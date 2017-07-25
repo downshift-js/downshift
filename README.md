@@ -166,6 +166,11 @@ I was heavily inspired by [Ryan Florence][ryan] and his talk entitled:
 the code in [`react-autocomplete`][react-autocomplete] and
 [jQuery UI's Autocomplete][jquery-complete].
 
+You can watch me build the first iteration of `react-autocompletely` on YouTube:
+
+- [Part 1](https://youtu.be/2kzD1IjDy5s)
+- [Part 2](https://youtu.be/w1Z7Jvj08_s)
+
 ## Other Solutions
 
 I'm not aware of any, if you are please [make a pull request][prs] and add it
