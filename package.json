@@ -1,0 +1,67 @@
+{
+  "name": "react-completely",
+  "version": "0.0.0-semantically-released",
+  "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "> 4",
+    "npm": "> 3"
+  },
+  "scripts": {
+    "start": "nps",
+    "test": "nps test",
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "dom-scroll-into-view": "^1.2.1"
+  },
+  "peerDependencies": {
+    "react": ">=15",
+    "prop-types": ">=15"
+  },
+  "devDependencies": {
+    "all-contributors-cli": "^4.3.0",
+    "babel-cli": "^6.24.1",
+    "babel-jest": "^20.0.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "enzyme": "^2.9.1",
+    "enzyme-to-json": "^1.5.1",
+    "eslint": "^4.2.0",
+    "eslint-config-kentcdodds": "^12.4.2",
+    "husky": "^0.14.3",
+    "jest": "^20.0.4",
+    "lint-staged": "^4.0.1",
+    "nps": "^5.4.0",
+    "nps-utils": "^1.2.0",
+    "opt-cli": "^1.5.1",
+    "prettier-eslint-cli": "^4.1.1",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier-eslint --write",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kentcdodds/react-completely.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kentcdodds/react-completely/issues"
+  },
+  "homepage": "https://github.com/kentcdodds/react-completely#readme"
+}
