@@ -2,7 +2,7 @@ import React from 'react'
 import matchSorter from 'match-sorter'
 import glamorous, {Div} from 'glamorous'
 import items from '../../other/countries'
-import Autocomplete from '../../../src'
+import Autocomplete from '../../other/react-autocompletely'
 
 export default Examples
 

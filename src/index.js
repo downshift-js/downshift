@@ -41,7 +41,7 @@ class Input extends Component {
 
     Enter(event) {
       event.preventDefault()
-      this.autocomplete.selectItem()
+      this.autocomplete.selectHighlightedItem()
     },
 
     Escape(event) {
@@ -125,32 +125,10 @@ class Controller extends Component {
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
   }
 
-  toggleMenu = () => {
-    this.autocomplete.toggle()
-  }
-
-  openMenu = () => {
-    this.autocomplete.toggle(true)
-  }
-
-  closeMenu = () => {
-    this.autocomplete.toggle(false)
-  }
-
-  clearSelection = () => {
-    this.autocomplete.clearSelection(null)
-  }
-
   render() {
-    return this.props.children({
-      selectedItem: this.autocomplete.state.selectedItem,
-      inputValue: this.autocomplete.state.inputValue,
-      isOpen: this.autocomplete.state.isOpen,
-      toggleMenu: this.toggleMenu,
-      openMenu: this.openMenu,
-      closeMenu: this.closeMenu,
-      clearSelection: this.clearSelection,
-    })
+    return this.props.children(
+      this.autocomplete.getControllerStateAndHelpers(),
+    )
   }
 }
 
@@ -273,13 +251,13 @@ class Menu extends Component {
     if (!this.autocomplete.state.isOpen) {
       return null
     }
-    const {inputValue, selectedItem} = this.autocomplete.state
+    const {inputValue} = this.autocomplete.state
     const {highlightedIndex} = this.state
     const {children, ...rest} = this.props
     return (
       <div {...rest} ref={this.ref}>
         <div>
-          {children({inputValue, highlightedIndex, selectedItem})}
+          {children(this.autocomplete.getControllerStateAndHelpers())}
         </div>
         <MenuStatus
           highlightedIndex={highlightedIndex}
@@ -309,13 +287,8 @@ class MenuStatus extends Component {
   }
 
   static propTypes = {
-    // TODO: is this the best way to do a nullable?
-    highlightedIndex: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.oneOf([null]),
-    ]).isRequired,
-    inputValue: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])])
-      .isRequired,
+    highlightedIndex: PropTypes.number,
+    inputValue: PropTypes.string,
     getA11yStatusMessage: PropTypes.func,
   }
 
@@ -465,7 +438,7 @@ class Item extends Component {
     this.menu.setHighlightedIndex(this.props.index)
   }
   handleClick = () => {
-    this.autocomplete.selectItem(this.props.index)
+    this.autocomplete.selectItemAtIndex(this.props.index)
   }
   componentWillMount() {
     this.menu.addItemInstance(this)
@@ -571,9 +544,17 @@ class Autocomplete extends Component {
     )
   }
 
-  selectItem = (
-    itemIndex = this.state.menu ? this.state.menu.state.highlightedIndex : null,
-  ) => {
+  selectItem = item => {
+    this.reset()
+    this.setState(
+      {selectedItem: item, inputValue: this.getInputValue(item)},
+      () => {
+        this.props.onChange(item)
+      },
+    )
+  }
+
+  selectItemAtIndex = itemIndex => {
     if (itemIndex === null) {
       // no item highlighted
       return
@@ -583,14 +564,43 @@ class Autocomplete extends Component {
       // TODO: see if this is even possible?
       return
     }
-    const {item} = itemInstance.props
-    this.reset()
-    this.setState(
-      {selectedItem: item, inputValue: this.getInputValue(item)},
-      () => {
-        this.props.onChange(item)
-      },
+    this.selectItem(itemInstance.props.item)
+  }
+
+  selectHighlightedItem = () => {
+    return this.selectItemAtIndex(
+      this.state.menu ? this.state.menu.state.highlightedIndex : null,
     )
+  }
+
+  getControllerStateAndHelpers() {
+    const {selectedItem, inputValue, isOpen} = this.state
+    const menu = this.state.menu || {state: {}} // handle the null case (before the menu's been rendered)
+    const {
+      toggleMenu,
+      openMenu,
+      closeMenu,
+      clearSelection,
+      selectItem,
+      selectItemAtIndex,
+      selectHighlightedItem,
+    } = this
+    const {setHighlightedIndex} = menu
+    const {highlightedIndex} = menu.state
+    return {
+      selectedItem,
+      selectItem,
+      selectItemAtIndex,
+      selectHighlightedItem,
+      highlightedIndex,
+      setHighlightedIndex,
+      inputValue,
+      isOpen,
+      toggleMenu,
+      openMenu,
+      closeMenu,
+      clearSelection,
+    }
   }
 
   reset = () => {
@@ -613,7 +623,8 @@ class Autocomplete extends Component {
       this.setState({isOpen: true}, cb)
     }
   }
-  toggle = (newState, cb) => {
+
+  toggleMenu = (newState, cb) => {
     this.setState(({isOpen}) => {
       let nextIsOpen = !isOpen
       if (typeof newState === 'boolean') {
@@ -621,6 +632,14 @@ class Autocomplete extends Component {
       }
       return {isOpen: nextIsOpen}
     }, cb)
+  }
+
+  openMenu = () => {
+    this.autocomplete.toggleMenu(true)
+  }
+
+  closeMenu = () => {
+    this.autocomplete.toggleMenu(false)
   }
 
   getInputValue = item => {

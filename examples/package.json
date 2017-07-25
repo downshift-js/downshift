@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "cleanup": "rimraf other/react-autocompletely && cpy \"./**/*.js\" ../examples/other/react-autocompletely --cwd=\"../src\" --parents",
+    "prestart": "npm run cleanup -s",
     "start": "next",
+    "prebuild": "npm run cleanup -s",
     "build": "next build"
   },
   "keywords": [],
@@ -18,11 +21,13 @@
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
+    "cpy-cli": "^1.0.1",
     "glamor": "^2.20.37",
     "glamorous": "^3.24.0",
     "match-sorter": "^1.8.0",
     "next": "^2.4.7",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "rimraf": "^2.6.1"
   }
 }

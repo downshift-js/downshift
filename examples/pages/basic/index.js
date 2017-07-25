@@ -1,5 +1,5 @@
 import React from 'react'
-import Autocomplete from '../../../src'
+import Autocomplete from '../../other/react-autocompletely'
 
 export default Examples
 

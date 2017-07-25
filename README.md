@@ -1,7 +1,7 @@
 <div align="center">
 <h1>react-completely</h1>
 
-<strong>A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components</strong>
+A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components
 </div>
 
 <hr />
@@ -22,13 +22,21 @@
 
 ## The problem
 
-// TODO
+You need an autocomplete experience in your application and you want it to be
+accessible. You also want it to be simple and flexible to account for your use
+cases.
 
 ## This solution
 
-// TODO
+This is a collection of primitive components that you can compose together to
+create an autocomplete component which you can reuse in your application. It's
+based on ideas from the talk ["Compound Components"][compound-components-talk]
+which effectively gives you maximum flexibility with a minimal API because you
+are responsible for the rendering of the autocomplete components.
 
 ## Installation
+
+**This component is currently under development and is not yet released...**
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
@@ -42,9 +50,96 @@ npm install --save react-completely
 
 ## Usage
 
-// TODO
+**Things are still in flux a little bit (looking for feedback).**
 
-For now, see the tests and examples.
+```jsx
+import Autocomplete from 'react-autocompletely'
+
+// use components together here.
+```
+
+### Autocomplete
+
+This is the main component. It renders a `div` and forwards props. Wrap
+everything in this.
+
+**props**:
+
+- `onChange` - `function(item: any)` - called when the user selects an item -
+  *required*
+- `itemToString` - `function(item: any)` - used to determine the `inputValue`
+  for the selected item. - *defaults to an identity function (`i => i`)*
+
+### Autocomplete.Input
+
+This is the input component. It renders an `input` and forwards props.
+
+**props**:
+
+- `defaultValue` - `string` - the initial value the input should have when it's
+  mounted. - *defaults to null*
+
+### Autocomplete.Controller
+
+This component allows you to receive and interact with the state of the
+autocomplete component.
+
+**props**:
+
+- `children` - `function` - this is called with an object with the properties
+  listed below. - *required*
+
+- `highlightedIndex` - `number|null` - the currently highlighted item
+- `setHighlightedIndex` - `function(index: number)` - call to set a new highlighted index
+- `inputValue` - `string|null` - the current value of the input
+- `isOpen` - `boolean` - the menu open state
+- `toggleMenu` - `function(state: boolean)` - toggle the menu open state (if
+  `state` is not provided, then it will be set to the inverse of the current
+  state)
+- `openMenu` - `function()` - opens the menu
+- `closeMenu` - `function()` - closes the menu
+- `selectedItem` - `any` - the currently selected item
+- `clearSelection` - `function()` - clears the selection
+- `selectItem` - `function(item: any)` - selects the given item
+- `selectItemAtIndex` - `function(index: number)` - selects the item at the
+  given index
+- `selectHighlightedItem` - `function()` - selects the item that is currently
+  highlighted
+
+### Autocomplete.Menu
+
+This component allows you to render the items based on the user input. It
+renders a `div` with another `div` for your items and a `div` for the menu
+status (for accessibility purposes)
+
+**props**:
+
+- `children` - `function` - this is called with the same things that the
+  `children` prop is called with for `Autocomplete.Controller` - *required*
+
+### Autocomplete.ItemContainer
+
+Use this component if you don't render the items as direct children of the
+`Autocomplete.Menu`. It renders a `div` and forwards all props. There should
+only be one of these in a menu and it should be the scrollable area where
+the items are rendered.
+
+### Autocomplete.Item
+
+Render your items inside this component. This renders a `div` and forwards all
+props.
+
+**props**:
+
+- `index` - `number` - this is how `react-autocompletely` keeps track of your
+  item when updating the `highlightedIndex` as the user keys around.
+- `item` - `any` - This is the item data that will be selected when the user
+  selects a particular item.
+
+## Examples
+
+Please see the `examples` directory for examples of how to compose these
+components together.
 
 ## Inspiration
 
