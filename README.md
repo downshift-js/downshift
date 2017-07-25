@@ -44,9 +44,14 @@ npm install --save react-completely
 
 // TODO
 
+For now, see the tests and examples.
+
 ## Inspiration
 
-// TODO
+I was heavily inspired by [Ryan Florence][ryan] and his talk entitled:
+["Compound Components"][compound-components-talk]. I also took a few ideas from
+the code in [`react-autocomplete`][react-autocomplete] and
+[jQuery UI's Autocomplete][jquery-complete].
 
 ## Other Solutions
 
@@ -94,3 +99,7 @@ MIT
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/kentcdodds/react-completely.svg?style=social
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
+[ryan]: https://github.com/ryanflorence
+[compound-components-talk]: https://www.youtube.com/watch?v=hEGg-3pIHlE
+[react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
+[jquery-complete]: https://jqueryui.com/autocomplete/

@@ -1,5 +1,6 @@
 {
   "rules": {
-    "no-alert": "off"
+    "no-alert": "off",
+    "react/prop-types": "off"
   }
 }

@@ -377,7 +377,7 @@ class MenuStatus extends Component {
     this.cleanup()
   }
 
-  renderStatus(status, index) {
+  renderStatus = (status, index) => {
     return (
       <div
         style={{
