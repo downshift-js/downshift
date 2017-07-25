@@ -173,8 +173,8 @@ You can watch me build the first iteration of `react-autocompletely` on YouTube:
 
 ## Other Solutions
 
-I'm not aware of any, if you are please [make a pull request][prs] and add it
-here!
+- [`react-select`](https://github.com/JedWatson/react-select)
+- [`react-autocomplete`](https://github.com/reactjs/react-autocomplete)
 
 ## Contributors
 
