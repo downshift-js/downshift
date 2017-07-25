@@ -58,53 +58,62 @@ import Autocomplete from 'react-autocompletely'
 // use components together here.
 ```
 
+Available components and relevant props:
+
 ### Autocomplete
 
 This is the main component. It renders a `div` and forwards props. Wrap
 everything in this.
 
-**props**:
+#### onChange
 
-- `onChange` - `function(item: any)` - called when the user selects an item -
-  *required*
-- `itemToString` - `function(item: any)` - used to determine the `inputValue`
-  for the selected item. - *defaults to an identity function (`i => i`)*
+> `function(item: any)` | *required*
+
+Called when the user selects an item
+
+#### itemToString
+
+> `function(item: any)` | defaults to an identity function (`i => i`)
+
+Used to determine the `inputValue` for the selected item.
 
 ### Autocomplete.Input
 
 This is the input component. It renders an `input` and forwards props.
 
-**props**:
+#### defaultValue
 
-- `defaultValue` - `string` - the initial value the input should have when it's
-  mounted. - *defaults to null*
+> `string` / `null` | *defaults to null*
+
+The initial value the input should have when it's mounted.
 
 ### Autocomplete.Controller
 
 This component allows you to receive and interact with the state of the
 autocomplete component.
 
-**props**:
+#### children
 
-- `children` - `function` - this is called with an object with the properties
-  listed below. - *required*
+> `function({})` | *required*
 
-- `highlightedIndex` - `number|null` - the currently highlighted item
-- `setHighlightedIndex` - `function(index: number)` - call to set a new highlighted index
-- `inputValue` - `string|null` - the current value of the input
-- `isOpen` - `boolean` - the menu open state
-- `toggleMenu` - `function(state: boolean)` - toggle the menu open state (if
-  `state` is not provided, then it will be set to the inverse of the current
-  state)
-- `openMenu` - `function()` - opens the menu
-- `closeMenu` - `function()` - closes the menu
-- `selectedItem` - `any` - the currently selected item
-- `clearSelection` - `function()` - clears the selection
-- `selectItem` - `function(item: any)` - selects the given item
-- `selectItemAtIndex` - `function(index: number)` - selects the item at the
-  given index
-- `selectHighlightedItem` - `function()` - selects the item that is currently
-  highlighted
+This is called with an object with the properties listed below:
+
+<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+
+| property                | type                       | description                                                                                                      |
+|-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
+| `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
+| `inputValue`            | `string` / `null`          | the current value of the input                                                                                   |
+| `isOpen`                | `boolean`                  | the menu open state                                                                                              |
+| `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
+| `openMenu`              | `function()`               | opens the menu                                                                                                   |
+| `closeMenu`             | `function()`               | closes the menu                                                                                                  |
+| `selectedItem`          | `any`                      | the currently selected item                                                                                      |
+| `clearSelection`        | `function()`               | clears the selection                                                                                             |
+| `selectItem`            | `function(item: any)`      | selects the given item                                                                                           |
+| `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
+| `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
 
 ### Autocomplete.Menu
 
@@ -112,10 +121,12 @@ This component allows you to render the items based on the user input. It
 renders a `div` with another `div` for your items and a `div` for the menu
 status (for accessibility purposes)
 
-**props**:
+#### children
 
-- `children` - `function` - this is called with the same things that the
-  `children` prop is called with for `Autocomplete.Controller` - *required*
+> `function({})` | *required*
+
+This is called with the same things that the `children` prop is called with for
+`Autocomplete.Controller`
 
 ### Autocomplete.ItemContainer
 
@@ -129,12 +140,19 @@ the items are rendered.
 Render your items inside this component. This renders a `div` and forwards all
 props.
 
-**props**:
+#### index
 
-- `index` - `number` - this is how `react-autocompletely` keeps track of your
-  item when updating the `highlightedIndex` as the user keys around.
-- `item` - `any` - This is the item data that will be selected when the user
-  selects a particular item.
+> `number` | *required*
+
+this is how `react-autocompletely` keeps track of your item when updating the
+`highlightedIndex` as the user keys around.
+
+#### item
+
+> `any` | *required*
+
+This is the item data that will be selected when the user selects a particular
+item.
 
 ## Examples
 
