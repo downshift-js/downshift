@@ -1,7 +1,7 @@
 <div align="center">
-<h1>react-completely</h1>
+<h1>react-completely 🔮</h1>
 
-A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components
+Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components
 </div>
 
 <hr />
