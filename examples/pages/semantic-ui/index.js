@@ -66,7 +66,10 @@ const Item = glamorous(Autocomplete.Item, {
   },
 )
 const onAttention = '&:hover, &:focus'
-const Input = glamorous(Autocomplete.Input, {rootEl: 'input'})(
+const Input = glamorous(Autocomplete.Input, {
+  rootEl: 'input',
+  forwardProps: ['getValue'],
+})(
   {
     width: 'calc(100% - 16px)', // full width - icon width/2 - border
     fontSize: 14,
