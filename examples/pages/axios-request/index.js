@@ -48,7 +48,7 @@ class AxiosAutocomplete extends Component {
             // prettier-ignore
             return this.state.items.map((item, index) => (
               <Autocomplete.Item
-                item={item}
+                value={item}
                 index={index}
                 key={item}
                 style={{

@@ -53,7 +53,7 @@ class MenuStatus extends Component {
     }
     const status = this.props.getA11yStatusMessage({
       resultCount,
-      highlightedItem: itemInstance.props.item,
+      highlightedItem: itemInstance.props.value,
       getInputValue,
     })
     const isSameAsLast = statuses[statuses.length - 1] === status
