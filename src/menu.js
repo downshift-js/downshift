@@ -21,6 +21,10 @@ class Menu extends Component {
     children: PropTypes.func.isRequired,
   }
 
+  static defaultProps = {
+    defaultHighlightedIndex: null,
+  }
+
   static initialState = {
     highlightedIndex: null,
   }
@@ -102,7 +106,7 @@ class Menu extends Component {
 
   componentDidMount() {
     this.autocomplete.setMenu(this)
-    this.autocomplete.emitter.on('open', this.setDefaultHighlightedIndex)
+    this.autocomplete.emitter.on('menu:open', this.setDefaultHighlightedIndex)
   }
 
   componentDidUpdate() {
@@ -111,7 +115,7 @@ class Menu extends Component {
 
   componentWillUnmount() {
     this.autocomplete.removeMenu(this)
-    this.autocomplete.emitter.off('open', this.setDefaultHighlightedIndex)
+    this.autocomplete.emitter.off('menu:open', this.setDefaultHighlightedIndex)
   }
 
   render() {

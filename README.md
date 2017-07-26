@@ -125,7 +125,7 @@ status (for accessibility purposes)
 
 > `number`/`null` | defaults to `null`
 
-This is the initial `Item` that will be highlighted when the menu first opens.
+This is the initial index to highlight when the menu first opens.
 
 #### children
 

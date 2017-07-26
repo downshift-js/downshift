@@ -164,7 +164,7 @@ class Autocomplete extends Component {
     if (this.state.isOpen) {
       cbToCb(cb)()
     } else {
-      this.emitter.emit('open')
+      this.emitter.emit('menu:open')
       this.setState({isOpen: true}, cbToCb(cb))
     }
   }
@@ -176,7 +176,7 @@ class Autocomplete extends Component {
         nextIsOpen = newState
       }
       if (nextIsOpen) {
-        this.emitter.emit('open')
+        this.emitter.emit('menu:open')
       }
       return {isOpen: nextIsOpen}
     }, cbToCb(cb))
