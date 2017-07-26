@@ -33,7 +33,10 @@
       "name": "Travis Arnold",
       "avatar_url": "https://avatars1.githubusercontent.com/u/2762082?v=4",
       "profile": "http://travisrayarnold.com",
-      "contributions": []
+      "contributions": [
+        "code",
+        "doc"
+      ]
     },
     {
       "login": "tizmagik",
