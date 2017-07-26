@@ -17,6 +17,7 @@ class Menu extends Component {
 
   static propTypes = {
     ref: PropTypes.func,
+    defaultHighlightedIndex: PropTypes.number,
     children: PropTypes.func.isRequired,
   }
 
@@ -61,6 +62,12 @@ class Menu extends Component {
     this.setState({highlightedIndex})
   }
 
+  setDefaultHighlightedIndex = () => {
+    if (typeof this.props.defaultHighlightedIndex !== 'undefined') {
+      this.setHighlightedIndex(this.props.defaultHighlightedIndex)
+    }
+  }
+
   getItemFromIndex = index => {
     if (!this.items || !this.items[0]) {
       return null
@@ -95,6 +102,7 @@ class Menu extends Component {
 
   componentDidMount() {
     this.autocomplete.setMenu(this)
+    this.autocomplete.emitter.on('open', this.setDefaultHighlightedIndex)
   }
 
   componentDidUpdate() {
@@ -103,14 +111,17 @@ class Menu extends Component {
 
   componentWillUnmount() {
     this.autocomplete.removeMenu(this)
+    this.autocomplete.emitter.off('open', this.setDefaultHighlightedIndex)
   }
+
   render() {
     if (!this.autocomplete.state.isOpen) {
       return null
     }
     const {inputValue} = this.autocomplete.state
     const {highlightedIndex} = this.state
-    const {children, ...rest} = this.props
+    // eslint-disable-next-line no-unused-vars
+    const {defaultHighlightedIndex, children, ...rest} = this.props
     return (
       <div {...rest} ref={this.ref}>
         <div>
