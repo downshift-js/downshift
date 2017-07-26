@@ -154,6 +154,7 @@ class Menu extends Component {
 
   static propTypes = {
     ref: PropTypes.func,
+    defaultHighlightedIndex: PropTypes.number,
     children: PropTypes.func.isRequired,
   }
 
@@ -174,6 +175,7 @@ class Menu extends Component {
   reset = cb => {
     this.setState(Menu.initialState, cb)
   }
+
   changeHighlighedIndex = moveAmount => {
     const {highlightedIndex} = this.state
     const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
@@ -191,6 +193,7 @@ class Menu extends Component {
       highlightedIndex: newIndex,
     })
   }
+
   setHighlightedIndex = highlightedIndex => {
     this.setState({highlightedIndex})
   }
@@ -252,19 +255,28 @@ class Menu extends Component {
   }
 
   componentDidUpdate() {
+    const {isOpen} = this.context[AUTOCOMPLETE_CONTEXT].state
+    if (this.lastOpenState !== isOpen) {
+      if (isOpen === true) {
+        this.setHighlightedIndex(this.props.defaultHighlightedIndex)
+      }
+      this.lastOpenState = isOpen
+    }
     this.maybeScrollToHighlightedElement()
   }
 
   componentWillUnmount() {
     this.autocomplete.removeMenu(this)
   }
+
   render() {
     if (!this.autocomplete.state.isOpen) {
       return null
     }
     const {inputValue} = this.autocomplete.state
     const {highlightedIndex} = this.state
-    const {children, ...rest} = this.props
+    // eslint-disable-next-line no-unused-vars
+    const {defaultHighlightedIndex, children, ...rest} = this.props
     return (
       <div {...rest} ref={this.ref}>
         <div>

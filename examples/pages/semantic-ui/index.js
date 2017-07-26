@@ -69,7 +69,10 @@ const Item = glamorous(Autocomplete.Item, {
   },
 )
 const onAttention = '&:hover, &:focus'
-const Input = glamorous(Autocomplete.Input, {rootEl: 'input'})(
+const Input = glamorous(Autocomplete.Input, {
+  rootEl: 'input',
+  forwardProps: ['getValue'],
+})(
   {
     width: '100%',
     fontSize: 14,
@@ -104,7 +107,10 @@ const Input = glamorous(Autocomplete.Input, {rootEl: 'input'})(
       null),
 )
 
-const Menu = glamorous(Autocomplete.Menu, {rootEl: 'div'})({
+const Menu = glamorous(Autocomplete.Menu, {
+  rootEl: 'div',
+  forwardProps: ['defaultHighlightedIndex'],
+})({
   maxHeight: '20rem',
   overflowY: 'auto',
   overflowX: 'hidden',
@@ -167,7 +173,7 @@ function SemanticUIAutocomplete() {
               </ControllerButton>}
           </Div>)}
       </Autocomplete.Controller>
-      <Menu>
+      <Menu defaultHighlightedIndex={0}>
         {({inputValue, highlightedIndex, selectedItem}) =>
           // prettier-ignore
           (inputValue ? advancedFilter(items, inputValue) : items)

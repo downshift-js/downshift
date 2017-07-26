@@ -121,6 +121,12 @@ This component allows you to render the items based on the user input. It
 renders a `div` with another `div` for your items and a `div` for the menu
 status (for accessibility purposes)
 
+#### defaultHighlightedIndex
+
+> `number`
+
+This is the initial `Item` that will be highlighted when first opening the menu.
+
 #### children
 
 > `function({})` | *required*
