@@ -24,7 +24,9 @@ function Index() {
         {routes.map(route =>
           (<li key={route}>
             <Link href={`/${route}`}>
-              {route}
+              <a>
+                {route}
+              </a>
             </Link>
           </li>),
         )}
