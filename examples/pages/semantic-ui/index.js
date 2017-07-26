@@ -96,12 +96,12 @@ const Input = glamorous(Autocomplete.Input, {
     },
   },
   ({isOpen}) =>
-    (isOpen ?
-      {
-        borderBottomLeftRadius: '0',
-        borderBottomRightRadius: '0',
-      } :
-      null),
+    isOpen
+      ? {
+          borderBottomLeftRadius: '0',
+          borderBottomRightRadius: '0',
+        }
+      : null,
 )
 
 const Menu = glamorous(Autocomplete.Menu, {
@@ -154,18 +154,18 @@ function SemanticUIAutocomplete() {
               isOpen={isOpen}
               placeholder="Enter some info"
             />
-            {selectedItem ?
-              <ControllerButton
+            {selectedItem
+              ? <ControllerButton
                 css={{paddingTop: 4}}
                 onClick={clearSelection}
                 aria-label="clear selection"
-              >
+                >
                 <XIcon />
-              </ControllerButton> :
-              <ControllerButton
+              </ControllerButton>
+              : <ControllerButton
                 onClick={toggleMenu}
                 aria-label={isOpen ? 'close menu' : 'open menu'}
-              >
+                >
                 <ArrowIcon isOpen={isOpen} />
               </ControllerButton>}
           </Div>)}
@@ -176,7 +176,7 @@ function SemanticUIAutocomplete() {
           (inputValue ? advancedFilter(items, inputValue) : items)
             .map((item, index) => (
               <Item
-                item={item}
+                value={item}
                 index={index}
                 key={item.code}
                 isActive={highlightedIndex === index}

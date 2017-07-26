@@ -66,14 +66,14 @@ class ReactPopperAutocomplete extends PureComponent {
                     )
                     .map((item, index) =>
                       (<Autocomplete.Item
-                        item={item}
+                        value={item}
                         index={index}
                         key={item}
                         style={{
                           backgroundColor:
-                            highlightedIndex === index ?
-                              'rgba(0, 0, 0, .2)' :
-                              'transparent',
+                            highlightedIndex === index
+                              ? 'rgba(0, 0, 0, .2)'
+                              : 'transparent',
                           fontWeight: selectedItem === item ? 'bold' : 'normal',
                         }}
                       >

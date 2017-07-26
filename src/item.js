@@ -14,7 +14,7 @@ class Item extends Component {
     onClick: PropTypes.func,
     ref: PropTypes.func,
     index: PropTypes.number.isRequired,
-    item: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
   }
   constructor(props, context) {
     super(props, context)
@@ -41,7 +41,7 @@ class Item extends Component {
   }
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {index, item, ...rest} = this.props
+    const {index, value, ...rest} = this.props
     return (
       <div
         {...rest}
