@@ -83,7 +83,7 @@ The initial value the input should have when it's mounted.
 
 #### getValue
 
-> `function(item: any)` | defaults to an identity function (`i => i`)
+> `function(item: any)` | defaults to an identity function (`i => String(i)`)
 
 Used to determine the `inputValue` for the selected item.
 
