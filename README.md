@@ -128,13 +128,6 @@ status (for accessibility purposes)
 This is called with the same things that the `children` prop is called with for
 `Autocomplete.Controller`
 
-### Autocomplete.ItemContainer
-
-Use this component if you don't render the items as direct children of the
-`Autocomplete.Menu`. It renders a `div` and forwards all props. There should
-only be one of these in a menu and it should be the scrollable area where
-the items are rendered.
-
 ### Autocomplete.Item
 
 Render your items inside this component. This renders a `div` and forwards all
