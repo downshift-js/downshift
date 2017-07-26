@@ -27,6 +27,7 @@
     "match-sorter": "^1.8.0",
     "next": "^2.4.7",
     "react": "^15.6.1",
+    "react-apollo": "^1.4.8",
     "react-dom": "^15.6.1",
     "rimraf": "^2.6.1"
   }
