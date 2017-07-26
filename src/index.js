@@ -172,7 +172,7 @@ class Menu extends Component {
   itemChangeListeners = []
 
   reset = cb => {
-    this.setState(Menu.initialState, cb)
+    this.setState(Menu.initialState, cbToCb(cb))
   }
   changeHighlighedIndex = moveAmount => {
     const {highlightedIndex} = this.state
@@ -624,9 +624,9 @@ class Autocomplete extends Component {
 
   open = cb => {
     if (this.state.isOpen) {
-      cb && cb()
+      cbToCb(cb)()
     } else {
-      this.setState({isOpen: true}, cb)
+      this.setState({isOpen: true}, cbToCb(cb))
     }
   }
 
@@ -637,7 +637,7 @@ class Autocomplete extends Component {
         nextIsOpen = newState
       }
       return {isOpen: nextIsOpen}
-    }, cb)
+    }, cbToCb(cb))
   }
 
   openMenu = () => {
@@ -693,3 +693,16 @@ class Autocomplete extends Component {
 }
 
 export default Autocomplete
+
+/**
+ * Accepts a parameter and returns it if it's a function
+ * or a noop function if it's not. This allows us to
+ * accept a callback, but not worry about it if it's not
+ * passed.
+ * @param {Function} cb the callback
+ * @return {Function} a function
+ */
+function cbToCb(cb) {
+  return typeof cb === 'function' ? cb : noop
+}
+function noop() {}
