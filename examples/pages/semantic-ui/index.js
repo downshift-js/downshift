@@ -17,10 +17,7 @@ function Examples() {
           textAlign: 'center',
         }}
       >
-        <p>
-          This is still a work in progress. Not sure what is up with the width
-          of the input...
-        </p>
+        <p>This is still a work in progress.</p>
         <Div display="flex" justifyContent="center">
           <SemanticUIAutocomplete />
         </Div>
@@ -71,7 +68,7 @@ const Item = glamorous(Autocomplete.Item, {
 const onAttention = '&:hover, &:focus'
 const Input = glamorous(Autocomplete.Input, {rootEl: 'input'})(
   {
-    width: '100%',
+    width: 'calc(100% - 16px)', // full width - icon width/2 - border
     fontSize: 14,
     wordWrap: 'break-word',
     lineHeight: '1em',
@@ -124,7 +121,7 @@ const ControllerButton = glamorous.button({
   backgroundColor: 'transparent',
   border: 'none',
   position: 'absolute',
-  right: 2,
+  right: 8,
   top: 12,
   cursor: 'pointer',
 })
@@ -145,7 +142,7 @@ function SemanticUIAutocomplete() {
     >
       <Autocomplete.Controller>
         {({isOpen, toggleMenu, clearSelection, selectedItem}) =>
-          (<Div position="relative">
+          (<Div position="relative" css={{paddingRight: '1.75em'}}>
             <Input
               getValue={i => i.name}
               isOpen={isOpen}
