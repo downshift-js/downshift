@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.25.0",
+    "babel-macros": "^0.5.2",
     "babel-plugin-module-alias": "^1.6.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
@@ -26,6 +27,7 @@
     "glamorous": "^3.24.0",
     "match-sorter": "^1.8.0",
     "next": "^2.4.7",
+    "preval.macro": "^1.0.1",
     "react": "^15.6.1",
     "react-apollo": "^1.4.8",
     "react-dom": "^15.6.1",

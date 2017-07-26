@@ -30,14 +30,16 @@ function Examples() {
 }
 
 function ApolloAutocomplete() {
+  // prettier-ignore
   return (
     <Autocomplete onChange={item => alert(item)}>
       <Autocomplete.Input />
       <Autocomplete.Menu>
-        {({inputValue, selectedItem, highlightedIndex}) =>
-          (<ApolloAutocompleteMenuWithData
+        {({inputValue, selectedItem, highlightedIndex}) => (
+          <ApolloAutocompleteMenuWithData
             {...{inputValue, selectedItem, highlightedIndex}}
-          />)}
+          />
+        )}
       </Autocomplete.Menu>
     </Autocomplete>
   )
@@ -51,10 +53,11 @@ function ApolloAutocompleteMenu({
   if (loading) {
     return <div>Loading...</div>
   }
+  // prettier-ignore
   return (
     <div>
-      {allColors.map(({name: item}, index) =>
-        (<Autocomplete.Item
+      {allColors.map(({name: item}, index) => (
+        <Autocomplete.Item
           item={item}
           index={index}
           key={item}
@@ -64,8 +67,8 @@ function ApolloAutocompleteMenu({
           }}
         >
           {item}
-        </Autocomplete.Item>),
-      )}
+        </Autocomplete.Item>
+      ))}
     </div>
   )
 }
