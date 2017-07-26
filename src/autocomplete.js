@@ -108,7 +108,7 @@ class Autocomplete extends Component {
       // TODO: see if this is even possible?
       return
     }
-    this.selectItem(itemInstance.props.item)
+    this.selectItem(itemInstance.props.value)
   }
 
   selectHighlightedItem = () => {

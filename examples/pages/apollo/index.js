@@ -1,22 +1,22 @@
-import React from 'react'
+import React from "react";
 import {
   ApolloClient,
   ApolloProvider,
   createNetworkInterface,
   gql,
-  graphql,
-} from 'react-apollo'
-import Autocomplete from '../../other/react-autocompletely'
+  graphql
+} from "react-apollo";
+import Autocomplete from "../../other/react-autocompletely";
 
-export default Examples
+export default Examples;
 
 const networkInterface = createNetworkInterface({
-  uri: 'https://api.graph.cool/simple/v1/cj5k7w90bjt2i0122z6v0syvu',
-})
+  uri: "https://api.graph.cool/simple/v1/cj5k7w90bjt2i0122z6v0syvu"
+});
 
 const client = new ApolloClient({
-  networkInterface,
-})
+  networkInterface
+});
 
 function Examples() {
   return (
@@ -26,7 +26,7 @@ function Examples() {
         <ApolloAutocomplete />
       </div>
     </ApolloProvider>
-  )
+  );
 }
 
 function ApolloAutocomplete() {
@@ -46,19 +46,19 @@ function ApolloAutocomplete() {
 }
 
 function ApolloAutocompleteMenu({
-  data: {allColors, loading},
+  data: { allColors, loading },
   selectedItem,
-  highlightedIndex,
+  highlightedIndex
 }) {
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
   // prettier-ignore
   return (
     <div>
       {allColors.map(({name: item}, index) => (
         <Autocomplete.Item
-          item={item}
+          value={item}
           index={index}
           key={item}
           style={{
@@ -79,8 +79,8 @@ const SEARCH_COLORS = gql`
       name
     }
   }
-`
+`;
 
 const ApolloAutocompleteMenuWithData = graphql(SEARCH_COLORS)(
-  ApolloAutocompleteMenu,
-)
+  ApolloAutocompleteMenu
+);

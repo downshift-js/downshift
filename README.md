@@ -146,7 +146,7 @@ props.
 this is how `react-autocompletely` keeps track of your item when updating the
 `highlightedIndex` as the user keys around.
 
-#### item
+#### value
 
 > `any` | *required*
 
