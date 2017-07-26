@@ -57,7 +57,9 @@ class Input extends Component {
       this.keyDownHandlers[event.key].call(this, event)
     } else if (!Input.ignoreKeys.includes(event.key)) {
       this.autocomplete.open()
-      this.autocomplete.highlightIndex(null)
+      this.autocomplete.highlightIndex(
+        this.autocomplete.state.menu.props.defaultHighlightedIndex,
+      )
     }
   }
 

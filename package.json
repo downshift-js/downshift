@@ -12,11 +12,15 @@
     "test": "nps test",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "mitt": "^1.1.2"
+  },
   "peerDependencies": {
     "react": ">=15",
     "prop-types": ">=15"
@@ -47,7 +51,10 @@
     "react-test-renderer": "^15.6.1"
   },
   "lint-staged": {
-    "*.js": ["prettier-eslint --write", "git add"]
+    "*.js": [
+      "prettier-eslint --write",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
