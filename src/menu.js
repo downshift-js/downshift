@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import MenuStatus from './MenuStatus'
+import MenuStatus from './menu-status'
 import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
 import {cbToCb, compose, scrollIntoView} from './utils'
 
@@ -71,10 +71,7 @@ class Menu extends Component {
     if (!itemInstance || !itemInstance.node) {
       return
     }
-    const itemContainer = this.itemContainer || this.node
-    scrollIntoView(itemInstance.node, itemContainer, {
-      onlyScrollIfNeeded: true,
-    })
+    scrollIntoView(itemInstance.node)
   }
 
   addItemsChangedListener(cb) {

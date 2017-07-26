@@ -105,7 +105,6 @@ export {
   cbToCb,
   compose,
   debounce,
-  getScrollParent,
   moveCursorToTheEnd,
   scrollIntoView,
   selectAllText,

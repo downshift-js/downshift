@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import Controller from './Controller'
-import Input from './Input'
-import Item from './Item'
-import ItemContainer from './ItemContainer'
-import Menu from './Menu'
-import MenuStatus from './MenuStatus'
+import Controller from './controller'
+import Input from './input'
+import Item from './item'
+import Menu from './menu'
+import MenuStatus from './menu-status'
 import {AUTOCOMPLETE_CONTEXT} from './constants'
 import {cbToCb, compose} from './utils'
 
@@ -16,7 +15,6 @@ class Autocomplete extends Component {
   static MenuStatus = MenuStatus
   static Item = Item
   static Controller = Controller
-  static ItemContainer = ItemContainer
   static childContextTypes = {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
   }
