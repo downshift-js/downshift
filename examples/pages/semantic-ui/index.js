@@ -139,7 +139,6 @@ function SemanticUIAutocomplete() {
   return (
     <Autocomplete
       onChange={item => alert(item.name)}
-      itemToString={i => i.name}
       style={{
         width: '250px',
       }}
@@ -147,7 +146,11 @@ function SemanticUIAutocomplete() {
       <Autocomplete.Controller>
         {({isOpen, toggleMenu, clearSelection, selectedItem}) =>
           (<Div position="relative">
-            <Input isOpen={isOpen} placeholder="Enter some info" />
+            <Input
+              getValue={i => i.name}
+              isOpen={isOpen}
+              placeholder="Enter some info"
+            />
             {selectedItem ?
               <ControllerButton
                 css={{paddingTop: 4}}
