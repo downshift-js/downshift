@@ -77,13 +77,13 @@ class MenuStatus extends Component {
 
   componentDidMount() {
     this._isMounted = true
-    this.cleanup = this.menu.addItemsChangedListener(this.updateStatus)
+    this.menu.emitter.on('changeHighlighedIndex', this.updateStatus)
     this.updateStatus()
   }
 
   componentWillUnmount() {
     this._isMounted = false
-    this.cleanup()
+    this.menu.emitter.off('changeHighlighedIndex', this.updateStatus)
   }
 
   renderStatus = (status, index) => {

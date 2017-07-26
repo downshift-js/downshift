@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import mitt from 'mitt'
 
 import Controller from './controller'
 import Input from './input'
@@ -29,14 +30,14 @@ class Autocomplete extends Component {
     this.ref = compose(node => (this._rootNode = node), this.props.ref)
   }
 
-  input = null
-
   state = {
     inputValue: null,
     selectedItem: null,
     isOpen: false,
     menu: null,
   }
+  input = null
+  emitter = mitt()
 
   setMenu = menuInstance => {
     this.setState({
@@ -163,6 +164,7 @@ class Autocomplete extends Component {
     if (this.state.isOpen) {
       cbToCb(cb)()
     } else {
+      this.emitter.emit('open')
       this.setState({isOpen: true}, cbToCb(cb))
     }
   }
@@ -172,6 +174,9 @@ class Autocomplete extends Component {
       let nextIsOpen = !isOpen
       if (typeof newState === 'boolean') {
         nextIsOpen = newState
+      }
+      if (nextIsOpen) {
+        this.emitter.emit('open')
       }
       return {isOpen: nextIsOpen}
     }, cbToCb(cb))

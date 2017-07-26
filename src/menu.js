@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import mitt from 'mitt'
 
 import MenuStatus from './menu-status'
 import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
@@ -31,11 +32,12 @@ class Menu extends Component {
 
   state = Menu.initialState
   items = []
-  itemChangeListeners = []
+  emitter = mitt()
 
   reset = cb => {
     this.setState(Menu.initialState, cbToCb(cb))
   }
+
   changeHighlighedIndex = moveAmount => {
     const {highlightedIndex} = this.state
     const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
@@ -52,7 +54,9 @@ class Menu extends Component {
     this.setState({
       highlightedIndex: newIndex,
     })
+    this.emitter.emit('changeHighlighedIndex', newIndex)
   }
+
   setHighlightedIndex = highlightedIndex => {
     this.setState({highlightedIndex})
   }
@@ -74,31 +78,14 @@ class Menu extends Component {
     scrollIntoView(itemInstance.node)
   }
 
-  addItemsChangedListener(cb) {
-    this.itemChangeListeners.push(cb)
-    const cleanup = () => {
-      const index = this.itemChangeListeners.indexOf(cb)
-      if (index !== -1) {
-        this.itemChangeListeners.splice(index, 1)
-      }
-    }
-    return cleanup
-  }
-
   addItemInstance(itemInstance) {
     this.items.push(itemInstance)
-    for (let i = 0; i < this.itemChangeListeners.length; i++) {
-      this.itemChangeListeners[i]({items: this.items, added: itemInstance})
-    }
   }
 
   removeItemInstance(itemInstance) {
     const index = this.items.indexOf(itemInstance)
     if (index !== -1) {
       this.items.splice(index, 1)
-    }
-    for (let i = 0; i < this.itemChangeListeners.length; i++) {
-      this.itemChangeListeners[i]({items: this.items, removed: itemInstance})
     }
   }
 
