@@ -12,7 +12,7 @@ Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete comp
 [![downloads][downloads-badge]][npmcharts]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 
@@ -71,12 +71,6 @@ everything in this.
 
 Called when the user selects an item
 
-#### itemToString
-
-> `function(item: any)` | defaults to an identity function (`i => i`)
-
-Used to determine the `inputValue` for the selected item.
-
 ### Autocomplete.Input
 
 This is the input component. It renders an `input` and forwards props.
@@ -86,6 +80,12 @@ This is the input component. It renders an `input` and forwards props.
 > `string` / `null` | *defaults to null*
 
 The initial value the input should have when it's mounted.
+
+#### getValue
+
+> `function(item: any)` | defaults to an identity function (`i => String(i)`)
+
+Used to determine the `inputValue` for the selected item.
 
 ### Autocomplete.Controller
 
@@ -184,8 +184,8 @@ you'd prefer to use these out of the box solutions, then that's fine too:
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") |
-| :---: | :---: |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br /> |
+| :---: | :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

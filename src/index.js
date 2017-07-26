@@ -15,7 +15,11 @@ class Input extends Component {
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
     onBlur: PropTypes.func,
+    getValue: PropTypes.func,
     defaultValue: PropTypes.string,
+  }
+  static defaultProps = {
+    getValue: i => String(i),
   }
   constructor(props, context) {
     super(props, context)
@@ -77,16 +81,22 @@ class Input extends Component {
     this._inputNode.focus()
   }
 
+  getValue = item => {
+    return item ? this.props.getValue(item) : null
+  }
+
   componentWillUnmount() {
     if (this.autocomplete.input === this) {
       this.autocomplete.input = null
     }
   }
+
   componentDidMount() {
     if (this.props.defaultValue) {
       this.updateInputValue(this.props.defaultValue)
     }
   }
+
   updateInputValue(value) {
     if (this.autocomplete.state.inputValue !== value) {
       this.autocomplete.setState({
@@ -94,11 +104,12 @@ class Input extends Component {
       })
     }
   }
+
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {defaultValue, ...rest} = this.props
+    const {defaultValue, getValue, ...rest} = this.props
     const {inputValue, selectedItem} = this.autocomplete.state
-    const selectedItemValue = this.autocomplete.getInputValue(selectedItem)
+    const selectedItemValue = this.getValue(selectedItem)
     return (
       <input
         value={(inputValue === null ? selectedItemValue : inputValue) || ''}
@@ -471,14 +482,9 @@ class Autocomplete extends Component {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
   }
 
-  static defaultProps = {
-    itemToString: i => String(i),
-  }
-
   static propTypes = {
     ref: PropTypes.func,
     onChange: PropTypes.func.isRequired,
-    itemToString: PropTypes.func,
   }
 
   constructor(...args) {
@@ -643,7 +649,7 @@ class Autocomplete extends Component {
   }
 
   getInputValue = item => {
-    return item ? this.props.itemToString(item) : null
+    return this.input.getValue(item)
   }
 
   getChildContext() {
@@ -681,7 +687,7 @@ class Autocomplete extends Component {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {ref, itemToString, onChange, ...rest} = this.props
+    const {ref, onChange, ...rest} = this.props
     return <div {...rest} ref={this.ref} />
   }
 }
