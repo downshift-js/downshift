@@ -58,7 +58,7 @@ function ApolloAutocompleteMenu({
     <div>
       {allColors.map(({name: item}, index) => (
         <Autocomplete.Item
-          item={item}
+          value={item}
           index={index}
           key={item}
           style={{
@@ -75,7 +75,7 @@ function ApolloAutocompleteMenu({
 
 const SEARCH_COLORS = gql`
   query AllColors($inputValue: String!) {
-    allColors(filter: { name_contains: $inputValue }) {
+    allColors(filter: {name_contains: $inputValue}) {
       name
     }
   }

@@ -12,9 +12,7 @@
     "test": "nps test",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -52,7 +50,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier-eslint --write",
+      "prettier-eslint --write --no-semi --single-quote --trailing-comma=all --no-bracket-spacing",
       "git add"
     ]
   },

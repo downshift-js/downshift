@@ -13,7 +13,7 @@ function RawAutoComplete({refine, hits}) {
         {({selectedItem, highlightedIndex}) =>
           hits.map((item, index) =>
             (<Autocomplete.Item
-              item={item}
+              value={item}
               index={index}
               key={item.objectID}
               style={{

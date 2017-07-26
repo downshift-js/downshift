@@ -31,9 +31,9 @@ class Examples extends Component {
                 padding: '.3em',
                 borderRadius: '5px',
                 marginRight: '.5em',
-                backgroundColor: this.state.selectedColor ?
-                  this.state.selectedColor :
-                  'transparent',
+                backgroundColor: this.state.selectedColor
+                  ? this.state.selectedColor
+                  : 'transparent',
               }}
             />
             <BasicAutocomplete
@@ -115,7 +115,7 @@ function BasicAutocomplete({items, onChange}) {
           items.filter(i => !inputValue || i.toLowerCase().includes(inputValue.toLowerCase()))
             .map((item, index) => (
               <Item
-                item={item}
+                value={item}
                 index={index}
                 key={item}
                 highlightedIndex={highlightedIndex}
