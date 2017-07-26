@@ -1,6 +1,7 @@
 {
   "rules": {
     "no-alert": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/jsx-closing-bracket-location": "off"
   }
 }
