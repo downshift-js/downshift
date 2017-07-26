@@ -1,5 +1,5 @@
 <div align="center">
-<h1>react-completely 🔮</h1>
+<h1>react-autocompletely 🔮</h1>
 
 Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components
 </div>
@@ -42,7 +42,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save react-completely
+npm install --save react-autocompletely
 ```
 
 > This package also depends on `react` and `prop-types`. Please make sure you have
@@ -183,7 +183,7 @@ you'd prefer to use these out of the box solutions, then that's fine too:
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Code") [📖](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/kentcdodds/react-completely/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br />[💻](https://github.com/kentcdodds/react-completely/commits?author=souporserious "Code") [📖](https://github.com/kentcdodds/react-completely/commits?author=souporserious "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub>Jeremy Gayed</sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") | [<img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;"/><br /><sub>Haroen Viaene</sub>](https://haroen.me)<br />[💡](#example-Haroenv "Examples") | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/kentcdodds/react-completely/commits?author=FezVrasta "Documentation") |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=souporserious "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=souporserious "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub>Jeremy Gayed</sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") | [<img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;"/><br /><sub>Haroen Viaene</sub>](https://haroen.me)<br />[💡](#example-Haroenv "Examples") | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/paypal/react-autocompletely/commits?author=FezVrasta "Documentation") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
@@ -197,27 +197,27 @@ MIT
 
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/kentcdodds/react-completely.svg?style=flat-square
-[build]: https://travis-ci.org/kentcdodds/react-completely
-[coverage-badge]: https://img.shields.io/codecov/c/github/kentcdodds/react-completely.svg?style=flat-square
-[coverage]: https://codecov.io/github/kentcdodds/react-completely
-[version-badge]: https://img.shields.io/npm/v/react-completely.svg?style=flat-square
-[package]: https://www.npmjs.com/package/react-completely
-[downloads-badge]: https://img.shields.io/npm/dm/react-completely.svg?style=flat-square
-[npmcharts]: http://npmcharts.com/compare/react-completely
-[license-badge]: https://img.shields.io/npm/l/react-completely.svg?style=flat-square
-[license]: https://github.com/kentcdodds/react-completely/blob/master/LICENSE
+[build-badge]: https://img.shields.io/travis/paypal/react-autocompletely.svg?style=flat-square
+[build]: https://travis-ci.org/paypal/react-autocompletely
+[coverage-badge]: https://img.shields.io/codecov/c/github/paypal/react-autocompletely.svg?style=flat-square
+[coverage]: https://codecov.io/github/paypal/react-autocompletely
+[version-badge]: https://img.shields.io/npm/v/react-autocompletely.svg?style=flat-square
+[package]: https://www.npmjs.com/package/react-autocompletely
+[downloads-badge]: https://img.shields.io/npm/dm/react-autocompletely.svg?style=flat-square
+[npmcharts]: http://npmcharts.com/compare/react-autocompletely
+[license-badge]: https://img.shields.io/npm/l/react-autocompletely.svg?style=flat-square
+[license]: https://github.com/paypal/react-autocompletely/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/kentcdodds/react-completely/blob/master/other/CODE_OF_CONDUCT.md
-[github-watch-badge]: https://img.shields.io/github/watchers/kentcdodds/react-completely.svg?style=social
-[github-watch]: https://github.com/kentcdodds/react-completely/watchers
-[github-star-badge]: https://img.shields.io/github/stars/kentcdodds/react-completely.svg?style=social
-[github-star]: https://github.com/kentcdodds/react-completely/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20react-completely!%20https://github.com/kentcdodds/react-completely%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/kentcdodds/react-completely.svg?style=social
+[coc]: https://github.com/paypal/react-autocompletely/blob/master/other/CODE_OF_CONDUCT.md
+[github-watch-badge]: https://img.shields.io/github/watchers/paypal/react-autocompletely.svg?style=social
+[github-watch]: https://github.com/paypal/react-autocompletely/watchers
+[github-star-badge]: https://img.shields.io/github/stars/paypal/react-autocompletely.svg?style=social
+[github-star]: https://github.com/paypal/react-autocompletely/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20react-autocompletely!%20https://github.com/paypal/react-autocompletely%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/paypal/react-autocompletely.svg?style=social
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence

@@ -11,7 +11,7 @@ never done that before, that's great! Check this free short video tutorial to
 learn how: http://kcd.im/pull-request
 -->
 
-- `react-completely` version:
+- `react-autocompletely` version:
 - `node` version:
 - `npm` (or `yarn`) version:
 

@@ -11,7 +11,8 @@ script:
   - npm start validate
 after_success:
   - npx codecov
-  - npx semantic-release pre && npm publish && npx semantic-release post
+# uncomment this when we're ready to auto-release
+#  - npx semantic-release pre && npm publish && npx semantic-release post
 branches:
   only:
     - master

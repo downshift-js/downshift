@@ -1,5 +1,5 @@
 {
-  "name": "react-completely",
+  "name": "react-autocompletely",
   "version": "0.0.0-semantically-released",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/index.js",
@@ -56,10 +56,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kentcdodds/react-completely.git"
+    "url": "https://github.com/paypal/react-autocompletely.git"
   },
   "bugs": {
-    "url": "https://github.com/kentcdodds/react-completely/issues"
+    "url": "https://github.com/paypal/react-autocompletely/issues"
   },
-  "homepage": "https://github.com/kentcdodds/react-completely#readme"
+  "homepage": "https://github.com/paypal/react-autocompletely#readme"
 }
