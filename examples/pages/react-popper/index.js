@@ -54,15 +54,18 @@ class ReactPopperAutocomplete extends PureComponent {
             </Target>
             <Autocomplete.Menu>
               {({inputValue, selectedItem, highlightedIndex}) =>
-                (<Popper placement={this.state.selected} style={{backgroundColor: 'orange'}}>
+                (<Popper
+                  placement={this.state.selected}
+                  style={{backgroundColor: 'orange'}}
+                >
                   {this.props.items
                     .filter(
                       i =>
                         !inputValue ||
                         i.toLowerCase().includes(inputValue.toLowerCase()),
                     )
-                    .map((item, index) => (
-                      <Autocomplete.Item
+                    .map((item, index) =>
+                      (<Autocomplete.Item
                         item={item}
                         index={index}
                         key={item}

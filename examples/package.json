@@ -34,5 +34,9 @@
     "react-instantsearch": "^4.0.9",
     "react-popper": "^0.7.2",
     "rimraf": "^2.6.1"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "throttle-debounce": "^1.0.1"
   }
 }
