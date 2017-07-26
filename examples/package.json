@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cleanup": "rimraf other/react-autocompletely && cpy \"./**/*.js\" ../examples/other/react-autocompletely --cwd=\"../src\" --parents",
+    "cleanup": "rimraf other/react-autocompletely node_modules/.cache && cpy \"./**/*.js\" ../examples/other/react-autocompletely --cwd=\"../src\" --parents",
     "prestart": "npm run cleanup -s",
     "start": "next",
     "prebuild": "npm run cleanup -s",
