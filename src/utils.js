@@ -71,15 +71,17 @@ function getScrollParent(node) {
  */
 function scrollIntoView(node) {
   const scrollParent = getScrollParent(node)
-  const nodeTop = node.offsetTop - scrollParent.offsetTop
-  if (nodeTop <= scrollParent.scrollTop) {
-    scrollParent.scrollTop = nodeTop
-  } else if (
-    nodeTop + node.offsetHeight >=
-    scrollParent.scrollTop + scrollParent.offsetHeight
-  ) {
-    scrollParent.scrollTop =
-      nodeTop + node.offsetHeight - scrollParent.offsetHeight
+  if (scrollParent) {
+    const nodeTop = node.offsetTop - scrollParent.offsetTop
+    if (scrollParent.scrollTop >= nodeTop) {
+      scrollParent.scrollTop = nodeTop
+    } else if (
+      nodeTop + node.offsetHeight >=
+      scrollParent.scrollTop + scrollParent.offsetHeight
+    ) {
+      scrollParent.scrollTop =
+        nodeTop + node.offsetHeight - scrollParent.offsetHeight
+    }
   }
 }
 
