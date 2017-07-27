@@ -108,14 +108,14 @@ class Input extends Component {
   render() {
     // eslint-disable-next-line no-unused-vars
     const {defaultValue, getValue, ...rest} = this.props
-    const {inputValue, selectedItem} = this.autocomplete.state
+    const {inputValue, selectedItem, isOpen} = this.autocomplete.state
     const selectedItemValue = this.getValue(selectedItem)
     return (
       <input
         role="combobox"
         aria-autocomplete="list"
+        aria-expanded={isOpen}
         autoComplete="off"
-        aria-expanded={this.autocomplete.state.isOpen}
         value={(inputValue === null ? selectedItemValue : inputValue) || ''}
         {...rest}
         onChange={this.handleChange}
