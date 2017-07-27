@@ -28,7 +28,7 @@ function Examples() {
 
 const Item = glamorous(Autocomplete.Item, {
   rootEl: 'div',
-  forwardProps: ['index', 'item'],
+  forwardProps: ['index', 'value'],
 })(
   {
     position: 'relative',
