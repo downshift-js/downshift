@@ -61,9 +61,13 @@ class Autocomplete extends Component {
     if (!this.state.menu) {
       return
     }
-    this.open(() => {
-      this.state.menu.changeHighlighedIndex(amount)
-    })
+    if (this.state.isOpen) {
+      this.open(() => {
+        this.state.menu.changeHighlighedIndex(amount)
+      })
+    } else {
+      this.highlightIndex(this.state.menu.props.defaultHighlightedIndex)
+    }
   }
 
   highlightIndex = index => {
