@@ -34,6 +34,11 @@ based on ideas from the talk ["Compound Components"][compound-components-talk]
 which effectively gives you maximum flexibility with a minimal API because you
 are responsible for the rendering of the autocomplete components.
 
+This differs from other solutions which render things for their use case and
+then expose many options to allow for extensibility causing an API that is less
+easy to use and less flexible as well as making the implementation more
+complicated and harder to contribute to.
+
 ## Installation
 
 **This component is currently under development and is not yet released...**
@@ -155,8 +160,16 @@ item.
 
 ## Examples
 
-Please see the `examples` directory for examples of how to compose these
-components together.
+Examples exist on [codesandbox.io][examples]:
+
+- [react-autocompletely Apollo example](https://codesandbox.io/s/j2omZpK3W)
+
+If you would like to add an example, follow these steps:
+
+1. Fork [this codesandbox](http://kcd.im/rac-example)
+2. Update the code for your example (add some form of documentation to explain what it is)
+3. Update the title and description
+4. Add the tag: `react-autocompletely:example`
 
 ## Inspiration
 
@@ -224,3 +237,4 @@ MIT
 [compound-components-talk]: https://www.youtube.com/watch?v=hEGg-3pIHlE
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
+[examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=react-autocompletely%3Aexample&page=1
