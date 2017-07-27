@@ -112,6 +112,10 @@ class Input extends Component {
     const selectedItemValue = this.getValue(selectedItem)
     return (
       <input
+        role="combobox"
+        aria-autocomplete="list"
+        autoComplete="off"
+        aria-expanded={this.autocomplete.state.isOpen}
         value={(inputValue === null ? selectedItemValue : inputValue) || ''}
         {...rest}
         onChange={this.handleChange}
