@@ -49,7 +49,7 @@ class Examples extends Component {
 
 const Item = glamorous(Autocomplete.Item, {
   rootEl: 'div',
-  forwardProps: ['index', 'item', 'key'],
+  forwardProps: ['index', 'value', 'key'],
 })(
   {
     cursor: 'pointer',
