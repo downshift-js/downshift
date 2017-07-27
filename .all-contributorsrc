@@ -82,6 +82,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "salmanmanekia",
+      "name": "Muhammad Salman",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/841955?v=4",
+      "profile": "https://github.com/salmanmanekia",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
