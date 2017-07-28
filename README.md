@@ -122,7 +122,7 @@ This is called with an object with the properties listed below:
 
 ### Autocomplete.Button
 
-This component renders a `button` tag and allows you to toggle the `Menu` component. It will also apply all of the proper ARIA attributes.
+This component renders a `button` tag and allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
 
 ### Autocomplete.Menu
 
