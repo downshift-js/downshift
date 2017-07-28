@@ -25,7 +25,7 @@ class Input extends Component {
     this.autocomplete.input = this
     this.handleChange = compose(this.handleChange, this.props.onChange)
     this.handleKeyDown = compose(this.handleKeyDown, this.props.onKeyDown)
-    this.handleBlur = compose(this.handleBlur, this.props.onBlur)
+    this.handleBlur = compose(this.props.onBlur)
   }
 
   keyDownHandlers = {
@@ -65,12 +65,6 @@ class Input extends Component {
 
   handleChange = event => {
     this.updateInputValue(event.target.value)
-  }
-
-  handleBlur = () => {
-    if (!this.autocomplete.isMouseDown) {
-      this.autocomplete.reset()
-    }
   }
 
   reset = () => {
