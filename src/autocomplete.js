@@ -159,7 +159,6 @@ class Autocomplete extends Component {
       }),
       () => {
         this.state.menu && this.state.menu.reset()
-        this.input && this.input.reset()
       },
     )
   }
