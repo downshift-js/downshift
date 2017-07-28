@@ -18,6 +18,7 @@ class Menu extends Component {
   static propTypes = {
     ref: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
+    getA11yStatusMessage: PropTypes.func,
     children: PropTypes.func.isRequired,
   }
 
@@ -118,6 +119,11 @@ class Menu extends Component {
     this.autocomplete.emitter.off('menu:open', this.setDefaultHighlightedIndex)
   }
 
+  test({resultCount, highlightedItem, getInputValue}) {
+    console.log(resultCount, 'test3')
+    console.log(getInputValue(highlightedItem), 'test4')
+  }
+
   render() {
     if (!this.autocomplete.state.isOpen) {
       return null
@@ -125,7 +131,12 @@ class Menu extends Component {
     const {inputValue} = this.autocomplete.state
     const {highlightedIndex} = this.state
     // eslint-disable-next-line no-unused-vars
-    const {defaultHighlightedIndex, children, ...rest} = this.props
+    const {
+      defaultHighlightedIndex,
+      getA11yStatusMessage,
+      children,
+      ...rest
+    } = this.props
     return (
       <div {...rest} ref={this.ref}>
         <div>
@@ -134,6 +145,7 @@ class Menu extends Component {
         <MenuStatus
           highlightedIndex={highlightedIndex}
           inputValue={inputValue}
+          getA11yStatusMessage={this.props.getA11yStatusMessage}
         />
       </div>
     )
