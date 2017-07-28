@@ -97,7 +97,6 @@ export {
   cbToCb,
   compose,
   debounce,
-  moveCursorToTheEnd,
   scrollIntoView,
   selectAllText,
   selectRangeOfText,
