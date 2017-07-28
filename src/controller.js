@@ -17,9 +17,7 @@ class Controller extends Component {
   }
 
   render() {
-    return this.props.children(
-      this.autocomplete.getControllerStateAndHelpers(),
-    )
+    return this.props.children(this.autocomplete.getControllerStateAndHelpers())
   }
 }
 

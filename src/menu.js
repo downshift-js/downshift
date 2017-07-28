@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import mitt from 'mitt'
 
 import MenuStatus from './menu-status'
 import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
-import {cbToCb, compose, scrollIntoView} from './utils'
+import {cbToCb, scrollIntoView} from './utils'
 
 class Menu extends Component {
   static contextTypes = {
@@ -16,7 +16,6 @@ class Menu extends Component {
   }
 
   static propTypes = {
-    ref: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
     getA11yStatusMessage: PropTypes.func,
     children: PropTypes.func.isRequired,
@@ -33,12 +32,10 @@ class Menu extends Component {
   constructor(props, context) {
     super(props, context)
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
-    this.ref = compose(node => (this.node = node), this.props.ref)
   }
 
   state = Menu.initialState
   items = []
-  emitter = mitt()
 
   reset = cb => {
     this.setState(Menu.initialState, cbToCb(cb))
@@ -57,10 +54,7 @@ class Menu extends Component {
     } else if (newIndex > itemsLastIndex) {
       newIndex = 0
     }
-    this.setState({
-      highlightedIndex: newIndex,
-    })
-    this.emitter.emit('changeHighlighedIndex', newIndex)
+    this.setState({highlightedIndex: newIndex})
   }
 
   setHighlightedIndex = highlightedIndex => {
@@ -101,6 +95,30 @@ class Menu extends Component {
     }
   }
 
+  createStatus() {
+    this._statusNode = document.createElement('div')
+    document.body.appendChild(this._statusNode)
+  }
+
+  removeStatus() {
+    ReactDOM.unmountComponentAtNode(this._statusNode)
+    document.body.removeChild(this._statusNode)
+  }
+
+  renderStatus = () => {
+    ReactDOM.render(
+      <MenuStatus
+        getA11yStatusMessage={this.props.getA11yStatusMessage}
+        getInputValue={this.autocomplete.getInputValue}
+        getItemFromIndex={this.getItemFromIndex}
+        highlightedIndex={this.state.highlightedIndex}
+        inputValue={this.autocomplete.state.inputValue}
+        resultCount={this.items.length}
+      />,
+      this._statusNode,
+    )
+  }
+
   getChildContext() {
     return {[MENU_CONTEXT]: this}
   }
@@ -108,42 +126,23 @@ class Menu extends Component {
   componentDidMount() {
     this.autocomplete.setMenu(this)
     this.autocomplete.emitter.on('menu:open', this.setDefaultHighlightedIndex)
+    this.createStatus()
+    this.renderStatus()
   }
 
   componentDidUpdate() {
     this.maybeScrollToHighlightedElement()
+    this.renderStatus()
   }
 
   componentWillUnmount() {
     this.autocomplete.removeMenu(this)
     this.autocomplete.emitter.off('menu:open', this.setDefaultHighlightedIndex)
+    this.removeStatus()
   }
 
   render() {
-    /* eslint no-unused-vars: 0 */
-    if (!this.autocomplete.state.isOpen) {
-      return null
-    }
-    const {inputValue} = this.autocomplete.state
-    const {highlightedIndex} = this.state
-    const {
-      defaultHighlightedIndex,
-      getA11yStatusMessage,
-      children,
-      ...rest
-    } = this.props
-    return (
-      <div {...rest} ref={this.ref}>
-        <div>
-          {children(this.autocomplete.getControllerStateAndHelpers())}
-        </div>
-        <MenuStatus
-          highlightedIndex={highlightedIndex}
-          inputValue={inputValue}
-          getA11yStatusMessage={getA11yStatusMessage}
-        />
-      </div>
-    )
+    return this.props.children(this.autocomplete.getControllerStateAndHelpers())
   }
 }
 

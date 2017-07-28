@@ -1,14 +1,9 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {MENU_CONTEXT} from './constants'
 import {debounce} from './utils'
 
 class MenuStatus extends Component {
-  static contextTypes = {
-    [MENU_CONTEXT]: PropTypes.object.isRequired,
-  }
-
   static defaultProps = {
     getA11yStatusMessage({resultCount, highlightedItem, getInputValue}) {
       if (!resultCount) {
@@ -23,14 +18,16 @@ class MenuStatus extends Component {
   }
 
   static propTypes = {
+    getA11yStatusMessage: PropTypes.func,
+    getInputValue: PropTypes.func,
+    getItemFromIndex: PropTypes.func,
     highlightedIndex: PropTypes.number,
     inputValue: PropTypes.string,
-    getA11yStatusMessage: PropTypes.func,
+    resultCount: PropTypes.number,
   }
 
   constructor(props, context) {
     super(props, context)
-    this.menu = this.context[MENU_CONTEXT]
     this.updateStatus = debounce(this.updateStatus, 200)
   }
   // have to do this because updateStatus is debounced
@@ -41,13 +38,8 @@ class MenuStatus extends Component {
     if (!this._isMounted) {
       return
     }
-    const {
-      items = [],
-      getItemFromIndex,
-      autocomplete: {getInputValue},
-    } = this.menu
+    const {resultCount, getItemFromIndex, getInputValue} = this.props
     const {statuses} = this.state
-    const resultCount = items.length
     const itemInstance = getItemFromIndex(highlightedIndex) || {
       props: {},
     }
@@ -77,13 +69,11 @@ class MenuStatus extends Component {
 
   componentDidMount() {
     this._isMounted = true
-    this.menu.emitter.on('changeHighlighedIndex', this.updateStatus)
     this.updateStatus()
   }
 
   componentWillUnmount() {
     this._isMounted = false
-    this.menu.emitter.off('changeHighlighedIndex', this.updateStatus)
   }
 
   renderStatus = (status, index) => {

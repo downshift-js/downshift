@@ -109,21 +109,27 @@ function BasicAutocomplete({items, onChange}) {
     <Autocomplete onChange={onChange}>
       <Input placeholder="Favorite color ?" />
       <Autocomplete.Menu style={{border: '1px solid rgba(34,36,38,.15)'}}>
-        {({inputValue, selectedItem, highlightedIndex}) =>
-          // prettier is doing weeeeird things to this
-          // prettier-ignore
-          items.filter(i => !inputValue || i.toLowerCase().includes(inputValue.toLowerCase()))
-            .map((item, index) => (
-              <Item
-                value={item}
-                index={index}
-                key={item}
-                highlightedIndex={highlightedIndex}
-                selectedItem={selectedItem}
-              >
-                {item}
-              </Item>
-            ))}
+        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
+          isOpen &&
+          <div>
+            {items
+              .filter(
+                i =>
+                  !inputValue ||
+                  i.toLowerCase().includes(inputValue.toLowerCase()),
+              )
+              .map((item, index) =>
+                (<Item
+                  value={item}
+                  index={index}
+                  key={item}
+                  highlightedIndex={highlightedIndex}
+                  selectedItem={selectedItem}
+                >
+                  {item}
+                </Item>),
+              )}
+          </div>}
       </Autocomplete.Menu>
     </Autocomplete>
   )
