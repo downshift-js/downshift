@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
 import {AUTOCOMPLETE_CONTEXT} from './constants'
-import {compose, moveCursorToTheEnd} from './utils'
+import {compose} from './utils'
 
 class Input extends Component {
   static contextTypes = {
@@ -63,10 +63,6 @@ class Input extends Component {
 
   handleChange = event => {
     this.updateInputValue(event.target.value)
-  }
-
-  reset = () => {
-    moveCursorToTheEnd(this._inputNode)
   }
 
   focusInput = () => {

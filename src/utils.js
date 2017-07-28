@@ -28,16 +28,6 @@ function selectAllText(node) {
 }
 
 /**
- * This moves the cursor position to the end of the text in the input node in a way
- * that works on iOS
- * @param {HTMLInputElement} node - the input to set the cursor position in
- */
-function moveCursorToTheEnd(node) {
-  const {length} = node.value
-  node.setSelectionRange(length, length)
-}
-
-/**
  * Accepts a parameter and returns it if it's a function
  * or a noop function if it's not. This allows us to
  * accept a callback, but not worry about it if it's not
@@ -107,7 +97,6 @@ export {
   cbToCb,
   compose,
   debounce,
-  moveCursorToTheEnd,
   scrollIntoView,
   selectAllText,
   selectRangeOfText,
