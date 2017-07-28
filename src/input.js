@@ -12,7 +12,6 @@ class Input extends Component {
   static propTypes = {
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
-    onBlur: PropTypes.func,
     getValue: PropTypes.func,
     defaultValue: PropTypes.string,
   }
@@ -25,7 +24,6 @@ class Input extends Component {
     this.autocomplete.input = this
     this.handleChange = compose(this.handleChange, this.props.onChange)
     this.handleKeyDown = compose(this.handleKeyDown, this.props.onKeyDown)
-    this.handleBlur = compose(this.handleBlur, this.props.onBlur)
   }
 
   keyDownHandlers = {
@@ -65,12 +63,6 @@ class Input extends Component {
 
   handleChange = event => {
     this.updateInputValue(event.target.value)
-  }
-
-  handleBlur = () => {
-    if (!this.autocomplete.isMouseDown) {
-      this.autocomplete.reset()
-    }
   }
 
   reset = () => {
@@ -120,7 +112,6 @@ class Input extends Component {
         {...rest}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
-        onBlur={this.handleBlur}
         ref={node => (this._inputNode = node)}
       />
     )
