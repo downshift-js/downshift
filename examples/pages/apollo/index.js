@@ -35,9 +35,9 @@ function ApolloAutocomplete() {
     <Autocomplete onChange={item => alert(item)}>
       <Autocomplete.Input />
       <Autocomplete.Menu>
-        {({inputValue, selectedItem, highlightedIndex}) => (
+        {({inputValue, selectedItem, highlightedIndex, isOpen}) => (
           <ApolloAutocompleteMenuWithData
-            {...{inputValue, selectedItem, highlightedIndex}}
+            {...{inputValue, selectedItem, highlightedIndex, isOpen}}
           />
         )}
       </Autocomplete.Menu>
@@ -49,7 +49,11 @@ function ApolloAutocompleteMenu({
   data: {allColors, loading},
   selectedItem,
   highlightedIndex,
+  isOpen,
 }) {
+  if (!isOpen) {
+    return null
+  }
   if (loading) {
     return <div>Loading...</div>
   }

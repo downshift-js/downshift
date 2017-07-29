@@ -53,8 +53,9 @@ class ReactPopperAutocomplete extends PureComponent {
               <Autocomplete.Input />
             </Target>
             <Autocomplete.Menu>
-              {({inputValue, selectedItem, highlightedIndex}) =>
-                (<Popper
+              {({inputValue, selectedItem, highlightedIndex, isOpen}) =>
+                isOpen &&
+                <Popper
                   placement={this.state.selected}
                   style={{backgroundColor: 'orange'}}
                 >
@@ -80,7 +81,7 @@ class ReactPopperAutocomplete extends PureComponent {
                         {item}
                       </Autocomplete.Item>),
                     )}
-                </Popper>)}
+                </Popper>}
             </Autocomplete.Menu>
           </Autocomplete>
         </Manager>
