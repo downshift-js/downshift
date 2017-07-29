@@ -8,19 +8,15 @@ function BasicAutocomplete() {
     <Autocomplete onChange={() => {}}>
       <Autocomplete.Input />
       <Autocomplete.Menu>
-        {() =>
-          // prettier is doing weeeeird things to this
-          // prettier-ignore
-          items
-            .map((item, index) => (
-              <Autocomplete.Item
-                value={item}
-                index={index}
-                key={item}
-              >
+        {({isOpen}) =>
+          isOpen &&
+          <div>
+            {items.map((item, index) =>
+              (<Autocomplete.Item value={item} index={index} key={item}>
                 {item}
-              </Autocomplete.Item>
-            ))}
+              </Autocomplete.Item>),
+            )}
+          </div>}
       </Autocomplete.Menu>
     </Autocomplete>
   )
