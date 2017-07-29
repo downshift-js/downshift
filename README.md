@@ -122,9 +122,9 @@ This is called with an object with the properties listed below:
 
 ### Autocomplete.Menu
 
-This component allows you to render the items based on the user input. It
-renders a `div` with another `div` for your items and a `div` for the menu
-status (for accessibility purposes)
+This component allows you to render the items based on the user input. It must
+return a single child. It will also render a `div` to the end of the
+document for the menu status (for accessibility purposes).
 
 #### defaultHighlightedIndex
 
@@ -136,7 +136,7 @@ This is the initial index to highlight when the menu first opens.
 
 > `function({ resultCount, highlightedItem, getInputValue})` | default messages provided in English
 
-This function is passed by `Menu` as props to the `MenuStatus` component nested within and allows you to create your own assertive ARIA statuses. 
+This function is passed by `Menu` as props to the `MenuStatus` component nested within and allows you to create your own assertive ARIA statuses.
 
 A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getInputValue(highlightedItem)` and display the value of the `highlightedItem`.  
 
