@@ -101,33 +101,55 @@ class Menu extends Component {
   }
 
   removeStatus() {
-    ReactDOM.unmountComponentAtNode(this._statusNode)
-    document.body.removeChild(this._statusNode)
+    if (this._statusNode) {
+      ReactDOM.unmountComponentAtNode(this._statusNode)
+      document.body.removeChild(this._statusNode)
+      this._statusNode = null
+    }
   }
 
   renderStatus = () => {
-    ReactDOM.render(
-      <MenuStatus
-        getA11yStatusMessage={this.props.getA11yStatusMessage}
-        getInputValue={this.autocomplete.getInputValue}
-        getItemFromIndex={this.getItemFromIndex}
-        highlightedIndex={this.state.highlightedIndex}
-        inputValue={this.autocomplete.state.inputValue}
-        resultCount={this.items.length}
-      />,
-      this._statusNode,
-    )
+    if (this._statusNode) {
+      ReactDOM.render(
+        <MenuStatus
+          getA11yStatusMessage={this.props.getA11yStatusMessage}
+          getInputValue={this.autocomplete.getInputValue}
+          getItemFromIndex={this.getItemFromIndex}
+          highlightedIndex={this.state.highlightedIndex}
+          inputValue={this.autocomplete.state.inputValue}
+          resultCount={this.items.length}
+        />,
+        this._statusNode,
+      )
+    }
   }
 
   getChildContext() {
     return {[MENU_CONTEXT]: this}
   }
 
-  componentDidMount() {
-    this.autocomplete.setMenu(this)
-    this.autocomplete.emitter.on('menu:open', this.setDefaultHighlightedIndex)
+  handleMenuOpen = () => {
+    const lastActiveElement = document.activeElement
+    this.returnFocus = () => {
+      // only return focus if a non-focusable item was selected when closing
+      if (document.activeElement === document.body) {
+        lastActiveElement.focus()
+      }
+    }
     this.createStatus()
     this.renderStatus()
+    this.setDefaultHighlightedIndex()
+  }
+
+  handleMenuClose = () => {
+    this.removeStatus()
+    this.returnFocus()
+  }
+
+  componentDidMount() {
+    this.autocomplete.setMenu(this)
+    this.autocomplete.emitter.on('menu:open', this.handleMenuOpen)
+    this.autocomplete.emitter.on('menu:close', this.handleMenuClose)
   }
 
   componentDidUpdate() {
@@ -137,8 +159,8 @@ class Menu extends Component {
 
   componentWillUnmount() {
     this.autocomplete.removeMenu(this)
-    this.autocomplete.emitter.off('menu:open', this.setDefaultHighlightedIndex)
-    this.removeStatus()
+    this.autocomplete.emitter.off('menu:open', this.handleMenuOpen)
+    this.autocomplete.emitter.off('menu:close', this.handleMenuClose)
   }
 
   render() {

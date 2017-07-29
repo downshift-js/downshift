@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import mitt from 'mitt'
 
+import Button from './button'
 import Controller from './controller'
 import Input from './input'
 import Item from './item'
@@ -10,10 +11,11 @@ import {AUTOCOMPLETE_CONTEXT} from './constants'
 import {cbToCb, compose} from './utils'
 
 class Autocomplete extends Component {
-  static Input = Input
-  static Menu = Menu
-  static Item = Item
+  static Button = Button
   static Controller = Controller
+  static Input = Input
+  static Item = Item
+  static Menu = Menu
   static childContextTypes = {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
   }
@@ -78,6 +80,7 @@ class Autocomplete extends Component {
   }
 
   clearSelection = () => {
+    this.emitter.emit('menu:close')
     this.setState(
       {
         selectedItem: null,
@@ -150,6 +153,7 @@ class Autocomplete extends Component {
   }
 
   reset = () => {
+    this.emitter.emit('menu:close')
     this.setState(
       ({selectedItem}) => ({
         isOpen: false,
@@ -178,6 +182,8 @@ class Autocomplete extends Component {
       }
       if (nextIsOpen) {
         this.emitter.emit('menu:open')
+      } else {
+        this.emitter.emit('menu:close')
       }
       return {isOpen: nextIsOpen}
     }, cbToCb(cb))

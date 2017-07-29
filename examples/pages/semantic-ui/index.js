@@ -120,7 +120,7 @@ const Menu = glamorous.div({
   borderStyle: 'solid',
 })
 
-const ControllerButton = glamorous.button({
+const ControllerButton = glamorous(Autocomplete.Button)({
   backgroundColor: 'transparent',
   border: 'none',
   position: 'absolute',
@@ -159,10 +159,7 @@ function SemanticUIAutocomplete() {
                 >
                 <XIcon />
               </ControllerButton>
-              : <ControllerButton
-                onClick={toggleMenu}
-                aria-label={isOpen ? 'close menu' : 'open menu'}
-                >
+              : <ControllerButton>
                 <ArrowIcon isOpen={isOpen} />
               </ControllerButton>}
           </Div>)}
