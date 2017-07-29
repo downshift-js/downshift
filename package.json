@@ -12,7 +12,9 @@
     "test": "nps test",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -21,6 +23,7 @@
   },
   "peerDependencies": {
     "react": ">=15",
+    "react-dom": ">=15",
     "prop-types": ">=15"
   },
   "devDependencies": {

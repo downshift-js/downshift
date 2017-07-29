@@ -6,14 +6,12 @@ import Controller from './controller'
 import Input from './input'
 import Item from './item'
 import Menu from './menu'
-import MenuStatus from './menu-status'
 import {AUTOCOMPLETE_CONTEXT} from './constants'
 import {cbToCb, compose} from './utils'
 
 class Autocomplete extends Component {
   static Input = Input
   static Menu = Menu
-  static MenuStatus = MenuStatus
   static Item = Item
   static Controller = Controller
   static childContextTypes = {

@@ -10,20 +10,24 @@ function RawAutoComplete({refine, hits}) {
     <Autocomplete onChange={item => alert(JSON.stringify(item))}>
       <Autocomplete.Input onChange={e => refine(e.target.value)} />
       <Autocomplete.Menu>
-        {({selectedItem, highlightedIndex}) =>
-          hits.map((item, index) =>
-            (<Autocomplete.Item
-              value={item}
-              index={index}
-              key={item.objectID}
-              style={{
-                backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-                fontWeight: selectedItem === item ? 'bold' : 'normal',
-              }}
-            >
-              <Highlight attributeName="name" hit={item} tagName="mark" />
-            </Autocomplete.Item>),
-          )}
+        {({selectedItem, highlightedIndex, isOpen}) =>
+          isOpen &&
+          <div>
+            {hits.map((item, index) =>
+              (<Autocomplete.Item
+                value={item}
+                index={index}
+                key={item.objectID}
+                style={{
+                  backgroundColor:
+                    highlightedIndex === index ? 'gray' : 'white',
+                  fontWeight: selectedItem === item ? 'bold' : 'normal',
+                }}
+              >
+                <Highlight attributeName="name" hit={item} tagName="mark" />
+              </Autocomplete.Item>),
+            )}
+          </div>}
       </Autocomplete.Menu>
     </Autocomplete>
   )
