@@ -10,16 +10,13 @@ class Button extends Component {
   }
 
   static propTypes = {
-    disabled: PropTypes.bool,
     onKeyDown: PropTypes.func,
-    onClick: PropTypes.func,
   }
 
   constructor(props, context) {
     super(props, context)
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
     this.handleKeyDown = compose(this.handleKeyDown, props.onKeyDown)
-    this.handleClick = compose(this.handleClick, props.onClick)
   }
 
   keyDownHandlers = {
@@ -66,23 +63,17 @@ class Button extends Component {
     this.autocomplete.toggleMenu()
   }
 
-  focusButton = () => {
-    this._buttonNode.focus()
-  }
-
   render() {
-    const {disabled, ...rest} = this.props
     const {isOpen} = this.autocomplete.state
     return (
       <button
         role="button"
-        tabIndex={disabled ? '' : '0'}
-        aria-haspopup={true}
+        aria-label={isOpen ? 'close menu' : 'open menu'}
         aria-expanded={isOpen}
-        aria-disabled={disabled}
-        {...rest}
-        onKeyDown={this.handleKeyDown}
+        aria-haspopup={true}
         onClick={this.handleClick}
+        {...this.props}
+        onKeyDown={this.handleKeyDown}
         ref={node => (this._buttonNode = node)}
       />
     )

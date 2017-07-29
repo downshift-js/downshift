@@ -80,6 +80,7 @@ class Autocomplete extends Component {
   }
 
   clearSelection = () => {
+    this.emitter.emit('menu:close')
     this.setState(
       {
         selectedItem: null,
@@ -152,6 +153,7 @@ class Autocomplete extends Component {
   }
 
   reset = () => {
+    this.emitter.emit('menu:close')
     this.setState(
       ({selectedItem}) => ({
         isOpen: false,
@@ -180,6 +182,8 @@ class Autocomplete extends Component {
       }
       if (nextIsOpen) {
         this.emitter.emit('menu:open')
+      } else {
+        this.emitter.emit('menu:close')
       }
       return {isOpen: nextIsOpen}
     }, cbToCb(cb))
