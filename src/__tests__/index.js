@@ -7,7 +7,7 @@ function BasicAutocomplete() {
   return (
     <Autocomplete onChange={() => {}}>
       <Autocomplete.Input />
-      <Autocomplete.Menu>
+      <Autocomplete.Controller>
         {({isOpen}) =>
           isOpen &&
           <div>
@@ -17,7 +17,7 @@ function BasicAutocomplete() {
               </Autocomplete.Item>),
             )}
           </div>}
-      </Autocomplete.Menu>
+      </Autocomplete.Controller>
     </Autocomplete>
   )
 }

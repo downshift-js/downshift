@@ -60,7 +60,46 @@ npm install --save react-autocompletely
 ```jsx
 import Autocomplete from 'react-autocompletely'
 
-// use components together here.
+function BasicAutocomplete({items, onChange}) {
+  return (
+    <Autocomplete onChange={onChange}>
+      <Input placeholder="Favorite color ?" />
+      <Autocomplete.Controller>
+        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
+          isOpen &&
+          <div style={{border: '1px solid #ccc'}}>
+            {items
+              .filter(
+                i =>
+                  !inputValue ||
+                  i.toLowerCase().includes(inputValue.toLowerCase()),
+              )
+              .map((item, index) =>
+                (<Item
+                  value={item}
+                  index={index}
+                  key={item}
+                  highlightedIndex={highlightedIndex}
+                  selectedItem={selectedItem}
+                >
+                  {item}
+                </Item>),
+              )}
+          </div>
+        }
+      </Autocomplete.Controller>
+    </Autocomplete>
+  )
+}
+
+function App() {
+  return (
+    <BasicAutocomplete
+      items={['apple', 'orange', 'carrot']}
+      onChange={items => console.log(item)}
+    />
+  )
+}
 ```
 
 Available components and relevant props:
@@ -69,6 +108,20 @@ Available components and relevant props:
 
 This is the main component. It renders a `div` and forwards props. Wrap
 everything in this.
+
+#### defaultHighlightedIndex
+
+> `number`/`null` | defaults to `null`
+
+This is the initial index to highlight when the autocomplete first opens.
+
+#### getA11yStatusMessage
+
+> `function({ resultCount, highlightedItem, getInputValue})` | default messages provided in English
+
+This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
+
+A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getInputValue(highlightedItem)` and display the value of the `highlightedItem`.
 
 #### onChange
 
@@ -123,33 +176,6 @@ This is called with an object with the properties listed below:
 ### Autocomplete.Button
 
 This component renders a `button` tag and allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
-
-### Autocomplete.Menu
-
-This component allows you to render the items based on the user input. It must
-return a single child. It will also render a `div` to the end of the
-document for the menu status (for accessibility purposes).
-
-#### defaultHighlightedIndex
-
-> `number`/`null` | defaults to `null`
-
-This is the initial index to highlight when the menu first opens.
-
-#### getA11yStatusMessage
-
-> `function({ resultCount, highlightedItem, getInputValue})` | default messages provided in English
-
-This function is passed by `Menu` as props to the `MenuStatus` component nested within and allows you to create your own assertive ARIA statuses.
-
-A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getInputValue(highlightedItem)` and display the value of the `highlightedItem`.  
-
-#### children
-
-> `function({})` | *required*
-
-This is called with the same things that the `children` prop is called with for
-`Autocomplete.Controller`
 
 ### Autocomplete.Item
 

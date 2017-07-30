@@ -18,12 +18,8 @@
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
-  "dependencies": {
-    "mitt": "^1.1.2"
-  },
   "peerDependencies": {
     "react": ">=15",
-    "react-dom": ">=15",
     "prop-types": ">=15"
   },
   "devDependencies": {

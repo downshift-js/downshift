@@ -1,7 +1,7 @@
 import {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {AUTOCOMPLETE_CONTEXT} from './constants'
+import AUTOCOMPLETE_CONTEXT from './context'
 
 class Controller extends Component {
   static contextTypes = {

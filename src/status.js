@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import {debounce} from './utils'
 
-class MenuStatus extends Component {
+class Status extends Component {
   static defaultProps = {
     getA11yStatusMessage({resultCount, highlightedItem, getInputValue}) {
       if (!resultCount) {
@@ -112,4 +112,4 @@ class MenuStatus extends Component {
   }
 }
 
-export default MenuStatus
+export default Status

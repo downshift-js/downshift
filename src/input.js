@@ -1,31 +1,33 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
+import AUTOCOMPLETE_CONTEXT from './context'
 import {compose} from './utils'
 
 class Input extends Component {
   static contextTypes = {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
-    [MENU_CONTEXT]: PropTypes.object,
   }
+
   static ignoreKeys = ['Shift', 'Meta', 'Alt', 'Control']
+
   static propTypes = {
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
     getValue: PropTypes.func,
     defaultValue: PropTypes.string,
   }
+
   static defaultProps = {
     getValue: i => String(i),
   }
+
   constructor(props, context) {
     super(props, context)
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
-    this.autoFocus = typeof this.context[MENU_CONTEXT] !== 'undefined'
     this.autocomplete.input = this
-    this.handleChange = compose(this.handleChange, this.props.onChange)
-    this.handleKeyDown = compose(this.handleKeyDown, this.props.onKeyDown)
+    this.handleChange = compose(this.handleChange, props.onChange)
+    this.handleKeyDown = compose(this.handleKeyDown, props.onKeyDown)
   }
 
   keyDownHandlers = {
@@ -56,10 +58,9 @@ class Input extends Component {
     if (event.key && this.keyDownHandlers[event.key]) {
       this.keyDownHandlers[event.key].call(this, event)
     } else if (!Input.ignoreKeys.includes(event.key)) {
-      this.autocomplete.open()
-      this.autocomplete.highlightIndex(
-        this.autocomplete.state.menu.props.defaultHighlightedIndex,
-      )
+      this.autocomplete.openMenu(() => {
+        this.autocomplete.highlightIndex()
+      })
     }
   }
 
@@ -107,7 +108,6 @@ class Input extends Component {
         aria-expanded={isOpen}
         autoComplete="off"
         value={(inputValue === null ? selectedItemValue : inputValue) || ''}
-        autoFocus={this.autoFocus}
         {...rest}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}

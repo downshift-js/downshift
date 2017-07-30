@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {AUTOCOMPLETE_CONTEXT} from './constants'
+import AUTOCOMPLETE_CONTEXT from './context'
 import {compose} from './utils'
 
 class Button extends Component {
@@ -37,7 +37,7 @@ class Button extends Component {
       if (this.autocomplete.state.isOpen) {
         this.autocomplete.selectHighlightedItem()
       } else {
-        this.autocomplete.open()
+        this.autocomplete.openMenu()
       }
     },
 

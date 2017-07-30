@@ -1,44 +1,46 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
+import AUTOCOMPLETE_CONTEXT from './context'
 import {compose} from './utils'
 
 class Item extends Component {
   static contextTypes = {
-    [MENU_CONTEXT]: PropTypes.object.isRequired,
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
   }
+
   static propTypes = {
+    index: PropTypes.number.isRequired,
     onMouseEnter: PropTypes.func,
     onClick: PropTypes.func,
     ref: PropTypes.func,
-    index: PropTypes.number.isRequired,
     value: PropTypes.any.isRequired,
   }
+
   constructor(props, context) {
     super(props, context)
-    this.menu = this.context[MENU_CONTEXT]
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
-    this.handleMouseEnter = compose(
-      this.handleMouseEnter,
-      this.props.onMouseEnter,
-    )
-    this.handleClick = compose(this.handleClick, this.props.onClick)
-    this.ref = compose(node => (this.node = node), this.props.ref)
+    this.handleClick = compose(this.handleClick, props.onClick)
+    this.handleMouseEnter = compose(this.handleMouseEnter, props.onMouseEnter)
+    this.ref = compose(node => (this.node = node), props.ref)
   }
+
   handleMouseEnter = () => {
-    this.menu.setHighlightedIndex(this.props.index)
+    this.autocomplete.setHighlightedIndex(this.props.index)
   }
+
   handleClick = () => {
     this.autocomplete.selectItemAtIndex(this.props.index)
   }
+
   componentWillMount() {
-    this.menu.addItemInstance(this)
+    this.autocomplete.addItemInstance(this)
   }
+
   componentWillUnmount() {
-    this.menu.removeItemInstance(this)
+    this.autocomplete.removeItemInstance(this)
   }
+
   render() {
     // eslint-disable-next-line no-unused-vars
     const {index, value, ...rest} = this.props
