@@ -149,17 +149,11 @@ function SemanticUIAutocomplete() {
         {({isOpen, toggleMenu, clearSelection, selectedItem}) =>
           (<Div position="relative" css={{paddingRight: '1.75em'}}>
             <Input isOpen={isOpen} placeholder="Enter some info" />
-            {selectedItem
-              ? <ControllerButton
-                css={{paddingTop: 4}}
-                onClick={clearSelection}
-                aria-label="clear selection"
-                >
-                <XIcon />
-              </ControllerButton>
-              : <ControllerButton>
-                <ArrowIcon isOpen={isOpen} />
-              </ControllerButton>}
+            <ControllerButton
+              action={selectedItem ? 'clearSelection' : 'toggle'}
+            >
+              {selectedItem ? <XIcon /> : <ArrowIcon isOpen={isOpen} />}
+            </ControllerButton>
           </Div>)}
       </Autocomplete.Controller>
       <Autocomplete.Controller>
@@ -210,6 +204,7 @@ function XIcon() {
       fill="transparent"
       stroke="#979797"
       strokeWidth="1.1px"
+      style={{marginTop: 4}}
     >
       <path d="M1,1 L19,19" />
       <path d="M19,1 L1,19" />
