@@ -56,52 +56,29 @@ function getClosestScrollParent(node) {
 }
 
 /**
- * Determines what side of a child is outside a specifed parent
- * @param  {HTMLElement} child - child element
- * @param  {HTMLElement} parent - parent element
- * @return {Object} true/false for each side depending if child is outside parent or not
- */
-function isChildOutsideParent(child, parent) {
-  const parentComputedStyle = window.getComputedStyle(parent, null)
-  const parentBorderTopWidth = parseInt(
-    parentComputedStyle.getPropertyValue('border-top-width'),
-    16,
-  )
-  const parentBorderLeftWidth = parseInt(
-    parentComputedStyle.getPropertyValue('border-left-width'),
-    16,
-  )
-  return {
-    overTop: child.offsetTop - parent.offsetTop < parent.scrollTop,
-    overBottom:
-      child.offsetTop -
-        parent.offsetTop +
-        child.clientHeight -
-        parentBorderTopWidth >
-      parent.scrollTop + parent.clientHeight,
-    overLeft: child.offsetLeft - parent.offsetLeft < parent.scrollLeft,
-    overRight:
-      child.offsetLeft -
-        parent.offsetLeft +
-        child.clientWidth -
-        parentBorderLeftWidth >
-      parent.scrollLeft + parent.clientWidth,
-  }
-}
-
-/**
  * Scroll node into view
  * @param {HTMLElement} node - the element that should scroll into view
  * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
 function scrollIntoView(node, alignToTop) {
-  // eslint-disable-line complexity
-  const {overTop, overBottom, overLeft, overRight} = isChildOutsideParent(
-    node,
-    getClosestScrollParent(node),
+  const scrollParent = getClosestScrollParent(node)
+  const scrollParentStyles = getComputedStyle(scrollParent)
+  const scrollParentRect = scrollParent.getBoundingClientRect()
+  const scrollParentBorderTopWidth = parseInt(
+    scrollParentStyles.borderTopWidth,
+    10,
   )
-  if (overTop || overBottom || overLeft || overRight) {
-    node.scrollIntoView(alignToTop || (overTop && !overBottom))
+  const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
+  const nodeRect = node.getBoundingClientRect()
+  const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
+  const nodeTop = nodeOffsetTop - scrollParentTop
+  if (alignToTop || nodeTop < scrollParent.scrollTop) {
+    scrollParent.scrollTop = nodeTop
+  } else if (
+    nodeTop + nodeRect.height >
+    scrollParent.scrollTop + scrollParentRect.height
+  ) {
+    scrollParent.scrollTop = nodeTop + nodeRect.height - scrollParentRect.height
   }
 }
 
