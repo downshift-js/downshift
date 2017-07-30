@@ -33,16 +33,12 @@ class Autocomplete extends Component {
     component: 'div',
     defaultHighlightedIndex: null,
     getValue: i => String(i),
+    innerRef: () => {},
   }
 
-  constructor(props, context) {
-    super(props, context)
-    this.ref = node => {
-      this._rootNode = node
-      if (typeof props.innerRef === 'function') {
-        props.innerRef(node)
-      }
-    }
+  ref = node => {
+    this._rootNode = node
+    this.props.innerRef(node)
   }
 
   input = null
