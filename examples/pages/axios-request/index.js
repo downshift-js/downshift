@@ -43,7 +43,7 @@ class AxiosAutocomplete extends Component {
               })
           }}
         />
-        <Autocomplete.Menu>
+        <Autocomplete.Controller>
           {({inputValue, selectedItem, highlightedIndex, isOpen}) => {
             // prettier-ignore
             return isOpen && <div>{this.state.items.map((item, index) => (
@@ -60,7 +60,7 @@ class AxiosAutocomplete extends Component {
               </Autocomplete.Item>
             ))}</div>
           }}
-        </Autocomplete.Menu>
+        </Autocomplete.Controller>
       </Autocomplete>
     )
   }

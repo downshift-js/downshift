@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import AUTOCOMPLETE_CONTEXT from './context'
+import {AUTOCOMPLETE_CONTEXT} from './constants'
 import {compose} from './utils'
 
 class Item extends Component {
@@ -10,11 +10,16 @@ class Item extends Component {
   }
 
   static propTypes = {
+    component: PropTypes.any,
     index: PropTypes.number.isRequired,
+    innerRef: PropTypes.func,
     onMouseEnter: PropTypes.func,
     onClick: PropTypes.func,
-    ref: PropTypes.func,
     value: PropTypes.any.isRequired,
+  }
+
+  static defaultProps = {
+    component: 'div',
   }
 
   constructor(props, context) {
@@ -22,7 +27,12 @@ class Item extends Component {
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
     this.handleClick = compose(this.handleClick, props.onClick)
     this.handleMouseEnter = compose(this.handleMouseEnter, props.onMouseEnter)
-    this.ref = compose(node => (this.node = node), props.ref)
+    this.ref = node => {
+      this.node = node
+      if (typeof props.innerRef === 'function') {
+        props.innerRef(node)
+      }
+    }
   }
 
   handleMouseEnter = () => {
@@ -43,9 +53,9 @@ class Item extends Component {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {index, value, ...rest} = this.props
+    const {component: ItemComponent, index, value, ...rest} = this.props
     return (
-      <div
+      <ItemComponent
         {...rest}
         ref={this.ref}
         onMouseEnter={this.handleMouseEnter}

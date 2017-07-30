@@ -138,6 +138,8 @@ function advancedFilter(theItems, value) {
 function SemanticUIAutocomplete() {
   return (
     <Autocomplete
+      defaultHighlightedIndex={0}
+      getValue={i => i.name}
       onChange={item => alert(item.name)}
       style={{
         width: '250px',
@@ -146,11 +148,7 @@ function SemanticUIAutocomplete() {
       <Autocomplete.Controller>
         {({isOpen, toggleMenu, clearSelection, selectedItem}) =>
           (<Div position="relative" css={{paddingRight: '1.75em'}}>
-            <Input
-              getValue={i => i.name}
-              isOpen={isOpen}
-              placeholder="Enter some info"
-            />
+            <Input isOpen={isOpen} placeholder="Enter some info" />
             {selectedItem
               ? <ControllerButton
                 css={{paddingTop: 4}}
@@ -164,12 +162,12 @@ function SemanticUIAutocomplete() {
               </ControllerButton>}
           </Div>)}
       </Autocomplete.Controller>
-      <Autocomplete.Menu defaultHighlightedIndex={0}>
-        {({inputValue, highlightedIndex, selectedItem, isOpen}) =>
+      <Autocomplete.Controller>
+        {({value, highlightedIndex, selectedItem, isOpen}) =>
           isOpen &&
           <Menu>
             {// prettier-ignore
-            (inputValue ? advancedFilter(items, inputValue) : items)
+            (value ? advancedFilter(items, value) : items)
             .map((item, index) => (
               <Item
                 value={item}
@@ -182,7 +180,7 @@ function SemanticUIAutocomplete() {
               </Item>
             ))}
           </Menu>}
-      </Autocomplete.Menu>
+      </Autocomplete.Controller>
     </Autocomplete>
   )
 }

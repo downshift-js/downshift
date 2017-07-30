@@ -9,7 +9,7 @@ function RawAutoComplete({refine, hits}) {
   return (
     <Autocomplete onChange={item => alert(JSON.stringify(item))}>
       <Autocomplete.Input onChange={e => refine(e.target.value)} />
-      <Autocomplete.Menu>
+      <Autocomplete.Controller>
         {({selectedItem, highlightedIndex, isOpen}) =>
           isOpen &&
           <div>
@@ -28,7 +28,7 @@ function RawAutoComplete({refine, hits}) {
               </Autocomplete.Item>),
             )}
           </div>}
-      </Autocomplete.Menu>
+      </Autocomplete.Controller>
     </Autocomplete>
   )
 }

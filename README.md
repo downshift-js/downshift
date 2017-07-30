@@ -109,6 +109,12 @@ Available components and relevant props:
 This is the main component. It renders a `div` and forwards props. Wrap
 everything in this.
 
+#### getValue
+
+> `function(item: any)` | defaults to an identity function (`i => String(i)`)
+
+Used to determine the `inputValue` for the selected item.
+
 #### defaultHighlightedIndex
 
 > `number`/`null` | defaults to `null`
@@ -138,12 +144,6 @@ This is the input component. It renders an `input` and forwards props.
 > `string` / `null` | *defaults to null*
 
 The initial value the input should have when it's mounted.
-
-#### getValue
-
-> `function(item: any)` | defaults to an identity function (`i => String(i)`)
-
-Used to determine the `inputValue` for the selected item.
 
 ### Autocomplete.Controller
 

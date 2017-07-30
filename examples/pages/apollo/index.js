@@ -34,13 +34,13 @@ function ApolloAutocomplete() {
   return (
     <Autocomplete onChange={item => alert(item)}>
       <Autocomplete.Input />
-      <Autocomplete.Menu>
-        {({inputValue, selectedItem, highlightedIndex, isOpen}) => (
+      <Autocomplete.Controller>
+        {({value, selectedItem, highlightedIndex, isOpen}) => (
           <ApolloAutocompleteMenuWithData
-            {...{inputValue, selectedItem, highlightedIndex, isOpen}}
+            {...{value, selectedItem, highlightedIndex, isOpen}}
           />
         )}
-      </Autocomplete.Menu>
+      </Autocomplete.Controller>
     </Autocomplete>
   )
 }
@@ -78,8 +78,8 @@ function ApolloAutocompleteMenu({
 }
 
 const SEARCH_COLORS = gql`
-  query AllColors($inputValue: String!) {
-    allColors(filter: {name_contains: $inputValue}) {
+  query AllColors($value: String!) {
+    allColors(filter: {name_contains: $value}) {
       name
     }
   }

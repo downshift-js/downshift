@@ -6,8 +6,8 @@ import Controller from './controller'
 import Input from './input'
 import Item from './item'
 import Status from './status'
-import {cbToCb, compose, scrollIntoView} from './utils'
-import AUTOCOMPLETE_CONTEXT from './context'
+import {cbToCb, scrollIntoView} from './utils'
+import {AUTOCOMPLETE_CONTEXT} from './constants'
 
 class Autocomplete extends Component {
   static Button = Button
@@ -20,26 +20,36 @@ class Autocomplete extends Component {
 
   static propTypes = {
     children: PropTypes.node.isRequired,
+    component: PropTypes.any,
+    defaultSelectedIndex: PropTypes.string,
     defaultHighlightedIndex: PropTypes.number,
     getA11yStatusMessage: PropTypes.func,
+    getValue: PropTypes.func,
+    innerRef: PropTypes.func,
     onChange: PropTypes.func.isRequired,
-    ref: PropTypes.func,
   }
 
   static defaultProps = {
+    component: 'div',
     defaultHighlightedIndex: null,
+    getValue: i => String(i),
   }
 
-  constructor(...args) {
-    super(...args)
-    this.ref = compose(node => (this._rootNode = node), this.props.ref)
+  constructor(props, context) {
+    super(props, context)
+    this.ref = node => {
+      this._rootNode = node
+      if (typeof props.innerRef === 'function') {
+        props.innerRef(node)
+      }
+    }
   }
 
   input = null
   items = []
   state = {
     highlightedIndex: null,
-    inputValue: null,
+    value: null,
     isOpen: false,
     selectedItem: null,
   }
@@ -66,22 +76,24 @@ class Autocomplete extends Component {
     })
   }
 
-  maybeScrollToHighlightedElement() {
-    const itemInstance = this.getItemFromIndex(this.state.highlightedIndex)
+  maybeScrollToHighlightedElement(highlightedIndex) {
+    const itemInstance = this.getItemFromIndex(highlightedIndex)
     if (!itemInstance || !itemInstance.node) {
       return
     }
     scrollIntoView(itemInstance.node)
   }
 
-  setHighlightedIndex = highlightedIndex => {
+  setHighlightedIndex = (
+    highlightedIndex = this.props.defaultHighlightedIndex,
+  ) => {
     this.setState({highlightedIndex}, () => {
-      this.maybeScrollToHighlightedElement()
+      this.maybeScrollToHighlightedElement(highlightedIndex)
     })
   }
 
-  highlightIndex = (index = this.props.defaultHighlightedIndex) => {
-    this.open(() => {
+  highlightIndex = index => {
+    this.openMenu(() => {
       this.setHighlightedIndex(index)
     })
   }
@@ -114,7 +126,7 @@ class Autocomplete extends Component {
     this.setState(
       {
         selectedItem: null,
-        inputValue: null,
+        value: null,
         isOpen: false,
       },
       () => {
@@ -125,12 +137,9 @@ class Autocomplete extends Component {
 
   selectItem = item => {
     this.reset()
-    this.setState(
-      {selectedItem: item, inputValue: this.getInputValue(item)},
-      () => {
-        this.props.onChange(item)
-      },
-    )
+    this.setState({selectedItem: item, value: this.getValue(item)}, () => {
+      this.props.onChange(item)
+    })
   }
 
   selectItemAtIndex = itemIndex => {
@@ -151,7 +160,7 @@ class Autocomplete extends Component {
   }
 
   getControllerStateAndHelpers() {
-    const {highlightedIndex, inputValue, isOpen, selectedItem} = this.state
+    const {highlightedIndex, value, isOpen, selectedItem} = this.state
     const {
       toggleMenu,
       openMenu,
@@ -169,7 +178,7 @@ class Autocomplete extends Component {
       selectHighlightedItem,
       highlightedIndex,
       setHighlightedIndex,
-      inputValue,
+      value,
       isOpen,
       toggleMenu,
       openMenu,
@@ -182,18 +191,26 @@ class Autocomplete extends Component {
     this.setState(({selectedItem}) => ({
       isOpen: false,
       highlightedIndex: null,
-      inputValue: this.getInputValue(selectedItem),
+      value: this.getValue(selectedItem),
     }))
   }
 
   toggleMenu = (newState, cb) => {
-    this.setState(({isOpen}) => {
-      let nextIsOpen = !isOpen
-      if (typeof newState === 'boolean') {
-        nextIsOpen = newState
-      }
-      return {isOpen: nextIsOpen}
-    }, cbToCb(cb))
+    this.setState(
+      ({isOpen}) => {
+        let nextIsOpen = !isOpen
+        if (typeof newState === 'boolean') {
+          nextIsOpen = newState
+        }
+        return {isOpen: nextIsOpen}
+      },
+      () => {
+        if (this.state.isOpen) {
+          this.setHighlightedIndex()
+        }
+        cbToCb(cb)
+      },
+    )
   }
 
   openMenu = () => {
@@ -204,8 +221,8 @@ class Autocomplete extends Component {
     this.toggleMenu(false)
   }
 
-  getInputValue = item => {
-    return this.input.getValue(item)
+  getValue = item => {
+    return item ? this.props.getValue(item) : null
   }
 
   getChildContext() {
@@ -243,28 +260,31 @@ class Autocomplete extends Component {
 
   render() {
     const {
+      component: AutocompleteComponent,
       children,
       // eslint-disable-next-line no-unused-vars
       defaultHighlightedIndex,
       getA11yStatusMessage,
       // eslint-disable-next-line no-unused-vars
+      getValue,
+      // eslint-disable-next-line no-unused-vars
       onChange,
       // eslint-disable-next-line no-unused-vars
-      ref,
+      innerRef,
       ...rest
     } = this.props
     return (
-      <div {...rest} ref={this.ref}>
+      <AutocompleteComponent ref={this.ref} {...rest}>
         {children}
         <Status
           getA11yStatusMessage={getA11yStatusMessage}
-          getInputValue={this.getInputValue}
           getItemFromIndex={this.getItemFromIndex}
+          getValue={this.getValue}
           highlightedIndex={this.state.highlightedIndex}
-          inputValue={this.state.inputValue}
           resultCount={this.items.length}
+          value={this.state.value}
         />
-      </div>
+      </AutocompleteComponent>
     )
   }
 }
