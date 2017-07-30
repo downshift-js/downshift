@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 
 import {debounce} from './utils'
 
-class MenuStatus extends Component {
+class Status extends Component {
   static defaultProps = {
-    getA11yStatusMessage({resultCount, highlightedItem, getInputValue}) {
+    getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
       if (!resultCount) {
         return 'No results.'
       } else if (!highlightedItem) {
@@ -13,16 +13,16 @@ class MenuStatus extends Component {
           'result is' :
           'results are'} available, use up and down arrow keys to navigate.`
       }
-      return getInputValue(highlightedItem)
+      return getValue(highlightedItem)
     },
   }
 
   static propTypes = {
     getA11yStatusMessage: PropTypes.func,
-    getInputValue: PropTypes.func,
+    getValue: PropTypes.func,
     getItemFromIndex: PropTypes.func,
     highlightedIndex: PropTypes.number,
-    inputValue: PropTypes.string,
+    value: PropTypes.string,
     resultCount: PropTypes.number,
   }
 
@@ -38,7 +38,7 @@ class MenuStatus extends Component {
     if (!this._isMounted) {
       return
     }
-    const {resultCount, getItemFromIndex, getInputValue} = this.props
+    const {resultCount, getItemFromIndex, getValue} = this.props
     const {statuses} = this.state
     const itemInstance = getItemFromIndex(highlightedIndex) || {
       props: {},
@@ -46,7 +46,7 @@ class MenuStatus extends Component {
     const status = this.props.getA11yStatusMessage({
       resultCount,
       highlightedItem: itemInstance.props.value,
-      getInputValue,
+      getValue,
     })
     const isSameAsLast = statuses[statuses.length - 1] === status
     if (isSameAsLast) {
@@ -61,7 +61,7 @@ class MenuStatus extends Component {
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.highlightedIndex !== this.props.highlightedIndex ||
-      this.props.inputValue !== nextProps.inputValue
+      this.props.value !== nextProps.value
     ) {
       this.updateStatus(nextProps.highlightedIndex)
     }
@@ -112,4 +112,4 @@ class MenuStatus extends Component {
   }
 }
 
-export default MenuStatus
+export default Status

@@ -10,7 +10,12 @@ class Button extends Component {
   }
 
   static propTypes = {
+    component: PropTypes.any,
     onKeyDown: PropTypes.func,
+  }
+
+  static defaultProps = {
+    component: 'button',
   }
 
   constructor(props, context) {
@@ -37,7 +42,7 @@ class Button extends Component {
       if (this.autocomplete.state.isOpen) {
         this.autocomplete.selectHighlightedItem()
       } else {
-        this.autocomplete.open()
+        this.autocomplete.openMenu()
       }
     },
 
@@ -64,15 +69,16 @@ class Button extends Component {
   }
 
   render() {
+    const {component: ButtonComponent, ...rest} = this.props
     const {isOpen} = this.autocomplete.state
     return (
-      <button
+      <ButtonComponent
         role="button"
         aria-label={isOpen ? 'close menu' : 'open menu'}
         aria-expanded={isOpen}
         aria-haspopup={true}
         onClick={this.handleClick}
-        {...this.props}
+        {...rest}
         onKeyDown={this.handleKeyDown}
         ref={node => (this._buttonNode = node)}
       />

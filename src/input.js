@@ -1,31 +1,33 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 
-import {AUTOCOMPLETE_CONTEXT, MENU_CONTEXT} from './constants'
+import {AUTOCOMPLETE_CONTEXT} from './constants'
 import {compose} from './utils'
 
 class Input extends Component {
   static contextTypes = {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
-    [MENU_CONTEXT]: PropTypes.object,
   }
+
   static ignoreKeys = ['Shift', 'Meta', 'Alt', 'Control']
+
   static propTypes = {
+    component: PropTypes.any,
     onChange: PropTypes.func,
     onKeyDown: PropTypes.func,
-    getValue: PropTypes.func,
     defaultValue: PropTypes.string,
   }
+
   static defaultProps = {
-    getValue: i => String(i),
+    component: 'input',
   }
+
   constructor(props, context) {
     super(props, context)
     this.autocomplete = this.context[AUTOCOMPLETE_CONTEXT]
-    this.autoFocus = typeof this.context[MENU_CONTEXT] !== 'undefined'
     this.autocomplete.input = this
-    this.handleChange = compose(this.handleChange, this.props.onChange)
-    this.handleKeyDown = compose(this.handleKeyDown, this.props.onKeyDown)
+    this.handleChange = compose(this.handleChange, props.onChange)
+    this.handleKeyDown = compose(this.handleKeyDown, props.onKeyDown)
   }
 
   keyDownHandlers = {
@@ -56,23 +58,18 @@ class Input extends Component {
     if (event.key && this.keyDownHandlers[event.key]) {
       this.keyDownHandlers[event.key].call(this, event)
     } else if (!Input.ignoreKeys.includes(event.key)) {
-      this.autocomplete.open()
-      this.autocomplete.highlightIndex(
-        this.autocomplete.state.menu.props.defaultHighlightedIndex,
-      )
+      this.autocomplete.openMenu(() => {
+        this.autocomplete.highlightIndex()
+      })
     }
   }
 
   handleChange = event => {
-    this.updateInputValue(event.target.value)
+    this.updateAutocompleteValue(event.target.value)
   }
 
   focusInput = () => {
     this._inputNode.focus()
-  }
-
-  getValue = item => {
-    return item ? this.props.getValue(item) : null
   }
 
   componentWillUnmount() {
@@ -83,31 +80,30 @@ class Input extends Component {
 
   componentDidMount() {
     if (this.props.defaultValue) {
-      this.updateInputValue(this.props.defaultValue)
+      this.updateAutocompleteValue(this.props.defaultValue)
     }
   }
 
-  updateInputValue(value) {
-    if (this.autocomplete.state.inputValue !== value) {
-      this.autocomplete.setState({
-        inputValue: value,
-      })
-    }
+  updateAutocompleteValue(value) {
+    this.autocomplete.setState(currState => {
+      if (currState.value !== value) {
+        return {value}
+      }
+    })
   }
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {defaultValue, getValue, ...rest} = this.props
-    const {inputValue, selectedItem, isOpen} = this.autocomplete.state
-    const selectedItemValue = this.getValue(selectedItem)
+    const {component: InputComponent, defaultValue, ...rest} = this.props
+    const {value, selectedItem, isOpen} = this.autocomplete.state
+    const selectedItemValue = this.autocomplete.getValue(selectedItem)
     return (
-      <input
+      <InputComponent
         role="combobox"
         aria-autocomplete="list"
         aria-expanded={isOpen}
         autoComplete="off"
-        value={(inputValue === null ? selectedItemValue : inputValue) || ''}
-        autoFocus={this.autoFocus}
+        value={(value === null ? selectedItemValue : value) || ''}
         {...rest}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}

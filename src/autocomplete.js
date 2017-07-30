@@ -1,90 +1,128 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import mitt from 'mitt'
 
 import Button from './button'
 import Controller from './controller'
 import Input from './input'
 import Item from './item'
-import Menu from './menu'
+import Status from './status'
+import {cbToCb, scrollIntoView} from './utils'
 import {AUTOCOMPLETE_CONTEXT} from './constants'
-import {cbToCb, compose} from './utils'
 
 class Autocomplete extends Component {
   static Button = Button
   static Controller = Controller
   static Input = Input
   static Item = Item
-  static Menu = Menu
   static childContextTypes = {
     [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
   }
 
   static propTypes = {
-    ref: PropTypes.func,
+    children: PropTypes.node.isRequired,
+    component: PropTypes.any,
+    defaultSelectedIndex: PropTypes.string,
+    defaultHighlightedIndex: PropTypes.number,
+    getA11yStatusMessage: PropTypes.func,
+    getValue: PropTypes.func,
+    innerRef: PropTypes.func,
     onChange: PropTypes.func.isRequired,
   }
 
-  constructor(...args) {
-    super(...args)
-    this.ref = compose(node => (this._rootNode = node), this.props.ref)
+  static defaultProps = {
+    component: 'div',
+    defaultHighlightedIndex: null,
+    getValue: i => String(i),
+    innerRef: () => {},
   }
 
-  state = {
-    inputValue: null,
-    selectedItem: null,
-    isOpen: false,
-    menu: null,
+  ref = node => {
+    this._rootNode = node
+    this.props.innerRef(node)
   }
+
   input = null
-  emitter = mitt()
+  items = []
+  state = {
+    highlightedIndex: null,
+    value: null,
+    isOpen: false,
+    selectedItem: null,
+  }
 
-  setMenu = menuInstance => {
-    this.setState({
-      menu: menuInstance,
+  addItemInstance(itemInstance) {
+    this.items.push(itemInstance)
+    this.forceUpdate()
+  }
+
+  removeItemInstance(itemInstance) {
+    const index = this.items.indexOf(itemInstance)
+    if (index !== -1) {
+      this.items.splice(index, 1)
+    }
+    this.forceUpdate()
+  }
+
+  getItemFromIndex = index => {
+    if (!this.items || !this.items[0]) {
+      return null
+    }
+    return this.items.find(itemInstance => {
+      return itemInstance.props.index === index
     })
   }
 
-  removeMenu = menuInstance => {
-    this.setState(({menu}) => {
-      // only remove the menu from the state
-      // if the current menu is the same as
-      // the one we're trying to remove
-      if (menu === menuInstance) {
-        return {menu: null}
-      }
-      return {}
+  maybeScrollToHighlightedElement(highlightedIndex) {
+    const itemInstance = this.getItemFromIndex(highlightedIndex)
+    if (!itemInstance || !itemInstance.node) {
+      return
+    }
+    scrollIntoView(itemInstance.node)
+  }
+
+  setHighlightedIndex = (
+    highlightedIndex = this.props.defaultHighlightedIndex,
+  ) => {
+    this.setState({highlightedIndex}, () => {
+      this.maybeScrollToHighlightedElement(highlightedIndex)
+    })
+  }
+
+  highlightIndex = index => {
+    this.openMenu(() => {
+      this.setHighlightedIndex(index)
     })
   }
 
   moveHighlightedIndex = amount => {
-    if (!this.state.menu) {
-      return
-    }
     if (this.state.isOpen) {
-      this.open(() => {
-        this.state.menu.changeHighlighedIndex(amount)
-      })
+      this.changeHighlighedIndex(amount)
     } else {
-      this.highlightIndex(this.state.menu.props.defaultHighlightedIndex)
+      this.highlightIndex()
     }
   }
 
-  highlightIndex = index => {
-    if (!this.state.menu) {
+  changeHighlighedIndex = moveAmount => {
+    const {highlightedIndex} = this.state
+    const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
+    const itemsLastIndex = this.items.length - 1
+    if (itemsLastIndex < 0) {
       return
     }
-    this.open(() => {
-      this.state.menu.setHighlightedIndex(index)
-    })
+    let newIndex = baseIndex + moveAmount
+    if (newIndex < 0) {
+      newIndex = itemsLastIndex
+    } else if (newIndex > itemsLastIndex) {
+      newIndex = 0
+    }
+    this.setHighlightedIndex(newIndex)
   }
 
   clearSelection = () => {
-    this.emitter.emit('menu:close')
     this.setState(
       {
         selectedItem: null,
-        inputValue: null,
+        value: null,
         isOpen: false,
       },
       () => {
@@ -95,12 +133,9 @@ class Autocomplete extends Component {
 
   selectItem = item => {
     this.reset()
-    this.setState(
-      {selectedItem: item, inputValue: this.getInputValue(item)},
-      () => {
-        this.props.onChange(item)
-      },
-    )
+    this.setState({selectedItem: item, value: this.getValue(item)}, () => {
+      this.props.onChange(item)
+    })
   }
 
   selectItemAtIndex = itemIndex => {
@@ -108,7 +143,7 @@ class Autocomplete extends Component {
       // no item highlighted
       return
     }
-    const itemInstance = this.state.menu.getItemFromIndex(itemIndex)
+    const itemInstance = this.getItemFromIndex(itemIndex)
     if (!itemInstance) {
       // TODO: see if this is even possible?
       return
@@ -117,14 +152,11 @@ class Autocomplete extends Component {
   }
 
   selectHighlightedItem = () => {
-    return this.selectItemAtIndex(
-      this.state.menu ? this.state.menu.state.highlightedIndex : null,
-    )
+    return this.selectItemAtIndex(this.state.highlightedIndex)
   }
 
   getControllerStateAndHelpers() {
-    const {selectedItem, inputValue, isOpen} = this.state
-    const menu = this.state.menu || {state: {}} // handle the null case (before the menu's been rendered)
+    const {highlightedIndex, value, isOpen, selectedItem} = this.state
     const {
       toggleMenu,
       openMenu,
@@ -133,9 +165,8 @@ class Autocomplete extends Component {
       selectItem,
       selectItemAtIndex,
       selectHighlightedItem,
+      setHighlightedIndex,
     } = this
-    const {setHighlightedIndex} = menu
-    const {highlightedIndex} = menu.state
     return {
       selectedItem,
       selectItem,
@@ -143,7 +174,7 @@ class Autocomplete extends Component {
       selectHighlightedItem,
       highlightedIndex,
       setHighlightedIndex,
-      inputValue,
+      value,
       isOpen,
       toggleMenu,
       openMenu,
@@ -153,52 +184,41 @@ class Autocomplete extends Component {
   }
 
   reset = () => {
-    this.emitter.emit('menu:close')
+    this.setState(({selectedItem}) => ({
+      isOpen: false,
+      highlightedIndex: null,
+      value: this.getValue(selectedItem),
+    }))
+  }
+
+  toggleMenu = (newState, cb) => {
     this.setState(
-      ({selectedItem}) => ({
-        isOpen: false,
-        inputValue: this.getInputValue(selectedItem),
-      }),
+      ({isOpen}) => {
+        let nextIsOpen = !isOpen
+        if (typeof newState === 'boolean') {
+          nextIsOpen = newState
+        }
+        return {isOpen: nextIsOpen}
+      },
       () => {
-        this.state.menu && this.state.menu.reset()
+        if (this.state.isOpen) {
+          this.setHighlightedIndex()
+        }
+        cbToCb(cb)
       },
     )
   }
 
-  open = cb => {
-    if (this.state.isOpen) {
-      cbToCb(cb)()
-    } else {
-      this.emitter.emit('menu:open')
-      this.setState({isOpen: true}, cbToCb(cb))
-    }
-  }
-
-  toggleMenu = (newState, cb) => {
-    this.setState(({isOpen}) => {
-      let nextIsOpen = !isOpen
-      if (typeof newState === 'boolean') {
-        nextIsOpen = newState
-      }
-      if (nextIsOpen) {
-        this.emitter.emit('menu:open')
-      } else {
-        this.emitter.emit('menu:close')
-      }
-      return {isOpen: nextIsOpen}
-    }, cbToCb(cb))
-  }
-
   openMenu = () => {
-    this.autocomplete.toggleMenu(true)
+    this.toggleMenu(true)
   }
 
   closeMenu = () => {
-    this.autocomplete.toggleMenu(false)
+    this.toggleMenu(false)
   }
 
-  getInputValue = item => {
-    return this.input.getValue(item)
+  getValue = item => {
+    return item ? this.props.getValue(item) : null
   }
 
   getChildContext() {
@@ -235,9 +255,33 @@ class Autocomplete extends Component {
   }
 
   render() {
-    // eslint-disable-next-line no-unused-vars
-    const {ref, onChange, ...rest} = this.props
-    return <div {...rest} ref={this.ref} />
+    const {
+      component: AutocompleteComponent,
+      children,
+      // eslint-disable-next-line no-unused-vars
+      defaultHighlightedIndex,
+      getA11yStatusMessage,
+      // eslint-disable-next-line no-unused-vars
+      getValue,
+      // eslint-disable-next-line no-unused-vars
+      onChange,
+      // eslint-disable-next-line no-unused-vars
+      innerRef,
+      ...rest
+    } = this.props
+    return (
+      <AutocompleteComponent ref={this.ref} {...rest}>
+        {children}
+        <Status
+          getA11yStatusMessage={getA11yStatusMessage}
+          getItemFromIndex={this.getItemFromIndex}
+          getValue={this.getValue}
+          highlightedIndex={this.state.highlightedIndex}
+          resultCount={this.items.length}
+          value={this.state.value}
+        />
+      </AutocompleteComponent>
+    )
   }
 }
 

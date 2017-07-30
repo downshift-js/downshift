@@ -52,8 +52,8 @@ class ReactPopperAutocomplete extends PureComponent {
             <Target>
               <Autocomplete.Input />
             </Target>
-            <Autocomplete.Menu>
-              {({inputValue, selectedItem, highlightedIndex, isOpen}) =>
+            <Autocomplete.Controller>
+              {({value, selectedItem, highlightedIndex, isOpen}) =>
                 isOpen &&
                 <Popper
                   placement={this.state.selected}
@@ -62,8 +62,7 @@ class ReactPopperAutocomplete extends PureComponent {
                   {this.props.items
                     .filter(
                       i =>
-                        !inputValue ||
-                        i.toLowerCase().includes(inputValue.toLowerCase()),
+                        !value || i.toLowerCase().includes(value.toLowerCase()),
                     )
                     .map((item, index) =>
                       (<Autocomplete.Item
@@ -82,7 +81,7 @@ class ReactPopperAutocomplete extends PureComponent {
                       </Autocomplete.Item>),
                     )}
                 </Popper>}
-            </Autocomplete.Menu>
+            </Autocomplete.Controller>
           </Autocomplete>
         </Manager>
       </div>

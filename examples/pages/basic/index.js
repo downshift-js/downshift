@@ -108,10 +108,10 @@ function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
       <Input placeholder="Favorite color ?" />
-      <Autocomplete.Menu style={{border: '1px solid rgba(34,36,38,.15)'}}>
+      <Autocomplete.Controller>
         {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
           isOpen &&
-          <div>
+          <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
             {items
               .filter(
                 i =>
@@ -130,7 +130,7 @@ function BasicAutocomplete({items, onChange}) {
                 </Item>),
               )}
           </div>}
-      </Autocomplete.Menu>
+      </Autocomplete.Controller>
     </Autocomplete>
   )
 }

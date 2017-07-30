@@ -41,17 +41,17 @@ function cbToCb(cb) {
 function noop() {}
 
 /**
- * Get the closest parent element that scrolls
+ * Get the closest element that scrolls
  * @param {HTMLElement} node - the child element to start searching for scroll parent at
  * @return {HTMLElement} the closest parentNode that scrolls
  */
-function getScrollParent(node) {
+function getClosestScrollElement(node) {
   if (node === null) {
     return null
   } else if (node.scrollHeight > node.clientHeight) {
     return node
   } else {
-    return getScrollParent(node.parentNode)
+    return getClosestScrollElement(node.parentNode)
   }
 }
 
@@ -60,17 +60,16 @@ function getScrollParent(node) {
  * @param {HTMLInputElement} node - the element that should scroll into view
  */
 function scrollIntoView(node) {
-  const scrollParent = getScrollParent(node)
-  if (scrollParent) {
-    const nodeTop = node.offsetTop - scrollParent.offsetTop
-    if (scrollParent.scrollTop >= nodeTop) {
-      scrollParent.scrollTop = nodeTop
+  const scrollElement = getClosestScrollElement(node)
+  if (scrollElement) {
+    if (scrollElement.scrollTop >= node.offsetTop) {
+      scrollElement.scrollTop = node.offsetTop
     } else if (
-      nodeTop + node.offsetHeight >=
-      scrollParent.scrollTop + scrollParent.offsetHeight
+      node.offsetTop + node.offsetHeight >=
+      scrollElement.scrollTop + scrollElement.offsetHeight
     ) {
-      scrollParent.scrollTop =
-        nodeTop + node.offsetHeight - scrollParent.offsetHeight
+      scrollElement.scrollTop =
+        node.offsetTop + node.offsetHeight - scrollElement.offsetHeight
     }
   }
 }
