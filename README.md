@@ -135,6 +135,12 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 
 Called when the user selects an item
 
+#### innerRef
+
+> `function(node)` | optional
+
+If you want to get a reference to the `div` rendered by `Autocomplete`, you can use this like you would a `ref` prop.
+
 ### Autocomplete.Input
 
 This is the input component. It renders an `input` and forwards props.
