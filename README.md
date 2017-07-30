@@ -135,6 +135,12 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 
 Called when the user selects an item
 
+#### component
+
+> `string`/`Component` | defaults to `'div'`
+
+This allows you to controll what is rendered as the root element.
+
 #### innerRef
 
 > `function(node)` | optional
