@@ -89,6 +89,7 @@ class Input extends Component {
       if (currState.value !== value) {
         return {value}
       }
+      return {}
     })
   }
 
