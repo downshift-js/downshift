@@ -29,14 +29,16 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-plugin-styled-components": "^1.1.7",
     "glamor": "^2.20.37",
     "glamorous": "^3.24.0",
     "match-sorter": "^1.8.0",
     "react": "^15.6.1",
-    "react-popper": "^0.7.2",
     "react-apollo": "^1.4.8",
     "react-dom": "^15.6.1",
     "react-instantsearch": "^4.0.9",
+    "react-popper": "^0.7.2",
+    "styled-components": "^2.1.1",
     "throttle-debounce": "^1.0.1"
   }
 }

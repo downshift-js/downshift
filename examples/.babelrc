@@ -13,6 +13,7 @@
   "plugins": [
     "babel-macros",
     "transform-class-properties",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    ["styled-components", { "ssr": true, "displayName": true, "preprocess": false } ]
   ]
 }
