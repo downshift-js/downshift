@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * This is a utilities file for the autocomplete component.
  * Part of the reason it exists is to be able to stub out
@@ -11,7 +13,7 @@
  * @param  {Number} start - the index to start the selection
  * @param  {Number} end - the index to end the selection
  */
-function selectRangeOfText(node, start, end) {
+function selectRangeOfText(node: HTMLInputElement, start: number, end: number) {
   // select all the text, but do it on the next tick because iOS has issues otherwise
   setTimeout(() => {
     // we're using setSelectionRange rather than select because select doesn't work with iOS
@@ -23,7 +25,7 @@ function selectRangeOfText(node, start, end) {
  * This will take a node and select all the text in it in a way that works for iOS
  * @param {HTMLInputElement} node - the input to select the text in
  */
-function selectAllText(node) {
+function selectAllText(node: HTMLInputElement) {
   selectRangeOfText(node, 0, node.value.length)
 }
 
@@ -35,7 +37,7 @@ function selectAllText(node) {
  * @param {Function} cb the callback
  * @return {Function} a function
  */
-function cbToCb(cb) {
+function cbToCb(cb: Function): Function {
   return typeof cb === 'function' ? cb : noop
 }
 function noop() {}
@@ -45,7 +47,7 @@ function noop() {}
  * @param {HTMLElement} node - the child element to start searching for scroll parent at
  * @return {HTMLElement} the closest parentNode that scrolls
  */
-function getScrollParent(node) {
+function getScrollParent(node: HTMLElement | any): ?HTMLElement {
   if (node === null) {
     return null
   } else if (node.scrollHeight > node.clientHeight) {
@@ -57,9 +59,9 @@ function getScrollParent(node) {
 
 /**
  * Scroll node into view
- * @param {HTMLInputElement} node - the element that should scroll into view
+ * @param {HTMLElement} node - the element that should scroll into view
  */
-function scrollIntoView(node) {
+function scrollIntoView(node: HTMLElement) {
   const scrollParent = getScrollParent(node)
   if (scrollParent) {
     const nodeTop = node.offsetTop - scrollParent.offsetTop
@@ -75,10 +77,10 @@ function scrollIntoView(node) {
   }
 }
 
-function debounce(fn, time) {
+function debounce(fn: Function, time: number): Function {
   let timeoutId
   return wrapper
-  function wrapper(...args) {
+  function wrapper(...args: Array<any>) {
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
@@ -89,8 +91,8 @@ function debounce(fn, time) {
   }
 }
 
-function compose(...fns) {
-  return (...args) => fns.forEach(fn => fn && fn(...args))
+function compose(...fns: Array<Function>): Function {
+  return (...args: Array<any>) => fns.forEach(fn => fn && fn(...args))
 }
 
 export {
