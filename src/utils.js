@@ -45,32 +45,63 @@ function noop() {}
  * @param {HTMLElement} node - the child element to start searching for scroll parent at
  * @return {HTMLElement} the closest parentNode that scrolls
  */
-function getClosestScrollElement(node) {
+function getClosestScrollParent(node) {
   if (node === null) {
     return null
   } else if (node.scrollHeight > node.clientHeight) {
     return node
   } else {
-    return getClosestScrollElement(node.parentNode)
+    return getClosestScrollParent(node.parentNode)
+  }
+}
+
+/**
+ * Determines what side of a child is outside a specifed parent
+ * @param  {HTMLElement} child - child element
+ * @param  {HTMLElement} parent - parent element
+ * @return {Object} true/false for each side depending if child is outside parent or not
+ */
+function isChildOutsideParent(child, parent) {
+  const parentComputedStyle = window.getComputedStyle(parent, null)
+  const parentBorderTopWidth = parseInt(
+    parentComputedStyle.getPropertyValue('border-top-width'),
+    16,
+  )
+  const parentBorderLeftWidth = parseInt(
+    parentComputedStyle.getPropertyValue('border-left-width'),
+    16,
+  )
+  return {
+    overTop: child.offsetTop - parent.offsetTop < parent.scrollTop,
+    overBottom:
+      child.offsetTop -
+        parent.offsetTop +
+        child.clientHeight -
+        parentBorderTopWidth >
+      parent.scrollTop + parent.clientHeight,
+    overLeft: child.offsetLeft - parent.offsetLeft < parent.scrollLeft,
+    overRight:
+      child.offsetLeft -
+        parent.offsetLeft +
+        child.clientWidth -
+        parentBorderLeftWidth >
+      parent.scrollLeft + parent.clientWidth,
   }
 }
 
 /**
  * Scroll node into view
- * @param {HTMLInputElement} node - the element that should scroll into view
+ * @param {HTMLElement} node - the element that should scroll into view
+ * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
-function scrollIntoView(node) {
-  const scrollElement = getClosestScrollElement(node)
-  if (scrollElement) {
-    if (scrollElement.scrollTop >= node.offsetTop) {
-      scrollElement.scrollTop = node.offsetTop
-    } else if (
-      node.offsetTop + node.offsetHeight >=
-      scrollElement.scrollTop + scrollElement.offsetHeight
-    ) {
-      scrollElement.scrollTop =
-        node.offsetTop + node.offsetHeight - scrollElement.offsetHeight
-    }
+function scrollIntoView(node, alignToTop) {
+  // eslint-disable-line complexity
+  const {overTop, overBottom, overLeft, overRight} = isChildOutsideParent(
+    node,
+    getClosestScrollParent(node),
+  )
+  if (overTop || overBottom || overLeft || overRight) {
+    node.scrollIntoView(alignToTop || (overTop && !overBottom))
   }
 }
 
