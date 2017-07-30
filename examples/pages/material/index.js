@@ -5,7 +5,7 @@ import MaterialAutoComplete from './MaterialAutoComplete'
 import dataSource from '../../other/countries'
 
 const ExampleWrapper = styled.div`
-  @import url(http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300ita‌​lic,400italic,500,500italic,700,700italic,900italic,900);
+  @import url('https://fonts.googleapis.com/css?family=Roboto');
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 16px;
   width: 40%;

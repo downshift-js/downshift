@@ -9,18 +9,16 @@ import Menu from './Menu'
 
 const Container = styled.div`position: relative;`
 
-class MaterialAutoComplete extends React.Component {
-  render() {
-    const {dataSource, onSelect} = this.props
-    return (
-      <Container>
-        <Autocomplete getValue={i => i.name} onChange={item => onSelect(item)}>
-          <Input placeholder="Search a country" />
-          <Menu dataSource={dataSource} />
-        </Autocomplete>
-      </Container>
-    )
-  }
+function MaterialAutoComplete(props) {
+  const {dataSource, onSelect} = props
+  return (
+    <Container>
+      <Autocomplete getValue={i => i.name} onChange={item => onSelect(item)}>
+        <Input placeholder="Search a country" />
+        <Menu dataSource={dataSource} />
+      </Autocomplete>
+    </Container>
+  )
 }
 
 export default MaterialAutoComplete
