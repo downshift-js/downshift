@@ -139,7 +139,7 @@ Called when the user selects an item
 
 > `string`/`Component` | defaults to `'div'`
 
-This allows you to controll what is rendered as the root element.
+This allows you to control what is rendered as the root element.
 
 #### innerRef
 
@@ -187,7 +187,19 @@ This is called with an object with the properties listed below:
 
 ### Autocomplete.Button
 
-This component renders a `button` tag and allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
+This component renders a `button` tag and allows you to interact with the `Autocomplete` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
+
+#### action
+
+> `open`/`close`/`toggle`/`clearSelection` | defaults to `'toggle'`
+
+This allows you to specify what type of action the button should take when interacted with. It will take care of calling the proper `Autocomplete` method as well as apply an `aria-label` for you.
+
+#### component
+
+> `string`/`Component` | defaults to `'button'`
+
+This allows you to control what is rendered as the root element. This should allow you to use your own component. Please remember that for accessibility purposes, you should ultimately render a `button`. Anything else is probably inaccessible in this context.
 
 ### Autocomplete.Item
 
