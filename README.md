@@ -191,7 +191,7 @@ This component renders a `button` tag and allows you to interact with the `Autoc
 
 #### action
 
-> `open` | `close` | `toggle` | `clearSelection` | defaults to `'toggle'`
+> `open`/`close`/`toggle`/`clearSelection` | defaults to `'toggle'`
 
 This allows you to specify what type of action the button should take when interacted with. It will take care of calling the proper `Autocomplete` method as well as apply an `aria-label` for you.
 
