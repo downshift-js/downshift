@@ -65,14 +65,14 @@ function BasicAutocomplete({items, onChange}) {
     <Autocomplete onChange={onChange}>
       <Input placeholder="Favorite color ?" />
       <Autocomplete.Controller>
-        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
+        {({isOpen, value, selectedItem, highlightedIndex}) =>
           isOpen &&
           <div style={{border: '1px solid #ccc'}}>
             {items
               .filter(
                 i =>
-                  !inputValue ||
-                  i.toLowerCase().includes(inputValue.toLowerCase()),
+                  !value ||
+                  i.toLowerCase().includes(value.toLowerCase()),
               )
               .map((item, index) =>
                 (<Item
@@ -113,7 +113,7 @@ everything in this.
 
 > `function(item: any)` | defaults to an identity function (`i => String(i)`)
 
-Used to determine the `inputValue` for the selected item.
+Used to determine the `value` for the selected item.
 
 #### defaultHighlightedIndex
 
@@ -123,11 +123,11 @@ This is the initial index to highlight when the autocomplete first opens.
 
 #### getA11yStatusMessage
 
-> `function({ resultCount, highlightedItem, getInputValue})` | default messages provided in English
+> `function({ resultCount, highlightedItem, getValue})` | default messages provided in English
 
 This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getInputValue(highlightedItem)` and display the value of the `highlightedItem`.
+A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getValue(highlightedItem)` and display the value of the `highlightedItem`.
 
 #### onChange
 
@@ -174,7 +174,7 @@ This is called with an object with the properties listed below:
 |-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `inputValue`            | `string` / `null`          | the current value of the input                                                                                   |
+| `value`                 | `string` / `null`          | the current value of the autocomplete                                                                                   |
 | `isOpen`                | `boolean`                  | the menu open state                                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
 | `openMenu`              | `function()`               | opens the menu                                                                                                   |
