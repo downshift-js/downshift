@@ -199,7 +199,7 @@ This allows you to specify what type of action the button should take when inter
 
 > `string`/`Component` | defaults to `'button'`
 
-This allows you to control what is rendered as the root element.
+This allows you to control what is rendered as the root element. This should allow you to use your own component. Please remember that for accessibility purposes, you should ultimately render a `button`. Anything else is probably inaccessible in this context.
 
 ### Autocomplete.Item
 
