@@ -63,7 +63,7 @@ import Autocomplete from 'react-autocompletely'
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
-      <Input placeholder="Favorite color ?" />
+      <Autocomplete.Input placeholder="Favorite color ?" />
       <Autocomplete.Controller>
         {({isOpen, value, selectedItem, highlightedIndex}) =>
           isOpen &&
@@ -75,7 +75,7 @@ function BasicAutocomplete({items, onChange}) {
                   i.toLowerCase().includes(value.toLowerCase()),
               )
               .map((item, index) =>
-                (<Item
+                (<Autocomplete.Item
                   value={item}
                   index={index}
                   key={item}
@@ -83,7 +83,7 @@ function BasicAutocomplete({items, onChange}) {
                   selectedItem={selectedItem}
                 >
                   {item}
-                </Item>),
+                </Autocomplete.Item>),
               )}
           </div>
         }
@@ -96,7 +96,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={items => console.log(item)}
+      onChange={item => console.log(item)}
     />
   )
 }
