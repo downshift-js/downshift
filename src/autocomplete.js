@@ -63,12 +63,16 @@ class Autocomplete extends Component {
     this.forceUpdate()
   }
 
+  getItemIndex(itemInstance) {
+    return this.items.indexOf(itemInstance)
+  }
+
   getItemFromIndex = index => {
     if (!this.items || !this.items[0]) {
       return null
     }
     return this.items.find(itemInstance => {
-      return itemInstance.props.index === index
+      return this.getItemIndex(itemInstance) === index
     })
   }
 
