@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import glamorous, {Div} from 'glamorous'
-import Autocomplete from '../../other/react-autocompletely'
+import matchSorter from 'match-sorter'
+import Autocomplete from '../../src'
 
 class Examples extends Component {
   state = {
     selectedColor: '',
   }
 
-  changeHandler(selectedColor) {
+  changeHandler = selectedColor => {
     this.setState({selectedColor})
   }
 
@@ -36,10 +37,7 @@ class Examples extends Component {
                   : 'transparent',
               }}
             />
-            <BasicAutocomplete
-              items={items}
-              onChange={this.changeHandler.bind(this)}
-            />
+            <BasicAutocomplete items={items} onChange={this.changeHandler} />
           </Div>
         </Div>
       </div>
@@ -47,10 +45,7 @@ class Examples extends Component {
   }
 }
 
-const Item = glamorous(Autocomplete.Item, {
-  rootEl: 'div',
-  forwardProps: ['index', 'value', 'key'],
-})(
+const Item = glamorous.div(
   {
     cursor: 'pointer',
     display: 'block',
@@ -69,20 +64,17 @@ const Item = glamorous(Autocomplete.Item, {
     whiteSpace: 'normal',
     wordWrap: 'normal',
   },
-  ({index, item, highlightedIndex, selectedItem}) => ({
-    backgroundColor: highlightedIndex === index ? 'lightgrey' : 'white',
-    fontWeight: selectedItem === item ? 'bold' : 'normal',
+  ({isActive, isSelected}) => ({
+    backgroundColor: isActive ? 'lightgrey' : 'white',
+    fontWeight: isSelected ? 'bold' : 'normal',
     '&:hover, &:focus': {
       borderColor: '#96c8da',
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
     },
-  }),
+  })
 )
 
-const Input = glamorous(Autocomplete.Input, {
-  rootEl: 'div',
-  forwardProps: ['placeholder'],
-})({
+const Input = glamorous.input({
   fontSize: 14,
   wordWrap: 'break-word',
   lineHeight: '1em',
@@ -107,30 +99,33 @@ const Input = glamorous(Autocomplete.Input, {
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
-      <Input placeholder="Favorite color ?" />
-      <Autocomplete.Controller>
-        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
-          isOpen &&
-          <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
-            {items
-              .filter(
-                i =>
-                  !inputValue ||
-                  i.toLowerCase().includes(inputValue.toLowerCase()),
-              )
-              .map((item, index) =>
+      {({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        value,
+        selectedItem,
+        highlightedIndex,
+      }) =>
+        (<div>
+          <Input {...getInputProps({placeholder: 'Favorite color ?'})} />
+          {isOpen &&
+            <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
+              {(value ? matchSorter(items, value) : items).map((item, index) =>
                 (<Item
-                  value={item}
-                  index={index}
                   key={item}
-                  highlightedIndex={highlightedIndex}
-                  selectedItem={selectedItem}
+                  {...getItemProps({
+                    value: item,
+                    index,
+                    isActive: highlightedIndex === index,
+                    isSelected: selectedItem === item,
+                  })}
                 >
                   {item}
-                </Item>),
+                </Item>)
               )}
-          </div>}
-      </Autocomplete.Controller>
+            </div>}
+        </div>)}
     </Autocomplete>
   )
 }

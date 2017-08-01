@@ -47,7 +47,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save react-autocompletely
+npm install --save react-autocompletely@beta
 ```
 
 > This package also depends on `react` and `prop-types`. Please make sure you have
@@ -63,31 +63,41 @@ import Autocomplete from 'react-autocompletely'
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
-      <Autocomplete.Input placeholder="Favorite color ?" />
-      <Autocomplete.Controller>
-        {({isOpen, value, selectedItem, highlightedIndex}) =>
-          isOpen &&
-          <div style={{border: '1px solid #ccc'}}>
-            {items
-              .filter(
-                i =>
-                  !value ||
-                  i.toLowerCase().includes(value.toLowerCase()),
-              )
-              .map((item, index) =>
-                (<Autocomplete.Item
-                  value={item}
-                  index={index}
-                  key={item}
-                  highlightedIndex={highlightedIndex}
-                  selectedItem={selectedItem}
-                >
-                  {item}
-                </Autocomplete.Item>),
-              )}
-          </div>
-        }
-      </Autocomplete.Controller>
+      {({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        value,
+        selectedItem,
+        highlightedIndex
+      }) => (
+        <div>
+          <input {...getInputProps({placeholder: 'Favorite color ?'})} />
+          {isOpen ? (
+            <div style={{border: '1px solid #ccc'}}>
+              {items
+                .filter(
+                  i =>
+                    !value ||
+                    i.toLowerCase().includes(value.toLowerCase()),
+                )
+                .map((value, index) => (
+                  <div
+                    {...getItemProps({value, index})}
+                    key={value}
+                    style: {
+                      backgroundColor:
+                        highlightedIndex === index ? 'gray' : 'white',
+                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                    }
+                  >
+                    {item}
+                  </div>
+                ))}
+            </div>
+          ) : null}
+        </div>
+      )}
     </Autocomplete>
   )
 }
@@ -106,7 +116,7 @@ Available components and relevant props:
 
 ### Autocomplete
 
-This is the main component. It renders a `div` and forwards props. Wrap
+This is the only component. It renders a `div` and forwards props. Wrap
 everything in this.
 
 #### getValue
@@ -114,6 +124,12 @@ everything in this.
 > `function(item: any)` | defaults to an identity function (`i => String(i)`)
 
 Used to determine the `value` for the selected item.
+
+#### defaultSelectedItem
+
+> `any` | defaults to `null`
+
+Pass an item that should be selected by default.
 
 #### defaultHighlightedIndex
 
@@ -135,33 +151,6 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 
 Called when the user selects an item
 
-#### component
-
-> `string`/`Component` | defaults to `'div'`
-
-This allows you to controll what is rendered as the root element.
-
-#### innerRef
-
-> `function(node)` | optional
-
-If you want to get a reference to the `div` rendered by `Autocomplete`, you can use this like you would a `ref` prop.
-
-### Autocomplete.Input
-
-This is the input component. It renders an `input` and forwards props.
-
-#### defaultValue
-
-> `string` / `null` | *defaults to null*
-
-The initial value the input should have when it's mounted.
-
-### Autocomplete.Controller
-
-This component allows you to receive and interact with the state of the
-autocomplete component.
-
 #### children
 
 > `function({})` | *required*
@@ -172,9 +161,12 @@ This is called with an object with the properties listed below:
 
 | property                | type                       | description                                                                                                      |
 |-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `getInputProps`         | `function({})`             | returns the props you should apply to the `input` element that you render. Read more below                       |
+| `getItemProps`          | `function({})`             | returns the props you should apply to any menu item elements you render. Read more below                         |
+| `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `value`                 | `string` / `null`          | the current value of the autocomplete                                                                                   |
+| `value`                 | `string` / `null`          | the current value of the autocomplete                                                                            |
 | `isOpen`                | `boolean`                  | the menu open state                                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
 | `openMenu`              | `function()`               | opens the menu                                                                                                   |
@@ -185,28 +177,29 @@ This is called with an object with the properties listed below:
 | `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
 | `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
 
-### Autocomplete.Button
+##### `getInputProps`
 
-This component renders a `button` tag and allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
+This method should be applied to the `input` you render. It is recommended that
+you pass all props as an object to this method which will compose together any
+of the event handlers you need to apply to the `input` while preserving the
+ones that `react-autocompletely` needs to apply to make the `input` behave.
 
-### Autocomplete.Item
+There are no required properties for this method.
+
+##### `getItemProps`
+
+This method should be applied to any menu items you render. You pass it an object
+and that object must contain `index` (number) and `value` (anything) properties.
+The `index` is how `react-autocompletely` keeps track of your item when updating
+the `highlightedIndex` as the user keys around. The `value` property is the item
+data that will be selected when the user selects a particular item.
+
+##### `getButtonProps`
+
+Call this and apply the returned props to a `button`. It allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
 
 Render your items inside this component. This renders a `div` and forwards all
 props.
-
-#### index
-
-> `number` | *required*
-
-this is how `react-autocompletely` keeps track of your item when updating the
-`highlightedIndex` as the user keys around.
-
-#### value
-
-> `any` | *required*
-
-This is the item data that will be selected when the user selects a particular
-item.
 
 ## Examples
 

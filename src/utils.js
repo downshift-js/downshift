@@ -82,6 +82,14 @@ function scrollIntoView(node, alignToTop) {
   }
 }
 
+/**
+ * Simple debounce implementation. Will call the given
+ * function once after the time given has passed since
+ * it was last called.
+ * @param {Function} fn the function to call after the time
+ * @param {Number} time the time to wait
+ * @return {Function} the debounced function
+ */
 function debounce(fn, time) {
   let timeoutId
   return wrapper
@@ -96,13 +104,37 @@ function debounce(fn, time) {
   }
 }
 
+/**
+ * returns a function that calls the given functions in
+ * sequence with the arguments that are passed to the
+ * function returned.
+ * @param {Function} fns the functions to call
+ * @return {Function} the function that calls the functions
+ */
 function compose(...fns) {
   return (...args) => fns.forEach(fn => fn && fn(...args))
+}
+
+/**
+ * This is intended to be used to compose event handlers
+ * They are executed in order until one of them calls
+ * `event.preventDefault()`. Not sure this is the best
+ * way to do this, but it seems legit...
+ * @param {Function} fns the event hanlder functions
+ * @return {Function} the event handler to add to an element
+ */
+function composeEventHandlers(...fns) {
+  return (event, ...args) =>
+    fns.some(fn => {
+      fn && fn(event, ...args)
+      return event.defaultPrevented
+    })
 }
 
 export {
   cbToCb,
   compose,
+  composeEventHandlers,
   debounce,
   scrollIntoView,
   selectAllText,
