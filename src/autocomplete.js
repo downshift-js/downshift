@@ -119,18 +119,20 @@ class Autocomplete extends Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const {highlightedIndex} = this.state
-    const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
     const itemsLastIndex = this.items.length - 1
     if (itemsLastIndex < 0) {
       return
     }
+    const {highlightedIndex} = this.state
+    let baseIndex = highlightedIndex
+    if (baseIndex === null) {
+      baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+    }
     let newIndex = baseIndex + moveAmount
-    if (newIndex < 0) {
-      newIndex = itemsLastIndex
-    } else if (newIndex > itemsLastIndex) {
-      newIndex = 0
+    if (newIndex < 0 || newIndex > itemsLastIndex) {
+      newIndex = null
     }
     this.setHighlightedIndex(newIndex)
   }
@@ -219,7 +221,11 @@ class Autocomplete extends Component {
       },
       () => {
         if (this.state.isOpen) {
-          this.highlightSelectedItem()
+          if (this.state.selectedItem) {
+            this.highlightSelectedItem()
+          } else {
+            this.setHighlightedIndex()
+          }
         }
         cbToCb(cb)
       },
