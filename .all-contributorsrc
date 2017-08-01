@@ -110,6 +110,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "geoffdavis92",
+      "name": "Geoff Davis",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7330124?v=4",
+      "profile": "https://geoffdavis.info",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }
