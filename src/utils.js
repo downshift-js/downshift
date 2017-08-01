@@ -45,32 +45,40 @@ function noop() {}
  * @param {HTMLElement} node - the child element to start searching for scroll parent at
  * @return {HTMLElement} the closest parentNode that scrolls
  */
-function getClosestScrollElement(node) {
+function getClosestScrollParent(node) {
   if (node === null) {
     return null
   } else if (node.scrollHeight > node.clientHeight) {
     return node
   } else {
-    return getClosestScrollElement(node.parentNode)
+    return getClosestScrollParent(node.parentNode)
   }
 }
 
 /**
  * Scroll node into view
- * @param {HTMLInputElement} node - the element that should scroll into view
+ * @param {HTMLElement} node - the element that should scroll into view
+ * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
-function scrollIntoView(node) {
-  const scrollElement = getClosestScrollElement(node)
-  if (scrollElement) {
-    if (scrollElement.scrollTop >= node.offsetTop) {
-      scrollElement.scrollTop = node.offsetTop
-    } else if (
-      node.offsetTop + node.offsetHeight >=
-      scrollElement.scrollTop + scrollElement.offsetHeight
-    ) {
-      scrollElement.scrollTop =
-        node.offsetTop + node.offsetHeight - scrollElement.offsetHeight
-    }
+function scrollIntoView(node, alignToTop) {
+  const scrollParent = getClosestScrollParent(node)
+  const scrollParentStyles = getComputedStyle(scrollParent)
+  const scrollParentRect = scrollParent.getBoundingClientRect()
+  const scrollParentBorderTopWidth = parseInt(
+    scrollParentStyles.borderTopWidth,
+    10,
+  )
+  const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
+  const nodeRect = node.getBoundingClientRect()
+  const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
+  const nodeTop = nodeOffsetTop - scrollParentTop
+  if (alignToTop || nodeTop < scrollParent.scrollTop) {
+    scrollParent.scrollTop = nodeTop
+  } else if (
+    nodeTop + nodeRect.height >
+    scrollParent.scrollTop + scrollParentRect.height
+  ) {
+    scrollParent.scrollTop = nodeTop + nodeRect.height - scrollParentRect.height
   }
 }
 
