@@ -11,7 +11,6 @@ class Item extends Component {
 
   static propTypes = {
     component: PropTypes.any,
-    index: PropTypes.number.isRequired,
     innerRef: PropTypes.func,
     onMouseEnter: PropTypes.func,
     onClick: PropTypes.func,
@@ -36,11 +35,11 @@ class Item extends Component {
   }
 
   handleMouseEnter = () => {
-    this.autocomplete.setHighlightedIndex(this.props.index)
+    this.autocomplete.setHighlightedIndex(this.autocomplete.getItemIndex(this))
   }
 
   handleClick = () => {
-    this.autocomplete.selectItemAtIndex(this.props.index)
+    this.autocomplete.selectItemAtIndex(this.autocomplete.getItemIndex(this))
   }
 
   componentWillMount() {
@@ -53,7 +52,7 @@ class Item extends Component {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const {component: ItemComponent, index, value, ...rest} = this.props
+    const {component: ItemComponent, value, ...rest} = this.props
     return (
       <ItemComponent
         {...rest}

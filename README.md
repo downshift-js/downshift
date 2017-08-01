@@ -139,7 +139,7 @@ Called when the user selects an item
 
 > `string`/`Component` | defaults to `'div'`
 
-This allows you to controll what is rendered as the root element.
+This allows you to control what is rendered as the root element.
 
 #### innerRef
 
@@ -193,13 +193,6 @@ This component renders a `button` tag and allows you to toggle the `Menu` compon
 
 Render your items inside this component. This renders a `div` and forwards all
 props.
-
-#### index
-
-> `number` | *required*
-
-this is how `react-autocompletely` keeps track of your item when updating the
-`highlightedIndex` as the user keys around.
 
 #### value
 

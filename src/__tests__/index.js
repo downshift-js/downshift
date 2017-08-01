@@ -11,8 +11,8 @@ function BasicAutocomplete() {
         {({isOpen}) =>
           isOpen &&
           <div>
-            {items.map((item, index) =>
-              (<Autocomplete.Item value={item} index={index} key={item}>
+            {items.map(item =>
+              (<Autocomplete.Item value={item} key={item}>
                 {item}
               </Autocomplete.Item>),
             )}
