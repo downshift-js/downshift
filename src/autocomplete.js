@@ -72,12 +72,22 @@ class Autocomplete extends Component {
     })
   }
 
-  maybeScrollToHighlightedElement(highlightedIndex) {
+  getIndexFromItem = item => {
+    let itemIndex = -1
+    this.items.forEach((itemInstance, index) => {
+      if (itemInstance.props.value === item) {
+        itemIndex = index
+      }
+    })
+    return itemIndex
+  }
+
+  maybeScrollToHighlightedElement(highlightedIndex, alignToTop) {
     const itemInstance = this.getItemFromIndex(highlightedIndex)
     if (!itemInstance || !itemInstance.node) {
       return
     }
-    scrollIntoView(itemInstance.node)
+    scrollIntoView(itemInstance.node, alignToTop)
   }
 
   setHighlightedIndex = (
@@ -85,6 +95,13 @@ class Autocomplete extends Component {
   ) => {
     this.setState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex)
+    })
+  }
+
+  highlightSelectedItem = () => {
+    const highlightedIndex = this.getIndexFromItem(this.state.selectedItem)
+    this.setState({highlightedIndex}, () => {
+      this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
   }
 
@@ -102,18 +119,20 @@ class Autocomplete extends Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const {highlightedIndex} = this.state
-    const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
     const itemsLastIndex = this.items.length - 1
     if (itemsLastIndex < 0) {
       return
     }
+    const {highlightedIndex} = this.state
+    let baseIndex = highlightedIndex
+    if (baseIndex === null) {
+      baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+    }
     let newIndex = baseIndex + moveAmount
-    if (newIndex < 0) {
-      newIndex = itemsLastIndex
-    } else if (newIndex > itemsLastIndex) {
-      newIndex = 0
+    if (newIndex < 0 || newIndex > itemsLastIndex) {
+      newIndex = null
     }
     this.setHighlightedIndex(newIndex)
   }
@@ -202,7 +221,11 @@ class Autocomplete extends Component {
       },
       () => {
         if (this.state.isOpen) {
-          this.setHighlightedIndex()
+          if (this.state.selectedItem) {
+            this.highlightSelectedItem()
+          } else {
+            this.setHighlightedIndex()
+          }
         }
         cbToCb(cb)
       },

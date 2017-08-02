@@ -12,7 +12,7 @@ Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete comp
 [![downloads][downloads-badge]][npmcharts]
 [![MIT License][license-badge]][LICENSE]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
 [![Code of Conduct][coc-badge]][coc]
 
@@ -63,19 +63,19 @@ import Autocomplete from 'react-autocompletely'
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
-      <Input placeholder="Favorite color ?" />
+      <Autocomplete.Input placeholder="Favorite color ?" />
       <Autocomplete.Controller>
-        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
+        {({isOpen, value, selectedItem, highlightedIndex}) =>
           isOpen &&
           <div style={{border: '1px solid #ccc'}}>
             {items
               .filter(
                 i =>
-                  !inputValue ||
-                  i.toLowerCase().includes(inputValue.toLowerCase()),
+                  !value ||
+                  i.toLowerCase().includes(value.toLowerCase()),
               )
               .map((item, index) =>
-                (<Item
+                (<Autocomplete.Item
                   value={item}
                   index={index}
                   key={item}
@@ -83,7 +83,7 @@ function BasicAutocomplete({items, onChange}) {
                   selectedItem={selectedItem}
                 >
                   {item}
-                </Item>),
+                </Autocomplete.Item>),
               )}
           </div>
         }
@@ -96,7 +96,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={items => console.log(item)}
+      onChange={item => console.log(item)}
     />
   )
 }
@@ -113,7 +113,7 @@ everything in this.
 
 > `function(item: any)` | defaults to an identity function (`i => String(i)`)
 
-Used to determine the `inputValue` for the selected item.
+Used to determine the `value` for the selected item.
 
 #### defaultHighlightedIndex
 
@@ -123,11 +123,11 @@ This is the initial index to highlight when the autocomplete first opens.
 
 #### getA11yStatusMessage
 
-> `function({ resultCount, highlightedItem, getInputValue})` | default messages provided in English
+> `function({ resultCount, highlightedItem, getValue})` | default messages provided in English
 
 This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getInputValue(highlightedItem)` and display the value of the `highlightedItem`.
+A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getValue(highlightedItem)` and display the value of the `highlightedItem`.
 
 #### onChange
 
@@ -174,7 +174,7 @@ This is called with an object with the properties listed below:
 |-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `inputValue`            | `string` / `null`          | the current value of the input                                                                                   |
+| `value`                 | `string` / `null`          | the current value of the autocomplete                                                                                   |
 | `isOpen`                | `boolean`                  | the menu open state                                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
 | `openMenu`              | `function()`               | opens the menu                                                                                                   |
@@ -213,6 +213,7 @@ item.
 Examples exist on [codesandbox.io][examples]:
 
 - [react-autocompletely Apollo example](https://codesandbox.io/s/j2omZpK3W)
+- [react-autocompletely Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 
 If you would like to add an example, follow these steps:
 
@@ -248,7 +249,7 @@ Thanks goes to these people ([emoji key][emojis]):
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/paypal/react-autocompletely/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=souporserious "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=souporserious "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub>Jeremy Gayed</sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") | [<img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;"/><br /><sub>Haroen Viaene</sub>](https://haroen.me)<br />[💡](#example-Haroenv "Examples") | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/paypal/react-autocompletely/commits?author=FezVrasta "Documentation") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") | [<img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;"/><br /><sub>Muhammad Salman</sub>](https://github.com/salmanmanekia)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=salmanmanekia "Code") | [<img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;"/><br /><sub>João Alberto</sub>](https://twitter.com/psicotropidev)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=psicotropicos "Code") | [<img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;"/><br /><sub>Bernard Lin</sub>](https://github.com/bernard-lin)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=bernard-lin "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=bernard-lin "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/6290720?v=4" width="100px;"/><br /><sub>David Nguyen</sub>](https://github.com/nndung179)<br />[💡](https://codesandbox.io/s/gOmNGvN6 "Example") | 
+| [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") | [<img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;"/><br /><sub>Muhammad Salman</sub>](https://github.com/salmanmanekia)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=salmanmanekia "Code") | [<img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;"/><br /><sub>João Alberto</sub>](https://twitter.com/psicotropidev)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=psicotropicos "Code") | [<img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;"/><br /><sub>Bernard Lin</sub>](https://github.com/bernard-lin)<br />[💻](https://github.com/paypal/react-autocompletely/commits?author=bernard-lin "Code") [📖](https://github.com/paypal/react-autocompletely/commits?author=bernard-lin "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/7330124?v=4" width="100px;"/><br /><sub>Geoff Davis</sub>](https://geoffdavis.info)<br />[💡](#example-geoffdavis92 "Examples") | [<img src="https://avatars0.githubusercontent.com/u/6290720?v=4" width="100px;"/><br /><sub>David Nguyen</sub>](https://github.com/nndung179)<br />[💡](https://codesandbox.io/s/gOmNGvN6 "Example") | 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
