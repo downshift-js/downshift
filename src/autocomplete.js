@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import React, {Component} from 'react'
+import {Component} from 'react'
 import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {cbToCb, composeEventHandlers, debounce, scrollIntoView} from './utils'
@@ -174,6 +174,7 @@ class Autocomplete extends Component {
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
+      getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
@@ -191,6 +192,7 @@ class Autocomplete extends Component {
       openMenu,
       closeMenu,
       clearSelection,
+      getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
@@ -200,7 +202,16 @@ class Autocomplete extends Component {
   //////////////////////////// ROOT
 
   rootRef = node => (this._rootNode = node)
-  handleClick = event => {
+
+  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+    return {
+      [refKey]: this.rootRef,
+      onClick: composeEventHandlers(onClick, this.root_handleClick),
+      ...rest,
+    }
+  }
+
+  root_handleClick = event => {
     event.preventDefault()
     const {target} = event
     if (!target) {
@@ -420,25 +431,8 @@ class Autocomplete extends Component {
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.items = []
-    const {
-      children,
-      // eslint-disable-next-line no-unused-vars
-      defaultSelectedItem,
-      // eslint-disable-next-line no-unused-vars
-      getValue,
-      // eslint-disable-next-line no-unused-vars
-      getA11yStatusMessage,
-      // eslint-disable-next-line no-unused-vars
-      defaultHighlightedIndex,
-      // eslint-disable-next-line no-unused-vars
-      onChange,
-      ...rest
-    } = this.props
-    return (
-      <div {...rest} ref={this.rootRef} onClick={this.handleClick}>
-        {children(this.getControllerStateAndHelpers())}
-      </div>
-    )
+    const {children} = this.props
+    return children(this.getControllerStateAndHelpers())
   }
 }
 
