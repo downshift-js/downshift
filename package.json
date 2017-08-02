@@ -10,11 +10,11 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\"",
+    "storybook": "start-storybook -p 6006 -c stories",
+    "build-storybook": "build-storybook -c stories"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "prop-types": ">=15"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.3",
     "all-contributors-cli": "^4.3.0",
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",

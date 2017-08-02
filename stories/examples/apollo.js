@@ -6,7 +6,7 @@ import {
   gql,
   graphql,
 } from 'react-apollo'
-import Autocomplete from '../../other/react-autocompletely'
+import Autocomplete from '../../src'
 
 export default Examples
 
@@ -30,26 +30,40 @@ function Examples() {
 }
 
 function ApolloAutocomplete() {
-  // prettier-ignore
   return (
     <Autocomplete onChange={item => alert(item)}>
-      <Autocomplete.Input />
-      <Autocomplete.Controller>
-        {({value, selectedItem, highlightedIndex, isOpen}) => (
-          <ApolloAutocompleteMenuWithData
-            {...{value, selectedItem, highlightedIndex, isOpen}}
-          />
-        )}
-      </Autocomplete.Controller>
+      {({
+        value,
+        getInputProps,
+        getItemProps,
+        selectedItem,
+        highlightedIndex,
+        isOpen,
+      }) =>
+        (<div>
+          <input {...getInputProps()} />
+          {value
+            ? <ApolloAutocompleteMenuWithData
+              {...{
+                  value,
+                  getItemProps,
+                  selectedItem,
+                  highlightedIndex,
+                  isOpen,
+                }}
+              />
+            : null}
+        </div>)}
     </Autocomplete>
   )
 }
 
 function ApolloAutocompleteMenu({
-  data: {allColors, loading},
+  data: {allColors = [], loading} = {},
   selectedItem,
   highlightedIndex,
   isOpen,
+  getItemProps,
 }) {
   if (!isOpen) {
     return null
@@ -57,22 +71,23 @@ function ApolloAutocompleteMenu({
   if (loading) {
     return <div>Loading...</div>
   }
-  // prettier-ignore
   return (
     <div>
-      {allColors.map(({name: item}, index) => (
-        <Autocomplete.Item
-          value={item}
-          index={index}
+      {allColors.map(({name: item}, index) =>
+        (<div
           key={item}
-          style={{
-            backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-            fontWeight: selectedItem === item ? 'bold' : 'normal',
-          }}
+          {...getItemProps({
+            value: item,
+            index,
+            style: {
+              backgroundColor: highlightedIndex === index ? 'gray' : 'white',
+              fontWeight: selectedItem === item ? 'bold' : 'normal',
+            },
+          })}
         >
           {item}
-        </Autocomplete.Item>
-      ))}
+        </div>)
+      )}
     </div>
   )
 }
@@ -86,5 +101,5 @@ const SEARCH_COLORS = gql`
 `
 
 const ApolloAutocompleteMenuWithData = graphql(SEARCH_COLORS)(
-  ApolloAutocompleteMenu,
+  ApolloAutocompleteMenu
 )

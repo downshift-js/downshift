@@ -1,0 +1,24 @@
+{
+  "name": "stories",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "glamor": "^2.20.37",
+    "glamorous": "^3.24.0",
+    "match-sorter": "^1.8.0",
+    "react": "^15.6.1",
+    "react-popper": "^0.7.2",
+    "react-apollo": "^1.4.8",
+    "react-dom": "^15.6.1",
+    "react-instantsearch": "^4.0.9",
+    "throttle-debounce": "^1.0.1"
+  }
+}
