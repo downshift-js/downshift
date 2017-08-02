@@ -12,7 +12,7 @@ Thanks for being willing to contribute!
 3. `$ npm start validate` to validate you've got it working
 4. Create a branch for your PR
 
-This project uses [`nps`][nps] and you can run `npm start help` to see what
+This project uses [`nps`](https://github.com/kentcdodds/nps) and you can run `npm start help` to see what
 scripts are available.
 
 > Tip: Keep your `master` branch pointing at the original repository and make
