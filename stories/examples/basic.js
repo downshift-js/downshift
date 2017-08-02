@@ -71,7 +71,7 @@ const Item = glamorous.div(
       borderColor: '#96c8da',
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
     },
-  })
+  }),
 )
 
 const Input = glamorous.input({
@@ -96,18 +96,25 @@ const Input = glamorous.input({
   },
 })
 
+// this is just a demo of how you'd use the getRootProps function
+// normally you wouldn't need this kind of abstraction 😉
+function Root({innerRef, ...rest}) {
+  return <div ref={innerRef} {...rest} />
+}
+
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
       {({
         getInputProps,
         getItemProps,
+        getRootProps,
         isOpen,
         value,
         selectedItem,
         highlightedIndex,
       }) =>
-        (<div>
+        (<Root {...getRootProps({refKey: 'innerRef'})}>
           <Input {...getInputProps({placeholder: 'Favorite color ?'})} />
           {isOpen &&
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
@@ -122,10 +129,10 @@ function BasicAutocomplete({items, onChange}) {
                   })}
                 >
                   {item}
-                </Item>)
+                </Item>),
               )}
             </div>}
-        </div>)}
+        </Root>)}
     </Autocomplete>
   )
 }

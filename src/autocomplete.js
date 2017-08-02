@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import {Component} from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {cbToCb, composeEventHandlers, debounce, scrollIntoView} from './utils'
@@ -40,9 +40,9 @@ class Autocomplete extends Component {
       isOpen: false,
       selectedItem: this.props.defaultSelectedItem,
     }
-    this.handleClick = composeEventHandlers(
+    this.root_handleClick = composeEventHandlers(
       this.props.onClick,
-      this.handleClick,
+      this.root_handleClick,
     )
   }
 
@@ -204,6 +204,9 @@ class Autocomplete extends Component {
   rootRef = node => (this._rootNode = node)
 
   getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+    // this is used in the render to know whether the user has called getRootProps.
+    // It uses that to know whether to apply the props automatically
+    this.getRootProps.called = true
     return {
       [refKey]: this.rootRef,
       onClick: composeEventHandlers(onClick, this.root_handleClick),
@@ -431,8 +434,38 @@ class Autocomplete extends Component {
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.items = []
-    const {children} = this.props
-    return children(this.getControllerStateAndHelpers())
+    // we reset this so we know whether the user calls getRootProps during
+    // this render. If they do then we don't need to do anything,
+    // if they don't then we need to clone the element they return and
+    // apply the props for them.
+    this.getRootProps.called = false
+    const {
+      children,
+      // eslint-disable-next-line no-unused-vars
+      defaultSelectedItem,
+      // eslint-disable-next-line no-unused-vars
+      getValue,
+      // eslint-disable-next-line no-unused-vars
+      getA11yStatusMessage,
+      // eslint-disable-next-line no-unused-vars
+      defaultHighlightedIndex,
+      // eslint-disable-next-line no-unused-vars
+      onChange,
+      ...rest
+    } = this.props
+    const element = children(this.getControllerStateAndHelpers())
+    if (this.getRootProps.called) {
+      return element
+    } else if (typeof element.type === 'string') {
+      return React.cloneElement(
+        element,
+        this.getRootProps({...rest, ...element.props}),
+      )
+    } else {
+      throw new Error(
+        'react-autocompletely: If you return a non-DOM element, you must use apply the getRootProps function',
+      )
+    }
   }
 }
 
