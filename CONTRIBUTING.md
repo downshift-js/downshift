@@ -12,7 +12,7 @@ Thanks for being willing to contribute!
 3. `$ npm start validate` to validate you've got it working
 4. Create a branch for your PR
 
-This project uses [`nps`][nps] and you can run `npm start help` to see what
+This project uses [`nps`](https://github.com/kentcdodds/nps) and you can run `npm start help` to see what
 scripts are available.
 
 > Tip: Keep your `master` branch pointing at the original repository and make
@@ -41,7 +41,8 @@ automated script as part of your PR:
 npm start contributors.add
 ```
 
-Follow the prompt. If you've already added yourself to the list and are making
+Follow the prompt and commit `.all-contributorsrc` and `README.md` in the PR.
+If you've already added yourself to the list and are making
 a new type of contribution, you can run it again and select the added
 contribution type.
 
