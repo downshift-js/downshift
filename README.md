@@ -1,7 +1,8 @@
 <div align="center">
 <h1>react-autocompletely 🔮</h1>
 
-Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components
+Primitives to build simple, flexible, WAI-ARIA compliant React
+autocomplete/dropdown/select/combobox components
 </div>
 
 <hr />
@@ -22,9 +23,9 @@ Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete comp
 
 ## The problem
 
-You need an autocomplete experience in your application and you want it to be
-accessible. You also want it to be simple and flexible to account for your use
-cases.
+You need an autocomplete/dropdown/select experience in your application and you
+want it to be accessible. You also want it to be simple and flexible to account
+for your use cases.
 
 ## This solution
 
@@ -38,6 +39,9 @@ This differs from other solutions which render things for their use case and
 then expose many options to allow for extensibility causing an API that is less
 easy to use and less flexible as well as making the implementation more
 complicated and harder to contribute to.
+
+> NOTE: The original use case of this component is autocomplete, however the API
+> is powerful and flexible enough to build things like dropdowns as well.
 
 ## Installation
 
