@@ -161,6 +161,7 @@ This is called with an object with the properties listed below:
 
 | property                | type                       | description                                                                                                      |
 |-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `getRootProps`          | `function({})`             | returns the props you should apply to the root element that you render. It can be optional. Read more below      |
 | `getInputProps`         | `function({})`             | returns the props you should apply to the `input` element that you render. Read more below                       |
 | `getItemProps`          | `function({})`             | returns the props you should apply to any menu item elements you render. Read more below                         |
 | `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
@@ -177,6 +178,29 @@ This is called with an object with the properties listed below:
 | `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
 | `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
 
+The functions below are used to apply props to the elements that you render.
+This gives you maximum flexibility to render what, when, and wherever you like.
+You call these on the element in question (for example:
+`<input {...getInputProps()}`)). It's advisable to pass all your props to that
+function rather than applying them on the element yourself to avoid your props
+being overridden (or overriding the props returned). For example:
+`getInputProps({onKeyUp(event) {console.log(event)}})`.
+
+##### `getRootProps`
+
+Most of the time, you can just render a `div` yourself and `Autocompletely` will
+apply the props it needs to do its job (and you don't need to call this
+function). However, if you're rendering a composite component (custom component)
+as the root element, then you'll need to call `getRootProps` and apply that to
+your root element.
+
+Required properties:
+
+- `refKey`: if you're rendering a composite component, that component will need
+  to accept a prop which it forwards to the root DOM element. Commonly, folks
+  call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})`
+  and your composite component would forward like: `<div ref={props.innerRef} />`
+
 ##### `getInputProps`
 
 This method should be applied to the `input` you render. It is recommended that
@@ -190,9 +214,13 @@ There are no required properties for this method.
 
 This method should be applied to any menu items you render. You pass it an object
 and that object must contain `index` (number) and `value` (anything) properties.
-The `index` is how `react-autocompletely` keeps track of your item when updating
-the `highlightedIndex` as the user keys around. The `value` property is the item
-data that will be selected when the user selects a particular item.
+
+Required properties:
+
+- `index`: this is how `react-autocompletely` keeps track of your item when
+  updating the `highlightedIndex` as the user keys around.
+- `value`: this is the item data that will be selected when the user selects a
+  particular item.
 
 ##### `getButtonProps`
 

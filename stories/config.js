@@ -13,7 +13,7 @@ import Popper from './examples/react-popper'
 
 function loadStories() {
   // clear the console to make debugging experience better
-  setTimeout(() => console.clear(), 100)
+  console.clear()
 
   storiesOf('Examples', module)
     .add('basic', () => <Basic />)

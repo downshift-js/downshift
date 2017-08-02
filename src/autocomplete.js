@@ -40,9 +40,9 @@ class Autocomplete extends Component {
       isOpen: false,
       selectedItem: this.props.defaultSelectedItem,
     }
-    this.handleClick = composeEventHandlers(
+    this.root_handleClick = composeEventHandlers(
       this.props.onClick,
-      this.handleClick,
+      this.root_handleClick,
     )
   }
 
@@ -174,6 +174,7 @@ class Autocomplete extends Component {
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
+      getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
@@ -191,6 +192,7 @@ class Autocomplete extends Component {
       openMenu,
       closeMenu,
       clearSelection,
+      getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
@@ -200,7 +202,19 @@ class Autocomplete extends Component {
   //////////////////////////// ROOT
 
   rootRef = node => (this._rootNode = node)
-  handleClick = event => {
+
+  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+    // this is used in the render to know whether the user has called getRootProps.
+    // It uses that to know whether to apply the props automatically
+    this.getRootProps.called = true
+    return {
+      [refKey]: this.rootRef,
+      onClick: composeEventHandlers(onClick, this.root_handleClick),
+      ...rest,
+    }
+  }
+
+  root_handleClick = event => {
     event.preventDefault()
     const {target} = event
     if (!target) {
@@ -420,6 +434,11 @@ class Autocomplete extends Component {
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.items = []
+    // we reset this so we know whether the user calls getRootProps during
+    // this render. If they do then we don't need to do anything,
+    // if they don't then we need to clone the element they return and
+    // apply the props for them.
+    this.getRootProps.called = false
     const {
       children,
       // eslint-disable-next-line no-unused-vars
@@ -434,11 +453,19 @@ class Autocomplete extends Component {
       onChange,
       ...rest
     } = this.props
-    return (
-      <div {...rest} ref={this.rootRef} onClick={this.handleClick}>
-        {children(this.getControllerStateAndHelpers())}
-      </div>
-    )
+    const element = children(this.getControllerStateAndHelpers())
+    if (this.getRootProps.called) {
+      return element
+    } else if (typeof element.type === 'string') {
+      return React.cloneElement(
+        element,
+        this.getRootProps({...rest, ...element.props}),
+      )
+    } else {
+      throw new Error(
+        'react-autocompletely: If you return a non-DOM element, you must use apply the getRootProps function',
+      )
+    }
   }
 }
 
