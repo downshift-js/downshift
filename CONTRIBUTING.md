@@ -41,7 +41,8 @@ automated script as part of your PR:
 npm start contributors.add
 ```
 
-Follow the prompt. If you've already added yourself to the list and are making
+Follow the prompt and commit `.all-contributorsrc` and `README.md` in the PR.
+If you've already added yourself to the list and are making
 a new type of contribution, you can run it again and select the added
 contribution type.
 
