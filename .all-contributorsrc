@@ -119,6 +119,13 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "reznord",
+      "name": "Anup",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3415488?v=4",
+      "profile": "https://github.com/reznord",
+      "contributions": []
     }
   ]
 }
