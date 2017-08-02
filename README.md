@@ -224,10 +224,18 @@ Required properties:
 
 ##### `getButtonProps`
 
-Call this and apply the returned props to a `button`. It allows you to toggle the `Menu` component. You can definitely build something like this yourself (all of the available APIs are exposed to you via the `Controller`), but this is nice because it will also apply all of the proper ARIA attributes.
+Call this and apply the returned props to a `button`. It allows you to toggle
+the `Menu` component. You can definitely build something like this yourself
+(all of the available APIs are exposed to you), but this is nice because it
+will also apply all of the proper ARIA attributes. The `aria-label` prop is in
+English. You should probably override this yourself so you can provide
+translations:
 
-Render your items inside this component. This renders a `div` and forwards all
-props.
+```jsx
+<button {...getButtonProps({
+  'aria-label': translateWithId(isOpen ? 'close.menu' : 'open.menu'),
+})} />
+```
 
 ## Examples
 
