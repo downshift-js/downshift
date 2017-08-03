@@ -106,18 +106,20 @@ class Autocomplete extends Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const {highlightedIndex} = this.state
-    const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
     const itemsLastIndex = this.items.length - 1
     if (itemsLastIndex < 0) {
       return
     }
+    const {highlightedIndex} = this.state
+    let baseIndex = highlightedIndex
+    if (baseIndex === null) {
+      baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+    }
     let newIndex = baseIndex + moveAmount
-    if (newIndex < 0) {
-      newIndex = itemsLastIndex
-    } else if (newIndex > itemsLastIndex) {
-      newIndex = 0
+    if (newIndex < 0 || newIndex > itemsLastIndex) {
+      newIndex = null
     }
     this.setHighlightedIndex(newIndex)
   }
@@ -151,7 +153,10 @@ class Autocomplete extends Component {
           } else {
             values.push(itemValue)
           }
-          return {value: values}
+          return {
+            value: values,
+            inputValue: values.map(value => this.getValue(value)).join(', '),
+          }
         } else {
           return {value: itemValue, inputValue: this.getValue(itemValue)}
         }
@@ -279,6 +284,30 @@ class Autocomplete extends Component {
 
   //////////////////////////// BUTTON
 
+  buttonKeyDownHandlers = {
+    ArrowDown: this.keyDownHandlers.ArrowDown,
+
+    ArrowUp: this.keyDownHandlers.ArrowUp,
+
+    Enter(event) {
+      event.preventDefault()
+      if (this.state.isOpen) {
+        if (this.state.highlightedIndex !== null) {
+          this.selectHighlightedItem()
+        } else {
+          this.closeMenu()
+        }
+      } else {
+        this.openMenu()
+      }
+    },
+
+    ' '(event) {
+      event.preventDefault()
+      this.toggleMenu()
+    },
+  }
+
   getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
     const {isOpen} = this.state
     return {
@@ -293,8 +322,8 @@ class Autocomplete extends Component {
   }
 
   button_handleKeyDown = event => {
-    if (this.keyDownHandlers[event.key]) {
-      this.keyDownHandlers[event.key].call(this, event)
+    if (this.buttonKeyDownHandlers[event.key]) {
+      this.buttonKeyDownHandlers[event.key].call(this, event)
     } else if (event.key === ' ') {
       event.preventDefault()
       this.toggleMenu()
@@ -362,11 +391,11 @@ class Autocomplete extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
   reset = () => {
-    this.setState({
+    this.setState(({value}) => ({
       isOpen: false,
       highlightedIndex: null,
       inputValue: this.getValue(value),
-    })
+    }))
   }
 
   toggleMenu = (newState, cb) => {
