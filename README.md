@@ -145,7 +145,8 @@ This is the initial index to highlight when the autocomplete first opens.
 
 > `boolean` | defaults to `false`
 
-Specifies that multiple items can be selected at once.
+Specifies that multiple items can be selected at once. This means that when an item is selected
+it will be added to the `value` array rather than replacing the existing `value`.
 
 #### getA11yStatusMessage
 
@@ -177,7 +178,7 @@ This is called with an object with the properties listed below:
 | `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `value`                 | `any` / `Array(any)`       | the currently selected item value[s] input                                                                            |
+| `value`                 | `any` / `Array(any)`       | the currently selected item value(s) input                                                                            |
 | `inputValue`            | `string` / `null`          | the current value of the `getInputProps` input                                                                            |
 | `isOpen`                | `boolean`                  | the menu open state                                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
