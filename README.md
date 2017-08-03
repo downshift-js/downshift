@@ -1,7 +1,7 @@
 <h1 align="center">
   downshift 🏎
   <br>
-  <img src="https://github.com/paypal/downshift/raw/master/other/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <img src="https://cdn.rawgit.com/paypal/downshift/d9e94139/other/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
