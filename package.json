@@ -1,6 +1,6 @@
 {
-  "name": "react-kadabra",
-  "version": "0.0.0-semantically-released",
+  "name": "downshift",
+  "version": "1.0.0-beta.8",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/index.js",
   "engines": {
@@ -58,10 +58,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paypal/react-kadabra.git"
+    "url": "https://github.com/paypal/downshift.git"
   },
   "bugs": {
-    "url": "https://github.com/paypal/react-kadabra/issues"
+    "url": "https://github.com/paypal/downshift/issues"
   },
-  "homepage": "https://github.com/paypal/react-kadabra#readme"
+  "homepage": "https://github.com/paypal/downshift#readme"
 }

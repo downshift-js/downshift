@@ -1,9 +1,11 @@
-<div align="center">
-<h1>react-kadabra 🔮</h1>
-
-Primitives to build simple, flexible, WAI-ARIA compliant React
-autocomplete/dropdown/select/combobox components
-</div>
+<h1 align="center">
+  <img src="https://github.com/paypal/downshift/raw/master/other/logo/downshift.png" alt="downshift logo" title="downshift logo" width="128">
+  <br>
+  downshift 🏎
+  <br>
+</h1>
+<p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
+autocomplete/dropdown/select/combobox components</p>
 
 <hr />
 
@@ -51,7 +53,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save react-kadabra@beta
+npm install --save downshift@beta
 ```
 
 > This package also depends on `react` and `prop-types`. Please make sure you have
@@ -62,7 +64,7 @@ npm install --save react-kadabra@beta
 **Things are still in flux a little bit (looking for feedback).**
 
 ```jsx
-import Autocomplete from 'react-kadabra'
+import Autocomplete from 'downshift'
 
 function BasicAutocomplete({items, onChange}) {
   return (
@@ -210,7 +212,7 @@ Required properties:
 This method should be applied to the `input` you render. It is recommended that
 you pass all props as an object to this method which will compose together any
 of the event handlers you need to apply to the `input` while preserving the
-ones that `react-kadabra` needs to apply to make the `input` behave.
+ones that `downshift` needs to apply to make the `input` behave.
 
 There are no required properties for this method.
 
@@ -221,7 +223,7 @@ and that object must contain `index` (number) and `value` (anything) properties.
 
 Required properties:
 
-- `index`: this is how `react-kadabra` keeps track of your item when
+- `index`: this is how `downshift` keeps track of your item when
   updating the `highlightedIndex` as the user keys around.
 - `value`: this is the item data that will be selected when the user selects a
   particular item.
@@ -245,15 +247,15 @@ translations:
 
 Examples exist on [codesandbox.io][examples]:
 
-- [react-kadabra Apollo example](https://codesandbox.io/s/j2omZpK3W)
-- [react-kadabra Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+- [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
+- [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 
 If you would like to add an example, follow these steps:
 
 1. Fork [this codesandbox](http://kcd.im/rac-example)
 2. Update the code for your example (add some form of documentation to explain what it is)
 3. Update the title and description
-4. Add the tag: `react-kadabra:example`
+4. Add the tag: `downshift:example`
 
 ## Inspiration
 
@@ -262,14 +264,14 @@ I was heavily inspired by [Ryan Florence][ryan] and his talk entitled:
 the code in [`react-autocomplete`][react-autocomplete] and
 [jQuery UI's Autocomplete][jquery-complete].
 
-You can watch me build the first iteration of `react-kadabra` on YouTube:
+You can watch me build the first iteration of `downshift` on YouTube:
 
 - [Part 1](https://youtu.be/2kzD1IjDy5s)
 - [Part 2](https://youtu.be/w1Z7Jvj08_s)
 
 ## Other Solutions
 
-You can implement these other solutions using `react-kadabra`, but if
+You can implement these other solutions using `downshift`, but if
 you'd prefer to use these out of the box solutions, then that's fine too:
 
 - [`react-select`](https://github.com/JedWatson/react-select)
@@ -280,9 +282,9 @@ you'd prefer to use these out of the box solutions, then that's fine too:
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/paypal/react-kadabra/commits?author=kentcdodds "Code") [📖](https://github.com/paypal/react-kadabra/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/paypal/react-kadabra/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br />[💻](https://github.com/paypal/react-kadabra/commits?author=souporserious "Code") [📖](https://github.com/paypal/react-kadabra/commits?author=souporserious "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub>Jeremy Gayed</sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") | [<img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;"/><br /><sub>Haroen Viaene</sub>](https://haroen.me)<br />[💡](#example-Haroenv "Examples") | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/paypal/react-kadabra/commits?author=FezVrasta "Documentation") |
+| [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub>Kent C. Dodds</sub>](https://kentcdodds.com)<br />[💻](https://github.com/paypal/downshift/commits?author=kentcdodds "Code") [📖](https://github.com/paypal/downshift/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/paypal/downshift/commits?author=kentcdodds "Tests") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub>Jack Moore</sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub>Travis Arnold</sub>](http://travisrayarnold.com)<br />[💻](https://github.com/paypal/downshift/commits?author=souporserious "Code") [📖](https://github.com/paypal/downshift/commits?author=souporserious "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub>Jeremy Gayed</sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") | [<img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;"/><br /><sub>Haroen Viaene</sub>](https://haroen.me)<br />[💡](#example-Haroenv "Examples") | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/paypal/downshift/commits?author=FezVrasta "Documentation") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") | [<img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;"/><br /><sub>Muhammad Salman</sub>](https://github.com/salmanmanekia)<br />[💻](https://github.com/paypal/react-kadabra/commits?author=salmanmanekia "Code") | [<img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;"/><br /><sub>João Alberto</sub>](https://twitter.com/psicotropidev)<br />[💻](https://github.com/paypal/react-kadabra/commits?author=psicotropicos "Code") | [<img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;"/><br /><sub>Bernard Lin</sub>](https://github.com/bernard-lin)<br />[💻](https://github.com/paypal/react-kadabra/commits?author=bernard-lin "Code") [📖](https://github.com/paypal/react-kadabra/commits?author=bernard-lin "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/7330124?v=4" width="100px;"/><br /><sub>Geoff Davis</sub>](https://geoffdavis.info)<br />[💡](#example-geoffdavis92 "Examples") | [<img src="https://avatars0.githubusercontent.com/u/3415488?v=4" width="100px;"/><br /><sub>Anup</sub>](https://github.com/reznord)<br />[📖](https://github.com/paypal/react-kadabra/commits?author=reznord "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/340520?v=4" width="100px;"/><br /><sub>Ferdinand Salis</sub>](http://ferdinandsalis.com)<br />[🐛](https://github.com/paypal/react-kadabra/issues?q=author%3Aferdinandsalis "Bug reports") [💻](https://github.com/paypal/react-kadabra/commits?author=ferdinandsalis "Code") |
+| [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") | [<img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;"/><br /><sub>Muhammad Salman</sub>](https://github.com/salmanmanekia)<br />[💻](https://github.com/paypal/downshift/commits?author=salmanmanekia "Code") | [<img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;"/><br /><sub>João Alberto</sub>](https://twitter.com/psicotropidev)<br />[💻](https://github.com/paypal/downshift/commits?author=psicotropicos "Code") | [<img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;"/><br /><sub>Bernard Lin</sub>](https://github.com/bernard-lin)<br />[💻](https://github.com/paypal/downshift/commits?author=bernard-lin "Code") [📖](https://github.com/paypal/downshift/commits?author=bernard-lin "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/7330124?v=4" width="100px;"/><br /><sub>Geoff Davis</sub>](https://geoffdavis.info)<br />[💡](#example-geoffdavis92 "Examples") | [<img src="https://avatars0.githubusercontent.com/u/3415488?v=4" width="100px;"/><br /><sub>Anup</sub>](https://github.com/reznord)<br />[📖](https://github.com/paypal/downshift/commits?author=reznord "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/340520?v=4" width="100px;"/><br /><sub>Ferdinand Salis</sub>](http://ferdinandsalis.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Aferdinandsalis "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=ferdinandsalis "Code") |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -294,31 +296,31 @@ MIT
 
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/paypal/react-kadabra.svg?style=flat-square
-[build]: https://travis-ci.org/paypal/react-kadabra
-[coverage-badge]: https://img.shields.io/codecov/c/github/paypal/react-kadabra.svg?style=flat-square
-[coverage]: https://codecov.io/github/paypal/react-kadabra
-[version-badge]: https://img.shields.io/npm/v/react-kadabra.svg?style=flat-square
-[package]: https://www.npmjs.com/package/react-kadabra
-[downloads-badge]: https://img.shields.io/npm/dm/react-kadabra.svg?style=flat-square
-[npmcharts]: http://npmcharts.com/compare/react-kadabra
-[license-badge]: https://img.shields.io/npm/l/react-kadabra.svg?style=flat-square
-[license]: https://github.com/paypal/react-kadabra/blob/master/LICENSE
+[build-badge]: https://img.shields.io/travis/paypal/downshift.svg?style=flat-square
+[build]: https://travis-ci.org/paypal/downshift
+[coverage-badge]: https://img.shields.io/codecov/c/github/paypal/downshift.svg?style=flat-square
+[coverage]: https://codecov.io/github/paypal/downshift
+[version-badge]: https://img.shields.io/npm/v/downshift.svg?style=flat-square
+[package]: https://www.npmjs.com/package/downshift
+[downloads-badge]: https://img.shields.io/npm/dm/downshift.svg?style=flat-square
+[npmcharts]: http://npmcharts.com/compare/downshift
+[license-badge]: https://img.shields.io/npm/l/downshift.svg?style=flat-square
+[license]: https://github.com/paypal/downshift/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/paypal/react-kadabra/blob/master/other/CODE_OF_CONDUCT.md
-[github-watch-badge]: https://img.shields.io/github/watchers/paypal/react-kadabra.svg?style=social
-[github-watch]: https://github.com/paypal/react-kadabra/watchers
-[github-star-badge]: https://img.shields.io/github/stars/paypal/react-kadabra.svg?style=social
-[github-star]: https://github.com/paypal/react-kadabra/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20react-kadabra!%20https://github.com/paypal/react-kadabra%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/paypal/react-kadabra.svg?style=social
+[coc]: https://github.com/paypal/downshift/blob/master/other/CODE_OF_CONDUCT.md
+[github-watch-badge]: https://img.shields.io/github/watchers/paypal/downshift.svg?style=social
+[github-watch]: https://github.com/paypal/downshift/watchers
+[github-star-badge]: https://img.shields.io/github/stars/paypal/downshift.svg?style=social
+[github-star]: https://github.com/paypal/downshift/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20downshift!%20https://github.com/paypal/downshift%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/paypal/downshift.svg?style=social
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence
 [compound-components-talk]: https://www.youtube.com/watch?v=hEGg-3pIHlE
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
-[examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=react-kadabra%3Aexample&page=1
+[examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1

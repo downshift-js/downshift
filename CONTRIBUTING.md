@@ -19,7 +19,7 @@ scripts are available.
 > pull requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream https://github.com/paypal/react-kadabra.git
+> git remote add upstream https://github.com/paypal/downshift.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/master master
 > ```
@@ -80,4 +80,4 @@ Also, please watch the repo and respond to questions/bug reports/feature request
 [semantic-release]: https://npmjs.com/package/semantic-release
 [convention]: https://github.com/conventional-changelog/conventional-changelog-angular/blob/ed32559941719a130bb0327f886d6a32a8cbc2ba/convention.md
 [all-contributors]: https://github.com/kentcdodds/all-contributors
-[issues]: https://github.com/paypal/react-kadabra/issues
+[issues]: https://github.com/paypal/downshift/issues
