@@ -324,9 +324,6 @@ class Autocomplete extends Component {
   button_handleKeyDown = event => {
     if (this.buttonKeyDownHandlers[event.key]) {
       this.buttonKeyDownHandlers[event.key].call(this, event)
-    } else if (event.key === ' ') {
-      event.preventDefault()
-      this.toggleMenu()
     }
   }
 
