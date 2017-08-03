@@ -1,5 +1,5 @@
 {
-  "name": "react-autocompletely",
+  "name": "react-kadabra",
   "version": "0.0.0-semantically-released",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/index.js",
@@ -14,7 +14,9 @@
     "storybook": "start-storybook -p 6006 -c stories",
     "build-storybook": "build-storybook -c stories"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -56,10 +58,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paypal/react-autocompletely.git"
+    "url": "https://github.com/paypal/react-kadabra.git"
   },
   "bugs": {
-    "url": "https://github.com/paypal/react-autocompletely/issues"
+    "url": "https://github.com/paypal/react-kadabra/issues"
   },
-  "homepage": "https://github.com/paypal/react-autocompletely#readme"
+  "homepage": "https://github.com/paypal/react-kadabra#readme"
 }

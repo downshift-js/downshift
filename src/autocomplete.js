@@ -463,7 +463,7 @@ class Autocomplete extends Component {
       )
     } else {
       throw new Error(
-        'react-autocompletely: If you return a non-DOM element, you must use apply the getRootProps function',
+        'react-kadabra: If you return a non-DOM element, you must use apply the getRootProps function',
       )
     }
   }
