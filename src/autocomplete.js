@@ -40,7 +40,7 @@ class Autocomplete extends Component {
       highlightedIndex: null,
       inputValue: '',
       isOpen: false,
-      value: this.props.defaultValue || this.props.multiple ? [] : '',
+      selectedValue: this.props.defaultValue || this.props.multiple ? [] : '',
     }
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
@@ -86,7 +86,8 @@ class Autocomplete extends Component {
   }
 
   highlightSelectedItem = () => {
-    const highlightedIndex = this.getIndexFromValue(this.state.value) || 0
+    const highlightedIndex =
+      this.getIndexFromValue(this.state.selectedValue) || 0
     this.setState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
@@ -127,7 +128,7 @@ class Autocomplete extends Component {
   clearSelection = () => {
     this.setState(
       {
-        value: this.multiple ? [] : '',
+        selectedValue: this.multiple ? [] : '',
         isOpen: false,
       },
       () => {
@@ -146,7 +147,7 @@ class Autocomplete extends Component {
     this.setState(
       state => {
         if (this.props.multiple) {
-          const values = [...state.value]
+          const values = [...state.selectedValue]
           const pos = values.indexOf(itemValue)
           if (pos > -1) {
             values.splice(pos, 1)
@@ -154,11 +155,14 @@ class Autocomplete extends Component {
             values.push(itemValue)
           }
           return {
-            value: values,
+            selectedValue: values,
             inputValue: values.map(value => this.getValue(value)).join(', '),
           }
         } else {
-          return {value: itemValue, inputValue: this.getValue(itemValue)}
+          return {
+            selectedValue: itemValue,
+            inputValue: this.getValue(itemValue),
+          }
         }
       },
       () => {
@@ -184,7 +188,7 @@ class Autocomplete extends Component {
   }
 
   getControllerStateAndHelpers() {
-    const {highlightedIndex, inputValue, isOpen, value} = this.state
+    const {highlightedIndex, inputValue, isOpen, selectedValue} = this.state
     const {
       getRootProps,
       getButtonProps,
@@ -222,7 +226,7 @@ class Autocomplete extends Component {
       highlightedIndex,
       inputValue,
       isOpen,
-      value,
+      selectedValue,
     }
   }
 
@@ -391,10 +395,10 @@ class Autocomplete extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
   reset = () => {
-    this.setState(({value}) => ({
+    this.setState(({selectedValue}) => ({
       isOpen: false,
       highlightedIndex: null,
-      inputValue: this.getValue(value),
+      inputValue: this.getValue(selectedValue),
     }))
   }
 
@@ -409,7 +413,7 @@ class Autocomplete extends Component {
       },
       () => {
         if (this.state.isOpen) {
-          if (this.state.value.length > 0) {
+          if (this.state.selectedValue.length > 0) {
             this.highlightSelectedItem()
           } else {
             this.setHighlightedIndex()
@@ -473,7 +477,7 @@ class Autocomplete extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       prevState.highlightedIndex !== this.state.highlightedIndex ||
-      this.state.value !== prevState.value
+      this.state.selectedValue !== prevState.selectedValue
     ) {
       this.updateStatus()
     }
