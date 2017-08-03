@@ -1,8 +1,8 @@
 <h1 align="center">
-  <img src="https://github.com/paypal/downshift/raw/master/other/logo/downshift.png" alt="downshift logo" title="downshift logo" width="128">
-  <br>
   downshift 🏎
-  <br>
+  <br>
+  <img src="https://github.com/paypal/downshift/raw/master/other/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
 autocomplete/dropdown/select/combobox components</p>
