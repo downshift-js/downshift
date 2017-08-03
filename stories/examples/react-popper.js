@@ -52,8 +52,8 @@ class ReactPopperAutocomplete extends PureComponent {
             {({
               getInputProps,
               getItemProps,
-              value,
-              selectedItem,
+              inputValue,
+              selectedValue,
               highlightedIndex,
               isOpen,
             }) =>
@@ -70,8 +70,8 @@ class ReactPopperAutocomplete extends PureComponent {
                       {this.props.items
                         .filter(
                           i =>
-                            !value ||
-                            i.toLowerCase().includes(value.toLowerCase())
+                            !inputValue ||
+                            i.toLowerCase().includes(inputValue.toLowerCase()),
                         )
                         .map((item, index) =>
                           (<div
@@ -86,11 +86,11 @@ class ReactPopperAutocomplete extends PureComponent {
                                   ? 'rgba(0, 0, 0, .2)'
                                   : 'transparent',
                               fontWeight:
-                                selectedItem === item ? 'bold' : 'normal',
+                                selectedValue === item ? 'bold' : 'normal',
                             }}
                           >
                             {item}
-                          </div>)
+                          </div>),
                         )}
                     </Popper>}
                 </div>

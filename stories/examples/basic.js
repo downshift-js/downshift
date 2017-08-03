@@ -111,7 +111,7 @@ function BasicAutocomplete({items, onChange}) {
         highlightedIndex,
         inputValue,
         isOpen,
-        value,
+        selectedValue,
       }) =>
         (<Root {...getRootProps({refKey: 'innerRef'})}>
           <Input {...getInputProps({placeholder: 'Favorite color ?'})} />
@@ -126,7 +126,7 @@ function BasicAutocomplete({items, onChange}) {
                     value: item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: value === item,
+                    isSelected: selectedValue === item,
                   })}
                 >
                     {item}
