@@ -292,10 +292,10 @@ class Autocomplete extends Component {
     Enter(event) {
       event.preventDefault()
       if (this.state.isOpen) {
-        if (this.state.highlightedIndex !== null) {
-          this.selectHighlightedItem()
-        } else {
+        if (this.state.highlightedIndex === null) {
           this.closeMenu()
+        } else {
+          this.selectHighlightedItem()
         }
       } else {
         this.openMenu()
