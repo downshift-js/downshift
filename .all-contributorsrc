@@ -128,6 +128,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "ferdinandsalis",
+      "name": "Ferdinand Salis",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/340520?v=4",
+      "profile": "http://ferdinandsalis.com",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }

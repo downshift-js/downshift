@@ -71,9 +71,8 @@ class Autocomplete extends Component {
 
   maybeScrollToHighlightedElement(highlightedIndex, alignToTop) {
     const node = this.getItemNodeFromIndex(highlightedIndex)
-    if (node) {
-      scrollIntoView(node, alignToTop)
-    }
+    const rootNode = this._rootNode
+    scrollIntoView(node, rootNode, alignToTop)
   }
 
   setHighlightedIndex = (
