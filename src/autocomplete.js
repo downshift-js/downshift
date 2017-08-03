@@ -8,18 +8,18 @@ import {cbToCb, composeEventHandlers, debounce, scrollIntoView} from './utils'
 class Autocomplete extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
-    defaultSelectedItem: PropTypes.any,
     defaultHighlightedIndex: PropTypes.number,
+    defaultValue: PropTypes.any,
     getA11yStatusMessage: PropTypes.func,
     getValue: PropTypes.func,
+    multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func,
+    value: PropTypes.any,
   }
 
   static defaultProps = {
-    defaultSelectedItem: null,
     defaultHighlightedIndex: null,
-    getValue: i => String(i),
     getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
       if (!resultCount) {
         return 'No results.'
@@ -30,15 +30,16 @@ class Autocomplete extends Component {
       }
       return getValue(highlightedItem)
     },
+    getValue: i => String(i),
   }
 
   constructor(...args) {
     super(...args)
     this.state = {
       highlightedIndex: null,
-      value: null,
+      inputValue: '',
       isOpen: false,
-      selectedItem: this.props.defaultSelectedItem,
+      value: this.props.defaultValue || this.props.multiple ? [] : '',
     }
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
@@ -58,7 +59,7 @@ class Autocomplete extends Component {
     })
   }
 
-  getIndexFromItem = itemValue => {
+  getIndexFromValue = itemValue => {
     const item = this.items.find(({value}) => value === itemValue)
     return item ? item.index : null
   }
@@ -84,7 +85,7 @@ class Autocomplete extends Component {
   }
 
   highlightSelectedItem = () => {
-    const highlightedIndex = this.getIndexFromItem(this.state.selectedItem) || 0
+    const highlightedIndex = this.getIndexFromValue(this.state.value) || 0
     this.setState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
@@ -123,8 +124,7 @@ class Autocomplete extends Component {
   clearSelection = () => {
     this.setState(
       {
-        selectedItem: null,
-        value: null,
+        value: this.multiple ? [] : '',
         isOpen: false,
       },
       () => {
@@ -137,9 +137,24 @@ class Autocomplete extends Component {
   }
 
   selectItem = itemValue => {
-    this.reset()
+    if (!this.props.multiple) {
+      this.reset()
+    }
     this.setState(
-      {selectedItem: itemValue, value: this.getValue(itemValue)},
+      state => {
+        if (this.props.multiple) {
+          const values = [...state.value]
+          const pos = values.indexOf(itemValue)
+          if (pos > -1) {
+            values.splice(pos, 1)
+          } else {
+            values.push(itemValue)
+          }
+          return {value: values}
+        } else {
+          return {value: itemValue, inputValue: this.getValue(itemValue)}
+        }
+      },
       () => {
         this.props.onChange(itemValue)
       },
@@ -163,38 +178,43 @@ class Autocomplete extends Component {
   }
 
   getControllerStateAndHelpers() {
-    const {highlightedIndex, value, isOpen, selectedItem} = this.state
+    const {highlightedIndex, inputValue, isOpen, value} = this.state
     const {
-      toggleMenu,
+      getButtonProps,
+      getInputProps,
+      getItemProps,
+      getRootProps,
       openMenu,
       closeMenu,
-      clearSelection,
+      toggleMenu,
       selectItem,
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
-      getRootProps,
-      getButtonProps,
-      getInputProps,
-      getItemProps,
+      clearSelection,
     } = this
     return {
-      selectedItem,
-      selectItem,
-      selectItemAtIndex,
-      selectHighlightedItem,
-      highlightedIndex,
-      setHighlightedIndex,
-      value,
-      isOpen,
-      toggleMenu,
-      openMenu,
-      closeMenu,
-      clearSelection,
-      getRootProps,
+      // prop getters
       getButtonProps,
       getInputProps,
       getItemProps,
+      getRootProps,
+
+      // actions
+      openMenu,
+      closeMenu,
+      toggleMenu,
+      selectItem,
+      selectItemAtIndex,
+      selectHighlightedItem,
+      setHighlightedIndex,
+      clearSelection,
+
+      // state
+      highlightedIndex,
+      inputValue,
+      isOpen,
+      value,
     }
   }
 
@@ -287,15 +307,19 @@ class Autocomplete extends Component {
 
   /////////////////////////////// INPUT
 
+  getValue = itemValue => {
+    return itemValue ? this.props.getValue(itemValue) : ''
+  }
+
   getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
-    const {value, selectedItem, isOpen} = this.state
+    const {isOpen} = this.state
     return {
       'data-autocomplete-input': true,
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       autoComplete: 'off',
-      value: (value === null ? this.getValue(selectedItem) : value) || '',
+      value: this.state.inputValue,
       onChange: composeEventHandlers(onChange, this.input_handleChange),
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
@@ -307,14 +331,12 @@ class Autocomplete extends Component {
     if (event.key && this.keyDownHandlers[event.key]) {
       this.keyDownHandlers[event.key].call(this, event)
     } else if (!['Shift', 'Meta', 'Alt', 'Control'].includes(event.key)) {
-      this.openMenu(() => {
-        this.highlightIndex()
-      })
+      this.openMenu()
     }
   }
 
   input_handleChange = event => {
-    this.setState({value: event.target.value})
+    this.setState({inputValue: event.target.value})
   }
   input_handleBlur = () => {
     if (!this.isMouseDown) {
@@ -337,11 +359,10 @@ class Autocomplete extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
   reset = () => {
-    this.setState(({selectedItem}) => ({
+    this.setState({
       isOpen: false,
       highlightedIndex: null,
-      value: this.getValue(selectedItem),
-    }))
+    })
   }
 
   toggleMenu = (newState, cb) => {
@@ -355,7 +376,11 @@ class Autocomplete extends Component {
       },
       () => {
         if (this.state.isOpen) {
-          this.highlightSelectedItem()
+          if (this.state.value.length > 0) {
+            this.highlightSelectedItem()
+          } else {
+            this.setHighlightedIndex()
+          }
         }
         cbToCb(cb)()
       },
@@ -368,10 +393,6 @@ class Autocomplete extends Component {
 
   closeMenu = cb => {
     this.toggleMenu(false, cb)
-  }
-
-  getValue = item => {
-    return item ? this.props.getValue(item) : null
   }
 
   updateStatus = debounce(() => {
@@ -441,7 +462,7 @@ class Autocomplete extends Component {
     const {
       children,
       // eslint-disable-next-line no-unused-vars
-      defaultSelectedItem,
+      defaultValue,
       // eslint-disable-next-line no-unused-vars
       getValue,
       // eslint-disable-next-line no-unused-vars
@@ -449,7 +470,13 @@ class Autocomplete extends Component {
       // eslint-disable-next-line no-unused-vars
       defaultHighlightedIndex,
       // eslint-disable-next-line no-unused-vars
+      multiple,
+      // eslint-disable-next-line no-unused-vars
+      onClick,
+      // eslint-disable-next-line no-unused-vars
       onChange,
+      // eslint-disable-next-line no-unused-vars
+      value,
       ...rest
     } = this.props
     const element = children(this.getControllerStateAndHelpers())
