@@ -8,18 +8,18 @@ import {cbToCb, composeEventHandlers, debounce, scrollIntoView} from './utils'
 class Autocomplete extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
-    defaultSelectedItem: PropTypes.any,
     defaultHighlightedIndex: PropTypes.number,
+    defaultValue: PropTypes.any,
     getA11yStatusMessage: PropTypes.func,
     getValue: PropTypes.func,
+    multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func,
   }
 
   static defaultProps = {
-    defaultSelectedItem: null,
     defaultHighlightedIndex: null,
-    getValue: i => String(i),
+    defaultValue: null,
     getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
       if (!resultCount) {
         return 'No results.'
@@ -30,15 +30,16 @@ class Autocomplete extends Component {
       }
       return getValue(highlightedItem)
     },
+    getValue: i => String(i),
   }
 
   constructor(...args) {
     super(...args)
     this.state = {
       highlightedIndex: null,
-      value: null,
+      inputValue: '',
       isOpen: false,
-      selectedItem: this.props.defaultSelectedItem,
+      selectedValue: this.props.defaultValue || this.props.multiple ? [] : '',
     }
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
@@ -58,7 +59,7 @@ class Autocomplete extends Component {
     })
   }
 
-  getIndexFromItem = itemValue => {
+  getIndexFromValue = itemValue => {
     const item = this.items.find(({value}) => value === itemValue)
     return item ? item.index : null
   }
@@ -84,7 +85,8 @@ class Autocomplete extends Component {
   }
 
   highlightSelectedItem = () => {
-    const highlightedIndex = this.getIndexFromItem(this.state.selectedItem) || 0
+    const highlightedIndex =
+      this.getIndexFromValue(this.state.selectedValue) || 0
     this.setState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
@@ -104,18 +106,20 @@ class Autocomplete extends Component {
     }
   }
 
+  // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const {highlightedIndex} = this.state
-    const baseIndex = highlightedIndex === null ? -1 : highlightedIndex
     const itemsLastIndex = this.items.length - 1
     if (itemsLastIndex < 0) {
       return
     }
+    const {highlightedIndex} = this.state
+    let baseIndex = highlightedIndex
+    if (baseIndex === null) {
+      baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+    }
     let newIndex = baseIndex + moveAmount
-    if (newIndex < 0) {
-      newIndex = itemsLastIndex
-    } else if (newIndex > itemsLastIndex) {
-      newIndex = 0
+    if (newIndex < 0 || newIndex > itemsLastIndex) {
+      newIndex = null
     }
     this.setHighlightedIndex(newIndex)
   }
@@ -123,8 +127,7 @@ class Autocomplete extends Component {
   clearSelection = () => {
     this.setState(
       {
-        selectedItem: null,
-        value: null,
+        selectedValue: this.multiple ? [] : '',
         isOpen: false,
       },
       () => {
@@ -137,11 +140,36 @@ class Autocomplete extends Component {
   }
 
   selectItem = itemValue => {
-    this.reset()
+    const previousValue = this.state.selectedValue
+    if (!this.props.multiple) {
+      this.reset()
+    }
     this.setState(
-      {selectedItem: itemValue, value: this.getValue(itemValue)},
+      state => {
+        if (this.props.multiple) {
+          const values = [...state.selectedValue]
+          const pos = values.indexOf(itemValue)
+          if (pos > -1) {
+            values.splice(pos, 1)
+          } else {
+            values.push(itemValue)
+          }
+          return {
+            selectedValue: values,
+            inputValue: values.map(value => this.getValue(value)).join(', '),
+          }
+        } else {
+          return {
+            selectedValue: itemValue,
+            inputValue: this.getValue(itemValue),
+          }
+        }
+      },
       () => {
-        this.props.onChange(itemValue)
+        this.props.onChange({
+          selectedValue: this.state.selectedValue,
+          previousValue,
+        })
       },
     )
   }
@@ -163,38 +191,45 @@ class Autocomplete extends Component {
   }
 
   getControllerStateAndHelpers() {
-    const {highlightedIndex, value, isOpen, selectedItem} = this.state
+    const {highlightedIndex, inputValue, isOpen, selectedValue} = this.state
     const {
-      toggleMenu,
-      openMenu,
-      closeMenu,
-      clearSelection,
-      selectItem,
-      selectItemAtIndex,
-      selectHighlightedItem,
-      setHighlightedIndex,
       getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
+      getItemFromIndex,
+      openMenu,
+      closeMenu,
+      toggleMenu,
+      selectItem,
+      selectItemAtIndex,
+      selectHighlightedItem,
+      setHighlightedIndex,
+      clearSelection,
     } = this
     return {
-      selectedItem,
-      selectItem,
-      selectItemAtIndex,
-      selectHighlightedItem,
-      highlightedIndex,
-      setHighlightedIndex,
-      value,
-      isOpen,
-      toggleMenu,
-      openMenu,
-      closeMenu,
-      clearSelection,
+      // prop getters
       getRootProps,
       getButtonProps,
       getInputProps,
       getItemProps,
+      getItemFromIndex,
+
+      // actions
+      openMenu,
+      closeMenu,
+      toggleMenu,
+      selectItem,
+      selectItemAtIndex,
+      selectHighlightedItem,
+      setHighlightedIndex,
+      clearSelection,
+
+      // state
+      highlightedIndex,
+      inputValue,
+      isOpen,
+      selectedValue,
     }
   }
 
@@ -256,6 +291,23 @@ class Autocomplete extends Component {
 
   //////////////////////////// BUTTON
 
+  buttonKeyDownHandlers = {
+    ...this.keyDownHandlers,
+
+    ' '(event) {
+      event.preventDefault()
+      if (this.state.isOpen) {
+        if (this.state.highlightedIndex === null) {
+          this.closeMenu()
+        } else {
+          this.selectHighlightedItem()
+        }
+      } else {
+        this.openMenu()
+      }
+    },
+  }
+
   getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
     const {isOpen} = this.state
     return {
@@ -270,11 +322,8 @@ class Autocomplete extends Component {
   }
 
   button_handleKeyDown = event => {
-    if (this.keyDownHandlers[event.key]) {
-      this.keyDownHandlers[event.key].call(this, event)
-    } else if (event.key === ' ') {
-      event.preventDefault()
-      this.toggleMenu()
+    if (this.buttonKeyDownHandlers[event.key]) {
+      this.buttonKeyDownHandlers[event.key].call(this, event)
     }
   }
 
@@ -287,15 +336,19 @@ class Autocomplete extends Component {
 
   /////////////////////////////// INPUT
 
+  getValue = itemValue => {
+    return itemValue ? this.props.getValue(itemValue) : ''
+  }
+
   getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
-    const {value, selectedItem, isOpen} = this.state
+    const {inputValue, isOpen} = this.state
     return {
       'data-autocomplete-input': true,
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       autoComplete: 'off',
-      value: (value === null ? this.getValue(selectedItem) : value) || '',
+      value: inputValue,
       onChange: composeEventHandlers(onChange, this.input_handleChange),
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
@@ -307,14 +360,12 @@ class Autocomplete extends Component {
     if (event.key && this.keyDownHandlers[event.key]) {
       this.keyDownHandlers[event.key].call(this, event)
     } else if (!['Shift', 'Meta', 'Alt', 'Control'].includes(event.key)) {
-      this.openMenu(() => {
-        this.highlightIndex()
-      })
+      this.openMenu()
     }
   }
 
   input_handleChange = event => {
-    this.setState({value: event.target.value})
+    this.setState({inputValue: event.target.value})
   }
   input_handleBlur = () => {
     if (!this.isMouseDown) {
@@ -337,10 +388,10 @@ class Autocomplete extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
   reset = () => {
-    this.setState(({selectedItem}) => ({
+    this.setState(({selectedValue}) => ({
       isOpen: false,
       highlightedIndex: null,
-      value: this.getValue(selectedItem),
+      inputValue: this.getValue(selectedValue),
     }))
   }
 
@@ -355,7 +406,11 @@ class Autocomplete extends Component {
       },
       () => {
         if (this.state.isOpen) {
-          this.highlightSelectedItem()
+          if (this.state.selectedValue.length > 0) {
+            this.highlightSelectedItem()
+          } else {
+            this.setHighlightedIndex()
+          }
         }
         cbToCb(cb)()
       },
@@ -368,10 +423,6 @@ class Autocomplete extends Component {
 
   closeMenu = cb => {
     this.toggleMenu(false, cb)
-  }
-
-  getValue = item => {
-    return item ? this.props.getValue(item) : null
   }
 
   updateStatus = debounce(() => {
@@ -419,7 +470,7 @@ class Autocomplete extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (
       prevState.highlightedIndex !== this.state.highlightedIndex ||
-      this.state.value !== prevState.value
+      this.state.selectedValue !== prevState.selectedValue
     ) {
       this.updateStatus()
     }
@@ -441,13 +492,17 @@ class Autocomplete extends Component {
     const {
       children,
       // eslint-disable-next-line no-unused-vars
-      defaultSelectedItem,
+      defaultValue,
       // eslint-disable-next-line no-unused-vars
       getValue,
       // eslint-disable-next-line no-unused-vars
       getA11yStatusMessage,
       // eslint-disable-next-line no-unused-vars
       defaultHighlightedIndex,
+      // eslint-disable-next-line no-unused-vars
+      multiple,
+      // eslint-disable-next-line no-unused-vars
+      onClick,
       // eslint-disable-next-line no-unused-vars
       onChange,
       ...rest

@@ -14,7 +14,7 @@ function RawAutoComplete({refine, hits}) {
       {({
         getInputProps,
         getItemProps,
-        selectedItem,
+        selectedValue,
         highlightedIndex,
         isOpen,
       }) =>
@@ -37,12 +37,12 @@ function RawAutoComplete({refine, hits}) {
                     style: {
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                      fontWeight: selectedValue === item ? 'bold' : 'normal',
                     },
                   })}
                 >
                   <Highlight attributeName="name" hit={item} tagName="mark" />
-                </div>)
+                </div>),
               )}
             </div>}
         </div>)}

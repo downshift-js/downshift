@@ -73,8 +73,8 @@ function BasicAutocomplete({items, onChange}) {
         getInputProps,
         getItemProps,
         isOpen,
-        value,
-        selectedItem,
+        inputValue,
+        selectedValue,
         highlightedIndex
       }) => (
         <div>
@@ -84,8 +84,8 @@ function BasicAutocomplete({items, onChange}) {
               {items
                 .filter(
                   i =>
-                    !value ||
-                    i.toLowerCase().includes(value.toLowerCase()),
+                    !inputValue ||
+                    i.toLowerCase().includes(inputValue.toLowerCase()),
                 )
                 .map((item, index) => (
                   <div
@@ -94,8 +94,8 @@ function BasicAutocomplete({items, onChange}) {
                     style={{
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                    }}
+                      fontWeight: selectedValue === item ? 'bold' : 'normal',
+                    }
                   >
                     {item}
                   </div>
@@ -112,7 +112,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={item => console.log(item)}
+      onChange={({selectedValue}) => console.log(selectedValue)}
     />
   )
 }
@@ -131,17 +131,24 @@ everything in this.
 
 Used to determine the `value` for the selected item.
 
-#### defaultSelectedItem
+#### defaultValue
 
-> `any` | defaults to `null`
+> `any`/`Array(any)` | defaults to `null` or an empty array (`[]`) if the `multiple` prop is true
 
-Pass an item that should be selected by default.
+Pass an item or an array of items that should be selected by default.
 
 #### defaultHighlightedIndex
 
 > `number`/`null` | defaults to `null`
 
 This is the initial index to highlight when the autocomplete first opens.
+
+#### multiple
+
+> `boolean` | defaults to `false`
+
+Specifies that multiple items can be selected at once. This means that when an item is selected
+it will be added to the `value` array rather than replacing the existing `value`.
 
 #### getA11yStatusMessage
 
@@ -153,7 +160,7 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 
 #### onChange
 
-> `function(item: any)` | *required*
+> `function({selectedValue, previousValue})` | *required*
 
 Called when the user selects an item
 
@@ -173,12 +180,12 @@ This is called with an object with the properties listed below:
 | `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `value`                 | `string` / `null`          | the current value of the autocomplete                                                                            |
+| `value`                 | `any` / `Array(any)`       | the currently selected item value(s) input                                                                            |
+| `inputValue`            | `string` / `null`          | the current value of the `getInputProps` input                                                                            |
 | `isOpen`                | `boolean`                  | the menu open state                                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
 | `openMenu`              | `function()`               | opens the menu                                                                                                   |
 | `closeMenu`             | `function()`               | closes the menu                                                                                                  |
-| `selectedItem`          | `any`                      | the currently selected item                                                                                      |
 | `clearSelection`        | `function()`               | clears the selection                                                                                             |
 | `selectItem`            | `function(item: any)`      | selects the given item                                                                                           |
 | `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |

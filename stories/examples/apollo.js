@@ -33,21 +33,21 @@ function ApolloAutocomplete() {
   return (
     <Autocomplete onChange={item => alert(item)}>
       {({
-        value,
+        inputValue,
         getInputProps,
         getItemProps,
-        selectedItem,
+        selectedValue,
         highlightedIndex,
         isOpen,
       }) =>
         (<div>
           <input {...getInputProps()} />
-          {value
+          {inputValue
             ? <ApolloAutocompleteMenuWithData
               {...{
-                  value,
+                  inputValue,
                   getItemProps,
-                  selectedItem,
+                  selectedValue,
                   highlightedIndex,
                   isOpen,
                 }}
@@ -60,7 +60,7 @@ function ApolloAutocomplete() {
 
 function ApolloAutocompleteMenu({
   data: {allColors = [], loading} = {},
-  selectedItem,
+  selectedValue,
   highlightedIndex,
   isOpen,
   getItemProps,
@@ -81,25 +81,25 @@ function ApolloAutocompleteMenu({
             index,
             style: {
               backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-              fontWeight: selectedItem === item ? 'bold' : 'normal',
+              fontWeight: selectedValue === item ? 'bold' : 'normal',
             },
           })}
         >
           {item}
-        </div>)
+        </div>),
       )}
     </div>
   )
 }
 
 const SEARCH_COLORS = gql`
-  query AllColors($value: String!) {
-    allColors(filter: {name_contains: $value}) {
+  query AllColors($inputValue: String!) {
+    allColors(filter: {name_contains: $inputValue}) {
       name
     }
   }
 `
 
 const ApolloAutocompleteMenuWithData = graphql(SEARCH_COLORS)(
-  ApolloAutocompleteMenu
+  ApolloAutocompleteMenu,
 )

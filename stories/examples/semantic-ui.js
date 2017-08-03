@@ -60,7 +60,7 @@ const Item = glamorous.div(
       })
     }
     return styles
-  }
+  },
 )
 const onAttention = '&:hover, &:focus'
 const Input = glamorous.input(
@@ -95,7 +95,7 @@ const Input = glamorous.input(
           borderBottomLeftRadius: '0',
           borderBottomRightRadius: '0',
         }
-      : null
+      : null,
 )
 
 const Menu = glamorous.div({
@@ -135,19 +135,19 @@ function SemanticUIAutocomplete() {
       getValue={i => i.name}
       // defaultHighlightedIndex={0}
       // defaultSelectedItem={items[20]}
-      onChange={item => alert(item.name)}
+      onChange={({selectedValue}) => alert(selectedValue.name)}
       style={{
         width: '250px',
       }}
     >
       {({
-        value,
         highlightedIndex,
         isOpen,
         toggleMenu,
         clearSelection,
         rootRef,
-        selectedItem,
+        inputValue,
+        selectedValue,
         getButtonProps,
         getInputProps,
         getItemProps,
@@ -160,7 +160,7 @@ function SemanticUIAutocomplete() {
                 placeholder: 'Enter some info',
               })}
             />
-            {selectedItem
+            {selectedValue
               ? <ControlButton
                 css={{paddingTop: 4}}
                 onClick={clearSelection}
@@ -174,8 +174,8 @@ function SemanticUIAutocomplete() {
           </Div>
           {isOpen &&
             <Menu>
-              {(value
-                ? advancedFilter(items, value)
+              {(inputValue
+                ? advancedFilter(items, inputValue)
                 : items).map((item, index) =>
                   (<Item
                     key={item.code}
@@ -183,11 +183,11 @@ function SemanticUIAutocomplete() {
                     value: item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: selectedItem === item,
+                    isSelected: selectedValue === item,
                   })}
                 >
                     {item.name}
-                  </Item>)
+                  </Item>),
               )}
             </Menu>}
         </Div>)}

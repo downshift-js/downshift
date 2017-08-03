@@ -25,10 +25,9 @@ class AxiosAutocomplete extends Component {
     return (
       <Autocomplete>
         {({
-          value,
+          selectedValue,
           getInputProps,
           getItemProps,
-          selectedItem,
           highlightedIndex,
           isOpen,
         }) => {
@@ -45,7 +44,7 @@ class AxiosAutocomplete extends Component {
                       .get(baseEndpoint + value)
                       .then(response => {
                         const items = response.data.items.map(
-                          item => `${item.name} (id:${item.id.toString()})`
+                          item => `${item.name} (id:${item.id.toString()})`,
                         ) // Added ID to make it unique
                         this.setState({items})
                       })
@@ -66,12 +65,13 @@ class AxiosAutocomplete extends Component {
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'gray' : 'white',
-                          fontWeight: selectedItem === item ? 'bold' : 'normal',
+                          fontWeight:
+                            selectedValue === item ? 'bold' : 'normal',
                         },
                       })}
                     >
                       {item}
-                    </div>)
+                    </div>),
                   )}
                 </div>}
             </div>

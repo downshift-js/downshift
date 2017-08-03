@@ -8,8 +8,8 @@ class Examples extends Component {
     selectedColor: '',
   }
 
-  changeHandler = selectedColor => {
-    this.setState({selectedColor})
+  changeHandler = ({selectedValue}) => {
+    this.setState({selectedColor: selectedValue})
   }
 
   render() {
@@ -101,7 +101,6 @@ const Input = glamorous.input({
 function Root({innerRef, ...rest}) {
   return <div ref={innerRef} {...rest} />
 }
-
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
@@ -109,32 +108,33 @@ function BasicAutocomplete({items, onChange}) {
         getInputProps,
         getItemProps,
         getRootProps,
-        isOpen,
-        value,
-        selectedItem,
         highlightedIndex,
+        inputValue,
+        isOpen,
+        selectedValue,
       }) =>
         (<Root {...getRootProps({refKey: 'innerRef'})}>
           <Input {...getInputProps({placeholder: 'Favorite color ?'})} />
           {isOpen &&
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
-              {(value ? matchSorter(items, value) : items).map((item, index) =>
-                (<Item
-                  key={item}
-                  {...getItemProps({
+              {(inputValue
+                ? matchSorter(items, inputValue)
+                : items).map((item, index) =>
+                  (<Item
+                    key={item}
+                    {...getItemProps({
                     value: item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: selectedItem === item,
+                    isSelected: selectedValue === item,
                   })}
                 >
-                  {item}
-                </Item>),
+                    {item}
+                  </Item>),
               )}
             </div>}
         </Root>)}
     </Autocomplete>
   )
 }
-
 export default Examples
