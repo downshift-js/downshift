@@ -131,7 +131,7 @@ Used to determine the `value` for the selected item.
 
 #### defaultValue
 
-> `any`/`Array(any)` | defaults to `null` or an empty array if multiple is true `[]`
+> `any`/`Array(any)` | defaults to `null` or an empty array (`[]`) if the `multiple` prop is true
 
 Pass an item or an array of items that should be selected by default.
 
