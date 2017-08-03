@@ -87,7 +87,7 @@ function BasicAutocomplete({items, onChange}) {
                 )
                 .map((item, index) => (
                   <div
-                    {...getItemProps({item, index})}
+                    {...getItemProps({value: item, index})}
                     key={item}
                     style={{
                       backgroundColor:
