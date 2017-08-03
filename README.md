@@ -85,15 +85,15 @@ function BasicAutocomplete({items, onChange}) {
                     !value ||
                     i.toLowerCase().includes(value.toLowerCase()),
                 )
-                .map((value, index) => (
+                .map((item, index) => (
                   <div
-                    {...getItemProps({value, index})}
-                    key={value}
-                    style: {
+                    {...getItemProps({item, index})}
+                    key={item}
+                    style={{
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
                       fontWeight: selectedItem === item ? 'bold' : 'normal',
-                    }
+                    }}
                   >
                     {item}
                   </div>
