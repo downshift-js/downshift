@@ -20,6 +20,7 @@ class Autocomplete extends Component {
 
   static defaultProps = {
     defaultHighlightedIndex: null,
+    defaultValue: null,
     getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
       if (!resultCount) {
         return 'No results.'
@@ -314,14 +315,14 @@ class Autocomplete extends Component {
   }
 
   getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
-    const {isOpen} = this.state
+    const {inputValue, isOpen} = this.state
     return {
       'data-autocomplete-input': true,
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       autoComplete: 'off',
-      value: this.state.inputValue,
+      value: inputValue,
       onChange: composeEventHandlers(onChange, this.input_handleChange),
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
@@ -364,6 +365,7 @@ class Autocomplete extends Component {
     this.setState({
       isOpen: false,
       highlightedIndex: null,
+      inputValue: this.getValue(value),
     })
   }
 
