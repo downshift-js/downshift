@@ -15,7 +15,6 @@ class Autocomplete extends Component {
     multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onClick: PropTypes.func,
-    value: PropTypes.any,
   }
 
   static defaultProps = {
@@ -141,6 +140,7 @@ class Autocomplete extends Component {
   }
 
   selectItem = itemValue => {
+    const previousValue = this.state.selectedValue
     if (!this.props.multiple) {
       this.reset()
     }
@@ -166,7 +166,10 @@ class Autocomplete extends Component {
         }
       },
       () => {
-        this.props.onChange(itemValue)
+        this.props.onChange({
+          selectedValue: this.state.selectedValue,
+          previousValue,
+        })
       },
     )
   }
@@ -505,8 +508,6 @@ class Autocomplete extends Component {
       onClick,
       // eslint-disable-next-line no-unused-vars
       onChange,
-      // eslint-disable-next-line no-unused-vars
-      value,
       ...rest
     } = this.props
     const element = children(this.getControllerStateAndHelpers())

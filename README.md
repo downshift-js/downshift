@@ -71,8 +71,8 @@ function BasicAutocomplete({items, onChange}) {
         getInputProps,
         getItemProps,
         isOpen,
-        value,
-        selectedItem,
+        inputValue,
+        selectedValue,
         highlightedIndex
       }) => (
         <div>
@@ -82,8 +82,8 @@ function BasicAutocomplete({items, onChange}) {
               {items
                 .filter(
                   i =>
-                    !value ||
-                    i.toLowerCase().includes(value.toLowerCase()),
+                    !inputValue ||
+                    i.toLowerCase().includes(inputValue.toLowerCase()),
                 )
                 .map((item, index) => (
                   <div
@@ -92,8 +92,8 @@ function BasicAutocomplete({items, onChange}) {
                     style={{
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                    }}
+                      fontWeight: selectedValue === item ? 'bold' : 'normal',
+                    }
                   >
                     {item}
                   </div>
@@ -110,7 +110,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={item => console.log(item)}
+      onChange={({selectedValue}) => console.log(selectedValue)}
     />
   )
 }
@@ -157,7 +157,7 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 
 #### onChange
 
-> `function(item: any)` | *required*
+> `function({selectedValue, previousValue})` | *required*
 
 Called when the user selects an item
 

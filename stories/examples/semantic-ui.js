@@ -135,7 +135,7 @@ function SemanticUIAutocomplete() {
       getValue={i => i.name}
       // defaultHighlightedIndex={0}
       // defaultSelectedItem={items[20]}
-      onChange={item => alert(item.name)}
+      onChange={({selectedValue}) => alert(selectedValue.name)}
       style={{
         width: '250px',
       }}

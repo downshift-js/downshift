@@ -46,7 +46,8 @@ class ReactPopperAutocomplete extends PureComponent {
       >
         <Manager>
           <Autocomplete
-            onChange={selected => this.setState({selected})}
+            onChange={({selectedValue}) =>
+              this.setState({selected: selectedValue})}
             style={{display: 'inline-block', position: 'relative'}}
           >
             {({
