@@ -39,7 +39,7 @@ class Autocomplete extends Component {
       highlightedIndex: null,
       inputValue: '',
       isOpen: false,
-      selectedValue: this.props.defaultValue || this.props.multiple ? [] : '',
+      selectedValue: this.props.defaultValue || (this.props.multiple ? [] : ''),
     }
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
