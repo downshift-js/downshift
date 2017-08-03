@@ -120,7 +120,7 @@ Available components and relevant props:
 
 ### Autocomplete
 
-This is the only component. It renders a `div` and forwards props. Wrap
+This is the only component. It doesn't render anything itself, it just calls the child function and renders that. Wrap
 everything in this.
 
 #### getValue
