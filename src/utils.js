@@ -4,6 +4,8 @@
  * some things that don't work with jsdom.
  */
 
+let inputIdCounter = 1
+
 /**
  * This will take a node and select the given range of text from start to end in a
  * way that works for iOS
@@ -138,6 +140,23 @@ function composeEventHandlers(...fns) {
     })
 }
 
+/**
+ * This generates a unique ID for all autocomplete inputs
+ * @return {String} the unique ID
+ */
+function generateInputId() {
+  return `autocomplete-input-id-${inputIdCounter++}`
+}
+
+/**
+ * Returns the first argument that is not undefined
+ * @param {...*} args the arguments
+ * @return {*} the defined value
+ */
+function firstDefined(...args) {
+  return args.find(a => typeof a !== 'undefined')
+}
+
 export {
   cbToCb,
   compose,
@@ -146,4 +165,6 @@ export {
   scrollIntoView,
   selectAllText,
   selectRangeOfText,
+  generateInputId,
+  firstDefined,
 }

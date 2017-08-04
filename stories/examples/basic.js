@@ -45,6 +45,8 @@ class Examples extends Component {
   }
 }
 
+const Label = glamorous.label({fontWeight: 'bold', display: 'block'})
+
 const Item = glamorous.div(
   {
     cursor: 'pointer',
@@ -71,7 +73,7 @@ const Item = glamorous.div(
       borderColor: '#96c8da',
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
     },
-  })
+  }),
 )
 
 const Input = glamorous.input({
@@ -108,13 +110,15 @@ function BasicAutocomplete({items, onChange}) {
         getInputProps,
         getItemProps,
         getRootProps,
+        getLabelProps,
         highlightedIndex,
         inputValue,
         isOpen,
         selectedValue,
       }) =>
         (<Root {...getRootProps({refKey: 'innerRef'})}>
-          <Input {...getInputProps({placeholder: 'Favorite color ?'})} />
+          <Label {...getLabelProps()}>What is your favorite color?</Label>
+          <Input {...getInputProps({placeholder: 'Enter color here'})} />
           {isOpen &&
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
               {(inputValue
@@ -130,7 +134,7 @@ function BasicAutocomplete({items, onChange}) {
                   })}
                 >
                     {item}
-                  </Item>)
+                  </Item>),
               )}
             </div>}
         </Root>)}

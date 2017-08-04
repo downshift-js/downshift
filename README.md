@@ -212,6 +212,7 @@ This is called with an object with the properties listed below:
 |-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
 | `getRootProps`          | `function({})`             | returns the props you should apply to the root element that you render. It can be optional. Read more below      |
 | `getInputProps`         | `function({})`             | returns the props you should apply to the `input` element that you render. Read more below                       |
+| `getLabelProps`         | `function({})`             | returns the props you should apply to the `label` element that you render. Read more below                       |
 | `getItemProps`          | `function({})`             | returns the props you should apply to any menu item elements you render. Read more below                         |
 | `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
 | `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
@@ -258,6 +259,21 @@ of the event handlers you need to apply to the `input` while preserving the
 ones that `downshift` needs to apply to make the `input` behave.
 
 There are no required properties for this method.
+
+##### `getLabelProps`
+
+This method should be applied to the `label` you render. It is useful for
+ensuring that the `for` attribute on the `<label>` (`htmlFor` as a react prop)
+is the same as the `id` that appears on the `input`. If no `htmlFor` is provided
+then an ID will be generated and used for the `input` and the `label` `for`
+attribute.
+
+There are no required properties for this method.
+
+> Note: You can definitely get by without using this (just provide an `id` to
+> your input and the same `htmlFor` to your `label` and you'll be good with
+> accessibility). However, we include this so you don't forget and it makes
+> things a little nicer for you. You're welcome 😀
 
 ##### `getItemProps`
 
