@@ -71,7 +71,7 @@ const Item = glamorous.div(
       borderColor: '#96c8da',
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
     },
-  }),
+  })
 )
 
 const Input = glamorous.input({
@@ -130,7 +130,7 @@ function BasicAutocomplete({items, onChange}) {
                   })}
                 >
                     {item}
-                  </Item>),
+                  </Item>)
               )}
             </div>}
         </Root>)}

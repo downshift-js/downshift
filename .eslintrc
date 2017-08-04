@@ -8,6 +8,8 @@
   "rules": {
     "max-len": "off",
     "max-lines": "off",
-    "func-style": "off"
+    "func-style": "off",
+    "no-eq-null": "off",
+    "eqeqeq": "off"
   }
 }
