@@ -152,11 +152,32 @@ it will be added to the `value` array rather than replacing the existing `value`
 
 #### getA11yStatusMessage
 
-> `function({ resultCount, highlightedItem, getValue})` | default messages provided in English
+> `function({/* see below */})` | default messages provided in English
 
-This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
+This function is passed as props to a `Status` component nested within and
+allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate."  If an item is highlighted it will run `getValue(highlightedItem)` and display the value of the `highlightedItem`.
+A default `getA11yStatusMessage` function is provided that will check
+`resultCount` and return "No results." or if there are results but no item is
+highlighted, "`resultCount` results are available, use up and down arrow keys
+to navigate."  If an item is highlighted it will run `getValue(highlightedItem)`
+and display the value of the `highlightedItem`.
+
+The object you are passed to generate your status message has the following
+properties:
+
+<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+
+| property              | type            | description                                                                              |
+|-----------------------|-----------------|------------------------------------------------------------------------------------------|
+| `getValue`            | `function(any)` | The `getValue` function (see props) for getting the string value from one of the options |
+| `resultCount`         | `number`        | The total items showing in the dropdown                                                  |
+| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated             |
+| `highlightedValue`    | `any`           | The value of the highlighted item                                                        |
+| `highlightedIndex`    | `number`/`null` | The currently highlighted index                                                          |
+| `inputValue`          | `string`        | The current input value                                                                  |
+| `isOpen`              | `boolean`       | The `isOpen` state                                                                       |
+| `selectedValue`       | `any`           | The value of the currently selected item                                                 |
 
 #### onChange
 

@@ -13,7 +13,7 @@ function setStatus(status) {
     statuses = [status]
   }
   const div = getStatusDiv()
-  div.innerHTML = `${statuses.map(getStatusHtml).join('')}`
+  div.innerHTML = `${statuses.filter(Boolean).map(getStatusHtml).join('')}`
 }
 
 function getStatusHtml(status, index) {

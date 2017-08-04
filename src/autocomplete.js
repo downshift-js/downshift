@@ -36,15 +36,31 @@ class Autocomplete extends Component {
   static defaultProps = {
     defaultHighlightedIndex: null,
     defaultValue: null,
-    getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
+    // eslint-disable-next-line complexity
+    getA11yStatusMessage({
+      isOpen,
+      highlightedValue,
+      selectedValue,
+      resultCount,
+      previousResultCount,
+      getValue,
+    }) {
+      if (!isOpen) {
+        if (selectedValue) {
+          return getValue(selectedValue)
+        } else {
+          return ''
+        }
+      }
+      const resultCountChanged = resultCount !== previousResultCount
       if (!resultCount) {
         return 'No results.'
-      } else if (!highlightedItem) {
+      } else if (!highlightedValue || resultCountChanged) {
         return `${resultCount} ${resultCount === 1 ?
           'result is' :
           'results are'} available, use up and down arrow keys to navigate.`
       }
-      return getValue(highlightedItem)
+      return getValue(highlightedValue)
     },
     getValue: i => String(i),
     onStateChange: () => {},
@@ -72,6 +88,7 @@ class Autocomplete extends Component {
 
   input = null
   items = []
+  previousResultCount = 0
 
   /**
    * Gets the state based on internal state or props
@@ -274,16 +291,16 @@ class Autocomplete extends Component {
       () => {
         // call the provided callback if it's a callback
         cbToCb(cb)()
-        // if the selectedValue changed
-        // then let's call onChange!
-        if (Object.keys(onChangeArg).length) {
-          this.props.onChange(onChangeArg)
-        }
         // We call this function whether we're controlled or not
         // It's mostly useful if we're controlled, but it can
         // definitely be useful for folks to know when something
         // happens internally.
         this.props.onStateChange(onStateChangeArg)
+        // if the selectedValue changed
+        // then let's call onChange!
+        if (Object.keys(onChangeArg).length) {
+          this.props.onChange(onChangeArg)
+        }
       },
     )
   }
@@ -569,12 +586,17 @@ class Autocomplete extends Component {
     if (!this._isMounted) {
       return
     }
-    const item = this.getItemFromIndex(this.getState().highlightedIndex) || {}
+    const state = this.getState()
+    const item = this.getItemFromIndex(state.highlightedIndex) || {}
+    const resultCount = this.items.length
     const status = this.props.getA11yStatusMessage({
-      resultCount: this.items.length,
-      highlightedItem: item.value,
       getValue: this.getValue,
+      previousResultCount: this.previousResultCount,
+      resultCount,
+      highlightedValue: item.value,
+      ...state,
     })
+    this.previousResultCount = resultCount
     setA11yStatus(status)
   }, 200)
 
@@ -607,15 +629,8 @@ class Autocomplete extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // TODO: what do we need to do for this when the
-    // autocomplete is a controlled component?
-    if (
-      prevState.highlightedIndex !== this.state.highlightedIndex ||
-      this.state.selectedValue !== prevState.selectedValue
-    ) {
-      this.updateStatus()
-    }
+  componentDidUpdate() {
+    this.updateStatus()
   }
 
   componentWillUnmount() {
