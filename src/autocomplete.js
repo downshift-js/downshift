@@ -3,7 +3,14 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
-import {cbToCb, composeEventHandlers, debounce, scrollIntoView} from './utils'
+import {
+  cbToCb,
+  composeEventHandlers,
+  debounce,
+  scrollIntoView,
+  generateInputId,
+  firstDefined,
+} from './utils'
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -291,6 +298,7 @@ class Autocomplete extends Component {
     const {
       getRootProps,
       getButtonProps,
+      getLabelProps,
       getInputProps,
       getItemProps,
       getItemFromIndex,
@@ -307,6 +315,7 @@ class Autocomplete extends Component {
       // prop getters
       getRootProps,
       getButtonProps,
+      getLabelProps,
       getInputProps,
       getItemProps,
       getItemFromIndex,
@@ -431,6 +440,29 @@ class Autocomplete extends Component {
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
 
+  /////////////////////////////// LABEL
+
+  getLabelProps = (props = {}) => {
+    this.getLabelProps.called = true
+    if (
+      this.getInputProps.called &&
+      props.htmlFor &&
+      props.htmlFor !== this.inputId
+    ) {
+      throw new Error(
+        `downshift: You provided the htmlFor of "${props.htmlFor}" for your label, but the id of your input is "${this
+          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+      )
+    }
+    this.inputId = firstDefined(this.inputId, props.htmlFor, generateInputId())
+    return {
+      ...props,
+      htmlFor: this.inputId,
+    }
+  }
+
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Label
+
   /////////////////////////////// INPUT
 
   getValue = itemValue => {
@@ -438,6 +470,14 @@ class Autocomplete extends Component {
   }
 
   getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
+    this.getInputProps.called = true
+    if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
+      throw new Error(
+        `downshift: You provided the id of "${rest.id}" for your input, but the htmlFor of your label is "${this
+          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+      )
+    }
+    this.inputId = firstDefined(this.inputId, rest.id, generateInputId())
     const {inputValue, isOpen} = this.getState()
     return {
       'data-autocomplete-input': true,
@@ -450,6 +490,7 @@ class Autocomplete extends Component {
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
       ...rest,
+      id: this.inputId,
     }
   }
 
@@ -591,6 +632,10 @@ class Autocomplete extends Component {
     // if they don't then we need to clone the element they return and
     // apply the props for them.
     this.getRootProps.called = false
+    // we do something similar for getLabelProps
+    this.getLabelProps.called = false
+    // and something similar for getInputProps
+    this.getInputProps.called = false
     // doing React.Children.only for Preact support ⚛️
     const element = React.Children.only(
       children(this.getControllerStateAndHelpers()),
