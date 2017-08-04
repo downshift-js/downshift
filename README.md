@@ -122,8 +122,8 @@ Available components and relevant props:
 
 ### Autocomplete
 
-This is the only component. It doesn't render anything itself, it just calls the child function and renders that. Wrap
-everything in this.
+This is the only component. It doesn't render anything itself, it just calls
+the child function and renders that. Wrap everything in this.
 
 #### getValue
 
@@ -163,6 +163,42 @@ A default `getA11yStatusMessage` function is provided that will check `resultCou
 > `function({selectedValue, previousValue})` | *required*
 
 Called when the user selects an item
+
+#### onStateChange
+
+> `function({highlightedIndex, inputValue, isOpen, selectedValue})` | not required, no useful default
+
+This function is called anytime the internal state changes. This can be useful
+if you're using downshift as a "controlled" component, where you manage some or
+all of the state (e.g. isOpen, selectedValue, highlightedIndex, etc) and then
+pass it as props, rather than letting downshift control all its state itself.
+
+#### highlightedIndex
+
+> `number` | **state prop** (read more below)
+
+The index that should be highlighted
+
+#### inputValue
+
+> `string` | **state prop** (read more below)
+
+The value the input should have
+
+#### isOpen
+
+> `boolean` | **state prop** (read more below)
+
+Whether the menu should be considered open or closed. Some aspects of the
+autocomplete component respond differently based on this value (for example, if
+`isOpen` is true when the user hits "Enter" on the input field, then the
+item at the `highlightedIndex` item is selected).
+
+#### `selectedValue`
+
+> `any`/`Array(any)` | **state prop** (read more below)
+
+The currently selected value.
 
 #### children
 
@@ -249,6 +285,17 @@ translations:
   'aria-label': translateWithId(isOpen ? 'close.menu' : 'open.menu'),
 })} />
 ```
+
+### State Props
+
+You can pass some props which normally the `downshift` will manage for you. If
+you pass these props, then they become "controlled" props. In this situation,
+`downshift` will no longer update them directly and will instead call your
+`onStateChange` handler and expect you to update them. This can be useful if
+you want to control the component externally (like selecting an item
+from another part of the UI).
+
+State Props are labeled above with **state prop**
 
 ## Examples
 
