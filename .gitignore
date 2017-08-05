@@ -5,7 +5,7 @@ dist
 .opt-out
 .DS_Store
 .next
-examples/other/react-autocompletely
+storybook-static
 
 # these cause more harm than good
 # when working with contributors

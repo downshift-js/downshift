@@ -4,6 +4,8 @@
  * some things that don't work with jsdom.
  */
 
+let inputIdCounter = 1
+
 /**
  * This will take a node and select the given range of text from start to end in a
  * way that works for iOS
@@ -43,25 +45,32 @@ function noop() {}
 /**
  * Get the closest element that scrolls
  * @param {HTMLElement} node - the child element to start searching for scroll parent at
+ * @param {HTMLElement} rootNode - the root element of the component
  * @return {HTMLElement} the closest parentNode that scrolls
  */
-function getClosestScrollParent(node) {
-  if (node === null) {
-    return null
-  } else if (node.scrollHeight > node.clientHeight) {
-    return node
+function getClosestScrollParent(node, rootNode) {
+  if (node !== null && node !== rootNode) {
+    if (node.scrollHeight > node.clientHeight) {
+      return node
+    } else {
+      return getClosestScrollParent(node.parentNode)
+    }
   } else {
-    return getClosestScrollParent(node.parentNode)
+    return null
   }
 }
 
 /**
- * Scroll node into view
+ * Scroll node into view if necessary
  * @param {HTMLElement} node - the element that should scroll into view
+ * @param {HTMLElement} rootNode - the root element of the component
  * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
-function scrollIntoView(node, alignToTop) {
-  const scrollParent = getClosestScrollParent(node)
+function scrollIntoView(node, rootNode, alignToTop) {
+  const scrollParent = getClosestScrollParent(node, rootNode)
+  if (scrollParent === null) {
+    return
+  }
   const scrollParentStyles = getComputedStyle(scrollParent)
   const scrollParentRect = scrollParent.getBoundingClientRect()
   const scrollParentBorderTopWidth = parseInt(
@@ -82,6 +91,14 @@ function scrollIntoView(node, alignToTop) {
   }
 }
 
+/**
+ * Simple debounce implementation. Will call the given
+ * function once after the time given has passed since
+ * it was last called.
+ * @param {Function} fn the function to call after the time
+ * @param {Number} time the time to wait
+ * @return {Function} the debounced function
+ */
 function debounce(fn, time) {
   let timeoutId
   return wrapper
@@ -96,15 +113,58 @@ function debounce(fn, time) {
   }
 }
 
+/**
+ * returns a function that calls the given functions in
+ * sequence with the arguments that are passed to the
+ * function returned.
+ * @param {Function} fns the functions to call
+ * @return {Function} the function that calls the functions
+ */
 function compose(...fns) {
   return (...args) => fns.forEach(fn => fn && fn(...args))
+}
+
+/**
+ * This is intended to be used to compose event handlers
+ * They are executed in order until one of them calls
+ * `event.preventDefault()`. Not sure this is the best
+ * way to do this, but it seems legit...
+ * @param {Function} fns the event hanlder functions
+ * @return {Function} the event handler to add to an element
+ */
+function composeEventHandlers(...fns) {
+  return (event, ...args) =>
+    fns.some(fn => {
+      fn && fn(event, ...args)
+      return event.defaultPrevented
+    })
+}
+
+/**
+ * This generates a unique ID for all autocomplete inputs
+ * @return {String} the unique ID
+ */
+function generateInputId() {
+  return `autocomplete-input-id-${inputIdCounter++}`
+}
+
+/**
+ * Returns the first argument that is not undefined
+ * @param {...*} args the arguments
+ * @return {*} the defined value
+ */
+function firstDefined(...args) {
+  return args.find(a => typeof a !== 'undefined')
 }
 
 export {
   cbToCb,
   compose,
+  composeEventHandlers,
   debounce,
   scrollIntoView,
   selectAllText,
   selectRangeOfText,
+  generateInputId,
+  firstDefined,
 }

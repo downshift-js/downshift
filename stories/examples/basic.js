@@ -1,14 +1,15 @@
 import React, {Component} from 'react'
 import glamorous, {Div} from 'glamorous'
-import Autocomplete from '../../other/react-autocompletely'
+import matchSorter from 'match-sorter'
+import Autocomplete from '../../src'
 
 class Examples extends Component {
   state = {
     selectedColor: '',
   }
 
-  changeHandler(selectedColor) {
-    this.setState({selectedColor})
+  changeHandler = ({selectedValue}) => {
+    this.setState({selectedColor: selectedValue})
   }
 
   render() {
@@ -36,10 +37,7 @@ class Examples extends Component {
                   : 'transparent',
               }}
             />
-            <BasicAutocomplete
-              items={items}
-              onChange={this.changeHandler.bind(this)}
-            />
+            <BasicAutocomplete items={items} onChange={this.changeHandler} />
           </Div>
         </Div>
       </div>
@@ -47,10 +45,9 @@ class Examples extends Component {
   }
 }
 
-const Item = glamorous(Autocomplete.Item, {
-  rootEl: 'div',
-  forwardProps: ['index', 'value', 'key'],
-})(
+const Label = glamorous.label({fontWeight: 'bold', display: 'block'})
+
+const Item = glamorous.div(
   {
     cursor: 'pointer',
     display: 'block',
@@ -69,9 +66,9 @@ const Item = glamorous(Autocomplete.Item, {
     whiteSpace: 'normal',
     wordWrap: 'normal',
   },
-  ({index, item, highlightedIndex, selectedItem}) => ({
-    backgroundColor: highlightedIndex === index ? 'lightgrey' : 'white',
-    fontWeight: selectedItem === item ? 'bold' : 'normal',
+  ({isActive, isSelected}) => ({
+    backgroundColor: isActive ? 'lightgrey' : 'white',
+    fontWeight: isSelected ? 'bold' : 'normal',
     '&:hover, &:focus': {
       borderColor: '#96c8da',
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
@@ -79,10 +76,7 @@ const Item = glamorous(Autocomplete.Item, {
   }),
 )
 
-const Input = glamorous(Autocomplete.Input, {
-  rootEl: 'div',
-  forwardProps: ['placeholder'],
-})({
+const Input = glamorous.input({
   fontSize: 14,
   wordWrap: 'break-word',
   lineHeight: '1em',
@@ -104,35 +98,47 @@ const Input = glamorous(Autocomplete.Input, {
   },
 })
 
+// this is just a demo of how you'd use the getRootProps function
+// normally you wouldn't need this kind of abstraction 😉
+function Root({innerRef, ...rest}) {
+  return <div ref={innerRef} {...rest} />
+}
 function BasicAutocomplete({items, onChange}) {
   return (
     <Autocomplete onChange={onChange}>
-      <Input placeholder="Favorite color ?" />
-      <Autocomplete.Controller>
-        {({isOpen, inputValue, selectedItem, highlightedIndex}) =>
-          isOpen &&
-          <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
-            {items
-              .filter(
-                i =>
-                  !inputValue ||
-                  i.toLowerCase().includes(inputValue.toLowerCase()),
-              )
-              .map((item, index) =>
-                (<Item
-                  value={item}
-                  index={index}
-                  key={item}
-                  highlightedIndex={highlightedIndex}
-                  selectedItem={selectedItem}
+      {({
+        getInputProps,
+        getItemProps,
+        getRootProps,
+        getLabelProps,
+        highlightedIndex,
+        inputValue,
+        isOpen,
+        selectedValue,
+      }) =>
+        (<Root {...getRootProps({refKey: 'innerRef'})}>
+          <Label {...getLabelProps()}>What is your favorite color?</Label>
+          <Input {...getInputProps({placeholder: 'Enter color here'})} />
+          {isOpen &&
+            <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
+              {(inputValue
+                ? matchSorter(items, inputValue)
+                : items).map((item, index) =>
+                  (<Item
+                    key={item}
+                    {...getItemProps({
+                    value: item,
+                    index,
+                    isActive: highlightedIndex === index,
+                    isSelected: selectedValue === item,
+                  })}
                 >
-                  {item}
-                </Item>),
+                    {item}
+                  </Item>),
               )}
-          </div>}
-      </Autocomplete.Controller>
+            </div>}
+        </Root>)}
     </Autocomplete>
   )
 }
-
 export default Examples

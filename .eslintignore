@@ -1,4 +1,4 @@
 node_modules
 coverage
 dist
-examples/other/react-autocompletely
+storybook-static

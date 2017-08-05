@@ -1,6 +1,6 @@
 {
-  "name": "react-autocompletely",
-  "version": "0.0.0-semantically-released",
+  "name": "downshift",
+  "version": "1.0.0-beta.11",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/index.js",
   "engines": {
@@ -10,7 +10,9 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\"",
+    "storybook": "start-storybook -p 6006 -c stories",
+    "build-storybook": "build-storybook -c stories"
   },
   "files": [
     "dist"
@@ -23,6 +25,7 @@
     "prop-types": ">=15"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.3",
     "all-contributors-cli": "^4.3.0",
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
@@ -55,10 +58,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/paypal/react-autocompletely.git"
+    "url": "https://github.com/paypal/downshift.git"
   },
   "bugs": {
-    "url": "https://github.com/paypal/react-autocompletely/issues"
+    "url": "https://github.com/paypal/downshift/issues"
   },
-  "homepage": "https://github.com/paypal/react-autocompletely#readme"
+  "homepage": "https://github.com/paypal/downshift#readme"
 }

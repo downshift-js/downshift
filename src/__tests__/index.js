@@ -6,18 +6,18 @@ function BasicAutocomplete() {
   const items = ['Red', 'Green', 'Blue', 'Orange', 'Purple']
   return (
     <Autocomplete onChange={() => {}}>
-      <Autocomplete.Input />
-      <Autocomplete.Controller>
-        {({isOpen}) =>
-          isOpen &&
-          <div>
-            {items.map((item, index) =>
-              (<Autocomplete.Item value={item} index={index} key={item}>
-                {item}
-              </Autocomplete.Item>),
-            )}
-          </div>}
-      </Autocomplete.Controller>
+      {({isOpen, getInputProps, getItemProps}) =>
+        (<div>
+          <input {...getInputProps()} />
+          {isOpen &&
+            <div>
+              {items.map((item, index) =>
+                (<div key={item} {...getItemProps({value: item, index})}>
+                  {item}
+                </div>),
+              )}
+            </div>}
+        </div>)}
     </Autocomplete>
   )
 }

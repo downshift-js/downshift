@@ -1,5 +1,5 @@
 {
-  "projectName": "react-autocompletely",
+  "projectName": "downshift",
   "projectOwner": "paypal",
   "files": [
     "README.md"
@@ -17,6 +17,25 @@
         "doc",
         "infra",
         "test"
+      ]
+    },
+    {
+      "login": "ryanflorence",
+      "name": "Ryan Florence",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/100200?v=4",
+      "profile": "http://twitter.com/ryanflorence",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "jaredly",
+      "name": "Jared Forsyth",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/112170?v=4",
+      "profile": "http://jaredforsyth.com",
+      "contributions": [
+        "ideas",
+        "doc"
       ]
     },
     {
@@ -118,6 +137,25 @@
       "profile": "https://geoffdavis.info",
       "contributions": [
         "example"
+      ]
+    },
+    {
+      "login": "reznord",
+      "name": "Anup",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3415488?v=4",
+      "profile": "https://github.com/reznord",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "ferdinandsalis",
+      "name": "Ferdinand Salis",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/340520?v=4",
+      "profile": "http://ferdinandsalis.com",
+      "contributions": [
+        "bug",
+        "code"
       ]
     }
   ]

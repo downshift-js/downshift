@@ -1,106 +1,139 @@
+/* eslint camelcase:0 */
+
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-
-import Button from './button'
-import Controller from './controller'
-import Input from './input'
-import Item from './item'
-import Status from './status'
-import {cbToCb, scrollIntoView} from './utils'
-import {AUTOCOMPLETE_CONTEXT} from './constants'
+import setA11yStatus from './set-a11y-status'
+import {
+  cbToCb,
+  composeEventHandlers,
+  debounce,
+  scrollIntoView,
+  generateInputId,
+  firstDefined,
+} from './utils'
 
 class Autocomplete extends Component {
-  static Button = Button
-  static Controller = Controller
-  static Input = Input
-  static Item = Item
-  static childContextTypes = {
-    [AUTOCOMPLETE_CONTEXT]: PropTypes.object.isRequired,
-  }
-
   static propTypes = {
-    children: PropTypes.node.isRequired,
-    component: PropTypes.any,
-    defaultSelectedIndex: PropTypes.string,
+    children: PropTypes.func.isRequired,
     defaultHighlightedIndex: PropTypes.number,
+    defaultValue: PropTypes.any,
     getA11yStatusMessage: PropTypes.func,
     getValue: PropTypes.func,
-    innerRef: PropTypes.func,
+    multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
+    onStateChange: PropTypes.func,
+    onClick: PropTypes.func,
+    // things we keep in state for uncontrolled components
+    // but can accept as props for controlled components
+    /* eslint-disable react/no-unused-prop-types */
+    selectedValue: PropTypes.any,
+    isOpen: PropTypes.bool,
+    inputValue: PropTypes.string,
+    highlightedIndex: PropTypes.number,
+    /* eslint-enable */
   }
 
   static defaultProps = {
-    component: 'div',
     defaultHighlightedIndex: null,
+    defaultValue: null,
+    getA11yStatusMessage({resultCount, highlightedItem, getValue}) {
+      if (!resultCount) {
+        return 'No results.'
+      } else if (!highlightedItem) {
+        return `${resultCount} ${resultCount === 1 ?
+          'result is' :
+          'results are'} available, use up and down arrow keys to navigate.`
+      }
+      return getValue(highlightedItem)
+    },
     getValue: i => String(i),
-    innerRef: () => {},
+    onStateChange: () => {},
   }
 
-  ref = node => {
-    this._rootNode = node
-    this.props.innerRef(node)
+  // this is an experimental feature
+  // so we're not going to document this yet
+  static stateChangeTypes = {
+    mouseUp: '__autocomplete_mouseup__',
+  }
+
+  constructor(...args) {
+    super(...args)
+    this.state = {
+      highlightedIndex: null,
+      inputValue: '',
+      isOpen: false,
+      selectedValue: this.props.defaultValue || (this.props.multiple ? [] : ''),
+    }
+    this.root_handleClick = composeEventHandlers(
+      this.props.onClick,
+      this.root_handleClick,
+    )
   }
 
   input = null
   items = []
-  state = {
-    highlightedIndex: null,
-    value: null,
-    isOpen: false,
-    selectedItem: null,
-  }
 
-  addItemInstance(itemInstance) {
-    this.items.push(itemInstance)
-    this.forceUpdate()
-  }
-
-  removeItemInstance(itemInstance) {
-    const index = this.items.indexOf(itemInstance)
-    if (index !== -1) {
-      this.items.splice(index, 1)
-    }
-    this.forceUpdate()
+  /**
+   * Gets the state based on internal state or props
+   * If a state value is passed via props, then that
+   * is the value given, otherwise it's retrieved from
+   * stateToMerge
+   *
+   * This will perform a shallow merge of the given state object
+   * with the state coming from props
+   * (for the controlled component scenario)
+   * This is used in state updater functions so they're referencing
+   * the right state regardless of where it comes from.
+   *
+   * @param {Object} stateToMerge defaults to this.state
+   * @return {Object} the state
+   */
+  getState(stateToMerge = this.state) {
+    return Object.keys(stateToMerge).reduce((state, key) => {
+      state[key] =
+        this.props[key] === undefined ? this.state[key] : this.props[key]
+      return state
+    }, {})
   }
 
   getItemFromIndex = index => {
     if (!this.items || !this.items[0]) {
       return null
     }
-    return this.items.find(itemInstance => {
-      return itemInstance.props.index === index
+    return this.items.find(item => {
+      return item.index === index
     })
   }
 
-  getIndexFromItem = item => {
-    let itemIndex = -1
-    this.items.forEach((itemInstance, index) => {
-      if (itemInstance.props.value === item) {
-        itemIndex = index
-      }
-    })
-    return itemIndex
+  getIndexFromValue = itemValue => {
+    const item = this.items.find(({value}) => value === itemValue)
+    return item ? item.index : null
+  }
+
+  getItemNodeFromIndex = index => {
+    return this._rootNode.querySelector(
+      `[data-autocomplete-item-index="${index}"]`,
+    )
   }
 
   maybeScrollToHighlightedElement(highlightedIndex, alignToTop) {
-    const itemInstance = this.getItemFromIndex(highlightedIndex)
-    if (!itemInstance || !itemInstance.node) {
-      return
-    }
-    scrollIntoView(itemInstance.node, alignToTop)
+    const node = this.getItemNodeFromIndex(highlightedIndex)
+    const rootNode = this._rootNode
+    scrollIntoView(node, rootNode, alignToTop)
   }
 
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
   ) => {
-    this.setState({highlightedIndex}, () => {
+    this.internalSetState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex)
     })
   }
 
   highlightSelectedItem = () => {
-    const highlightedIndex = this.getIndexFromItem(this.state.selectedItem)
-    this.setState({highlightedIndex}, () => {
+    const highlightedIndex =
+      this.getIndexFromValue(this.getState().selectedValue) || 0
+    this.internalSetState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
   }
@@ -112,7 +145,7 @@ class Autocomplete extends Component {
   }
 
   moveHighlightedIndex = amount => {
-    if (this.state.isOpen) {
+    if (this.getState().isOpen) {
       this.changeHighlighedIndex(amount)
     } else {
       this.highlightIndex()
@@ -125,35 +158,58 @@ class Autocomplete extends Component {
     if (itemsLastIndex < 0) {
       return
     }
-    const {highlightedIndex} = this.state
+    const {highlightedIndex} = this.getState()
     let baseIndex = highlightedIndex
     if (baseIndex === null) {
       baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
     }
     let newIndex = baseIndex + moveAmount
-    if (newIndex < 0 || newIndex > itemsLastIndex) {
-      newIndex = null
+    if (newIndex < 0) {
+      newIndex = itemsLastIndex
+    } else if (newIndex > itemsLastIndex) {
+      newIndex = 0
     }
     this.setHighlightedIndex(newIndex)
   }
 
   clearSelection = () => {
-    this.setState(
+    this.internalSetState(
       {
-        selectedItem: null,
-        value: null,
+        selectedValue: this.multiple ? [] : '',
         isOpen: false,
       },
       () => {
-        this.input.focusInput()
+        const inputNode = this._rootNode.querySelector(
+          '[data-autocomplete-input]',
+        )
+        inputNode && inputNode.focus && inputNode.focus()
       },
     )
   }
 
-  selectItem = item => {
-    this.reset()
-    this.setState({selectedItem: item, value: this.getValue(item)}, () => {
-      this.props.onChange(item)
+  selectItem = itemValue => {
+    if (!this.props.multiple) {
+      this.reset()
+    }
+    this.internalSetState(({selectedValue: previousValue}) => {
+      if (this.props.multiple) {
+        const values = [...previousValue]
+        const pos = values.indexOf(itemValue)
+        if (pos > -1) {
+          values.splice(pos, 1)
+        } else {
+          values.push(itemValue)
+        }
+        return {
+          selectedValue: values,
+          inputValue: values.map(value => this.getValue(value)).join(', '),
+        }
+      } else {
+        return {
+          selectedValue: itemValue,
+          inputValue: this.getValue(itemValue),
+        }
+      }
     })
   }
 
@@ -162,56 +218,324 @@ class Autocomplete extends Component {
       // no item highlighted
       return
     }
-    const itemInstance = this.getItemFromIndex(itemIndex)
-    if (!itemInstance) {
-      // TODO: see if this is even possible?
+    const item = this.getItemFromIndex(itemIndex)
+    if (!item) {
       return
     }
-    this.selectItem(itemInstance.props.value)
+    this.selectItem(item.value)
   }
 
   selectHighlightedItem = () => {
-    return this.selectItemAtIndex(this.state.highlightedIndex)
+    return this.selectItemAtIndex(this.getState().highlightedIndex)
+  }
+
+  // any piece of our state can live in two places:
+  // 1. Uncontrolled: it's internal (this.state)
+  //    We will call this.setState to update that state
+  // 2. Controlled: it's external (this.props)
+  //    We will call this.props.onChange to update that state
+  //
+  // In addition, we'll always call this.props.onChange if the
+  // selectedValue is changed because that's important whether
+  // that property is controlled or not.
+  internalSetState(stateToSet, cb) {
+    const onChangeArg = {}
+    let onStateChangeArg
+    return this.setState(
+      state => {
+        state = this.getState(state)
+        onStateChangeArg =
+          typeof stateToSet === 'function' ? stateToSet(state) : stateToSet
+        const nextState = {}
+        // we need to call on change if the outside world is controlling any of our state
+        // and we're trying to update that state. OR if the selection has changed and we're
+        // trying to update the selection
+        if (onStateChangeArg.hasOwnProperty('selectedValue')) {
+          onChangeArg.selectedValue = onStateChangeArg.selectedValue
+          onChangeArg.previousValue = state.selectedValue
+        }
+        Object.keys(onStateChangeArg).forEach(key => {
+          // the type is useful for the onStateChangeArg
+          // but we don't actually want to set it in internal state.
+          // this is an undocumented feature for now... Not all internalSetState
+          // calls support it and I'm not certain we want them to yet.
+          // But it enables users controlling the isOpen state to know when
+          // the isOpen state changes due to mouseup events which is quite handy.
+          if (key === 'type') {
+            return
+          }
+          // if it's coming from props, then we don't want to set it internally
+          if (!this.props.hasOwnProperty(key)) {
+            nextState[key] = onStateChangeArg[key]
+          }
+        })
+        return nextState
+      },
+      () => {
+        // call the provided callback if it's a callback
+        cbToCb(cb)()
+        // if the selectedValue changed
+        // then let's call onChange!
+        if (Object.keys(onChangeArg).length) {
+          this.props.onChange(onChangeArg)
+        }
+        // We call this function whether we're controlled or not
+        // It's mostly useful if we're controlled, but it can
+        // definitely be useful for folks to know when something
+        // happens internally.
+        this.props.onStateChange(onStateChangeArg)
+      },
+    )
   }
 
   getControllerStateAndHelpers() {
-    const {highlightedIndex, value, isOpen, selectedItem} = this.state
     const {
-      toggleMenu,
+      highlightedIndex,
+      inputValue,
+      selectedValue,
+      isOpen,
+    } = this.getState()
+    const {
+      getRootProps,
+      getButtonProps,
+      getLabelProps,
+      getInputProps,
+      getItemProps,
+      getItemFromIndex,
       openMenu,
       closeMenu,
-      clearSelection,
+      toggleMenu,
       selectItem,
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
+      clearSelection,
     } = this
     return {
-      selectedItem,
+      // prop getters
+      getRootProps,
+      getButtonProps,
+      getLabelProps,
+      getInputProps,
+      getItemProps,
+      getItemFromIndex,
+
+      // actions
+      openMenu,
+      closeMenu,
+      toggleMenu,
       selectItem,
       selectItemAtIndex,
       selectHighlightedItem,
-      highlightedIndex,
       setHighlightedIndex,
-      value,
-      isOpen,
-      toggleMenu,
-      openMenu,
-      closeMenu,
       clearSelection,
+
+      // state
+      highlightedIndex,
+      inputValue,
+      isOpen,
+      selectedValue,
     }
   }
 
-  reset = () => {
-    this.setState(({selectedItem}) => ({
+  //////////////////////////// ROOT
+
+  rootRef = node => (this._rootNode = node)
+
+  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+    // this is used in the render to know whether the user has called getRootProps.
+    // It uses that to know whether to apply the props automatically
+    this.getRootProps.called = true
+    return {
+      [refKey]: this.rootRef,
+      onClick: composeEventHandlers(onClick, this.root_handleClick),
+      ...rest,
+    }
+  }
+
+  root_handleClick = event => {
+    event.preventDefault()
+    const {target} = event
+    if (!target) {
+      return
+    }
+    const index = target.getAttribute('data-autocomplete-item-index')
+    if (!index) {
+      return
+    }
+    this.selectItemAtIndex(Number(index))
+  }
+
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
+
+  keyDownHandlers = {
+    ArrowDown(event) {
+      event.preventDefault()
+      const amount = event.shiftKey ? 5 : 1
+      this.moveHighlightedIndex(amount)
+    },
+
+    ArrowUp(event) {
+      event.preventDefault()
+      const amount = event.shiftKey ? -5 : -1
+      this.moveHighlightedIndex(amount)
+    },
+
+    Enter(event) {
+      event.preventDefault()
+      if (this.getState().isOpen) {
+        this.selectHighlightedItem()
+      }
+    },
+
+    Escape(event) {
+      event.preventDefault()
+      this.reset()
+    },
+  }
+
+  //////////////////////////// BUTTON
+
+  buttonKeyDownHandlers = {
+    ...this.keyDownHandlers,
+
+    ' '(event) {
+      event.preventDefault()
+      const {isOpen, highlightedIndex} = this.getState()
+      if (isOpen) {
+        if (highlightedIndex === null) {
+          this.closeMenu()
+        } else {
+          this.selectHighlightedItem()
+        }
+      } else {
+        this.openMenu()
+      }
+    },
+  }
+
+  getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
+    const {isOpen} = this.getState()
+    return {
+      role: 'button',
+      'aria-label': isOpen ? 'close menu' : 'open menu',
+      'aria-expanded': isOpen,
+      'aria-haspopup': true,
+      onClick: composeEventHandlers(onClick, this.button_handleClick),
+      onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+      ...rest,
+    }
+  }
+
+  button_handleKeyDown = event => {
+    if (this.buttonKeyDownHandlers[event.key]) {
+      this.buttonKeyDownHandlers[event.key].call(this, event)
+    }
+  }
+
+  button_handleClick = event => {
+    event.preventDefault()
+    this.toggleMenu()
+  }
+
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
+
+  /////////////////////////////// LABEL
+
+  getLabelProps = (props = {}) => {
+    this.getLabelProps.called = true
+    if (
+      this.getInputProps.called &&
+      props.htmlFor &&
+      props.htmlFor !== this.inputId
+    ) {
+      throw new Error(
+        `downshift: You provided the htmlFor of "${props.htmlFor}" for your label, but the id of your input is "${this
+          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+      )
+    }
+    this.inputId = firstDefined(this.inputId, props.htmlFor, generateInputId())
+    return {
+      ...props,
+      htmlFor: this.inputId,
+    }
+  }
+
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Label
+
+  /////////////////////////////// INPUT
+
+  getValue = itemValue => {
+    return itemValue ? this.props.getValue(itemValue) : ''
+  }
+
+  getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
+    this.getInputProps.called = true
+    if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
+      throw new Error(
+        `downshift: You provided the id of "${rest.id}" for your input, but the htmlFor of your label is "${this
+          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+      )
+    }
+    this.inputId = firstDefined(this.inputId, rest.id, generateInputId())
+    const {inputValue, isOpen} = this.getState()
+    return {
+      'data-autocomplete-input': true,
+      role: 'combobox',
+      'aria-autocomplete': 'list',
+      'aria-expanded': isOpen,
+      autoComplete: 'off',
+      value: inputValue,
+      onChange: composeEventHandlers(onChange, this.input_handleChange),
+      onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
+      onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+      ...rest,
+      id: this.inputId,
+    }
+  }
+
+  input_handleKeyDown = event => {
+    if (event.key && this.keyDownHandlers[event.key]) {
+      this.keyDownHandlers[event.key].call(this, event)
+    } else if (!['Shift', 'Meta', 'Alt', 'Control'].includes(event.key)) {
+      this.openMenu()
+    }
+  }
+
+  input_handleChange = event => {
+    this.internalSetState({inputValue: event.target.value})
+  }
+  input_handleBlur = () => {
+    if (!this.isMouseDown) {
+      this.reset()
+    }
+  }
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
+
+  /////////////////////////////// ITEM
+  getItemProps = ({onMouseEnter, value, index, ...rest} = {}) => {
+    this.items.push({index, value})
+    return {
+      'data-autocomplete-item-index': index,
+      onMouseEnter: composeEventHandlers(onMouseEnter, () => {
+        this.setHighlightedIndex(index)
+      }),
+      ...rest,
+    }
+  }
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
+
+  reset = type => {
+    this.internalSetState(({selectedValue}) => ({
+      type,
       isOpen: false,
       highlightedIndex: null,
-      value: this.getValue(selectedItem),
+      inputValue: this.getValue(selectedValue),
     }))
   }
 
   toggleMenu = (newState, cb) => {
-    this.setState(
+    this.internalSetState(
       ({isOpen}) => {
         let nextIsOpen = !isOpen
         if (typeof newState === 'boolean') {
@@ -220,35 +544,44 @@ class Autocomplete extends Component {
         return {isOpen: nextIsOpen}
       },
       () => {
-        if (this.state.isOpen) {
-          if (this.state.selectedItem) {
+        const {isOpen, selectedValue} = this.getState()
+        if (isOpen) {
+          if (selectedValue.length > 0) {
             this.highlightSelectedItem()
           } else {
             this.setHighlightedIndex()
           }
         }
-        cbToCb(cb)
+        cbToCb(cb)()
       },
     )
   }
 
-  openMenu = () => {
-    this.toggleMenu(true)
+  openMenu = cb => {
+    this.toggleMenu(true, cb)
   }
 
-  closeMenu = () => {
-    this.toggleMenu(false)
+  closeMenu = cb => {
+    this.toggleMenu(false, cb)
   }
 
-  getValue = item => {
-    return item ? this.props.getValue(item) : null
-  }
-
-  getChildContext() {
-    return {[AUTOCOMPLETE_CONTEXT]: this}
-  }
+  updateStatus = debounce(() => {
+    if (!this._isMounted) {
+      return
+    }
+    const item = this.getItemFromIndex(this.getState().highlightedIndex) || {}
+    const status = this.props.getA11yStatusMessage({
+      resultCount: this.items.length,
+      highlightedItem: item.value,
+      getValue: this.getValue,
+    })
+    setA11yStatus(status)
+  }, 200)
 
   componentDidMount() {
+    // the _isMounted property is because we have `updateStatus` in a `debounce`
+    // and we don't want to update the status if the component has been umounted
+    this._isMounted = true
     // this.isMouseDown helps us track whether the mouse is currently held down.
     // This is useful when the user clicks on an item in the list, but holds the mouse
     // down long enough for the list to disappear (because the blur event fires on the input)
@@ -261,50 +594,69 @@ class Autocomplete extends Component {
       this.isMouseDown = false
       const {target} = event
       if (!this._rootNode.contains(target)) {
-        this.reset()
+        this.reset(Autocomplete.stateChangeTypes.mouseUp)
       }
     }
     document.body.addEventListener('mousedown', onMouseDown)
     document.body.addEventListener('mouseup', onMouseUp)
 
-    this.unregisterClickTracker = () => {
+    this.cleanup = () => {
+      this._isMounted = false
       document.body.removeEventListener('mousedown', onMouseDown)
       document.body.removeEventListener('mouseup', onMouseUp)
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // TODO: what do we need to do for this when the
+    // autocomplete is a controlled component?
+    if (
+      prevState.highlightedIndex !== this.state.highlightedIndex ||
+      this.state.selectedValue !== prevState.selectedValue
+    ) {
+      this.updateStatus()
+    }
+  }
+
   componentWillUnmount() {
-    this.unregisterClickTracker() // avoids memory leak
+    this.cleanup() // avoids memory leak
   }
 
   render() {
-    const {
-      component: AutocompleteComponent,
-      children,
-      // eslint-disable-next-line no-unused-vars
-      defaultHighlightedIndex,
-      getA11yStatusMessage,
-      // eslint-disable-next-line no-unused-vars
-      getValue,
-      // eslint-disable-next-line no-unused-vars
-      onChange,
-      // eslint-disable-next-line no-unused-vars
-      innerRef,
-      ...rest
-    } = this.props
-    return (
-      <AutocompleteComponent ref={this.ref} {...rest}>
-        {children}
-        <Status
-          getA11yStatusMessage={getA11yStatusMessage}
-          getItemFromIndex={this.getItemFromIndex}
-          getValue={this.getValue}
-          highlightedIndex={this.state.highlightedIndex}
-          resultCount={this.items.length}
-          value={this.state.value}
-        />
-      </AutocompleteComponent>
+    const {children} = this.props
+    // because the items are rerendered every time we call the children
+    // we clear this out each render and
+    this.items = []
+    // we reset this so we know whether the user calls getRootProps during
+    // this render. If they do then we don't need to do anything,
+    // if they don't then we need to clone the element they return and
+    // apply the props for them.
+    this.getRootProps.called = false
+    // we do something similar for getLabelProps
+    this.getLabelProps.called = false
+    // and something similar for getInputProps
+    this.getInputProps.called = false
+    // doing React.Children.only for Preact support ⚛️
+    const element = React.Children.only(
+      children(this.getControllerStateAndHelpers()),
     )
+    if (!element) {
+      // returned null or something...
+      return element
+    } else if (this.getRootProps.called) {
+      // we assumed they applied the root props correctly
+      return element
+    } else if (typeof element.type === 'string') {
+      // they didn't apply the root props, but we can clone
+      // this and apply the props ourselves
+      return React.cloneElement(element, this.getRootProps(element.props))
+    } else {
+      // they didn't apply the root props, but they need to
+      // otherwise we can't query around the autocomplete
+      throw new Error(
+        'downshift: If you return a non-DOM element, you must use apply the getRootProps function',
+      )
+    }
   }
 }
 
