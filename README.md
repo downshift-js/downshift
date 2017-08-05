@@ -95,7 +95,7 @@ function BasicAutocomplete({items, onChange}) {
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
                       fontWeight: selectedValue === item ? 'bold' : 'normal',
-                    }
+                    }}
                   >
                     {item}
                   </div>
