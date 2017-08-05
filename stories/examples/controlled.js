@@ -34,6 +34,13 @@ class Examples extends Component {
   items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
 
   changeHandler = changes => {
+    this.setState({
+      selectedColor: changes.selectedValue,
+      isOpen: false,
+    })
+  }
+
+  stateChangeHandler = changes => {
     let {
       selectedValue = this.state.selectedColor,
       isOpen = this.state.isOpen,
@@ -124,7 +131,7 @@ class Examples extends Component {
               isOpen={this.state.isOpen}
               inputValue={this.state.inputValue}
               onChange={this.changeHandler}
-              onStateChange={this.changeHandler}
+              onStateChange={this.stateChangeHandler}
               onInputChange={this.handleInputChange}
             />
           </Div>
