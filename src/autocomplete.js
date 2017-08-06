@@ -195,7 +195,7 @@ class Autocomplete extends Component {
         isOpen: false,
       },
       () => {
-        const inputNode = document.getElementById(this.id)
+        const inputNode = document.getElementById(this.inputId)
         inputNode && inputNode.focus && inputNode.focus()
       },
     )
