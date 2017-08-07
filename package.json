@@ -8,6 +8,8 @@
     "npm": "> 3"
   },
   "scripts": {
+    "build": "rollup -c --environment LIBRARY:react -o dist/index.js",
+    "build:preact": "rollup -c --environment LIBRARY:preact -o dist/preact/index.js",
     "start": "nps",
     "test": "nps test",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\"",
@@ -22,17 +24,22 @@
   "license": "MIT",
   "peerDependencies": {
     "react": ">=15",
-    "prop-types": ">=15"
+    "prop-types": ">=15",
+    "preact": ">=5"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.3",
     "all-contributors-cli": "^4.3.0",
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.24.1",
     "enzyme": "^2.9.1",
     "enzyme-to-json": "^1.5.1",
@@ -44,11 +51,18 @@
     "nps": "^5.4.0",
     "nps-utils": "^1.2.0",
     "opt-cli": "^1.5.1",
+    "preact": "^8.2.1",
     "prettier-eslint-cli": "^4.1.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1"
+    "react-test-renderer": "^15.6.1",
+    "rollup": "^0.45.2",
+    "rollup-plugin-alias": "^1.3.1",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1"
   },
   "lint-staged": {
     "*.js": [
