@@ -11,6 +11,7 @@ import {
   generateId,
   firstDefined,
   isNumber,
+  containsSubset,
 } from './utils'
 
 class Autocomplete extends Component {
@@ -239,13 +240,16 @@ class Autocomplete extends Component {
   // that property is controlled or not.
   internalSetState(stateToSet, cb) {
     const onChangeArg = {}
-    let onStateChangeArg
+    let onStateChangeArg, stateChanged
     return this.setState(
       state => {
         state = this.getState(state)
         onStateChangeArg =
           typeof stateToSet === 'function' ? stateToSet(state) : stateToSet
+        // this keeps track of the object we want to call with setState
         const nextState = {}
+        // this is just used to tell whether the state changed
+        const nextFullState = {}
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
@@ -263,24 +267,28 @@ class Autocomplete extends Component {
           if (key === 'type') {
             return
           }
+          nextFullState[key] = onStateChangeArg[key]
           // if it's coming from props, then we don't want to set it internally
           if (!this.props.hasOwnProperty(key)) {
             nextState[key] = onStateChangeArg[key]
           }
         })
+        stateChanged = !containsSubset(state, nextFullState)
         return nextState
       },
       () => {
         // call the provided callback if it's a callback
         cbToCb(cb)()
-        // We call this function whether we're controlled or not
-        // It's mostly useful if we're controlled, but it can
-        // definitely be useful for folks to know when something
-        // happens internally.
-        this.props.onStateChange(onStateChangeArg)
-        // if the selectedItem changed
-        // then let's call onChange!
+        if (stateChanged) {
+          // We call this function whether we're controlled or not
+          // It's mostly useful if we're controlled, but it can
+          // definitely be useful for folks to know when something
+          // happens internally.
+          this.props.onStateChange(onStateChangeArg)
+        }
         if (Object.keys(onChangeArg).length) {
+          // if the selectedItem changed
+          // then let's call onChange!
           this.props.onChange(onChangeArg)
         }
       },
@@ -604,8 +612,7 @@ class Autocomplete extends Component {
     }
     const onMouseUp = event => {
       this.isMouseDown = false
-      const {target} = event
-      if (!this._rootNode.contains(target)) {
+      if (!this._rootNode.contains(event.target)) {
         this.reset(Autocomplete.stateChangeTypes.mouseUp)
       }
     }
