@@ -193,6 +193,7 @@ class Autocomplete extends Component {
     this.internalSetState(
       {
         selectedItem: null,
+        inputValue: '',
         isOpen: false,
       },
       () => {
