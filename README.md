@@ -138,7 +138,7 @@ Used to determine the `value` for the selected item.
 
 #### defaultValue
 
-> `any`/`Array(any)` | defaults to `null` or an empty array (`[]`) if the `multiple` prop is true
+> `any`/`Array(any)` | defaults to `null`
 
 Pass an item or an array of items that should be selected by default.
 
@@ -147,13 +147,6 @@ Pass an item or an array of items that should be selected by default.
 > `number`/`null` | defaults to `null`
 
 This is the initial index to highlight when the menu first opens.
-
-#### multiple
-
-> `boolean` | defaults to `false`
-
-Specifies that multiple items can be selected at once. This means that when an item is selected
-it will be added to the `value` array rather than replacing the existing `value`.
 
 #### getA11yStatusMessage
 
@@ -343,6 +336,7 @@ State Props are labeled above with **state prop**
 
 Examples exist on [codesandbox.io][examples]:
 
+- [multiple selection example](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
 - [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
 - [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 
