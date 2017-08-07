@@ -25,7 +25,7 @@ class AxiosAutocomplete extends Component {
     return (
       <Autocomplete>
         {({
-          selectedValue,
+          selectedItem,
           getInputProps,
           getItemProps,
           highlightedIndex,
@@ -60,13 +60,12 @@ class AxiosAutocomplete extends Component {
                     (<div
                       key={index}
                       {...getItemProps({
-                        value: item,
+                        item,
                         index,
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'gray' : 'white',
-                          fontWeight:
-                            selectedValue === item ? 'bold' : 'normal',
+                          fontWeight: selectedItem === item ? 'bold' : 'normal',
                         },
                       })}
                     >

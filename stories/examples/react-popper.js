@@ -46,15 +46,15 @@ class ReactPopperAutocomplete extends PureComponent {
       >
         <Manager>
           <Autocomplete
-            onChange={({selectedValue}) =>
-              this.setState({selected: selectedValue})}
+            onChange={({selectedItem}) =>
+              this.setState({selected: selectedItem})}
             style={{display: 'inline-block', position: 'relative'}}
           >
             {({
               getInputProps,
               getItemProps,
               inputValue,
-              selectedValue,
+              selectedItem,
               highlightedIndex,
               isOpen,
             }) =>
@@ -78,7 +78,7 @@ class ReactPopperAutocomplete extends PureComponent {
                           (<div
                             {...getItemProps({
                               index,
-                              value: item,
+                              item,
                             })}
                             key={item}
                             style={{
@@ -87,7 +87,7 @@ class ReactPopperAutocomplete extends PureComponent {
                                   ? 'rgba(0, 0, 0, .2)'
                                   : 'transparent',
                               fontWeight:
-                                selectedValue === item ? 'bold' : 'normal',
+                                selectedItem === item ? 'bold' : 'normal',
                             }}
                           >
                             {item}

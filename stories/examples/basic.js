@@ -8,8 +8,8 @@ class Examples extends Component {
     selectedColor: '',
   }
 
-  changeHandler = ({selectedValue}) => {
-    this.setState({selectedColor: selectedValue})
+  changeHandler = ({selectedItem}) => {
+    this.setState({selectedColor: selectedItem})
   }
 
   render() {
@@ -114,7 +114,7 @@ function BasicAutocomplete({items, onChange}) {
         highlightedIndex,
         inputValue,
         isOpen,
-        selectedValue,
+        selectedItem,
       }) =>
         (<Root {...getRootProps({refKey: 'innerRef'})}>
           <Label {...getLabelProps()}>What is your favorite color?</Label>
@@ -127,10 +127,10 @@ function BasicAutocomplete({items, onChange}) {
                   (<Item
                     key={item}
                     {...getItemProps({
-                    value: item,
+                    item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: selectedValue === item,
+                    isSelected: selectedItem === item,
                   })}
                 >
                     {item}

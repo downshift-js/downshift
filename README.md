@@ -79,7 +79,7 @@ function BasicAutocomplete({items, onChange}) {
         getItemProps,
         isOpen,
         inputValue,
-        selectedValue,
+        selectedItem,
         highlightedIndex
       }) => (
         <div>
@@ -94,12 +94,12 @@ function BasicAutocomplete({items, onChange}) {
                 )
                 .map((item, index) => (
                   <div
-                    {...getItemProps({value: item, index})}
+                    {...getItemProps({item, index})}
                     key={item}
                     style={{
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedValue === item ? 'bold' : 'normal',
+                      fontWeight: selectedItem === item ? 'bold' : 'normal',
                     }}
                   >
                     {item}
@@ -117,7 +117,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={({selectedValue}) => console.log(selectedValue)}
+      onChange={({selectedItem}) => console.log(selectedItem)}
     />
   )
 }
@@ -130,15 +130,9 @@ Available components and relevant props:
 This is the only component. It doesn't render anything itself, it just calls
 the child function and renders that. Wrap everything in this.
 
-#### getValue
+#### defaultSelectedItem
 
-> `function(item: any)` | defaults to an identity function (`i => String(i)`)
-
-Used to determine the `value` for the selected item.
-
-#### defaultValue
-
-> `any`/`Array(any)` | defaults to `null`
+> `any` | defaults to `null`
 
 Pass an item or an array of items that should be selected by default.
 
@@ -147,6 +141,25 @@ Pass an item or an array of items that should be selected by default.
 > `number`/`null` | defaults to `null`
 
 This is the initial index to highlight when the menu first opens.
+
+#### defaultInputValue
+
+> `string` | defaults to `''`
+
+This is the initial input value.
+
+#### defaultIsOpen
+
+> `boolean` | defaults to `false`
+
+This is the initial `isOpen` value.
+
+#### itemToString
+
+> `function(item: any)` | defaults to: `i => (i == null ? String(i) : '')`
+
+Used to determine the string value for the selected item (which is used to
+compute the `inputValue`.
 
 #### getA11yStatusMessage
 
@@ -158,38 +171,38 @@ allows you to create your own assertive ARIA statuses.
 A default `getA11yStatusMessage` function is provided that will check
 `resultCount` and return "No results." or if there are results but no item is
 highlighted, "`resultCount` results are available, use up and down arrow keys
-to navigate."  If an item is highlighted it will run `getValue(highlightedItem)`
-and display the value of the `highlightedItem`.
+to navigate."  If an item is highlighted it will run
+`itemToString(highlightedItem)` and display the value of the `highlightedItem`.
 
 The object you are passed to generate your status message has the following
 properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property              | type            | description                                                                              |
-|-----------------------|-----------------|------------------------------------------------------------------------------------------|
-| `getValue`            | `function(any)` | The `getValue` function (see props) for getting the string value from one of the options |
-| `resultCount`         | `number`        | The total items showing in the dropdown                                                  |
-| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated             |
-| `highlightedValue`    | `any`           | The value of the highlighted item                                                        |
-| `highlightedIndex`    | `number`/`null` | The currently highlighted index                                                          |
-| `inputValue`          | `string`        | The current input value                                                                  |
-| `isOpen`              | `boolean`       | The `isOpen` state                                                                       |
-| `selectedValue`       | `any`           | The value of the currently selected item                                                 |
+| property              | type            | description                                                                                  |
+|-----------------------|-----------------|----------------------------------------------------------------------------------------------|
+| `highlightedIndex`    | `number`/`null` | The currently highlighted index                                                              |
+| `highlightedValue`    | `any`           | The value of the highlighted item                                                            |
+| `inputValue`          | `string`        | The current input value                                                                      |
+| `isOpen`              | `boolean`       | The `isOpen` state                                                                           |
+| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
+| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated                 |
+| `resultCount`         | `number`        | The total items showing in the dropdown                                                      |
+| `selectedItem`        | `any`           | The value of the currently selected item                                                     |
 
 #### onChange
 
-> `function({selectedValue, previousValue})` | *required*
+> `function({selectedItem, previousItem})` | *required*
 
 Called when the user selects an item
 
 #### onStateChange
 
-> `function({highlightedIndex, inputValue, isOpen, selectedValue})` | not required, no useful default
+> `function({highlightedIndex, inputValue, isOpen, selectedItem})` | not required, no useful default
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
-all of the state (e.g. isOpen, selectedValue, highlightedIndex, etc) and then
+all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
 
 #### highlightedIndex
@@ -213,47 +226,38 @@ downshift component respond differently based on this value (for example, if
 `isOpen` is true when the user hits "Enter" on the input field, then the
 item at the `highlightedIndex` item is selected).
 
-#### `selectedValue`
+#### `selectedItem`
 
 > `any`/`Array(any)` | **state prop** (read more below)
 
-The currently selected value.
+The currently selected item.
 
 #### children
 
 > `function({})` | *required*
 
-This is called with an object with the properties listed below:
+This is called with an object. The properties of this object can be split into
+three categories as indicated below:
 
-<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+##### prop getters
 
-| property                | type                       | description                                                                                                      |
-|-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `getRootProps`          | `function({})`             | returns the props you should apply to the root element that you render. It can be optional. Read more below      |
-| `getInputProps`         | `function({})`             | returns the props you should apply to the `input` element that you render. Read more below                       |
-| `getLabelProps`         | `function({})`             | returns the props you should apply to the `label` element that you render. Read more below                       |
-| `getItemProps`          | `function({})`             | returns the props you should apply to any menu item elements you render. Read more below                         |
-| `getButtonProps`        | `function({})`             | returns the props you should apply to any menu toggle button element you render. Read more below                 |
-| `highlightedIndex`      | `number` / `null`          | the currently highlighted item                                                                                   |
-| `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `value`                 | `any` / `Array(any)`       | the currently selected item value(s) input                                                                            |
-| `inputValue`            | `string` / `null`          | the current value of the `getInputProps` input                                                                            |
-| `isOpen`                | `boolean`                  | the menu open state                                                                                              |
-| `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
-| `openMenu`              | `function()`               | opens the menu                                                                                                   |
-| `closeMenu`             | `function()`               | closes the menu                                                                                                  |
-| `clearSelection`        | `function()`               | clears the selection                                                                                             |
-| `selectItem`            | `function(item: any)`      | selects the given item                                                                                           |
-| `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
-| `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
-
-The functions below are used to apply props to the elements that you render.
+These functions are used to apply props to the elements that you render.
 This gives you maximum flexibility to render what, when, and wherever you like.
 You call these on the element in question (for example:
 `<input {...getInputProps()}`)). It's advisable to pass all your props to that
 function rather than applying them on the element yourself to avoid your props
 being overridden (or overriding the props returned). For example:
 `getInputProps({onKeyUp(event) {console.log(event)}})`.
+
+<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+
+| property         | type           | description                                                                                 |
+|------------------|----------------|---------------------------------------------------------------------------------------------|
+| `getButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.            |
+| `getInputProps`  | `function({})` | returns the props you should apply to the `input` element that you render.                  |
+| `getItemProps`   | `function({})` | returns the props you should apply to any menu item elements you render.                    |
+| `getLabelProps`  | `function({})` | returns the props you should apply to the `label` element that you render.                  |
+| `getRootProps`   | `function({})` | returns the props you should apply to the root element that you render. It can be optional. |
 
 ##### `getRootProps`
 
@@ -297,13 +301,13 @@ There are no required properties for this method.
 ##### `getItemProps`
 
 This method should be applied to any menu items you render. You pass it an object
-and that object must contain `index` (number) and `value` (anything) properties.
+and that object must contain `index` (number) and `item` (anything) properties.
 
 Required properties:
 
 - `index`: this is how `downshift` keeps track of your item when
   updating the `highlightedIndex` as the user keys around.
-- `value`: this is the item data that will be selected when the user selects a
+- `item`: this is the item data that will be selected when the user selects a
   particular item.
 
 ##### `getButtonProps`
@@ -320,6 +324,30 @@ translations:
   'aria-label': translateWithId(isOpen ? 'close.menu' : 'open.menu'),
 })} />
 ```
+
+##### actions
+
+<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+
+| property                | type                       | description                                                                                                      |
+|-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
+| `clearSelection`        | `function()`               | clears the selection                                                                                             |
+| `closeMenu`             | `function()`               | closes the menu                                                                                                  |
+| `openMenu`              | `function()`               | opens the menu                                                                                                   |
+| `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
+| `selectItem`            | `function(item: any)`      | selects the given item                                                                                           |
+| `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
+| `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
+| `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
+
+##### state
+
+| property           | type              | description                                    |
+|--------------------|-------------------|------------------------------------------------|
+| `highlightedIndex` | `number` / `null` | the currently highlighted item                 |
+| `inputValue`       | `string` / `null` | the current value of the `getInputProps` input |
+| `isOpen`           | `boolean`         | the menu open state                            |
+| `selectedItem`     | `any`             | the currently selected item input              |
 
 ### State Props
 
