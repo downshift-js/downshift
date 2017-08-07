@@ -218,7 +218,7 @@ class Autocomplete extends Component {
       return
     }
     const item = this.getItemFromIndex(itemIndex)
-    if (!isNumber(item)) {
+    if (!item) {
       return
     }
     this.selectItem(item)
