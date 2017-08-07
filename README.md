@@ -117,7 +117,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={({selectedValue}) => console.log(selectedValue)}
+      onChange={(selectedValue) => console.log(selectedValue)}
     />
   )
 }
