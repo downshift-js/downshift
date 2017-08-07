@@ -14,7 +14,7 @@ function RawAutoComplete({refine, hits}) {
       {({
         getInputProps,
         getItemProps,
-        selectedValue,
+        selectedItem,
         highlightedIndex,
         isOpen,
       }) =>
@@ -32,12 +32,12 @@ function RawAutoComplete({refine, hits}) {
                 (<div
                   key={item.objectID}
                   {...getItemProps({
-                    value: item,
+                    item,
                     index,
                     style: {
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedValue === item ? 'bold' : 'normal',
+                      fontWeight: selectedItem === item ? 'bold' : 'normal',
                     },
                   })}
                 >

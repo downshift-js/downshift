@@ -36,7 +36,7 @@ function ApolloAutocomplete() {
         inputValue,
         getInputProps,
         getItemProps,
-        selectedValue,
+        selectedItem,
         highlightedIndex,
         isOpen,
       }) =>
@@ -47,7 +47,7 @@ function ApolloAutocomplete() {
               {...{
                   inputValue,
                   getItemProps,
-                  selectedValue,
+                  selectedItem,
                   highlightedIndex,
                   isOpen,
                 }}
@@ -60,7 +60,7 @@ function ApolloAutocomplete() {
 
 function ApolloAutocompleteMenu({
   data: {allColors = [], loading} = {},
-  selectedValue,
+  selectedItem,
   highlightedIndex,
   isOpen,
   getItemProps,
@@ -77,11 +77,11 @@ function ApolloAutocompleteMenu({
         (<div
           key={item}
           {...getItemProps({
-            value: item,
+            item,
             index,
             style: {
               backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-              fontWeight: selectedValue === item ? 'bold' : 'normal',
+              fontWeight: selectedItem === item ? 'bold' : 'normal',
             },
           })}
         >

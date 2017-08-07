@@ -35,14 +35,14 @@ class Examples extends Component {
 
   changeHandler = changes => {
     this.setState({
-      selectedColor: changes.selectedValue,
+      selectedColor: changes.selectedItem,
       isOpen: false,
     })
   }
 
   stateChangeHandler = changes => {
     let {
-      selectedValue = this.state.selectedColor,
+      selectedItem = this.state.selectedColor,
       isOpen = this.state.isOpen,
       inputValue = this.state.inputValue,
       type,
@@ -52,7 +52,7 @@ class Examples extends Component {
         ? this.state.isOpen
         : isOpen
     this.setState({
-      selectedColor: selectedValue,
+      selectedColor: selectedItem,
       isOpen,
       inputValue,
     })
@@ -90,7 +90,7 @@ class Examples extends Component {
             {`
               In this example, we're passing controlling props directly to the downshift
               component. This allows us to control which item is selected from the outside.
-              In our example we're passing the selectedValue, isOpen, and inputValue and we're
+              In our example we're passing the selectedItem, isOpen, and inputValue and we're
               able to control a bunch of stuff from the outside
             `}
           </p>
@@ -126,7 +126,7 @@ class Examples extends Component {
               }}
             />
             <ControlledAutocomplete
-              selectedValue={this.state.selectedColor}
+              selectedItem={this.state.selectedColor}
               items={this.items}
               isOpen={this.state.isOpen}
               inputValue={this.state.inputValue}
@@ -180,7 +180,7 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
         highlightedIndex,
         inputValue,
         isOpen,
-        selectedValue,
+        selectedItem,
       }) =>
         (<div>
           <Input
@@ -197,10 +197,10 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
                   (<Item
                     key={item}
                     {...getItemProps({
-                    value: item,
+                    item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: selectedValue === item,
+                    isSelected: selectedItem === item,
                   })}
                 >
                     {item}

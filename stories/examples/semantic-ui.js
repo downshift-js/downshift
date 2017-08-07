@@ -135,7 +135,7 @@ function SemanticUIAutocomplete() {
       getValue={i => i.name}
       // defaultHighlightedIndex={0}
       // defaultSelectedItem={items[20]}
-      onChange={({selectedValue}) => alert(selectedValue.name)}
+      onChange={({selectedItem}) => alert(selectedItem.name)}
       style={{
         width: '250px',
       }}
@@ -147,7 +147,7 @@ function SemanticUIAutocomplete() {
         clearSelection,
         rootRef,
         inputValue,
-        selectedValue,
+        selectedItem,
         getButtonProps,
         getInputProps,
         getItemProps,
@@ -160,7 +160,7 @@ function SemanticUIAutocomplete() {
                 placeholder: 'Enter some info',
               })}
             />
-            {selectedValue
+            {selectedItem
               ? <ControlButton
                 css={{paddingTop: 4}}
                 onClick={clearSelection}
@@ -180,10 +180,10 @@ function SemanticUIAutocomplete() {
                   (<Item
                     key={item.code}
                     {...getItemProps({
-                    value: item,
+                    item,
                     index,
                     isActive: highlightedIndex === index,
-                    isSelected: selectedValue === item,
+                    isSelected: selectedItem === item,
                   })}
                 >
                     {item.name}
