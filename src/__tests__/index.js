@@ -3,7 +3,7 @@ import {mount} from 'enzyme'
 import Autocomplete from '../'
 
 function BasicAutocomplete() {
-  const items = ['Red', 'Green', 'Blue', 'Orange', 'Purple']
+  const items = ['Red', 'Green', 'Blue', 'Orange', 'Purple', 'Pink']
   return (
     <Autocomplete onChange={() => {}}>
       {({isOpen, getInputProps, getItemProps}) =>

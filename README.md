@@ -35,7 +35,8 @@ This is a collection of primitive components that you can compose together to
 create an autocomplete component which you can reuse in your application. It's
 based on ideas from the talk ["Compound Components"][compound-components-talk]
 which effectively gives you maximum flexibility with a minimal API because you
-are responsible for the rendering of the autocomplete components.
+are responsible for the rendering of everything and you simply apply props to
+what you're rendering.
 
 This differs from other solutions which render things for their use case and
 then expose many options to allow for extensibility causing an API that is less
@@ -56,19 +57,23 @@ should be installed as one of your project's `dependencies`:
 npm install --save downshift@beta
 ```
 
-> This package also depends on `react` and `prop-types`. Please make sure you have
-> those installed as well.
+> This package also depends on `react` and `prop-types`. Please make sure you
+> have those installed as well.
+
+> Note also this library supports `preact` out of the box. If you are using
+> `preact` then look in the `dist/` folder and use the module you want with the
+> `preact` suffix.
 
 ## Usage
 
 **Things are still in flux a little bit (looking for feedback).**
 
 ```jsx
-import Autocomplete from 'downshift'
+import Downshift from 'downshift'
 
 function BasicAutocomplete({items, onChange}) {
   return (
-    <Autocomplete onChange={onChange}>
+    <Downshift onChange={onChange}>
       {({
         getInputProps,
         getItemProps,
@@ -104,7 +109,7 @@ function BasicAutocomplete({items, onChange}) {
           ) : null}
         </div>
       )}
-    </Autocomplete>
+    </Downshift>
   )
 }
 
@@ -120,7 +125,7 @@ function App() {
 
 Available components and relevant props:
 
-### Autocomplete
+### Downshift
 
 This is the only component. It doesn't render anything itself, it just calls
 the child function and renders that. Wrap everything in this.
@@ -141,7 +146,7 @@ Pass an item or an array of items that should be selected by default.
 
 > `number`/`null` | defaults to `null`
 
-This is the initial index to highlight when the autocomplete first opens.
+This is the initial index to highlight when the menu first opens.
 
 #### multiple
 
@@ -211,7 +216,7 @@ The value the input should have
 > `boolean` | **state prop** (read more below)
 
 Whether the menu should be considered open or closed. Some aspects of the
-autocomplete component respond differently based on this value (for example, if
+downshift component respond differently based on this value (for example, if
 `isOpen` is true when the user hits "Enter" on the input field, then the
 item at the `highlightedIndex` item is selected).
 
@@ -259,7 +264,7 @@ being overridden (or overriding the props returned). For example:
 
 ##### `getRootProps`
 
-Most of the time, you can just render a `div` yourself and `Autocompletely` will
+Most of the time, you can just render a `div` yourself and `Downshift` will
 apply the props it needs to do its job (and you don't need to call this
 function). However, if you're rendering a composite component (custom component)
 as the root element, then you'll need to call `getRootProps` and apply that to

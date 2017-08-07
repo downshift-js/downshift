@@ -1,3 +1,3 @@
-import Autocomplete from './autocomplete'
+import Downshift from './downshift'
 
-export default Autocomplete
+export default Downshift
