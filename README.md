@@ -349,17 +349,6 @@ translations:
 | `isOpen`           | `boolean`         | the menu open state                            |
 | `selectedItem`     | `any`             | the currently selected item input              |
 
-### State Props
-
-You can pass some props which normally the `downshift` will manage for you. If
-you pass these props, then they become "controlled" props. In this situation,
-`downshift` will no longer update them directly and will instead call your
-`onStateChange` handler and expect you to update them. This can be useful if
-you want to control the component externally (like selecting an item
-from another part of the UI).
-
-State Props are labeled above with **state prop**
-
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
