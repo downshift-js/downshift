@@ -158,6 +158,12 @@ function firstDefined(...args) {
   return args.find(a => typeof a !== 'undefined')
 }
 
+function isNumber(thing) {
+  // not NaN and is a number type
+  // eslint-disable-next-line no-self-compare
+  return thing === thing && typeof thing === 'number'
+}
+
 export {
   cbToCb,
   compose,
@@ -168,4 +174,5 @@ export {
   selectRangeOfText,
   generateId,
   firstDefined,
+  isNumber,
 }

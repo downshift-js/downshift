@@ -10,6 +10,7 @@ import {
   scrollIntoView,
   generateId,
   firstDefined,
+  isNumber,
 } from './utils'
 
 class Autocomplete extends Component {
@@ -351,10 +352,9 @@ class Autocomplete extends Component {
       return
     }
     const index = this.getItemIndexFromId(target.getAttribute('id'))
-    if (!index) {
-      return
+    if (isNumber(index)) {
+      this.selectItemAtIndex(index)
     }
-    this.selectItemAtIndex(index)
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
