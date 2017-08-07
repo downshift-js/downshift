@@ -9,6 +9,7 @@ import {
   debounce,
   scrollIntoView,
   generateId,
+  firstDefined,
 } from './utils'
 
 class Autocomplete extends Component {
@@ -73,8 +74,7 @@ class Autocomplete extends Component {
 
   constructor(...args) {
     super(...args)
-    this.id = generateId()
-    this.inputId = `${this.id}-input`
+    this.id = generateId('downshift')
     this.state = {
       highlightedIndex: null,
       inputValue: '',
@@ -356,14 +356,28 @@ class Autocomplete extends Component {
 
   rootRef = node => (this._rootNode = node)
 
-  getRootProps = ({refKey = 'ref', ...rest} = {}) => {
+  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
     return {
       [refKey]: this.rootRef,
+      onClick: composeEventHandlers(onClick, this.root_handleClick),
       ...rest,
     }
+  }
+
+  root_handleClick = event => {
+    event.preventDefault()
+    const {target} = event
+    if (!target) {
+      return
+    }
+    const index = this.getItemIndexFromId(target.getAttribute('id'))
+    if (!index) {
+      return
+    }
+    this.selectItemAtIndex(index)
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
@@ -442,17 +456,26 @@ class Autocomplete extends Component {
 
   /////////////////////////////// LABEL
 
-  getLabelProps = ({htmlFor, ...props}) => {
+  getLabelProps = (props = {}) => {
     this.getLabelProps.called = true
-    if (this.getInputProps.called && htmlFor && htmlFor !== this.inputId) {
+    if (
+      this.getInputProps.called &&
+      props.htmlFor &&
+      props.htmlFor !== this.inputId
+    ) {
       throw new Error(
-        `downshift: You provided the htmlFor of "${htmlFor}" for your label, but the id of your input is "${this
+        `downshift: You provided the htmlFor of "${props.htmlFor}" for your label, but the id of your input is "${this
           .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
+    this.inputId = firstDefined(
+      this.inputId,
+      props.htmlFor,
+      generateId('downshift-input'),
+    )
     return {
       ...props,
-      htmlFor: typeof htmlFor === 'undefined' ? this.inputId : htmlFor,
+      htmlFor: this.inputId,
     }
   }
 
@@ -464,29 +487,35 @@ class Autocomplete extends Component {
     return itemValue ? this.props.getValue(itemValue) : ''
   }
 
-  getInputProps = ({id, onChange, onKeyDown, onBlur, ...rest} = {}) => {
+  getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
     this.getInputProps.called = true
-    if (this.getLabelProps.called && id && id !== this.inputId) {
+    if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
-        `downshift: You provided the id of "${id}" for your input, but the htmlFor of your label is "${this
+        `downshift: You provided the id of "${rest.id}" for your input, but the htmlFor of your label is "${this
           .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
-    const {highlightedIndex, inputValue, isOpen} = this.getState()
+    this.inputId = firstDefined(
+      this.inputId,
+      rest.id,
+      generateId('downshift-input'),
+    )
+    const {inputValue, isOpen, highlightedIndex} = this.getState()
     return {
-      id: typeof id === 'undefined' ? this.inputId : id,
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
-      'aria-activedescendant': highlightedIndex ?
-        this.getItemId(highlightedIndex) :
-        null,
+      'aria-activedescendant':
+        typeof highlightedIndex === 'number' && highlightedIndex >= 0 ?
+          this.getItemId(highlightedIndex) :
+          null,
       autoComplete: 'off',
       value: inputValue,
       onChange: composeEventHandlers(onChange, this.input_handleChange),
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
       ...rest,
+      id: this.inputId,
     }
   }
 
@@ -501,7 +530,6 @@ class Autocomplete extends Component {
   input_handleChange = event => {
     this.internalSetState({inputValue: event.target.value})
   }
-
   input_handleBlur = () => {
     if (!this.isMouseDown) {
       this.reset()
@@ -511,16 +539,21 @@ class Autocomplete extends Component {
 
   /////////////////////////////// ITEM
   getItemId(index) {
-    return `${this.id}-item${index}`
+    return `${this.id}-item-${index}`
   }
 
-  getItemProps = ({onClick, onMouseEnter, value, index, ...rest} = {}) => {
+  getItemIndexFromId(id) {
+    if (id) {
+      return Number(id.split(`${this.id}-item-`)[1])
+    } else {
+      return null
+    }
+  }
+
+  getItemProps = ({onMouseEnter, value, index, ...rest} = {}) => {
     this.items.push({index, value})
     return {
       id: this.getItemId(index),
-      onClick: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(Number(index))
-      }),
       onMouseEnter: composeEventHandlers(onMouseEnter, () => {
         this.setHighlightedIndex(index)
       }),
