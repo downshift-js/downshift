@@ -164,6 +164,21 @@ function isNumber(thing) {
   return thing === thing && typeof thing === 'number'
 }
 
+/**
+ * Determines whether the two given objects have shallow
+ * equality with respect to the keys given in obj2.
+ * In other words, every value in obj2 is equal to the
+ * value of the same key in obj1.
+ * @param {Object} obj1 the first
+ * @param {Object} obj2 the second
+ * @return {Boolean} whether they are shallowly equal
+ */
+function containsSubset(obj1, obj2) {
+  return Object.keys(obj2).every(key => {
+    return obj1[key] === obj2[key]
+  })
+}
+
 export {
   cbToCb,
   compose,
@@ -175,4 +190,5 @@ export {
   generateId,
   firstDefined,
   isNumber,
+  containsSubset,
 }
