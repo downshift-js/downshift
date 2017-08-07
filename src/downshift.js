@@ -15,14 +15,14 @@ import {
 
 class Autocomplete extends Component {
   static propTypes = {
-    children: PropTypes.func.isRequired,
+    children: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
     defaultIsOpen: PropTypes.bool,
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     onStateChange: PropTypes.func,
     onClick: PropTypes.func,
     // things we keep in state for uncontrolled components
@@ -338,6 +338,7 @@ class Autocomplete extends Component {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
+    this.getRootProps.refKey = refKey
     return {
       [refKey]: this.rootRef,
       onClick: composeEventHandlers(onClick, this.root_handleClick),
@@ -636,19 +637,20 @@ class Autocomplete extends Component {
     // if they don't then we need to clone the element they return and
     // apply the props for them.
     this.getRootProps.called = false
+    this.getRootProps.refKey = undefined
     // we do something similar for getLabelProps
     this.getLabelProps.called = false
     // and something similar for getInputProps
     this.getInputProps.called = false
+    const uiDescriptor =
+      children && children(this.getControllerStateAndHelpers())
+    if (!uiDescriptor) {
+      return null
+    }
     // doing React.Children.only for Preact support ⚛️
-    const element = React.Children.only(
-      children(this.getControllerStateAndHelpers()),
-    )
-    if (!element) {
-      // returned null or something...
-      return element
-    } else if (this.getRootProps.called) {
-      // we assumed they applied the root props correctly
+    const element = React.Children.only(uiDescriptor)
+    if (this.getRootProps.called) {
+      validateGetRootPropsCalledCorrectly(element, this.getRootProps)
       return element
     } else if (typeof element.type === 'string') {
       // they didn't apply the root props, but we can clone
@@ -665,3 +667,27 @@ class Autocomplete extends Component {
 }
 
 export default Autocomplete
+
+function validateGetRootPropsCalledCorrectly(element, {refKey}) {
+  const refKeySpecified = refKey !== 'ref'
+  const isComposite = typeof element.type !== 'string'
+  if (isComposite && !refKeySpecified) {
+    throw new Error(
+      'downshift: You returned a non-DOM element. You must specify a refKey in getRootProps',
+    )
+  } else if (!isComposite && refKeySpecified) {
+    throw new Error(
+      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
+    )
+  }
+  if (!element.props.hasOwnProperty(refKey)) {
+    throw new Error(
+      `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
+    )
+  }
+  if (!element.props.hasOwnProperty('onClick')) {
+    throw new Error(
+      `downshift: You must apply the "onClick" prop from getRootProps onto your root element.`,
+    )
+  }
+}

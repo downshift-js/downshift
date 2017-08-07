@@ -223,5 +223,3 @@ function setup({items = colors} = {}) {
     childSpy,
   }
 }
-
-/* eslint react/prop-types:0 */
