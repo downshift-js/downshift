@@ -15,7 +15,7 @@ class Autocomplete extends Component {
   static propTypes = {
     children: PropTypes.func.isRequired,
     defaultHighlightedIndex: PropTypes.number,
-    defaultValue: PropTypes.any,
+    defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     getA11yStatusMessage: PropTypes.func,
     getValue: PropTypes.func,
     multiple: PropTypes.bool,
@@ -25,7 +25,7 @@ class Autocomplete extends Component {
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
-    selectedValue: PropTypes.any,
+    selectedValue: PropTypes.string,
     isOpen: PropTypes.bool,
     inputValue: PropTypes.string,
     highlightedIndex: PropTypes.number,
@@ -112,6 +112,12 @@ class Autocomplete extends Component {
         this.props[key] === undefined ? this.state[key] : this.props[key]
       return state
     }, {})
+  }
+
+  getItemFromValue = (value, items = this.items) => {
+    return value.constructor === Array ?
+      items.filter(item => value.indexOf(this.getValue(item)) > -1) :
+      items.find(item => this.getValue(item) === value)
   }
 
   getItemFromIndex = index => {
@@ -202,26 +208,27 @@ class Autocomplete extends Component {
   }
 
   selectItem = itemValue => {
+    const value = this.getValue(itemValue)
     if (!this.props.multiple) {
       this.reset()
     }
     this.internalSetState(({selectedValue: previousValue}) => {
       if (this.props.multiple) {
         const values = [...previousValue]
-        const pos = values.indexOf(itemValue)
+        const pos = values.indexOf(value)
         if (pos > -1) {
           values.splice(pos, 1)
         } else {
-          values.push(itemValue)
+          values.push(value)
         }
         return {
           selectedValue: values,
-          inputValue: values.map(value => this.getValue(value)).join(', '),
+          inputValue: values.join(', '),
         }
       } else {
         return {
-          selectedValue: itemValue,
-          inputValue: this.getValue(itemValue),
+          selectedValue: value,
+          inputValue: value,
         }
       }
     })
@@ -306,8 +313,8 @@ class Autocomplete extends Component {
     const {
       highlightedIndex,
       inputValue,
-      selectedValue,
       isOpen,
+      selectedValue,
     } = this.getState()
     const {
       getRootProps,
@@ -316,6 +323,7 @@ class Autocomplete extends Component {
       getInputProps,
       getItemProps,
       getItemFromIndex,
+      getItemFromValue,
       openMenu,
       closeMenu,
       toggleMenu,
@@ -326,13 +334,14 @@ class Autocomplete extends Component {
       clearSelection,
     } = this
     return {
-      // prop getters
+      // getters
       getRootProps,
       getButtonProps,
       getLabelProps,
       getInputProps,
       getItemProps,
       getItemFromIndex,
+      getItemFromValue,
 
       // actions
       openMenu,
@@ -515,9 +524,14 @@ class Autocomplete extends Component {
   }
 
   getItemProps = ({onClick, onMouseEnter, value, index, ...rest} = {}) => {
+    const {highlightedIndex, selectedValue} = this.getState()
     this.items.push({index, value})
     return {
       id: this.getItemId(index),
+      isHighlighted: highlightedIndex === index,
+      isSelected: this.props.multiple ?
+        selectedValue.indexOf(this.getValue(value)) > -1 :
+        selectedValue === this.getValue(value),
       onClick: composeEventHandlers(onClick, () => {
         this.selectItemAtIndex(Number(index))
       }),
@@ -534,7 +548,7 @@ class Autocomplete extends Component {
       type,
       isOpen: false,
       highlightedIndex: null,
-      inputValue: this.getValue(selectedValue),
+      inputValue: selectedValue,
     }))
   }
 
