@@ -142,10 +142,20 @@ function composeEventHandlers(...fns) {
 
 /**
  * This generates a unique ID for all autocomplete inputs
+ * @param {String} prefix the prefix for the id
  * @return {String} the unique ID
  */
-function generateId() {
-  return `ds${idCounter++}`
+function generateId(prefix) {
+  return `${prefix}-${idCounter++}`
+}
+
+/**
+ * Returns the first argument that is not undefined
+ * @param {...*} args the arguments
+ * @return {*} the defined value
+ */
+function firstDefined(...args) {
+  return args.find(a => typeof a !== 'undefined')
 }
 
 export {
@@ -157,4 +167,5 @@ export {
   selectAllText,
   selectRangeOfText,
   generateId,
+  firstDefined,
 }
