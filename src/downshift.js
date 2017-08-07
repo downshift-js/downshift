@@ -66,7 +66,7 @@ class Autocomplete extends Component {
       }
       return itemToString(highlightedItem)
     },
-    itemToString: i => (i == null ? String(i) : ''),
+    itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
   }
 

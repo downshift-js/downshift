@@ -1,27 +1,27 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import Autocomplete from '../'
+import Downshift from '../'
 
-function BasicAutocomplete() {
+function BasicDownshift() {
   const items = ['Red', 'Green', 'Blue', 'Orange', 'Purple', 'Pink']
   return (
-    <Autocomplete onChange={() => {}}>
+    <Downshift onChange={() => {}}>
       {({isOpen, getInputProps, getItemProps}) =>
         (<div>
           <input {...getInputProps()} />
           {isOpen &&
             <div>
               {items.map((item, index) =>
-                (<div key={item} {...getItemProps({value: item, index})}>
+                (<div key={item} {...getItemProps({item, index})}>
                   {item}
                 </div>),
               )}
             </div>}
         </div>)}
-    </Autocomplete>
+    </Downshift>
   )
 }
 
 test('renders', () => {
-  expect(() => mount(<BasicAutocomplete />)).not.toThrow()
+  expect(() => mount(<BasicDownshift />)).not.toThrow()
 })

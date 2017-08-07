@@ -156,7 +156,7 @@ This is the initial `isOpen` value.
 
 #### itemToString
 
-> `function(item: any)` | defaults to: `i => (i == null ? String(i) : '')`
+> `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
 
 Used to determine the string value for the selected item (which is used to
 compute the `inputValue`.
