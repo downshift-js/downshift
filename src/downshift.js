@@ -19,7 +19,6 @@ class Autocomplete extends Component {
     defaultValue: PropTypes.any,
     getA11yStatusMessage: PropTypes.func,
     getValue: PropTypes.func,
-    multiple: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onStateChange: PropTypes.func,
     onClick: PropTypes.func,
@@ -79,7 +78,7 @@ class Autocomplete extends Component {
       highlightedIndex: null,
       inputValue: '',
       isOpen: false,
-      selectedValue: this.props.defaultValue || (this.props.multiple ? [] : ''),
+      selectedValue: firstDefined(this.props.defaultValue, ''),
     }
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
@@ -191,7 +190,7 @@ class Autocomplete extends Component {
   clearSelection = () => {
     this.internalSetState(
       {
-        selectedValue: this.multiple ? [] : '',
+        selectedValue: '',
         isOpen: false,
       },
       () => {
@@ -202,28 +201,10 @@ class Autocomplete extends Component {
   }
 
   selectItem = itemValue => {
-    if (!this.props.multiple) {
-      this.reset()
-    }
-    this.internalSetState(({selectedValue: previousValue}) => {
-      if (this.props.multiple) {
-        const values = [...previousValue]
-        const pos = values.indexOf(itemValue)
-        if (pos > -1) {
-          values.splice(pos, 1)
-        } else {
-          values.push(itemValue)
-        }
-        return {
-          selectedValue: values,
-          inputValue: values.map(value => this.getValue(value)).join(', '),
-        }
-      } else {
-        return {
-          selectedValue: itemValue,
-          inputValue: this.getValue(itemValue),
-        }
-      }
+    this.reset()
+    this.internalSetState({
+      selectedValue: itemValue,
+      inputValue: this.getValue(itemValue),
     })
   }
 
