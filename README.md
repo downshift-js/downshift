@@ -356,6 +356,7 @@ Examples exist on [codesandbox.io][examples]:
 - [multiple selection example](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
 - [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
 - [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+- [A Material UI Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY) (Material-Ui 1.0.0-beta.4)
 
 If you would like to add an example, follow these steps:
 
