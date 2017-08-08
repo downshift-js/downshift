@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`when the input id is set, and the label for is set to something else, an error is thrown 1`] = `"downshift: You provided the htmlFor of \\"bar\\" for your label, but the id of your input is \\"foo\\". You must either remove the id from your input or set the htmlFor of the label equal to the input id."`;
+
+exports[`when the label for is set, and the input id is set to something else, an error is thrown 1`] = `"downshift: You provided the id of \\"foo\\" for your input, but the htmlFor of your label is \\"bar\\". You must either remove the id from your input or set the htmlFor of the label equal to the input id."`;
