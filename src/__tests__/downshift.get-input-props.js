@@ -155,20 +155,7 @@ test('escape on an input without a selection should reset downshift and close th
 })
 
 test('escape on an input with a selection should reset downshift and close the menu', () => {
-  const items = ['animal', 'bug', 'cat']
-  const {Component, childSpy} = setup({items})
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
-  input.simulate('keydown')
-  input.simulate('change', {target: {value: 'a'}})
-  // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
-  // ENTER to select the first one
-  input.simulate('keydown', {key: 'Enter'})
-  expect(input.node.value).toBe(items[0])
-  // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
-  input.simulate('change', {target: {value: 'bu'}})
+  const {input, childSpy, items} = setupDownshiftWithState()
   input.simulate('keydown', {key: 'Escape'})
   expect(childSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
@@ -177,6 +164,28 @@ test('escape on an input with a selection should reset downshift and close the m
       selectedItem: items[0],
     }),
   )
+})
+
+test('on input blur resets the state', () => {
+  const {input, childSpy, items} = setupDownshiftWithState()
+  input.simulate('blur')
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      isOpen: false,
+      inputValue: items[0],
+      selectedItem: items[0],
+    }),
+  )
+})
+
+test('on input blur does not reset the state when the mouse is down', () => {
+  const {input, childSpy} = setupDownshiftWithState()
+  // mousedown somwhere
+  document.body.dispatchEvent(
+    new window.MouseEvent('mousedown', {bubbles: true}),
+  )
+  input.simulate('blur')
+  expect(childSpy).not.toHaveBeenCalled()
 })
 
 test('keydown with a modifier key does not open the menu', () => {
@@ -196,6 +205,25 @@ function sel(id) {
   return `[data-test="${id}"]`
 }
 
+function setupDownshiftWithState() {
+  const items = ['animal', 'bug', 'cat']
+  const {Component, childSpy} = setup({items})
+  const wrapper = mount(<Component />)
+  const input = wrapper.find(sel('input'))
+  input.simulate('keydown')
+  input.simulate('change', {target: {value: 'a'}})
+  // ↓
+  input.simulate('keydown', {key: 'ArrowDown'})
+  // ENTER to select the first one
+  input.simulate('keydown', {key: 'Enter'})
+  expect(input.node.value).toBe(items[0])
+  // ↓
+  input.simulate('keydown', {key: 'ArrowDown'})
+  input.simulate('change', {target: {value: 'bu'}})
+  childSpy.mockClear()
+  return {childSpy, input, items, wrapper}
+}
+
 function setup({items = colors} = {}) {
   const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) =>
     (<div>
@@ -213,7 +241,7 @@ function setup({items = colors} = {}) {
 
   function BasicDownshift(props) {
     return (
-      <Downshift onChange={() => {}} {...props}>
+      <Downshift {...props}>
         {childSpy}
       </Downshift>
     )

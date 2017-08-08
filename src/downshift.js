@@ -104,11 +104,6 @@ class Downshift extends Component {
     return this.items[index]
   }
 
-  getIndexFromItem = item => {
-    const itemIndex = this.items.findIndex(i => i === item)
-    return itemIndex === -1 ? null : itemIndex
-  }
-
   getItemNodeFromIndex = index => {
     return document.getElementById(this.getItemId(index))
   }
@@ -326,16 +321,12 @@ class Downshift extends Component {
 
   root_handleClick = event => {
     event.preventDefault()
-    const {target} = event
-    if (!target) {
-      return
-    }
     const itemParent = findParent(
       node => {
         const index = this.getItemIndexFromId(node.getAttribute('id'))
         return isNumber(index)
       },
-      target,
+      event.target,
       this._rootNode,
     )
     if (itemParent) {
@@ -591,7 +582,10 @@ class Downshift extends Component {
     }
     const onMouseUp = event => {
       this.isMouseDown = false
-      if (!this._rootNode.contains(event.target)) {
+      if (
+        event.target === this._rootNode ||
+        !this._rootNode.contains(event.target)
+      ) {
         this.reset(Downshift.stateChangeTypes.mouseUp)
       }
     }
