@@ -120,7 +120,13 @@ function BasicAutocomplete({items, onChange}) {
           <Label {...getLabelProps()}>What is your favorite color?</Label>
           <Input {...getInputProps({placeholder: 'Enter color here'})} />
           {isOpen &&
-            <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
+            <div
+              style={{
+                border: '1px solid rgba(34,36,38,.15)',
+                maxHeight: 100,
+                overflowY: 'scroll',
+              }}
+            >
               {(inputValue
                 ? matchSorter(items, inputValue)
                 : items).map((item, index) =>

@@ -13,24 +13,28 @@ function cbToCb(cb) {
 }
 function noop() {}
 
-/**
- * Get the closest element that scrolls
- * @param {HTMLElement} node - the child element to start searching for scroll parent at
- * @param {HTMLElement} rootNode - the root element of the component
- * @return {HTMLElement} the closest parentNode that scrolls
- */
-function getClosestScrollParent(node, rootNode) {
-  if (node !== null && node !== rootNode) {
-    const isScrollable = node.scrollHeight > node.clientHeight
-    if (isScrollable) {
+function findParent(finder, node, rootNode) {
+  if (node !== null && node !== rootNode.parentNode) {
+    if (finder(node)) {
       return node
     } else {
-      return getClosestScrollParent(node.parentNode)
+      return findParent(finder, node.parentNode, rootNode)
     }
   } else {
     return null
   }
 }
+
+/**
+* Get the closest element that scrolls
+* @param {HTMLElement} node - the child element to start searching for scroll parent at
+* @param {HTMLElement} rootNode - the root element of the component
+* @return {HTMLElement} the closest parentNode that scrolls
+*/
+const getClosestScrollParent = findParent.bind(
+  null,
+  node => node.scrollHeight > node.clientHeight,
+)
 
 /**
  * Scroll node into view if necessary
@@ -172,6 +176,7 @@ function getA11yStatusMessage({
 
 export {
   cbToCb,
+  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,

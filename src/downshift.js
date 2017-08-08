@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
+  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,
@@ -45,6 +46,7 @@ class Downshift extends Component {
     getA11yStatusMessage,
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
+    onChange: () => {},
   }
 
   // this is an experimental feature
@@ -328,9 +330,18 @@ class Downshift extends Component {
     if (!target) {
       return
     }
-    const index = this.getItemIndexFromId(target.getAttribute('id'))
-    if (isNumber(index)) {
-      this.selectItemAtIndex(index)
+    const itemParent = findParent(
+      node => {
+        const index = this.getItemIndexFromId(node.getAttribute('id'))
+        return isNumber(index)
+      },
+      target,
+      this._rootNode,
+    )
+    if (itemParent) {
+      this.selectItemAtIndex(
+        this.getItemIndexFromId(itemParent.getAttribute('id')),
+      )
     }
   }
 
