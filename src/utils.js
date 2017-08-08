@@ -38,7 +38,7 @@ function getClosestScrollParent(node, rootNode) {
  * @param {HTMLElement} rootNode - the root element of the component
  * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
-function scrollIntoView(node, rootNode, alignToTop) {
+function scrollIntoView(node, rootNode) {
   const scrollParent = getClosestScrollParent(node, rootNode)
   if (scrollParent === null) {
     return
@@ -53,7 +53,7 @@ function scrollIntoView(node, rootNode, alignToTop) {
   const nodeRect = node.getBoundingClientRect()
   const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
   const nodeTop = nodeOffsetTop - scrollParentTop
-  if (alignToTop || nodeTop < scrollParent.scrollTop) {
+  if (nodeTop < scrollParent.scrollTop) {
     // the item is above the scrollable area
     scrollParent.scrollTop = nodeTop
   } else if (
