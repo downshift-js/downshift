@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clears statuses when a change appears 1`] = `"<div id=\\"a11y-status-message\\" role=\\"status\\" aria-live=\\"assertive\\" aria-relevant=\\"additions text\\" style=\\"border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;\\"><div style=\\"display:block;\\">goodbye</div></div>"`;
+
+exports[`does add anything for an empty string 1`] = `"<div id=\\"a11y-status-message\\" role=\\"status\\" aria-live=\\"assertive\\" aria-relevant=\\"additions text\\" style=\\"border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;\\"></div>"`;
+
+exports[`repeat statuses get appended as children 1`] = `"<div id=\\"a11y-status-message\\" role=\\"status\\" aria-live=\\"assertive\\" aria-relevant=\\"additions text\\" style=\\"border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;\\"><div style=\\"display:none;\\">hello</div><div style=\\"display:none;\\">hello</div><div style=\\"display:block;\\">hello</div></div>"`;
+
+exports[`sets the status 1`] = `"<div id=\\"a11y-status-message\\" role=\\"status\\" aria-live=\\"assertive\\" aria-relevant=\\"additions text\\" style=\\"border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;\\"><div style=\\"display:block;\\">hello</div></div>"`;
