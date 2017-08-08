@@ -188,8 +188,8 @@ test('on input blur does not reset the state when the mouse is down', () => {
   expect(childSpy).not.toHaveBeenCalled()
 })
 
-test('keydown with a modifier key does not open the menu', () => {
-  const modifiers = ['Shift', 'Meta', 'Alt', 'Control']
+test('keydown of things that are not handled do nothing', () => {
+  const modifiers = [undefined, 'Shift']
   const {Component, childSpy} = setup()
   const wrapper = mount(<Component />)
   const input = wrapper.find(sel('input'))

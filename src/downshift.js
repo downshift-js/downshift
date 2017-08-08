@@ -465,14 +465,13 @@ class Downshift extends Component {
   input_handleKeyDown = event => {
     if (event.key && this.keyDownHandlers[event.key]) {
       this.keyDownHandlers[event.key].call(this, event)
-    } else if (!['Shift', 'Meta', 'Alt', 'Control'].includes(event.key)) {
-      this.openMenu()
     }
   }
 
   input_handleChange = event => {
-    this.internalSetState({inputValue: event.target.value})
+    this.internalSetState({isOpen: true, inputValue: event.target.value})
   }
+
   input_handleBlur = () => {
     if (!this.isMouseDown) {
       this.reset()
