@@ -371,16 +371,7 @@ class Downshift extends Component {
 
     ' '(event) {
       event.preventDefault()
-      const {isOpen, highlightedIndex} = this.getState()
-      if (isOpen) {
-        if (highlightedIndex === null) {
-          this.closeMenu()
-        } else {
-          this.selectHighlightedItem()
-        }
-      } else {
-        this.openMenu()
-      }
+      this.toggleMenu()
     },
   }
 

@@ -101,10 +101,10 @@ test('enter on an input with a closed menu does nothing', () => {
   const wrapper = mount(<Component />)
   const input = wrapper.find(sel('input'))
   // ENTER
-  const preEnterCallsCount = childSpy.mock.calls.length
+  childSpy.mockClear()
   input.simulate('keydown', {key: 'Enter'})
   // does not even rerender
-  expect(childSpy.mock.calls).toHaveLength(preEnterCallsCount)
+  expect(childSpy).not.toHaveBeenCalled()
 })
 
 test('enter on an input with an open menu does nothing without a highlightedIndex', () => {
@@ -112,10 +112,10 @@ test('enter on an input with an open menu does nothing without a highlightedInde
   const wrapper = mount(<Component isOpen={true} />)
   const input = wrapper.find(sel('input'))
   // ENTER
-  const preEnterCallsCount = childSpy.mock.calls.length
+  childSpy.mockClear()
   input.simulate('keydown', {key: 'Enter'})
   // does not even rerender
-  expect(childSpy.mock.calls).toHaveLength(preEnterCallsCount)
+  expect(childSpy).not.toHaveBeenCalled()
 })
 
 test('enter on an input with an open menu and a highlightedIndex selects that item', () => {
@@ -193,12 +193,12 @@ test('keydown with a modifier key does not open the menu', () => {
   const {Component, childSpy} = setup()
   const wrapper = mount(<Component />)
   const input = wrapper.find(sel('input'))
-  const preKeyDownCallsCount = childSpy.mock.calls.length
+  childSpy.mockClear()
   modifiers.forEach(key => {
     input.simulate('keydown', {key})
   })
   // does not even rerender
-  expect(childSpy.mock.calls).toHaveLength(preKeyDownCallsCount)
+  expect(childSpy).not.toHaveBeenCalled()
 })
 
 function sel(id) {
