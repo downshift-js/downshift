@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-declare namespace ReactAutocompletely {
+declare namespace Downshift {
     interface AutocompleteProps {
         children: React.ReactNode;
         component?: any;
@@ -48,14 +48,14 @@ declare namespace ReactAutocompletely {
     }
     class Item extends React.Component<ItemProps, {}> {}
     class Autocomplete extends React.Component<
-        ReactAutocompletely.AutocompleteProps,
+        Downshift.AutocompleteProps,
         {}
     > {
-        public static Button: typeof ReactAutocompletely.Button;
-        public static Controller: typeof ReactAutocompletely.Controller;
-        public static Input: typeof ReactAutocompletely.Input;
-        public static Item: typeof ReactAutocompletely.Item;
+        public static Button: typeof Downshift.Button;
+        public static Controller: typeof Downshift.Controller;
+        public static Input: typeof Downshift.Input;
+        public static Item: typeof Downshift.Item;
     }
 }
 
-export default ReactAutocompletely.Autocomplete;
+export default Downshift.Autocomplete;
