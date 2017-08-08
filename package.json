@@ -8,9 +8,7 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\"",
-    "storybook": "start-storybook -p 6006 -c stories",
-    "build-storybook": "build-storybook -c stories"
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
   "files": ["dist"],
   "keywords": [],

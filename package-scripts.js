@@ -38,6 +38,15 @@ module.exports = {
       preact: getBuildFor('preact'),
       andTest: series.nps('build', 'test.build'),
     },
+    storybook: {
+      default: 'start-storybook -p 6006 -c stories',
+      build: series(
+        'cd stories',
+        'npm install',
+        'cd ..',
+        'build-storybook -c stories'
+      ),
+    },
     lint: {
       description: 'lint the entire project',
       script: 'eslint .',
