@@ -192,13 +192,13 @@ properties:
 
 #### onChange
 
-> `function({selectedItem, previousItem})` | *required*
+> `function({selectedItem, previousItem})` | optional, no useful default
 
 Called when the user selects an item
 
 #### onStateChange
 
-> `function({highlightedIndex, inputValue, isOpen, selectedItem})` | not required, no useful default
+> `function({highlightedIndex, inputValue, isOpen, selectedItem})` | optional, no useful default
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
