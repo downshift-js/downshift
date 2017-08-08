@@ -30,7 +30,7 @@ test('clicking anywhere within the rendered downshift but outside an item does n
   )
   childSpy.mockClear()
   wrapper.find('button').first().simulate('click')
-  expect(childSpy).toHaveBeenCalledTimes(0)
+  expect(childSpy).not.toHaveBeenCalled()
 })
 
 test('on mouseenter of an item updates the highlightedIndex to that item', () => {

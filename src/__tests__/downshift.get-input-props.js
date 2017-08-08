@@ -201,10 +201,6 @@ test('keydown with a modifier key does not open the menu', () => {
   expect(childSpy).not.toHaveBeenCalled()
 })
 
-function sel(id) {
-  return `[data-test="${id}"]`
-}
-
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const {Component, childSpy} = setup({items})
@@ -250,4 +246,8 @@ function setup({items = colors} = {}) {
     Component: BasicDownshift,
     childSpy,
   }
+}
+
+function sel(id) {
+  return `[data-test="${id}"]`
 }

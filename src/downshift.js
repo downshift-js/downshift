@@ -164,7 +164,7 @@ class Downshift extends Component {
         isOpen: false,
       },
       () => {
-        const inputNode = document.getElementById(this.inputId)
+        const inputNode = this._rootNode.querySelector(`#${this.inputId}`)
         inputNode && inputNode.focus && inputNode.focus()
       },
     )
