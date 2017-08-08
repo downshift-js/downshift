@@ -111,10 +111,10 @@ class Downshift extends Component {
     return document.getElementById(this.getItemId(index))
   }
 
-  maybeScrollToHighlightedElement(highlightedIndex, alignToTop) {
+  maybeScrollToHighlightedElement(highlightedIndex) {
     const node = this.getItemNodeFromIndex(highlightedIndex)
     const rootNode = this._rootNode
-    scrollIntoView(node, rootNode, alignToTop)
+    scrollIntoView(node, rootNode)
   }
 
   setHighlightedIndex = (
@@ -122,14 +122,6 @@ class Downshift extends Component {
   ) => {
     this.internalSetState({highlightedIndex}, () => {
       this.maybeScrollToHighlightedElement(highlightedIndex)
-    })
-  }
-
-  highlightSelectedItem = () => {
-    const highlightedIndex =
-      this.getIndexFromItem(this.getState().selectedItem) || 0
-    this.internalSetState({highlightedIndex}, () => {
-      this.maybeScrollToHighlightedElement(highlightedIndex, true)
     })
   }
 

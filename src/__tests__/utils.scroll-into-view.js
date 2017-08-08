@@ -20,19 +20,6 @@ test('does nothing if the node is within the scrollable area', () => {
   expect(scrollableNode.scrollTop).toBe(scrollableScrollTop)
 })
 
-test('aligns to top when specified', () => {
-  const nodeTop = 6
-  const scrollableScrollTop = 2
-  const node = getNode({height: 10, top: nodeTop})
-  const scrollableNode = getScrollableNode({
-    scrollTop: scrollableScrollTop,
-    children: [node],
-  })
-  const alignToTop = true
-  scrollIntoView(node, scrollableNode, alignToTop)
-  expect(scrollableNode.scrollTop).toBe(nodeTop + scrollableScrollTop)
-})
-
 test('aligns to top when the node is above the scrollable parent', () => {
   // TODO: make this test a tiny bit more readable/maintainable...
   const nodeTop = 2
