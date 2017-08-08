@@ -157,6 +157,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "zsid",
+      "name": "Zhivko Siderov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11786608?v=4",
+      "profile": "http://zsid.github.io/",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }

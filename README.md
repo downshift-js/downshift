@@ -356,6 +356,7 @@ Examples exist on [codesandbox.io][examples]:
 - [multiple selection example](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
 - [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
 - [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+- [downshift GenieJS example](https://codesandbox.io/s/4zNL2WW1)
 
 If you would like to add an example, follow these steps:
 
