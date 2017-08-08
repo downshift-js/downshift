@@ -12,9 +12,10 @@ import {
   firstDefined,
   isNumber,
   containsSubset,
+  getA11yStatusMessage,
 } from './utils'
 
-class Autocomplete extends Component {
+class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
@@ -41,32 +42,7 @@ class Autocomplete extends Component {
     defaultSelectedItem: null,
     defaultInputValue: '',
     defaultIsOpen: false,
-    // eslint-disable-next-line complexity
-    getA11yStatusMessage({
-      isOpen,
-      highlightedItem,
-      selectedItem,
-      resultCount,
-      previousResultCount,
-      itemToString,
-    }) {
-      if (!isOpen) {
-        if (selectedItem) {
-          return itemToString(selectedItem)
-        } else {
-          return ''
-        }
-      }
-      const resultCountChanged = resultCount !== previousResultCount
-      if (!resultCount) {
-        return 'No results.'
-      } else if (!highlightedItem || resultCountChanged) {
-        return `${resultCount} ${resultCount === 1 ?
-          'result is' :
-          'results are'} available, use up and down arrow keys to navigate.`
-      }
-      return itemToString(highlightedItem)
-    },
+    getA11yStatusMessage,
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
   }
@@ -613,16 +589,16 @@ class Autocomplete extends Component {
     const onMouseUp = event => {
       this.isMouseDown = false
       if (!this._rootNode.contains(event.target)) {
-        this.reset(Autocomplete.stateChangeTypes.mouseUp)
+        this.reset(Downshift.stateChangeTypes.mouseUp)
       }
     }
-    document.body.addEventListener('mousedown', onMouseDown)
-    document.body.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mouseup', onMouseUp)
 
     this.cleanup = () => {
       this._isMounted = false
-      document.body.removeEventListener('mousedown', onMouseDown)
-      document.body.removeEventListener('mouseup', onMouseUp)
+      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mouseup', onMouseUp)
     }
   }
 
@@ -673,7 +649,7 @@ class Autocomplete extends Component {
   }
 }
 
-export default Autocomplete
+export default Downshift
 
 function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'

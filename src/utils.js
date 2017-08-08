@@ -1,33 +1,4 @@
-/**
- * This is a utilities file for the autocomplete component.
- * Part of the reason it exists is to be able to stub out
- * some things that don't work with jsdom.
- */
-
 let idCounter = 1
-
-/**
- * This will take a node and select the given range of text from start to end in a
- * way that works for iOS
- * @param  {HTMLInputElement} node - the input to select the text in
- * @param  {Number} start - the index to start the selection
- * @param  {Number} end - the index to end the selection
- */
-function selectRangeOfText(node, start, end) {
-  // select all the text, but do it on the next tick because iOS has issues otherwise
-  setTimeout(() => {
-    // we're using setSelectionRange rather than select because select doesn't work with iOS
-    node.setSelectionRange(start, end)
-  })
-}
-
-/**
- * This will take a node and select all the text in it in a way that works for iOS
- * @param {HTMLInputElement} node - the input to select the text in
- */
-function selectAllText(node) {
-  selectRangeOfText(node, 0, node.value.length)
-}
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -50,7 +21,8 @@ function noop() {}
  */
 function getClosestScrollParent(node, rootNode) {
   if (node !== null && node !== rootNode) {
-    if (node.scrollHeight > node.clientHeight) {
+    const isScrollable = node.scrollHeight > node.clientHeight
+    if (isScrollable) {
       return node
     } else {
       return getClosestScrollParent(node.parentNode)
@@ -82,13 +54,16 @@ function scrollIntoView(node, rootNode, alignToTop) {
   const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
   const nodeTop = nodeOffsetTop - scrollParentTop
   if (alignToTop || nodeTop < scrollParent.scrollTop) {
+    // the item is above the scrollable area
     scrollParent.scrollTop = nodeTop
   } else if (
     nodeTop + nodeRect.height >
     scrollParent.scrollTop + scrollParentRect.height
   ) {
+    // the item is below the scrollable area
     scrollParent.scrollTop = nodeTop + nodeRect.height - scrollParentRect.height
   }
+  // the item is within the scrollable area (do nothing)
 }
 
 /**
@@ -111,17 +86,6 @@ function debounce(fn, time) {
       fn(...args)
     }, time)
   }
-}
-
-/**
- * returns a function that calls the given functions in
- * sequence with the arguments that are passed to the
- * function returned.
- * @param {Function} fns the functions to call
- * @return {Function} the function that calls the functions
- */
-function compose(...fns) {
-  return (...args) => fns.forEach(fn => fn && fn(...args))
 }
 
 /**
@@ -179,16 +143,41 @@ function containsSubset(obj1, obj2) {
   })
 }
 
+// eslint-disable-next-line complexity
+function getA11yStatusMessage({
+  isOpen,
+  highlightedItem,
+  selectedItem,
+  resultCount,
+  previousResultCount,
+  itemToString,
+}) {
+  if (!isOpen) {
+    if (selectedItem) {
+      return itemToString(selectedItem)
+    } else {
+      return ''
+    }
+  }
+  const resultCountChanged = resultCount !== previousResultCount
+  if (!resultCount) {
+    return 'No results.'
+  } else if (!highlightedItem || resultCountChanged) {
+    return `${resultCount} ${resultCount === 1 ?
+      'result is' :
+      'results are'} available, use up and down arrow keys to navigate.`
+  }
+  return itemToString(highlightedItem)
+}
+
 export {
   cbToCb,
-  compose,
   composeEventHandlers,
   debounce,
   scrollIntoView,
-  selectAllText,
-  selectRangeOfText,
   generateId,
   firstDefined,
   isNumber,
   containsSubset,
+  getA11yStatusMessage,
 }

@@ -1,3 +1,4 @@
+// istanbul ignore next
 let statusDiv =
   typeof document === 'undefined' ?
     null :
