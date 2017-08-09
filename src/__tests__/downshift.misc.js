@@ -45,14 +45,38 @@ test('clearSelection with an input node focuses the input node', () => {
   expect(document.activeElement).toBe(input.getDOMNode())
 })
 
-function setup({children = () => <div />} = {}) {
+test('onStateChange called with changes and all the state', () => {
+  const handleStateChange = jest.fn()
+  const controlledState = {
+    inputValue: '',
+    selectedItem: null,
+  }
+  const {selectItem} = setup({
+    ...controlledState,
+    onStateChange: handleStateChange,
+  })
+  const itemToSelect = 'foo'
+  selectItem(itemToSelect)
+  const changes = {
+    selectedItem: itemToSelect,
+    inputValue: itemToSelect,
+  }
+  const allState = {
+    ...controlledState,
+    isOpen: false,
+    highlightedIndex: null,
+  }
+  expect(handleStateChange).toHaveBeenLastCalledWith(changes, allState)
+})
+
+function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return children(controllerArg)
   })
   const wrapper = mount(
-    <Downshift>
+    <Downshift {...props}>
       {childSpy}
     </Downshift>,
   )
