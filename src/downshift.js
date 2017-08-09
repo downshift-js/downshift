@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {
@@ -16,7 +16,7 @@ import {
   getA11yStatusMessage,
 } from './utils'
 
-class Downshift extends Component {
+class Downshift extends PureComponent {
   static propTypes = {
     children: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
