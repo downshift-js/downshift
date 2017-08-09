@@ -28,7 +28,7 @@ class Downshift extends PureComponent {
     onChange: PropTypes.func,
     onStateChange: PropTypes.func,
     onClick: PropTypes.func,
-    getItemCount: PropTypes.func,
+    itemCount: PropTypes.number,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -48,9 +48,6 @@ class Downshift extends PureComponent {
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
     onChange: () => {},
-    getItemCount() {
-      return this.items.length
-    },
   }
 
   // this is an experimental feature
@@ -111,6 +108,14 @@ class Downshift extends PureComponent {
     return this.props[key] !== undefined
   }
 
+  getItemCount() {
+    if (this.props.itemCount === undefined) {
+      return this.items.length
+    } else {
+      return this.props.itemCount
+    }
+  }
+
   getItemFromIndex = index => {
     if (!this.items || !this.items[0]) {
       return null
@@ -148,7 +153,7 @@ class Downshift extends PureComponent {
 
   // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const itemsLastIndex = this.props.getItemCount.call(this) - 1
+    const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0) {
       return
     }
@@ -556,7 +561,7 @@ class Downshift extends PureComponent {
     }
     const state = this.getState()
     const item = this.getItemFromIndex(state.highlightedIndex) || {}
-    const resultCount = this.props.getItemCount.call(this)
+    const resultCount = this.getItemCount()
     const status = this.props.getA11yStatusMessage({
       itemToString: this.props.itemToString,
       previousResultCount: this.previousResultCount,

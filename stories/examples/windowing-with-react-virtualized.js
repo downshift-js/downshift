@@ -29,11 +29,10 @@ class Example extends React.Component {
         <h1>Windowing example</h1>
         <div>
           <Downshift
-            isOpen={true}
             inputValue={inputValue}
             itemToString={i => (i ? i.name : '')}
             onStateChange={this.handleStateChange}
-            getItemCount={() => items.length}
+            itemCount={items.length}
           >
             {({
               getInputProps,

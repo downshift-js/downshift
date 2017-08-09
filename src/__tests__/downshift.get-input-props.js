@@ -201,6 +201,18 @@ test('keydown of things that are not handled do nothing', () => {
   expect(childSpy).not.toHaveBeenCalled()
 })
 
+test('highlightedIndex uses the given itemCount prop to determine the last index', () => {
+  const {Component, childSpy} = setup()
+  const itemCount = 200
+  const wrapper = mount(<Component itemCount={itemCount} isOpen={true} />)
+  const input = wrapper.find(sel('input'))
+  // ↑
+  input.simulate('keydown', {key: 'ArrowUp'})
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: itemCount - 1}),
+  )
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const {Component, childSpy} = setup({items})
