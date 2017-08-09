@@ -31,7 +31,7 @@ function Examples() {
 
 function ApolloAutocomplete() {
   return (
-    <Autocomplete onChange={item => alert(item)}>
+    <Autocomplete onChange={({selectedItem}) => alert(selectedItem)}>
       {({
         inputValue,
         getInputProps,

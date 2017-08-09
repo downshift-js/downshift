@@ -36,6 +36,8 @@ class AxiosAutocomplete extends Component {
               <input
                 {...getInputProps({
                   onChange: event => {
+                    // would probably be a good idea to debounce this
+                    // 😅
                     const value = event.target.value
                     if (!value) {
                       return

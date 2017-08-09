@@ -8,12 +8,14 @@ jest.mock('../set-a11y-status')
 
 test('handles mouse events properly to reset state', () => {
   const handleStateChange = jest.fn()
+  const childSpy = jest.fn(({getInputProps}) =>
+    (<div>
+      <input {...getInputProps({'data-test': 'input'})} />
+    </div>),
+  )
   const MyComponent = () =>
     (<Downshift onStateChange={handleStateChange}>
-      {({getInputProps}) =>
-        (<div>
-          <input {...getInputProps({'data-test': 'input'})} />
-        </div>)}
+      {childSpy}
     </Downshift>)
   const wrapper = mount(<MyComponent />)
   const inputWrapper = wrapper.find(sel('input'))
@@ -26,15 +28,20 @@ test('handles mouse events properly to reset state', () => {
 
   const inputNode = inputWrapper.getDOMNode()
 
+  // mouse down and up on within the autocomplete node
   mouseDownAndUp(inputNode)
   expect(handleStateChange).toHaveBeenCalledTimes(0)
 
+  // mouse down and up on outside the autocomplete node
   mouseDownAndUp(document.body)
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 
-  // calls our state change handler it every time
+  childSpy.mockClear()
+  // does not call our state change handler when no state changes
   mouseDownAndUp(document.body)
   expect(handleStateChange).toHaveBeenCalledTimes(1)
+  // does not rerender when no state changes
+  expect(childSpy).not.toHaveBeenCalled()
 
   // cleans up
   wrapper.unmount()

@@ -132,10 +132,7 @@ function advancedFilter(theItems, value) {
 function SemanticUIAutocomplete() {
   return (
     <Autocomplete
-      getValue={i => i.name}
-      // defaultHighlightedIndex={0}
-      // defaultSelectedItem={items[20]}
-      onChange={({selectedItem}) => alert(selectedItem.name)}
+      itemToString={i => (i ? i.name : '')}
       style={{
         width: '250px',
       }}
@@ -145,14 +142,14 @@ function SemanticUIAutocomplete() {
         isOpen,
         toggleMenu,
         clearSelection,
-        rootRef,
+        getRootProps,
         inputValue,
         selectedItem,
         getButtonProps,
         getInputProps,
         getItemProps,
       }) =>
-        (<Div innerRef={rootRef}>
+        (<Div {...getRootProps({refKey: 'innerRef'})}>
           <Div position="relative" css={{paddingRight: '1.75em'}}>
             <Input
               {...getInputProps({
