@@ -69,6 +69,22 @@ test('props update causes the a11y status to be updated', () => {
   expect(setA11yStatus).toHaveBeenCalledTimes(1)
 })
 
+test('props update of selectedItem will update the inputValue state', () => {
+  const childSpy = jest.fn(() => null)
+  const wrapper = mount(
+    <Downshift selectedItem={null}>
+      {childSpy}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  wrapper.setProps({selectedItem: 'foo'})
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      inputValue: 'foo',
+    }),
+  )
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
