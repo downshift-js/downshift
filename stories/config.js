@@ -11,6 +11,8 @@ import Apollo from './examples/apollo'
 import Axios from './examples/axios'
 import InstantSearch from './examples/react-instantsearch'
 import Popper from './examples/react-popper'
+import ReactVirtualized from './examples/windowing-with-react-virtualized'
+import ReactTinyVirtualList from './examples/windowing-with-react-tiny-virtual-list'
 
 function loadStories() {
   // clear the console to make debugging experience better
@@ -24,6 +26,10 @@ function loadStories() {
     .add('axios', () => <Axios />)
     .add('instant search', () => <InstantSearch />)
     .add('react-popper', () => <Popper />)
+    .add('windowing with react-virtualized', () => <ReactVirtualized />)
+    .add('windowing with react-tiny-virtual-list', () =>
+      <ReactTinyVirtualList />,
+    )
 }
 
 configure(loadStories, module)
