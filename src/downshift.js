@@ -12,7 +12,6 @@ import {
   generateId,
   firstDefined,
   isNumber,
-  containsSubset,
   getA11yStatusMessage,
 } from './utils'
 
@@ -186,8 +185,9 @@ class Downshift extends PureComponent {
   }
 
   selectItem = item => {
-    this.reset()
     this.internalSetState({
+      isOpen: false,
+      highlightedIndex: null,
       selectedItem: item,
       inputValue: this.props.itemToString(item),
     })
@@ -220,11 +220,11 @@ class Downshift extends PureComponent {
   // that property is controlled or not.
   internalSetState(stateToSet, cb) {
     const onChangeArg = {}
-    let onStateChangeArg, stateChanged
+    const onStateChangeArg = {}
     return this.setState(
       state => {
         state = this.getState(state)
-        onStateChangeArg =
+        stateToSet =
           typeof stateToSet === 'function' ? stateToSet(state) : stateToSet
         // this keeps track of the object we want to call with setState
         const nextState = {}
@@ -233,11 +233,11 @@ class Downshift extends PureComponent {
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
-        if (onStateChangeArg.hasOwnProperty('selectedItem')) {
-          onChangeArg.selectedItem = onStateChangeArg.selectedItem
+        if (stateToSet.hasOwnProperty('selectedItem')) {
+          onChangeArg.selectedItem = stateToSet.selectedItem
           onChangeArg.previousItem = state.selectedItem
         }
-        Object.keys(onStateChangeArg).forEach(key => {
+        Object.keys(stateToSet).forEach(key => {
           // the type is useful for the onStateChangeArg
           // but we don't actually want to set it in internal state.
           // this is an undocumented feature for now... Not all internalSetState
@@ -247,24 +247,28 @@ class Downshift extends PureComponent {
           if (key === 'type') {
             return
           }
-          nextFullState[key] = onStateChangeArg[key]
-          // if it's coming from props, then we don't want to set it internally
+          // onStateChangeArg should only have the state that is
+          // actually changing
+          if (state[key] !== stateToSet[key]) {
+            onStateChangeArg[key] = stateToSet[key]
+          }
+          nextFullState[key] = stateToSet[key]
+          // if it's coming from props, then we don't care to set it internally
           if (!this.isStateProp(key)) {
-            nextState[key] = onStateChangeArg[key]
+            nextState[key] = stateToSet[key]
           }
         })
-        stateChanged = !containsSubset(state, nextFullState)
         return nextState
       },
       () => {
         // call the provided callback if it's a callback
         cbToCb(cb)()
-        if (stateChanged) {
+        if (Object.keys(onStateChangeArg).length) {
           // We call this function whether we're controlled or not
           // It's mostly useful if we're controlled, but it can
           // definitely be useful for folks to know when something
           // happens internally.
-          this.props.onStateChange(onStateChangeArg)
+          this.props.onStateChange(onStateChangeArg, this.getState())
         }
         if (Object.keys(onChangeArg).length) {
           // if the selectedItem changed

@@ -198,12 +198,20 @@ Called when the user selects an item
 
 #### onStateChange
 
-> `function({highlightedIndex, inputValue, isOpen, selectedItem})` | optional, no useful default
+> `function(changes, allState)` | optional, no useful default
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
+The parameters both take the shape of internal state
+(`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`)
+but differ slightly.
+
+- `changes`: These are the properties that actually have changed since the last
+  state change
+- `allState`: This is the full state object of all the state in your `downshift`
+  component.
 
 #### itemCount
 
