@@ -91,10 +91,20 @@ class Downshift extends PureComponent {
    */
   getState(stateToMerge = this.state) {
     return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] =
-        this.props[key] === undefined ? this.state[key] : this.props[key]
+      state[key] = this.isStateProp(key) ? this.props[key] : this.state[key]
       return state
     }, {})
+  }
+
+  /**
+   * This determines whether a prop is a "state prop" meaning it is
+   * state which is controlled by the outside of this component rather
+   * than within this component.
+   * @param {String} key the key to check
+   * @return {Boolean} whether it is a controlled state prop
+   */
+  isStateProp(key) {
+    return this.props[key] !== undefined
   }
 
   getItemFromIndex = index => {
@@ -234,7 +244,7 @@ class Downshift extends PureComponent {
           }
           nextFullState[key] = onStateChangeArg[key]
           // if it's coming from props, then we don't want to set it internally
-          if (!this.props.hasOwnProperty(key)) {
+          if (!this.isStateProp(key)) {
             nextState[key] = onStateChangeArg[key]
           }
         })
@@ -589,7 +599,15 @@ class Downshift extends PureComponent {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (
+      this.isStateProp('selectedItem') &&
+      this.props.selectedItem !== prevProps.selectedItem
+    ) {
+      this.internalSetState({
+        inputValue: this.props.itemToString(this.props.selectedItem),
+      })
+    }
     this.updateStatus()
   }
 
