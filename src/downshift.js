@@ -28,6 +28,7 @@ class Downshift extends PureComponent {
     onChange: PropTypes.func,
     onStateChange: PropTypes.func,
     onClick: PropTypes.func,
+    getItemCount: PropTypes.func,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -47,6 +48,9 @@ class Downshift extends PureComponent {
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
     onChange: () => {},
+    getItemCount() {
+      return this.items.length
+    },
   }
 
   // this is an experimental feature
@@ -118,17 +122,13 @@ class Downshift extends PureComponent {
     return document.getElementById(this.getItemId(index))
   }
 
-  maybeScrollToHighlightedElement(highlightedIndex) {
-    const node = this.getItemNodeFromIndex(highlightedIndex)
-    const rootNode = this._rootNode
-    scrollIntoView(node, rootNode)
-  }
-
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
   ) => {
     this.internalSetState({highlightedIndex}, () => {
-      this.maybeScrollToHighlightedElement(highlightedIndex)
+      const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
+      const rootNode = this._rootNode
+      scrollIntoView(node, rootNode)
     })
   }
 
@@ -148,7 +148,7 @@ class Downshift extends PureComponent {
 
   // eslint-disable-next-line complexity
   changeHighlighedIndex = moveAmount => {
-    const itemsLastIndex = this.items.length - 1
+    const itemsLastIndex = this.props.getItemCount.call(this) - 1
     if (itemsLastIndex < 0) {
       return
     }
@@ -556,7 +556,7 @@ class Downshift extends PureComponent {
     }
     const state = this.getState()
     const item = this.getItemFromIndex(state.highlightedIndex) || {}
-    const resultCount = this.items.length
+    const resultCount = this.props.getItemCount.call(this)
     const status = this.props.getA11yStatusMessage({
       itemToString: this.props.itemToString,
       previousResultCount: this.previousResultCount,

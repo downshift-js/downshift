@@ -205,6 +205,13 @@ if you're using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
 
+#### getItemCount
+
+> `function()` | optional, defaults to adding up the items you render
+
+This is useful if you're using some kind of virtual listing component for
+"windowing" (like [`react-virtualized`](https://github.com/bvaughn/react-virtualized)).
+
 #### highlightedIndex
 
 > `number` | **state prop** (read more below)
