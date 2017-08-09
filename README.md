@@ -31,12 +31,12 @@ for your use cases.
 
 ## This solution
 
-This is a collection of primitive components that you can compose together to
-create an autocomplete component which you can reuse in your application. It's
-based on ideas from the talk ["Compound Components"][compound-components-talk]
-which effectively gives you maximum flexibility with a minimal API because you
-are responsible for the rendering of everything and you simply apply props to
-what you're rendering.
+This is a component that controls user interactions and state for you so you can
+create autocomplete/dropdown/select/etc. components. It's based on ideas from
+the talk ["Compound Components"][compound-components-talk] which effectively
+gives you maximum flexibility with a minimal API because you are responsible
+for the rendering of everything and you simply apply props to what you're
+rendering.
 
 This differs from other solutions which render things for their use case and
 then expose many options to allow for extensibility causing an API that is less
@@ -54,7 +54,7 @@ This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save downshift@beta
+npm install --save downshift@rc
 ```
 
 > This package also depends on `react` and `prop-types`. Please make sure you
@@ -387,10 +387,15 @@ I was heavily inspired by [Ryan Florence][ryan] and his talk entitled:
 the code in [`react-autocomplete`][react-autocomplete] and
 [jQuery UI's Autocomplete][jquery-complete].
 
+The `getXProps` functions were inspired by [Jared Forsyth][jared]. That bit of
+inspiration made a big impact on the flexibility and simplicity of this API.
+
 You can watch me build the first iteration of `downshift` on YouTube:
 
-- [Part 1](https://youtu.be/2kzD1IjDy5s)
-- [Part 2](https://youtu.be/w1Z7Jvj08_s)
+- [Part 1](https://www.youtube.com/watch?v=2kzD1IjDy5s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=11)
+- [Part 2](https://www.youtube.com/watch?v=w1Z7Jvj08_s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=10)
+
+You'll find more recordings of me working on `downshift` on [my livestream YouTube playlist][yt-playlist].
 
 ## Other Solutions
 
@@ -448,3 +453,5 @@ MIT
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
 [examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
+[yt-playlist]: https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
+[jared]: https://github.com/jaredly
