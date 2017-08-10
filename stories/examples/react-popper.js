@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import {Manager, Target, Popper} from 'react-popper'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 export default Examples
 
@@ -45,9 +45,8 @@ class ReactPopperAutocomplete extends PureComponent {
         }}
       >
         <Manager>
-          <Autocomplete
-            onChange={({selectedItem}) =>
-              this.setState({selected: selectedItem})}
+          <Downshift
+            onChange={selected => this.setState({selected})}
             style={{display: 'inline-block', position: 'relative'}}
           >
             {({
@@ -96,7 +95,7 @@ class ReactPopperAutocomplete extends PureComponent {
                     </Popper>}
                 </div>
               </div>)}
-          </Autocomplete>
+          </Downshift>
         </Manager>
       </div>
     )

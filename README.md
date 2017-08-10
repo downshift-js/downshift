@@ -115,7 +115,7 @@ function App() {
   return (
     <BasicAutocomplete
       items={['apple', 'orange', 'carrot']}
-      onChange={({selectedItem}) => console.log(selectedItem)}
+      onChange={selectedItem => console.log(selectedItem)}
     />
   )
 }
@@ -189,13 +189,15 @@ properties:
 
 ### onChange
 
-> `function({selectedItem, previousItem})` | optional, no useful default
+> `function(selectedItem: any, allState: object)` | optional, no useful default
 
-Called when the user selects an item
+Called when the user selects an item. Called with the item that was selected
+and the new state of `downshift`. (see `onStateChange` for more info on
+`allState`).
 
 ### onStateChange
 
-> `function(changes, allState)` | optional, no useful default
+> `function(changes: object, allState: object)` | optional, no useful default
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or

@@ -33,9 +33,9 @@ class Examples extends Component {
   }
   items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
 
-  changeHandler = changes => {
+  changeHandler = selectedColor => {
     this.setState({
-      selectedColor: changes.selectedItem,
+      selectedColor,
       isOpen: false,
     })
   }

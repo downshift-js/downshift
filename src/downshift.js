@@ -211,7 +211,7 @@ class Downshift extends Component {
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
   internalSetState(stateToSet, cb) {
-    const onChangeArg = {}
+    let onChangeArg
     const onStateChangeArg = {}
     return this.setState(
       state => {
@@ -226,8 +226,7 @@ class Downshift extends Component {
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
         if (stateToSet.hasOwnProperty('selectedItem')) {
-          onChangeArg.selectedItem = stateToSet.selectedItem
-          onChangeArg.previousItem = state.selectedItem
+          onChangeArg = stateToSet.selectedItem
         }
         Object.keys(stateToSet).forEach(key => {
           // the type is useful for the onStateChangeArg
@@ -261,8 +260,8 @@ class Downshift extends Component {
         if (Object.keys(onStateChangeArg).length) {
           this.props.onStateChange(onStateChangeArg, this.getState())
         }
-        if (Object.keys(onChangeArg).length) {
-          this.props.onChange(onChangeArg)
+        if (onChangeArg) {
+          this.props.onChange(onChangeArg, this.getState())
         }
       },
     )
