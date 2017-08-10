@@ -11,8 +11,8 @@ autocomplete/dropdown/select/combobox components</p>
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
-[![version][version-badge]][package]
 [![downloads][downloads-badge]][npmcharts]
+[![version][version-badge]][package]
 [![MIT License][license-badge]][LICENSE]
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors)
@@ -20,9 +20,11 @@ autocomplete/dropdown/select/combobox components</p>
 [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 
-[![gzip size][gzip-badge]][unpkg-dist]
+[![Supports React and Preact][react-badge]][react]
 [![size][size-badge]][unpkg-dist]
+[![gzip size][gzip-badge]][unpkg-dist]
 [![module formats: umd, cjs, and es][module-formats-badge]][unpkg-dist]
+
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
@@ -480,6 +482,8 @@ MIT
 [chat-badge]: https://img.shields.io/gitter/room/paypal/downshift.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/paypal/downshift/blob/master/other/CODE_OF_CONDUCT.md
+[react-badge]: https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
+[react]: https://facebook.github.io/react/
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
 [size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/downshift/dist/
