@@ -10,6 +10,7 @@
     "max-lines": "off",
     "func-style": "off",
     "no-eq-null": "off",
-    "eqeqeq": "off"
+    "eqeqeq": "off",
+    "no-nested-ternary": "off"
   }
 }

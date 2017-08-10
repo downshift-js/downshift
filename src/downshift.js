@@ -13,6 +13,7 @@ import {
   firstDefined,
   isNumber,
   getA11yStatusMessage,
+  getChildrenFn,
 } from './utils'
 
 class Downshift extends Component {
@@ -614,7 +615,7 @@ class Downshift extends Component {
   }
 
   render() {
-    const {children} = this.props
+    const children = getChildrenFn(this.props.children)
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.items = []
@@ -628,8 +629,7 @@ class Downshift extends Component {
     this.getLabelProps.called = false
     // and something similar for getInputProps
     this.getInputProps.called = false
-    const uiDescriptor =
-      children && children(this.getControllerStateAndHelpers())
+    const uiDescriptor = children(this.getControllerStateAndHelpers())
     if (!uiDescriptor) {
       return null
     }

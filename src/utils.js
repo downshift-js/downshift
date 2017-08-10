@@ -159,6 +159,24 @@ function getA11yStatusMessage({
   return itemToString(highlightedItem)
 }
 
+/**
+ * preact treats all children as arrays and React doesn't
+ * this is for compatibility. Children could also be undefined/null
+ * @param {*} children the children prop
+ * @return {Function} a function which should be called to get what to render
+ */
+function getChildrenFn(children) {
+  if (!children) {
+    return noop
+  } else if (typeof children === 'function') {
+    return children
+  } else if (typeof children[0] === 'function') {
+    return children[0]
+  } else {
+    return noop
+  }
+}
+
 export {
   cbToCb,
   findParent,
@@ -169,4 +187,5 @@ export {
   firstDefined,
   isNumber,
   getA11yStatusMessage,
+  getChildrenFn,
 }
