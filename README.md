@@ -370,6 +370,7 @@ Examples exist on [codesandbox.io][examples]:
 - [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
 - [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 - [Material UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
+- [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) (learn more about `genie` here](https://github.com/kentcdodds/genie))
 
 If you would like to add an example, follow these steps:
 
