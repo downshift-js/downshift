@@ -6,8 +6,3 @@ dist
 .DS_Store
 .next
 storybook-static
-
-# these cause more harm than good
-# when working with contributors
-package-lock.json
-yarn.lock
