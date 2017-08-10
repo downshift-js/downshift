@@ -371,6 +371,7 @@ Examples exist on [codesandbox.io][examples]:
 - [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 - [Material UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
 - [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) ([learn more about `genie` here](https://github.com/kentcdodds/genie))
+- [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
 
 If you would like to add an example, follow these steps:
 
