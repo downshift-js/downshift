@@ -17,8 +17,12 @@ autocomplete/dropdown/select/combobox components</p>
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs]
+[![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 
+[![gzip size][gzip-badge]][unpkg-dist]
+[![size][size-badge]][unpkg-dist]
+[![module formats: umd, cjs, and es][module-formats-badge]][unpkg-dist]
 [![Watch on GitHub][github-watch-badge]][github-watch]
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
@@ -472,9 +476,14 @@ MIT
 [license]: https://github.com/paypal/downshift/blob/master/LICENSE
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[donate-badge]: https://img.shields.io/badge/$-support-green.svg?style=flat-square
+[chat]: https://gitter.im/paypal/downshift
+[chat-badge]: https://img.shields.io/gitter/room/paypal/downshift.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/paypal/downshift/blob/master/other/CODE_OF_CONDUCT.md
+[gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
+[unpkg-dist]: https://unpkg.com/downshift/dist/
+[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
 [github-watch-badge]: https://img.shields.io/github/watchers/paypal/downshift.svg?style=social
 [github-watch]: https://github.com/paypal/downshift/watchers
 [github-star-badge]: https://img.shields.io/github/stars/paypal/downshift.svg?style=social
