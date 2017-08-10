@@ -8,6 +8,8 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
+    "prerelease": "npm start validate",
+    "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
   "files": ["dist"],

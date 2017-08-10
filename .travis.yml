@@ -12,7 +12,7 @@ script:
 after_success:
   - npx codecov
 # uncomment this when we're ready to auto-release
-#  - npx semantic-release pre && npm publish && npx semantic-release post
+# - npm i -g semantic-release && semantic-release pre && npm publish && semantic-release post
 branches:
   only:
     - master
