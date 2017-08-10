@@ -41,7 +41,7 @@ This project uses [Storybook](https://storybook.js.org) for local development. R
 
 With the Storybook dependancies installed, run the following command to start your local environment:
 
-`$ npm start stotybook`
+`$ npm start storybook`
 
 Open [`http://localhost:6006/`](http://localhost:6006/) in your browser and start developing!
 
