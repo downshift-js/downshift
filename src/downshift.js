@@ -58,12 +58,16 @@ class Downshift extends Component {
   constructor(...args) {
     super(...args)
     this.id = generateId('downshift')
-    this.state = {
+    const state = this.getState({
       highlightedIndex: this.props.defaultHighlightedIndex,
-      inputValue: this.props.defaultInputValue,
       isOpen: this.props.defaultIsOpen,
+      inputValue: this.props.defaultInputValue,
       selectedItem: this.props.defaultSelectedItem,
+    })
+    if (state.selectedItem) {
+      state.inputValue = this.props.itemToString(state.selectedItem)
     }
+    this.state = state
     this.root_handleClick = composeEventHandlers(
       this.props.onClick,
       this.root_handleClick,
@@ -91,7 +95,7 @@ class Downshift extends Component {
    */
   getState(stateToMerge = this.state) {
     return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isStateProp(key) ? this.props[key] : this.state[key]
+      state[key] = this.isStateProp(key) ? this.props[key] : stateToMerge[key]
       return state
     }, {})
   }
