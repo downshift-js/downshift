@@ -8,9 +8,11 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "remove-lockfiles && lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -47,6 +49,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
+    "remove-lockfiles": "^0.1.0",
     "rollup": "^0.45.2",
     "rollup-plugin-alias": "^1.3.1",
     "rollup-plugin-babel": "^2.7.1",
