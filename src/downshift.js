@@ -115,13 +115,6 @@ class Downshift extends Component {
     }
   }
 
-  getItemFromIndex = index => {
-    if (!this.items || !this.items[0]) {
-      return null
-    }
-    return this.items[index]
-  }
-
   getItemNodeFromIndex = index => {
     return document.getElementById(this.getItemId(index))
   }
@@ -194,11 +187,7 @@ class Downshift extends Component {
   }
 
   selectItemAtIndex = itemIndex => {
-    if (itemIndex === null) {
-      // no item highlighted
-      return
-    }
-    const item = this.getItemFromIndex(itemIndex)
+    const item = this.items[itemIndex]
     if (!item) {
       return
     }
@@ -564,7 +553,7 @@ class Downshift extends Component {
       return
     }
     const state = this.getState()
-    const item = this.getItemFromIndex(state.highlightedIndex) || {}
+    const item = this.items[state.highlightedIndex] || {}
     const resultCount = this.getItemCount()
     const status = this.props.getA11yStatusMessage({
       itemToString: this.props.itemToString,

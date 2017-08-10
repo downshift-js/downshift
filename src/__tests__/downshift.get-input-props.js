@@ -213,6 +213,36 @@ test('highlightedIndex uses the given itemCount prop to determine the last index
   )
 })
 
+test('Enter when there is no item at index 0 still selects the highlighted item', () => {
+  // test inspired by https://github.com/paypal/downshift/issues/119
+  // use case is virtualized lists
+  const items = [
+    {value: 'cat', index: 1},
+    {value: 'dog', index: 2},
+    {value: 'bird', index: 3},
+    {value: 'cheetah', index: 4},
+  ]
+  const {Component, childSpy} = setup({items})
+  const wrapper = mount(
+    <Component
+      itemToString={i => (i ? i.value : '')}
+      defaultHighlightedIndex={1}
+      isOpen={true}
+    />,
+  )
+  const input = wrapper.find(sel('input'))
+  // ↓
+  input.simulate('keydown', {key: 'ArrowDown'})
+  // ENTER
+  childSpy.mockClear()
+  input.simulate('keydown', {key: 'Enter'})
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      selectedItem: items[1],
+    }),
+  )
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const {Component, childSpy} = setup({items})
@@ -233,14 +263,18 @@ function setupDownshiftWithState() {
 }
 
 function setup({items = colors} = {}) {
+  /* eslint-disable react/jsx-closing-bracket-location */
   const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) =>
     (<div>
       <input {...getInputProps({'data-test': 'input'})} />
       {isOpen &&
         <div>
           {items.map((item, index) =>
-            (<div key={item} {...getItemProps({item, index})}>
-              {item}
+            (<div
+              key={item.index || index}
+              {...getItemProps({item, index: item.index || index})}
+            >
+              {item.value ? item.value : item}
             </div>),
           )}
         </div>}
