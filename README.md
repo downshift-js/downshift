@@ -219,19 +219,19 @@ This is useful if you're using some kind of virtual listing component for
 
 ### highlightedIndex
 
-> `number` | **state prop** (read more about this in the "State Props" section below)
+> `number` | **control prop** (read more about this in the "Control Props" section below)
 
 The index that should be highlighted
 
 ### inputValue
 
-> `string` | **state prop** (read more about this in the "State Props" section below)
+> `string` | **control prop** (read more about this in the "Control Props" section below)
 
 The value the input should have
 
 ### isOpen
 
-> `boolean` | **state prop** (read more about this in the "State Props" section below)
+> `boolean` | **control prop** (read more about this in the "Control Props" section below)
 
 Whether the menu should be considered open or closed. Some aspects of the
 downshift component respond differently based on this value (for example, if
@@ -240,7 +240,7 @@ item at the `highlightedIndex` item is selected).
 
 ### `selectedItem`
 
-> `any`/`Array(any)` | **state prop** (read more about this in the "State Props" section below)
+> `any`/`Array(any)` | **control prop** (read more about this in the "Control Props" section below)
 
 The currently selected item.
 
@@ -251,7 +251,7 @@ The currently selected item.
 This is called with an object. Read more about the properties of this object
 in the section "Child Callback Function"
 
-## State Props
+## Control Props
 
 downshift manages its own state internally and calls your `onChange` and
 `onStateChange` handlers with any relevant changes. The state that downshift
@@ -261,7 +261,7 @@ to manipulate this state from within the render function and can likely support
 many of your use cases.
 
 However, if more control is needed, you can pass any of these pieces of state as
-a prop (as indicated above) and that prop becomes controlled. As soon as
+a prop (as indicated above) and that state becomes controlled. As soon as
 `this.props[statePropKey] !== undefined`, internally, `downshift` will determine
 its state based on your prop's value rather than its own internal state. You
 will be required to keep the state up to date (this is where `onStateChange`
