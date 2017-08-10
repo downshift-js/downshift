@@ -48,7 +48,7 @@ complicated and harder to contribute to.
 
 ## Installation
 
-**This component is currently under development and is not yet released...**
+**This component is currently released as a Release Candidate. It is quite stable, but not officially released yet.**
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
@@ -65,8 +65,6 @@ npm install --save downshift@rc
 > `preact` suffix.
 
 ## Usage
-
-**Things are still in flux a little bit (looking for feedback).**
 
 ```jsx
 import Downshift from 'downshift'
@@ -375,10 +373,11 @@ Examples exist on [codesandbox.io][examples]:
 
 If you would like to add an example, follow these steps:
 
-1. Fork [this codesandbox](http://kcd.im/rac-example)
-2. Update the code for your example (add some form of documentation to explain what it is)
+1. Fork [this codesandbox](http://kcd.im/ds-example)
+2. Make sure your version (under dependencies) is the latest available version.
 3. Update the title and description
-4. Add the tag: `downshift:example`
+4. Update the code for your example (add some form of documentation to explain what it is)
+5. Add the tag: `downshift:example`
 
 ## Inspiration
 
