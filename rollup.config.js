@@ -36,7 +36,7 @@ export default {
   entry: 'src/index.js',
   targets,
   exports: esm ? 'named' : 'default',
-  moduleName: 'downshift',
+  moduleName: 'Downshift',
   format,
   external: isPreact ? ['preact'] : ['react', 'prop-types'],
   globals: isPreact ?
