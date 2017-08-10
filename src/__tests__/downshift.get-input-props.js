@@ -121,22 +121,22 @@ test('enter on an input with an open menu does nothing without a highlightedInde
 test('enter on an input with an open menu and a highlightedIndex selects that item', () => {
   const {Component, childSpy} = setup()
   const onChange = jest.fn()
-  const wrapper = mount(<Component isOpen={true} onChange={onChange} />)
+  const isOpen = true
+  const wrapper = mount(<Component isOpen={isOpen} onChange={onChange} />)
   const input = wrapper.find(sel('input'))
   // ↓
   input.simulate('keydown', {key: 'ArrowDown'})
   // ENTER
   input.simulate('keydown', {key: 'Enter'})
   expect(onChange).toHaveBeenCalledTimes(1)
-  expect(onChange).toHaveBeenCalledWith({
+  const newState = expect.objectContaining({
     selectedItem: colors[0],
-    previousItem: null,
+    isOpen,
+    highlightedIndex: null,
+    inputValue: colors[0],
   })
-  expect(childSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      selectedItem: colors[0],
-    }),
-  )
+  expect(onChange).toHaveBeenCalledWith(colors[0], newState)
+  expect(childSpy).toHaveBeenLastCalledWith(newState)
 })
 
 test('escape on an input without a selection should reset downshift and close the menu', () => {

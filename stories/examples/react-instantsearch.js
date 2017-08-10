@@ -8,7 +8,7 @@ export default Examples
 function RawAutoComplete({refine, hits}) {
   return (
     <Autocomplete
-      getValue={i => i.name}
+      itemToString={i => (i ? i.name : i)}
       onChange={item => alert(JSON.stringify(item))}
     >
       {({

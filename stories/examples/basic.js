@@ -8,8 +8,8 @@ class Examples extends Component {
     selectedColor: '',
   }
 
-  changeHandler = ({selectedItem}) => {
-    this.setState({selectedColor: selectedItem})
+  changeHandler = selectedColor => {
+    this.setState({selectedColor})
   }
 
   render() {
