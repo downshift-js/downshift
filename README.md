@@ -121,45 +121,44 @@ function App() {
 }
 ```
 
-Available components and relevant props:
+`downshift` is the only component. It doesn't render anything itself, it just
+calls the child function and renders that. Wrap everything in
+`<Downshift>{/* your function here! */}</Downshift>`.
 
-### Downshift
+## Props:
 
-This is the only component. It doesn't render anything itself, it just calls
-the child function and renders that. Wrap everything in this.
-
-#### defaultSelectedItem
+### defaultSelectedItem
 
 > `any` | defaults to `null`
 
 Pass an item or an array of items that should be selected by default.
 
-#### defaultHighlightedIndex
+### defaultHighlightedIndex
 
 > `number`/`null` | defaults to `null`
 
 This is the initial index to highlight when the menu first opens.
 
-#### defaultInputValue
+### defaultInputValue
 
 > `string` | defaults to `''`
 
 This is the initial input value.
 
-#### defaultIsOpen
+### defaultIsOpen
 
 > `boolean` | defaults to `false`
 
 This is the initial `isOpen` value.
 
-#### itemToString
+### itemToString
 
 > `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
 
 Used to determine the string value for the selected item (which is used to
 compute the `inputValue`.
 
-#### getA11yStatusMessage
+### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
 
@@ -188,13 +187,13 @@ properties:
 | `resultCount`         | `number`        | The total items showing in the dropdown                                                      |
 | `selectedItem`        | `any`           | The value of the currently selected item                                                     |
 
-#### onChange
+### onChange
 
 > `function({selectedItem, previousItem})` | optional, no useful default
 
 Called when the user selects an item
 
-#### onStateChange
+### onStateChange
 
 > `function(changes, allState)` | optional, no useful default
 
@@ -211,48 +210,75 @@ but differ slightly.
 - `allState`: This is the full state object of all the state in your `downshift`
   component.
 
-#### itemCount
+### itemCount
 
 > `number` | optional, defaults the number of times you call getItemProps
 
 This is useful if you're using some kind of virtual listing component for
 "windowing" (like [`react-virtualized`](https://github.com/bvaughn/react-virtualized)).
 
-#### highlightedIndex
+### highlightedIndex
 
-> `number` | **state prop** (read more below)
+> `number` | **state prop** (read more about this in the "State Props" section below)
 
 The index that should be highlighted
 
-#### inputValue
+### inputValue
 
-> `string` | **state prop** (read more below)
+> `string` | **state prop** (read more about this in the "State Props" section below)
 
 The value the input should have
 
-#### isOpen
+### isOpen
 
-> `boolean` | **state prop** (read more below)
+> `boolean` | **state prop** (read more about this in the "State Props" section below)
 
 Whether the menu should be considered open or closed. Some aspects of the
 downshift component respond differently based on this value (for example, if
 `isOpen` is true when the user hits "Enter" on the input field, then the
 item at the `highlightedIndex` item is selected).
 
-#### `selectedItem`
+### `selectedItem`
 
-> `any`/`Array(any)` | **state prop** (read more below)
+> `any`/`Array(any)` | **state prop** (read more about this in the "State Props" section below)
 
 The currently selected item.
 
-#### children
+### children
 
 > `function({})` | *required*
 
-This is called with an object. The properties of this object can be split into
-three categories as indicated below:
+This is called with an object. Read more about the properties of this object
+in the section "Child Callback Function"
 
-##### prop getters
+## State Props
+
+downshift manages its own state internally and calls your `onChange` and
+`onStateChange` handlers with any relevant changes. The state that downshift
+manages includes: `isOpen`, `selectedItem`, `inputValue`, and
+`highlightedIndex`. Your child callback function (read more below) can be used
+to manipulate this state from within the render function and can likely support
+many of your use cases.
+
+However, if more control is needed, you can pass any of these pieces of state as
+a prop (as indicated above) and that prop becomes controlled. As soon as
+`this.props[statePropKey] !== undefined`, internally, `downshift` will determine
+its state based on your prop's value rather than its own internal state. You
+will be required to keep the state up to date (this is where `onStateChange`
+comes in really handy), but you can also control the state from anywhere, be
+that state from other components, `redux` (example wanted!), `react-router`
+(example wanted!), or anywhere else.
+
+## Child Callback Function
+
+This is where you render whatever you want to based on the state of `downshift`.
+The function is passed as the child prop:
+`<Downshift>{/* right here*/}</Downshift>`
+
+The properties of this object can be split into three categories as indicated
+below:
+
+### prop getters
 
 These functions are used to apply props to the elements that you render.
 This gives you maximum flexibility to render what, when, and wherever you like.
@@ -272,7 +298,7 @@ being overridden (or overriding the props returned). For example:
 | `getLabelProps`  | `function({})` | returns the props you should apply to the `label` element that you render.                  |
 | `getRootProps`   | `function({})` | returns the props you should apply to the root element that you render. It can be optional. |
 
-##### `getRootProps`
+#### `getRootProps`
 
 Most of the time, you can just render a `div` yourself and `Downshift` will
 apply the props it needs to do its job (and you don't need to call this
@@ -287,7 +313,7 @@ Required properties:
   call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})`
   and your composite component would forward like: `<div ref={props.innerRef} />`
 
-##### `getInputProps`
+#### `getInputProps`
 
 This method should be applied to the `input` you render. It is recommended that
 you pass all props as an object to this method which will compose together any
@@ -296,7 +322,7 @@ ones that `downshift` needs to apply to make the `input` behave.
 
 There are no required properties for this method.
 
-##### `getLabelProps`
+#### `getLabelProps`
 
 This method should be applied to the `label` you render. It is useful for
 ensuring that the `for` attribute on the `<label>` (`htmlFor` as a react prop)
@@ -311,7 +337,7 @@ There are no required properties for this method.
 > accessibility). However, we include this so you don't forget and it makes
 > things a little nicer for you. You're welcome 😀
 
-##### `getItemProps`
+#### `getItemProps`
 
 This method should be applied to any menu items you render. You pass it an object
 and that object must contain `index` (number) and `item` (anything) properties.
@@ -323,7 +349,7 @@ Required properties:
 - `item`: this is the item data that will be selected when the user selects a
   particular item.
 
-##### `getButtonProps`
+#### `getButtonProps`
 
 Call this and apply the returned props to a `button`. It allows you to toggle
 the `Menu` component. You can definitely build something like this yourself
@@ -338,7 +364,9 @@ translations:
 })} />
 ```
 
-##### actions
+### actions
+
+These are functions you can call to change the state of the downshift component.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
@@ -353,7 +381,11 @@ translations:
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
 
-##### state
+### state
+
+These are values that represent the current state of the downshift component.
+
+<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
 | property           | type              | description                                    |
 |--------------------|-------------------|------------------------------------------------|
