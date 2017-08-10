@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import React, {PureComponent} from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {
@@ -15,7 +15,7 @@ import {
   getA11yStatusMessage,
 } from './utils'
 
-class Downshift extends PureComponent {
+class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
@@ -592,8 +592,9 @@ class Downshift extends PureComponent {
     const onMouseUp = event => {
       this.isMouseDown = false
       if (
-        event.target === this._rootNode ||
-        !this._rootNode.contains(event.target)
+        (event.target === this._rootNode ||
+          !this._rootNode.contains(event.target)) &&
+        this.getState().isOpen
       ) {
         this.reset(Downshift.stateChangeTypes.mouseUp)
       }
