@@ -101,11 +101,11 @@ class Downshift extends Component {
   }
 
   /**
-   * This determines whether a prop is a "state prop" meaning it is
+   * This determines whether a prop is a "controlled prop" meaning it is
    * state which is controlled by the outside of this component rather
    * than within this component.
    * @param {String} key the key to check
-   * @return {Boolean} whether it is a controlled state prop
+   * @return {Boolean} whether it is a controlled controlled prop
    */
   isStateProp(key) {
     return this.props[key] !== undefined
@@ -206,11 +206,10 @@ class Downshift extends Component {
   // 1. Uncontrolled: it's internal (this.state)
   //    We will call this.setState to update that state
   // 2. Controlled: it's external (this.props)
-  //    We will call this.props.onChange to update that state
+  //    We will call this.props.onStateChange to update that state
   //
-  // In addition, we'll always call this.props.onChange if the
-  // selectedItem is changed because that's important whether
-  // that property is controlled or not.
+  // In addition, we'll call this.props.onChange if the
+  // selectedItem is changed.
   internalSetState(stateToSet, cb) {
     const onChangeArg = {}
     const onStateChangeArg = {}
@@ -256,16 +255,13 @@ class Downshift extends Component {
       () => {
         // call the provided callback if it's a callback
         cbToCb(cb)()
+
+        // only call the onStateChange and onChange callbacks if
+        // we have relevant information to pass them.
         if (Object.keys(onStateChangeArg).length) {
-          // We call this function whether we're controlled or not
-          // It's mostly useful if we're controlled, but it can
-          // definitely be useful for folks to know when something
-          // happens internally.
           this.props.onStateChange(onStateChangeArg, this.getState())
         }
         if (Object.keys(onChangeArg).length) {
-          // if the selectedItem changed
-          // then let's call onChange!
           this.props.onChange(onChangeArg)
         }
       },
