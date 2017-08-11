@@ -25,7 +25,7 @@ module.exports = {
       watch: crossEnv('NODE_ENV=test jest --watch'),
       build: {
         description: 'validates the built files',
-        script: 'babel-node other/build-test.js',
+        script: crossEnv('NODE_ENV=test jest --config other/jest.config.js'),
       },
     },
     build: {
