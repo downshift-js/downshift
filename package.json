@@ -12,7 +12,9 @@
     "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
@@ -30,6 +32,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.8",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.24.1",
@@ -44,6 +47,7 @@
     "nps-utils": "^1.2.0",
     "opt-cli": "^1.5.1",
     "preact": "^8.2.1",
+    "preact-render-to-string": "^3.6.3",
     "prettier-eslint-cli": "^4.1.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
@@ -55,7 +59,8 @@
     "rollup-plugin-commonjs": "^8.1.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^2.0.1"
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.3.1"
   },
   "lint-staged": {
     "*.js": [
@@ -70,5 +75,6 @@
   "bugs": {
     "url": "https://github.com/paypal/downshift/issues"
   },
-  "homepage": "https://github.com/paypal/downshift#readme"
+  "homepage": "https://github.com/paypal/downshift#readme",
+  "dependencies": {}
 }

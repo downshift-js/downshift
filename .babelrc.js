@@ -1,3 +1,4 @@
+const isTest = process.env.NODE_ENV === 'test'
 const isPreact = process.env.LIBRARY === 'preact'
 const isRollup = process.env.ROLLUP_BUILD
 
@@ -8,7 +9,10 @@ module.exports = {
     // we're actually not using JSX at all, but I'm leaving this
     // in here just in case we ever do (this would be easy to miss).
     isPreact ? ['transform-react-jsx', {pragma: 'h'}] : null,
-    'transform-inline-environment-variables',
+    isPreact
+      ? ['transform-react-remove-prop-types', {removeImport: true}]
+      : null,
+    isTest ? null : 'transform-inline-environment-variables',
     'transform-class-properties',
     'transform-object-rest-spread',
   ].filter(Boolean),

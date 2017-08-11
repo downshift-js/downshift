@@ -38,7 +38,7 @@ export default {
   exports: esm ? 'named' : 'default',
   moduleName: 'Downshift',
   format,
-  external: isPreact ? ['preact'] : ['react', 'prop-types'],
+  external: isPreact ? ['preact', 'prop-types'] : ['react', 'prop-types'],
   globals: isPreact ?
     {
       react: 'preact',
@@ -48,14 +48,7 @@ export default {
       'prop-types': 'PropTypes',
     },
   plugins: [
-    alias(
-      isPreact ?
-        {
-          react: require.resolve('./src/preact/compat-lite'),
-          'prop-types': require.resolve('./src/preact/prop-types'),
-        } :
-        {}
-    ),
+    alias(isPreact ? {react: 'preact'} : {}),
     nodeResolve({jsnext: true, main: true}),
     commonjs({include: 'node_modules/**'}),
     json(),

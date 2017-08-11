@@ -23,25 +23,28 @@ import umdImport from '../dist/downshift.umd'
 const cjsRequire = require('../') // picks up the main from package.json
 const umdRequire = require('../dist/downshift.umd')
 
-assert(isDownshiftComponent(esImport), 'ES build has a problem with ES Modules')
+test('stuff is good', () => {
+  assert(
+    isDownshiftComponent(esImport),
+    'ES build has a problem with ES Modules',
+  )
 
-assert(
-  isDownshiftComponent(cjsImport),
-  'CJS build has a problem with ES Modules',
-)
+  assert(
+    isDownshiftComponent(cjsImport),
+    'CJS build has a problem with ES Modules',
+  )
 
-assert(isDownshiftComponent(cjsRequire), 'CJS build has a problem with CJS')
+  assert(isDownshiftComponent(cjsRequire), 'CJS build has a problem with CJS')
 
-assert(
-  isDownshiftComponent(umdImport),
-  'UMD build has a problem with ES Modules',
-)
+  assert(
+    isDownshiftComponent(umdImport),
+    'UMD build has a problem with ES Modules',
+  )
 
-assert(isDownshiftComponent(umdRequire), 'UMD build has a problem with CJS')
+  assert(isDownshiftComponent(umdRequire), 'UMD build has a problem with CJS')
 
-// TODO: how could we validate the global export?
-
-console.log('Built modules look good 👍')
+  // TODO: how could we validate the global export?
+})
 
 function isDownshiftComponent(thing) {
   if (typeof thing !== 'function') {

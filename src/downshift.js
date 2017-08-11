@@ -13,7 +13,10 @@ import {
   firstDefined,
   isNumber,
   getA11yStatusMessage,
-  getChildrenFn,
+  unwrapArray,
+  isDOMElement,
+  getElementProps,
+  noop,
 } from './utils'
 
 class Downshift extends Component {
@@ -438,7 +441,7 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onChange, onKeyDown, onBlur, ...rest} = {}) => {
+  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
@@ -451,6 +454,10 @@ class Downshift extends Component {
       rest.id,
       generateId('downshift-input'),
     )
+    const onChangeKey =
+      process.env.LIBRARY === 'preact' ? /* istanbul ignore next (preact) */
+      'onInput' :
+        'onChange'
     const {inputValue, isOpen, highlightedIndex} = this.getState()
     return {
       role: 'combobox',
@@ -462,7 +469,12 @@ class Downshift extends Component {
           null,
       autoComplete: 'off',
       value: inputValue,
-      onChange: composeEventHandlers(onChange, this.input_handleChange),
+      // preact compatibility
+      [onChangeKey]: composeEventHandlers(
+        onChange,
+        onInput,
+        this.input_handleChange,
+      ),
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
       ...rest,
@@ -615,7 +627,7 @@ class Downshift extends Component {
   }
 
   render() {
-    const children = getChildrenFn(this.props.children)
+    const children = unwrapArray(this.props.children, noop)
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.items = []
@@ -629,19 +641,20 @@ class Downshift extends Component {
     this.getLabelProps.called = false
     // and something similar for getInputProps
     this.getInputProps.called = false
-    const uiDescriptor = children(this.getControllerStateAndHelpers())
-    if (!uiDescriptor) {
+    const element = unwrapArray(children(this.getControllerStateAndHelpers()))
+    if (!element) {
       return null
     }
-    // doing React.Children.only for Preact support ⚛️
-    const element = React.Children.only(uiDescriptor)
     if (this.getRootProps.called) {
       validateGetRootPropsCalledCorrectly(element, this.getRootProps)
       return element
-    } else if (typeof element.type === 'string') {
+    } else if (isDOMElement(element)) {
       // they didn't apply the root props, but we can clone
       // this and apply the props ourselves
-      return React.cloneElement(element, this.getRootProps(element.props))
+      return React.cloneElement(
+        element,
+        this.getRootProps(getElementProps(element)),
+      )
     } else {
       // they didn't apply the root props, but they need to
       // otherwise we can't query around the autocomplete
@@ -656,7 +669,7 @@ export default Downshift
 
 function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'
-  const isComposite = typeof element.type !== 'string'
+  const isComposite = !isDOMElement(element)
   if (isComposite && !refKeySpecified) {
     throw new Error(
       'downshift: You returned a non-DOM element. You must specify a refKey in getRootProps',
@@ -666,12 +679,12 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
       `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
-  if (!element.props.hasOwnProperty(refKey)) {
+  if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }
-  if (!element.props.hasOwnProperty('onClick')) {
+  if (!getElementProps(element).hasOwnProperty('onClick')) {
     throw new Error(
       `downshift: You must apply the "onClick" prop from getRootProps onto your root element.`,
     )

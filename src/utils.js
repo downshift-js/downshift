@@ -160,21 +160,43 @@ function getA11yStatusMessage({
 }
 
 /**
- * preact treats all children as arrays and React doesn't
- * this is for compatibility. Children could also be undefined/null
- * @param {*} children the children prop
- * @return {Function} a function which should be called to get what to render
+ * Takes an argument and if it's an array, returns the first item in the array
+ * otherwise returns the argument
+ * @param {*} arg the maybe-array
+ * @param {*} defaultValue the value if arg is falsey not defined
+ * @return {*} the arg or it's first item
  */
-function getChildrenFn(children) {
-  if (!children) {
-    return noop
-  } else if (typeof children === 'function') {
-    return children
-  } else if (typeof children[0] === 'function') {
-    return children[0]
+function unwrapArray(arg, defaultValue) {
+  arg = Array.isArray(arg) ? /* istanbul ignore next (preact) */ arg[0] : arg
+  if (!arg && defaultValue) {
+    return defaultValue
   } else {
-    return noop
+    return arg
   }
+}
+
+/**
+ * @param {Object} element (P)react element
+ * @return {Boolean} whether it's a DOM element
+ */
+function isDOMElement(element) {
+  /* istanbul ignore if */
+  if (element.nodeName) {
+    // then this is preact
+    return typeof element.nodeName === 'string'
+  } else {
+    // then we assume this is react
+    return typeof element.type === 'string'
+  }
+}
+
+/**
+ * @param {Object} element (P)react element
+ * @return {Object} the props
+ */
+function getElementProps(element) {
+  // props for react, attributes for preact
+  return element.props || /* istanbul ignore next (preact) */ element.attributes
 }
 
 export {
@@ -187,5 +209,8 @@ export {
   firstDefined,
   isNumber,
   getA11yStatusMessage,
-  getChildrenFn,
+  unwrapArray,
+  isDOMElement,
+  getElementProps,
+  noop,
 }
