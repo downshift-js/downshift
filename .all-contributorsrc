@@ -166,6 +166,17 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "jgoux",
+      "name": "Julien Goux",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1443499?v=4",
+      "profile": "https://github.com/jgoux",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
