@@ -69,6 +69,17 @@ test('onStateChange called with changes and all the state', () => {
   expect(handleStateChange).toHaveBeenLastCalledWith(changes, allState)
 })
 
+test('onChange called when clearSelection is trigered', () => {
+  const handleChange = jest.fn()
+  const {clearSelection} = setup({
+    selectedItem: 'foo',
+    onChange: handleChange,
+  })
+  clearSelection()
+  expect(handleChange).toHaveBeenCalledTimes(1)
+  expect(handleChange).toHaveBeenCalledWith(null, expect.any(Object))
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {

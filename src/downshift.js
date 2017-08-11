@@ -261,7 +261,7 @@ class Downshift extends Component {
         if (Object.keys(onStateChangeArg).length) {
           this.props.onStateChange(onStateChangeArg, this.getState())
         }
-        if (onChangeArg) {
+        if (onChangeArg !== undefined) {
           this.props.onChange(onChangeArg, this.getState())
         }
       },
