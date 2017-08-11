@@ -76,7 +76,8 @@ test('onChange called when clearSelection is trigered', () => {
     onChange: handleChange,
   })
   clearSelection()
-  expect(handleChange).toHaveBeenCalled()
+  expect(handleChange).toHaveBeenCalledTimes(1)
+  expect(handleChange).toHaveBeenWith(null, expect.any(Object))
 })
 
 function setup({children = () => <div />, ...props} = {}) {
