@@ -1,6 +1,6 @@
 {
   "name": "downshift",
-  "version": "1.0.0-rc.8",
+  "version": "1.0.0-rc.9",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
   "jsnext:main": "dist/downshift.es.js",
