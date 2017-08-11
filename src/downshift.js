@@ -229,7 +229,10 @@ class Downshift extends Component {
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
-        if (stateToSet.hasOwnProperty('selectedItem')) {
+        if (
+          stateToSet.hasOwnProperty('selectedItem') &&
+          stateToSet.selectedItem !== state.selectedItem
+        ) {
           onChangeArg = stateToSet.selectedItem
         }
         Object.keys(stateToSet).forEach(key => {
