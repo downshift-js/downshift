@@ -633,7 +633,7 @@ class Downshift extends Component {
     if (!uiDescriptor) {
       return null
     }
-    // doing React.Children.only for Preact support 
+    // doing React.Children.only for Preact support ⚛️
     const element = React.Children.only(uiDescriptor)
     if (this.getRootProps.called) {
       validateGetRootPropsCalledCorrectly(element, this.getRootProps)
