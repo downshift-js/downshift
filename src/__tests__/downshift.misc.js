@@ -71,9 +71,9 @@ test('onStateChange called with changes and all the state', () => {
 
 test('onChange called when clearSelection is trigered', () => {
   const handleChange = jest.fn()
-  const { clearSelection } = setup({
+  const {clearSelection} = setup({
     selectedItem: 'foo',
-    onChange: handleChange
+    onChange: handleChange,
   })
   clearSelection()
   expect(handleChange).toHaveBeenCalled()
