@@ -5,6 +5,7 @@ dist
 .opt-out
 .DS_Store
 .next
+.eslintcache
 storybook-static
 
 # these cause more harm than good

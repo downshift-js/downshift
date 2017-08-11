@@ -80,6 +80,19 @@ test('onChange called when clearSelection is trigered', () => {
   expect(handleChange).toHaveBeenCalledWith(null, expect.any(Object))
 })
 
+test('onChange only called when the selection changes', () => {
+  const handleChange = jest.fn()
+  const {selectItem} = setup({
+    onChange: handleChange,
+  })
+  selectItem('foo')
+  expect(handleChange).toHaveBeenCalledTimes(1)
+  expect(handleChange).toHaveBeenCalledWith('foo', expect.any(Object))
+  handleChange.mockClear()
+  selectItem('foo')
+  expect(handleChange).toHaveBeenCalledTimes(0)
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
