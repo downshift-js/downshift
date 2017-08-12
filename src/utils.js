@@ -53,6 +53,10 @@ function scrollIntoView(node, rootNode) {
     scrollParentStyles.borderTopWidth,
     10,
   )
+  const scrollParentBorderBottomWidth = parseInt(
+    scrollParentStyles.borderBottomWidth,
+    10,
+  )
   const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
   const nodeRect = node.getBoundingClientRect()
   const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
@@ -61,11 +65,19 @@ function scrollIntoView(node, rootNode) {
     // the item is above the scrollable area
     scrollParent.scrollTop = nodeTop
   } else if (
-    nodeTop + nodeRect.height >
+    nodeTop +
+      nodeRect.height +
+      scrollParentBorderTopWidth +
+      scrollParentBorderBottomWidth >
     scrollParent.scrollTop + scrollParentRect.height
   ) {
     // the item is below the scrollable area
-    scrollParent.scrollTop = nodeTop + nodeRect.height - scrollParentRect.height
+    scrollParent.scrollTop =
+      nodeTop +
+      nodeRect.height -
+      scrollParentRect.height +
+      scrollParentBorderTopWidth +
+      scrollParentBorderBottomWidth
   }
   // the item is within the scrollable area (do nothing)
 }

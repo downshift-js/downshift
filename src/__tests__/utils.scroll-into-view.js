@@ -45,6 +45,19 @@ test('aligns to bottom when the node is below the scrollable parent', () => {
   expect(scrollableNode.scrollTop).toBe(25)
 })
 
+test('aligns to bottom when the the node is below the scrollable parent and scrollable parent has a border', () => {
+  const nodeTop = 115
+  const node = getNode({height: 10, top: nodeTop})
+  const scrollableNode = getScrollableNode({
+    height: 100,
+    children: [node],
+    borderBottomWidth: '2px',
+    borderTopWidth: '2px',
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(27)
+})
+
 function getScrollableNode(overrides = {}) {
   return getNode({
     height: 100,
@@ -64,6 +77,8 @@ function getNode(
     scrollHeight = height,
     clientHeight = height,
     children = [],
+    borderBottomWidth = 0,
+    borderTopWidth = 0,
   } = {},
 ) {
   const div = document.createElement('div')
@@ -75,8 +90,10 @@ function getNode(
     right: 50,
     bottom: height,
   })
-  div.style.borderTopWidth = 0
+  div.style.borderTopWidth = borderTopWidth
+  div.style.borderBottomWidth = borderBottomWidth
   div.scrollTop = scrollTop
+
   Object.defineProperties(div, {
     clientHeight: {value: clientHeight},
     scrollHeight: {value: scrollHeight},

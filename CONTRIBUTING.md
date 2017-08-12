@@ -35,7 +35,7 @@ scripts are available.
 
 This project uses [Storybook](https://storybook.js.org) for local development. Run the following commands to get setup:
 
-1. `$ cd stories` to change to the `/stores` diretory
+1. `$ cd stories` to change to the `/stories` diretory
 2. `$ npm install` to install the Storybook dependencies
 3. `$ cd ..` to change back to the root directory
 
