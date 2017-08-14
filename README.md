@@ -39,7 +39,7 @@ for your use cases.
 
 This is a component that controls user interactions and state for you so you can
 create autocomplete/dropdown/select/etc. components. It's based on ideas from
-the talk ["Compound Components"][compound-components-talk] which effectively
+the video ["Compound Components"][compound-components-lecture] which effectively
 gives you maximum flexibility with a minimal API because you are responsible
 for the rendering of everything and you simply apply props to what you're
 rendering.
