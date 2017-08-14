@@ -277,6 +277,13 @@ comes in really handy), but you can also control the state from anywhere, be
 that state from other components, `redux` (example wanted!), `react-router`
 (example wanted!), or anywhere else.
 
+> Note: This is very similar to how normal controlled components work elsewhere
+> in react (like `</input>`). If you want to learn more about this concept, you
+> can learn about that from this the
+> ["Controlled Components" lecture][controlled-components-lecture] and
+> exercises from [React Training's][react-training]
+> [Advanced React][advanced-react] course.
+
 ## Child Callback Function
 
 This is where you render whatever you want to based on the state of `downshift`.
@@ -423,9 +430,9 @@ If you would like to add an example, follow these steps:
 
 ## Inspiration
 
-I was heavily inspired by [Ryan Florence][ryan] and his talk entitled:
-["Compound Components"][compound-components-talk]. I also took a few ideas from
-the code in [`react-autocomplete`][react-autocomplete] and
+I was heavily inspired by [Ryan Florence][ryan]. Watch his (free) lesson about
+["Compound Components"][compound-components-lecture]. I also took a few ideas
+from the code in [`react-autocomplete`][react-autocomplete] and
 [jQuery UI's Autocomplete][jquery-complete].
 
 The `getXProps` functions were inspired by [Jared Forsyth][jared]. That bit of
@@ -497,9 +504,12 @@ MIT
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence
-[compound-components-talk]: https://www.youtube.com/watch?v=hEGg-3pIHlE
+[compound-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3060560
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
 [examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
 [yt-playlist]: https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
 [jared]: https://github.com/jaredly
+[controlled-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
+[react-training]: https://reacttraining.com/
+[advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
