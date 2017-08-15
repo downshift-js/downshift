@@ -276,6 +276,7 @@ class Downshift extends Component {
 
   getControllerStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
+    const {itemToString} = this.props
     const {
       getRootProps,
       getButtonProps,
@@ -308,6 +309,7 @@ class Downshift extends Component {
       selectHighlightedItem,
       setHighlightedIndex,
       clearSelection,
+      itemToString,
 
       // state
       highlightedIndex,

@@ -394,6 +394,7 @@ These are functions you can call to change the state of the downshift component.
 | `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
 | `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
 | `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
+| `itemToString`          | `function(item: any)`      | this is the same as the `itemToString` prop and is provided just as a helper                                     |
 
 ### state
 
