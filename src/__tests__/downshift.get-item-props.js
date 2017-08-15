@@ -46,7 +46,7 @@ test('on mouseenter of an item updates the highlightedIndex to that item', () =>
   )
 })
 
-test('does not error when given no props', () => {
+test('getItemProps throws a helpful error when no object is given', () => {
   expect(() =>
     mount(
       <Downshift>
@@ -56,7 +56,33 @@ test('does not error when given no props', () => {
           </div>)}
       </Downshift>,
     ),
-  ).not.toThrow()
+  ).toThrowErrorMatchingSnapshot()
+})
+
+test('getItemProps throws when no index is given', () => {
+  expect(() =>
+    mount(
+      <Downshift>
+        {({getItemProps}) =>
+          (<div>
+            <span {...getItemProps({item: 'hi'})} />
+          </div>)}
+      </Downshift>,
+    ),
+  ).toThrowErrorMatchingSnapshot()
+})
+
+test('getItemProps throws when no item is given', () => {
+  expect(() =>
+    mount(
+      <Downshift>
+        {({getItemProps}) =>
+          (<div>
+            <span {...getItemProps({index: 0})} />
+          </div>)}
+      </Downshift>,
+    ),
+  ).toThrowErrorMatchingSnapshot()
 })
 
 function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {

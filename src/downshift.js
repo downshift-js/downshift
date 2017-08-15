@@ -17,6 +17,7 @@ import {
   isDOMElement,
   getElementProps,
   noop,
+  requiredProp,
 } from './utils'
 
 class Downshift extends Component {
@@ -517,7 +518,14 @@ class Downshift extends Component {
     }
   }
 
-  getItemProps = ({onMouseEnter, item, index, ...rest} = {}) => {
+  getItemProps = (
+    {
+      onMouseEnter,
+      item = requiredProp('getItemProps', 'item'),
+      index = requiredProp('getItemProps', 'index'),
+      ...rest
+    } = {},
+  ) => {
     this.items[index] = item
     return {
       id: this.getItemId(index),
