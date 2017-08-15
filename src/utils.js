@@ -211,6 +211,16 @@ function getElementProps(element) {
   return element.props || /* istanbul ignore next (preact) */ element.attributes
 }
 
+/**
+ * Throws a helpful error message for required properties. Useful
+ * to be used as a default in destructuring or object params.
+ * @param {String} fnName the function name
+ * @param {String} propName the prop name
+ */
+function requiredProp(fnName, propName) {
+  throw new Error(`The property "${propName}" is required in "${fnName}"`)
+}
+
 export {
   cbToCb,
   findParent,
@@ -225,4 +235,5 @@ export {
   isDOMElement,
   getElementProps,
   noop,
+  requiredProp,
 }
