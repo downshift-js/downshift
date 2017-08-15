@@ -38,16 +38,15 @@ for your use cases.
 ## This solution
 
 This is a component that controls user interactions and state for you so you can
-create autocomplete/dropdown/select/etc. components. It's based on ideas from
-the video ["Compound Components"][compound-components-lecture] which effectively
-gives you maximum flexibility with a minimal API because you are responsible
-for the rendering of everything and you simply apply props to what you're
-rendering.
+create autocomplete/dropdown/select/etc. components. It uses a
+[render function as children][fac] which gives you maximum flexibility with a
+minimal API because you are responsible for the rendering of everything and you
+simply apply props to what you're rendering.
 
 This differs from other solutions which render things for their use case and
-then expose many options to allow for extensibility causing an API that is less
-easy to use and less flexible as well as making the implementation more
-complicated and harder to contribute to.
+then expose many options to allow for extensibility resulting in a bigger API
+that is less flexible as well as making the implementation more complicated and
+harder to contribute to.
 
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
@@ -431,19 +430,23 @@ If you would like to add an example, follow these steps:
 ## Inspiration
 
 I was heavily inspired by [Ryan Florence][ryan]. Watch his (free) lesson about
-["Compound Components"][compound-components-lecture]. I also took a few ideas
-from the code in [`react-autocomplete`][react-autocomplete] and
-[jQuery UI's Autocomplete][jquery-complete].
+["Compound Components"][compound-components-lecture]. Initially downshift was
+a group of compound components using context to communicate. But then
+[Jared Forsyth][jared] suggested I expose functions (the prop getters) to get
+props to apply to the elements rendered. That bit of inspiration made a big
+impact on the flexibility and simplicity of this API.
 
-The `getXProps` functions were inspired by [Jared Forsyth][jared]. That bit of
-inspiration made a big impact on the flexibility and simplicity of this API.
+I also took a few ideas from the code in
+[`react-autocomplete`][react-autocomplete] and
+[jQuery UI's Autocomplete][jquery-complete].
 
 You can watch me build the first iteration of `downshift` on YouTube:
 
 - [Part 1](https://www.youtube.com/watch?v=2kzD1IjDy5s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=11)
 - [Part 2](https://www.youtube.com/watch?v=w1Z7Jvj08_s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=10)
 
-You'll find more recordings of me working on `downshift` on [my livestream YouTube playlist][yt-playlist].
+You'll find more recordings of me working on `downshift` on
+[my livestream YouTube playlist][yt-playlist].
 
 ## Other Solutions
 
@@ -513,3 +516,4 @@ MIT
 [controlled-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
 [react-training]: https://reacttraining.com/
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
+[fac]: https://medium.com/merrickchristensen/function-as-child-components-5f3920a9ace9
