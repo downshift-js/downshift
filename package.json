@@ -12,10 +12,21 @@
     "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": [
-    "dist"
+  "files": ["dist"],
+  "keywords": [
+    "enhanced input",
+    "react",
+    "autocomplete",
+    "typeahead",
+    "dropdown",
+    "select",
+    "combobox",
+    "omnibox",
+    "accessibility",
+    "WAI-ARIA",
+    "multiselect",
+    "multiple selection"
   ],
-  "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "peerDependencies": {
