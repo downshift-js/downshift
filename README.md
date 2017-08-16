@@ -277,7 +277,7 @@ that state from other components, `redux` (example wanted!), `react-router`
 (example wanted!), or anywhere else.
 
 > Note: This is very similar to how normal controlled components work elsewhere
-> in react (like `</input>`). If you want to learn more about this concept, you
+> in react (like `<input />`). If you want to learn more about this concept, you
 > can learn about that from this the
 > ["Controlled Components" lecture][controlled-components-lecture] and
 > exercises from [React Training's][react-training]
