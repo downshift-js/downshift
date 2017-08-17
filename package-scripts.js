@@ -20,8 +20,10 @@ module.exports = {
       },
     },
     test: {
-      default: crossEnv('NODE_ENV=test jest --coverage'),
+      default: series.nps('test.jest', 'test.ts'),
+      jest: crossEnv('NODE_ENV=test jest --coverage'),
       update: crossEnv('NODE_ENV=test jest --coverage --updateSnapshot'),
+      ts: 'tsc --noEmit -p ./tsconfig.json',
       watch: crossEnv('NODE_ENV=test jest --watch'),
       build: {
         description: 'validates the built files',

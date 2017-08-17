@@ -1,92 +1,74 @@
 {
-  "name": "downshift",
-  "version": "1.0.0-rc.14",
-  "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
-  "main": "dist/downshift.cjs.js",
-  "jsnext:main": "dist/downshift.es.js",
-  "module": "dist/downshift.es.js",
-  "scripts": {
-    "start": "nps",
-    "test": "nps test",
-    "prerelease": "npm start validate",
-    "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
-  },
-  "files": ["dist"],
-  "keywords": [
-    "enhanced input",
-    "react",
-    "autocomplete",
-    "autosuggest",
-    "typeahead",
-    "dropdown",
-    "select",
-    "combobox",
-    "omnibox",
-    "accessibility",
-    "WAI-ARIA",
-    "multiselect",
-    "multiple selection"
-  ],
-  "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
-  "license": "MIT",
-  "peerDependencies": {
-    "react": ">=15",
-    "prop-types": ">=15"
-  },
-  "devDependencies": {
-    "@storybook/react": "^3.2.3",
-    "all-contributors-cli": "^4.3.0",
-    "babel-cli": "^6.24.1",
-    "babel-jest": "^20.0.3",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-inline-environment-variables": "^0.1.1",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.8",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.24.1",
-    "enzyme": "^2.9.1",
-    "enzyme-to-json": "^1.5.1",
-    "eslint": "^4.2.0",
-    "eslint-config-kentcdodds": "^12.4.2",
-    "husky": "^0.14.3",
-    "jest": "^20.0.4",
-    "lint-staged": "^4.0.1",
-    "nps": "^5.4.0",
-    "nps-utils": "^1.2.0",
-    "opt-cli": "^1.5.1",
-    "preact": "^8.2.1",
-    "preact-render-to-string": "^3.6.3",
-    "prettier-eslint-cli": "^4.1.1",
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.1",
-    "rollup": "^0.45.2",
-    "rollup-plugin-alias": "^1.3.1",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-commonjs": "^8.1.0",
-    "rollup-plugin-json": "^2.3.0",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^2.0.1",
-    "rollup-watch": "^4.3.1"
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier-eslint --write --no-semi --single-quote --trailing-comma=all --no-bracket-spacing",
-      "git add"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/paypal/downshift.git"
-  },
-  "bugs": {
-    "url": "https://github.com/paypal/downshift/issues"
-  },
-  "homepage": "https://github.com/paypal/downshift#readme",
-  "dependencies": {}
+    "name": "downshift",
+    "version": "1.0.0-rc.1",
+    "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
+    "main": "dist/downshift.cjs.js",
+    "jsnext:main": "dist/downshift.es.js",
+    "module": "dist/downshift.es.js",
+    "typings": "typings/index.d.ts",
+    "scripts": {
+        "start": "nps",
+        "test": "nps test",
+        "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    },
+    "files": ["dist"],
+    "keywords": [],
+    "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
+    "license": "MIT",
+    "peerDependencies": {
+        "react": ">=15",
+        "prop-types": ">=15"
+    },
+    "devDependencies": {
+        "@storybook/react": "^3.2.3",
+        "all-contributors-cli": "^4.3.0",
+        "babel-cli": "^6.24.1",
+        "babel-jest": "^20.0.3",
+        "babel-plugin-external-helpers": "^6.22.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-inline-environment-variables": "^0.1.1",
+        "babel-plugin-transform-object-rest-spread": "^6.23.0",
+        "babel-plugin-transform-react-jsx": "^6.24.1",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-react": "^6.24.1",
+        "babel-register": "^6.24.1",
+        "enzyme": "^2.9.1",
+        "enzyme-to-json": "^1.5.1",
+        "eslint": "^4.2.0",
+        "eslint-config-kentcdodds": "^12.4.2",
+        "husky": "^0.14.3",
+        "jest": "^20.0.4",
+        "lint-staged": "^4.0.1",
+        "nps": "^5.4.0",
+        "nps-utils": "^1.2.0",
+        "opt-cli": "^1.5.1",
+        "preact": "^8.2.1",
+        "prettier-eslint-cli": "^4.1.1",
+        "prop-types": "^15.5.10",
+        "react": "^15.6.1",
+        "react-dom": "^15.6.1",
+        "react-test-renderer": "^15.6.1",
+        "rollup": "^0.45.2",
+        "rollup-plugin-alias": "^1.3.1",
+        "rollup-plugin-babel": "^2.7.1",
+        "rollup-plugin-commonjs": "^8.1.0",
+        "rollup-plugin-json": "^2.3.0",
+        "rollup-plugin-node-resolve": "^3.0.0",
+        "rollup-plugin-uglify": "^2.0.1",
+        "typescript": "^2.4.2"
+    },
+    "lint-staged": {
+        "*.js": [
+            "prettier-eslint --write --no-semi --single-quote --trailing-comma=all --no-bracket-spacing",
+            "git add"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/paypal/downshift.git"
+    },
+    "bugs": {
+        "url": "https://github.com/paypal/downshift/issues"
+    },
+    "homepage": "https://github.com/paypal/downshift#readme"
 }
