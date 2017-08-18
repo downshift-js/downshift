@@ -22,6 +22,7 @@ module.exports = {
     test: {
       default: crossEnv('NODE_ENV=test jest --coverage'),
       update: crossEnv('NODE_ENV=test jest --coverage --updateSnapshot'),
+      ts: 'tsc --noEmit -p ./tsconfig.json',
       watch: crossEnv('NODE_ENV=test jest --watch'),
       build: {
         description: 'validates the built files',
@@ -56,7 +57,7 @@ module.exports = {
         This runs several scripts to make sure things look
         good before committing or on clean install
       `,
-      script: concurrent.nps('lint', 'build.andTest', 'test'),
+      script: concurrent.nps('lint', 'build.andTest', 'test', 'test.ts'),
     },
   },
   options: {

@@ -5,6 +5,7 @@
   "main": "dist/downshift.cjs.js",
   "jsnext:main": "dist/downshift.es.js",
   "module": "dist/downshift.es.js",
+  "typings": "typings/index.d.ts",
   "scripts": {
     "start": "nps",
     "test": "nps test",
@@ -12,7 +13,9 @@
     "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "enhanced input",
     "react",
@@ -72,7 +75,8 @@
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1",
-    "rollup-watch": "^4.3.1"
+    "rollup-watch": "^4.3.1",
+    "typescript": "^2.4.2"
   },
   "lint-staged": {
     "*.js": [
