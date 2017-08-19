@@ -146,14 +146,14 @@ class Downshift extends Component {
 
   moveHighlightedIndex = amount => {
     if (this.getState().isOpen) {
-      this.changeHighlighedIndex(amount)
+      this.changeHighlightedIndex(amount)
     } else {
       this.highlightIndex()
     }
   }
 
   // eslint-disable-next-line complexity
-  changeHighlighedIndex = moveAmount => {
+  changeHighlightedIndex = moveAmount => {
     const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0) {
       return
