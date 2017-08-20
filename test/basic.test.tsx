@@ -12,9 +12,8 @@ export default class App extends React.Component<Props, State> {
         items: ['apple', 'orange', 'carrot'],
     };
 
-    onChange = ({ selectedItem, previousItem }: ChangeOptions) => {
+    onChange = (selectedItem: any) => {
         console.log('selectedItem', selectedItem);
-        console.log('previousItem', previousItem);
     };
 
     render() {
