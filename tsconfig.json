@@ -1,5 +1,9 @@
 {
-    "compilerOptions": {
-        "jsx": "react"
-    }
+  "compilerOptions": {
+    "jsx": "react"
+  },
+  "include": [
+    "test/**/*.tsx"
+  ]
 }
+
