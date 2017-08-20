@@ -186,6 +186,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "the-simian",
+      "name": "Jesse Harlin",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/954596?v=4",
+      "profile": "http://jesseharlin.net/",
+      "contributions": [
+        "bug",
+        "example"
+      ]
     }
   ]
 }
