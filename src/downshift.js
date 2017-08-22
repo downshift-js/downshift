@@ -31,6 +31,7 @@ class Downshift extends Component {
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
     onStateChange: PropTypes.func,
+    onUserAction: PropTypes.func,
     onClick: PropTypes.func,
     itemCount: PropTypes.number,
     // things we keep in state for uncontrolled components
@@ -51,6 +52,7 @@ class Downshift extends Component {
     getA11yStatusMessage,
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
+    onUserAction: () => {},
     onChange: () => {},
   }
 
@@ -63,6 +65,7 @@ class Downshift extends Component {
   // down your version of downshift (don't use a
   // version range) to avoid surprise breakages.
   static stateChangeTypes = {
+    unknown: '__autocomplete_unknown__',
     mouseUp: '__autocomplete_mouseup__',
     itemMouseEnter: '__autocomplete_item_mouseenter__',
     keyDownArrowUp: '__autocomplete_keydown_arrow_up__',
@@ -267,6 +270,7 @@ class Downshift extends Component {
         ) {
           onChangeArg = stateToSet.selectedItem
         }
+        stateToSet.type = stateToSet.type || Downshift.stateChangeTypes.unknown
         Object.keys(stateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
           // actually changing
@@ -296,12 +300,16 @@ class Downshift extends Component {
 
         // only call the onStateChange and onChange callbacks if
         // we have relevant information to pass them.
-        if (Object.keys(onStateChangeArg).length) {
+        const hasMoreStateThanType = Object.keys(onStateChangeArg).length > 1
+        if (hasMoreStateThanType) {
           this.props.onStateChange(onStateChangeArg, this.getState())
         }
         if (onChangeArg !== undefined) {
           this.props.onChange(onChangeArg, this.getState())
         }
+        // this is currently undocumented and therefore subject to change
+        // We'll try to not break it, but just be warned.
+        this.props.onUserAction(onStateChangeArg, this.getState())
       },
     )
   }

@@ -15,38 +15,40 @@ class Examples extends Component {
     this.setState({selectedColor})
   }
 
-  onStateChange = changes => {
-    let {selectedColor, inputValue, itemsToShow} = this.state
-    const isClosingMenu = changes.hasOwnProperty('isOpen') && !changes.isOpen
-    if (
-      changes.type === Downshift.stateChangeTypes.keyDownEscape &&
-      !isClosingMenu
-    ) {
-      selectedColor = null
-    }
-    if (changes.hasOwnProperty('inputValue')) {
-      if (changes.type === Downshift.stateChangeTypes.keyDownEscape) {
-        inputValue = this.userInputtedValue
-      } else {
-        inputValue = changes.inputValue
-        this.userInputtedValue = changes.inputValue
+  onUserAction = changes => {
+    this.setState(({inputValue, itemsToShow, selectedColor}) => {
+      selectedColor = changes.selectedItem || selectedColor
+      const isClosingMenu = changes.hasOwnProperty('isOpen') && !changes.isOpen
+      if (
+        changes.type === Downshift.stateChangeTypes.keyDownEscape &&
+        !isClosingMenu
+      ) {
+        selectedColor = null
       }
-    }
-    itemsToShow = this.userInputtedValue
-      ? matchSorter(this.items, this.userInputtedValue)
-      : this.items
-    if (
-      changes.hasOwnProperty('highlightedIndex') &&
-      (changes.type === Downshift.stateChangeTypes.keyDownArrowUp ||
-        changes.type === Downshift.stateChangeTypes.keyDownArrowDown)
-    ) {
-      inputValue = itemsToShow[changes.highlightedIndex]
-    }
-    if (isClosingMenu) {
-      inputValue = selectedColor
-      this.userInputtedValue = selectedColor
-    }
-    this.setState({inputValue, itemsToShow, selectedColor})
+      if (changes.hasOwnProperty('inputValue')) {
+        if (changes.type === Downshift.stateChangeTypes.keyDownEscape) {
+          inputValue = this.userInputtedValue
+        } else {
+          inputValue = changes.inputValue
+          this.userInputtedValue = changes.inputValue
+        }
+      }
+      itemsToShow = this.userInputtedValue
+        ? matchSorter(this.items, this.userInputtedValue)
+        : this.items
+      if (
+        changes.hasOwnProperty('highlightedIndex') &&
+        (changes.type === Downshift.stateChangeTypes.keyDownArrowUp ||
+          changes.type === Downshift.stateChangeTypes.keyDownArrowDown)
+      ) {
+        inputValue = itemsToShow[changes.highlightedIndex]
+      }
+      if (isClosingMenu) {
+        inputValue = selectedColor
+        this.userInputtedValue = selectedColor
+      }
+      return {inputValue, itemsToShow, selectedColor}
+    })
   }
 
   render() {
@@ -77,7 +79,7 @@ class Examples extends Component {
               selectedItem={selectedColor}
               inputValue={inputValue}
               onChange={this.changeHandler}
-              onStateChange={this.onStateChange}
+              onUserAction={this.onUserAction}
             />
           </div>
         </div>
@@ -91,14 +93,14 @@ function BasicAutocomplete({
   inputValue,
   selectedItem,
   onChange,
-  onStateChange,
+  onUserAction,
 }) {
   return (
     <Downshift
       inputValue={inputValue}
       selectedItem={selectedItem}
       onChange={onChange}
-      onStateChange={onStateChange}
+      onUserAction={onUserAction}
     >
       {({
         getInputProps,
