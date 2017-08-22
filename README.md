@@ -325,7 +325,8 @@ Required properties:
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})`
-  and your composite component would forward like: `<div ref={props.innerRef} />`
+  and your composite component would forward like:
+  `<div ref={props.innerRef} />`
 
 #### `getInputProps`
 
@@ -353,8 +354,9 @@ There are no required properties for this method.
 
 #### `getItemProps`
 
-This method should be applied to any menu items you render. You pass it an object
-and that object must contain `index` (number) and `item` (anything) properties.
+This method should be applied to any menu items you render. You pass it an
+object and that object must contain `index` (number) and `item` (anything)
+properties.
 
 Required properties:
 
@@ -384,17 +386,21 @@ These are functions you can call to change the state of the downshift component.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property                | type                       | description                                                                                                      |
-|-------------------------|----------------------------|------------------------------------------------------------------------------------------------------------------|
-| `clearSelection`        | `function()`               | clears the selection                                                                                             |
-| `closeMenu`             | `function()`               | closes the menu                                                                                                  |
-| `openMenu`              | `function()`               | opens the menu                                                                                                   |
-| `selectHighlightedItem` | `function()`               | selects the item that is currently highlighted                                                                   |
-| `selectItem`            | `function(item: any)`      | selects the given item                                                                                           |
-| `selectItemAtIndex`     | `function(index: number)`  | selects the item at the given index                                                                              |
-| `setHighlightedIndex`   | `function(index: number)`  | call to set a new highlighted index                                                                              |
-| `toggleMenu`            | `function(state: boolean)` | toggle the menu open state (if `state` is not provided, then it will be set to the inverse of the current state) |
-| `itemToString`          | `function(item: any)`      | this is the same as the `itemToString` prop and is provided just as a helper                                     |
+| property                | type                                                             | description                                                                  |
+|-------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `clearSelection`        | `function(cb: Function)`                                         | clears the selection                                                         |
+| `closeMenu`             | `function(cb: Function)`                                         | closes the menu                                                              |
+| `openMenu`              | `function(cb: Function)`                                         | opens the menu                                                               |
+| `selectHighlightedItem` | `function(otherStateToSet: object, cb: Function)`                | selects the item that is currently highlighted                               |
+| `selectItem`            | `function(item: any, otherStateToSet: object, cb: Function)`     | selects the given item                                                       |
+| `selectItemAtIndex`     | `function(index: number, otherStateToSet: object, cb: Function)` | selects the item at the given index                                          |
+| `setHighlightedIndex`   | `function(index: number, otherStateToSet: object, cb: Function)` | call to set a new highlighted index                                          |
+| `toggleMenu`            | `function(otherStateToSet: object, cb: Function)`                | toggle the menu open state                                                   |
+| `reset`                 | `function(otherStateToSet: object, cb: Function)`                | this resets downshift's state to a reasonable default                        |
+| `itemToString`          | `function(item: any)`                                            | this is the same as the `itemToString` prop and is provided just as a helper |
+
+> `otherStateToSet` refers to an object to set other internal state. It is
+> recommended to avoid abusing this, but is available if you need it.
 
 ### state
 

@@ -6,6 +6,7 @@ import {storiesOf} from '@storybook/react'
 
 import Basic from './examples/basic'
 import Controlled from './examples/controlled'
+import Autosuggest from './examples/react-autosuggest'
 import SemanticUI from './examples/semantic-ui'
 import Apollo from './examples/apollo'
 import Axios from './examples/axios'
@@ -21,6 +22,7 @@ function loadStories() {
   storiesOf('Examples', module)
     .add('basic', () => <Basic />)
     .add('controlled', () => <Controlled />)
+    .add('autosuggest', () => <Autosuggest />)
     .add('semantic-ui', () => <SemanticUI />)
     .add('apollo', () => <Apollo />)
     .add('axios', () => <Axios />)

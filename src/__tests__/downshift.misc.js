@@ -93,6 +93,49 @@ test('onChange only called when the selection changes', () => {
   expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
+test('toggleMenu can take no arguments at all', () => {
+  const {toggleMenu, childSpy} = setup()
+  toggleMenu()
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      isOpen: true,
+    }),
+  )
+})
+
+test('reset can take no arguments at all', () => {
+  const {reset, childSpy} = setup()
+  reset()
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      isOpen: false,
+    }),
+  )
+})
+
+test('setHighlightedIndex can take no arguments at all', () => {
+  const defaultHighlightedIndex = 2
+  const {setHighlightedIndex, childSpy} = setup({defaultHighlightedIndex})
+  setHighlightedIndex()
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: defaultHighlightedIndex,
+    }),
+  )
+})
+
+test('openAndHighlightDefaultIndex can take no arguments at all', () => {
+  const defaultHighlightedIndex = 2
+  const {wrapper, childSpy} = setup({defaultHighlightedIndex})
+  const {openAndHighlightDefaultIndex} = wrapper.instance()
+  openAndHighlightDefaultIndex()
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: defaultHighlightedIndex,
+    }),
+  )
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {

@@ -56,13 +56,29 @@ class Downshift extends Component {
 
   // this is an experimental feature
   // so we're not going to document this yet
+  // nor are we going to test it.
+  // We will try to avoid breaking it, but
+  // we make no guarantees.
+  // If you need it, we recommend that you lock
+  // down your version of downshift (don't use a
+  // version range) to avoid surprise breakages.
   static stateChangeTypes = {
     mouseUp: '__autocomplete_mouseup__',
+    itemMouseEnter: '__autocomplete_item_mouseenter__',
+    keyDownArrowUp: '__autocomplete_keydown_arrow_up__',
+    keyDownArrowDown: '__autocomplete_keydown_arrow_down__',
+    keyDownEscape: '__autocomplete_keydown_escape__',
+    keyDownEnter: '__autocomplete_keydown_enter__',
+    blurInput: '__autocomplete_blur_input__',
+    changeInput: '__autocomplete_change_input__',
+    keyDownSpaceButton: '__autocomplete_keydown_space_button__',
+    clickButton: '__autocomplete_click_button__',
+    controlledPropUpdatedSelectedItem:
+      '__autocomplete_controlled_prop_updated_selected_item__',
   }
 
   constructor(...args) {
     super(...args)
-    this.id = generateId('downshift')
     const state = this.getState({
       highlightedIndex: this.props.defaultHighlightedIndex,
       isOpen: this.props.defaultIsOpen,
@@ -73,12 +89,13 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
-    this.root_handleClick = composeEventHandlers(
-      this.props.onClick,
-      this.root_handleClick,
-    )
   }
 
+  id = generateId('downshift')
+  root_handleClick = composeEventHandlers(
+    this.props.onClick,
+    this.root_handleClick,
+  )
   input = null
   items = []
   previousResultCount = 0
@@ -100,7 +117,9 @@ class Downshift extends Component {
    */
   getState(stateToMerge = this.state) {
     return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isStateProp(key) ? this.props[key] : stateToMerge[key]
+      state[key] = this.isControlledProp(key) ?
+        this.props[key] :
+        stateToMerge[key]
       return state
     }, {})
   }
@@ -112,7 +131,7 @@ class Downshift extends Component {
    * @param {String} key the key to check
    * @return {Boolean} whether it is a controlled controlled prop
    */
-  isStateProp(key) {
+  isControlledProp(key) {
     return this.props[key] !== undefined
   }
 
@@ -130,30 +149,33 @@ class Downshift extends Component {
 
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
+    otherStateToSet = {},
   ) => {
-    this.internalSetState({highlightedIndex}, () => {
+    this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       const rootNode = this._rootNode
       scrollIntoView(node, rootNode)
     })
   }
 
-  highlightIndex = index => {
-    this.openMenu(() => {
-      this.setHighlightedIndex(index)
-    })
+  openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
+    this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
   }
 
-  moveHighlightedIndex = amount => {
+  highlightDefaultIndex = (otherStateToSet = {}) => {
+    this.setHighlightedIndex(undefined, otherStateToSet)
+  }
+
+  moveHighlightedIndex = (amount, otherStateToSet) => {
     if (this.getState().isOpen) {
-      this.changeHighlightedIndex(amount)
+      this.changeHighlightedIndex(amount, otherStateToSet)
     } else {
-      this.highlightIndex()
+      this.openAndHighlightDefaultIndex(otherStateToSet)
     }
   }
 
   // eslint-disable-next-line complexity
-  changeHighlightedIndex = moveAmount => {
+  changeHighlightedIndex = (moveAmount, otherStateToSet) => {
     const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0) {
       return
@@ -169,10 +191,10 @@ class Downshift extends Component {
     } else if (newIndex > itemsLastIndex) {
       newIndex = 0
     }
-    this.setHighlightedIndex(newIndex)
+    this.setHighlightedIndex(newIndex, otherStateToSet)
   }
 
-  clearSelection = () => {
+  clearSelection = cb => {
     this.internalSetState(
       {
         selectedItem: null,
@@ -182,29 +204,38 @@ class Downshift extends Component {
       () => {
         const inputNode = this._rootNode.querySelector(`#${this.inputId}`)
         inputNode && inputNode.focus && inputNode.focus()
+        cbToCb(cb)()
       },
     )
   }
 
-  selectItem = item => {
-    this.internalSetState({
-      isOpen: false,
-      highlightedIndex: null,
-      selectedItem: item,
-      inputValue: this.props.itemToString(item),
-    })
+  selectItem = (item, otherStateToSet, cb) => {
+    this.internalSetState(
+      {
+        isOpen: false,
+        highlightedIndex: null,
+        selectedItem: item,
+        inputValue: this.props.itemToString(item),
+        ...otherStateToSet,
+      },
+      cbToCb(cb),
+    )
   }
 
-  selectItemAtIndex = itemIndex => {
+  selectItemAtIndex = (itemIndex, otherStateToSet, cb) => {
     const item = this.items[itemIndex]
     if (!item) {
       return
     }
-    this.selectItem(item)
+    this.selectItem(item, otherStateToSet, cb)
   }
 
-  selectHighlightedItem = () => {
-    return this.selectItemAtIndex(this.getState().highlightedIndex)
+  selectHighlightedItem = (otherStateToSet, cb) => {
+    return this.selectItemAtIndex(
+      this.getState().highlightedIndex,
+      otherStateToSet,
+      cb,
+    )
   }
 
   // any piece of our state can live in two places:
@@ -237,6 +268,11 @@ class Downshift extends Component {
           onChangeArg = stateToSet.selectedItem
         }
         Object.keys(stateToSet).forEach(key => {
+          // onStateChangeArg should only have the state that is
+          // actually changing
+          if (state[key] !== stateToSet[key]) {
+            onStateChangeArg[key] = stateToSet[key]
+          }
           // the type is useful for the onStateChangeArg
           // but we don't actually want to set it in internal state.
           // this is an undocumented feature for now... Not all internalSetState
@@ -246,14 +282,9 @@ class Downshift extends Component {
           if (key === 'type') {
             return
           }
-          // onStateChangeArg should only have the state that is
-          // actually changing
-          if (state[key] !== stateToSet[key]) {
-            onStateChangeArg[key] = stateToSet[key]
-          }
           nextFullState[key] = stateToSet[key]
           // if it's coming from props, then we don't care to set it internally
-          if (!this.isStateProp(key)) {
+          if (!this.isControlledProp(key)) {
             nextState[key] = stateToSet[key]
           }
         })
@@ -292,6 +323,7 @@ class Downshift extends Component {
       selectHighlightedItem,
       setHighlightedIndex,
       clearSelection,
+      reset,
     } = this
     return {
       // prop getters
@@ -302,6 +334,7 @@ class Downshift extends Component {
       getItemProps,
 
       // actions
+      reset,
       openMenu,
       closeMenu,
       toggleMenu,
@@ -359,25 +392,31 @@ class Downshift extends Component {
     ArrowDown(event) {
       event.preventDefault()
       const amount = event.shiftKey ? 5 : 1
-      this.moveHighlightedIndex(amount)
+      this.moveHighlightedIndex(amount, {
+        type: Downshift.stateChangeTypes.keyDownArrowDown,
+      })
     },
 
     ArrowUp(event) {
       event.preventDefault()
       const amount = event.shiftKey ? -5 : -1
-      this.moveHighlightedIndex(amount)
+      this.moveHighlightedIndex(amount, {
+        type: Downshift.stateChangeTypes.keyDownArrowUp,
+      })
     },
 
     Enter(event) {
       event.preventDefault()
       if (this.getState().isOpen) {
-        this.selectHighlightedItem()
+        this.selectHighlightedItem({
+          type: Downshift.stateChangeTypes.keyDownEnter,
+        })
       }
     },
 
     Escape(event) {
       event.preventDefault()
-      this.reset()
+      this.reset({type: Downshift.stateChangeTypes.keyDownEscape})
     },
   }
 
@@ -388,7 +427,7 @@ class Downshift extends Component {
 
     ' '(event) {
       event.preventDefault()
-      this.toggleMenu()
+      this.toggleMenu({type: Downshift.stateChangeTypes.keyDownSpaceButton})
     },
   }
 
@@ -413,7 +452,7 @@ class Downshift extends Component {
 
   button_handleClick = event => {
     event.preventDefault()
-    this.toggleMenu()
+    this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
@@ -495,12 +534,16 @@ class Downshift extends Component {
   }
 
   input_handleChange = event => {
-    this.internalSetState({isOpen: true, inputValue: event.target.value})
+    this.internalSetState({
+      type: Downshift.stateChangeTypes.changeInput,
+      isOpen: true,
+      inputValue: event.target.value,
+    })
   }
 
   input_handleBlur = () => {
     if (!this.isMouseDown) {
-      this.reset()
+      this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
@@ -530,35 +573,36 @@ class Downshift extends Component {
     return {
       id: this.getItemId(index),
       onMouseEnter: composeEventHandlers(onMouseEnter, () => {
-        this.setHighlightedIndex(index)
+        this.setHighlightedIndex(index, {
+          type: Downshift.stateChangeTypes.itemMouseEnter,
+        })
       }),
       ...rest,
     }
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
-  reset = type => {
-    this.internalSetState(({selectedItem}) => ({
-      type,
-      isOpen: false,
-      highlightedIndex: null,
-      inputValue: this.props.itemToString(selectedItem),
-    }))
+  reset = (otherStateToSet = {}, cb) => {
+    this.internalSetState(
+      ({selectedItem}) => ({
+        isOpen: false,
+        highlightedIndex: null,
+        inputValue: this.props.itemToString(selectedItem),
+        ...otherStateToSet,
+      }),
+      cbToCb(cb),
+    )
   }
 
-  toggleMenu = (newState, cb) => {
+  toggleMenu = (otherStateToSet = {}, cb) => {
     this.internalSetState(
       ({isOpen}) => {
-        let nextIsOpen = !isOpen
-        if (typeof newState === 'boolean') {
-          nextIsOpen = newState
-        }
-        return {isOpen: nextIsOpen}
+        return {isOpen: !isOpen, ...otherStateToSet}
       },
       () => {
         const {isOpen} = this.getState()
         if (isOpen) {
-          this.setHighlightedIndex()
+          this.highlightDefaultIndex()
         }
         cbToCb(cb)()
       },
@@ -566,11 +610,11 @@ class Downshift extends Component {
   }
 
   openMenu = cb => {
-    this.toggleMenu(true, cb)
+    this.internalSetState({isOpen: true}, cbToCb(cb))
   }
 
   closeMenu = cb => {
-    this.toggleMenu(false, cb)
+    this.internalSetState({isOpen: false}, cbToCb(cb))
   }
 
   updateStatus = debounce(() => {
@@ -610,7 +654,7 @@ class Downshift extends Component {
           !this._rootNode.contains(event.target)) &&
         this.getState().isOpen
       ) {
-        this.reset(Downshift.stateChangeTypes.mouseUp)
+        this.reset({type: Downshift.stateChangeTypes.mouseUp})
       }
     }
     window.addEventListener('mousedown', onMouseDown)
@@ -625,10 +669,11 @@ class Downshift extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      this.isStateProp('selectedItem') &&
+      this.isControlledProp('selectedItem') &&
       this.props.selectedItem !== prevProps.selectedItem
     ) {
       this.internalSetState({
+        type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
