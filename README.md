@@ -217,9 +217,9 @@ but differ slightly.
 - `allState`: This is the full state object of all the state in your `downshift`
   component.
 
-> Note: this function could also be called even though no state actually changes
-> so make sure you check `changes.hasOwnProperty()` to see whether you're
-> interested in the changes.
+> Tip: This function will be called any time _any_ state is changed. The best
+> way to determine whether any particular state was changed, you can use
+> `changes.hasOwnProperty('propName')`.
 
 ### itemCount
 

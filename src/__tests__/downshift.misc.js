@@ -58,6 +58,7 @@ test('onStateChange called with changes and all the state', () => {
   const itemToSelect = 'foo'
   selectItem(itemToSelect)
   const changes = {
+    type: Downshift.stateChangeTypes.unknown,
     selectedItem: itemToSelect,
     inputValue: itemToSelect,
   }
