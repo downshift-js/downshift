@@ -426,12 +426,21 @@ These are values that represent the current state of the downshift component.
 
 Examples exist on [codesandbox.io][examples]:
 
+- [bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
 - [multiple selection example](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
-- [downshift Apollo example](https://codesandbox.io/s/j2omZpK3W)
-- [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+- [downshift Apollo example](https://codesandbox.io/s/m5zrvqj85p)
+- [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83) from Algolia
 - [Material UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
 - [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) ([learn more about `genie` here](https://github.com/kentcdodds/genie))
 - [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
+
+<!--
+
+This needs to be updated to the latest version of downshift:
+
+- [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+
+-->
 
 If you would like to add an example, follow these steps:
 
