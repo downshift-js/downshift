@@ -442,6 +442,10 @@ This needs to be updated to the latest version of downshift:
 
 -->
 
+You'll find other examples in the `stories/examples` folder of the repo.
+And you'll find
+[a live version of those examples here](https://downshift.netlify.com)
+
 If you would like to add an example, follow these steps:
 
 1. Fork [this codesandbox](http://kcd.im/ds-example)
