@@ -53,13 +53,11 @@ harder to contribute to.
 
 ## Installation
 
-**This component is currently released as a Release Candidate. It is quite stable, but not officially released yet.**
-
 This module is distributed via [npm][npm] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
-npm install --save downshift@rc
+npm install --save downshift
 ```
 
 > This package also depends on `react` and `prop-types`. Please make sure you
@@ -220,6 +218,11 @@ but differ slightly.
 > Tip: This function will be called any time _any_ state is changed. The best
 > way to determine whether any particular state was changed, you can use
 > `changes.hasOwnProperty('propName')`.
+
+> Note: the `changes` object will also have a `type` property that corresponds
+> to a `Downshift.stateChangeTypes` property. This is an experimental feature
+> so it's not recommended to use it if you can avoid it. If you need it, please
+> open an issue to discuss solidifying the API.
 
 ### itemCount
 
