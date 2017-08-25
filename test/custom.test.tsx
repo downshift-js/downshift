@@ -7,6 +7,10 @@ interface State {
     items: Array<any>;
 }
 
+const CustomList = ({ isOpen, children }) => (
+    <div className={isOpen ? 'open' : ''}>{children}</div>
+)
+
 const CustomListItem = ({ isSelected, children }) => (
     <div className={isSelected ? 'selected' : ''}>{children}</div>
 )
@@ -34,7 +38,7 @@ export default class App extends React.Component<Props, State> {
                 }) => (
                     <div style={{ position: 'relative' }}>
                         <div {...getButtonProps()}>{selectedItem}</div>
-                        <div isOpen={isOpen}>
+                        <CustomList isOpen={isOpen}>
                         {items.map((item, index) => (
                             <CustomListItem
                                 key={index}
@@ -47,7 +51,7 @@ export default class App extends React.Component<Props, State> {
                                 {item}
                             </CustomListItem>
                         ))}
-                        </div>
+                        </CustomList>
                     </div>
                 )}
             </Downshift>
