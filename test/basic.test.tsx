@@ -53,7 +53,7 @@ export default class App extends React.Component<Props, State> {
                                       )
                                       .map((item: any, index: number) =>
                                           <div
-                                              {...getItemProps({ item, index, isSelected: selectedItem === item })}
+                                              {...getItemProps({ item, index })}
                                               key={item}
                                               style={{
                                                   backgroundColor:
