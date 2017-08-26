@@ -22,6 +22,7 @@ export default class App extends React.Component<Props, State> {
         return (
             <Downshift onChange={this.onChange}>
                 {({
+                    getButtonProps,
                     getInputProps,
                     getItemProps,
                     isOpen,
@@ -34,6 +35,9 @@ export default class App extends React.Component<Props, State> {
                             {...getInputProps({
                                 placeholder: 'Favorite color ?',
                             })}
+                        />
+                        <button
+                            {...getButtonProps()}
                         />
                         {isOpen
                             ? <div style={{ border: '1px solid #ccc' }}>

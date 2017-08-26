@@ -66,7 +66,11 @@ export interface GetButtonPropsOptions extends React.HTMLProps<HTMLButtonElement
     selectedItem: any;
 }
 
-export interface GetItemPropsOptions {
+interface OptionalExtraGetItemPropsOptions {
+    [key: string]: any;
+}
+
+export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
     index: number;
     item: any;
 }
@@ -74,9 +78,9 @@ export interface GetItemPropsOptions {
 export interface ControllerStateAndHelpers {
     // prop getters
     getRootProps: (options: GetRootPropsOptions) => any;
-    getButtonProps: (options: GetButtonPropsOptions) => any;
-    getLabelProps: (options: GetLabelPropsOptions) => any;
-    getInputProps: (options: GetInputPropsOptions) => any;
+    getButtonProps: (options?: GetButtonPropsOptions) => any;
+    getLabelProps: (options?: GetLabelPropsOptions) => any;
+    getInputProps: (options?: GetInputPropsOptions) => any;
     getItemProps: (options: GetItemPropsOptions) => any;
 
     // actions
