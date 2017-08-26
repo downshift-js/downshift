@@ -211,14 +211,18 @@
       "name": "thom",
       "avatar_url": "https://avatars1.githubusercontent.com/u/11661846?v=4",
       "profile": "http://thom.kr",
-      "contributions": []
+      "contributions": [
+        "code"
+      ]
     },
     {
       "login": "vutran",
       "name": "Vu Tran",
       "avatar_url": "https://avatars2.githubusercontent.com/u/1088312?v=4",
       "profile": "http://twitter.com/tranvu",
-      "contributions": []
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
