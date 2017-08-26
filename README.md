@@ -192,15 +192,19 @@ properties:
 
 ### onChange
 
-> `function(selectedItem: any, allState: object)` | optional, no useful default
+> `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful default
 
 Called when the user selects an item. Called with the item that was selected
 and the new state of `downshift`. (see `onStateChange` for more info on
-`allState`).
+`stateAndHelpers`).
+
+- `selectedItem`: The item that was just selected
+- `stateAndHelpers`: This is the exact same thing you're `children` prop
+  function is called with (see [Child Callback Function](#child-callback-function))
 
 ### onStateChange
 
-> `function(changes: object, allState: object)` | optional, no useful default
+> `function(changes: object, stateAndHelpers: object)` | optional, no useful default
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
@@ -211,9 +215,9 @@ The parameters both take the shape of internal state
 but differ slightly.
 
 - `changes`: These are the properties that actually have changed since the last
-  state change
-- `allState`: This is the full state object of all the state in your `downshift`
-  component.
+  state change.
+- `stateAndHelpers`: This is the exact same thing you're `children` prop
+  function is called with (see [Child Callback Function](#child-callback-function))
 
 > Tip: This function will be called any time _any_ state is changed. The best
 > way to determine whether any particular state was changed, you can use
