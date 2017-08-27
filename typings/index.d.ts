@@ -8,8 +8,9 @@ export interface DownshiftProps {
     defaultIsOpen?: boolean;
     getA11yStatusMessage?: (options: A11StatusMessageOptions) => any;
     itemToString?: (item: any) => string;
-    onChange?: (selectedItem: any, allState: any) => void;
-    onStateChange?: (options: StateChangeOptions, allState: any) => void;
+    onChange?: (selectedItem: any, stateAndHelpers: ControllerStateAndHelpers) => void;
+    onStateChange?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
+    onUserAction?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onClick?: Function;
     selectedItem?: any;
     isOpen?: boolean;
