@@ -302,19 +302,19 @@ class Downshift extends Component {
         // we have relevant information to pass them.
         const hasMoreStateThanType = Object.keys(onStateChangeArg).length > 1
         if (hasMoreStateThanType) {
-          this.props.onStateChange(onStateChangeArg, this.getState())
+          this.props.onStateChange(onStateChangeArg, this.getStateAndHelpers())
         }
         if (onChangeArg !== undefined) {
-          this.props.onChange(onChangeArg, this.getState())
+          this.props.onChange(onChangeArg, this.getStateAndHelpers())
         }
         // this is currently undocumented and therefore subject to change
         // We'll try to not break it, but just be warned.
-        this.props.onUserAction(onStateChangeArg, this.getState())
+        this.props.onUserAction(onStateChangeArg, this.getStateAndHelpers())
       },
     )
   }
 
-  getControllerStateAndHelpers() {
+  getStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
     const {itemToString} = this.props
     const {
@@ -707,7 +707,7 @@ class Downshift extends Component {
     this.getLabelProps.called = false
     // and something similar for getInputProps
     this.getInputProps.called = false
-    const element = unwrapArray(children(this.getControllerStateAndHelpers()))
+    const element = unwrapArray(children(this.getStateAndHelpers()))
     if (!element) {
       return null
     }

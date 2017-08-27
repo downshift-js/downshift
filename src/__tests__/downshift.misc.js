@@ -45,55 +45,6 @@ test('clearSelection with an input node focuses the input node', () => {
   expect(document.activeElement).toBe(input.getDOMNode())
 })
 
-test('onStateChange called with changes and all the state', () => {
-  const handleStateChange = jest.fn()
-  const controlledState = {
-    inputValue: '',
-    selectedItem: null,
-  }
-  const {selectItem} = setup({
-    ...controlledState,
-    onStateChange: handleStateChange,
-  })
-  const itemToSelect = 'foo'
-  selectItem(itemToSelect)
-  const changes = {
-    type: Downshift.stateChangeTypes.unknown,
-    selectedItem: itemToSelect,
-    inputValue: itemToSelect,
-  }
-  const allState = {
-    ...controlledState,
-    isOpen: false,
-    highlightedIndex: null,
-  }
-  expect(handleStateChange).toHaveBeenLastCalledWith(changes, allState)
-})
-
-test('onChange called when clearSelection is trigered', () => {
-  const handleChange = jest.fn()
-  const {clearSelection} = setup({
-    selectedItem: 'foo',
-    onChange: handleChange,
-  })
-  clearSelection()
-  expect(handleChange).toHaveBeenCalledTimes(1)
-  expect(handleChange).toHaveBeenCalledWith(null, expect.any(Object))
-})
-
-test('onChange only called when the selection changes', () => {
-  const handleChange = jest.fn()
-  const {selectItem} = setup({
-    onChange: handleChange,
-  })
-  selectItem('foo')
-  expect(handleChange).toHaveBeenCalledTimes(1)
-  expect(handleChange).toHaveBeenCalledWith('foo', expect.any(Object))
-  handleChange.mockClear()
-  selectItem('foo')
-  expect(handleChange).toHaveBeenCalledTimes(0)
-})
-
 test('toggleMenu can take no arguments at all', () => {
   const {toggleMenu, childSpy} = setup()
   toggleMenu()
