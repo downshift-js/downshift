@@ -130,6 +130,14 @@ function generateId(prefix) {
 }
 
 /**
+ * This is only used in tests... Could be useful in SSR?
+ * @param {Number} num The number to set the idCountry to
+ */
+function setIdCounter(num) {
+  idCounter = num
+}
+
+/**
  * Returns the first argument that is not undefined
  * @param {...*} args the arguments
  * @return {*} the defined value
@@ -236,4 +244,5 @@ export {
   getElementProps,
   noop,
   requiredProp,
+  setIdCounter,
 }

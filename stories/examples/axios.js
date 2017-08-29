@@ -56,14 +56,13 @@ class AxiosAutocomplete extends Component {
                   },
                 })}
               />
-              {isOpen &&
+              {isOpen && (
                 <div>
-                  {this.state.items.map((item, index) =>
-                    (<div
+                  {this.state.items.map((item, index) => (
+                    <div
                       key={index}
                       {...getItemProps({
                         item,
-                        index,
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'gray' : 'white',
@@ -72,9 +71,10 @@ class AxiosAutocomplete extends Component {
                       })}
                     >
                       {item}
-                    </div>),
-                  )}
-                </div>}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )
         }}

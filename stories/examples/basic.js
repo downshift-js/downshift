@@ -115,11 +115,11 @@ function BasicAutocomplete({items, onChange}) {
         inputValue,
         isOpen,
         selectedItem,
-      }) =>
-        (<Root {...getRootProps({refKey: 'innerRef'})}>
+      }) => (
+        <Root {...getRootProps({refKey: 'innerRef'})}>
           <Label {...getLabelProps()}>What is your favorite color?</Label>
           <Input {...getInputProps({placeholder: 'Enter color here'})} />
-          {isOpen &&
+          {isOpen && (
             <div
               style={{
                 border: '1px solid rgba(34,36,38,.15)',
@@ -129,21 +129,22 @@ function BasicAutocomplete({items, onChange}) {
             >
               {(inputValue
                 ? matchSorter(items, inputValue)
-                : items).map((item, index) =>
-                  (<Item
+                : items).map((item, index) => (
+                  <Item
                     key={item}
                     {...getItemProps({
                     item,
-                    index,
                     isActive: highlightedIndex === index,
                     isSelected: selectedItem === item,
                   })}
                 >
                     {item}
-                  </Item>),
-              )}
-            </div>}
-        </Root>)}
+                  </Item>
+              ))}
+            </div>
+          )}
+        </Root>
+      )}
     </Autocomplete>
   )
 }

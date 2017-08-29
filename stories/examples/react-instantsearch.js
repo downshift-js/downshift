@@ -17,8 +17,8 @@ function RawAutoComplete({refine, hits}) {
         selectedItem,
         highlightedIndex,
         isOpen,
-      }) =>
-        (<div>
+      }) => (
+        <div>
           <input
             {...getInputProps({
               onChange(e) {
@@ -26,14 +26,13 @@ function RawAutoComplete({refine, hits}) {
               },
             })}
           />
-          {isOpen &&
+          {isOpen && (
             <div>
-              {hits.map((item, index) =>
-                (<div
+              {hits.map((item, index) => (
+                <div
                   key={item.objectID}
                   {...getItemProps({
                     item,
-                    index,
                     style: {
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
@@ -42,10 +41,12 @@ function RawAutoComplete({refine, hits}) {
                   })}
                 >
                   <Highlight attributeName="name" hit={item} tagName="mark" />
-                </div>),
-              )}
-            </div>}
-        </div>)}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </Autocomplete>
   )
 }

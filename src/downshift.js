@@ -572,12 +572,17 @@ class Downshift extends Component {
   getItemProps = (
     {
       onMouseEnter,
+      index,
       item = requiredProp('getItemProps', 'item'),
-      index = requiredProp('getItemProps', 'index'),
       ...rest
     } = {},
   ) => {
-    this.items[index] = item
+    if (index === undefined) {
+      this.items.push(item)
+      index = this.items.indexOf(item)
+    } else {
+      this.items[index] = item
+    }
     return {
       id: this.getItemId(index),
       onMouseEnter: composeEventHandlers(onMouseEnter, () => {

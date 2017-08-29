@@ -1,6 +1,11 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {mount, render} from 'enzyme'
 import Downshift from '../'
+import {setIdCounter} from '../utils'
+
+beforeEach(() => {
+  setIdCounter(1)
+})
 
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/paypal/downshift/issues/113
@@ -18,18 +23,17 @@ test('clicking on a DOM node within an item selects that item', () => {
 })
 
 test('clicking anywhere within the rendered downshift but outside an item does not select an item', () => {
-  const childSpy = jest.fn(() =>
-    (<div>
+  const childSpy = jest.fn(() => (
+    <div>
       <button />
-    </div>),
-  )
-  const wrapper = mount(
-    <Downshift>
-      {childSpy}
-    </Downshift>,
-  )
+    </div>
+  ))
+  const wrapper = mount(<Downshift>{childSpy}</Downshift>)
   childSpy.mockClear()
-  wrapper.find('button').first().simulate('click')
+  wrapper
+    .find('button')
+    .first()
+    .simulate('click')
   expect(childSpy).not.toHaveBeenCalled()
 })
 
@@ -50,53 +54,58 @@ test('getItemProps throws a helpful error when no object is given', () => {
   expect(() =>
     mount(
       <Downshift>
-        {({getItemProps}) =>
-          (<div>
+        {({getItemProps}) => (
+          <div>
             <span {...getItemProps()} />
-          </div>)}
+          </div>
+        )}
       </Downshift>,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
 
-test('getItemProps throws when no index is given', () => {
-  expect(() =>
-    mount(
+test('getItemProps defaults the index when no index is given', () => {
+  expect(
+    render(
       <Downshift>
-        {({getItemProps}) =>
-          (<div>
-            <span {...getItemProps({item: 'hi'})} />
-          </div>)}
+        {({getItemProps}) => (
+          <div>
+            <span {...getItemProps({item: 0})}>0</span>
+            <span {...getItemProps({item: 1})}>1</span>
+            <span {...getItemProps({item: 2})}>2</span>
+            <span {...getItemProps({item: 3})}>3</span>
+            <span {...getItemProps({item: 4})}>4</span>
+          </div>
+        )}
       </Downshift>,
     ),
-  ).toThrowErrorMatchingSnapshot()
+  ).toMatchSnapshot()
 })
 
 test('getItemProps throws when no item is given', () => {
   expect(() =>
     mount(
       <Downshift>
-        {({getItemProps}) =>
-          (<div>
+        {({getItemProps}) => (
+          <div>
             <span {...getItemProps({index: 0})} />
-          </div>)}
+          </div>
+        )}
       </Downshift>,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
 
 function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
-  const childSpy = jest.fn(({getItemProps}) =>
-    (<div>
-      {items.map((item, index) =>
-        (<div {...getItemProps({item, index})} key={index}>
-          <button>
-            {item}
-          </button>
-        </div>),
-      )}
-    </div>),
-  )
+  const childSpy = jest.fn(({getItemProps}) => (
+    <div>
+      {items.map((item, index) => (
+        <div {...getItemProps({item, index})} key={index}>
+          <button>{item}</button>
+        </div>
+      ))}
+    </div>
+  ))
   function BasicDownshift(props) {
     return (
       <Downshift isOpen={true} onChange={() => {}} {...props}>

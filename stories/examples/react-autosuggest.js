@@ -108,22 +108,21 @@ function BasicAutocomplete({
         highlightedIndex,
         isOpen,
         selectedItem,
-      }) =>
-        (<div>
+      }) => (
+        <div>
           <input {...getInputProps({placeholder: 'Enter color here'})} />
-          {isOpen &&
+          {isOpen && (
             <div
               style={{
                 maxHeight: 200,
                 overflowY: 'scroll',
               }}
             >
-              {items.map((item, index) =>
-                (<div
+              {items.map((item, index) => (
+                <div
                   key={item}
                   {...getItemProps({
                     item,
-                    index,
                     style: {
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
@@ -132,10 +131,12 @@ function BasicAutocomplete({
                   })}
                 >
                   {item}
-                </div>),
-              )}
-            </div>}
-        </div>)}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </Downshift>
   )
 }
