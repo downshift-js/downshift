@@ -365,8 +365,36 @@ There are no required properties for this method.
 #### `getItemProps`
 
 The props returned from calling this function should be applied to any menu
-items you render. **This is an impure function**, so it should only be called
-when you will actually be applying the props to an item.
+items you render.
+
+**This is an impure function**, so it should only be called when you will
+actually be applying the props to an item.
+
+<details>
+
+<summary>What do you mean by impure function?</summary>
+
+Basically just don't do this:
+
+```jsx
+items.map(item => {
+  const props = getItemProps({item}) // we're calling it here
+  if (!shouldRenderItem(item)) {
+    return null // but we're not using props, and downshift things we are...
+  }
+  return <div {...props} />
+})
+```
+
+Instead, you could do this:
+
+```jsx
+items
+  .filter(shouldRenderItem)
+  .map(item => <div {...getItemProps({item})} />)
+```
+
+</details>
 
 Required properties:
 
