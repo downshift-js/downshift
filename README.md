@@ -95,7 +95,7 @@ function BasicAutocomplete({items, onChange}) {
                 )
                 .map((item, index) => (
                   <div
-                    {...getItemProps({item, index})}
+                    {...getItemProps({item})}
                     key={item}
                     style={{
                       backgroundColor:
@@ -364,16 +364,23 @@ There are no required properties for this method.
 
 #### `getItemProps`
 
-This method should be applied to any menu items you render. You pass it an
-object and that object must contain `index` (number) and `item` (anything)
-properties.
+The props returned from calling this function should be applied to any menu
+items you render. **This is an impure function**, so it should only be called
+when you will actually be applying the props to an item.
 
 Required properties:
 
-- `index`: this is how `downshift` keeps track of your item when
-  updating the `highlightedIndex` as the user keys around.
 - `item`: this is the item data that will be selected when the user selects a
   particular item.
+
+Optional properties:
+
+- `index`: this is how `downshift` keeps track of your item when updating the
+  `highlightedIndex` as the user keys around. By default, `downshift` will
+  assume the `index` is the order in which you're calling `getItemProps`. This
+  is often good enough, but if you find odd behavior, try setting this
+  explicitly. It's probably best to be explicit about `index` when using a
+  windowing library like `react-virtualized`.
 
 #### `getButtonProps`
 

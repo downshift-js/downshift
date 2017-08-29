@@ -72,10 +72,7 @@ class ReactPopperAutocomplete extends PureComponent {
                         )
                         .map((item, index) => (
                           <div
-                            {...getItemProps({
-                              index,
-                              item,
-                            })}
+                            {...getItemProps({item})}
                             key={item}
                             style={{
                               backgroundColor:

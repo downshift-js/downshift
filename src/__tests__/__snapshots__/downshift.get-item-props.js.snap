@@ -1,7 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getItemProps throws a helpful error when no object is given 1`] = `"The property \\"item\\" is required in \\"getItemProps\\""`;
+exports[`getItemProps defaults the index when no index is given 1`] = `
+<div>
+  <span
+    id="downshift-1-item-0"
+  >
+    0
+  </span>
+  <span
+    id="downshift-1-item-1"
+  >
+    1
+  </span>
+  <span
+    id="downshift-1-item-2"
+  >
+    2
+  </span>
+  <span
+    id="downshift-1-item-3"
+  >
+    3
+  </span>
+  <span
+    id="downshift-1-item-4"
+  >
+    4
+  </span>
+</div>
+`;
 
-exports[`getItemProps throws when no index is given 1`] = `"The property \\"index\\" is required in \\"getItemProps\\""`;
+exports[`getItemProps throws a helpful error when no object is given 1`] = `"The property \\"item\\" is required in \\"getItemProps\\""`;
 
 exports[`getItemProps throws when no item is given 1`] = `"The property \\"item\\" is required in \\"getItemProps\\""`;
