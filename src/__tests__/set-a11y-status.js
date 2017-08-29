@@ -5,7 +5,7 @@ beforeEach(() => {
 test('sets the status', () => {
   const setA11yStatus = setup()
   setA11yStatus('hello')
-  expect(document.body.innerHTML).toMatchSnapshot()
+  expect(document.body.innerHTML.trim()).toMatchSnapshot()
 })
 
 test('repeat statuses get appended as children', () => {
@@ -13,7 +13,7 @@ test('repeat statuses get appended as children', () => {
   setA11yStatus('hello')
   setA11yStatus('hello')
   setA11yStatus('hello')
-  expect(document.body.innerHTML).toMatchSnapshot()
+  expect(document.body.innerHTML.trim()).toMatchSnapshot()
 })
 
 test('clears statuses when a change appears', () => {
@@ -22,13 +22,13 @@ test('clears statuses when a change appears', () => {
   setA11yStatus('hello')
   setA11yStatus('hello')
   setA11yStatus('goodbye')
-  expect(document.body.innerHTML).toMatchSnapshot()
+  expect(document.body.innerHTML.trim()).toMatchSnapshot()
 })
 
 test('does add anything for an empty string', () => {
   const setA11yStatus = setup()
   setA11yStatus('')
-  expect(document.body.innerHTML).toMatchSnapshot()
+  expect(document.body.innerHTML.trim()).toMatchSnapshot()
 })
 
 function setup() {

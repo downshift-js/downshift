@@ -12,5 +12,5 @@ module.exports = {
       statements: 100,
     },
   },
-  snapshotSerializers: ['enzyme-to-json/serializer'],
+  snapshotSerializers: ['jest-serializer-html', 'enzyme-to-json/serializer'],
 }
