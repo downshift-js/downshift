@@ -5,6 +5,7 @@ import React from 'react'
 import {storiesOf} from '@storybook/react'
 
 import Basic from './examples/basic'
+import Form from './examples/form'
 import Controlled from './examples/controlled'
 import Autosuggest from './examples/react-autosuggest'
 import SemanticUI from './examples/semantic-ui'
@@ -21,6 +22,7 @@ function loadStories() {
 
   storiesOf('Examples', module)
     .add('basic', () => <Basic />)
+    .add('form', () => <Form />)
     .add('controlled', () => <Controlled />)
     .add('autosuggest', () => <Autosuggest />)
     .add('semantic-ui', () => <SemanticUI />)
@@ -29,9 +31,9 @@ function loadStories() {
     .add('instant search', () => <InstantSearch />)
     .add('react-popper', () => <Popper />)
     .add('windowing with react-virtualized', () => <ReactVirtualized />)
-    .add('windowing with react-tiny-virtual-list', () =>
-      <ReactTinyVirtualList />,
-    )
+    .add('windowing with react-tiny-virtual-list', () => (
+      <ReactTinyVirtualList />
+    ))
 }
 
 configure(loadStories, module)

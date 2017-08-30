@@ -414,8 +414,8 @@ class Downshift extends Component {
     },
 
     Enter(event) {
-      event.preventDefault()
       if (this.getState().isOpen) {
+        event.preventDefault()
         this.selectHighlightedItem({
           type: Downshift.stateChangeTypes.keyDownEnter,
         })
