@@ -1,4 +1,3 @@
-// Type definitions for downshift 1.2.0
 import * as React from 'react';
 
 type CB = () => void
