@@ -52,23 +52,7 @@ export interface GetInputPropsOptions extends React.HTMLProps<HTMLInputElement> 
 
 export interface GetLabelPropsOptions extends React.HTMLProps<HTMLLabelElement> { }
 
-export interface GetButtonPropsOptions extends React.HTMLProps<HTMLButtonElement> {
-    // actions
-    clearSelection: () => void;
-    closeMenu: () => void;
-    openMenu: () => void;
-    selectHighlightedItem: () => void;
-    selectItem: (item: any) => void;
-    selectItemAtIndex: (index: number) => void;
-    setHighlightedIndex: (index: number) => void;
-    toggleMenu: (state: boolean) => void;
-
-    // state
-    highlightedIndex: number;
-    inputValue: string;
-    isOpen: boolean;
-    selectedItem: any;
-}
+export interface GetButtonPropsOptions extends React.HTMLProps<HTMLButtonElement> { }
 
 interface OptionalExtraGetItemPropsOptions {
     [key: string]: any;
