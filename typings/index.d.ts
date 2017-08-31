@@ -1,4 +1,7 @@
+// Type definitions for downshift 1.2.0
 import * as React from 'react';
+
+type CB = () => void
 
 export interface DownshiftProps {
     children: ChildrenFunction;
@@ -85,14 +88,16 @@ export interface ControllerStateAndHelpers {
     getItemProps: (options: GetItemPropsOptions) => any;
 
     // actions
-    openMenu: () => void;
-    closeMenu: () => void;
-    toggleMenu: () => void;
-    selectItem: (item: any) => void;
-    selectItemAtIndex: (index: number) => void;
-    selectHighlightedItem: (index: number) => void;
-    setHighlightedItem: (index: number) => void;
-    clearSelection: () => void;
+    openMenu: (cb: CB) => void;
+    closeMenu: (cb: CB) => void;
+    toggleMenu: (cb: CB) => void;
+    selectItem: (item: any, otherStateToSet: any, cb: CB) => void;
+    selectItemAtIndex: (index: number, otherStateToSet: any, cb: CB) => void;
+    selectHighlightedItem: (otherStateToSet: any, cb: CB) => void;
+    setHighlightedItem: (index: number, otherStateToSet: any, cb: CB) => void;
+    clearSelection: (cb: CB) => void;
+    reset: (otherStateToSet: any, cb: CB) => void;
+    itemToString: (item: any) => void;
 
     // state
     highlightedIndex: number;
