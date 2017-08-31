@@ -59,7 +59,7 @@ interface OptionalExtraGetItemPropsOptions {
 }
 
 export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
-    index: number;
+    index?: number;
     item: any;
 }
 
