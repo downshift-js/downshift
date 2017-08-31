@@ -84,8 +84,8 @@ export interface ControllerStateAndHelpers {
     itemToString: (item: any) => void;
 
     // state
-    highlightedIndex: number;
-    inputValue: string;
+    highlightedIndex: number | null;
+    inputValue: string | null;
     isOpen: boolean;
     selectedItem: any;
 }
