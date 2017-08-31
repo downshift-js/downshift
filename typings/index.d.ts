@@ -5,16 +5,17 @@ type CB = () => void
 
 export interface DownshiftProps {
     children: ChildrenFunction;
-    defaultHighlightedIndex?: number;
+    defaultHighlightedIndex?: number | null;
     defaultSelectedItem?: any;
     defaultInputValue?: string;
     defaultIsOpen?: boolean;
     getA11yStatusMessage?: (options: A11StatusMessageOptions) => any;
     itemToString?: (item: any) => string;
     onChange?: (selectedItem: any, stateAndHelpers: ControllerStateAndHelpers) => void;
-    onStateChange?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
+    onStateChange?: (changes: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onUserAction?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onClick?: Function;
+    itemCount?: number;
     selectedItem?: any;
     isOpen?: boolean;
     inputValue?: string;
@@ -22,7 +23,7 @@ export interface DownshiftProps {
 }
 
 export interface A11StatusMessageOptions {
-    highlightedIndex: number;
+    highlightedIndex: number | null;
     highlightedValue: any;
     inputValue: string;
     isOpen: boolean;
