@@ -466,6 +466,7 @@ Examples exist on [codesandbox.io][examples]:
 
 - [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
 - [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
+- [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled `selectedItem` API).
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
 - [Integration with Redux](https://codesandbox.io/s/0o0w70lp8p)
 - [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83) from Algolia
