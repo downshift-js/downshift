@@ -477,6 +477,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
 - [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
 - [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
+
 <!--
 
 This needs to be updated to the latest version of downshift:
