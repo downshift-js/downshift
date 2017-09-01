@@ -1,8 +1,7 @@
 {
   "name": "downshift",
   "version": "0.0.0-semantically-released",
-  "description":
-    "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
+  "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
   "jsnext:main": "dist/downshift.es.js",
   "module": "dist/downshift.es.js",
@@ -10,10 +9,12 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
-    "precommit":
-      "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
-  "files": ["dist", "typings"],
+  "files": [
+    "dist",
+    "typings"
+  ],
   "keywords": [
     "enhanced input",
     "react",
