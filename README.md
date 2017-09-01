@@ -475,6 +475,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
 - [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
 - [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
+- [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
 
 <!--
 
