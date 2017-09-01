@@ -474,6 +474,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) ([learn more about `genie` here](https://github.com/kentcdodds/genie))
 - [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
 - [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
+- [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
 
 <!--
 
