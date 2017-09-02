@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-type CB = () => void
-
 export interface DownshiftProps {
     children: ChildrenFunction;
     defaultHighlightedIndex?: number | null;
@@ -11,7 +9,7 @@ export interface DownshiftProps {
     getA11yStatusMessage?: (options: A11StatusMessageOptions) => any;
     itemToString?: (item: any) => string;
     onChange?: (selectedItem: any, stateAndHelpers: ControllerStateAndHelpers) => void;
-    onStateChange?: (changes: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
+    onStateChange?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onUserAction?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onClick?: Function;
     itemCount?: number;
@@ -72,15 +70,15 @@ export interface ControllerStateAndHelpers {
     getItemProps: (options: GetItemPropsOptions) => any;
 
     // actions
-    openMenu: (cb: CB) => void;
-    closeMenu: (cb: CB) => void;
-    toggleMenu: (cb: CB) => void;
-    selectItem: (item: any, otherStateToSet: any, cb: CB) => void;
-    selectItemAtIndex: (index: number, otherStateToSet: any, cb: CB) => void;
-    selectHighlightedItem: (otherStateToSet: any, cb: CB) => void;
-    setHighlightedItem: (index: number, otherStateToSet: any, cb: CB) => void;
-    clearSelection: (cb: CB) => void;
-    reset: (otherStateToSet: any, cb: CB) => void;
+    openMenu: (cb?: Function) => void;
+    closeMenu: (cb?: Function) => void;
+    toggleMenu: (cb?: Function) => void;
+    selectItem: (item: any, otherStateToSet?: object, cb?: Function) => void;
+    selectItemAtIndex: (index: number, otherStateToSet?: object, cb?: Function) => void;
+    selectHighlightedItem: (otherStateToSet?: object, cb?: Function) => void;
+    setHighlightedIndex: (index: number, otherStateToSet?: object, cb?: Function) => void;
+    clearSelection: (cb?: Function) => void;
+    reset: (otherStateToSet?: object, cb?: Function) => void;
     itemToString: (item: any) => void;
 
     // state
