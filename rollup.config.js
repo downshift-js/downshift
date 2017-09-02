@@ -41,7 +41,7 @@ export default {
   external: isPreact ? ['preact', 'prop-types'] : ['react', 'prop-types'],
   globals: isPreact ?
     {
-      react: 'preact',
+      preact: 'preact',
     } :
     {
       react: 'React',
