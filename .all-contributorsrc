@@ -233,6 +233,16 @@
         "code",
         "example"
       ]
+    },
+    {
+      "login": "morajabi",
+      "name": "Mohammad Rajabifard",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12202757?v=4",
+      "profile": "https://morajabi.me",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
     }
   ]
 }
