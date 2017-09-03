@@ -6,12 +6,11 @@ export interface DownshiftProps {
     defaultSelectedItem?: any;
     defaultInputValue?: string;
     defaultIsOpen?: boolean;
-    getA11yStatusMessage?: (options: A11StatusMessageOptions) => any;
+    getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any;
     itemToString?: (item: any) => string;
     onChange?: (selectedItem: any, stateAndHelpers: ControllerStateAndHelpers) => void;
     onStateChange?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
     onUserAction?: (options: StateChangeOptions, stateAndHelpers: ControllerStateAndHelpers) => void;
-    onClick?: Function;
     itemCount?: number;
     selectedItem?: any;
     isOpen?: boolean;
@@ -19,7 +18,7 @@ export interface DownshiftProps {
     highlightedIndex?: number;
 }
 
-export interface A11StatusMessageOptions {
+export interface A11yStatusMessageOptions {
     highlightedIndex: number | null;
     highlightedValue: any;
     inputValue: string;
@@ -28,11 +27,6 @@ export interface A11StatusMessageOptions {
     previousResultCount: number;
     resultCount: number;
     selectedItem: any;
-}
-
-export interface ChangeOptions {
-    selectedItem: any;
-    previousItem: any;
 }
 
 export interface StateChangeOptions {
