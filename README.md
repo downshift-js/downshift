@@ -51,6 +51,24 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
+## Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Props](#props)
+- [Control Props](#control-props)
+- [Child Callback Function](#child-callback-function)
+- [Examples](#examples)
+- [Inspiration](#inspiration)
+- [Other Solutions](#other-solutions)
+- [Contributors](#contributors)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and
@@ -128,7 +146,7 @@ function App() {
 calls the child function and renders that. Wrap everything in
 `<Downshift>{/* your function here! */}</Downshift>`.
 
-## Props:
+## Props
 
 ### defaultSelectedItem
 

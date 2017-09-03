@@ -9,6 +9,7 @@
   "scripts": {
     "start": "nps",
     "test": "nps test",
+    "doc": "doctoc README.md CONTRIBUTING.md --maxlevel 2 --notitle",
     "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
   },
   "files": [
@@ -82,7 +83,8 @@
     "*.js": [
       "prettier-eslint --write --no-semi --single-quote --trailing-comma=all --no-bracket-spacing",
       "git add"
-    ]
+    ],
+    "*.md": "doc"
   },
   "repository": {
     "type": "git",
