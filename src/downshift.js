@@ -528,6 +528,7 @@ class Downshift extends Component {
         onInput,
         this.input_handleChange,
       ),
+      onFocus: this.input_handleFocus,
       onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
       onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
       ...rest,
@@ -547,6 +548,14 @@ class Downshift extends Component {
       isOpen: true,
       inputValue: event.target.value,
     })
+  }
+
+  input_handleFocus = () => {
+    if (this.getState().inputValue.length) {
+      this.internalSetState({
+        isOpen: true,
+      })
+    }
   }
 
   input_handleBlur = () => {
