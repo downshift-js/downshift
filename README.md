@@ -51,6 +51,24 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
+## Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Props](#props)
+- [Control Props](#control-props)
+- [Child Callback Function](#child-callback-function)
+- [Examples](#examples)
+- [Inspiration](#inspiration)
+- [Other Solutions](#other-solutions)
+- [Contributors](#contributors)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 
 This module is distributed via [npm][npm] which is bundled with [node][node] and
@@ -128,7 +146,7 @@ function App() {
 calls the child function and renders that. Wrap everything in
 `<Downshift>{/* your function here! */}</Downshift>`.
 
-## Props:
+## Props
 
 ### defaultSelectedItem
 
@@ -466,6 +484,7 @@ Examples exist on [codesandbox.io][examples]:
 
 - [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
 - [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
+- [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled `selectedItem` API).
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
 - [Integration with Redux](https://codesandbox.io/s/0o0w70lp8p)
 - [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83) from Algolia
@@ -473,6 +492,8 @@ Examples exist on [codesandbox.io][examples]:
 - [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) ([learn more about `genie` here](https://github.com/kentcdodds/genie))
 - [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
 - [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
+- [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
+- [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
 
 <!--
 
@@ -533,7 +554,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;"/><br /><sub>monssef</sub>](https://github.com/rezof)<br />[💡](#example-rezof "Examples") | [<img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;"/><br /><sub>Federico Zivolo</sub>](https://fezvrasta.github.io)<br />[📖](https://github.com/paypal/downshift/commits?author=FezVrasta "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;"/><br /><sub>Divyendu Singh</sub>](https://divyendusingh.com)<br />[💡](#example-divyenduz "Examples") | [<img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;"/><br /><sub>Muhammad Salman</sub>](https://github.com/salmanmanekia)<br />[💻](https://github.com/paypal/downshift/commits?author=salmanmanekia "Code") | [<img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;"/><br /><sub>João Alberto</sub>](https://twitter.com/psicotropidev)<br />[💻](https://github.com/paypal/downshift/commits?author=psicotropicos "Code") | [<img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;"/><br /><sub>Bernard Lin</sub>](https://github.com/bernard-lin)<br />[💻](https://github.com/paypal/downshift/commits?author=bernard-lin "Code") [📖](https://github.com/paypal/downshift/commits?author=bernard-lin "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/7330124?v=4" width="100px;"/><br /><sub>Geoff Davis</sub>](https://geoffdavis.info)<br />[💡](#example-geoffdavis92 "Examples") |
 | [<img src="https://avatars0.githubusercontent.com/u/3415488?v=4" width="100px;"/><br /><sub>Anup</sub>](https://github.com/reznord)<br />[📖](https://github.com/paypal/downshift/commits?author=reznord "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/340520?v=4" width="100px;"/><br /><sub>Ferdinand Salis</sub>](http://ferdinandsalis.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Aferdinandsalis "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=ferdinandsalis "Code") | [<img src="https://avatars2.githubusercontent.com/u/662750?v=4" width="100px;"/><br /><sub>Kye Hohenberger</sub>](https://github.com/tkh44)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Atkh44 "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1443499?v=4" width="100px;"/><br /><sub>Julien Goux</sub>](https://github.com/jgoux)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ajgoux "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=jgoux "Code") [⚠️](https://github.com/paypal/downshift/commits?author=jgoux "Tests") | [<img src="https://avatars2.githubusercontent.com/u/9586897?v=4" width="100px;"/><br /><sub>Joachim Seminck</sub>](https://github.com/jseminck)<br />[💻](https://github.com/paypal/downshift/commits?author=jseminck "Code") | [<img src="https://avatars3.githubusercontent.com/u/954596?v=4" width="100px;"/><br /><sub>Jesse Harlin</sub>](http://jesseharlin.net/)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Athe-simian "Bug reports") [💡](#example-the-simian "Examples") | [<img src="https://avatars0.githubusercontent.com/u/1402095?v=4" width="100px;"/><br /><sub>Matt Parrish</sub>](https://github.com/pbomb)<br />[🔧](#tool-pbomb "Tools") |
-| [<img src="https://avatars1.githubusercontent.com/u/11661846?v=4" width="100px;"/><br /><sub>thom</sub>](http://thom.kr)<br />[💻](https://github.com/paypal/downshift/commits?author=thomhos "Code") | [<img src="https://avatars2.githubusercontent.com/u/1088312?v=4" width="100px;"/><br /><sub>Vu Tran</sub>](http://twitter.com/tranvu)<br />[💻](https://github.com/paypal/downshift/commits?author=vutran "Code") | [<img src="https://avatars1.githubusercontent.com/u/74193?v=4" width="100px;"/><br /><sub>Codie Mullins</sub>](https://github.com/codiemullins)<br />[💻](https://github.com/paypal/downshift/commits?author=codiemullins "Code") | [<img src="https://avatars3.githubusercontent.com/u/9488719?v=4" width="100px;"/><br /><sub>Frank Tan</sub>](https://github.com/tansongyang)<br />[💻](https://github.com/paypal/downshift/commits?author=tansongyang "Code") |
+| [<img src="https://avatars1.githubusercontent.com/u/11661846?v=4" width="100px;"/><br /><sub>thom</sub>](http://thom.kr)<br />[💻](https://github.com/paypal/downshift/commits?author=thomhos "Code") | [<img src="https://avatars2.githubusercontent.com/u/1088312?v=4" width="100px;"/><br /><sub>Vu Tran</sub>](http://twitter.com/tranvu)<br />[💻](https://github.com/paypal/downshift/commits?author=vutran "Code") | [<img src="https://avatars1.githubusercontent.com/u/74193?v=4" width="100px;"/><br /><sub>Codie Mullins</sub>](https://github.com/codiemullins)<br />[💻](https://github.com/paypal/downshift/commits?author=codiemullins "Code") [💡](#example-codiemullins "Examples") | [<img src="https://avatars3.githubusercontent.com/u/12202757?v=4" width="100px;"/><br /><sub>Mohammad Rajabifard</sub>](https://morajabi.me)<br />[📖](https://github.com/paypal/downshift/commits?author=morajabi "Documentation") [🤔](#ideas-morajabi "Ideas, Planning, & Feedback") |  | [<img src="https://avatars3.githubusercontent.com/u/9488719?v=4" width="100px;"/><br /><sub>Frank Tan</sub>](https://github.com/tansongyang)<br />[💻](https://github.com/paypal/downshift/commits?author=tansongyang "Code") |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

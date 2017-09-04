@@ -5,6 +5,18 @@ Thanks for being willing to contribute!
 **Working on your first Pull Request?** You can learn how from this *free* series
 [How to Contribute to an Open Source Project on GitHub][egghead]
 
+## Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Project setup](#project-setup)
+- [Add yourself as a contributor](#add-yourself-as-a-contributor)
+- [Committing and Pushing changes](#committing-and-pushing-changes)
+- [Help needed](#help-needed)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Project setup
 
 1. Fork and clone the repo
