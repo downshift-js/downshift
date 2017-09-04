@@ -252,6 +252,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "srph",
+      "name": "Kier Borromeo",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5093058?v=4",
+      "profile": "https://kierb.com",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }
