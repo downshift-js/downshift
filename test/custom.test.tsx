@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Downshift, { ChangeOptions, ControllerStateAndHelpers } from '../';
+import Downshift, { ControllerStateAndHelpers } from '../';
 
 interface Props {}
 
@@ -35,7 +35,7 @@ export default class App extends React.Component<Props, State> {
                     getItemProps,
                     selectedItem,
                     isOpen,
-                }) => (
+                }: ControllerStateAndHelpers) => (
                     <div style={{ position: 'relative' }}>
                         <div {...getButtonProps()}>{selectedItem}</div>
                         <CustomList isOpen={isOpen}>

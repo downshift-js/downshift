@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "jsx": "react"
+    "jsx": "react",
+    "noUnusedLocals": true
   },
   "include": [
     "test/**/*.tsx"
