@@ -175,16 +175,16 @@ function SemanticUIAutocomplete() {
               {(inputValue
                 ? advancedFilter(items, inputValue)
                 : items).map((item, index) => (
-                  <Item
-                    key={item.code}
-                    {...getItemProps({
+                <Item
+                  key={item.code}
+                  {...getItemProps({
                     item,
                     isActive: highlightedIndex === index,
                     isSelected: selectedItem === item,
                   })}
                 >
-                    {item.name}
-                  </Item>
+                  {item.name}
+                </Item>
               ))}
             </Menu>
           )}

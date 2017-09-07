@@ -120,9 +120,9 @@ class Downshift extends Component {
    */
   getState(stateToMerge = this.state) {
     return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isControlledProp(key) ?
-        this.props[key] :
-        stateToMerge[key]
+      state[key] = this.isControlledProp(key)
+        ? this.props[key]
+        : stateToMerge[key]
       return state
     }, {})
   }
@@ -508,18 +508,18 @@ class Downshift extends Component {
       generateId('downshift-input'),
     )
     const onChangeKey =
-      process.env.LIBRARY === 'preact' ? /* istanbul ignore next (preact) */
-      'onInput' :
-        'onChange'
+      process.env.BUILD_PREACT === 'true' /* istanbul ignore next (preact) */
+        ? 'onInput'
+        : 'onChange'
     const {inputValue, isOpen, highlightedIndex} = this.getState()
     return {
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
-        typeof highlightedIndex === 'number' && highlightedIndex >= 0 ?
-          this.getItemId(highlightedIndex) :
-          null,
+        typeof highlightedIndex === 'number' && highlightedIndex >= 0
+          ? this.getItemId(highlightedIndex)
+          : null,
       autoComplete: 'off',
       value: inputValue,
       // preact compatibility

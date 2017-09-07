@@ -44,10 +44,11 @@ test('getButtonProps returns all given props', () => {
   const Button = jest.fn(props => <button {...props} />)
   mount(
     <Downshift>
-      {({getButtonProps}) =>
-        (<div>
+      {({getButtonProps}) => (
+        <div>
           <Button {...getButtonProps(buttonProps)} />
-        </div>)}
+        </div>
+      )}
     </Downshift>,
   )
   expect(Button).toHaveBeenCalledTimes(1)
@@ -61,16 +62,13 @@ test('getButtonProps returns all given props', () => {
 })
 
 function setup() {
-  const childSpy = jest.fn(({getButtonProps}) =>
-    (<div>
+  const childSpy = jest.fn(({getButtonProps}) => (
+    <div>
       <button {...getButtonProps()} />
-    </div>),
-  )
+    </div>
+  ))
   return {
-    Component: props =>
-      (<Downshift {...props}>
-        {childSpy}
-      </Downshift>),
+    Component: props => <Downshift {...props}>{childSpy}</Downshift>,
     childSpy,
   }
 }

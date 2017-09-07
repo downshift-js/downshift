@@ -133,12 +133,12 @@ class MultipleAutocomplete extends React.Component {
           getLabelProps,
           highlightedIndex,
           isOpen,
-        }) =>
-          (<Root {...getRootProps({refKey: 'innerRef'})}>
+        }) => (
+          <Root {...getRootProps({refKey: 'innerRef'})}>
             <Label {...getLabelProps()}>What are your favorite colors?</Label>
             <InputWrapper>
-              {values.map((value, i) =>
-                (<span
+              {values.map((value, i) => (
+                <span
                   key={i}
                   style={{
                     height: '2em',
@@ -148,8 +148,8 @@ class MultipleAutocomplete extends React.Component {
                     marginRight: '.5em',
                     backgroundColor: value,
                   }}
-                />),
-              )}
+                />
+              ))}
               <Input
                 {...getInputProps({
                   placeholder: 'Enter color here',
@@ -159,7 +159,7 @@ class MultipleAutocomplete extends React.Component {
               />
             </InputWrapper>
 
-            {isOpen &&
+            {isOpen && (
               <div
                 style={{
                   border: '1px solid rgba(34,36,38,.15)',
@@ -186,8 +186,10 @@ class MultipleAutocomplete extends React.Component {
                     </Item>
                   )
                 })}
-              </div>}
-          </Root>)}
+              </div>
+            )}
+          </Root>
+        )}
       </Autocomplete>
     )
   }

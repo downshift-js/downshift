@@ -130,16 +130,16 @@ function BasicAutocomplete({items, onChange}) {
               {(inputValue
                 ? matchSorter(items, inputValue)
                 : items).map((item, index) => (
-                  <Item
-                    key={item}
-                    {...getItemProps({
+                <Item
+                  key={item}
+                  {...getItemProps({
                     item,
                     isActive: highlightedIndex === index,
                     isSelected: selectedItem === item,
                   })}
                 >
-                    {item}
-                  </Item>
+                  {item}
+                </Item>
               ))}
             </div>
           )}

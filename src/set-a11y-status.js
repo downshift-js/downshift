@@ -1,8 +1,8 @@
 // istanbul ignore next
 let statusDiv =
-  typeof document === 'undefined' ?
-    null :
-    document.getElementById('a11y-status-message')
+  typeof document === 'undefined'
+    ? null
+    : document.getElementById('a11y-status-message')
 
 let statuses = []
 
@@ -14,7 +14,10 @@ function setStatus(status) {
     statuses = [status]
   }
   const div = getStatusDiv()
-  div.innerHTML = `${statuses.filter(Boolean).map(getStatusHtml).join('')}`
+  div.innerHTML = `${statuses
+    .filter(Boolean)
+    .map(getStatusHtml)
+    .join('')}`
 }
 
 function getStatusHtml(status, index) {
