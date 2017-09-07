@@ -494,6 +494,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
 - [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/o5yk7pzmmy)
 - [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
+- [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
 
 <!--
 
