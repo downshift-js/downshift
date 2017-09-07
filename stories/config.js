@@ -33,9 +33,9 @@ function loadStories() {
     .add('instant search', () => <InstantSearch />)
     .add('react-popper', () => <Popper />)
     .add('windowing with react-virtualized', () => <ReactVirtualized />)
-    .add('windowing with react-tiny-virtual-list', () =>
-      <ReactTinyVirtualList />,
-    )
+    .add('windowing with react-tiny-virtual-list', () => (
+      <ReactTinyVirtualList />
+    ))
 }
 
 configure(loadStories, module)

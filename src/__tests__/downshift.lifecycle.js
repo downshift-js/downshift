@@ -8,15 +8,14 @@ jest.mock('../set-a11y-status')
 
 test('handles mouse events properly to reset state', () => {
   const handleStateChange = jest.fn()
-  const childSpy = jest.fn(({getInputProps}) =>
-    (<div>
+  const childSpy = jest.fn(({getInputProps}) => (
+    <div>
       <input {...getInputProps({'data-test': 'input'})} />
-    </div>),
+    </div>
+  ))
+  const MyComponent = () => (
+    <Downshift onStateChange={handleStateChange}>{childSpy}</Downshift>
   )
-  const MyComponent = () =>
-    (<Downshift onStateChange={handleStateChange}>
-      {childSpy}
-    </Downshift>)
   const wrapper = mount(<MyComponent />)
   const inputWrapper = wrapper.find(sel('input'))
   const node = wrapper.getDOMNode().parentNode
@@ -51,14 +50,16 @@ test('handles mouse events properly to reset state', () => {
 
 test('props update causes the a11y status to be updated', () => {
   setA11yStatus.mockReset()
-  const MyComponent = () =>
-    (<Downshift isOpen={false}>
-      {({getInputProps, getItemProps, isOpen}) =>
-        (<div>
+  const MyComponent = () => (
+    <Downshift isOpen={false}>
+      {({getInputProps, getItemProps, isOpen}) => (
+        <div>
           <input {...getInputProps({'data-test': 'input'})} />
           {isOpen ? <div {...getItemProps({item: 'foo', index: 0})} /> : null}
-        </div>)}
-    </Downshift>)
+        </div>
+      )}
+    </Downshift>
+  )
   const wrapper = mount(<MyComponent />)
   wrapper.setProps({isOpen: true})
   jest.runAllTimers()
@@ -71,11 +72,7 @@ test('props update causes the a11y status to be updated', () => {
 
 test('inputValue initializes properly if the selectedItem is controlled and set', () => {
   const childSpy = jest.fn(() => null)
-  mount(
-    <Downshift selectedItem={'foo'}>
-      {childSpy}
-    </Downshift>,
-  )
+  mount(<Downshift selectedItem={'foo'}>{childSpy}</Downshift>)
   expect(childSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',
@@ -85,11 +82,7 @@ test('inputValue initializes properly if the selectedItem is controlled and set'
 
 test('props update of selectedItem will update the inputValue state', () => {
   const childSpy = jest.fn(() => null)
-  const wrapper = mount(
-    <Downshift selectedItem={null}>
-      {childSpy}
-    </Downshift>,
-  )
+  const wrapper = mount(<Downshift selectedItem={null}>{childSpy}</Downshift>)
   childSpy.mockClear()
   wrapper.setProps({selectedItem: 'foo'})
   expect(childSpy).toHaveBeenCalledWith(

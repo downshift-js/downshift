@@ -40,38 +40,38 @@ class Example extends React.Component {
               isOpen,
               selectedItem,
               highlightedIndex,
-            }) =>
-              (<div>
+            }) => (
+              <div>
                 <input {...getInputProps()} />
-                {isOpen
-                  ? <List
+                {isOpen ? (
+                  <List
                     width={300}
                     scrollToIndex={highlightedIndex || 0}
                     height={200}
                     rowCount={items.length}
                     rowHeight={20}
-                    rowRenderer={({key, index, style}) =>
-                        (<div
-                          key={key}
-                          {...getItemProps({
-                            item: items[index],
-                            index,
-                            style: {
-                              ...style,
-                              backgroundColor:
-                                highlightedIndex === index ? 'gray' : 'white',
-                              fontWeight:
-                                selectedItem === items[index]
-                                  ? 'bold'
-                                  : 'normal',
-                            },
-                          })}
-                        >
-                          {items[index].name}
-                        </div>)}
-                    />
-                  : null}
-              </div>)}
+                    rowRenderer={({key, index, style}) => (
+                      <div
+                        key={key}
+                        {...getItemProps({
+                          item: items[index],
+                          index,
+                          style: {
+                            ...style,
+                            backgroundColor:
+                              highlightedIndex === index ? 'gray' : 'white',
+                            fontWeight:
+                              selectedItem === items[index] ? 'bold' : 'normal',
+                          },
+                        })}
+                      >
+                        {items[index].name}
+                      </div>
+                    )}
+                  />
+                ) : null}
+              </div>
+            )}
           </Downshift>
         </div>
       </div>

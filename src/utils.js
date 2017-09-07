@@ -172,9 +172,9 @@ function getA11yStatusMessage({
   if (!resultCount) {
     return 'No results.'
   } else if (!highlightedItem || resultCountChanged) {
-    return `${resultCount} ${resultCount === 1 ?
-      'result is' :
-      'results are'} available, use up and down arrow keys to navigate.`
+    return `${resultCount} ${resultCount === 1
+      ? 'result is'
+      : 'results are'} available, use up and down arrow keys to navigate.`
   }
   return itemToString(highlightedItem)
 }

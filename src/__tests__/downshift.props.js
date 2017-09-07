@@ -64,10 +64,6 @@ function setup({children = () => <div />, ...props} = {}) {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const wrapper = mount(
-    <Downshift {...props}>
-      {childSpy}
-    </Downshift>,
-  )
+  const wrapper = mount(<Downshift {...props}>{childSpy}</Downshift>)
   return {childSpy, wrapper, ...renderArg}
 }

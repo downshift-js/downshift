@@ -33,10 +33,11 @@ test('selectItemAtIndex does nothing if there is no item at that index', () => {
 })
 
 test('clearSelection with an input node focuses the input node', () => {
-  const children = ({getInputProps}) =>
-    (<div>
+  const children = ({getInputProps}) => (
+    <div>
       <input {...getInputProps()} />
-    </div>)
+    </div>
+  )
   const {wrapper, openMenu, selectItem, clearSelection} = setup({children})
   openMenu()
   selectItem('foo')
@@ -94,10 +95,6 @@ function setup({children = () => <div />, ...props} = {}) {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const wrapper = mount(
-    <Downshift {...props}>
-      {childSpy}
-    </Downshift>,
-  )
+  const wrapper = mount(<Downshift {...props}>{childSpy}</Downshift>)
   return {childSpy, wrapper, ...renderArg}
 }

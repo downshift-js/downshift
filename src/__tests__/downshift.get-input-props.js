@@ -264,29 +264,26 @@ function setupDownshiftWithState() {
 
 function setup({items = colors} = {}) {
   /* eslint-disable react/jsx-closing-bracket-location */
-  const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) =>
-    (<div>
+  const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) => (
+    <div>
       <input {...getInputProps({'data-test': 'input'})} />
-      {isOpen &&
+      {isOpen && (
         <div>
-          {items.map((item, index) =>
-            (<div
+          {items.map((item, index) => (
+            <div
               key={item.index || index}
               {...getItemProps({item, index: item.index || index})}
             >
               {item.value ? item.value : item}
-            </div>),
-          )}
-        </div>}
-    </div>),
-  )
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  ))
 
   function BasicDownshift(props) {
-    return (
-      <Downshift {...props}>
-        {childSpy}
-      </Downshift>
-    )
+    return <Downshift {...props}>{childSpy}</Downshift>
   }
   return {
     Component: BasicDownshift,
