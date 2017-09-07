@@ -67,7 +67,8 @@
     "rules": {
       "max-lines": "off",
       "no-eq-null": "off",
-      "eqeqeq": "off"
+      "eqeqeq": "off",
+      "react/jsx-indent": "off"
     }
   },
   "eslintIgnore": [
