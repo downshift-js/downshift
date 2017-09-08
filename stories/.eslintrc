@@ -1,9 +1,5 @@
 {
   "extends": [
-    "../node_modules/eslint-config-kentcdodds/possible-errors.js",
-    "../node_modules/eslint-config-kentcdodds/es6/possible-errors.js",
-    "../node_modules/eslint-config-kentcdodds/react.js",
-    "../node_modules/eslint-config-kentcdodds/prettier.js",
     "../node_modules/kcd-scripts/eslint.js",
   ],
   "root": true,
@@ -13,6 +9,10 @@
     "no-alert": "off",
     "react/prop-types": "off",
     "react/jsx-closing-bracket-location": "off",
-    "react/jsx-indent": "off"
+    "react/jsx-indent": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "prefer-const": "off",
+    "eqeqeq": "off",
+    "complexity": "off"
   }
 }

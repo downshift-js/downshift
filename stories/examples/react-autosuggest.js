@@ -102,13 +102,7 @@ function BasicAutocomplete({
       onChange={onChange}
       onUserAction={onUserAction}
     >
-      {({
-        getInputProps,
-        getItemProps,
-        highlightedIndex,
-        isOpen,
-        selectedItem,
-      }) => (
+      {({getInputProps, getItemProps, highlightedIndex, isOpen}) => (
         <div>
           <input {...getInputProps({placeholder: 'Enter color here'})} />
           {isOpen && (

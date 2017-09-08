@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {List} from 'react-virtualized'
 import matchSorter from 'match-sorter'
 import Downshift from '../../src'

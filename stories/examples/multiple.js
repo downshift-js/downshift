@@ -167,7 +167,7 @@ class MultipleAutocomplete extends React.Component {
                   overflowY: 'scroll',
                 }}
               >
-                {items.map((item, index) => {
+                {items.map(item => {
                   const selected = this.props.values.indexOf(item) !== -1
 
                   const props = selected
@@ -220,7 +220,7 @@ class MultipleAutocomplete extends React.Component {
  *
  * Given that ['Black', 'Blue', 'Green'], and 'Blue' is selected
  * Output: { 'Black': 0, 'Green': 1 }
- * 
+ *
  * @param {String[]} items items
  * @param {String[]} values selected items
  * @return {Object} Mapping of selected items to their indices

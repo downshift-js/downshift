@@ -139,7 +139,6 @@ function SemanticUIAutocomplete() {
       {({
         highlightedIndex,
         isOpen,
-        toggleMenu,
         clearSelection,
         getRootProps,
         inputValue,

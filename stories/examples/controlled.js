@@ -176,7 +176,6 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
       {({
         getInputProps,
         getItemProps,
-        getRootProps,
         highlightedIndex,
         inputValue,
         isOpen,
