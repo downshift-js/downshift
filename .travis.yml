@@ -7,6 +7,10 @@ notifications:
   email: false
 node_js: '8'
 install: npm install
+before_script:
+  - cd stories
+  - npm install
+  - cd ..
 script: npm run validate
 after_success:
   - npx codecov
