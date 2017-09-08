@@ -11,7 +11,8 @@
     "test": "nps test",
     "prerelease": "npm start validate",
     "release": "npm publish && npm dist-tag add downshift@$npm_package_version rc",
-    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\""
+    "precommit": "lint-staged && opt --in pre-commit --exec \"npm start validate\"",
+    "flow": "flow"
   },
   "files": [
     "dist",
@@ -50,12 +51,14 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.8",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-register": "^6.24.1",
     "enzyme": "^2.9.1",
     "enzyme-to-json": "^1.5.1",
     "eslint": "^4.2.0",
     "eslint-config-kentcdodds": "^12.4.2",
+    "flow-bin": "^0.53.1",
     "husky": "^0.14.3",
     "jest": "^20.0.4",
     "lint-staged": "^4.0.1",
