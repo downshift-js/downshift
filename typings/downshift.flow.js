@@ -1,3 +1,5 @@
+import React from 'react'
+
 // @flow
 
 type A11yOptionsStatusMessageOptions = {
@@ -71,7 +73,7 @@ class GetButtonPropsOptions extends HTMLButtonElement {
   selectedItem: any
 }
 
-type ChildrenFunction = (options: ControllerStateAndHelpers) => React$Node<*>
+type ChildrenFunction = (options: ControllerStateAndHelpers) => React.Node<*>
 
 type downshiftProps = {
   children: ChildrenFunction,
