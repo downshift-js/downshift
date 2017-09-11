@@ -229,6 +229,27 @@ function requiredProp(fnName, propName) {
   throw new Error(`The property "${propName}" is required in "${fnName}"`)
 }
 
+const stateKeys = [
+  'highlightedIndex',
+  'inputValue',
+  'isOpen',
+  'selectedItem',
+  'type',
+]
+/**
+ * @param {Object} state The state object
+ * @return {Object} State that is relevant to downshift
+ */
+function pickState(state = {}) {
+  const result = {}
+  stateKeys.forEach((k) => {
+    if (state.hasOwnProperty(k)) {
+      result[k] = state[k]
+    }
+  })
+  return result
+}
+
 export {
   cbToCb,
   findParent,
@@ -245,4 +266,5 @@ export {
   noop,
   requiredProp,
   setIdCounter,
+  pickState,
 }

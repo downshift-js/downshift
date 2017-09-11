@@ -18,6 +18,7 @@ import {
   getElementProps,
   noop,
   requiredProp,
+  pickState,
 } from './utils'
 
 class Downshift extends Component {
@@ -154,6 +155,7 @@ class Downshift extends Component {
     highlightedIndex = this.props.defaultHighlightedIndex,
     otherStateToSet = {},
   ) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       const rootNode = this._rootNode
@@ -213,6 +215,7 @@ class Downshift extends Component {
   }
 
   selectItem = (item, otherStateToSet, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       {
         isOpen: false,
@@ -596,6 +599,7 @@ class Downshift extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
   reset = (otherStateToSet = {}, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({selectedItem}) => ({
         isOpen: false,
@@ -608,6 +612,7 @@ class Downshift extends Component {
   }
 
   toggleMenu = (otherStateToSet = {}, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({isOpen}) => {
         return {isOpen: !isOpen, ...otherStateToSet}
