@@ -452,7 +452,7 @@ These are functions you can call to change the state of the downshift component.
 | property                | type                                                             | description                                                                  |
 |-------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------|
 | `clearSelection`        | `function(cb: Function)`                                         | clears the selection                                                         |
-| `clearItems`            | `function()`                                                     | clears the items                                                             |
+| `clearItems`            | `function()`                                                     | Clears downshift's record of all the items. Only really useful if you render your items asynchronously within downshift. See [#186](https://github.com/paypal/downshift/issues/186)                                                             |
 | `closeMenu`             | `function(cb: Function)`                                         | closes the menu                                                              |
 | `openMenu`              | `function(cb: Function)`                                         | opens the menu                                                               |
 | `selectHighlightedItem` | `function(otherStateToSet: object, cb: Function)`                | selects the item that is currently highlighted                               |
