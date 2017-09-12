@@ -452,6 +452,7 @@ These are functions you can call to change the state of the downshift component.
 | property                | type                                                             | description                                                                  |
 |-------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------|
 | `clearSelection`        | `function(cb: Function)`                                         | clears the selection                                                         |
+| `clearItems`            | `function()`                                                     | clears the items                                                             |
 | `closeMenu`             | `function(cb: Function)`                                         | closes the menu                                                              |
 | `openMenu`              | `function(cb: Function)`                                         | opens the menu                                                               |
 | `selectHighlightedItem` | `function(otherStateToSet: object, cb: Function)`                | selects the item that is currently highlighted                               |
