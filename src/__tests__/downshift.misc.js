@@ -56,6 +56,13 @@ test('toggleMenu can take no arguments at all', () => {
   )
 })
 
+test('clearItems clears the all items', () => {
+  const items = ['Chess']
+  const {wrapper, clearItems} = setup({items})
+  clearItems()
+  expect(wrapper.node.items).toEqual([])
+})
+
 test('reset can take no arguments at all', () => {
   const {reset, childSpy} = setup()
   reset()
