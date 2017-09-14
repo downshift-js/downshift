@@ -23,7 +23,7 @@ class Examples extends Component {
         changes.type === Downshift.stateChangeTypes.keyDownEscape &&
         !isClosingMenu
       ) {
-        selectedColor = null
+        selectedColor = ''
       }
       if (changes.hasOwnProperty('inputValue')) {
         if (changes.type === Downshift.stateChangeTypes.keyDownEscape) {
