@@ -125,7 +125,11 @@ class MultipleAutocomplete extends React.Component {
     const indices = mapItemIndex(items, values)
 
     return (
-      <Autocomplete inputValue={this.state.input} onChange={this.handleChange}>
+      <Autocomplete
+        inputValue={this.state.input}
+        onChange={this.handleChange}
+        selectedItem={values}
+      >
         {({
           getInputProps,
           getItemProps,
@@ -133,11 +137,12 @@ class MultipleAutocomplete extends React.Component {
           getLabelProps,
           highlightedIndex,
           isOpen,
+          selectedItem,
         }) => (
           <Root {...getRootProps({refKey: 'innerRef'})}>
             <Label {...getLabelProps()}>What are your favorite colors?</Label>
             <InputWrapper>
-              {values.map((value, i) => (
+              {selectedItem.map((value, i) => (
                 <span
                   key={i}
                   style={{
