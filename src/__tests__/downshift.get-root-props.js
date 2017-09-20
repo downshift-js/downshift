@@ -47,18 +47,6 @@ test('not applying the ref prop results in an error', () => {
   expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
-test('not applying the onClick prop results in an error', () => {
-  const MyComponent = () => (
-    <Downshift>
-      {({getRootProps}) => {
-        const {ref} = getRootProps()
-        return <div ref={ref} />
-      }}
-    </Downshift>
-  )
-  expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
-})
-
 test('renders fine when rendering a composite component and applying getRootProps properly', () => {
   const MyComponent = () => (
     <Downshift>
