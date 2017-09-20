@@ -5,13 +5,11 @@ import PropTypes from 'prop-types'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
-  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,
   generateId,
   firstDefined,
-  isNumber,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
@@ -370,32 +368,14 @@ class Downshift extends Component {
 
   rootRef = node => (this._rootNode = node)
 
-  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+  getRootProps = ({refKey = 'ref', ...rest} = {}) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
     this.getRootProps.refKey = refKey
     return {
       [refKey]: this.rootRef,
-      onClick: composeEventHandlers(onClick, this.root_handleClick),
       ...rest,
-    }
-  }
-
-  root_handleClick = event => {
-    event.preventDefault()
-    const itemParent = findParent(
-      node => {
-        const index = this.getItemIndexFromId(node.getAttribute('id'))
-        return isNumber(index)
-      },
-      event.target,
-      this._rootNode,
-    )
-    if (itemParent) {
-      this.selectItemAtIndex(
-        this.getItemIndexFromId(itemParent.getAttribute('id')),
-      )
     }
   }
 
@@ -566,17 +546,10 @@ class Downshift extends Component {
     return `${this.id}-item-${index}`
   }
 
-  getItemIndexFromId(id) {
-    if (id) {
-      return Number(id.split(`${this.id}-item-`)[1])
-    } else {
-      return null
-    }
-  }
-
   getItemProps = (
     {
       onMouseEnter,
+      onClick,
       index,
       item = requiredProp('getItemProps', 'item'),
       ...rest
@@ -594,6 +567,9 @@ class Downshift extends Component {
         this.setHighlightedIndex(index, {
           type: Downshift.stateChangeTypes.itemMouseEnter,
         })
+      }),
+      onClick: composeEventHandlers(onClick, () => {
+        this.selectItemAtIndex(index)
       }),
       ...rest,
     }
@@ -764,11 +740,6 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
-    )
-  }
-  if (!getElementProps(element).hasOwnProperty('onClick')) {
-    throw new Error(
-      `downshift: You must apply the "onClick" prop from getRootProps onto your root element.`,
     )
   }
 }

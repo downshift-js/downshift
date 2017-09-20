@@ -146,12 +146,6 @@ function firstDefined(...args) {
   return args.find(a => typeof a !== 'undefined')
 }
 
-function isNumber(thing) {
-  // not NaN and is a number type
-  // eslint-disable-next-line no-self-compare
-  return thing === thing && typeof thing === 'number'
-}
-
 // eslint-disable-next-line complexity
 function getA11yStatusMessage({
   isOpen,
@@ -242,7 +236,7 @@ const stateKeys = [
  */
 function pickState(state = {}) {
   const result = {}
-  stateKeys.forEach((k) => {
+  stateKeys.forEach(k => {
     if (state.hasOwnProperty(k)) {
       result[k] = state[k]
     }
@@ -252,13 +246,11 @@ function pickState(state = {}) {
 
 export {
   cbToCb,
-  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,
   generateId,
   firstDefined,
-  isNumber,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
