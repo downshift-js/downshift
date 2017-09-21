@@ -50,6 +50,19 @@ test('on mouseenter of an item updates the highlightedIndex to that item', () =>
   )
 })
 
+test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
+  const {Component, childSpy} = setup()
+  const wrapper = mount(<Component defaultHighlightedIndex={1} />)
+  const firstButton = wrapper.find('button').first()
+  childSpy.mockClear()
+  firstButton.simulate('click')
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: 1,
+    }),
+  )
+})
+
 test('getItemProps throws a helpful error when no object is given', () => {
   expect(() =>
     mount(

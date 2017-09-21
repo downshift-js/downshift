@@ -217,7 +217,7 @@ class Downshift extends Component {
     this.internalSetState(
       {
         isOpen: false,
-        highlightedIndex: null,
+        highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
         inputValue: this.props.itemToString(item),
         ...otherStateToSet,
