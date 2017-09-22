@@ -52,7 +52,7 @@
     "enzyme": "^2.9.1",
     "enzyme-to-json": "^2.0.0",
     "jest-serializer-html": "^4.0.0",
-    "kcd-scripts": "^0.18.1",
+    "kcd-scripts": "^0.18.2",
     "preact": "^8.2.1",
     "preact-render-to-string": "^3.6.3",
     "prop-types": "^15.5.10",
