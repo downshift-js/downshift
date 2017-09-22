@@ -11,7 +11,7 @@
  */
 import assert from 'assert'
 
-import esImport from '../../dist/downshift.es'
+import esImport from '../../dist/downshift.esm'
 
 import cjsImport from '../../' // picks up the main from package.json
 

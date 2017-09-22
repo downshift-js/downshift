@@ -4,8 +4,8 @@
   "description":
     "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
-  "jsnext:main": "dist/downshift.es.js",
-  "module": "dist/downshift.es.js",
+  "jsnext:main": "dist/downshift.esm.js",
+  "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
   "scripts": {
     "add-contributor": "kcd-scripts contributors add",
