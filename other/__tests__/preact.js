@@ -19,7 +19,7 @@ for preact before running this test.
 
 import preact from 'preact'
 import render from 'preact-render-to-string'
-import Downshift from '../../dist/downshift.preact.cjs'
+import Downshift from '../../preact'
 
 test('works with preact', () => {
   const childSpy = jest.fn(({getInputProps, getItemProps}) => (
