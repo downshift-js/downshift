@@ -129,7 +129,8 @@ function BasicAutocomplete({items, onChange}) {
             >
               {(inputValue
                 ? matchSorter(items, inputValue)
-                : items).map((item, index) => (
+                : items
+              ).map((item, index) => (
                 <Item
                   key={item}
                   {...getItemProps({

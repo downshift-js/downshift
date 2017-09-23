@@ -192,7 +192,8 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
               {(inputValue
                 ? matchSorter(items, inputValue)
-                : items).map((item, index) => (
+                : items
+              ).map((item, index) => (
                 <Item
                   key={item}
                   {...getItemProps({
