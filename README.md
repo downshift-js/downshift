@@ -62,6 +62,7 @@ harder to contribute to.
 - [Control Props](#control-props)
 - [Child Callback Function](#child-callback-function)
 - [Examples](#examples)
+- [FAQ](#faq)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
 - [Contributors](#contributors)
@@ -286,6 +287,14 @@ The currently selected item.
 
 This is called with an object. Read more about the properties of this object
 in the section "Child Callback Function"
+
+### id
+
+> `string` | defaults to a generated ID
+
+You should not normally need to set this prop. It's only useful if you're
+server rendering items (which each have an `id` prop generated based on the
+`downshift` `id`). For more information see the `FAQ` below.
 
 ## Control Props
 
@@ -516,6 +525,36 @@ If you would like to add an example, follow these steps:
 You'll find other examples in the `stories/examples` folder of the repo.
 And you'll find
 [a live version of those examples here](https://downshift.netlify.com)
+
+## FAQ
+
+<details>
+
+<summary>How do I avoid the checksum error when server rendering (SSR)?</summary>
+
+The checksum error you're seeing is most likely due to the automatically
+generated `id` and/or `htmlFor` prop you get from `getInputProps` and
+`getLabelProps` (respectively). It could also be from the automatically
+generated `id` prop you get from `getItemProps` (though this is not likely as
+you're probably not rendering any items when rendering a downshift component
+on the server).
+
+To avoid these problems, simply provide your own `id` prop in `getInputProps`
+and `getLabelProps`. Also, you can use the `id` prop on the component
+`Downshift`. For example:
+
+```javascript
+<Downshift id="autocomplete">
+  {({getInputProps, getLabelProps}) => (
+    <label {...getLabelProps({htmlFor: 'autocomplete-input'})}>
+      Some Label
+    </label>
+    <input {...getInputProps({id: 'autocomplete-input'})} />
+  )}
+</Downshift>
+```
+
+</details>
 
 
 ## Inspiration

@@ -33,6 +33,7 @@ class Downshift extends Component {
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
     itemCount: PropTypes.number,
+    id: PropTypes.string,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -49,6 +50,7 @@ class Downshift extends Component {
     defaultInputValue: '',
     defaultIsOpen: false,
     getA11yStatusMessage,
+    id: generateId('downshift'),
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
     onUserAction: () => {},
@@ -93,7 +95,6 @@ class Downshift extends Component {
     this.state = state
   }
 
-  id = generateId('downshift')
   root_handleClick = composeEventHandlers(
     this.props.onClick,
     this.root_handleClick,
@@ -543,7 +544,7 @@ class Downshift extends Component {
 
   /////////////////////////////// ITEM
   getItemId(index) {
-    return `${this.id}-item-${index}`
+    return `${this.props.id}-item-${index}`
   }
 
   getItemProps = (
