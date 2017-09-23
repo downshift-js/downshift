@@ -25,6 +25,7 @@ export interface DownshiftProps {
   isOpen?: boolean
   inputValue?: string
   highlightedIndex?: number
+  id?: string
 }
 
 export interface A11yStatusMessageOptions {
