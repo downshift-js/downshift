@@ -96,6 +96,12 @@ test('openAndHighlightDefaultIndex can take no arguments at all', () => {
   )
 })
 
+test('can specify a custom ID which is used in item IDs (good for SSR)', () => {
+  const id = 'my-custom-id'
+  const {getItemProps} = setup({id})
+  expect(getItemProps({item: 'blah'}).id).toContain(id)
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
