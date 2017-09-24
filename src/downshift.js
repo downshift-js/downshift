@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
@@ -493,10 +494,14 @@ class Downshift extends Component {
       rest.id,
       generateId('downshift-input'),
     )
-    const onChangeKey =
-      process.env.BUILD_PREACT === 'true' /* istanbul ignore next (preact) */
-        ? 'onInput'
-        : 'onChange'
+    // the boolean cast here is necessary due to a weird deal with
+    // babel-plugin-istanbul + preval.macro. No idea...
+    const isPreact = Boolean(
+      preval`module.exports = process.env.BUILD_PREACT === 'true'`,
+    )
+    const onChangeKey = isPreact /* istanbul ignore next (preact) */
+      ? 'onInput'
+      : 'onChange'
     const {inputValue, isOpen, highlightedIndex} = this.getState()
     return {
       role: 'combobox',
