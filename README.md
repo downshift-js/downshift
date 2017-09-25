@@ -218,7 +218,7 @@ and the new state of `downshift`. (see `onStateChange` for more info on
 `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the exact same thing you're `children` prop
+- `stateAndHelpers`: This is the same thing your `children` prop
   function is called with (see [Child Callback Function](#child-callback-function))
 
 ### onStateChange
