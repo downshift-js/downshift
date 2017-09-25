@@ -407,7 +407,7 @@ Basically just don't do this:
 items.map(item => {
   const props = getItemProps({item}) // we're calling it here
   if (!shouldRenderItem(item)) {
-    return null // but we're not using props, and downshift things we are...
+    return null // but we're not using props, and downshift thinks we are...
   }
   return <div {...props} />
 })
