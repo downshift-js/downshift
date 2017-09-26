@@ -296,6 +296,13 @@ You should not normally need to set this prop. It's only useful if you're
 server rendering items (which each have an `id` prop generated based on the
 `downshift` `id`). For more information see the `FAQ` below.
 
+### eventTarget
+
+> `Element`/`document`/`window` | defaults to `window`
+
+You should not normally need to set this prop. It's only useful if you're
+ rendering into another `window` context from where your JavaScript is running, for example an iframe.
+
 ## Control Props
 
 downshift manages its own state internally and calls your `onChange` and
