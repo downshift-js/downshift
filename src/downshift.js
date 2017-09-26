@@ -38,6 +38,9 @@ class Downshift extends Component {
     environment: PropTypes.shape({
       addEventListener: PropTypes.func,
       removeEventListener: PropTypes.func,
+      document: PropTypes.shape({
+        getElementById: PropTypes.func,
+      }),
     }),
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
@@ -153,7 +156,7 @@ class Downshift extends Component {
   }
 
   getItemNodeFromIndex = index => {
-    return this._rootNode.querySelector(`#${this.getItemId(index)}`)
+    return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
   setHighlightedIndex = (
