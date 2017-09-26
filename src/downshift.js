@@ -35,6 +35,10 @@ class Downshift extends Component {
     onClick: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
+    eventTarget: PropTypes.shape({
+      addEventListener: PropTypes.func,
+      removeEventListener: PropTypes.func,
+    }),
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -56,6 +60,7 @@ class Downshift extends Component {
     onStateChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
+    eventTarget: window,
   }
 
   // this is an experimental feature
@@ -148,7 +153,7 @@ class Downshift extends Component {
   }
 
   getItemNodeFromIndex = index => {
-    return document.getElementById(this.getItemId(index))
+    return this._rootNode.querySelector(`#${this.getItemId(index)}`)
   }
 
   setHighlightedIndex = (
@@ -663,13 +668,13 @@ class Downshift extends Component {
         this.reset({type: Downshift.stateChangeTypes.mouseUp})
       }
     }
-    window.addEventListener('mousedown', onMouseDown)
-    window.addEventListener('mouseup', onMouseUp)
+    this.props.eventTarget.addEventListener('mousedown', onMouseDown)
+    this.props.eventTarget.addEventListener('mouseup', onMouseUp)
 
     this.cleanup = () => {
       this._isMounted = false
-      window.removeEventListener('mousedown', onMouseDown)
-      window.removeEventListener('mouseup', onMouseUp)
+      this.props.eventTarget.removeEventListener('mousedown', onMouseDown)
+      this.props.eventTarget.removeEventListener('mouseup', onMouseUp)
     }
   }
 
