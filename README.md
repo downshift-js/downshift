@@ -298,10 +298,10 @@ server rendering items (which each have an `id` prop generated based on the
 
 ### environment
 
-> `Element`/`document`/`window` | defaults to `window`
+> `window` | defaults to `window`
 
 You should not normally need to set this prop. It's only useful if you're
- rendering into another `window` context from where your JavaScript is running, for example an iframe.
+ rendering into a different `window` context from where your JavaScript is running, for example an iframe.
 
 ## Control Props
 
