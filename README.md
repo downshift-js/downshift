@@ -296,7 +296,7 @@ You should not normally need to set this prop. It's only useful if you're
 server rendering items (which each have an `id` prop generated based on the
 `downshift` `id`). For more information see the `FAQ` below.
 
-### eventTarget
+### environment
 
 > `Element`/`document`/`window` | defaults to `window`
 

@@ -35,7 +35,7 @@ class Downshift extends Component {
     onClick: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
-    eventTarget: PropTypes.shape({
+    environment: PropTypes.shape({
       addEventListener: PropTypes.func,
       removeEventListener: PropTypes.func,
     }),
@@ -60,7 +60,7 @@ class Downshift extends Component {
     onStateChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
-    eventTarget: window,
+    environment: window,
   }
 
   // this is an experimental feature
@@ -668,13 +668,13 @@ class Downshift extends Component {
         this.reset({type: Downshift.stateChangeTypes.mouseUp})
       }
     }
-    this.props.eventTarget.addEventListener('mousedown', onMouseDown)
-    this.props.eventTarget.addEventListener('mouseup', onMouseUp)
+    this.props.environment.addEventListener('mousedown', onMouseDown)
+    this.props.environment.addEventListener('mouseup', onMouseUp)
 
     this.cleanup = () => {
       this._isMounted = false
-      this.props.eventTarget.removeEventListener('mousedown', onMouseDown)
-      this.props.eventTarget.removeEventListener('mouseup', onMouseUp)
+      this.props.environment.removeEventListener('mousedown', onMouseDown)
+      this.props.environment.removeEventListener('mouseup', onMouseUp)
     }
   }
 
