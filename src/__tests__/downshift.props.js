@@ -66,23 +66,11 @@ test('uses given environment', () => {
       getElementById: jest.fn(() => document.createElement('div')),
     },
   }
-  const MyComponent = () => (
-    <Downshift environment={environment}>
-      {({getInputProps}) => (
-        <div>
-          <input {...getInputProps()} />
-        </div>
-      )}
-    </Downshift>
-  )
-  const wrapper = mount(<MyComponent />)
+  const {wrapper, setHighlightedIndex} = setup({environment})
+  setHighlightedIndex()
   wrapper.unmount()
   expect(environment.addEventListener).toHaveBeenCalledTimes(2)
   expect(environment.removeEventListener).toHaveBeenCalledTimes(2)
-
-  const defaultHighlightedIndex = 2
-  const {setHighlightedIndex} = setup({defaultHighlightedIndex, environment})
-  setHighlightedIndex()
   expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
 })
 
