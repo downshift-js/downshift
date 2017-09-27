@@ -58,6 +58,22 @@ test('onChange only called when the selection changes', () => {
   expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
+test('uses given environment', () => {
+  const environment = {
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    document: {
+      getElementById: jest.fn(() => document.createElement('div')),
+    },
+  }
+  const {wrapper, setHighlightedIndex} = setup({environment})
+  setHighlightedIndex()
+  wrapper.unmount()
+  expect(environment.addEventListener).toHaveBeenCalledTimes(2)
+  expect(environment.removeEventListener).toHaveBeenCalledTimes(2)
+  expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
