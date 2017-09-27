@@ -26,6 +26,17 @@ export interface DownshiftProps {
   inputValue?: string
   highlightedIndex?: number
   id?: string
+  environment?: Environment
+}
+
+export interface Environment {
+  addEventListener: (type: string, listener: (event: Event) => void) => void
+  removeEventListener: (type: string, listener: () => void) => void
+  document: Document
+}
+
+export interface Document {
+  getElementById: (id: String) => HTMLElement
 }
 
 export interface A11yStatusMessageOptions {
