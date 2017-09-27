@@ -30,13 +30,13 @@ export interface DownshiftProps {
 }
 
 export interface Environment {
-  addEventListener: (type: string, listener: (event: Event) => void) => void
-  removeEventListener: (type: string, listener: () => void) => void
+  addEventListener: (type: string, cb: Function) => void
+  removeEventListener: (type: string, cb: Function) => void
   document: Document
 }
 
 export interface Document {
-  getElementById: (id: String) => HTMLElement
+  getElementById: (id: string) => HTMLElement
 }
 
 export interface A11yStatusMessageOptions {
