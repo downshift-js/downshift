@@ -53,11 +53,9 @@ test('getButtonProps returns all given props', () => {
   )
   expect(Button).toHaveBeenCalledTimes(1)
   const context = expect.any(Object)
-  const updater = expect.any(Object)
   expect(Button).toHaveBeenCalledWith(
     expect.objectContaining(buttonProps),
     context,
-    updater,
   )
 })
 

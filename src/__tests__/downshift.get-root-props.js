@@ -4,6 +4,16 @@ import Downshift from '../'
 
 const MyDiv = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
 
+const oldError = console.error
+
+beforeEach(() => {
+  console.error = jest.fn()
+})
+
+afterEach(() => {
+  console.error = oldError
+})
+
 test('no children provided renders nothing', () => {
   const MyComponent = () => <Downshift />
   expect(mount(<MyComponent />).html()).toBe(null)
@@ -55,3 +65,5 @@ test('renders fine when rendering a composite component and applying getRootProp
   )
   expect(() => mount(<MyComponent />)).not.toThrow()
 })
+
+/* eslint no-console:0 */

@@ -5,5 +5,7 @@ jestConfig.snapshotSerializers.push(
   'jest-serializer-html',
   'enzyme-to-json/serializer',
 )
+jestConfig.setupFiles = jestConfig.setupFiles || []
+jestConfig.setupFiles.push('<rootDir>/other/setup-tests.js')
 
 module.exports = jestConfig

@@ -145,7 +145,7 @@ test('escape on an input without a selection should reset downshift and close th
   const input = wrapper.find(sel('input'))
   input.simulate('change', {target: {value: 'p'}})
   input.simulate('keydown', {key: 'Escape'})
-  expect(input.node.value).toBe('')
+  expect(input.instance().value).toBe('')
   expect(childSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -254,7 +254,7 @@ function setupDownshiftWithState() {
   input.simulate('keydown', {key: 'ArrowDown'})
   // ENTER to select the first one
   input.simulate('keydown', {key: 'Enter'})
-  expect(input.node.value).toBe(items[0])
+  expect(input.instance().value).toBe(items[0])
   // ↓
   input.simulate('keydown', {key: 'ArrowDown'})
   input.simulate('change', {target: {value: 'bu'}})

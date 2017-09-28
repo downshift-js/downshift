@@ -60,7 +60,7 @@ test('clearItems clears the all items', () => {
   const items = ['Chess']
   const {wrapper, clearItems} = setup({items})
   clearItems()
-  expect(wrapper.node.items).toEqual([])
+  expect(wrapper.instance().items).toEqual([])
 })
 
 test('reset can take no arguments at all', () => {
@@ -75,7 +75,9 @@ test('reset can take no arguments at all', () => {
 
 test('setHighlightedIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {setHighlightedIndex, childSpy} = setup({defaultHighlightedIndex})
+  const {setHighlightedIndex, childSpy} = setup({
+    defaultHighlightedIndex,
+  })
   setHighlightedIndex()
   expect(childSpy).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -86,7 +88,9 @@ test('setHighlightedIndex can take no arguments at all', () => {
 
 test('openAndHighlightDefaultIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {wrapper, childSpy} = setup({defaultHighlightedIndex})
+  const {wrapper, childSpy} = setup({
+    defaultHighlightedIndex,
+  })
   const {openAndHighlightDefaultIndex} = wrapper.instance()
   openAndHighlightDefaultIndex()
   expect(childSpy).toHaveBeenCalledWith(

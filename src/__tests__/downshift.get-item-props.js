@@ -3,8 +3,15 @@ import {mount, render} from 'enzyme'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
 
+const oldError = console.error
+
 beforeEach(() => {
   setIdCounter(1)
+  console.error = jest.fn()
+})
+
+afterEach(() => {
+  console.error = oldError
 })
 
 test('clicking on a DOM node within an item selects that item', () => {
@@ -40,9 +47,9 @@ test('clicking anywhere within the rendered downshift but outside an item does n
 test('on mouseenter of an item updates the highlightedIndex to that item', () => {
   const {Component, childSpy} = setup()
   const wrapper = mount(<Component />)
-  const thirdButton = wrapper.find('button').at(2)
+  const thirdButton = wrapper.find('[data-test="item-2"]')
   childSpy.mockClear()
-  thirdButton.parent().simulate('mouseenter')
+  thirdButton.simulate('mouseenter')
   expect(childSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 2,
@@ -113,7 +120,11 @@ function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
   const childSpy = jest.fn(({getItemProps}) => (
     <div>
       {items.map((item, index) => (
-        <div {...getItemProps({item, index})} key={index}>
+        <div
+          {...getItemProps({item, index})}
+          key={index}
+          data-test={`item-${index}`}
+        >
           <button>{item}</button>
         </div>
       ))}
@@ -128,3 +139,5 @@ function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
   }
   return {Component: BasicDownshift, childSpy}
 }
+
+/* eslint no-console:0 */
