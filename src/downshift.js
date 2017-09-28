@@ -63,7 +63,10 @@ class Downshift extends Component {
     onStateChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
-    environment: window,
+    environment:
+      typeof window === 'undefined' /* istanbul ignore next (ssr) */
+        ? {}
+        : window,
   }
 
   // this is an experimental feature
