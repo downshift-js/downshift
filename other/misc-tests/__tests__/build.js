@@ -11,17 +11,17 @@
  */
 import assert from 'assert'
 
-import esImport from '../../dist/downshift.esm'
+import esImport from '../../../dist/downshift.esm'
 
-import cjsImport from '../../' // picks up the main from package.json
+import cjsImport from '../../../' // picks up the main from package.json
 
-import umdImport from '../../dist/downshift.umd'
+import umdImport from '../../../dist/downshift.umd'
 
 // intentionally left out because you shouldn't ever
 // try to require the ES file in CommonJS
-// const esRequire = require('../../dist/downshift.es')
-const cjsRequire = require('../../') // picks up the main from package.json
-const umdRequire = require('../../dist/downshift.umd')
+// const esRequire = require('../../../dist/downshift.es')
+const cjsRequire = require('../../../') // picks up the main from package.json
+const umdRequire = require('../../../dist/downshift.umd')
 
 test('stuff is good', () => {
   assert(
