@@ -10,5 +10,5 @@
     ],
     "react"
   ],
-  "plugins": ["transform-class-properties", "transform-object-rest-spread"]
+  "plugins": ["babel-macros", "transform-class-properties", "transform-object-rest-spread"]
 }
