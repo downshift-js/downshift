@@ -218,7 +218,7 @@ and the new state of `downshift`. (see `onStateChange` for more info on
 `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the same thing your `children` prop
+- `stateAndHelpers`: This is the exact same thing you're `children` prop
   function is called with (see [Child Callback Function](#child-callback-function))
 
 ### onStateChange
@@ -226,7 +226,7 @@ and the new state of `downshift`. (see `onStateChange` for more info on
 > `function(changes: object, stateAndHelpers: object)` | optional, no useful default
 
 This function is called anytime the internal state changes. This can be useful
-if you're using downshift as a "controlled" component, where you manage some or
+if your using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
 The parameters both take the shape of internal state
@@ -235,7 +235,7 @@ but differ slightly.
 
 - `changes`: These are the properties that actually have changed since the last
   state change.
-- `stateAndHelpers`: This is the exact same thing you're `children` prop
+- `stateAndHelpers`: This is the same thing your `children` prop
   function is called with (see [Child Callback Function](#child-callback-function))
 
 > Tip: This function will be called any time _any_ state is changed. The best
