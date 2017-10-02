@@ -109,7 +109,10 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/746482?v=4",
       "profile": "https://divyendusingh.com",
       "contributions": [
-        "example"
+        "example",
+        "code",
+        "doc",
+        "test"
       ]
     },
     {

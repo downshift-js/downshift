@@ -3,8 +3,5 @@
     "jsx": "react",
     "noUnusedLocals": true
   },
-  "include": [
-    "test/**/*.tsx"
-  ]
+  "include": ["test/**/*.tsx"]
 }
-

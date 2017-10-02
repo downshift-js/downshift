@@ -12,7 +12,7 @@ test('does not throw an error when server rendering', () => {
             <input {...getInputProps({id: 'my-autocomplete-input'})} />
           </div>
         )}
-      </Downshift>
+      </Downshift>,
     )
   }).not.toThrow()
 })
