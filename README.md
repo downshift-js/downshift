@@ -512,6 +512,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/v670kq95l)
 - [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
 - [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
+- [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
 
 <!--
 
