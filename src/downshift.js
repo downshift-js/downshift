@@ -33,6 +33,7 @@ class Downshift extends Component {
     onStateChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
+    onOuterClick: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
     environment: PropTypes.shape({
@@ -63,6 +64,7 @@ class Downshift extends Component {
     onStateChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
+    onOuterClick: () => {},
     environment:
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
@@ -671,7 +673,9 @@ class Downshift extends Component {
           !this._rootNode.contains(event.target)) &&
         this.getState().isOpen
       ) {
-        this.reset({type: Downshift.stateChangeTypes.mouseUp})
+        this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.props.onOuterClick(this.getStateAndHelpers()),
+        )
       }
     }
     this.props.environment.addEventListener('mousedown', onMouseDown)

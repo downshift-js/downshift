@@ -74,6 +74,27 @@ test('uses given environment', () => {
   expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
 })
 
+test('can override onOuterClick callback to maintain isOpen state', () => {
+  const children = () => <div />
+  const onOuterClick = jest.fn()
+  const {openMenu} = setup({children, onOuterClick})
+  openMenu()
+  mouseDownAndUp(document.body)
+  expect(onOuterClick).toHaveBeenCalledTimes(1)
+  expect(onOuterClick).toHaveBeenCalledWith(
+    expect.objectContaining({
+      // just verify that it's the controller object
+      isOpen: false,
+      getItemProps: expect.any(Function),
+    }),
+  )
+})
+
+function mouseDownAndUp(node) {
+  node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
+  node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
+}
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
