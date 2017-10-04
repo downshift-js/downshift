@@ -536,6 +536,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
 - [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
 - [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
+- [Multiple editable tag selection](https://codesandbox.io/s/o4yp9vmm8z)
 
 <!--
 
