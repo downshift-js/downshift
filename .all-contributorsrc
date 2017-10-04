@@ -283,6 +283,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "rickMcGavin",
+      "name": "Rick McGavin",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13605633?v=4",
+      "profile": "http://rickmcgavin.github.io",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
