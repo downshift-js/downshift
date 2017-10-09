@@ -26,7 +26,7 @@
       "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr",
     "precommit": "kcd-scripts precommit"
   },
-  "files": ["dist", "typings"],
+  "files": ["dist", "typings", "preact"],
   "keywords": [
     "enhanced input",
     "react",
