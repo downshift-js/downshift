@@ -1,9 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions */
+/* eslint-disable import/no-extraneous-dependencies, import/no-unresolved, import/extensions, import/max-dependencies */
 
 import {configure, storiesOf} from '@storybook/react'
 import React from 'react'
 
 import Basic from './examples/basic'
+import Dropdown from './examples/dropdown'
 import Form from './examples/form'
 import Controlled from './examples/controlled'
 import Multiple from './examples/multiple'
@@ -22,6 +23,7 @@ function loadStories() {
 
   storiesOf('Examples', module)
     .add('basic', () => <Basic />)
+    .add('dropdown', () => <Dropdown />)
     .add('form', () => <Form />)
     .add('controlled', () => <Controlled />)
     .add('multiple', () => <Multiple />)
