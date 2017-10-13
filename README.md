@@ -537,6 +537,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
 - [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
 - [Multiple editable tag selection](https://codesandbox.io/s/o4yp9vmm8z)
+- [Downshift implemented as compound components and a Higher Order Component](https://codesandbox.io/s/017n1jqo00) (exposes a `withDownshift` higher order component which you can use to get at the state, actions, prop getters in a rendered downshift tree).
 
 <!--
 
