@@ -243,6 +243,23 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
   )
 })
 
+// normally this test would be like the others where we render and then simulate a click on the
+// button to ensure that a disabled input cannot be interacted with, however this is only a problem in IE11
+// so we have to get into the implementation details a little bit (unless we want to run these tests
+// in IE11... no thank you 🙅)
+test(`getInputProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
+  const {getInputProps} = setupWithDownshiftController()
+  const props = getInputProps({disabled: true})
+  const entry = Object.entries(props).find(
+    ([_key, value]) => typeof value === 'function',
+  )
+  if (entry) {
+    throw new Error(
+      `getInputProps should not have any props that are callbacks. It has ${entry[0]}.`,
+    )
+  }
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const {Component, childSpy} = setup({items})
@@ -289,6 +306,19 @@ function setup({items = colors} = {}) {
     Component: BasicDownshift,
     childSpy,
   }
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  mount(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    </Downshift>,
+  )
+  return renderArg
 }
 
 function sel(id) {
