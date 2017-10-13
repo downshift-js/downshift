@@ -441,13 +441,18 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
     const {isOpen} = this.getState()
+    const eventHandlers = rest.disabled
+      ? {}
+      : {
+          onClick: composeEventHandlers(onClick, this.button_handleClick),
+          onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+        }
     return {
       role: 'button',
       'aria-label': isOpen ? 'close menu' : 'open menu',
       'aria-expanded': isOpen,
       'aria-haspopup': true,
-      onClick: composeEventHandlers(onClick, this.button_handleClick),
-      onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+      ...eventHandlers,
       ...rest,
     }
   }
@@ -516,6 +521,18 @@ class Downshift extends Component {
       ? 'onInput'
       : 'onChange'
     const {inputValue, isOpen, highlightedIndex} = this.getState()
+    const eventHandlers = rest.disabled
+      ? {}
+      : {
+          // preact compatibility
+          [onChangeKey]: composeEventHandlers(
+            onChange,
+            onInput,
+            this.input_handleChange,
+          ),
+          onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
+          onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+        }
     return {
       role: 'combobox',
       'aria-autocomplete': 'list',
@@ -526,14 +543,7 @@ class Downshift extends Component {
           : null,
       autoComplete: 'off',
       value: inputValue,
-      // preact compatibility
-      [onChangeKey]: composeEventHandlers(
-        onChange,
-        onInput,
-        this.input_handleChange,
-      ),
-      onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
-      onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+      ...eventHandlers,
       ...rest,
       id: this.inputId,
     }

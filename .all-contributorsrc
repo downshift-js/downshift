@@ -310,6 +310,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "brentertz",
+      "name": "Brent Ertz",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/202773?v=4",
+      "profile": "https://github.com/brentertz",
+      "contributions": [
+        "ideas"
+      ]
     }
   ]
 }
