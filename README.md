@@ -538,14 +538,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
 - [Multiple editable tag selection](https://codesandbox.io/s/o4yp9vmm8z)
 - [Downshift implemented as compound components and a Higher Order Component](https://codesandbox.io/s/017n1jqo00) (exposes a `withDownshift` higher order component which you can use to get at the state, actions, prop getters in a rendered downshift tree).
-
-<!--
-
-This needs to be updated to the latest version of downshift:
-
-- [downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
-
--->
+- [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 
 If you would like to add an example, follow these steps:
 
