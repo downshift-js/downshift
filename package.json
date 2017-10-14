@@ -22,6 +22,7 @@
     "storybook": "start-storybook -p 6006 -c stories",
     "storybook:build":
       "cd stories && npm install && cd .. && build-storybook -c stories",
+    "setup": "npm install && npm run storybook:build -s && npm run validate",
     "validate":
       "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr",
     "precommit": "kcd-scripts precommit"
