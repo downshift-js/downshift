@@ -500,7 +500,6 @@ These are functions you can call to change the state of the downshift component.
 | `setHighlightedIndex`   | `function(index: number, otherStateToSet: object, cb: Function)` | call to set a new highlighted index                                          |
 | `toggleMenu`            | `function(otherStateToSet: object, cb: Function)`                | toggle the menu open state                                                   |
 | `reset`                 | `function(otherStateToSet: object, cb: Function)`                | this resets downshift's state to a reasonable default                        |
-| `itemToString`          | `function(item: any)`                                            | this is the same as the `itemToString` prop and is provided just as a helper |
 
 > `otherStateToSet` refers to an object to set other internal state. It is
 > recommended to avoid abusing this, but is available if you need it.
@@ -517,6 +516,10 @@ These are values that represent the current state of the downshift component.
 | `inputValue`       | `string` / `null` | the current value of the `getInputProps` input |
 | `isOpen`           | `boolean`         | the menu open state                            |
 | `selectedItem`     | `any`             | the currently selected item input              |
+
+### props
+
+As a convenience, all props you pass to <Downshift /> are forwarded along to you. You can access all props via the `getStateAndHelpers` function.
 
 ## Examples
 
