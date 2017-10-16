@@ -369,9 +369,9 @@ class Downshift extends Component {
       setHighlightedIndex,
       clearSelection,
       clearItems,
-      itemToString,
 
       //props
+      itemToString,
       id,
 
       // state
