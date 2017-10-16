@@ -216,7 +216,8 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/1402095?v=4",
       "profile": "https://github.com/pbomb",
       "contributions": [
-        "tool"
+        "tool",
+        "review"
       ]
     },
     {
@@ -316,6 +317,26 @@
       "name": "Brent Ertz",
       "avatar_url": "https://avatars1.githubusercontent.com/u/202773?v=4",
       "profile": "https://github.com/brentertz",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "Dajust",
+      "name": "Justice Mba ",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8015514?v=4",
+      "profile": "https://github.com/Dajust",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "ellismarkf",
+      "name": "Mark Ellis",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3925281?v=4",
+      "profile": "http://mfellis.com",
       "contributions": [
         "ideas"
       ]

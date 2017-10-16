@@ -332,7 +332,7 @@ class Downshift extends Component {
 
   getStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
-    const {itemToString} = this.props
+    const {id, itemToString} = this.props
     const {
       getRootProps,
       getButtonProps,
@@ -369,7 +369,10 @@ class Downshift extends Component {
       setHighlightedIndex,
       clearSelection,
       clearItems,
+
+      //props
       itemToString,
+      id,
 
       // state
       highlightedIndex,
