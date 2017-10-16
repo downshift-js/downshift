@@ -519,7 +519,7 @@ These are values that represent the current state of the downshift component.
 
 ### props
 
-As a convenience, all props you pass to <Downshift /> are forwarded along to you. You can access all props via the `getStateAndHelpers` function.
+As a convenience, the `id` and `itemToString` props which you pass to `<Downshift />` are available here as well.
 
 ## Examples
 
