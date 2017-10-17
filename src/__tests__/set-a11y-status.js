@@ -31,6 +31,12 @@ test('does add anything for an empty string', () => {
   expect(document.body.innerHTML.trim()).toMatchSnapshot()
 })
 
+test('escapes HTML', () => {
+  const setA11yStatus = setup()
+  setA11yStatus('<script>alert("!!!")</script>')
+  expect(document.body.innerHTML.trim()).toMatchSnapshot()
+})
+
 function setup() {
   jest.resetModules()
   return require('../set-a11y-status').default
