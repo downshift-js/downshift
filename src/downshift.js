@@ -270,9 +270,14 @@ class Downshift extends Component {
   internalSetState(stateToSet, cb) {
     let onChangeArg
     const onStateChangeArg = {}
-    const isSetToStateFunction = typeof stateToSet === 'function'
+    const isStateToSetFunction = typeof stateToSet === 'function'
 
-    if (!isSetToStateFunction && stateToSet.hasOwnProperty('inputValue')) {
+    // we want to call `onInputValueChange` before the `setState` call
+    // so someone controlling the `inputValue` state gets notified of
+    // the input change as soon as possible. This avoids issues with
+    // preserving the cursor position.
+    // See https://github.com/paypal/downshift/issues/217 for more info.
+    if (!isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
       this.props.onInputValueChange(stateToSet.inputValue, {
         ...this.getStateAndHelpers(),
         ...stateToSet,
@@ -281,7 +286,7 @@ class Downshift extends Component {
     return this.setState(
       state => {
         state = this.getState(state)
-        stateToSet = isSetToStateFunction ? stateToSet(state) : stateToSet
+        stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
         // this keeps track of the object we want to call with setState
         const nextState = {}
         // this is just used to tell whether the state changed
@@ -319,7 +324,9 @@ class Downshift extends Component {
           }
         })
 
-        if (isSetToStateFunction && stateToSet.hasOwnProperty('inputValue')) {
+        // if stateToSet is a function, then we weren't able to call onInputValueChange
+        // earlier, so we'll call it now that we know what the inputValue state will be.
+        if (isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
           this.props.onInputValueChange(stateToSet.inputValue, {
             ...this.getStateAndHelpers(),
             ...stateToSet,
