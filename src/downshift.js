@@ -31,6 +31,7 @@ class Downshift extends Component {
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
     onStateChange: PropTypes.func,
+    onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
@@ -62,6 +63,7 @@ class Downshift extends Component {
     id: generateId('downshift'),
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
+    onInputValueChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
     onOuterClick: () => {},
@@ -268,11 +270,18 @@ class Downshift extends Component {
   internalSetState(stateToSet, cb) {
     let onChangeArg
     const onStateChangeArg = {}
+    const isSetToStateFunction = typeof stateToSet === 'function'
+
+    if (!isSetToStateFunction && stateToSet.hasOwnProperty('inputValue')) {
+      this.props.onInputValueChange(stateToSet.inputValue, {
+        ...this.getStateAndHelpers(),
+        ...stateToSet,
+      })
+    }
     return this.setState(
       state => {
         state = this.getState(state)
-        stateToSet =
-          typeof stateToSet === 'function' ? stateToSet(state) : stateToSet
+        stateToSet = isSetToStateFunction ? stateToSet(state) : stateToSet
         // this keeps track of the object we want to call with setState
         const nextState = {}
         // this is just used to tell whether the state changed
@@ -287,6 +296,7 @@ class Downshift extends Component {
           onChangeArg = stateToSet.selectedItem
         }
         stateToSet.type = stateToSet.type || Downshift.stateChangeTypes.unknown
+
         Object.keys(stateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
           // actually changing
@@ -308,6 +318,14 @@ class Downshift extends Component {
             nextState[key] = stateToSet[key]
           }
         })
+
+        if (isSetToStateFunction && stateToSet.hasOwnProperty('inputValue')) {
+          this.props.onInputValueChange(stateToSet.inputValue, {
+            ...this.getStateAndHelpers(),
+            ...stateToSet,
+          })
+        }
+
         return nextState
       },
       () => {
