@@ -340,6 +340,17 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "usandfriends",
+      "name": "us͡an̸df͘rien͜ds͠",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3241922?v=4",
+      "profile": "http://ronak.io/",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
