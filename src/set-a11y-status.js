@@ -14,15 +14,25 @@ function setStatus(status) {
     statuses = [status]
   }
   const div = getStatusDiv()
-  div.innerHTML = `${statuses
-    .filter(Boolean)
-    .map(getStatusHtml)
-    .join('')}`
+
+  // Remove previous children
+  while (div.lastChild) {
+    div.removeChild(div.firstChild)
+  }
+
+  statuses.filter(Boolean).forEach((statusItem, index) => {
+    div.appendChild(getStatusChildDiv(statusItem, index))
+  })
 }
 
-function getStatusHtml(status, index) {
+function getStatusChildDiv(status, index) {
   const display = index === statuses.length - 1 ? 'block' : 'none'
-  return `<div style="display:${display};">${status}</div>`
+
+  const childDiv = document.createElement('div')
+  childDiv.style.display = display
+  childDiv.textContent = status
+
+  return childDiv
 }
 
 function getStatusDiv() {
