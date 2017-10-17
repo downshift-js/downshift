@@ -31,6 +31,7 @@ class Downshift extends Component {
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
     onStateChange: PropTypes.func,
+    onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
@@ -62,6 +63,7 @@ class Downshift extends Component {
     id: generateId('downshift'),
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
+    onInputValueChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
     onOuterClick: () => {},
@@ -268,6 +270,14 @@ class Downshift extends Component {
   internalSetState(stateToSet, cb) {
     let onChangeArg
     const onStateChangeArg = {}
+
+    if (stateToSet.hasOwnProperty('inputValue')) {
+      this.props.onInputValueChange(
+        stateToSet.inputValue,
+        this.getStateAndHelpers(),
+      )
+    }
+
     return this.setState(
       state => {
         state = this.getState(state)
