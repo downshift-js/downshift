@@ -52,7 +52,7 @@ class AxiosAutocomplete extends Component {
                         .catch(error => {
                           console.log(error)
                         })
-                    }, 300);
+                    }, 300)
                   },
                 })}
               />
