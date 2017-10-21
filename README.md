@@ -249,6 +249,16 @@ but differ slightly.
 > so it's not recommended to use it if you can avoid it. If you need it, please
 > open an issue to discuss solidifying the API.
 
+### onInputValueChange
+
+> `function(inputValue: string, stateAndHelpers: object)` | optional, no useful default
+
+Called whenever the input value changes. Useful to use instead or in combination of `onStateChange` when `inputValue` is a controlled prop to [avoid issues with cursor positions](https://github.com/paypal/downshift/issues/217). 
+
+- `inputValue`: The current value of the input
+- `stateAndHelpers`: This is the same thing your `children` prop
+  function is called with (see [Child Callback Function](#child-callback-function))
+
 ### itemCount
 
 > `number` | optional, defaults the number of times you call getItemProps
