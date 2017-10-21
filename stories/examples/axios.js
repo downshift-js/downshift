@@ -36,23 +36,23 @@ class AxiosAutocomplete extends Component {
               <input
                 {...getInputProps({
                   onChange: event => {
-                    // would probably be a good idea to debounce this
-                    // 😅
                     const value = event.target.value
                     if (!value) {
                       return
                     }
-                    axios
-                      .get(baseEndpoint + value)
-                      .then(response => {
-                        const items = response.data.items.map(
-                          item => `${item.name} (id:${item.id.toString()})`,
-                        ) // Added ID to make it unique
-                        this.setState({items})
-                      })
-                      .catch(error => {
-                        console.log(error)
-                      })
+                    setTimeout(() => {
+                      axios
+                        .get(baseEndpoint + value)
+                        .then(response => {
+                          const items = response.data.items.map(
+                            item => `${item.name} (id:${item.id.toString()})`,
+                          ) // Added ID to make it unique
+                          this.setState({items})
+                        })
+                        .catch(error => {
+                          console.log(error)
+                        })
+                    }, 300);
                   },
                 })}
               />
