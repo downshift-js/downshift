@@ -353,11 +353,23 @@
       ]
     },
     {
+      "login": "robin-drexler",
+      "name": "Robin Drexler",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/474248?v=4",
+      "profile": "https://www.robin-drexler.com/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
       "login": "arturoromeroslc",
       "name": "Arturo Romero",
       "avatar_url": "https://avatars0.githubusercontent.com/u/7406639?v=4",
       "profile": "http://arturoromero.info/",
-      "contributions": []
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }
