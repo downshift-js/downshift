@@ -90,6 +90,39 @@ test('can override onOuterClick callback to maintain isOpen state', () => {
   )
 })
 
+test('onInputValueChange called when changes contain inputValue', () => {
+  const handleInputValueChange = jest.fn()
+  const {selectItem} = setup({
+    onInputValueChange: handleInputValueChange,
+  })
+  selectItem('foo')
+  expect(handleInputValueChange).toHaveBeenCalledTimes(1)
+  expect(handleInputValueChange).toHaveBeenCalledWith(
+    'foo',
+    expect.any(Object),
+  )
+})
+
+test('onInputValueChange not called when changes do not contain inputValue', () => {
+  const handleInputValueChange = jest.fn()
+  const {openMenu} = setup({
+    onInputValueChange: handleInputValueChange,
+  })
+  openMenu()
+
+  expect(handleInputValueChange).toHaveBeenCalledTimes(0)
+})
+
+test('onInputValueChange called with empty string on reset', () => {
+  const handleInputValueChange = jest.fn()
+  const {reset} = setup({
+    onInputValueChange: handleInputValueChange,
+  })
+  reset()
+  expect(handleInputValueChange).toHaveBeenCalledTimes(1)
+  expect(handleInputValueChange).toHaveBeenCalledWith('', expect.any(Object))
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
