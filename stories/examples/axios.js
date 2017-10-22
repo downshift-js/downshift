@@ -2,6 +2,20 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import Autocomplete from '../../src'
 
+function debounce(fn, time) {
+  let timeoutId
+  return wrapper
+  function wrapper(...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null
+      fn(...args)
+    }, time)
+  }
+}
+
 const baseEndpoint = 'https://api.github.com/search/repositories?q='
 
 export default Examples
@@ -40,7 +54,7 @@ class AxiosAutocomplete extends Component {
                     if (!value) {
                       return
                     }
-                    setTimeout(() => {
+                    debounce(
                       axios
                         .get(baseEndpoint + value)
                         .then(response => {
@@ -51,8 +65,9 @@ class AxiosAutocomplete extends Component {
                         })
                         .catch(error => {
                           console.log(error)
-                        })
-                    }, 300)
+                        }),
+                      300,
+                    )
                   },
                 })}
               />
