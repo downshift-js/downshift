@@ -351,6 +351,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "robin-drexler",
+      "name": "Robin Drexler",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/474248?v=4",
+      "profile": "https://www.robin-drexler.com/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
