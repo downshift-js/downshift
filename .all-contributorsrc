@@ -361,6 +361,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "arturoromeroslc",
+      "name": "Arturo Romero",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/7406639?v=4",
+      "profile": "http://arturoromero.info/",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }

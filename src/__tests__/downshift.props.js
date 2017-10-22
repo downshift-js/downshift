@@ -97,10 +97,7 @@ test('onInputValueChange called when changes contain inputValue', () => {
   })
   selectItem('foo')
   expect(handleInputValueChange).toHaveBeenCalledTimes(1)
-  expect(handleInputValueChange).toHaveBeenCalledWith(
-    'foo',
-    expect.any(Object),
-  )
+  expect(handleInputValueChange).toHaveBeenCalledWith('foo', expect.any(Object))
 })
 
 test('onInputValueChange not called when changes do not contain inputValue', () => {
