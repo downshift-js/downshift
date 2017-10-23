@@ -227,7 +227,7 @@ and the new state of `downshift`. (see `onStateChange` for more info on
 
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful default
 
-Called when the user selects an item, regardless of the previous selected item. `onChange` is only called when the selected item is different from the previously selected one.
+Called when the user selects an item, regardless of the previous selected item.
  Called with the item that was selected
 and the new state of `downshift`. (see `onStateChange` for more info on
 `stateAndHelpers`).
