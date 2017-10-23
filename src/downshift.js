@@ -30,6 +30,7 @@ class Downshift extends Component {
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
+    onSelect: PropTypes.func,
     onStateChange: PropTypes.func,
     onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
@@ -66,6 +67,7 @@ class Downshift extends Component {
     onInputValueChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
+    onSelect: () => {},
     onOuterClick: () => {},
     environment:
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
@@ -268,7 +270,8 @@ class Downshift extends Component {
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
   internalSetState(stateToSet, cb) {
-    let onChangeArg
+    let isItemSelected, onChangeArg
+
     const onStateChangeArg = {}
     const isStateToSetFunction = typeof stateToSet === 'function'
 
@@ -287,6 +290,11 @@ class Downshift extends Component {
       state => {
         state = this.getState(state)
         stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
+
+        // checks if an item is selected, regardless of if it's different from
+        // what was selected before
+        // used to determine if onSelect and onChange callbacks should be called
+        isItemSelected = stateToSet.hasOwnProperty('selectedItem')
         // this keeps track of the object we want to call with setState
         const nextState = {}
         // this is just used to tell whether the state changed
@@ -294,10 +302,7 @@ class Downshift extends Component {
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
-        if (
-          stateToSet.hasOwnProperty('selectedItem') &&
-          stateToSet.selectedItem !== state.selectedItem
-        ) {
+        if (isItemSelected && stateToSet.selectedItem !== state.selectedItem) {
           onChangeArg = stateToSet.selectedItem
         }
         stateToSet.type = stateToSet.type || Downshift.stateChangeTypes.unknown
@@ -345,6 +350,14 @@ class Downshift extends Component {
         if (hasMoreStateThanType) {
           this.props.onStateChange(onStateChangeArg, this.getStateAndHelpers())
         }
+
+        if (isItemSelected) {
+          this.props.onSelect(
+            stateToSet.selectedItem,
+            this.getStateAndHelpers(),
+          )
+        }
+
         if (onChangeArg !== undefined) {
           this.props.onChange(onChangeArg, this.getStateAndHelpers())
         }

@@ -215,7 +215,20 @@ properties:
 
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful default
 
-Called when the user selects an item. Called with the item that was selected
+Called when the user selects an item and the selected item has changed. Called with the item that was selected
+and the new state of `downshift`. (see `onStateChange` for more info on
+`stateAndHelpers`).
+
+- `selectedItem`: The item that was just selected
+- `stateAndHelpers`: This is the same thing your `children` prop
+  function is called with (see [Child Callback Function](#child-callback-function))
+
+### onSelect
+
+> `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful default
+
+Called when the user selects an item, regardless of the previous selected item.
+ Called with the item that was selected
 and the new state of `downshift`. (see `onStateChange` for more info on
 `stateAndHelpers`).
 
