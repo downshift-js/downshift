@@ -58,6 +58,28 @@ test('onChange only called when the selection changes', () => {
   expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
+test('onSelect called whenever selection happens, even if the item is the same ', () => {
+  const handleSelect = jest.fn()
+  const {selectItem} = setup({
+    onSelect: handleSelect,
+  })
+  selectItem('foo')
+  expect(handleSelect).toHaveBeenCalledTimes(1)
+  expect(handleSelect).toHaveBeenCalledWith('foo', expect.any(Object))
+  handleSelect.mockClear()
+  selectItem('foo')
+  expect(handleSelect).toHaveBeenCalledTimes(1)
+})
+
+test('onSelect not called when nothing was selected', () => {
+  const handleSelect = jest.fn()
+  const {openMenu} = setup({
+    onSelect: handleSelect,
+  })
+  openMenu()
+  expect(handleSelect).not.toHaveBeenCalled()
+})
+
 test('uses given environment', () => {
   const environment = {
     addEventListener: jest.fn(),
