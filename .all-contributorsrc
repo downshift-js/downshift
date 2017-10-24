@@ -370,6 +370,16 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "yp",
+      "name": "yp",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/275483?v=4",
+      "profile": "http://algolab.eu/pirola",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
