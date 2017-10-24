@@ -424,11 +424,15 @@ class Downshift extends Component {
 
   rootRef = node => (this._rootNode = node)
 
-  getRootProps = ({refKey = 'ref', ...rest} = {}) => {
+  getRootProps = (
+    {refKey = 'ref', ...rest} = {},
+    {suppressRefError = false} = {},
+  ) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
     this.getRootProps.refKey = refKey
+    this.getRootProps.suppressRefError = suppressRefError
     return {
       [refKey]: this.rootRef,
       ...rest,
@@ -767,6 +771,7 @@ class Downshift extends Component {
     // apply the props for them.
     this.getRootProps.called = false
     this.getRootProps.refKey = undefined
+    this.getRootProps.suppressRefError = undefined
     // we do something similar for getLabelProps
     this.getLabelProps.called = false
     // and something similar for getInputProps
@@ -776,7 +781,9 @@ class Downshift extends Component {
       return null
     }
     if (this.getRootProps.called) {
-      validateGetRootPropsCalledCorrectly(element, this.getRootProps)
+      if (!this.getRootProps.suppressRefError) {
+        validateGetRootPropsCalledCorrectly(element, this.getRootProps)
+      }
       return element
     } else if (isDOMElement(element)) {
       // they didn't apply the root props, but we can clone

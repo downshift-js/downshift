@@ -266,7 +266,7 @@ but differ slightly.
 
 > `function(inputValue: string, stateAndHelpers: object)` | optional, no useful default
 
-Called whenever the input value changes. Useful to use instead or in combination of `onStateChange` when `inputValue` is a controlled prop to [avoid issues with cursor positions](https://github.com/paypal/downshift/issues/217). 
+Called whenever the input value changes. Useful to use instead or in combination of `onStateChange` when `inputValue` is a controlled prop to [avoid issues with cursor positions](https://github.com/paypal/downshift/issues/217).
 
 - `inputValue`: The current value of the input
 - `stateAndHelpers`: This is the same thing your `children` prop
@@ -400,7 +400,7 @@ being overridden (or overriding the props returned). For example:
 | `getInputProps`  | `function({})` | returns the props you should apply to the `input` element that you render.                  |
 | `getItemProps`   | `function({})` | returns the props you should apply to any menu item elements you render.                    |
 | `getLabelProps`  | `function({})` | returns the props you should apply to the `label` element that you render.                  |
-| `getRootProps`   | `function({})` | returns the props you should apply to the root element that you render. It can be optional. |
+| `getRootProps`   | `function({},{})` | returns the props you should apply to the root element that you render. It can be optional. |
 
 #### `getRootProps`
 
@@ -417,6 +417,17 @@ Required properties:
   call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})`
   and your composite component would forward like:
   `<div ref={props.innerRef} />`
+
+If you're rendering a composite component, `Downshift` checks that
+`getRootProps` is called and that `refKey` is a prop of the returned composite
+component.
+This is done to catch common causes of errors but, in some cases, the check
+could fail even if the ref is correctly forwarded to the root DOM component.
+In these cases, you can provide the object `{suppressRefError : true}` as the
+second argument to `getRootProps` to completely bypass the check.
+** Please use it with extreme care and only if you are absolutely sure that the
+ref is correctly forwarded otherwise `Downshift` will unexpectedly fail. **
+See issue #235 for the discussion that lead to this.
 
 #### `getInputProps`
 
