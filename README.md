@@ -424,10 +424,10 @@ component.
 This is done to catch common causes of errors but, in some cases, the check
 could fail even if the ref is correctly forwarded to the root DOM component.
 In these cases, you can provide the object `{suppressRefError : true}` as the
-second argument to `getRootProps` to completely bypass the check.
-** Please use it with extreme care and only if you are absolutely sure that the
-ref is correctly forwarded otherwise `Downshift` will unexpectedly fail. **
-See issue #235 for the discussion that lead to this.
+second argument to `getRootProps` to completely bypass the check.  
+**Please use it with extreme care and only if you are absolutely sure that the
+ref is correctly forwarded otherwise `Downshift` will unexpectedly fail.**  
+See issue paypal/downshift#235 for the discussion that lead to this.
 
 #### `getInputProps`
 
