@@ -378,7 +378,8 @@
       "profile": "http://algolab.eu/pirola",
       "contributions": [
         "bug",
-        "code"
+        "code",
+        "test"
       ]
     }
   ]
