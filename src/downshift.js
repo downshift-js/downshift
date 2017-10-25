@@ -245,7 +245,7 @@ class Downshift extends Component {
 
   selectItemAtIndex = (itemIndex, otherStateToSet, cb) => {
     const item = this.items[itemIndex]
-    if (!item) {
+    if (item == null) {
       return
     }
     this.selectItem(item, otherStateToSet, cb)
