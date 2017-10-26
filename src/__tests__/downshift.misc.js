@@ -75,8 +75,15 @@ test('toggleMenu can take no arguments at all', () => {
 })
 
 test('clearItems clears the all items', () => {
-  const items = ['Chess']
-  const {wrapper, clearItems} = setup({items})
+  const item = 'Chess'
+  const children = ({getItemProps}) => (
+    <div>
+      <div key={item} {...getItemProps({item})}>
+        {item}
+      </div>
+    </div>
+  )
+  const {wrapper, clearItems} = setup({children})
   clearItems()
   expect(wrapper.instance().items).toEqual([])
 })
