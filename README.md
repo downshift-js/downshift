@@ -86,6 +86,7 @@ npm install --save downshift
 
 > Note also this library supports `preact` out of the box. If you are using
 > `preact` then use the corresponding module in the `preact/dist` folder.
+> You can even `import Downshift from 'downshift/preact'` 👍
 
 ## Usage
 
