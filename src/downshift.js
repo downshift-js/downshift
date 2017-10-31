@@ -749,6 +749,11 @@ class Downshift extends Component {
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
+
+    if (this.props.highlightedIndex !== prevProps.highlightedIndex) {
+      this.setHighlightedIndex()
+    }
+
     this.updateStatus()
   }
 
