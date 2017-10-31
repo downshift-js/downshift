@@ -99,6 +99,22 @@ test('props update of selectedItem will update the inputValue state', () => {
   )
 })
 
+test('props update of highlightedIndex will update highlighted index', () => {
+  const childSpy = jest.fn(() => null)
+  const wrapper = mount(
+    <Downshift highlightedIndex={1}>
+      {childSpy}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  wrapper.setProps({highlightedIndex: 0})
+  expect(childSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: 0,
+    }),
+  )
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
