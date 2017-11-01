@@ -16,6 +16,10 @@ function noop() {}
 function findParent(finder, node, rootNode) {
   if (node !== null && node !== rootNode.parentNode) {
     if (finder(node)) {
+      if (node === document.body) {
+        // in chrome body.scrollTop always return 0
+        return node.scrollTop ? node : document.documentElement
+      }
       return node
     } else {
       return findParent(finder, node.parentNode, rootNode)
@@ -36,6 +40,7 @@ const getClosestScrollParent = findParent.bind(
   node => node.scrollHeight > node.clientHeight,
 )
 
+/* eslint-disable complexity */
 /**
  * Scroll node into view if necessary
  * @param {HTMLElement} node - the element that should scroll into view
@@ -59,6 +64,22 @@ function scrollIntoView(node, rootNode) {
   )
   const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
   const nodeRect = node.getBoundingClientRect()
+
+  if (nodeRect.top < 0) {
+    // the item above view
+    scrollParent.scrollTop += nodeRect.top
+    return
+  }
+
+  if (nodeRect.top > 0 && scrollParentRect.top < 0) {
+    if (nodeRect.bottom > scrollParentRect.bottom + scrollParent.scrollTop) {
+      // the item is below scrollable area
+      scrollParent.scrollTop += nodeRect.bottom - scrollParentRect.bottom
+    }
+    // item and parent top are on different sides of view top border (do nothing)
+    return
+  }
+
   const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
   const nodeTop = nodeOffsetTop - scrollParentTop
   if (nodeTop < scrollParent.scrollTop) {
@@ -81,6 +102,7 @@ function scrollIntoView(node, rootNode) {
   }
   // the item is within the scrollable area (do nothing)
 }
+/* eslint-enable */
 
 /**
  * Simple debounce implementation. Will call the given
