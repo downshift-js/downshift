@@ -62,6 +62,8 @@ function scrollIntoView(node, rootNode) {
     scrollParentStyles.borderBottomWidth,
     10,
   )
+  const bordersWidth =
+    scrollParentBorderTopWidth + scrollParentBorderBottomWidth
   const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
   const nodeRect = node.getBoundingClientRect()
 
@@ -72,9 +74,13 @@ function scrollIntoView(node, rootNode) {
   }
 
   if (nodeRect.top > 0 && scrollParentRect.top < 0) {
-    if (nodeRect.bottom > scrollParentRect.bottom + scrollParent.scrollTop) {
+    if (
+      scrollParentRect.bottom > 0 &&
+      nodeRect.bottom + bordersWidth > scrollParentRect.bottom
+    ) {
       // the item is below scrollable area
-      scrollParent.scrollTop += nodeRect.bottom - scrollParentRect.bottom
+      scrollParent.scrollTop +=
+        nodeRect.bottom - scrollParentRect.bottom + bordersWidth
     }
     // item and parent top are on different sides of view top border (do nothing)
     return
@@ -86,19 +92,12 @@ function scrollIntoView(node, rootNode) {
     // the item is above the scrollable area
     scrollParent.scrollTop = nodeTop
   } else if (
-    nodeTop +
-      nodeRect.height +
-      scrollParentBorderTopWidth +
-      scrollParentBorderBottomWidth >
+    nodeTop + nodeRect.height + bordersWidth >
     scrollParent.scrollTop + scrollParentRect.height
   ) {
     // the item is below the scrollable area
     scrollParent.scrollTop =
-      nodeTop +
-      nodeRect.height -
-      scrollParentRect.height +
-      scrollParentBorderTopWidth +
-      scrollParentBorderBottomWidth
+      nodeTop + nodeRect.height - scrollParentRect.height + bordersWidth
   }
   // the item is within the scrollable area (do nothing)
 }
@@ -271,6 +270,7 @@ export {
   composeEventHandlers,
   debounce,
   scrollIntoView,
+  findParent,
   generateId,
   firstDefined,
   getA11yStatusMessage,
