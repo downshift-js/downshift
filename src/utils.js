@@ -16,9 +16,9 @@ function noop() {}
 function findParent(finder, node, rootNode) {
   if (node !== null && node !== rootNode.parentNode) {
     if (finder(node)) {
-      if (node === document.body) {
+      if (node === document.body && node.scrollTop === 0) {
         // in chrome body.scrollTop always return 0
-        return node.scrollTop ? node : document.documentElement
+        return document.documentElement
       }
       return node
     } else {
