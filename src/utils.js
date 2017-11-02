@@ -40,13 +40,13 @@ const getClosestScrollParent = findParent.bind(
   node => node.scrollHeight > node.clientHeight,
 )
 
-/* eslint-disable complexity */
 /**
  * Scroll node into view if necessary
  * @param {HTMLElement} node - the element that should scroll into view
  * @param {HTMLElement} rootNode - the root element of the component
  * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
+// eslint-disable-next-line complexity
 function scrollIntoView(node, rootNode) {
   const scrollParent = getClosestScrollParent(node, rootNode)
   if (scrollParent === null) {
@@ -101,7 +101,6 @@ function scrollIntoView(node, rootNode) {
   }
   // the item is within the scrollable area (do nothing)
 }
-/* eslint-enable */
 
 /**
  * Simple debounce implementation. Will call the given
