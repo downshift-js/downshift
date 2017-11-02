@@ -20,6 +20,21 @@ test('does nothing if the node is within the scrollable area', () => {
   expect(scrollableNode.scrollTop).toBe(scrollableScrollTop)
 })
 
+test('does nothing if parent.top is above view area and node within view', () => {
+  const scrollableScrollTop = 1000
+  const node = getNode({height: 40, top: 300})
+  // parent bounds is [-1000 + 1000, -500 + 1000] = [0, 500]
+  // node bounds is [300, 340] => node within visible area
+  const scrollableNode = getScrollableNode({
+    top: -1000,
+    height: 500,
+    scrollTop: scrollableScrollTop,
+    children: [node],
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(scrollableScrollTop)
+})
+
 test('aligns to top when the node is above the scrollable parent', () => {
   // TODO: make this test a tiny bit more readable/maintainable...
   const nodeTop = 2
@@ -32,6 +47,29 @@ test('aligns to top when the node is above the scrollable parent', () => {
   })
   scrollIntoView(node, scrollableNode)
   expect(scrollableNode.scrollTop).toBe(5)
+})
+
+test('aligns to top when the node is above view area', () => {
+  const node = getNode({height: 40, top: -15})
+  const scrollableNode = getScrollableNode({
+    top: -50,
+    scrollTop: 100,
+    children: [node],
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(85)
+})
+
+test('aligns to bottom when the node is below the scrollable parent and parent top above view area', () => {
+  const node = getNode({height: 40, top: 280})
+  const scrollableNode = getScrollableNode({
+    top: -60,
+    height: 360,
+    scrollTop: 28,
+    children: [node],
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(48)
 })
 
 test('aligns to bottom when the node is below the scrollable parent', () => {
@@ -88,7 +126,7 @@ function getNode(
     top,
     left: 0,
     right: 50,
-    bottom: height,
+    bottom: top + height,
   })
   div.style.borderTopWidth = borderTopWidth
   div.style.borderBottomWidth = borderBottomWidth
