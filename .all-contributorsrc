@@ -389,6 +389,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "Rendez",
+      "name": "Luis Merino",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/61776?v=4",
+      "profile": "https://github.com/Rendez",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
