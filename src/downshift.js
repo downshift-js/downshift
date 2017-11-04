@@ -740,15 +740,19 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const itemString = this.props.itemToString(this.props.selectedItem)
+    const prevItemString = this.props.itemToString(prevProps.selectedItem)
+
     if (
       this.isControlledProp('selectedItem') &&
-      this.props.selectedItem !== prevProps.selectedItem
+      itemString !== prevItemString
     ) {
       this.internalSetState({
         type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,
-        inputValue: this.props.itemToString(this.props.selectedItem),
+        inputValue: itemString,
       })
     }
+
     this.updateStatus()
   }
 
