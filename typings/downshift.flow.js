@@ -1,8 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 
 // @flow
 
-type A11yOptionsStatusMessageOptions = {
+type A11StatusMessageOptions = {
   highlightedIndex: number,
   highlightedValue: any,
   inputValue: string,
@@ -35,11 +35,14 @@ type GetItemPropsOptions = {
 }
 
 type ControllerStateAndHelpers = {
+  // prop getters
   getRootProps: (options: GetRootPropsOptions) => any,
   getButtonProps: (options: GetButtonPropsOptions) => any,
   getLabelProps: (options: GetLabelPropsOptions) => any,
   getInputProps: (options: GetInputPropsOptions) => any,
   getItemProps: (options: GetItemPropsOptions) => any,
+
+  // actions
   openMenu: () => void,
   closeMenu: () => void,
   toggleMenu: () => void,
@@ -48,29 +51,34 @@ type ControllerStateAndHelpers = {
   selectHighlightedItem: (index: number) => void,
   setHighlightedItem: (index: number) => void,
   clearSelection: () => void,
+
+  // state
   highlightedIndex: number,
   inputValue: string,
   isOpen: boolean,
   selectedItem: any,
 }
 
-class GetInputPropsOptions extends HTMLInputElement {}
+type GetInputPropsOptions = React.InputHTMLAttributes
 
-class GetLabelPropsOptions extends HTMLLabelElement {}
+type GetLabelPropsOptions = React.LabelHTMLAttributes
 
-class GetButtonPropsOptions extends HTMLButtonElement {
-  clearSelection: () => void
-  closeMenu: () => void
-  openMenu: () => void
-  selectHighlightedItem: () => void
-  selectItem: (item: any) => void
-  selectItemAtIndex: (index: number) => void
-  setHighlightedIndex: (index: number) => void
-  toggleMenu: (state: boolean) => void
-  highlightedIndex: number
-  inputValue: string
-  isOpen: boolean
-  selectedItem: any
+type GetButtonPropsOptions = {
+  // actions
+  clearSelection: () => void,
+  closeMenu: () => void,
+  openMenu: () => void,
+  selectHighlightedItem: () => void,
+  selectItem: (item: any) => void,
+  selectItemAtIndex: (index: number) => void,
+  setHighlightedIndex: (index: number) => void,
+  toggleMenu: (state: boolean) => void,
+
+  // state
+  highlightedIndex: number,
+  inputValue: string,
+  isOpen: boolean,
+  selectedItem: any,
 }
 
 type ChildrenFunction = (options: ControllerStateAndHelpers) => React.Node<*>
@@ -81,7 +89,7 @@ type downshiftProps = {
   defaultSelectedItem?: any,
   defaultInputValue?: string,
   defaultIsOpen?: boolean,
-  getA11yStatusMessage?: (options: A11yOptionsStatusMessageOptions) => any,
+  getA11yStatusMessage?: (options: A11StatusMessageOptions) => any,
   itemToString?: (item: any) => any,
   onChange?: (
     options: ChangeOptions,
@@ -98,9 +106,7 @@ type downshiftProps = {
   highlightedIndex?: number,
 }
 
-class Downshift extends React$Component<downshiftProps, void> {
-  props: downshiftProps
-}
+type Downshift = React$Component<downshiftProps, void>
 
 declare module 'downshift' {
   declare export default Downshift
