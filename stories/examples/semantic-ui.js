@@ -139,7 +139,6 @@ function SemanticUIAutocomplete() {
       {({
         highlightedIndex,
         isOpen,
-        toggleMenu,
         clearSelection,
         getRootProps,
         inputValue,
@@ -147,8 +146,8 @@ function SemanticUIAutocomplete() {
         getButtonProps,
         getInputProps,
         getItemProps,
-      }) =>
-        (<Div {...getRootProps({refKey: 'innerRef'})}>
+      }) => (
+        <Div {...getRootProps({refKey: 'innerRef'})}>
           <Div position="relative" css={{paddingRight: '1.75em'}}>
             <Input
               {...getInputProps({
@@ -156,37 +155,41 @@ function SemanticUIAutocomplete() {
                 placeholder: 'Enter some info',
               })}
             />
-            {selectedItem
-              ? <ControlButton
+            {selectedItem ? (
+              <ControlButton
                 css={{paddingTop: 4}}
                 onClick={clearSelection}
                 aria-label="clear selection"
-                >
+              >
                 <XIcon />
               </ControlButton>
-              : <ControlButton {...getButtonProps()}>
+            ) : (
+              <ControlButton {...getButtonProps()}>
                 <ArrowIcon isOpen={isOpen} />
-              </ControlButton>}
+              </ControlButton>
+            )}
           </Div>
-          {isOpen &&
+          {isOpen && (
             <Menu>
               {(inputValue
                 ? advancedFilter(items, inputValue)
-                : items).map((item, index) =>
-                  (<Item
-                    key={item.code}
-                    {...getItemProps({
+                : items
+              ).map((item, index) => (
+                <Item
+                  key={item.code}
+                  {...getItemProps({
                     item,
-                    index,
                     isActive: highlightedIndex === index,
                     isSelected: selectedItem === item,
                   })}
                 >
-                    {item.name}
-                  </Item>),
-              )}
-            </Menu>}
-        </Div>)}
+                  {item.name}
+                </Item>
+              ))}
+            </Menu>
+          )}
+        </Div>
+      )}
     </Autocomplete>
   )
 }

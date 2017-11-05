@@ -39,21 +39,22 @@ function ApolloAutocomplete() {
         selectedItem,
         highlightedIndex,
         isOpen,
-      }) =>
-        (<div>
+      }) => (
+        <div>
           <input {...getInputProps()} />
-          {inputValue
-            ? <ApolloAutocompleteMenuWithData
+          {inputValue ? (
+            <ApolloAutocompleteMenuWithData
               {...{
-                  inputValue,
-                  getItemProps,
-                  selectedItem,
-                  highlightedIndex,
-                  isOpen,
-                }}
-              />
-            : null}
-        </div>)}
+                inputValue,
+                getItemProps,
+                selectedItem,
+                highlightedIndex,
+                isOpen,
+              }}
+            />
+          ) : null}
+        </div>
+      )}
     </Autocomplete>
   )
 }
@@ -73,12 +74,11 @@ function ApolloAutocompleteMenu({
   }
   return (
     <div>
-      {allColors.map(({name: item}, index) =>
-        (<div
+      {allColors.map(({name: item}, index) => (
+        <div
           key={item}
           {...getItemProps({
             item,
-            index,
             style: {
               backgroundColor: highlightedIndex === index ? 'gray' : 'white',
               fontWeight: selectedItem === item ? 'bold' : 'normal',
@@ -86,8 +86,8 @@ function ApolloAutocompleteMenu({
           })}
         >
           {item}
-        </div>),
-      )}
+        </div>
+      ))}
     </div>
   )
 }

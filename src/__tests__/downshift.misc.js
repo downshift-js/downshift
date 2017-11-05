@@ -32,66 +32,36 @@ test('selectItemAtIndex does nothing if there is no item at that index', () => {
   expect(childSpy).not.toHaveBeenCalled()
 })
 
+test('selectItemAtIndex can select item that is an empty string', () => {
+  const items = ['Chess', '']
+  const children = ({getItemProps}) => (
+    <div>
+      {items.map((item, index) => (
+        <div key={index} {...getItemProps({item})}>
+          {item}
+        </div>
+      ))}
+    </div>
+  )
+  const {selectItemAtIndex, childSpy} = setup({children})
+  selectItemAtIndex(1)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({selectedItem: ''}),
+  )
+})
+
 test('clearSelection with an input node focuses the input node', () => {
-  const children = ({getInputProps}) =>
-    (<div>
+  const children = ({getInputProps}) => (
+    <div>
       <input {...getInputProps()} />
-    </div>)
+    </div>
+  )
   const {wrapper, openMenu, selectItem, clearSelection} = setup({children})
   openMenu()
   selectItem('foo')
   clearSelection()
   const input = wrapper.find('input').first()
   expect(document.activeElement).toBe(input.getDOMNode())
-})
-
-test('onStateChange called with changes and all the state', () => {
-  const handleStateChange = jest.fn()
-  const controlledState = {
-    inputValue: '',
-    selectedItem: null,
-  }
-  const {selectItem} = setup({
-    ...controlledState,
-    onStateChange: handleStateChange,
-  })
-  const itemToSelect = 'foo'
-  selectItem(itemToSelect)
-  const changes = {
-    type: Downshift.stateChangeTypes.unknown,
-    selectedItem: itemToSelect,
-    inputValue: itemToSelect,
-  }
-  const allState = {
-    ...controlledState,
-    isOpen: false,
-    highlightedIndex: null,
-  }
-  expect(handleStateChange).toHaveBeenLastCalledWith(changes, allState)
-})
-
-test('onChange called when clearSelection is trigered', () => {
-  const handleChange = jest.fn()
-  const {clearSelection} = setup({
-    selectedItem: 'foo',
-    onChange: handleChange,
-  })
-  clearSelection()
-  expect(handleChange).toHaveBeenCalledTimes(1)
-  expect(handleChange).toHaveBeenCalledWith(null, expect.any(Object))
-})
-
-test('onChange only called when the selection changes', () => {
-  const handleChange = jest.fn()
-  const {selectItem} = setup({
-    onChange: handleChange,
-  })
-  selectItem('foo')
-  expect(handleChange).toHaveBeenCalledTimes(1)
-  expect(handleChange).toHaveBeenCalledWith('foo', expect.any(Object))
-  handleChange.mockClear()
-  selectItem('foo')
-  expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
 test('toggleMenu can take no arguments at all', () => {
@@ -102,6 +72,20 @@ test('toggleMenu can take no arguments at all', () => {
       isOpen: true,
     }),
   )
+})
+
+test('clearItems clears the all items', () => {
+  const item = 'Chess'
+  const children = ({getItemProps}) => (
+    <div>
+      <div key={item} {...getItemProps({item})}>
+        {item}
+      </div>
+    </div>
+  )
+  const {wrapper, clearItems} = setup({children})
+  clearItems()
+  expect(wrapper.instance().items).toEqual([])
 })
 
 test('reset can take no arguments at all', () => {
@@ -116,7 +100,9 @@ test('reset can take no arguments at all', () => {
 
 test('setHighlightedIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {setHighlightedIndex, childSpy} = setup({defaultHighlightedIndex})
+  const {setHighlightedIndex, childSpy} = setup({
+    defaultHighlightedIndex,
+  })
   setHighlightedIndex()
   expect(childSpy).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -127,7 +113,9 @@ test('setHighlightedIndex can take no arguments at all', () => {
 
 test('openAndHighlightDefaultIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {wrapper, childSpy} = setup({defaultHighlightedIndex})
+  const {wrapper, childSpy} = setup({
+    defaultHighlightedIndex,
+  })
   const {openAndHighlightDefaultIndex} = wrapper.instance()
   openAndHighlightDefaultIndex()
   expect(childSpy).toHaveBeenCalledWith(
@@ -137,16 +125,18 @@ test('openAndHighlightDefaultIndex can take no arguments at all', () => {
   )
 })
 
+test('can specify a custom ID which is used in item IDs (good for SSR)', () => {
+  const id = 'my-custom-id'
+  const {getItemProps} = setup({id})
+  expect(getItemProps({item: 'blah'}).id).toContain(id)
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const wrapper = mount(
-    <Downshift {...props}>
-      {childSpy}
-    </Downshift>,
-  )
+  const wrapper = mount(<Downshift {...props}>{childSpy}</Downshift>)
   return {childSpy, wrapper, ...renderArg}
 }

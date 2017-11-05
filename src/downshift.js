@@ -2,22 +2,22 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
-  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,
   generateId,
   firstDefined,
-  isNumber,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
   getElementProps,
   noop,
   requiredProp,
+  pickState,
 } from './utils'
 
 class Downshift extends Component {
@@ -30,10 +30,21 @@ class Downshift extends Component {
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
+    onSelect: PropTypes.func,
     onStateChange: PropTypes.func,
+    onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
+    onOuterClick: PropTypes.func,
     itemCount: PropTypes.number,
+    id: PropTypes.string,
+    environment: PropTypes.shape({
+      addEventListener: PropTypes.func,
+      removeEventListener: PropTypes.func,
+      document: PropTypes.shape({
+        getElementById: PropTypes.func,
+      }),
+    }),
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -50,10 +61,18 @@ class Downshift extends Component {
     defaultInputValue: '',
     defaultIsOpen: false,
     getA11yStatusMessage,
+    id: generateId('downshift'),
     itemToString: i => (i == null ? '' : String(i)),
     onStateChange: () => {},
+    onInputValueChange: () => {},
     onUserAction: () => {},
     onChange: () => {},
+    onSelect: () => {},
+    onOuterClick: () => {},
+    environment:
+      typeof window === 'undefined' /* istanbul ignore next (ssr) */
+        ? {}
+        : window,
   }
 
   // this is an experimental feature
@@ -94,7 +113,6 @@ class Downshift extends Component {
     this.state = state
   }
 
-  id = generateId('downshift')
   root_handleClick = composeEventHandlers(
     this.props.onClick,
     this.root_handleClick,
@@ -120,9 +138,9 @@ class Downshift extends Component {
    */
   getState(stateToMerge = this.state) {
     return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isControlledProp(key) ?
-        this.props[key] :
-        stateToMerge[key]
+      state[key] = this.isControlledProp(key)
+        ? this.props[key]
+        : stateToMerge[key]
       return state
     }, {})
   }
@@ -147,13 +165,14 @@ class Downshift extends Component {
   }
 
   getItemNodeFromIndex = index => {
-    return document.getElementById(this.getItemId(index))
+    return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
     otherStateToSet = {},
   ) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       const rootNode = this._rootNode
@@ -213,10 +232,11 @@ class Downshift extends Component {
   }
 
   selectItem = (item, otherStateToSet, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       {
         isOpen: false,
-        highlightedIndex: null,
+        highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
         inputValue: this.props.itemToString(item),
         ...otherStateToSet,
@@ -227,7 +247,7 @@ class Downshift extends Component {
 
   selectItemAtIndex = (itemIndex, otherStateToSet, cb) => {
     const item = this.items[itemIndex]
-    if (!item) {
+    if (item == null) {
       return
     }
     this.selectItem(item, otherStateToSet, cb)
@@ -250,13 +270,31 @@ class Downshift extends Component {
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
   internalSetState(stateToSet, cb) {
-    let onChangeArg
+    let isItemSelected, onChangeArg
+
     const onStateChangeArg = {}
+    const isStateToSetFunction = typeof stateToSet === 'function'
+
+    // we want to call `onInputValueChange` before the `setState` call
+    // so someone controlling the `inputValue` state gets notified of
+    // the input change as soon as possible. This avoids issues with
+    // preserving the cursor position.
+    // See https://github.com/paypal/downshift/issues/217 for more info.
+    if (!isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
+      this.props.onInputValueChange(stateToSet.inputValue, {
+        ...this.getStateAndHelpers(),
+        ...stateToSet,
+      })
+    }
     return this.setState(
       state => {
         state = this.getState(state)
-        stateToSet =
-          typeof stateToSet === 'function' ? stateToSet(state) : stateToSet
+        stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
+
+        // checks if an item is selected, regardless of if it's different from
+        // what was selected before
+        // used to determine if onSelect and onChange callbacks should be called
+        isItemSelected = stateToSet.hasOwnProperty('selectedItem')
         // this keeps track of the object we want to call with setState
         const nextState = {}
         // this is just used to tell whether the state changed
@@ -264,13 +302,11 @@ class Downshift extends Component {
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
-        if (
-          stateToSet.hasOwnProperty('selectedItem') &&
-          stateToSet.selectedItem !== state.selectedItem
-        ) {
+        if (isItemSelected && stateToSet.selectedItem !== state.selectedItem) {
           onChangeArg = stateToSet.selectedItem
         }
         stateToSet.type = stateToSet.type || Downshift.stateChangeTypes.unknown
+
         Object.keys(stateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
           // actually changing
@@ -292,6 +328,16 @@ class Downshift extends Component {
             nextState[key] = stateToSet[key]
           }
         })
+
+        // if stateToSet is a function, then we weren't able to call onInputValueChange
+        // earlier, so we'll call it now that we know what the inputValue state will be.
+        if (isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
+          this.props.onInputValueChange(stateToSet.inputValue, {
+            ...this.getStateAndHelpers(),
+            ...stateToSet,
+          })
+        }
+
         return nextState
       },
       () => {
@@ -302,21 +348,29 @@ class Downshift extends Component {
         // we have relevant information to pass them.
         const hasMoreStateThanType = Object.keys(onStateChangeArg).length > 1
         if (hasMoreStateThanType) {
-          this.props.onStateChange(onStateChangeArg, this.getState())
+          this.props.onStateChange(onStateChangeArg, this.getStateAndHelpers())
         }
+
+        if (isItemSelected) {
+          this.props.onSelect(
+            stateToSet.selectedItem,
+            this.getStateAndHelpers(),
+          )
+        }
+
         if (onChangeArg !== undefined) {
-          this.props.onChange(onChangeArg, this.getState())
+          this.props.onChange(onChangeArg, this.getStateAndHelpers())
         }
         // this is currently undocumented and therefore subject to change
         // We'll try to not break it, but just be warned.
-        this.props.onUserAction(onStateChangeArg, this.getState())
+        this.props.onUserAction(onStateChangeArg, this.getStateAndHelpers())
       },
     )
   }
 
-  getControllerStateAndHelpers() {
+  getStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
-    const {itemToString} = this.props
+    const {id, itemToString} = this.props
     const {
       getRootProps,
       getButtonProps,
@@ -331,6 +385,7 @@ class Downshift extends Component {
       selectHighlightedItem,
       setHighlightedIndex,
       clearSelection,
+      clearItems,
       reset,
     } = this
     return {
@@ -351,7 +406,11 @@ class Downshift extends Component {
       selectHighlightedItem,
       setHighlightedIndex,
       clearSelection,
+      clearItems,
+
+      //props
       itemToString,
+      id,
 
       // state
       highlightedIndex,
@@ -365,32 +424,14 @@ class Downshift extends Component {
 
   rootRef = node => (this._rootNode = node)
 
-  getRootProps = ({refKey = 'ref', onClick, ...rest} = {}) => {
+  getRootProps = ({refKey = 'ref', ...rest} = {}) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
     this.getRootProps.refKey = refKey
     return {
       [refKey]: this.rootRef,
-      onClick: composeEventHandlers(onClick, this.root_handleClick),
       ...rest,
-    }
-  }
-
-  root_handleClick = event => {
-    event.preventDefault()
-    const itemParent = findParent(
-      node => {
-        const index = this.getItemIndexFromId(node.getAttribute('id'))
-        return isNumber(index)
-      },
-      event.target,
-      this._rootNode,
-    )
-    if (itemParent) {
-      this.selectItemAtIndex(
-        this.getItemIndexFromId(itemParent.getAttribute('id')),
-      )
     }
   }
 
@@ -414,8 +455,8 @@ class Downshift extends Component {
     },
 
     Enter(event) {
-      event.preventDefault()
       if (this.getState().isOpen) {
+        event.preventDefault()
         this.selectHighlightedItem({
           type: Downshift.stateChangeTypes.keyDownEnter,
         })
@@ -441,13 +482,18 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
     const {isOpen} = this.getState()
+    const eventHandlers = rest.disabled
+      ? {}
+      : {
+          onClick: composeEventHandlers(onClick, this.button_handleClick),
+          onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+        }
     return {
       role: 'button',
       'aria-label': isOpen ? 'close menu' : 'open menu',
       'aria-expanded': isOpen,
       'aria-haspopup': true,
-      onClick: composeEventHandlers(onClick, this.button_handleClick),
-      onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+      ...eventHandlers,
       ...rest,
     }
   }
@@ -507,29 +553,38 @@ class Downshift extends Component {
       rest.id,
       generateId('downshift-input'),
     )
-    const onChangeKey =
-      process.env.LIBRARY === 'preact' ? /* istanbul ignore next (preact) */
-      'onInput' :
-        'onChange'
+    // the boolean cast here is necessary due to a weird deal with
+    // babel-plugin-istanbul + preval.macro. No idea...
+    const isPreact = Boolean(
+      preval`module.exports = process.env.BUILD_PREACT === 'true'`,
+    )
+    const onChangeKey = isPreact /* istanbul ignore next (preact) */
+      ? 'onInput'
+      : 'onChange'
     const {inputValue, isOpen, highlightedIndex} = this.getState()
+    const eventHandlers = rest.disabled
+      ? {}
+      : {
+          // preact compatibility
+          [onChangeKey]: composeEventHandlers(
+            onChange,
+            onInput,
+            this.input_handleChange,
+          ),
+          onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
+          onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+        }
     return {
       role: 'combobox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
-        typeof highlightedIndex === 'number' && highlightedIndex >= 0 ?
-          this.getItemId(highlightedIndex) :
-          null,
+        typeof highlightedIndex === 'number' && highlightedIndex >= 0
+          ? this.getItemId(highlightedIndex)
+          : null,
       autoComplete: 'off',
       value: inputValue,
-      // preact compatibility
-      [onChangeKey]: composeEventHandlers(
-        onChange,
-        onInput,
-        this.input_handleChange,
-      ),
-      onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
-      onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+      ...eventHandlers,
       ...rest,
       id: this.inputId,
     }
@@ -558,26 +613,24 @@ class Downshift extends Component {
 
   /////////////////////////////// ITEM
   getItemId(index) {
-    return `${this.id}-item-${index}`
-  }
-
-  getItemIndexFromId(id) {
-    if (id) {
-      return Number(id.split(`${this.id}-item-`)[1])
-    } else {
-      return null
-    }
+    return `${this.props.id}-item-${index}`
   }
 
   getItemProps = (
     {
       onMouseEnter,
+      onClick,
+      index,
       item = requiredProp('getItemProps', 'item'),
-      index = requiredProp('getItemProps', 'index'),
       ...rest
     } = {},
   ) => {
-    this.items[index] = item
+    if (index === undefined) {
+      this.items.push(item)
+      index = this.items.indexOf(item)
+    } else {
+      this.items[index] = item
+    }
     return {
       id: this.getItemId(index),
       onMouseEnter: composeEventHandlers(onMouseEnter, () => {
@@ -585,12 +638,20 @@ class Downshift extends Component {
           type: Downshift.stateChangeTypes.itemMouseEnter,
         })
       }),
+      onClick: composeEventHandlers(onClick, () => {
+        this.selectItemAtIndex(index)
+      }),
       ...rest,
     }
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ ITEM
 
+  clearItems = () => {
+    this.items = []
+  }
+
   reset = (otherStateToSet = {}, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({selectedItem}) => ({
         isOpen: false,
@@ -603,6 +664,7 @@ class Downshift extends Component {
   }
 
   toggleMenu = (otherStateToSet = {}, cb) => {
+    otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({isOpen}) => {
         return {isOpen: !isOpen, ...otherStateToSet}
@@ -662,16 +724,18 @@ class Downshift extends Component {
           !this._rootNode.contains(event.target)) &&
         this.getState().isOpen
       ) {
-        this.reset({type: Downshift.stateChangeTypes.mouseUp})
+        this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.props.onOuterClick(this.getStateAndHelpers()),
+        )
       }
     }
-    window.addEventListener('mousedown', onMouseDown)
-    window.addEventListener('mouseup', onMouseUp)
+    this.props.environment.addEventListener('mousedown', onMouseDown)
+    this.props.environment.addEventListener('mouseup', onMouseUp)
 
     this.cleanup = () => {
       this._isMounted = false
-      window.removeEventListener('mousedown', onMouseDown)
-      window.removeEventListener('mouseup', onMouseUp)
+      this.props.environment.removeEventListener('mousedown', onMouseDown)
+      this.props.environment.removeEventListener('mouseup', onMouseUp)
     }
   }
 
@@ -696,7 +760,7 @@ class Downshift extends Component {
     const children = unwrapArray(this.props.children, noop)
     // because the items are rerendered every time we call the children
     // we clear this out each render and
-    this.items = []
+    this.clearItems()
     // we reset this so we know whether the user calls getRootProps during
     // this render. If they do then we don't need to do anything,
     // if they don't then we need to clone the element they return and
@@ -707,7 +771,7 @@ class Downshift extends Component {
     this.getLabelProps.called = false
     // and something similar for getInputProps
     this.getInputProps.called = false
-    const element = unwrapArray(children(this.getControllerStateAndHelpers()))
+    const element = unwrapArray(children(this.getStateAndHelpers()))
     if (!element) {
       return null
     }
@@ -748,11 +812,6 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
-    )
-  }
-  if (!getElementProps(element).hasOwnProperty('onClick')) {
-    throw new Error(
-      `downshift: You must apply the "onClick" prop from getRootProps onto your root element.`,
     )
   }
 }

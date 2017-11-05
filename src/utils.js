@@ -16,6 +16,10 @@ function noop() {}
 function findParent(finder, node, rootNode) {
   if (node !== null && node !== rootNode.parentNode) {
     if (finder(node)) {
+      if (node === document.body && node.scrollTop === 0) {
+        // in chrome body.scrollTop always return 0
+        return document.documentElement
+      }
       return node
     } else {
       return findParent(finder, node.parentNode, rootNode)
@@ -42,6 +46,7 @@ const getClosestScrollParent = findParent.bind(
  * @param {HTMLElement} rootNode - the root element of the component
  * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
  */
+// eslint-disable-next-line complexity
 function scrollIntoView(node, rootNode) {
   const scrollParent = getClosestScrollParent(node, rootNode)
   if (scrollParent === null) {
@@ -57,27 +62,42 @@ function scrollIntoView(node, rootNode) {
     scrollParentStyles.borderBottomWidth,
     10,
   )
+  const bordersWidth =
+    scrollParentBorderTopWidth + scrollParentBorderBottomWidth
   const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
   const nodeRect = node.getBoundingClientRect()
+
+  if (nodeRect.top < 0) {
+    // the item above view
+    scrollParent.scrollTop += nodeRect.top
+    return
+  }
+
+  if (nodeRect.top > 0 && scrollParentRect.top < 0) {
+    if (
+      scrollParentRect.bottom > 0 &&
+      nodeRect.bottom + bordersWidth > scrollParentRect.bottom
+    ) {
+      // the item is below scrollable area
+      scrollParent.scrollTop +=
+        nodeRect.bottom - scrollParentRect.bottom + bordersWidth
+    }
+    // item and parent top are on different sides of view top border (do nothing)
+    return
+  }
+
   const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
   const nodeTop = nodeOffsetTop - scrollParentTop
   if (nodeTop < scrollParent.scrollTop) {
     // the item is above the scrollable area
     scrollParent.scrollTop = nodeTop
   } else if (
-    nodeTop +
-      nodeRect.height +
-      scrollParentBorderTopWidth +
-      scrollParentBorderBottomWidth >
+    nodeTop + nodeRect.height + bordersWidth >
     scrollParent.scrollTop + scrollParentRect.height
   ) {
     // the item is below the scrollable area
     scrollParent.scrollTop =
-      nodeTop +
-      nodeRect.height -
-      scrollParentRect.height +
-      scrollParentBorderTopWidth +
-      scrollParentBorderBottomWidth
+      nodeTop + nodeRect.height - scrollParentRect.height + bordersWidth
   }
   // the item is within the scrollable area (do nothing)
 }
@@ -130,18 +150,20 @@ function generateId(prefix) {
 }
 
 /**
+ * This is only used in tests... Could be useful in SSR?
+ * @param {Number} num The number to set the idCountry to
+ */
+function setIdCounter(num) {
+  idCounter = num
+}
+
+/**
  * Returns the first argument that is not undefined
  * @param {...*} args the arguments
  * @return {*} the defined value
  */
 function firstDefined(...args) {
   return args.find(a => typeof a !== 'undefined')
-}
-
-function isNumber(thing) {
-  // not NaN and is a number type
-  // eslint-disable-next-line no-self-compare
-  return thing === thing && typeof thing === 'number'
 }
 
 // eslint-disable-next-line complexity
@@ -164,9 +186,9 @@ function getA11yStatusMessage({
   if (!resultCount) {
     return 'No results.'
   } else if (!highlightedItem || resultCountChanged) {
-    return `${resultCount} ${resultCount === 1 ?
-      'result is' :
-      'results are'} available, use up and down arrow keys to navigate.`
+    return `${resultCount} ${resultCount === 1
+      ? 'result is'
+      : 'results are'} available, use up and down arrow keys to navigate.`
   }
   return itemToString(highlightedItem)
 }
@@ -221,19 +243,41 @@ function requiredProp(fnName, propName) {
   throw new Error(`The property "${propName}" is required in "${fnName}"`)
 }
 
+const stateKeys = [
+  'highlightedIndex',
+  'inputValue',
+  'isOpen',
+  'selectedItem',
+  'type',
+]
+/**
+ * @param {Object} state The state object
+ * @return {Object} State that is relevant to downshift
+ */
+function pickState(state = {}) {
+  const result = {}
+  stateKeys.forEach(k => {
+    if (state.hasOwnProperty(k)) {
+      result[k] = state[k]
+    }
+  })
+  return result
+}
+
 export {
   cbToCb,
-  findParent,
   composeEventHandlers,
   debounce,
   scrollIntoView,
+  findParent,
   generateId,
   firstDefined,
-  isNumber,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
   getElementProps,
   noop,
   requiredProp,
+  setIdCounter,
+  pickState,
 }

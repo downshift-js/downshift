@@ -45,10 +45,7 @@ class ReactPopperAutocomplete extends PureComponent {
         }}
       >
         <Manager>
-          <Downshift
-            onChange={selected => this.setState({selected})}
-            style={{display: 'inline-block', position: 'relative'}}
-          >
+          <Downshift style={{display: 'inline-block', position: 'relative'}}>
             {({
               getInputProps,
               getItemProps,
@@ -56,15 +53,15 @@ class ReactPopperAutocomplete extends PureComponent {
               selectedItem,
               highlightedIndex,
               isOpen,
-            }) =>
-              (<div>
+            }) => (
+              <div>
                 <Target>
-                  <input {...getInputProps()} />
+                  <input {...getInputProps({placeholder: 'Type a position'})} />
                 </Target>
                 <div>
-                  {isOpen &&
+                  {isOpen && (
                     <Popper
-                      placement={this.state.selected}
+                      placement={selectedItem || 'bottom'}
                       style={{backgroundColor: 'orange'}}
                     >
                       {this.props.items
@@ -73,12 +70,9 @@ class ReactPopperAutocomplete extends PureComponent {
                             !inputValue ||
                             i.toLowerCase().includes(inputValue.toLowerCase()),
                         )
-                        .map((item, index) =>
-                          (<div
-                            {...getItemProps({
-                              index,
-                              item,
-                            })}
+                        .map((item, index) => (
+                          <div
+                            {...getItemProps({item})}
                             key={item}
                             style={{
                               backgroundColor:
@@ -90,11 +84,13 @@ class ReactPopperAutocomplete extends PureComponent {
                             }}
                           >
                             {item}
-                          </div>),
-                        )}
-                    </Popper>}
+                          </div>
+                        ))}
+                    </Popper>
+                  )}
                 </div>
-              </div>)}
+              </div>
+            )}
           </Downshift>
         </Manager>
       </div>

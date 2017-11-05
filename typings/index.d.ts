@@ -1,107 +1,125 @@
-import * as React from 'react';
+import * as React from 'react'
 
 export interface DownshiftProps {
-    children: ChildrenFunction;
-    defaultHighlightedIndex?: number;
-    defaultSelectedItem?: any;
-    defaultInputValue?: string;
-    defaultIsOpen?: boolean;
-    getA11yStatusMessage?: (options: A11StatusMessageOptions) => any;
-    itemToString?: (item: any) => string;
-    onChange?: (selectedItem: any, allState: any) => void;
-    onStateChange?: (options: StateChangeOptions, allState: any) => void;
-    onClick?: Function;
-    selectedItem?: any;
-    isOpen?: boolean;
-    inputValue?: string;
-    highlightedIndex?: number;
+  children: ChildrenFunction
+  defaultHighlightedIndex?: number | null
+  defaultSelectedItem?: any
+  defaultInputValue?: string
+  defaultIsOpen?: boolean
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any
+  itemToString?: (item: any) => string
+  onChange?: (
+    selectedItem: any,
+    stateAndHelpers: ControllerStateAndHelpers,
+  ) => void
+  onOuterClick?: () => void
+  onStateChange?: (
+    options: StateChangeOptions,
+    stateAndHelpers: ControllerStateAndHelpers,
+  ) => void
+  onUserAction?: (
+    options: StateChangeOptions,
+    stateAndHelpers: ControllerStateAndHelpers,
+  ) => void
+  itemCount?: number
+  selectedItem?: any
+  isOpen?: boolean
+  inputValue?: string
+  highlightedIndex?: number
+  id?: string
+  environment?: Environment
 }
 
-export interface A11StatusMessageOptions {
-    highlightedIndex: number;
-    highlightedValue: any;
-    inputValue: string;
-    isOpen: boolean;
-    itemToString: (item: any) => string;
-    previousResultCount: number;
-    resultCount: number;
-    selectedItem: any;
+export interface Environment {
+  addEventListener: (type: string, cb: Function) => void
+  removeEventListener: (type: string, cb: Function) => void
+  document: Document
 }
 
-export interface ChangeOptions {
-    selectedItem: any;
-    previousItem: any;
+export interface Document {
+  getElementById: (id: string) => HTMLElement
+}
+
+export interface A11yStatusMessageOptions {
+  highlightedIndex: number | null
+  highlightedValue: any
+  inputValue: string
+  isOpen: boolean
+  itemToString: (item: any) => string
+  previousResultCount: number
+  resultCount: number
+  selectedItem: any
 }
 
 export interface StateChangeOptions {
-    highlightedIndex: number;
-    inputValue: string;
-    isOpen: boolean;
-    selectedItem: any;
+  highlightedIndex: number
+  inputValue: string
+  isOpen: boolean
+  selectedItem: any
 }
 
 export interface GetRootPropsOptions {
-    refKey: string;
+  refKey: string
 }
 
-export interface GetInputPropsOptions extends React.HTMLProps<HTMLInputElement> { }
+export interface GetInputPropsOptions
+  extends React.HTMLProps<HTMLInputElement> {}
 
-export interface GetLabelPropsOptions extends React.HTMLProps<HTMLLabelElement> { }
+export interface GetLabelPropsOptions
+  extends React.HTMLProps<HTMLLabelElement> {}
 
-export interface GetButtonPropsOptions extends React.HTMLProps<HTMLButtonElement> {
-    // actions
-    clearSelection: () => void;
-    closeMenu: () => void;
-    openMenu: () => void;
-    selectHighlightedItem: () => void;
-    selectItem: (item: any) => void;
-    selectItemAtIndex: (index: number) => void;
-    setHighlightedIndex: (index: number) => void;
-    toggleMenu: (state: boolean) => void;
-
-    // state
-    highlightedIndex: number;
-    inputValue: string;
-    isOpen: boolean;
-    selectedItem: any;
-}
+export interface GetButtonPropsOptions
+  extends React.HTMLProps<HTMLButtonElement> {}
 
 interface OptionalExtraGetItemPropsOptions {
-    [key: string]: any;
+  [key: string]: any
 }
 
 export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
-    index: number;
-    item: any;
+  index?: number
+  item: any
 }
 
 export interface ControllerStateAndHelpers {
-    // prop getters
-    getRootProps: (options: GetRootPropsOptions) => any;
-    getButtonProps: (options?: GetButtonPropsOptions) => any;
-    getLabelProps: (options?: GetLabelPropsOptions) => any;
-    getInputProps: (options?: GetInputPropsOptions) => any;
-    getItemProps: (options: GetItemPropsOptions) => any;
+  // prop getters
+  getRootProps: (options: GetRootPropsOptions) => any
+  getButtonProps: (options?: GetButtonPropsOptions) => any
+  getLabelProps: (options?: GetLabelPropsOptions) => any
+  getInputProps: (options?: GetInputPropsOptions) => any
+  getItemProps: (options: GetItemPropsOptions) => any
 
-    // actions
-    openMenu: () => void;
-    closeMenu: () => void;
-    toggleMenu: () => void;
-    selectItem: (item: any) => void;
-    selectItemAtIndex: (index: number) => void;
-    selectHighlightedItem: (index: number) => void;
-    setHighlightedItem: (index: number) => void;
-    clearSelection: () => void;
+  // actions
+  openMenu: (cb?: Function) => void
+  closeMenu: (cb?: Function) => void
+  toggleMenu: (cb?: Function) => void
+  selectItem: (item: any, otherStateToSet?: object, cb?: Function) => void
+  selectItemAtIndex: (
+    index: number,
+    otherStateToSet?: object,
+    cb?: Function,
+  ) => void
+  selectHighlightedItem: (otherStateToSet?: object, cb?: Function) => void
+  setHighlightedIndex: (
+    index: number,
+    otherStateToSet?: object,
+    cb?: Function,
+  ) => void
+  clearSelection: (cb?: Function) => void
+  clearItems: () => void
+  reset: (otherStateToSet?: object, cb?: Function) => void
+  itemToString: (item: any) => void
 
-    // state
-    highlightedIndex: number;
-    inputValue: string;
-    isOpen: boolean;
-    selectedItem: any;
+  // state
+  highlightedIndex: number | null
+  inputValue: string | null
+  isOpen: boolean
+  selectedItem: any
 }
 
-export type ChildrenFunction = (options: ControllerStateAndHelpers) => React.ReactNode;
-export type DownshiftInterface = React.ComponentClass<DownshiftProps>;
+export type ChildrenFunction = (
+  options: ControllerStateAndHelpers,
+) => React.ReactNode
+export type DownshiftInterface = React.ComponentClass<DownshiftProps>
 
-declare const Downshift: DownshiftInterface;
-export default Downshift;
+declare const Downshift: DownshiftInterface
+export default Downshift

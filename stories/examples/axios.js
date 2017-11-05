@@ -2,6 +2,20 @@ import React, {Component} from 'react'
 import axios from 'axios'
 import Autocomplete from '../../src'
 
+function debounce(fn, time) {
+  let timeoutId
+  return wrapper
+  function wrapper(...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null
+      fn(...args)
+    }, time)
+  }
+}
+
 const baseEndpoint = 'https://api.github.com/search/repositories?q='
 
 export default Examples
@@ -36,34 +50,34 @@ class AxiosAutocomplete extends Component {
               <input
                 {...getInputProps({
                   onChange: event => {
-                    // would probably be a good idea to debounce this
-                    // 😅
                     const value = event.target.value
                     if (!value) {
                       return
                     }
-                    axios
-                      .get(baseEndpoint + value)
-                      .then(response => {
-                        const items = response.data.items.map(
-                          item => `${item.name} (id:${item.id.toString()})`,
-                        ) // Added ID to make it unique
-                        this.setState({items})
-                      })
-                      .catch(error => {
-                        console.log(error)
-                      })
+                    debounce(
+                      axios
+                        .get(baseEndpoint + value)
+                        .then(response => {
+                          const items = response.data.items.map(
+                            item => `${item.name} (id:${item.id.toString()})`,
+                          ) // Added ID to make it unique
+                          this.setState({items})
+                        })
+                        .catch(error => {
+                          console.log(error)
+                        }),
+                      300,
+                    )
                   },
                 })}
               />
-              {isOpen &&
+              {isOpen && (
                 <div>
-                  {this.state.items.map((item, index) =>
-                    (<div
+                  {this.state.items.map((item, index) => (
+                    <div
                       key={index}
                       {...getItemProps({
                         item,
-                        index,
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'gray' : 'white',
@@ -72,9 +86,10 @@ class AxiosAutocomplete extends Component {
                       })}
                     >
                       {item}
-                    </div>),
-                  )}
-                </div>}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )
         }}

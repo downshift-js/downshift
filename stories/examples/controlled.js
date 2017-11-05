@@ -176,38 +176,39 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
       {({
         getInputProps,
         getItemProps,
-        getRootProps,
         highlightedIndex,
         inputValue,
         isOpen,
         selectedItem,
-      }) =>
-        (<div>
+      }) => (
+        <div>
           <Input
             {...getInputProps({
               placeholder: 'Favorite color ?',
               onChange: onInputChange,
             })}
           />
-          {isOpen &&
+          {isOpen && (
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
               {(inputValue
                 ? matchSorter(items, inputValue)
-                : items).map((item, index) =>
-                  (<Item
-                    key={item}
-                    {...getItemProps({
+                : items
+              ).map((item, index) => (
+                <Item
+                  key={item}
+                  {...getItemProps({
                     item,
-                    index,
                     isActive: highlightedIndex === index,
                     isSelected: selectedItem === item,
                   })}
                 >
-                    {item}
-                  </Item>),
-              )}
-            </div>}
-        </div>)}
+                  {item}
+                </Item>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </Autocomplete>
   )
 }

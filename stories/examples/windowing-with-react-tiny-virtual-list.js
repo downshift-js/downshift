@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import VirtualList from 'react-tiny-virtual-list'
 import matchSorter from 'match-sorter'
 import Downshift from '../../src'
@@ -46,38 +45,39 @@ class Example extends React.Component {
               isOpen,
               selectedItem,
               highlightedIndex,
-            }) =>
-              (<div>
+            }) => (
+              <div>
                 <input {...getInputProps()} />
-                {isOpen
-                  ? <VirtualList
+                {isOpen ? (
+                  <VirtualList
                     width={300}
                     scrollToIndex={highlightedIndex || 0}
+                    scrollToAlignment="auto"
                     height={200}
                     itemCount={items.length}
                     itemSize={20}
-                    renderItem={({index, style}) =>
-                        (<div
-                          key={items[index].code}
-                          {...getItemProps({
-                            item: items[index],
-                            index,
-                            style: {
-                              ...style,
-                              backgroundColor:
-                                highlightedIndex === index ? 'gray' : 'white',
-                              fontWeight:
-                                selectedItem === items[index]
-                                  ? 'bold'
-                                  : 'normal',
-                            },
-                          })}
-                        >
-                          {items[index].name}
-                        </div>)}
-                    />
-                  : null}
-              </div>)}
+                    renderItem={({index, style}) => (
+                      <div
+                        key={items[index].code}
+                        {...getItemProps({
+                          item: items[index],
+                          index,
+                          style: {
+                            ...style,
+                            backgroundColor:
+                              highlightedIndex === index ? 'gray' : 'white',
+                            fontWeight:
+                              selectedItem === items[index] ? 'bold' : 'normal',
+                          },
+                        })}
+                      >
+                        {items[index].name}
+                      </div>
+                    )}
+                  />
+                ) : null}
+              </div>
+            )}
           </Downshift>
         </div>
       </div>

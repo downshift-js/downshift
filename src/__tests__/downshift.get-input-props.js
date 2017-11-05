@@ -145,7 +145,7 @@ test('escape on an input without a selection should reset downshift and close th
   const input = wrapper.find(sel('input'))
   input.simulate('change', {target: {value: 'p'}})
   input.simulate('keydown', {key: 'Escape'})
-  expect(input.node.value).toBe('')
+  expect(input.instance().value).toBe('')
   expect(childSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -243,6 +243,23 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
   )
 })
 
+// normally this test would be like the others where we render and then simulate a click on the
+// button to ensure that a disabled input cannot be interacted with, however this is only a problem in IE11
+// so we have to get into the implementation details a little bit (unless we want to run these tests
+// in IE11... no thank you 🙅)
+test(`getInputProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
+  const {getInputProps} = setupWithDownshiftController()
+  const props = getInputProps({disabled: true})
+  const entry = Object.entries(props).find(
+    ([_key, value]) => typeof value === 'function',
+  )
+  if (entry) {
+    throw new Error(
+      `getInputProps should not have any props that are callbacks. It has ${entry[0]}.`,
+    )
+  }
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const {Component, childSpy} = setup({items})
@@ -254,7 +271,7 @@ function setupDownshiftWithState() {
   input.simulate('keydown', {key: 'ArrowDown'})
   // ENTER to select the first one
   input.simulate('keydown', {key: 'Enter'})
-  expect(input.node.value).toBe(items[0])
+  expect(input.instance().value).toBe(items[0])
   // ↓
   input.simulate('keydown', {key: 'ArrowDown'})
   input.simulate('change', {target: {value: 'bu'}})
@@ -264,34 +281,44 @@ function setupDownshiftWithState() {
 
 function setup({items = colors} = {}) {
   /* eslint-disable react/jsx-closing-bracket-location */
-  const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) =>
-    (<div>
+  const childSpy = jest.fn(({isOpen, getInputProps, getItemProps}) => (
+    <div>
       <input {...getInputProps({'data-test': 'input'})} />
-      {isOpen &&
+      {isOpen && (
         <div>
-          {items.map((item, index) =>
-            (<div
+          {items.map((item, index) => (
+            <div
               key={item.index || index}
               {...getItemProps({item, index: item.index || index})}
             >
               {item.value ? item.value : item}
-            </div>),
-          )}
-        </div>}
-    </div>),
-  )
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  ))
 
   function BasicDownshift(props) {
-    return (
-      <Downshift {...props}>
-        {childSpy}
-      </Downshift>
-    )
+    return <Downshift {...props}>{childSpy}</Downshift>
   }
   return {
     Component: BasicDownshift,
     childSpy,
   }
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  mount(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    </Downshift>,
+  )
+  return renderArg
 }
 
 function sel(id) {
