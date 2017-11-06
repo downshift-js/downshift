@@ -124,12 +124,12 @@ test('onInputValueChange called when changes contain inputValue', () => {
 
 test('onInputValueChange not called when changes do not contain inputValue', () => {
   const handleInputValueChange = jest.fn()
-  const {wrapper} = setup({
+  const {openMenu} = setup({
     onInputValueChange: handleInputValueChange,
-    selectedItem: {},
   })
 
-  wrapper.setProps({selectedItem: {}})
+  openMenu()
+
   expect(handleInputValueChange).toHaveBeenCalledTimes(0)
 })
 

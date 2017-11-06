@@ -92,6 +92,22 @@ test('props update of selectedItem will update the inputValue state', () => {
   )
 })
 
+test('props update of selectedItem will not update inputValue state', () => {
+  const childSpy = jest.fn(() => null)
+  const wrapper = mount(
+    <Downshift
+      onInputValueChange={childSpy}
+      selectedItemChanged={(prevItem, item) => prevItem.id !== item.id}
+      selectedItem={{id: '123', value: 'wow'}}
+    >
+      {() => null}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  wrapper.setProps({selectedItem: {id: '123', value: 'not wow'}})
+  expect(childSpy).not.toHaveBeenCalled()
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
