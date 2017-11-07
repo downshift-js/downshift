@@ -182,6 +182,13 @@ This is the initial `isOpen` value.
 Used to determine the string value for the selected item (which is used to
 compute the `inputValue`.
 
+### selectedItemChanged
+
+> `function(prevItem: any, item: any)` | defaults to: `(prevItem, item) => (prevItem !== item)`
+
+Used to determine if the new `selectedItem` has changed compared to the 
+previous `selectedItem` and properly update Downshift's internal state.
+
 ### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
