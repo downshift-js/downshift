@@ -240,7 +240,9 @@ class Downshift extends Component {
         isOpen: false,
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
-        inputValue: this.props.itemToString(item),
+        inputValue: this.isControlledProp('selectedItem')
+          ? ''
+          : this.props.itemToString(item),
         ...otherStateToSet,
       },
       cbToCb(cb),
