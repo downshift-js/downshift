@@ -7,6 +7,7 @@ import Basic from './examples/basic'
 import Dropdown from './examples/dropdown'
 import Form from './examples/form'
 import Controlled from './examples/controlled'
+import SemiControlled from './examples/semi-controlled'
 import Multiple from './examples/multiple'
 import Autosuggest from './examples/react-autosuggest'
 import SemanticUI from './examples/semantic-ui'
@@ -26,6 +27,7 @@ function loadStories() {
     .add('dropdown', () => <Dropdown />)
     .add('form', () => <Form />)
     .add('controlled', () => <Controlled />)
+    .add('semi-controlled', () => <SemiControlled />)
     .add('multiple', () => <Multiple />)
     .add('autosuggest', () => <Autosuggest />)
     .add('semantic-ui', () => <SemanticUI />)
