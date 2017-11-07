@@ -34,7 +34,7 @@ test('onStateChange called with changes and downshift state and helpers', () => 
   )
 })
 
-test('onChange called when clearSelection is trigered', () => {
+test('onChange called when clearSelection is triggered', () => {
   const handleChange = jest.fn()
   const {clearSelection} = setup({
     selectedItem: 'foo',
@@ -127,6 +127,7 @@ test('onInputValueChange not called when changes do not contain inputValue', () 
   const {openMenu} = setup({
     onInputValueChange: handleInputValueChange,
   })
+
   openMenu()
 
   expect(handleInputValueChange).toHaveBeenCalledTimes(0)
