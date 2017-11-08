@@ -241,7 +241,7 @@ class Downshift extends Component {
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
         inputValue: this.isControlledProp('selectedItem')
-          ? ''
+          ? this.props.defaultInputValue
           : this.props.itemToString(item),
         ...otherStateToSet,
       },
