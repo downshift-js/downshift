@@ -1,8 +1,7 @@
 {
   "name": "downshift",
   "version": "0.0.0-semantically-released",
-  "description":
-    "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
+  "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
   "jsnext:main": "dist/downshift.esm.js",
   "module": "dist/downshift.esm.js",
@@ -16,18 +15,19 @@
     "test:ssr": "kcd-scripts test --config other/ssr/jest.config.js --no-watch",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:ts": "tsc --noEmit -p ./tsconfig.json",
-    "test:build":
-      "kcd-scripts test --config other/misc-tests/jest.config.js --no-watch",
+    "test:build": "kcd-scripts test --config other/misc-tests/jest.config.js --no-watch",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "storybook": "start-storybook -p 6006 -c stories",
-    "storybook:build":
-      "cd stories && npm install && cd .. && build-storybook -c stories",
+    "storybook:build": "cd stories && npm install && cd .. && build-storybook -c stories",
     "setup": "npm install && npm run storybook:build -s && npm run validate",
-    "validate":
-      "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr",
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr",
     "precommit": "kcd-scripts precommit"
   },
-  "files": ["dist", "typings", "preact"],
+  "files": [
+    "dist",
+    "typings",
+    "preact"
+  ],
   "keywords": [
     "enhanced input",
     "react",
