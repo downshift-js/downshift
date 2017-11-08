@@ -408,6 +408,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "Jwhiles",
+      "name": "John Whiles",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/20307225?v=4",
+      "profile": "http://www.johnwhiles.com",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }

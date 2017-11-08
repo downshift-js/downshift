@@ -1,13 +1,13 @@
 import * as React from 'react'
 
 export interface DownshiftProps {
-  children: ChildrenFunction
-  defaultHighlightedIndex?: number | null
   defaultSelectedItem?: any
+  defaultHighlightedIndex?: number | null
   defaultInputValue?: string
   defaultIsOpen?: boolean
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any
   itemToString?: (item: any) => string
+  selectedItemChanged?: (prevItem: any, item: any) => boolean
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any
   onChange?: (
     selectedItem: any,
     stateAndHelpers: ControllerStateAndHelpers,
@@ -16,22 +16,27 @@ export interface DownshiftProps {
     selectedItem: any,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
-  onOuterClick?: () => void
   onStateChange?: (
     options: StateChangeOptions,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  onInputValueChange?: (
+    inputValue: string,
+    stateAndhelpers: ControllerStateAndHelpers,
+  ) => void
+  itemCount?: number
+  highlightedIndex?: number
+  inputValue?: string
+  isOpen?: boolean
+  selectedItem?: any
+  children: ChildrenFunction
+  id?: string
+  environment?: Environment
+  onOuterClick?: () => void
   onUserAction?: (
     options: StateChangeOptions,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
-  itemCount?: number
-  selectedItem?: any
-  isOpen?: boolean
-  inputValue?: string
-  highlightedIndex?: number
-  id?: string
-  environment?: Environment
 }
 
 export interface Environment {
