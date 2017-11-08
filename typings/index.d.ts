@@ -22,7 +22,7 @@ export interface DownshiftProps {
   ) => void
   onInputValueChange?: (
     inputValue: string,
-    stateAndhelpers: ControllerStateAndHelpers,
+    stateAndHelpers: ControllerStateAndHelpers,
   ) => void
   itemCount?: number
   highlightedIndex?: number
