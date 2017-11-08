@@ -12,6 +12,10 @@ export interface DownshiftProps {
     selectedItem: any,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  onSelect?: (
+    selectedItem: any,
+    stateAndHelpers: ControllerStateAndHelpers,
+  ) => void
   onOuterClick?: () => void
   onStateChange?: (
     options: StateChangeOptions,
