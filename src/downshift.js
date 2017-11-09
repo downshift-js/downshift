@@ -36,6 +36,7 @@ class Downshift extends Component {
     onUserAction: PropTypes.func,
     onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
+    selectedItemChanged: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
     environment: PropTypes.shape({
@@ -69,6 +70,7 @@ class Downshift extends Component {
     onChange: () => {},
     onSelect: () => {},
     onOuterClick: () => {},
+    selectedItemChanged: (prevItem, item) => prevItem !== item,
     environment:
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
@@ -247,7 +249,7 @@ class Downshift extends Component {
 
   selectItemAtIndex = (itemIndex, otherStateToSet, cb) => {
     const item = this.items[itemIndex]
-    if (!item) {
+    if (item == null) {
       return
     }
     this.selectItem(item, otherStateToSet, cb)
@@ -746,7 +748,10 @@ class Downshift extends Component {
   componentDidUpdate(prevProps) {
     if (
       this.isControlledProp('selectedItem') &&
-      this.props.selectedItem !== prevProps.selectedItem
+      this.props.selectedItemChanged(
+        prevProps.selectedItem,
+        this.props.selectedItem,
+      )
     ) {
       this.internalSetState({
         type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,

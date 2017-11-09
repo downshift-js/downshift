@@ -32,6 +32,24 @@ test('selectItemAtIndex does nothing if there is no item at that index', () => {
   expect(childSpy).not.toHaveBeenCalled()
 })
 
+test('selectItemAtIndex can select item that is an empty string', () => {
+  const items = ['Chess', '']
+  const children = ({getItemProps}) => (
+    <div>
+      {items.map((item, index) => (
+        <div key={index} {...getItemProps({item})}>
+          {item}
+        </div>
+      ))}
+    </div>
+  )
+  const {selectItemAtIndex, childSpy} = setup({children})
+  selectItemAtIndex(1)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({selectedItem: ''}),
+  )
+})
+
 test('clearSelection with an input node focuses the input node', () => {
   const children = ({getInputProps}) => (
     <div>
@@ -57,8 +75,15 @@ test('toggleMenu can take no arguments at all', () => {
 })
 
 test('clearItems clears the all items', () => {
-  const items = ['Chess']
-  const {wrapper, clearItems} = setup({items})
+  const item = 'Chess'
+  const children = ({getItemProps}) => (
+    <div>
+      <div key={item} {...getItemProps({item})}>
+        {item}
+      </div>
+    </div>
+  )
+  const {wrapper, clearItems} = setup({children})
   clearItems()
   expect(wrapper.instance().items).toEqual([])
 })

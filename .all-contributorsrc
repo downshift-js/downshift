@@ -381,6 +381,44 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "ifyoumakeit",
+      "name": "Dave Garwacke",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3998604?v=4",
+      "profile": "http://www.warbyparker.com",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Drapegnik",
+      "name": "Ivan Pazhitnykh",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/11758660?v=4",
+      "profile": "http://linkedin.com/in/drapegnik",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "Rendez",
+      "name": "Luis Merino",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/61776?v=4",
+      "profile": "https://github.com/Rendez",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "arahansen",
+      "name": "Andrew Hansen",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/8746094?v=4",
+      "profile": "http://twitter.com/arahansen",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ]
 }
