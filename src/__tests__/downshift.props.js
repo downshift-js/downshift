@@ -14,6 +14,41 @@ test('onStateChange called with changes and downshift state and helpers', () => 
   const {selectItem} = setup({
     ...controlledState,
     onStateChange: handleStateChange,
+    breakingChanges: {
+      v2resetInputOnSelection: false,
+    },
+  })
+  const itemToSelect = 'foo'
+  selectItem(itemToSelect)
+  const changes = {
+    type: Downshift.stateChangeTypes.unknown,
+    selectedItem: itemToSelect,
+    inputValue: itemToSelect,
+  }
+  const stateAndHelpers = {
+    ...controlledState,
+    isOpen: false,
+    highlightedIndex: null,
+    selectItem,
+  }
+  expect(handleStateChange).toHaveBeenLastCalledWith(
+    changes,
+    expect.objectContaining(stateAndHelpers),
+  )
+})
+
+test('v2 BREAKING CHANGE onStateChange called with changes and downshift state and helpers', () => {
+  const handleStateChange = jest.fn()
+  const controlledState = {
+    inputValue: '',
+    selectedItem: null,
+  }
+  const {selectItem} = setup({
+    ...controlledState,
+    onStateChange: handleStateChange,
+    breakingChanges: {
+      v2resetInputOnSelection: true,
+    },
   })
   const itemToSelect = 'foo'
   selectItem(itemToSelect)

@@ -53,6 +53,9 @@ class Downshift extends Component {
     isOpen: PropTypes.bool,
     inputValue: PropTypes.string,
     highlightedIndex: PropTypes.number,
+    breakingChanges: PropTypes.shape({
+      v2resetInputOnSelection: PropTypes.bool,
+    }),
     /* eslint-enable */
   }
 
@@ -75,6 +78,7 @@ class Downshift extends Component {
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
         : window,
+    breakingChanges: {},
   }
 
   // this is an experimental feature
@@ -240,9 +244,12 @@ class Downshift extends Component {
         isOpen: false,
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
-        inputValue: this.isControlledProp('selectedItem')
-          ? this.props.defaultInputValue
-          : this.props.itemToString(item),
+        inputValue:
+          this.isControlledProp('selectedItem') &&
+          this.props.breakingChanges &&
+          this.props.breakingChanges.v2resetInputOnSelection
+            ? this.props.defaultInputValue
+            : this.props.itemToString(item),
         ...otherStateToSet,
       },
       cbToCb(cb),

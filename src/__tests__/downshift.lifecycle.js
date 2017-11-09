@@ -100,7 +100,42 @@ test('item selection when selectedItem is controlled will update the inputValue 
     return <div />
   })
   const wrapper = mount(
-    <Downshift selectedItem="foo" itemToString={itemToString}>
+    <Downshift
+      selectedItem="foo"
+      itemToString={itemToString}
+      breakingChanges={{v2resetInputOnSelection: false}}
+    >
+      {childSpy}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  itemToString.mockClear()
+  const newSelectedItem = 'newfoo'
+  renderArg.selectItem(newSelectedItem)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+  wrapper.setProps({selectedItem: newSelectedItem})
+  expect(itemToString).toHaveBeenCalledTimes(2)
+  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+})
+
+test('v2 BREAKING CHANGE item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
+  const itemToString = jest.fn(x => x)
+  let renderArg
+  const childSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return <div />
+  })
+  const wrapper = mount(
+    <Downshift
+      selectedItem="foo"
+      itemToString={itemToString}
+      breakingChanges={{v2resetInputOnSelection: true}}
+    >
       {childSpy}
     </Downshift>,
   )
