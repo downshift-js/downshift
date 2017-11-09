@@ -4,3 +4,4 @@ dist/
 storybook-static/
 preact/
 package-lock.json
+package.json
