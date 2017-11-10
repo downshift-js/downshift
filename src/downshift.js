@@ -54,7 +54,7 @@ class Downshift extends Component {
     inputValue: PropTypes.string,
     highlightedIndex: PropTypes.number,
     breakingChanges: PropTypes.shape({
-      v2resetInputOnSelection: PropTypes.bool,
+      resetInputOnSelection: PropTypes.bool,
     }),
     /* eslint-enable */
   }
@@ -247,7 +247,7 @@ class Downshift extends Component {
         inputValue:
           this.isControlledProp('selectedItem') &&
           this.props.breakingChanges &&
-          this.props.breakingChanges.v2resetInputOnSelection
+          this.props.breakingChanges.resetInputOnSelection
             ? this.props.defaultInputValue
             : this.props.itemToString(item),
         ...otherStateToSet,

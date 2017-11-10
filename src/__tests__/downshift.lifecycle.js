@@ -103,7 +103,9 @@ test('item selection when selectedItem is controlled will update the inputValue 
     <Downshift
       selectedItem="foo"
       itemToString={itemToString}
-      breakingChanges={{v2resetInputOnSelection: false}}
+      breakingChanges={{resetInputOnSelection: false}}
+      // Explicitly set to false even if this is the default behaviour to highlight that this test
+      // will fail on v2.
     >
       {childSpy}
     </Downshift>,
@@ -134,7 +136,7 @@ test('v2 BREAKING CHANGE item selection when selectedItem is controlled will upd
     <Downshift
       selectedItem="foo"
       itemToString={itemToString}
-      breakingChanges={{v2resetInputOnSelection: true}}
+      breakingChanges={{resetInputOnSelection: true}}
     >
       {childSpy}
     </Downshift>,

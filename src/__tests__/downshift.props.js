@@ -15,7 +15,9 @@ test('onStateChange called with changes and downshift state and helpers', () => 
     ...controlledState,
     onStateChange: handleStateChange,
     breakingChanges: {
-      v2resetInputOnSelection: false,
+      resetInputOnSelection: false,
+      // Explicitly set to false even if this is the default behaviour to highlight that this test
+      // will fail on v2.
     },
   })
   const itemToSelect = 'foo'
@@ -47,7 +49,7 @@ test('v2 BREAKING CHANGE onStateChange called with changes and downshift state a
     ...controlledState,
     onStateChange: handleStateChange,
     breakingChanges: {
-      v2resetInputOnSelection: true,
+      resetInputOnSelection: true,
     },
   })
   const itemToSelect = 'foo'
