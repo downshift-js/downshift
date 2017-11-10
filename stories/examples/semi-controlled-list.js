@@ -28,6 +28,7 @@ const Input = glamorous.input({
 class Examples extends Component {
   state = {
     selectedItems: [],
+    resetInputOnSelection: true,
   }
   items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
   changeHandlers = []
@@ -47,6 +48,10 @@ class Examples extends Component {
     const selectedItems = [...this.state.selectedItems]
     selectedItems.push(selectedColor)
     this.setState({selectedItems})
+  }
+
+  toggleResetInputOnSelection = () => {
+    this.setState({resetInputOnSelection: !this.state.resetInputOnSelection})
   }
 
   render() {
@@ -70,6 +75,21 @@ class Examples extends Component {
               At the end of the list an autocomplete component allows to add a new item to the list.
             `}
           </p>
+          <p>
+            This example requires to activate the{' '}
+            <code>resetInputOnSelection</code> flag of the{' '}
+            <code>breakingChanges</code> component property in order to work
+            properly. The checkbox below allows to compare the behaviour with
+            the flag <code>true</code> or <code>false</code>.
+          </p>
+          <Div>
+            <input
+              type="checkbox"
+              checked={this.state.resetInputOnSelection}
+              onChange={this.toggleResetInputOnSelection}
+            />{' '}
+            Activate <code>resetInputOnSelection</code>?
+          </Div>
           {this.state.selectedItems.map((selectedColor, idx) => (
             <Div key={selectedColor} display="flex" justifyContent="center">
               <span
@@ -89,6 +109,9 @@ class Examples extends Component {
                 selectedItem={selectedColor}
                 items={notSelectedItems.concat([selectedColor])}
                 onChange={this.changeHandler(idx)}
+                breakingChanges={{
+                  resetInputOnSelection: this.state.resetInputOnSelection,
+                }}
               />
             </Div>
           ))}
@@ -108,6 +131,9 @@ class Examples extends Component {
                 selectedItem=""
                 items={notSelectedItems}
                 onChange={this.addHandler}
+                breakingChanges={{
+                  resetInputOnSelection: this.state.resetInputOnSelection,
+                }}
               />
             ) : (
               <p>All colors have been selected!</p>
