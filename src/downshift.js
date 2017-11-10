@@ -246,7 +246,6 @@ class Downshift extends Component {
         selectedItem: item,
         inputValue:
           this.isControlledProp('selectedItem') &&
-          this.props.breakingChanges &&
           this.props.breakingChanges.resetInputOnSelection
             ? this.props.defaultInputValue
             : this.props.itemToString(item),
