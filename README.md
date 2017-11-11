@@ -570,7 +570,7 @@ Examples exist on [codesandbox.io][examples]:
 - [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled `selectedItem` API).
 - [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled `selectedItem` API).
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
-- [Integration with Redux](https://codesandbox.io/s/0o0w70lp8p)
+- [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
 - [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83) from Algolia
 - [Material UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
 - [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl) ([learn more about `genie` here](https://github.com/kentcdodds/genie))
