@@ -615,6 +615,27 @@ and `getLabelProps`. Also, you can use the `id` prop on the component
 
 </details>
 
+## Upcoming Breaking Changes
+
+We try to avoid breaking changes when possible and try to adhere to
+[semver][semver]. Sometimes breaking changes are necessary and we'll make
+the transition as smooth as possible. This is why there's a prop available
+which will allow you to opt into breaking changes. It looks like this:
+
+```javascript
+<Downshift breakingChanges={{ /* breaking change flags here */ }}>
+  /* your render function here */
+</Downshift>
+```
+
+To opt-into a breaking change, simply provide the key and value in the
+`breakingChanges` object prop for each breaking change mentioned below:
+
+1. `resetInputOnSelection` - Enable with the value of `true`. For more information, see [#243](https://github.com/paypal/downshift/issues/243)
+
+When a new major version is released, then the code to support the old
+functionality will be removed and the breaking change version will be the
+default, so it's suggested you enable these as soon as you are aware of them.
 
 ## Inspiration
 
@@ -709,3 +730,4 @@ MIT
 [react-training]: https://reacttraining.com/
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
 [fac]: https://medium.com/merrickchristensen/function-as-child-components-5f3920a9ace9
+[semver]: http://semver.org/
