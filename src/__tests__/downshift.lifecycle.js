@@ -92,6 +92,70 @@ test('props update of selectedItem will update the inputValue state', () => {
   )
 })
 
+test('item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
+  const itemToString = jest.fn(x => x)
+  let renderArg
+  const childSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return <div />
+  })
+  const wrapper = mount(
+    <Downshift
+      selectedItem="foo"
+      itemToString={itemToString}
+      breakingChanges={{resetInputOnSelection: false}}
+      // Explicitly set to false even if this is the default behaviour to highlight that this test
+      // will fail on v2.
+    >
+      {childSpy}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  itemToString.mockClear()
+  const newSelectedItem = 'newfoo'
+  renderArg.selectItem(newSelectedItem)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+  wrapper.setProps({selectedItem: newSelectedItem})
+  expect(itemToString).toHaveBeenCalledTimes(2)
+  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+})
+
+test('v2 BREAKING CHANGE item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
+  const itemToString = jest.fn(x => x)
+  let renderArg
+  const childSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return <div />
+  })
+  const wrapper = mount(
+    <Downshift
+      selectedItem="foo"
+      itemToString={itemToString}
+      breakingChanges={{resetInputOnSelection: true}}
+    >
+      {childSpy}
+    </Downshift>,
+  )
+  childSpy.mockClear()
+  itemToString.mockClear()
+  const newSelectedItem = 'newfoo'
+  renderArg.selectItem(newSelectedItem)
+  expect(childSpy).not.toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+  wrapper.setProps({selectedItem: newSelectedItem})
+  expect(itemToString).toHaveBeenCalledTimes(1)
+  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
+  expect(childSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({inputValue: newSelectedItem}),
+  )
+})
+
 test('props update of selectedItem will not update inputValue state', () => {
   const onInputValueChangeSpy = jest.fn(() => null)
   const wrapper = mount(
