@@ -50,20 +50,20 @@
     "react": ">=15"
   },
   "devDependencies": {
-    "@storybook/react": "^3.2.11",
-    "enzyme": "^3.0.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "enzyme-to-json": "^3.0.1",
-    "jest-serializer-html": "^4.0.0",
-    "kcd-scripts": "^0.23.4",
-    "preact": "^8.2.1",
-    "preact-render-to-string": "^3.6.3",
-    "preval.macro": "^1.0.1",
+    "@storybook/react": "^3.2.16",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "enzyme-to-json": "^3.2.2",
+    "jest-serializer-html": "^4.0.1",
+    "kcd-scripts": "^0.27.2",
+    "preact": "^8.2.6",
+    "preact-render-to-string": "^3.7.0",
+    "preval.macro": "^1.0.2",
     "prop-types": "^15.6.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "typescript": "^2.5.3"
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-test-renderer": "^16.1.1",
+    "typescript": "^2.6.1"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
