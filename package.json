@@ -55,7 +55,7 @@
     "enzyme-adapter-react-16": "^1.1.0",
     "enzyme-to-json": "^3.2.2",
     "jest-serializer-html": "^4.0.1",
-    "kcd-scripts": "^0.27.2",
+    "kcd-scripts": "^0.28.0",
     "preact": "^8.2.6",
     "preact-render-to-string": "^3.7.0",
     "preval.macro": "^1.0.2",
@@ -63,6 +63,7 @@
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-test-renderer": "^16.1.1",
+    "scroll-into-view-if-needed": "^1.4.1",
     "typescript": "^2.6.1"
   },
   "eslintConfig": {
