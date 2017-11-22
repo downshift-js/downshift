@@ -29,7 +29,8 @@ export interface DownshiftProps {
   inputValue?: string
   isOpen?: boolean
   selectedItem?: any
-  children: ChildrenFunction
+  render?: ChildrenFunction
+  children?: ChildrenFunction
   id?: string
   environment?: Environment
   onOuterClick?: () => void
