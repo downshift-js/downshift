@@ -446,6 +446,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "jaredpalmer",
+      "name": "Jared Palmer",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4060187?v=4",
+      "profile": "http://jaredpalmer.com",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
