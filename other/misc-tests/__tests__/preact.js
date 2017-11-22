@@ -22,7 +22,7 @@ import render from 'preact-render-to-string'
 import Downshift from '../../../preact'
 
 test('works with preact', () => {
-  const childSpy = jest.fn(({getInputProps, getItemProps}) => (
+  const renderSpy = jest.fn(({getInputProps, getItemProps}) => (
     <div>
       <input {...getInputProps()} />
       <div>
@@ -31,9 +31,9 @@ test('works with preact', () => {
       </div>
     </div>
   ))
-  const ui = <Downshift>{childSpy}</Downshift>
+  const ui = <Downshift render={renderSpy} />
   render(ui)
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
       highlightedIndex: null,
@@ -45,12 +45,12 @@ test('works with preact', () => {
 
 test('can render a composite component', () => {
   const Div = ({innerRef, ...props}) => <div {...props} ref={innerRef} />
-  const childSpy = jest.fn(({getRootProps}) => (
+  const renderSpy = jest.fn(({getRootProps}) => (
     <Div {...getRootProps({refKey: 'innerRef'})} />
   ))
-  const ui = <Downshift>{childSpy}</Downshift>
+  const ui = <Downshift render={renderSpy} />
   render(ui)
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
       highlightedIndex: null,
@@ -88,12 +88,18 @@ test('getInputProps composes onChange with onInput', () => {
   expect(onInput).toHaveBeenCalledWith(fakeEvent)
 })
 
+test('can use children instead of render prop', () => {
+  const childrenSpy = jest.fn()
+  render(<Downshift>{childrenSpy}</Downshift>)
+  expect(childrenSpy).toHaveBeenCalledTimes(1)
+})
+
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
-  const childSpy = jest.fn(controllerArg => {
+  const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const ui = <Downshift {...props}>{childSpy}</Downshift>
-  return {childSpy, ui, ...renderArg}
+  const ui = <Downshift {...props}>{renderSpy}</Downshift>
+  return {renderSpy, ui, ...renderArg}
 }

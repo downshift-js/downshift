@@ -2,39 +2,39 @@
 // but we still want to have tested.
 
 import React from 'react'
-import {mount} from 'enzyme'
+import {mount, render as enzymeRender} from 'enzyme'
 import Downshift from '../'
 
 test('closeMenu closes the menu', () => {
-  const {openMenu, closeMenu, childSpy} = setup()
+  const {openMenu, closeMenu, renderSpy} = setup()
   openMenu()
   closeMenu()
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('clearSelection clears an existing selection', () => {
-  const {openMenu, selectItem, childSpy, clearSelection} = setup()
+  const {openMenu, selectItem, renderSpy, clearSelection} = setup()
   openMenu()
   selectItem('foo')
   clearSelection()
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: null}),
   )
 })
 
 test('selectItemAtIndex does nothing if there is no item at that index', () => {
-  const {openMenu, selectItemAtIndex, childSpy} = setup()
+  const {openMenu, selectItemAtIndex, renderSpy} = setup()
   openMenu()
-  childSpy.mockClear()
+  renderSpy.mockClear()
   selectItemAtIndex(100)
-  expect(childSpy).not.toHaveBeenCalled()
+  expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('selectItemAtIndex can select item that is an empty string', () => {
   const items = ['Chess', '']
-  const children = ({getItemProps}) => (
+  const render = ({getItemProps}) => (
     <div>
       {items.map((item, index) => (
         <div key={index} {...getItemProps({item})}>
@@ -43,20 +43,20 @@ test('selectItemAtIndex can select item that is an empty string', () => {
       ))}
     </div>
   )
-  const {selectItemAtIndex, childSpy} = setup({children})
+  const {selectItemAtIndex, renderSpy} = setup({render})
   selectItemAtIndex(1)
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: ''}),
   )
 })
 
 test('clearSelection with an input node focuses the input node', () => {
-  const children = ({getInputProps}) => (
+  const render = ({getInputProps}) => (
     <div>
       <input {...getInputProps()} />
     </div>
   )
-  const {wrapper, openMenu, selectItem, clearSelection} = setup({children})
+  const {wrapper, openMenu, selectItem, clearSelection} = setup({render})
   openMenu()
   selectItem('foo')
   clearSelection()
@@ -65,9 +65,9 @@ test('clearSelection with an input node focuses the input node', () => {
 })
 
 test('toggleMenu can take no arguments at all', () => {
-  const {toggleMenu, childSpy} = setup()
+  const {toggleMenu, renderSpy} = setup()
   toggleMenu()
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: true,
     }),
@@ -76,22 +76,22 @@ test('toggleMenu can take no arguments at all', () => {
 
 test('clearItems clears the all items', () => {
   const item = 'Chess'
-  const children = ({getItemProps}) => (
+  const render = ({getItemProps}) => (
     <div>
       <div key={item} {...getItemProps({item})}>
         {item}
       </div>
     </div>
   )
-  const {wrapper, clearItems} = setup({children})
+  const {wrapper, clearItems} = setup({render})
   clearItems()
   expect(wrapper.instance().items).toEqual([])
 })
 
 test('reset can take no arguments at all', () => {
-  const {reset, childSpy} = setup()
+  const {reset, renderSpy} = setup()
   reset()
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
     }),
@@ -100,11 +100,11 @@ test('reset can take no arguments at all', () => {
 
 test('setHighlightedIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {setHighlightedIndex, childSpy} = setup({
+  const {setHighlightedIndex, renderSpy} = setup({
     defaultHighlightedIndex,
   })
   setHighlightedIndex()
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: defaultHighlightedIndex,
     }),
@@ -113,12 +113,12 @@ test('setHighlightedIndex can take no arguments at all', () => {
 
 test('openAndHighlightDefaultIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {wrapper, childSpy} = setup({
+  const {wrapper, renderSpy} = setup({
     defaultHighlightedIndex,
   })
   const {openAndHighlightDefaultIndex} = wrapper.instance()
   openAndHighlightDefaultIndex()
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: defaultHighlightedIndex,
     }),
@@ -131,12 +131,18 @@ test('can specify a custom ID which is used in item IDs (good for SSR)', () => {
   expect(getItemProps({item: 'blah'}).id).toContain(id)
 })
 
-function setup({children = () => <div />, ...props} = {}) {
+test('can use children instead of render prop', () => {
+  const childrenSpy = jest.fn()
+  enzymeRender(<Downshift>{childrenSpy}</Downshift>)
+  expect(childrenSpy).toHaveBeenCalledTimes(1)
+})
+
+function setup({render = () => <div />, ...props} = {}) {
   let renderArg
-  const childSpy = jest.fn(controllerArg => {
+  const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return children(controllerArg)
+    return render(controllerArg)
   })
-  const wrapper = mount(<Downshift {...props}>{childSpy}</Downshift>)
-  return {childSpy, wrapper, ...renderArg}
+  const wrapper = mount(<Downshift {...props} render={renderSpy} />)
+  return {renderSpy, wrapper, ...renderArg}
 }

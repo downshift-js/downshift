@@ -186,10 +186,10 @@ function mouseDownAndUp(node) {
 
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
-  const childSpy = jest.fn(controllerArg => {
+  const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const wrapper = mount(<Downshift {...props}>{childSpy}</Downshift>)
-  return {childSpy, wrapper, ...renderArg}
+  const wrapper = mount(<Downshift {...props} render={renderSpy} />)
+  return {renderSpy, wrapper, ...renderArg}
 }

@@ -3,7 +3,7 @@ import matchSorter from 'match-sorter'
 import glamorous, {Div} from 'glamorous'
 import items from '../countries'
 
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 export default Examples
 
@@ -130,13 +130,12 @@ function advancedFilter(theItems, value) {
 
 function SemanticUIAutocomplete() {
   return (
-    <Autocomplete
+    <Downshift
       itemToString={i => (i ? i.name : '')}
       style={{
         width: '250px',
       }}
-    >
-      {({
+      render={({
         highlightedIndex,
         isOpen,
         clearSelection,
@@ -189,7 +188,7 @@ function SemanticUIAutocomplete() {
           )}
         </Div>
       )}
-    </Autocomplete>
+    />
   )
 }
 

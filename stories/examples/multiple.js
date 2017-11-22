@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import glamorous, {Div} from 'glamorous'
 import matchSorter from 'match-sorter'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 class Examples extends Component {
   state = {
@@ -125,12 +125,11 @@ class MultipleAutocomplete extends React.Component {
     const indices = mapItemIndex(items, values)
 
     return (
-      <Autocomplete
+      <Downshift
         inputValue={this.state.input}
         onChange={this.handleChange}
         selectedItem={values}
-      >
-        {({
+        render={({
           getInputProps,
           getItemProps,
           getRootProps,
@@ -195,7 +194,7 @@ class MultipleAutocomplete extends React.Component {
             )}
           </Root>
         )}
-      </Autocomplete>
+      />
     )
   }
 

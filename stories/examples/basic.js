@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import glamorous, {Div} from 'glamorous'
 import matchSorter from 'match-sorter'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 class Examples extends Component {
   state = {
@@ -105,8 +105,9 @@ function Root({innerRef, ...rest}) {
 }
 function BasicAutocomplete({items, onChange}) {
   return (
-    <Autocomplete onChange={onChange}>
-      {({
+    <Downshift
+      onChange={onChange}
+      render={({
         getInputProps,
         getItemProps,
         getRootProps,
@@ -145,7 +146,7 @@ function BasicAutocomplete({items, onChange}) {
           )}
         </Root>
       )}
-    </Autocomplete>
+    />
   )
 }
 export default Examples

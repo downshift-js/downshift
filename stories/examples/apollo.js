@@ -6,7 +6,7 @@ import {
   gql,
   graphql,
 } from 'react-apollo'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 export default Examples
 
@@ -31,8 +31,9 @@ function Examples() {
 
 function ApolloAutocomplete() {
   return (
-    <Autocomplete onChange={selectedItem => alert(selectedItem)}>
-      {({
+    <Downshift
+      onChange={selectedItem => alert(selectedItem)}
+      render={({
         inputValue,
         getInputProps,
         getItemProps,
@@ -55,7 +56,7 @@ function ApolloAutocomplete() {
           ) : null}
         </div>
       )}
-    </Autocomplete>
+    />
   )
 }
 
