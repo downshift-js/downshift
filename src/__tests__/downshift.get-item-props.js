@@ -17,12 +17,12 @@ afterEach(() => {
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/paypal/downshift/issues/113
   const items = ['Chess', 'Dominion', 'Checkers']
-  const {Component, childSpy} = setup({items})
+  const {Component, renderSpy} = setup({items})
   const wrapper = mount(<Component />)
   const firstButton = wrapper.find('button').first()
-  childSpy.mockClear()
+  renderSpy.mockClear()
   firstButton.simulate('click')
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       selectedItem: items[0],
     }),
@@ -30,27 +30,27 @@ test('clicking on a DOM node within an item selects that item', () => {
 })
 
 test('clicking anywhere within the rendered downshift but outside an item does not select an item', () => {
-  const childSpy = jest.fn(() => (
+  const renderSpy = jest.fn(() => (
     <div>
       <button />
     </div>
   ))
-  const wrapper = mount(<Downshift>{childSpy}</Downshift>)
-  childSpy.mockClear()
+  const wrapper = mount(<Downshift render={renderSpy} />)
+  renderSpy.mockClear()
   wrapper
     .find('button')
     .first()
     .simulate('click')
-  expect(childSpy).not.toHaveBeenCalled()
+  expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('on mouseenter of an item updates the highlightedIndex to that item', () => {
-  const {Component, childSpy} = setup()
+  const {Component, renderSpy} = setup()
   const wrapper = mount(<Component />)
   const thirdButton = wrapper.find('[data-test="item-2"]')
-  childSpy.mockClear()
+  renderSpy.mockClear()
   thirdButton.simulate('mouseenter')
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 2,
     }),
@@ -58,12 +58,12 @@ test('on mouseenter of an item updates the highlightedIndex to that item', () =>
 })
 
 test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
-  const {Component, childSpy} = setup()
+  const {Component, renderSpy} = setup()
   const wrapper = mount(<Component defaultHighlightedIndex={1} />)
   const firstButton = wrapper.find('button').first()
-  childSpy.mockClear()
+  renderSpy.mockClear()
   firstButton.simulate('click')
-  expect(childSpy).toHaveBeenCalledWith(
+  expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 1,
     }),
@@ -73,13 +73,13 @@ test('after selecting an item highlightedIndex should be reset to defaultHighlig
 test('getItemProps throws a helpful error when no object is given', () => {
   expect(() =>
     mount(
-      <Downshift>
-        {({getItemProps}) => (
+      <Downshift
+        render={({getItemProps}) => (
           <div>
             <span {...getItemProps()} />
           </div>
         )}
-      </Downshift>,
+      />,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
@@ -87,8 +87,8 @@ test('getItemProps throws a helpful error when no object is given', () => {
 test('getItemProps defaults the index when no index is given', () => {
   expect(
     render(
-      <Downshift>
-        {({getItemProps}) => (
+      <Downshift
+        render={({getItemProps}) => (
           <div>
             <span {...getItemProps({item: 0})}>0</span>
             <span {...getItemProps({item: 1})}>1</span>
@@ -97,7 +97,7 @@ test('getItemProps defaults the index when no index is given', () => {
             <span {...getItemProps({item: 4})}>4</span>
           </div>
         )}
-      </Downshift>,
+      />,
     ),
   ).toMatchSnapshot()
 })
@@ -105,19 +105,19 @@ test('getItemProps defaults the index when no index is given', () => {
 test('getItemProps throws when no item is given', () => {
   expect(() =>
     mount(
-      <Downshift>
-        {({getItemProps}) => (
+      <Downshift
+        render={({getItemProps}) => (
           <div>
             <span {...getItemProps({index: 0})} />
           </div>
         )}
-      </Downshift>,
+      />,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
 
 function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
-  const childSpy = jest.fn(({getItemProps}) => (
+  const renderSpy = jest.fn(({getItemProps}) => (
     <div>
       {items.map((item, index) => (
         <div
@@ -132,12 +132,15 @@ function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
   ))
   function BasicDownshift(props) {
     return (
-      <Downshift isOpen={true} onChange={() => {}} {...props}>
-        {childSpy}
-      </Downshift>
+      <Downshift
+        isOpen={true}
+        onChange={() => {}}
+        {...props}
+        render={renderSpy}
+      />
     )
   }
-  return {Component: BasicDownshift, childSpy}
+  return {Component: BasicDownshift, renderSpy}
 }
 
 /* eslint no-console:0 */

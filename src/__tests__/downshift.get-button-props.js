@@ -3,34 +3,34 @@ import {mount} from 'enzyme'
 import Downshift from '../'
 
 test('space on button opens and closes the menu', () => {
-  const {button, childSpy} = setup()
+  const {button, renderSpy} = setup()
   button.simulate('keydown', {key: ' '})
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   button.simulate('keydown', {key: ' '})
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('clicking on the button opens and closes the menu', () => {
-  const {button, childSpy} = setup()
+  const {button, renderSpy} = setup()
   button.simulate('click')
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   button.simulate('click')
-  expect(childSpy).toHaveBeenLastCalledWith(
+  expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('button ignores key events it does not handle', () => {
-  const {button, childSpy} = setup()
-  childSpy.mockClear()
+  const {button, renderSpy} = setup()
+  renderSpy.mockClear()
   button.simulate('keydown', {key: 's'})
-  expect(childSpy).not.toHaveBeenCalled()
+  expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('getButtonProps returns all given props', () => {
@@ -66,7 +66,7 @@ test(`getButtonProps doesn't include event handlers when disabled is passed (for
 
 function setup({buttonProps, Button = props => <button {...props} />} = {}) {
   let renderArg
-  const childSpy = jest.fn(controllerArg => {
+  const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return (
       <div>
@@ -74,7 +74,7 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
       </div>
     )
   })
-  const wrapper = mount(<Downshift>{childSpy}</Downshift>)
+  const wrapper = mount(<Downshift render={renderSpy} />)
   const button = wrapper.find('button')
-  return {button, childSpy, ...renderArg}
+  return {button, renderSpy, ...renderArg}
 }

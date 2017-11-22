@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import glamorous, {Div} from 'glamorous'
 import matchSorter from 'match-sorter'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 const Input = glamorous.input({
   fontSize: 14,
@@ -48,9 +48,7 @@ class Examples extends Component {
       type,
     } = changes
     isOpen =
-      type === Autocomplete.stateChangeTypes.mouseUp
-        ? this.state.isOpen
-        : isOpen
+      type === Downshift.stateChangeTypes.mouseUp ? this.state.isOpen : isOpen
     this.setState({
       selectedColor: selectedItem,
       isOpen,
@@ -172,8 +170,9 @@ const Item = glamorous.div(
 
 function ControlledAutocomplete({onInputChange, items, ...rest}) {
   return (
-    <Autocomplete {...rest}>
-      {({
+    <Downshift
+      {...rest}
+      render={({
         getInputProps,
         getItemProps,
         highlightedIndex,
@@ -208,7 +207,7 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
           )}
         </div>
       )}
-    </Autocomplete>
+    />
   )
 }
 export default Examples

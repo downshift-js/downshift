@@ -23,6 +23,7 @@ import {
 class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
+    render: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
@@ -779,8 +780,9 @@ class Downshift extends Component {
     this.cleanup() // avoids memory leak
   }
 
+  // eslint-disable-next-line complexity
   render() {
-    const children = unwrapArray(this.props.children, noop)
+    const children = unwrapArray(this.props.render || this.props.children, noop)
     // because the items are rerendered every time we call the children
     // we clear this out each render and
     this.clearItems()

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 function debounce(fn, time) {
   let timeoutId
@@ -37,8 +37,8 @@ class AxiosAutocomplete extends Component {
 
   render() {
     return (
-      <Autocomplete>
-        {({
+      <Downshift
+        render={({
           selectedItem,
           getInputProps,
           getItemProps,
@@ -93,7 +93,7 @@ class AxiosAutocomplete extends Component {
             </div>
           )
         }}
-      </Autocomplete>
+      />
     )
   }
 }

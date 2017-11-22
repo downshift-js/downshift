@@ -1,17 +1,16 @@
 import React from 'react'
 import {InstantSearch, Highlight} from 'react-instantsearch/dom'
 import {connectAutoComplete} from 'react-instantsearch/connectors'
-import Autocomplete from '../../src'
+import Downshift from '../../src'
 
 export default Examples
 
 function RawAutoComplete({refine, hits}) {
   return (
-    <Autocomplete
+    <Downshift
       itemToString={i => (i ? i.name : i)}
       onChange={item => alert(JSON.stringify(item))}
-    >
-      {({
+      render={({
         getInputProps,
         getItemProps,
         selectedItem,
@@ -47,7 +46,7 @@ function RawAutoComplete({refine, hits}) {
           )}
         </div>
       )}
-    </Autocomplete>
+    />
   )
 }
 
