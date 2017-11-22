@@ -1,4 +1,4 @@
-const jestConfig = require('kcd-scripts/config').jest
+const jestConfig = require('kcd-scripts/jest')
 
 jestConfig.snapshotSerializers = jestConfig.snapshotSerializers || []
 jestConfig.snapshotSerializers.push(

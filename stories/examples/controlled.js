@@ -190,21 +190,20 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
           />
           {isOpen && (
             <div style={{border: '1px solid rgba(34,36,38,.15)'}}>
-              {(inputValue
-                ? matchSorter(items, inputValue)
-                : items
-              ).map((item, index) => (
-                <Item
-                  key={item}
-                  {...getItemProps({
-                    item,
-                    isActive: highlightedIndex === index,
-                    isSelected: selectedItem === item,
-                  })}
-                >
-                  {item}
-                </Item>
-              ))}
+              {(inputValue ? matchSorter(items, inputValue) : items).map(
+                (item, index) => (
+                  <Item
+                    key={item}
+                    {...getItemProps({
+                      item,
+                      isActive: highlightedIndex === index,
+                      isSelected: selectedItem === item,
+                    })}
+                  >
+                    {item}
+                  </Item>
+                ),
+              )}
             </div>
           )}
         </div>

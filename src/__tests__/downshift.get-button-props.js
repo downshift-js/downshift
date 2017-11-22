@@ -57,7 +57,9 @@ test(`getButtonProps doesn't include event handlers when disabled is passed (for
   )
   if (entry) {
     throw new Error(
-      `getButtonProps should not have any props that are callbacks. It has ${entry[0]}.`,
+      `getButtonProps should not have any props that are callbacks. It has ${
+        entry[0]
+      }.`,
     )
   }
 })

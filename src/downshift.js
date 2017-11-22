@@ -535,8 +535,11 @@ class Downshift extends Component {
       props.htmlFor !== this.inputId
     ) {
       throw new Error(
-        `downshift: You provided the htmlFor of "${props.htmlFor}" for your label, but the id of your input is "${this
-          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+        `downshift: You provided the htmlFor of "${
+          props.htmlFor
+        }" for your label, but the id of your input is "${
+          this.inputId
+        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
     this.inputId = firstDefined(
@@ -558,8 +561,11 @@ class Downshift extends Component {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
-        `downshift: You provided the id of "${rest.id}" for your input, but the htmlFor of your label is "${this
-          .inputId}". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
+        `downshift: You provided the id of "${
+          rest.id
+        }" for your input, but the htmlFor of your label is "${
+          this.inputId
+        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
     this.inputId = firstDefined(
@@ -826,12 +832,16 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
     )
   } else if (!isComposite && refKeySpecified) {
     throw new Error(
-      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
+      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${
+        refKey
+      }"`,
     )
   }
   if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
-      `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
+      `downshift: You must apply the ref prop "${
+        refKey
+      }" from getRootProps onto your root element.`,
     )
   }
 }

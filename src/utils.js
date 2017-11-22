@@ -30,11 +30,11 @@ function findParent(finder, node, rootNode) {
 }
 
 /**
-* Get the closest element that scrolls
-* @param {HTMLElement} node - the child element to start searching for scroll parent at
-* @param {HTMLElement} rootNode - the root element of the component
-* @return {HTMLElement} the closest parentNode that scrolls
-*/
+ * Get the closest element that scrolls
+ * @param {HTMLElement} node - the child element to start searching for scroll parent at
+ * @param {HTMLElement} rootNode - the root element of the component
+ * @return {HTMLElement} the closest parentNode that scrolls
+ */
 const getClosestScrollParent = findParent.bind(
   null,
   node => node.scrollHeight > node.clientHeight,
@@ -186,9 +186,9 @@ function getA11yStatusMessage({
   if (!resultCount) {
     return 'No results.'
   } else if (!highlightedItem || resultCountChanged) {
-    return `${resultCount} ${resultCount === 1
-      ? 'result is'
-      : 'results are'} available, use up and down arrow keys to navigate.`
+    return `${resultCount} ${
+      resultCount === 1 ? 'result is' : 'results are'
+    } available, use up and down arrow keys to navigate.`
   }
   return itemToString(highlightedItem)
 }

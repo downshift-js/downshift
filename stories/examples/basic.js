@@ -127,21 +127,20 @@ function BasicAutocomplete({items, onChange}) {
                 overflowY: 'scroll',
               }}
             >
-              {(inputValue
-                ? matchSorter(items, inputValue)
-                : items
-              ).map((item, index) => (
-                <Item
-                  key={item}
-                  {...getItemProps({
-                    item,
-                    isActive: highlightedIndex === index,
-                    isSelected: selectedItem === item,
-                  })}
-                >
-                  {item}
-                </Item>
-              ))}
+              {(inputValue ? matchSorter(items, inputValue) : items).map(
+                (item, index) => (
+                  <Item
+                    key={item}
+                    {...getItemProps({
+                      item,
+                      isActive: highlightedIndex === index,
+                      isSelected: selectedItem === item,
+                    })}
+                  >
+                    {item}
+                  </Item>
+                ),
+              )}
             </div>
           )}
         </Root>
