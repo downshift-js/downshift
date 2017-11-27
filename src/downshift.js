@@ -539,13 +539,16 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
-    const eventHandlers = rest.disabled
-      ? {}
+    const enabledEventHandlers = isReactNative()
+      ? {
+          onPress: composeEventHandlers(onClick, this.button_handleClick),
+        }
       : {
           onClick: composeEventHandlers(onClick, this.button_handleClick),
           onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
           onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
         }
+    const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
       type: 'button',
       role: 'button',
