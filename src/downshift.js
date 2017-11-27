@@ -217,7 +217,13 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState({highlightedIndex, ...otherStateToSet})
+    // TODO: this whole method is DOM specific...
+    if (!isReactNative()) {
+      this.internalSetState(
+        {highlightedIndex, ...otherStateToSet},
+        this.scrollHighlightedItemIntoView,
+      )
+    }
   }
 
   scrollHighlightedItemIntoView = () => {
