@@ -202,6 +202,13 @@ class Downshift extends Component {
   unsetItemCount = () => (this.itemCount = null)
 
   getItemNodeFromIndex = index => {
+    if (isReactNative()) {
+      throw new Error(
+        'Getting item nodes by index is unsupported on React Native.\n' +
+          'See https://github.com/paypal/downshift/issues/185#issuecomment-328911789',
+      )
+    }
+
     return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
