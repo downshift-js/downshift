@@ -18,6 +18,7 @@ import {
   noop,
   requiredProp,
   pickState,
+  isPlainObject,
 } from './utils'
 
 class Downshift extends Component {
@@ -67,7 +68,12 @@ class Downshift extends Component {
     defaultIsOpen: false,
     getA11yStatusMessage,
     id: generateId('downshift'),
-    itemToString: i => (i == null ? '' : String(i)),
+    itemToString: i => {
+      if (isPlainObject(i)) {
+        console.warn('you passed an Object as the value of `selectedItem`. Please refer to `itemToString` API documentation on Downshift\'s repository.')
+      }
+      return i == null ? '' : String(i)
+    },
     onStateChange: () => {},
     onInputValueChange: () => {},
     onUserAction: () => {},
