@@ -241,7 +241,7 @@ function isDOMElement(element) {
  * We can use this to determine if the target is React Native or not.
  * See https://github.com/facebook/react-native/issues/10881 for more info.
  * See https://github.com/facebook/react-native/blob/70c359000a2df091c3939f4c19db6024af992d43/Libraries/Core/InitializeCore.js#L194-L195 for more info.
- * @return {Boolean} whether or not the platform is React native
+ * @return {Boolean} whether or not the platform is React Native
  */
 function isReactNative() {
   return navigator != null && navigator.product === 'ReactNative'
