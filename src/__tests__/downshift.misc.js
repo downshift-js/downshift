@@ -140,7 +140,7 @@ test('can use children instead of render prop', () => {
 describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
   afterEach(() => (process.env.NODE_ENV = 'test'))
 
-  test("it shouldn't log anything when value === production ", () => {
+  test("it shouldn't log anything when value === production", () => {
     jest.spyOn(console, 'warn')
     process.env.NODE_ENV = 'production'
     /* eslint-disable no-console */
@@ -152,7 +152,7 @@ describe('expect console.warn to fire—depending on process.env.NODE_ENV value'
     /* eslint-enable no-console */
   })
 
-  test('it should warn exactly one time when value !== production ', () => {
+  test('it should warn exactly one time when value !== production', () => {
     jest.spyOn(console, 'warn')
     process.env.NODE_ENV = 'development'
     /* eslint-disable no-console */
