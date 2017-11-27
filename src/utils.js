@@ -237,6 +237,17 @@ function isDOMElement(element) {
 }
 
 /**
+ * React Native sets `navigator.product` to a constant `ReactNative`.
+ * We can use this to determine if the target is React Native or not.
+ * See https://github.com/facebook/react-native/issues/10881 for more info.
+ * See https://github.com/facebook/react-native/blob/70c359000a2df091c3939f4c19db6024af992d43/Libraries/Core/InitializeCore.js#L194-L195 for more info.
+ * @return {Boolean} whether or not the platform is React native
+ */
+function isReactNative() {
+  return navigator.product === 'ReactNative'
+}
+
+/**
  * @param {Object} element (P)react element
  * @return {Object} the props
  */
@@ -287,6 +298,7 @@ export {
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
+  isReactNative,
   getElementProps,
   noop,
   requiredProp,
