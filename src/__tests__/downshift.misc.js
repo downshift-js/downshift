@@ -137,6 +137,34 @@ test('can use children instead of render prop', () => {
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
+describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
+  afterEach(() => (process.env.NODE_ENV = 'test'))
+
+  test("it shouldn't log anything when value === production ", () => {
+    jest.spyOn(console, 'warn')
+    process.env.NODE_ENV = 'production'
+    /* eslint-disable no-console */
+    /* eslint-disable no-unused-vars */
+    const {wrapper} = setup({selectedItem: {label: 'test', value: 'any'}})
+
+    expect(console.warn).toHaveBeenCalledTimes(0)
+    console.warn.mockRestore()
+    /* eslint-enable no-console */
+  })
+
+  test('it should warn exactly one time when value !== production ', () => {
+    jest.spyOn(console, 'warn')
+    process.env.NODE_ENV = 'development'
+    /* eslint-disable no-console */
+    /* eslint-disable no-unused-vars */
+    const {wrapper} = setup({selectedItem: {label: 'test', value: 'any'}})
+
+    expect(console.warn).toHaveBeenCalledTimes(1)
+    console.warn.mockRestore()
+    /* eslint-enable no-console */
+  })
+})
+
 function setup({render = () => <div />, ...props} = {}) {
   let renderArg
   const renderSpy = jest.fn(controllerArg => {

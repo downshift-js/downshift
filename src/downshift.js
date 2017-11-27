@@ -69,8 +69,11 @@ class Downshift extends Component {
     getA11yStatusMessage,
     id: generateId('downshift'),
     itemToString: i => {
-      if (isPlainObject(i)) {
-        console.warn('you passed an Object as the value of `selectedItem`. Please refer to `itemToString` API documentation on Downshift\'s repository.')
+      if (process.env.NODE_ENV !== 'production' && isPlainObject(i)) {
+        //eslint-disable-next-line
+        console.warn(
+          "you passed an Object as the value of `selectedItem`. Please refer to `itemToString` API documentation on Downshift's repository.",
+        )
       }
       return i == null ? '' : String(i)
     },

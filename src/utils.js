@@ -280,13 +280,14 @@ export {
   requiredProp,
   setIdCounter,
   pickState,
+  isPlainObject,
 }
 
 /**
  * Simple check if the value passed is object literal
- * @param {*} arg any things
+ * @param {*} obj any things
  * @return {Boolean} whether it's object literal
  */
 function isPlainObject(obj) {
-  return Object.prototype.toString.call(i) === '[object Object]'
+  return Object.prototype.toString.call(obj) === '[object Object]'
 }
