@@ -813,33 +813,39 @@ class Downshift extends Component {
     // the _isMounted property is because we have `updateStatus` in a `debounce`
     // and we don't want to update the status if the component has been umounted
     this._isMounted = true
-    // this.isMouseDown helps us track whether the mouse is currently held down.
-    // This is useful when the user clicks on an item in the list, but holds the mouse
-    // down long enough for the list to disappear (because the blur event fires on the input)
-    // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
-    // trigger hiding the menu.
-    const onMouseDown = () => {
-      this.isMouseDown = true
-    }
-    const onMouseUp = event => {
-      this.isMouseDown = false
-      if (
-        (event.target === this._rootNode ||
-          !this._rootNode.contains(event.target)) &&
-        this.getState().isOpen
-      ) {
-        this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
-          this.props.onOuterClick(this.getStateAndHelpers()),
-        )
+    if (isReactNative()) {
+      this.cleanup = () => {
+        this._isMounted = false
       }
-    }
-    this.props.environment.addEventListener('mousedown', onMouseDown)
-    this.props.environment.addEventListener('mouseup', onMouseUp)
+    } else {
+      // this.isMouseDown helps us track whether the mouse is currently held down.
+      // This is useful when the user clicks on an item in the list, but holds the mouse
+      // down long enough for the list to disappear (because the blur event fires on the input)
+      // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
+      // trigger hiding the menu.
+      const onMouseDown = () => {
+        this.isMouseDown = true
+      }
+      const onMouseUp = event => {
+        this.isMouseDown = false
+        if (
+          (event.target === this._rootNode ||
+            !this._rootNode.contains(event.target)) &&
+          this.getState().isOpen
+        ) {
+          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+            this.props.onOuterClick(this.getStateAndHelpers()),
+          )
+        }
+      }
+      this.props.environment.addEventListener('mousedown', onMouseDown)
+      this.props.environment.addEventListener('mouseup', onMouseUp)
 
-    this.cleanup = () => {
-      this._isMounted = false
-      this.props.environment.removeEventListener('mousedown', onMouseDown)
-      this.props.environment.removeEventListener('mouseup', onMouseUp)
+      this.cleanup = () => {
+        this._isMounted = false
+        this.props.environment.removeEventListener('mousedown', onMouseDown)
+        this.props.environment.removeEventListener('mouseup', onMouseUp)
+      }
     }
   }
 
