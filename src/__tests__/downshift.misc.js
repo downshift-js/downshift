@@ -138,30 +138,29 @@ test('can use children instead of render prop', () => {
 })
 
 describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
-  afterEach(() => (process.env.NODE_ENV = 'test'))
-
-  test("it shouldn't log anything when value === production", () => {
+  const originalEnv = process.env.NODE_ENV
+  
+  beforeEach(() => {
     jest.spyOn(console, 'warn')
+  })
+
+  afterEach(() => {
+    process.env.NODE_ENV = originalEnv
+    console.warn.mockRestore()
+  })
+
+  test(`it shouldn't log anything when value === 'production'`, () => {
     process.env.NODE_ENV = 'production'
-    /* eslint-disable no-console */
-    /* eslint-disable no-unused-vars */
-    const {wrapper} = setup({selectedItem: {label: 'test', value: 'any'}})
+    setup({selectedItem: {label: 'test', value: 'any'}})
 
     expect(console.warn).toHaveBeenCalledTimes(0)
-    console.warn.mockRestore()
-    /* eslint-enable no-console */
   })
 
   test('it should warn exactly one time when value !== production', () => {
-    jest.spyOn(console, 'warn')
     process.env.NODE_ENV = 'development'
-    /* eslint-disable no-console */
-    /* eslint-disable no-unused-vars */
-    const {wrapper} = setup({selectedItem: {label: 'test', value: 'any'}})
+    setup({selectedItem: {label: 'test', value: 'any'}})
 
     expect(console.warn).toHaveBeenCalledTimes(1)
-    console.warn.mockRestore()
-    /* eslint-enable no-console */
   })
 })
 
@@ -174,3 +173,5 @@ function setup({render = () => <div />, ...props} = {}) {
   const wrapper = mount(<Downshift {...props} render={renderSpy} />)
   return {renderSpy, wrapper, ...renderArg}
 }
+
+/* eslint-disable no-console */
