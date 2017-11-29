@@ -9,6 +9,7 @@
   "scripts": {
     "add-contributor": "kcd-scripts contributors add",
     "build": "kcd-scripts build --bundle --p-react",
+    "build:react-native": "BUILD_REACT_NATIVE=true BUILD_FILENAME_PREFIX=react-native kcd-scripts build --bundle",
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
