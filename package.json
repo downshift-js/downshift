@@ -55,15 +55,15 @@
     "enzyme-adapter-react-16": "^1.1.0",
     "enzyme-to-json": "^3.2.2",
     "jest-serializer-html": "^4.0.1",
-    "kcd-scripts": "^0.30.2",
+    "kcd-scripts": "^0.30.3",
     "preact": "^8.2.6",
     "preact-render-to-string": "^3.7.0",
     "preval.macro": "^1.0.2",
     "prop-types": "^15.6.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-test-renderer": "^16.1.1",
-    "typescript": "^2.6.1"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0",
+    "typescript": "^2.6.2"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
