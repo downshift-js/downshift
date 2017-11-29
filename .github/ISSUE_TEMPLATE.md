@@ -11,19 +11,16 @@ never done that before, that's great! Check this free short video tutorial to
 learn how: http://kcd.im/pull-request
 -->
 
-- `downshift` version:
-- `node` version:
-- `npm` (or `yarn`) version:
+* `downshift` version:
+* `node` version:
+* `npm` (or `yarn`) version:
 
 Relevant code or config
 
 ```javascript
-
 ```
 
 What you did:
-
-
 
 What happened:
 
@@ -37,7 +34,5 @@ minimal amount of code possible.
 -->
 
 Problem description:
-
-
 
 Suggested solution:

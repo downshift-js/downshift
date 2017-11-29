@@ -137,6 +137,34 @@ test('can use children instead of render prop', () => {
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
+describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
+  const originalEnv = process.env.NODE_ENV
+
+  beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    process.env.NODE_ENV = originalEnv
+    console.warn.mockRestore()
+  })
+
+  test(`it shouldn't log anything when value === 'production'`, () => {
+    process.env.NODE_ENV = 'production'
+    setup({selectedItem: {label: 'test', value: 'any'}})
+
+    expect(console.warn).toHaveBeenCalledTimes(0)
+  })
+
+  test('it should warn exactly one time when value !== production', () => {
+    process.env.NODE_ENV = 'development'
+    setup({selectedItem: {label: 'test', value: 'any'}})
+
+    expect(console.warn).toHaveBeenCalledTimes(1)
+    expect(console.warn.mock.calls[0]).toMatchSnapshot()
+  })
+})
+
 function setup({render = () => <div />, ...props} = {}) {
   let renderArg
   const renderSpy = jest.fn(controllerArg => {
@@ -146,3 +174,5 @@ function setup({render = () => <div />, ...props} = {}) {
   const wrapper = mount(<Downshift {...props} render={renderSpy} />)
   return {renderSpy, wrapper, ...renderArg}
 }
+
+/* eslint no-console:0 */

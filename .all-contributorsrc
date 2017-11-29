@@ -455,6 +455,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "philipyoungg",
+      "name": "Philip Young",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/11477718?v=4",
+      "profile": "http://www.philipyoungg.com",
+      "contributions": [
+        "code",
+        "test",
+        "ideas"
+      ]
     }
   ]
 }

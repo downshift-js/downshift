@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expect console.warn to fire—depending on process.env.NODE_ENV value it should warn exactly one time when value !== production 1`] = `
+Array [
+  "downshift: An object was passed to the default implementation of \`itemToString\`. You should probably provide your own \`itemToString\` implementation. Please refer to the \`itemToString\` API documentation.",
+  "The object that was passed:",
+  Object {
+    "label": "test",
+    "value": "any",
+  },
+]
+`;
