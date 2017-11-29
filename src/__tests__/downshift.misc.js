@@ -139,9 +139,9 @@ test('can use children instead of render prop', () => {
 
 describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
   const originalEnv = process.env.NODE_ENV
-  
+
   beforeEach(() => {
-    jest.spyOn(console, 'warn')
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
   afterEach(() => {
@@ -161,6 +161,7 @@ describe('expect console.warn to fire—depending on process.env.NODE_ENV value'
     setup({selectedItem: {label: 'test', value: 'any'}})
 
     expect(console.warn).toHaveBeenCalledTimes(1)
+    expect(console.warn.mock.calls[0]).toMatchSnapshot()
   })
 })
 
@@ -174,4 +175,4 @@ function setup({render = () => <div />, ...props} = {}) {
   return {renderSpy, wrapper, ...renderArg}
 }
 
-/* eslint-disable no-console */
+/* eslint no-console:0 */

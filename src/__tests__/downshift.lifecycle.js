@@ -162,6 +162,7 @@ test('props update of selectedItem will not update inputValue state', () => {
       onInputValueChange={onInputValueChangeSpy}
       selectedItemChanged={(prevItem, item) => prevItem.id !== item.id}
       selectedItem={{id: '123', value: 'wow'}}
+      itemToString={i => (i ? i.value : '')}
       render={() => null}
     />,
   )
