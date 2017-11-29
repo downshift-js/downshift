@@ -2,6 +2,7 @@ import React from 'react'
 import {mount} from 'enzyme'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
+import * as utils from '../utils'
 
 jest.useFakeTimers()
 jest.mock('../set-a11y-status')
@@ -171,6 +172,44 @@ test('props update of selectedItem will not update inputValue state', () => {
   expect(onInputValueChangeSpy).not.toHaveBeenCalled()
 })
 
+test('controlled highlighted index change scrolls the item into view', () => {
+  // sadly, testing scroll is really difficult in a jsdom environment.
+  // Perhaps eventually we'll add real integration tests with cypress
+  // or something, but for now we'll just mock the implementation of
+  // utils.scrollIntoView and ensure it's called with the proper arguments
+  // assuming that the test suite for utils.scrollIntoView will ensure
+  // this functionality doesn't break.
+  jest.spyOn(utils, 'scrollIntoView').mockImplementation(() => {})
+  const oneHundredItems = Array.from({length: 100})
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+  const {wrapper} = setup({
+    mountOptions: {attachTo: div},
+    highlightedIndex: 1,
+    render({getItemProps}) {
+      return (
+        <div>
+          {oneHundredItems.map((x, i) => (
+            <div key={i} {...getItemProps({item: i})} />
+          ))}
+        </div>
+      )
+    },
+  })
+  wrapper.setProps({highlightedIndex: 75})
+  expect(utils.scrollIntoView).toHaveBeenCalledTimes(1)
+  const rootDivWrapper = wrapper.find('div').first()
+  expect(utils.scrollIntoView).toHaveBeenCalledWith(
+    rootDivWrapper
+      .find('div')
+      .at(76)
+      .instance(),
+    rootDivWrapper.instance(),
+  )
+
+  utils.scrollIntoView.mockRestore()
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
@@ -178,4 +217,17 @@ function mouseDownAndUp(node) {
 
 function sel(id) {
   return `[data-test="${id}"]`
+}
+
+function setup({render = () => <div />, mountOptions, ...props} = {}) {
+  let renderArg
+  const renderSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return render(controllerArg)
+  })
+  const wrapper = mount(
+    <Downshift {...props} render={renderSpy} />,
+    mountOptions,
+  )
+  return {renderSpy, wrapper, ...renderArg}
 }
