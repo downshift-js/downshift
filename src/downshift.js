@@ -194,11 +194,16 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
-      const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      const rootNode = this._rootNode
-      scrollIntoView(node, rootNode)
-    })
+    this.internalSetState(
+      {highlightedIndex, ...otherStateToSet},
+      this.scrollHighlightedItemIntoView,
+    )
+  }
+
+  scrollHighlightedItemIntoView = () => {
+    const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
+    const rootNode = this._rootNode
+    scrollIntoView(node, rootNode)
   }
 
   openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
@@ -786,6 +791,12 @@ class Downshift extends Component {
         type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
+    }
+    if (
+      this.isControlledProp('highlightedIndex') &&
+      this.props.highlightedIndex !== prevProps.highlightedIndex
+    ) {
+      this.scrollHighlightedItemIntoView()
     }
     this.updateStatus()
   }
