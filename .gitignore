@@ -8,6 +8,7 @@ dist
 .eslintcache
 storybook-static
 preact/
+react-native/
 
 # these cause more harm than good
 # when working with contributors
