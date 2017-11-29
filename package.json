@@ -27,7 +27,8 @@
   "files": [
     "dist",
     "typings",
-    "preact"
+    "preact",
+    "react-native"
   ],
   "keywords": [
     "enhanced input",
