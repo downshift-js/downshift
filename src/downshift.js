@@ -202,7 +202,7 @@ class Downshift extends Component {
   unsetItemCount = () => (this.itemCount = null)
 
   getItemNodeFromIndex = index => {
-    if (isReactNative()) {
+    if (isReactNative) {
       throw new Error(
         'Getting item nodes by index is unsupported on React Native.\n' +
           'See https://github.com/paypal/downshift/issues/185#issuecomment-328911789',
@@ -218,7 +218,7 @@ class Downshift extends Component {
   ) => {
     otherStateToSet = pickState(otherStateToSet)
     // TODO: this whole method is DOM specific...
-    if (!isReactNative()) {
+    if (!isReactNative) {
       this.internalSetState(
         {highlightedIndex, ...otherStateToSet},
         this.scrollHighlightedItemIntoView,
@@ -545,7 +545,7 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
-    const enabledEventHandlers = isReactNative()
+    const enabledEventHandlers = isReactNative
       ? {
           onPress: composeEventHandlers(onClick, this.button_handleClick),
         }
@@ -680,7 +680,7 @@ class Downshift extends Component {
     )
     if (isPreact) {
       return 'onInput'
-    } else if (isReactNative()) {
+    } else if (isReactNative) {
       return 'onChangeText'
     } else {
       return 'onChange'
@@ -697,7 +697,7 @@ class Downshift extends Component {
     this.internalSetState({
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative() ? event : event.target.value,
+      inputValue: isReactNative ? event : event.target.value,
     })
   }
 
@@ -728,7 +728,7 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative() ? 'onPress' : 'onClick'
+    const onSelectKey = isReactNative ? 'onPress' : 'onClick'
     return {
       id: this.getItemId(index),
       // onMouseMove is used over onMouseEnter here. onMouseMove
@@ -820,7 +820,7 @@ class Downshift extends Component {
     })
     this.previousResultCount = resultCount
     // TODO: make this work.
-    if (!isReactNative()) {
+    if (!isReactNative) {
       setA11yStatus(status)
     }
   }, 200)
@@ -829,7 +829,7 @@ class Downshift extends Component {
     // the _isMounted property is because we have `updateStatus` in a `debounce`
     // and we don't want to update the status if the component has been umounted
     this._isMounted = true
-    if (isReactNative()) {
+    if (isReactNative) {
       this.cleanup = () => {
         this._isMounted = false
       }

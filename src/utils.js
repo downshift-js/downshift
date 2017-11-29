@@ -1,3 +1,5 @@
+import preval from 'preval.macro'
+
 let idCounter = 1
 
 /**
@@ -243,9 +245,9 @@ function isDOMElement(element) {
  * See https://github.com/facebook/react-native/blob/70c359000a2df091c3939f4c19db6024af992d43/Libraries/Core/InitializeCore.js#L194-L195 for more info.
  * @return {Boolean} whether or not the platform is React Native
  */
-function isReactNative() {
-  return typeof navigator !== 'undefined' && navigator.product === 'ReactNative'
-}
+const isReactNative = Boolean(
+  preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`,
+)
 
 /**
  * @param {Object} element (P)react element
