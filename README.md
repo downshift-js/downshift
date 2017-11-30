@@ -581,6 +581,8 @@ These are functions you can call to change the state of the downshift component.
 | `setHighlightedIndex`   | `function(index: number, otherStateToSet: object, cb: Function)` | call to set a new highlighted index                                                                                                                                                 |
 | `toggleMenu`            | `function(otherStateToSet: object, cb: Function)`                | toggle the menu open state                                                                                                                                                          |
 | `reset`                 | `function(otherStateToSet: object, cb: Function)`                | this resets downshift's state to a reasonable default                                                                                                                               |
+| `setItemCount`          | `function(count: number)`                                        | this sets the `itemCount`. Handy in situations where you're using windowing and the items are loaded asynchronously from within downshift (so you can't use the `itemCount` prop.   |
+| `unsetItemCount`        | `function()`                                                     | this unsets the `itemCount` which means the item count will be calculated instead by the `itemCount` prop or based on how many times you call `getItemProps`.                       |
 
 > `otherStateToSet` refers to an object to set other internal state. It is
 > recommended to avoid abusing this, but is available if you need it.
