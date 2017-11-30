@@ -140,6 +140,12 @@ class Downshift extends Component {
   )
   input = null
   items = []
+  // itemCount can be changed asynchronously
+  // from within downshift (so it can't come from a prop)
+  // this is why we store it as an instance and use
+  // getItemCount rather than just use items.length
+  // (to support windowing + async)
+  itemCount = null
   previousResultCount = 0
 
   /**
@@ -178,12 +184,23 @@ class Downshift extends Component {
   }
 
   getItemCount() {
-    if (this.props.itemCount === undefined) {
-      return this.items.length
-    } else {
+    // things read better this way. They're in priority order:
+    // 1. `this.itemCount`
+    // 2. `this.props.itemCount`
+    // 3. `this.items.length`
+    /* eslint-disable no-negated-condition */
+    if (this.itemCount != null) {
+      return this.itemCount
+    } else if (this.props.itemCount !== undefined) {
       return this.props.itemCount
+    } else {
+      return this.items.length
     }
+    /* eslint-enable no-negated-condition */
   }
+
+  setItemCount = count => (this.itemCount = count)
+  unsetItemCount = () => (this.itemCount = null)
 
   getItemNodeFromIndex = index => {
     return this.props.environment.document.getElementById(this.getItemId(index))
@@ -417,6 +434,8 @@ class Downshift extends Component {
       clearSelection,
       clearItems,
       reset,
+      setItemCount,
+      unsetItemCount,
     } = this
     return {
       // prop getters
@@ -437,6 +456,8 @@ class Downshift extends Component {
       setHighlightedIndex,
       clearSelection,
       clearItems,
+      setItemCount,
+      unsetItemCount,
 
       //props
       itemToString,

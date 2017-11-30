@@ -213,6 +213,48 @@ test('highlightedIndex uses the given itemCount prop to determine the last index
   )
 })
 
+test('itemCount can be set and unset asynchronously', () => {
+  let downshift
+  const renderSpy = jest.fn(d => {
+    downshift = d
+    return (
+      <div>
+        <input {...d.getInputProps({'data-test': 'input'})} />
+      </div>
+    )
+  })
+  const wrapper = mount(
+    <Downshift isOpen={true} render={renderSpy} itemCount={10} />,
+  )
+  const input = wrapper.find(sel('input'))
+  const up = () => input.simulate('keydown', {key: 'ArrowUp'})
+  const down = () => input.simulate('keydown', {key: 'ArrowDown'})
+
+  downshift.setItemCount(100)
+  up()
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 99}),
+  )
+  down()
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 0}),
+  )
+  downshift.setItemCount(40)
+  up()
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 39}),
+  )
+  down()
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 0}),
+  )
+  downshift.unsetItemCount()
+  up()
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 9}),
+  )
+})
+
 test('Enter when there is no item at index 0 still selects the highlighted item', () => {
   // test inspired by https://github.com/paypal/downshift/issues/119
   // use case is virtualized lists
