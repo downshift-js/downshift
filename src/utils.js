@@ -239,10 +239,9 @@ function isDOMElement(element) {
 }
 
 /**
- * React Native sets `navigator.product` to a constant `ReactNative`.
- * We can use this to determine if the target is React Native or not.
- * See https://github.com/facebook/react-native/issues/10881 for more info.
- * See https://github.com/facebook/react-native/blob/70c359000a2df091c3939f4c19db6024af992d43/Libraries/Core/InitializeCore.js#L194-L195 for more info.
+ * When built, this constant will signify if the current platform is React Native.
+ * This can be used to optimize codepaths for other platforms without conflating
+ * concepts because of the React Native target.
  * @return {Boolean} whether or not the platform is React Native
  */
 const isReactNative = Boolean(
