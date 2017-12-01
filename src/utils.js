@@ -244,9 +244,13 @@ function isDOMElement(element) {
  * concepts because of the React Native target.
  * @return {Boolean} whether or not the platform is React Native
  */
-const isReactNative = Boolean(
-  preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`,
-)
+/* istanbul ignore next (react-native) */
+const isReactNative = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+
+// Disabling coverage here is necessary due to a weird deal with
+// babel-plugin-istanbul + preval.macro. No idea...
+/* istanbul ignore next (preact) */
+const isPreact = preval`module.exports = process.env.BUILD_PREACT === 'true'`
 
 /**
  * @param {Object} element (P)react element
@@ -299,6 +303,7 @@ export {
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
+  isPreact,
   isReactNative,
   getElementProps,
   noop,

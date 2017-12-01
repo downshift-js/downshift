@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
@@ -14,6 +13,7 @@ import {
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
+  isPreact,
   isReactNative,
   getElementProps,
   noop,
@@ -665,11 +665,6 @@ class Downshift extends Component {
   }
 
   input_getOnChangeKey() {
-    // the boolean cast here is necessary due to a weird deal with
-    // babel-plugin-istanbul + preval.macro. No idea...
-    const isPreact = Boolean(
-      preval`module.exports = process.env.BUILD_PREACT === 'true'`,
-    )
     if (isPreact) {
       return 'onInput'
     } else if (isReactNative) {
