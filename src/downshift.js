@@ -210,6 +210,8 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
+    this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
+      /* istanbul ignore else (react-native) */
     if (!isReactNative) {
       this.internalSetState(
         {highlightedIndex, ...otherStateToSet},
@@ -538,7 +540,8 @@ class Downshift extends Component {
   getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
     const enabledEventHandlers = isReactNative
-      ? {
+      ? /* istanbul ignore next (react-native) */
+        {
           onPress: composeEventHandlers(onClick, this.button_handleClick),
         }
       : {
@@ -665,8 +668,10 @@ class Downshift extends Component {
   }
 
   input_getOnChangeKey() {
+    /* istanbul ignore next (preact) */
     if (isPreact) {
       return 'onInput'
+      /* istanbul ignore next (react-native) */
     } else if (isReactNative) {
       return 'onChangeText'
     } else {
@@ -684,7 +689,9 @@ class Downshift extends Component {
     this.internalSetState({
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative ? event : event.target.value,
+      inputValue: isReactNative
+        ? /* istanbul ignore next (react-native) */ event
+        : event.target.value,
     })
   }
 
@@ -715,7 +722,9 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative ? 'onPress' : 'onClick'
+    const onSelectKey = isReactNative
+      ? /* istanbul ignore next (react-native) */ 'onPress'
+      : 'onClick'
     return {
       id: this.getItemId(index),
       // onMouseMove is used over onMouseEnter here. onMouseMove
@@ -806,6 +815,7 @@ class Downshift extends Component {
       ...state,
     })
     this.previousResultCount = resultCount
+    /* istanbul ignore else (react-native) */
     if (!isReactNative) {
       setA11yStatus(status)
     }
@@ -815,6 +825,7 @@ class Downshift extends Component {
     // the _isMounted property is because we have `updateStatus` in a `debounce`
     // and we don't want to update the status if the component has been umounted
     this._isMounted = true
+    /* istanbul ignore if (react-native) */
     if (isReactNative) {
       this.cleanup = () => {
         this._isMounted = false
