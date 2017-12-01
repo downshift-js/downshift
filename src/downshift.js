@@ -210,19 +210,19 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    /* istanbul ignore else (react-native) */
-    if (!isReactNative) {
-      this.internalSetState(
-        {highlightedIndex, ...otherStateToSet},
-        this.scrollHighlightedItemIntoView,
-      )
-    }
+    this.internalSetState(
+      {highlightedIndex, ...otherStateToSet},
+      this.scrollHighlightedItemIntoView,
+    )
   }
 
   scrollHighlightedItemIntoView = () => {
-    const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-    const rootNode = this._rootNode
-    scrollIntoView(node, rootNode)
+    /* istanbul ignore else (react-native) */
+    if (!isReactNative) {
+      const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
+      const rootNode = this._rootNode
+      scrollIntoView(node, rootNode)
+    }
   }
 
   openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
