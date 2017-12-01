@@ -467,6 +467,15 @@
         "test",
         "ideas"
       ]
+    },
+    {
+      "login": "alexandernanberg",
+      "name": "Alexander Nanberg",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8997319?v=4",
+      "profile": "https://alexandernanberg.com",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
