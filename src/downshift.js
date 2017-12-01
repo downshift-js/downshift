@@ -210,8 +210,7 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState({highlightedIndex, ...otherStateToSet}, () => {
-      /* istanbul ignore else (react-native) */
+    /* istanbul ignore else (react-native) */
     if (!isReactNative) {
       this.internalSetState(
         {highlightedIndex, ...otherStateToSet},
