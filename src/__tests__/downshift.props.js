@@ -133,9 +133,9 @@ test('uses given environment', () => {
 })
 
 test('can override onOuterClick callback to maintain isOpen state', () => {
-  const children = () => <div />
+  const render = () => <div />
   const onOuterClick = jest.fn()
-  const {openMenu} = setup({children, onOuterClick})
+  const {openMenu} = setup({render, onOuterClick})
   openMenu()
   mouseDownAndUp(document.body)
   expect(onOuterClick).toHaveBeenCalledTimes(1)
@@ -179,16 +179,27 @@ test('onInputValueChange called with empty string on reset', () => {
   expect(handleInputValueChange).toHaveBeenCalledWith('', expect.any(Object))
 })
 
+test('defaultHighlightedIndex will be used for the highlighted index on reset', () => {
+  const {reset, renderSpy} = setup({defaultHighlightedIndex: 0})
+  renderSpy.mockClear()
+  reset()
+  expect(renderSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: 0,
+    }),
+  )
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
 }
 
-function setup({children = () => <div />, ...props} = {}) {
+function setup({render = () => <div />, ...props} = {}) {
   let renderArg
   const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return children(controllerArg)
+    return render(controllerArg)
   })
   const wrapper = mount(<Downshift {...props} render={renderSpy} />)
   return {renderSpy, wrapper, ...renderArg}
