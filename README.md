@@ -75,7 +75,7 @@ harder to contribute to.
   * [highlightedIndex](#highlightedindex)
   * [inputValue](#inputvalue)
   * [isOpen](#isopen)
-  * [`selectedItem`](#selecteditem)
+  * [selectedItem](#selecteditem)
   * [render](#render)
   * [id](#id)
   * [environment](#environment)
