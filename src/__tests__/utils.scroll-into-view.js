@@ -60,6 +60,28 @@ test('aligns to top when the node is above view area', () => {
   expect(scrollableNode.scrollTop).toBe(85)
 })
 
+test('aligns to top of view area when the node is above view area and scrollable parent top', () => {
+  const node = getNode({height: 40, top: -75})
+  const scrollableNode = getScrollableNode({
+    top: -50,
+    scrollTop: 100,
+    children: [node],
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(25)
+})
+
+test('aligns to top of scrollable parent when the node is above view area', () => {
+  const node = getNode({height: 40, top: -50})
+  const scrollableNode = getScrollableNode({
+    top: 50,
+    scrollTop: 100,
+    children: [node],
+  })
+  scrollIntoView(node, scrollableNode)
+  expect(scrollableNode.scrollTop).toBe(0)
+})
+
 test('aligns to bottom when the node is below the scrollable parent and parent top above view area', () => {
   const node = getNode({height: 40, top: 280})
   const scrollableNode = getScrollableNode({
