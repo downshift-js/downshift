@@ -46,6 +46,8 @@ class Downshift extends Component {
       removeEventListener: PropTypes.func,
       document: PropTypes.shape({
         getElementById: PropTypes.func,
+        activeElement: PropTypes.any,
+        body: PropTypes.any,
       }),
     }),
     // things we keep in state for uncontrolled components
@@ -561,6 +563,15 @@ class Downshift extends Component {
 
   button_handleClick = event => {
     event.preventDefault()
+    // handle odd case for Safari and Firefox which
+    // don't give the button the focus properly.
+    /* istanbul ignore if (can't reasonably test this) */
+    if (
+      this.props.environment.document.activeElement ===
+      this.props.environment.document.body
+    ) {
+      event.target.focus()
+    }
     this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
   }
 
