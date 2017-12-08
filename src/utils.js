@@ -67,9 +67,14 @@ function scrollIntoView(node, rootNode) {
   const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
   const nodeRect = node.getBoundingClientRect()
 
-  if (nodeRect.top < 0) {
-    // the item above view
+  if (nodeRect.top < 0 && scrollParentRect.top < 0) {
     scrollParent.scrollTop += nodeRect.top
+    return
+  }
+
+  if (nodeRect.top < 0) {
+    // the item is above the viewport and the parent is not above the viewport
+    scrollParent.scrollTop += nodeRect.top - scrollParentTop
     return
   }
 
