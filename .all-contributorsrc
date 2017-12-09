@@ -485,6 +485,17 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "Zashy",
+      "name": "Nick Lavin",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1706342?v=4",
+      "profile": "https://github.com/Zashy",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
