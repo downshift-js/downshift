@@ -17,7 +17,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-50-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-51-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 
@@ -75,7 +75,7 @@ harder to contribute to.
   * [highlightedIndex](#highlightedindex)
   * [inputValue](#inputvalue)
   * [isOpen](#isopen)
-  * [`selectedItem`](#selecteditem)
+  * [selectedItem](#selecteditem)
   * [render](#render)
   * [id](#id)
   * [environment](#environment)
@@ -209,7 +209,8 @@ compute the `inputValue`.
 
 ### selectedItemChanged
 
-> `function(prevItem: any, item: any)` | defaults to: `(prevItem, item) => (prevItem !== item)`
+> `function(prevItem: any, item: any)` | defaults to: `(prevItem, item) =>
+> (prevItem !== item)`
 
 Used to determine if the new `selectedItem` has changed compared to the previous
 `selectedItem` and properly update Downshift's internal state.
@@ -278,7 +279,8 @@ This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
-The parameters both take the shape of internal state (`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`) but differ
+The parameters both take the shape of internal state (`{highlightedIndex:
+number, inputValue: string, isOpen: boolean, selectedItem: any}`) but differ
 slightly.
 
 * `changes`: These are the properties that actually have changed since the last
@@ -432,7 +434,8 @@ below:
 
 These functions are used to apply props to the elements that you render. This
 gives you maximum flexibility to render what, when, and wherever you like. You
-call these on the element in question (for example: `<input {...getInputProps()}`)). It's advisable to pass all your props to that function
+call these on the element in question (for example: `<input
+{...getInputProps()}`)). It's advisable to pass all your props to that function
 rather than applying them on the element yourself to avoid your props being
 overridden (or overriding the props returned). For example:
 `getInputProps({onKeyUp(event) {console.log(event)}})`.
@@ -466,7 +469,8 @@ If you're rendering a composite component, `Downshift` checks that
 `getRootProps` is called and that `refKey` is a prop of the returned composite
 component. This is done to catch common causes of errors but, in some cases, the
 check could fail even if the ref is correctly forwarded to the root DOM
-component. In these cases, you can provide the object `{suppressRefError : true}` as the second argument to `getRootProps` to completely bypass the check.\
+component. In these cases, you can provide the object `{suppressRefError :
+true}` as the second argument to `getRootProps` to completely bypass the check.\
 **Please use it with extreme care and only if you are absolutely sure that the ref
 is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
 See issue paypal/downshift#235 for the discussion that lead to this.
@@ -751,8 +755,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars1.githubusercontent.com/u/8969456?v=4" width="100px;"/><br /><sub><b>Paul Veevers</b></sub>](https://github.com/paul-veevers)<br />[💻](https://github.com/paypal/downshift/commits?author=paul-veevers "Code") | [<img src="https://avatars2.githubusercontent.com/u/13622298?v=4" width="100px;"/><br /><sub><b>Ron Cruz</b></sub>](https://github.com/Ronolibert)<br />[📖](https://github.com/paypal/downshift/commits?author=Ronolibert "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/13605633?v=4" width="100px;"/><br /><sub><b>Rick McGavin</b></sub>](http://rickmcgavin.github.io)<br />[📖](https://github.com/paypal/downshift/commits?author=rickMcGavin "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/869669?v=4" width="100px;"/><br /><sub><b>Jelle Versele</b></sub>](http://twitter.com/vejersele)<br />[💡](#example-vejersele "Examples") | [<img src="https://avatars1.githubusercontent.com/u/202773?v=4" width="100px;"/><br /><sub><b>Brent Ertz</b></sub>](https://github.com/brentertz)<br />[🤔](#ideas-brentertz "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/8015514?v=4" width="100px;"/><br /><sub><b>Justice Mba </b></sub>](https://github.com/Dajust)<br />[💻](https://github.com/paypal/downshift/commits?author=Dajust "Code") [📖](https://github.com/paypal/downshift/commits?author=Dajust "Documentation") [🤔](#ideas-Dajust "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/3925281?v=4" width="100px;"/><br /><sub><b>Mark Ellis</b></sub>](http://mfellis.com)<br />[🤔](#ideas-ellismarkf "Ideas, Planning, & Feedback") |
 | [<img src="https://avatars1.githubusercontent.com/u/3241922?v=4" width="100px;"/><br /><sub><b>us͡an̸df͘rien͜ds͠</b></sub>](http://ronak.io/)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ausandfriends "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=usandfriends "Code") [⚠️](https://github.com/paypal/downshift/commits?author=usandfriends "Tests") | [<img src="https://avatars0.githubusercontent.com/u/474248?v=4" width="100px;"/><br /><sub><b>Robin Drexler</b></sub>](https://www.robin-drexler.com/)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Arobin-drexler "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=robin-drexler "Code") | [<img src="https://avatars0.githubusercontent.com/u/7406639?v=4" width="100px;"/><br /><sub><b>Arturo Romero</b></sub>](http://arturoromero.info/)<br />[💡](#example-arturoromeroslc "Examples") | [<img src="https://avatars1.githubusercontent.com/u/275483?v=4" width="100px;"/><br /><sub><b>yp</b></sub>](http://algolab.eu/pirola)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ayp "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=yp "Code") [⚠️](https://github.com/paypal/downshift/commits?author=yp "Tests") | [<img src="https://avatars0.githubusercontent.com/u/3998604?v=4" width="100px;"/><br /><sub><b>Dave Garwacke</b></sub>](http://www.warbyparker.com)<br />[📖](https://github.com/paypal/downshift/commits?author=ifyoumakeit "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/11758660?v=4" width="100px;"/><br /><sub><b>Ivan Pazhitnykh</b></sub>](http://linkedin.com/in/drapegnik)<br />[💻](https://github.com/paypal/downshift/commits?author=Drapegnik "Code") [⚠️](https://github.com/paypal/downshift/commits?author=Drapegnik "Tests") | [<img src="https://avatars0.githubusercontent.com/u/61776?v=4" width="100px;"/><br /><sub><b>Luis Merino</b></sub>](https://github.com/Rendez)<br />[📖](https://github.com/paypal/downshift/commits?author=Rendez "Documentation") |
 | [<img src="https://avatars0.githubusercontent.com/u/8746094?v=4" width="100px;"/><br /><sub><b>Andrew Hansen</b></sub>](http://twitter.com/arahansen)<br />[💻](https://github.com/paypal/downshift/commits?author=arahansen "Code") [⚠️](https://github.com/paypal/downshift/commits?author=arahansen "Tests") [🤔](#ideas-arahansen "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/20307225?v=4" width="100px;"/><br /><sub><b>John Whiles</b></sub>](http://www.johnwhiles.com)<br />[💻](https://github.com/paypal/downshift/commits?author=Jwhiles "Code") | [<img src="https://avatars1.githubusercontent.com/u/1288694?v=4" width="100px;"/><br /><sub><b>Justin Hall</b></sub>](https://github.com/wKovacs64)<br />[🚇](#infra-wKovacs64 "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars2.githubusercontent.com/u/7641760?v=4" width="100px;"/><br /><sub><b>Pete Nykänen</b></sub>](https://twitter.com/pete_tnt)<br />[👀](#review-petetnt "Reviewed Pull Requests") | [<img src="https://avatars2.githubusercontent.com/u/4060187?v=4" width="100px;"/><br /><sub><b>Jared Palmer</b></sub>](http://jaredpalmer.com)<br />[💻](https://github.com/paypal/downshift/commits?author=jaredpalmer "Code") | [<img src="https://avatars3.githubusercontent.com/u/11477718?v=4" width="100px;"/><br /><sub><b>Philip Young</b></sub>](http://www.philipyoungg.com)<br />[💻](https://github.com/paypal/downshift/commits?author=philipyoungg "Code") [⚠️](https://github.com/paypal/downshift/commits?author=philipyoungg "Tests") [🤔](#ideas-philipyoungg "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/8997319?v=4" width="100px;"/><br /><sub><b>Alexander Nanberg</b></sub>](https://alexandernanberg.com)<br />[📖](https://github.com/paypal/downshift/commits?author=alexandernanberg "Documentation") |
-| [<img src="https://avatars2.githubusercontent.com/u/1556430?v=4" width="100px;"/><br /><sub><b>Pete Redmond</b></sub>](https://httpete.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ahttpete-ire "Bug reports") |
-| [<img src="https://avatars2.githubusercontent.com/u/1706342?v=4" width="100px;"/><br /><sub><b>Nick Lavin</b></sub>](https://github.com/Zashy)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3AZashy "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=Zashy "Code") [⚠️](https://github.com/paypal/downshift/commits?author=Zashy "Tests") |
+| [<img src="https://avatars2.githubusercontent.com/u/1556430?v=4" width="100px;"/><br /><sub><b>Pete Redmond</b></sub>](https://httpete.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ahttpete-ire "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/1706342?v=4" width="100px;"/><br /><sub><b>Nick Lavin</b></sub>](https://github.com/Zashy)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3AZashy "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=Zashy "Code") [⚠️](https://github.com/paypal/downshift/commits?author=Zashy "Tests") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
