@@ -129,7 +129,6 @@ test('uses given environment', () => {
   wrapper.unmount()
   expect(environment.addEventListener).toHaveBeenCalledTimes(2)
   expect(environment.removeEventListener).toHaveBeenCalledTimes(2)
-  expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
 })
 
 test('can override onOuterClick callback to maintain isOpen state', () => {

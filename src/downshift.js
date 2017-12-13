@@ -213,10 +213,7 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState(
-      {highlightedIndex, ...otherStateToSet},
-      this.scrollHighlightedItemIntoView,
-    )
+    this.internalSetState({highlightedIndex, ...otherStateToSet})
   }
 
   scrollHighlightedItemIntoView = () => {
@@ -688,15 +685,13 @@ class Downshift extends Component {
     return `${this.props.id}-item-${index}`
   }
 
-  getItemProps = (
-    {
-      onMouseEnter,
-      onClick,
-      index,
-      item = requiredProp('getItemProps', 'item'),
-      ...rest
-    } = {},
-  ) => {
+  getItemProps = ({
+    onMouseEnter,
+    onClick,
+    index,
+    item = requiredProp('getItemProps', 'item'),
+    ...rest
+  } = {}) => {
     if (index === undefined) {
       this.items.push(item)
       index = this.items.indexOf(item)
@@ -709,6 +704,13 @@ class Downshift extends Component {
         this.setHighlightedIndex(index, {
           type: Downshift.stateChangeTypes.itemMouseEnter,
         })
+
+        // We never want to manually scroll when changing state based
+        // on `onMouseEnter` because we will be moving the element out
+        // from under the user which is currently scrolling/moving the
+        // cursor
+        this.avoidScrolling = true
+        setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onClick: composeEventHandlers(onClick, () => {
         this.selectItemAtIndex(index)
@@ -811,7 +813,7 @@ class Downshift extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       this.isControlledProp('selectedItem') &&
       this.props.selectedItemChanged(
@@ -824,12 +826,21 @@ class Downshift extends Component {
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
+
+    const current = this.isControlledProp('highlightedIndex')
+      ? this.props
+      : this.state
+    const prev = this.isControlledProp('highlightedIndex')
+      ? prevProps
+      : prevState
+
     if (
-      this.isControlledProp('highlightedIndex') &&
-      this.props.highlightedIndex !== prevProps.highlightedIndex
+      current.highlightedIndex !== prev.highlightedIndex &&
+      !this.avoidScrolling
     ) {
       this.scrollHighlightedItemIntoView()
     }
+
     this.updateStatus()
   }
 
@@ -891,16 +902,12 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
     )
   } else if (!isComposite && refKeySpecified) {
     throw new Error(
-      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${
-        refKey
-      }"`,
+      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
   if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
-      `downshift: You must apply the ref prop "${
-        refKey
-      }" from getRootProps onto your root element.`,
+      `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }
 }
