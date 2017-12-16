@@ -827,12 +827,10 @@ class Downshift extends Component {
       })
     }
 
-    const current = this.isControlledProp('highlightedIndex')
-      ? this.props
-      : this.state
-    const prev = this.isControlledProp('highlightedIndex')
-      ? prevProps
-      : prevState
+    const current =
+      this.props.highlightedIndex === undefined ? this.state : this.props
+    const prev =
+      prevProps.highlightedIndex === undefined ? prevState : prevProps
 
     if (
       current.highlightedIndex !== prev.highlightedIndex &&
