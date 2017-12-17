@@ -496,6 +496,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "cycomachead",
+      "name": "Michael Ball",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1505907?v=4",
+      "profile": "http://michaelball.co",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
