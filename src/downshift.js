@@ -651,7 +651,7 @@ class Downshift extends Component {
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
-        typeof highlightedIndex === 'number' && highlightedIndex >= 0
+        isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
       autoComplete: 'off',
@@ -688,15 +688,13 @@ class Downshift extends Component {
     return `${this.props.id}-item-${index}`
   }
 
-  getItemProps = (
-    {
-      onMouseEnter,
-      onClick,
-      index,
-      item = requiredProp('getItemProps', 'item'),
-      ...rest
-    } = {},
-  ) => {
+  getItemProps = ({
+    onMouseEnter,
+    onClick,
+    index,
+    item = requiredProp('getItemProps', 'item'),
+    ...rest
+  } = {}) => {
     if (index === undefined) {
       this.items.push(item)
       index = this.items.indexOf(item)
@@ -891,16 +889,12 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
     )
   } else if (!isComposite && refKeySpecified) {
     throw new Error(
-      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${
-        refKey
-      }"`,
+      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
   if (!getElementProps(element).hasOwnProperty(refKey)) {
     throw new Error(
-      `downshift: You must apply the ref prop "${
-        refKey
-      }" from getRootProps onto your root element.`,
+      `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }
 }
