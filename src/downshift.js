@@ -213,10 +213,7 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState(
-      {highlightedIndex, ...otherStateToSet},
-      this.scrollHighlightedItemIntoView,
-    )
+    this.internalSetState({highlightedIndex, ...otherStateToSet})
   }
 
   scrollHighlightedItemIntoView = () => {
@@ -707,6 +704,13 @@ class Downshift extends Component {
         this.setHighlightedIndex(index, {
           type: Downshift.stateChangeTypes.itemMouseEnter,
         })
+
+        // We never want to manually scroll when changing state based
+        // on `onMouseEnter` because we will be moving the element out
+        // from under the user which is currently scrolling/moving the
+        // cursor
+        this.avoidScrolling = true
+        setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onClick: composeEventHandlers(onClick, () => {
         this.selectItemAtIndex(index)
@@ -809,7 +813,7 @@ class Downshift extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       this.isControlledProp('selectedItem') &&
       this.props.selectedItemChanged(
@@ -822,12 +826,19 @@ class Downshift extends Component {
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
+
+    const current =
+      this.props.highlightedIndex === undefined ? this.state : this.props
+    const prev =
+      prevProps.highlightedIndex === undefined ? prevState : prevProps
+
     if (
-      this.isControlledProp('highlightedIndex') &&
-      this.props.highlightedIndex !== prevProps.highlightedIndex
+      current.highlightedIndex !== prev.highlightedIndex &&
+      !this.avoidScrolling
     ) {
       this.scrollHighlightedItemIntoView()
     }
+
     this.updateStatus()
   }
 

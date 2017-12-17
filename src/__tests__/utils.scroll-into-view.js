@@ -129,18 +129,16 @@ function getScrollableNode(overrides = {}) {
   })
 }
 
-function getNode(
-  {
-    top = 0,
-    height = 0,
-    scrollTop = 0,
-    scrollHeight = height,
-    clientHeight = height,
-    children = [],
-    borderBottomWidth = 0,
-    borderTopWidth = 0,
-  } = {},
-) {
+function getNode({
+  top = 0,
+  height = 0,
+  scrollTop = 0,
+  scrollHeight = height,
+  clientHeight = height,
+  children = [],
+  borderBottomWidth = 0,
+  borderTopWidth = 0,
+} = {}) {
   const div = document.createElement('div')
   div.getBoundingClientRect = () => ({
     width: 50,
