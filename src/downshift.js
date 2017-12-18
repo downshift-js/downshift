@@ -648,7 +648,7 @@ class Downshift extends Component {
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
-        typeof highlightedIndex === 'number' && highlightedIndex >= 0
+        isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
       autoComplete: 'off',
