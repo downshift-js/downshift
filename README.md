@@ -8,7 +8,9 @@
 autocomplete/dropdown/select/combobox components</p>
 
 > See
-> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817)
+> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817) and 
+>[Episode
+79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
 
 <hr />
 
