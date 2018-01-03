@@ -35,6 +35,20 @@ class AxiosAutocomplete extends Component {
     this.state = {items: []}
   }
 
+  fetchRepository = debounce(value => {
+    axios
+      .get(baseEndpoint + value)
+      .then(response => {
+        const items = response.data.items.map(
+          item => `${item.name} (id:${item.id.toString()})`,
+        ) // Added ID to make it unique
+        this.setState({items})
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, 300)
+
   render() {
     return (
       <Downshift
@@ -54,20 +68,8 @@ class AxiosAutocomplete extends Component {
                     if (!value) {
                       return
                     }
-                    debounce(
-                      axios
-                        .get(baseEndpoint + value)
-                        .then(response => {
-                          const items = response.data.items.map(
-                            item => `${item.name} (id:${item.id.toString()})`,
-                          ) // Added ID to make it unique
-                          this.setState({items})
-                        })
-                        .catch(error => {
-                          console.log(error)
-                        }),
-                      300,
-                    )
+                    // call the debounce function
+                    this.fetchRepository(value)
                   },
                 })}
               />
