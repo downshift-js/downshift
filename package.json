@@ -50,12 +50,12 @@
     "react": ">=15"
   },
   "devDependencies": {
-    "@storybook/react": "^3.2.16",
-    "enzyme": "^3.2.0",
-    "enzyme-adapter-react-16": "^1.1.0",
+    "@storybook/react": "^3.3.3",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.2.2",
-    "jest-serializer-html": "^4.0.1",
-    "kcd-scripts": "^0.30.3",
+    "jest-serializer-html": "^5.0.0",
+    "kcd-scripts": "^0.31.1",
     "preact": "^8.2.6",
     "preact-render-to-string": "^3.7.0",
     "preval.macro": "^1.0.2",
@@ -71,7 +71,11 @@
       "max-lines": "off",
       "no-eq-null": "off",
       "eqeqeq": "off",
-      "react/jsx-indent": "off"
+      "react/jsx-indent": "off",
+      "complexity": [
+        "error",
+        12
+      ]
     }
   },
   "eslintIgnore": [
