@@ -12,8 +12,6 @@ before_script:
   - npm install
   - cd ..
 script: npm run validate
-after_success:
-  - npx codecov
-  - npx -p semantic-release@7 -c "semantic-release pre && npm publish && semantic-release post"
+after_success: kcd-scripts travis-after-success
 branches:
   only: master
