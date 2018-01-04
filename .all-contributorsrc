@@ -541,6 +541,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "tiansijie",
+      "name": "Sijie",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3675602?v=4",
+      "profile": "http://sijietian.com",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
