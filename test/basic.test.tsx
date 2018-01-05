@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Downshift, { ControllerStateAndHelpers } from '../';
+import Downshift, { ControllerStateAndHelpers, StateChangeOptions } from '../';
 
 interface Props {}
 
@@ -15,6 +15,10 @@ export default class App extends React.Component<Props, State> {
     onChange = (selectedItem: any) => {
         console.log('selectedItem', selectedItem);
     };
+
+    onUserAction = (changes: StateChangeOptions) => {
+        console.log('type', changes.type);
+    }
 
     render() {
         const items = this.state.items;
