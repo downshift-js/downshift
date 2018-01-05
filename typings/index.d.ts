@@ -62,6 +62,7 @@ export interface A11yStatusMessageOptions {
 }
 
 export interface StateChangeOptions {
+  type: string
   highlightedIndex: number
   inputValue: string
   isOpen: boolean
