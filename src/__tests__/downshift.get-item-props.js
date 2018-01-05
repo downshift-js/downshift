@@ -44,12 +44,12 @@ test('clicking anywhere within the rendered downshift but outside an item does n
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
-test('on mouseenter of an item updates the highlightedIndex to that item', () => {
+test('on mousemove of an item updates the highlightedIndex to that item', () => {
   const {Component, renderSpy} = setup()
   const wrapper = mount(<Component />)
   const thirdButton = wrapper.find('[data-test="item-2"]')
   renderSpy.mockClear()
-  thirdButton.simulate('mouseenter')
+  thirdButton.simulate('mousemove')
   expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 2,
