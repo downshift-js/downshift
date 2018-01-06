@@ -16,7 +16,13 @@
         "code",
         "doc",
         "infra",
-        "test"
+        "test",
+        "review",
+        "blog",
+        "bug",
+        "example",
+        "ideas",
+        "talk"
       ]
     },
     {
@@ -532,7 +538,8 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/3421067?v=4",
       "profile": "http://www.kimgronqvist.se",
       "contributions": [
-        "code"
+        "code",
+        "test"
       ]
     }
   ]
