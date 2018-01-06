@@ -93,6 +93,7 @@ harder to contribute to.
 * [Upcoming Breaking Changes](#upcoming-breaking-changes)
 * [Inspiration](#inspiration)
 * [Other Solutions](#other-solutions)
+* [Bindings](#bindings-for-reasonml)
 * [Contributors](#contributors)
 * [LICENSE](#license)
 
@@ -737,6 +738,10 @@ to use these out of the box solutions, then that's fine too:
 
 * [`react-select`](https://github.com/JedWatson/react-select)
 * [`react-autocomplete`](https://github.com/reactjs/react-autocomplete)
+
+## Bindings for ReasonML
+
+If you're developing some React in ReasonML, check out the [`Downshift` bindings](https://github.com/reasonml-community/bs-downshift) for that.
 
 ## Contributors
 
