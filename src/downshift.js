@@ -686,7 +686,7 @@ class Downshift extends Component {
   }
 
   getItemProps = ({
-    onMouseEnter,
+    onMouseMove,
     onClick,
     index,
     item = requiredProp('getItemProps', 'item'),
@@ -700,13 +700,19 @@ class Downshift extends Component {
     }
     return {
       id: this.getItemId(index),
-      onMouseEnter: composeEventHandlers(onMouseEnter, () => {
+      // onMouseMove is used over onMouseEnter here. onMouseMove
+      // is only triggered on actual mouse movement while onMouseEnter
+      // can fire on DOM changes, interrupting keyboard navigation
+      onMouseMove: composeEventHandlers(onMouseMove, () => {
+        if (index === this.getState().highlightedIndex) {
+          return
+        }
         this.setHighlightedIndex(index, {
           type: Downshift.stateChangeTypes.itemMouseEnter,
         })
 
         // We never want to manually scroll when changing state based
-        // on `onMouseEnter` because we will be moving the element out
+        // on `onMouseMove` because we will be moving the element out
         // from under the user which is currently scrolling/moving the
         // cursor
         this.avoidScrolling = true

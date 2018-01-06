@@ -9,7 +9,7 @@ import {scrollIntoView} from '../utils'
 jest.useFakeTimers()
 jest.mock('../utils')
 
-test('does not scroll from an onMouseEnter event', () => {
+test('does not scroll from an onMouseMove event', () => {
   class HighlightedIndexController extends React.Component {
     state = {highlightedIndex: 10}
     handleStateChange = changes => {
@@ -36,7 +36,7 @@ test('does not scroll from an onMouseEnter event', () => {
   const wrapper = mount(<HighlightedIndexController />)
   const input = wrapper.find('input')
   const item = wrapper.find(sel('item-1'))
-  item.simulate('mouseenter')
+  item.simulate('mousemove')
   jest.runAllTimers()
   expect(scrollIntoView).not.toHaveBeenCalled()
   // now let's make sure that we can still scroll items into view
