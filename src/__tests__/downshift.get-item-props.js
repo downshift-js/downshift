@@ -57,6 +57,15 @@ test('on mousemove of an item updates the highlightedIndex to that item', () => 
   )
 })
 
+test('on mousemove of the highlighted item should not emit changes', () => {
+  const {Component, renderSpy} = setup()
+  const wrapper = mount(<Component defaultHighlightedIndex={1} />)
+  const secondButton = wrapper.find('[data-test="item-1"]')
+  renderSpy.mockClear()
+  secondButton.simulate('mousemove')
+  expect(renderSpy).not.toHaveBeenCalled()
+})
+
 test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
   const {Component, renderSpy} = setup()
   const wrapper = mount(<Component defaultHighlightedIndex={1} />)

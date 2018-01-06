@@ -700,6 +700,9 @@ class Downshift extends Component {
     }
     return {
       id: this.getItemId(index),
+      // onMouseMove is used over onMouseEnter here. onMouseMove
+      // is only triggered on actual mouse movement while onMouseEnter
+      // can fire on DOM changes, interrupting keyboard navigation
       onMouseMove: composeEventHandlers(onMouseMove, () => {
         if (index === this.getState().highlightedIndex) {
           return
