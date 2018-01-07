@@ -2,14 +2,13 @@ import React from 'react'
 import {mount} from 'enzyme'
 import Downshift from '../'
 
-const oldError = console.error
-
 beforeEach(() => {
-  console.error = jest.fn()
+  jest.spyOn(console, 'error')
+  console.error.mockImplementation(() => {})
 })
 
 afterEach(() => {
-  console.error = oldError
+  console.error.mockRestore()
 })
 
 test('label "for" attribute is set to the input "id" attribute', () => {
