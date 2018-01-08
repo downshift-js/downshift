@@ -909,7 +909,7 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
       `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
-  if (!getElementProps(element).hasOwnProperty(refKey)) {
+  if (!getElementProps(element)[refKey]) {
     throw new Error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
