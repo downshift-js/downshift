@@ -632,6 +632,7 @@ Examples exist on [codesandbox.io][examples]:
   the state, actions, prop getters in a rendered downshift tree).
 * [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 * [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
+* [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
 
 If you would like to add an example, follow these steps:
 
