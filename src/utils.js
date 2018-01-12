@@ -134,7 +134,7 @@ function debounce(fn, time) {
  * They are executed in order until one of them calls
  * `event.preventDefault()`. Not sure this is the best
  * way to do this, but it seems legit...
- * @param {Function} fns the event hanlder functions
+ * @param {Function} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
 function composeEventHandlers(...fns) {
