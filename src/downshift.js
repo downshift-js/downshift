@@ -266,11 +266,15 @@ class Downshift extends Component {
         isOpen: false,
       },
       () => {
-        const inputNode = this._rootNode.querySelector(`#${this.inputId}`)
-        inputNode && inputNode.focus && inputNode.focus()
+        this.focusInput()
         cbToCb(cb)()
       },
     )
+  }
+
+  focusInput = () => {
+    const inputNode = this._rootNode.querySelector(`#${this.inputId}`)
+    inputNode && inputNode.focus && inputNode.focus()
   }
 
   selectItem = (item, otherStateToSet, cb) => {
@@ -287,7 +291,10 @@ class Downshift extends Component {
             : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      cbToCb(cb),
+      () => {
+        this.focusInput()
+        cbToCb(cb)()
+      },
     )
   }
 
