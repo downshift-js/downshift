@@ -156,6 +156,22 @@ test('v2 BREAKING CHANGE item selection when selectedItem is controlled will upd
   )
 })
 
+test('the callback is invoked on selected item only if it is a function', () => {
+  let renderArg
+  const renderSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return <div />
+  })
+  const callbackSpy = jest.fn(x => x)
+  mount(<Downshift selectedItem="foo" render={renderSpy} />)
+
+  renderSpy.mockClear()
+  callbackSpy.mockClear()
+  renderArg.selectItem('foo', {}, callbackSpy)
+  expect(callbackSpy).toHaveBeenCalledTimes(1)
+  renderArg.selectItem('foo', {}, {})
+})
+
 test('props update of selectedItem will not update inputValue state', () => {
   const onInputValueChangeSpy = jest.fn(() => null)
   const wrapper = mount(
