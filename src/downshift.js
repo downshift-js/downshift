@@ -265,11 +265,9 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      (...args) => {
+      () => {
         this.focusInput()
-        if (typeof cb === 'function') {
-          cb(...args)
-        }
+        cbToCb(cb)()
       },
     )
   }
@@ -293,9 +291,9 @@ class Downshift extends Component {
             : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      () => {
+      (...args) => {
         this.focusInput()
-        cbToCb(cb)()
+        typeof cb === 'function' && cb(...args)
       },
     )
   }
