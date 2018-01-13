@@ -265,14 +265,16 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      () => {
+      (...args) => {
         this.focusInput()
-        cbToCb(cb)()
+        if (typeof cb === 'function') {
+          cb(...args)
+        }
       },
     )
   }
 
-  focusInput = () => {
+  focusInput() {
     const inputNode = this._rootNode.querySelector(`#${this.inputId}`)
     inputNode && inputNode.focus && inputNode.focus()
   }
