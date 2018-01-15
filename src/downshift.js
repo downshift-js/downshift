@@ -273,7 +273,7 @@ class Downshift extends Component {
   }
 
   focusInput() {
-    const inputNode = this._rootNode.getElementById(this.inputId)
+    const inputNode = this._rootNode.querySelector(`[id="${this.inputId}"]`)
     inputNode && inputNode.focus && inputNode.focus()
   }
 
