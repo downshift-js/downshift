@@ -14,11 +14,14 @@ test('input is focused upon item mouse click', () => {
 })
 
 function getWrapper(items) {
+  const id = 'languages[0].name'
+
   return mount(
     <Downshift
+      id={id}
       render={({getInputProps, getItemProps}) => (
         <div>
-          <input {...getInputProps()} />
+          <input {...getInputProps({id})} />
           <div>
             {items.map(item => (
               <div data-test={item} key={item} {...getItemProps({item})}>
