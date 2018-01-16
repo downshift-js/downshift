@@ -581,6 +581,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "brikou",
+      "name": "Brice BERNARD",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/383212?v=4",
+      "profile": "https://github.com/brikou",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
