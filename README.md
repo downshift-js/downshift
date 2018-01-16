@@ -88,6 +88,8 @@ harder to contribute to.
   * [actions](#actions)
   * [state](#state)
   * [props](#props)
+* [Utilities](#utilities)
+  * [resetIdCounter](#resetidcounter)
 * [Examples](#examples)
 * [FAQ](#faq)
 * [Upcoming Breaking Changes](#upcoming-breaking-changes)
@@ -604,6 +606,21 @@ These are values that represent the current state of the downshift component.
 As a convenience, the `id` and `itemToString` props which you pass to
 `<Downshift />` are available here as well.
 
+## Utilities
+
+### resetIdCounter
+
+Allows reseting the internal id counter which is used to generate unique ids for Downshift component.
+
+You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
+
+```javascript
+import { resetIdCounter } from 'downshift';
+
+resetIdCounter();
+ReactDOMServer.renderToString(...);
+```
+
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
@@ -660,7 +677,9 @@ generated `id` prop you get from `getItemProps` (though this is not likely as
 you're probably not rendering any items when rendering a downshift component on
 the server).
 
-To avoid these problems, simply provide your own `id` prop in `getInputProps`
+To avoid these problems, simply call [resetIdCounter](#resetidcounter) before `ReactDOM.renderToString`.
+
+Alternatively you could provide your own `id` prop in `getInputProps`
 and `getLabelProps`. Also, you can use the `id` prop on the component
 `Downshift`. For example:
 
