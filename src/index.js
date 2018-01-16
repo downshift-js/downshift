@@ -1,4 +1,5 @@
 import Downshift from './downshift'
+import {resetIdCounter} from './utils'
 
 /*
  * Fix importing in typescript after rollup compilation
@@ -7,4 +8,5 @@ import Downshift from './downshift'
  */
 Downshift.default = Downshift
 
+export {resetIdCounter}
 export default Downshift
