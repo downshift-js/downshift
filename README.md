@@ -615,9 +615,9 @@ Allows reseting the internal id counter which is used to generate unique ids for
 You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
 
 ```javascript
-import { resetIdCounter } from 'downshift';
+import Downshift from 'downshift';
 
-resetIdCounter();
+Downshift.resetIdCounter();
 ReactDOMServer.renderToString(...);
 ```
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
-import Downshift, {resetIdCounter} from '../../../src'
+import Downshift from '../../../src'
 
 test('does not throw an error when server rendering', () => {
   expect(() => {
@@ -19,7 +19,7 @@ test('does not throw an error when server rendering', () => {
 
 test('resets idCounter', () => {
   const getRenderedString = () => {
-    resetIdCounter()
+    Downshift.resetIdCounter()
     return ReactDOMServer.renderToString(
       <Downshift id="my-autocomplete-component">
         {({getInputProps, getLabelProps}) => (

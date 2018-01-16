@@ -7,6 +7,6 @@ import {resetIdCounter} from './utils'
  * https://github.com/Microsoft/TypeScript/issues/13017#issuecomment-268657860
  */
 Downshift.default = Downshift
+Downshift.resetIdCounter = resetIdCounter
 
-export {resetIdCounter}
 export default Downshift
