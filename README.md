@@ -88,6 +88,8 @@ harder to contribute to.
   * [actions](#actions)
   * [state](#state)
   * [props](#props)
+* [Utilities](#utilities)
+  * [resetIdCounter](#resetidcounter)
 * [Examples](#examples)
 * [FAQ](#faq)
 * [Upcoming Breaking Changes](#upcoming-breaking-changes)
@@ -604,6 +606,21 @@ These are values that represent the current state of the downshift component.
 As a convenience, the `id` and `itemToString` props which you pass to
 `<Downshift />` are available here as well.
 
+## Utilities
+
+### resetIdCounter
+
+Allows reseting the internal id counter which is used to generate unique ids for Downshift component.
+
+You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
+
+```javascript
+import Downshift from 'downshift';
+
+Downshift.resetIdCounter();
+ReactDOMServer.renderToString(...);
+```
+
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
@@ -660,7 +677,9 @@ generated `id` prop you get from `getItemProps` (though this is not likely as
 you're probably not rendering any items when rendering a downshift component on
 the server).
 
-To avoid these problems, simply provide your own `id` prop in `getInputProps`
+To avoid these problems, simply call [resetIdCounter](#resetidcounter) before `ReactDOM.renderToString`.
+
+Alternatively you could provide your own `id` prop in `getInputProps`
 and `getLabelProps`. Also, you can use the `id` prop on the component
 `Downshift`. For example:
 
@@ -761,7 +780,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars1.githubusercontent.com/u/3241922?v=4" width="100px;"/><br /><sub><b>us͡an̸df͘rien͜ds͠</b></sub>](http://ronak.io/)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ausandfriends "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=usandfriends "Code") [⚠️](https://github.com/paypal/downshift/commits?author=usandfriends "Tests") | [<img src="https://avatars0.githubusercontent.com/u/474248?v=4" width="100px;"/><br /><sub><b>Robin Drexler</b></sub>](https://www.robin-drexler.com/)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Arobin-drexler "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=robin-drexler "Code") | [<img src="https://avatars0.githubusercontent.com/u/7406639?v=4" width="100px;"/><br /><sub><b>Arturo Romero</b></sub>](http://arturoromero.info/)<br />[💡](#example-arturoromeroslc "Examples") | [<img src="https://avatars1.githubusercontent.com/u/275483?v=4" width="100px;"/><br /><sub><b>yp</b></sub>](http://algolab.eu/pirola)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ayp "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=yp "Code") [⚠️](https://github.com/paypal/downshift/commits?author=yp "Tests") | [<img src="https://avatars0.githubusercontent.com/u/3998604?v=4" width="100px;"/><br /><sub><b>Dave Garwacke</b></sub>](http://www.warbyparker.com)<br />[📖](https://github.com/paypal/downshift/commits?author=ifyoumakeit "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/11758660?v=4" width="100px;"/><br /><sub><b>Ivan Pazhitnykh</b></sub>](http://linkedin.com/in/drapegnik)<br />[💻](https://github.com/paypal/downshift/commits?author=Drapegnik "Code") [⚠️](https://github.com/paypal/downshift/commits?author=Drapegnik "Tests") | [<img src="https://avatars0.githubusercontent.com/u/61776?v=4" width="100px;"/><br /><sub><b>Luis Merino</b></sub>](https://github.com/Rendez)<br />[📖](https://github.com/paypal/downshift/commits?author=Rendez "Documentation") |
 | [<img src="https://avatars0.githubusercontent.com/u/8746094?v=4" width="100px;"/><br /><sub><b>Andrew Hansen</b></sub>](http://twitter.com/arahansen)<br />[💻](https://github.com/paypal/downshift/commits?author=arahansen "Code") [⚠️](https://github.com/paypal/downshift/commits?author=arahansen "Tests") [🤔](#ideas-arahansen "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/20307225?v=4" width="100px;"/><br /><sub><b>John Whiles</b></sub>](http://www.johnwhiles.com)<br />[💻](https://github.com/paypal/downshift/commits?author=Jwhiles "Code") | [<img src="https://avatars1.githubusercontent.com/u/1288694?v=4" width="100px;"/><br /><sub><b>Justin Hall</b></sub>](https://github.com/wKovacs64)<br />[🚇](#infra-wKovacs64 "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars2.githubusercontent.com/u/7641760?v=4" width="100px;"/><br /><sub><b>Pete Nykänen</b></sub>](https://twitter.com/pete_tnt)<br />[👀](#review-petetnt "Reviewed Pull Requests") | [<img src="https://avatars2.githubusercontent.com/u/4060187?v=4" width="100px;"/><br /><sub><b>Jared Palmer</b></sub>](http://jaredpalmer.com)<br />[💻](https://github.com/paypal/downshift/commits?author=jaredpalmer "Code") | [<img src="https://avatars3.githubusercontent.com/u/11477718?v=4" width="100px;"/><br /><sub><b>Philip Young</b></sub>](http://www.philipyoungg.com)<br />[💻](https://github.com/paypal/downshift/commits?author=philipyoungg "Code") [⚠️](https://github.com/paypal/downshift/commits?author=philipyoungg "Tests") [🤔](#ideas-philipyoungg "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/8997319?v=4" width="100px;"/><br /><sub><b>Alexander Nanberg</b></sub>](https://alexandernanberg.com)<br />[📖](https://github.com/paypal/downshift/commits?author=alexandernanberg "Documentation") |
 | [<img src="https://avatars2.githubusercontent.com/u/1556430?v=4" width="100px;"/><br /><sub><b>Pete Redmond</b></sub>](https://httpete.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ahttpete-ire "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/1706342?v=4" width="100px;"/><br /><sub><b>Nick Lavin</b></sub>](https://github.com/Zashy)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3AZashy "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=Zashy "Code") [⚠️](https://github.com/paypal/downshift/commits?author=Zashy "Tests") | [<img src="https://avatars2.githubusercontent.com/u/17031?v=4" width="100px;"/><br /><sub><b>James Long</b></sub>](http://jlongster.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ajlongster "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=jlongster "Code") | [<img src="https://avatars0.githubusercontent.com/u/1505907?v=4" width="100px;"/><br /><sub><b>Michael Ball</b></sub>](http://michaelball.co)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Acycomachead "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=cycomachead "Code") | [<img src="https://avatars0.githubusercontent.com/u/8990614?v=4" width="100px;"/><br /><sub><b>CAVALEIRO Julien</b></sub>](https://github.com/Julienng)<br />[💡](#example-Julienng "Examples") | [<img src="https://avatars1.githubusercontent.com/u/3421067?v=4" width="100px;"/><br /><sub><b>Kim Grönqvist</b></sub>](http://www.kimgronqvist.se)<br />[💻](https://github.com/paypal/downshift/commits?author=kimgronqvist "Code") [⚠️](https://github.com/paypal/downshift/commits?author=kimgronqvist "Tests") | [<img src="https://avatars2.githubusercontent.com/u/3675602?v=4" width="100px;"/><br /><sub><b>Sijie</b></sub>](http://sijietian.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Atiansijie "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=tiansijie "Code") |
-| [<img src="https://avatars0.githubusercontent.com/u/410792?v=4" width="100px;"/><br /><sub><b>Dony Sukardi</b></sub>](http://dsds.io)<br />[💡](#example-donysukardi "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2755722?v=4" width="100px;"/><br /><sub><b>Dillon Mulroy</b></sub>](https://dillonmulroy.com)<br />[📖](https://github.com/paypal/downshift/commits?author=dmmulroy "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/12440573?v=4" width="100px;"/><br /><sub><b>Curtis Tate Wilkinson</b></sub>](https://twitter.com/curtytate)<br />[💻](https://github.com/paypal/downshift/commits?author=curtiswilkinson "Code") |
+| [<img src="https://avatars0.githubusercontent.com/u/410792?v=4" width="100px;"/><br /><sub><b>Dony Sukardi</b></sub>](http://dsds.io)<br />[💡](#example-donysukardi "Examples") [💬](#question-donysukardi "Answering Questions") [💻](https://github.com/paypal/downshift/commits?author=donysukardi "Code") [⚠️](https://github.com/paypal/downshift/commits?author=donysukardi "Tests") | [<img src="https://avatars1.githubusercontent.com/u/2755722?v=4" width="100px;"/><br /><sub><b>Dillon Mulroy</b></sub>](https://dillonmulroy.com)<br />[📖](https://github.com/paypal/downshift/commits?author=dmmulroy "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/12440573?v=4" width="100px;"/><br /><sub><b>Curtis Tate Wilkinson</b></sub>](https://twitter.com/curtytate)<br />[💻](https://github.com/paypal/downshift/commits?author=curtiswilkinson "Code") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

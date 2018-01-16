@@ -155,11 +155,18 @@ function generateId(prefix) {
 }
 
 /**
- * This is only used in tests... Could be useful in SSR?
- * @param {Number} num The number to set the idCountry to
+ * This is only used in tests
+ * @param {Number} num The number to set the idCounter to
  */
 function setIdCounter(num) {
   idCounter = num
+}
+
+/**
+ * Resets idCounter to 0. Used for SSR.
+ */
+function resetIdCounter() {
+  idCounter = 0
 }
 
 /**
@@ -284,6 +291,7 @@ export {
   noop,
   requiredProp,
   setIdCounter,
+  resetIdCounter,
   pickState,
   isPlainObject,
 }
