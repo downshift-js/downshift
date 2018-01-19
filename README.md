@@ -396,6 +396,8 @@ const ui = (
 )
 ```
 
+This callback will only be called if `isOpen` is `true`.
+
 ## Control Props
 
 downshift manages its own state internally and calls your `onChange` and
