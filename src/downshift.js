@@ -118,6 +118,7 @@ class Downshift extends Component {
     changeInput: '__autocomplete_change_input__',
     keyDownSpaceButton: '__autocomplete_keydown_space_button__',
     clickButton: '__autocomplete_click_button__',
+    blurButton: '__autocomplete_blur_button__',
     controlledPropUpdatedSelectedItem:
       '__autocomplete_controlled_prop_updated_selected_item__',
   }
@@ -541,13 +542,14 @@ class Downshift extends Component {
     },
   }
 
-  getButtonProps = ({onClick, onKeyDown, ...rest} = {}) => {
+  getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
     const eventHandlers = rest.disabled
       ? {}
       : {
           onClick: composeEventHandlers(onClick, this.button_handleClick),
           onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+          onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
         }
     return {
       role: 'button',
@@ -577,6 +579,12 @@ class Downshift extends Component {
       event.target.focus()
     }
     this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
+  }
+
+  button_handleBlur = () => {
+    if (!this.isMouseDown) {
+      this.reset({type: Downshift.stateChangeTypes.blurButton})
+    }
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
