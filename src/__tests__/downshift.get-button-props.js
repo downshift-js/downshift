@@ -33,6 +33,27 @@ test('button ignores key events it does not handle', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
+test('on button blur resets the state', () => {
+  const {button, renderSpy} = setup()
+  button.simulate('blur')
+  expect(renderSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      isOpen: false,
+    }),
+  )
+})
+
+test('on button blur does not reset the state when the mouse is down', () => {
+  const {button, renderSpy} = setup()
+  renderSpy.mockClear()
+  // mousedown somwhere
+  document.body.dispatchEvent(
+    new window.MouseEvent('mousedown', {bubbles: true}),
+  )
+  button.simulate('blur')
+  expect(renderSpy).not.toHaveBeenCalled()
+})
+
 test('getButtonProps returns all given props', () => {
   const buttonProps = {'data-foo': 'bar'}
   const Button = jest.fn(props => <button {...props} />)
