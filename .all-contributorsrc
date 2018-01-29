@@ -600,6 +600,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "newyork-anthonyng",
+      "name": "Anthony Ng",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/14035529?v=4",
+      "profile": "http://anthonyng.me",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
