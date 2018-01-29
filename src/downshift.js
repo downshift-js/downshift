@@ -552,6 +552,7 @@ class Downshift extends Component {
           onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
         }
     return {
+      type: 'button',
       role: 'button',
       'aria-label': isOpen ? 'close menu' : 'open menu',
       'aria-expanded': isOpen,
