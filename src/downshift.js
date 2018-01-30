@@ -39,6 +39,7 @@ class Downshift extends Component {
     onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
     selectedItemChanged: PropTypes.func,
+    modifyStateChange: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
     environment: PropTypes.shape({
@@ -95,6 +96,7 @@ class Downshift extends Component {
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
         : window,
+    modifyStateChange: stateToSet => stateToSet,
     breakingChanges: {},
   }
 
@@ -344,6 +346,9 @@ class Downshift extends Component {
       state => {
         state = this.getState(state)
         stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
+
+        // Your own function that could modify the state that will be set.
+        stateToSet = this.props.modifyStateChange(stateToSet, state)
 
         // checks if an item is selected, regardless of if it's different from
         // what was selected before
