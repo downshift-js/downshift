@@ -96,7 +96,7 @@ class Downshift extends Component {
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
         : window,
-    modifyStateChange: stateToSet => stateToSet,
+    modifyStateChange: (state, stateToSet) => stateToSet,
     breakingChanges: {},
   }
 
@@ -341,7 +341,7 @@ class Downshift extends Component {
         stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
 
         // Your own function that could modify the state that will be set.
-        stateToSet = this.props.modifyStateChange(stateToSet, state)
+        stateToSet = this.props.modifyStateChange(state, stateToSet)
 
         // checks if an item is selected, regardless of if it's different from
         // what was selected before
