@@ -82,6 +82,7 @@ harder to contribute to.
   * [id](#id)
   * [environment](#environment)
   * [onOuterClick](#onouterclick)
+  * [modifyStateChange](#modifystatechange)
 * [Control Props](#control-props)
 * [Render Prop Function](#render-prop-function)
   * [prop getters](#prop-getters)
@@ -397,6 +398,49 @@ const ui = (
 ```
 
 This callback will only be called if `isOpen` is `true`.
+
+### modifyStateChange
+
+> `function(state: object, stateToBeSet: object)` | optional
+
+**🚨 This is a really handy power feature 🚨**
+
+This function will be called each time `downshift` sets its internal state
+(or calls your `onStateChange` handler for control props). It allows you to
+modify the state change that will take place which can give you fine grain
+control over how the component interacts with user updates without having to
+use [Control Props](#control-props).
+
+* `state`: The full current state of downshift.
+* `stateToBeSet`: The state that is about to be set (including the `type` or
+  origin of the change which has references in `Downshift.stateChangeTypes`
+  as in [`onStateChange`](#onstatechange).
+
+This is a pure function. You _might_ think of it as a simple reducer!
+
+```jsx
+const ui = (
+  <Downshift modifyStateChange={modifyStateChange}>
+    {/* your callback */}
+  </Downshift>
+)
+
+function modifyStateChange(state, stateToBeSet) {
+  // this prevents the menu from being closed when the user
+  // selects an item with the keyboard
+  switch (stateToSet.type) {
+    case Downshift.stateChangeTypes.keyDownEnter:
+    case Downshift.stateChangeTypes.clickItem:
+      return {
+        ...stateToSet,
+        isOpen: state.isOpen,
+        highlightedIndex: state.highlightedIndex,
+      }
+    default:
+      return stateToSet
+  }
+}
+```
 
 ## Control Props
 
