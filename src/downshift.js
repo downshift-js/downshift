@@ -39,6 +39,7 @@ class Downshift extends Component {
     onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
     selectedItemChanged: PropTypes.func,
+    stateReducer: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
     environment: PropTypes.shape({
@@ -95,17 +96,10 @@ class Downshift extends Component {
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
         ? {}
         : window,
+    stateReducer: (state, stateToSet) => stateToSet,
     breakingChanges: {},
   }
 
-  // this is an experimental feature
-  // so we're not going to document this yet
-  // nor are we going to test it.
-  // We will try to avoid breaking it, but
-  // we make no guarantees.
-  // If you need it, we recommend that you lock
-  // down your version of downshift (don't use a
-  // version range) to avoid surprise breakages.
   static stateChangeTypes = {
     unknown: '__autocomplete_unknown__',
     mouseUp: '__autocomplete_mouseup__',
@@ -114,6 +108,7 @@ class Downshift extends Component {
     keyDownArrowDown: '__autocomplete_keydown_arrow_down__',
     keyDownEscape: '__autocomplete_keydown_escape__',
     keyDownEnter: '__autocomplete_keydown_enter__',
+    clickItem: '__autocomplete_click_item__',
     blurInput: '__autocomplete_blur_input__',
     changeInput: '__autocomplete_change_input__',
     keyDownSpaceButton: '__autocomplete_keydown_space_button__',
@@ -344,6 +339,9 @@ class Downshift extends Component {
       state => {
         state = this.getState(state)
         stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
+
+        // Your own function that could modify the state that will be set.
+        stateToSet = this.props.stateReducer(state, stateToSet)
 
         // checks if an item is selected, regardless of if it's different from
         // what was selected before
@@ -735,7 +733,9 @@ class Downshift extends Component {
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onClick: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(index)
+        this.selectItemAtIndex(index, {
+          type: Downshift.stateChangeTypes.clickItem,
+        })
       }),
       ...rest,
     }
