@@ -82,7 +82,7 @@ harder to contribute to.
   * [id](#id)
   * [environment](#environment)
   * [onOuterClick](#onouterclick)
-  * [modifyStateChange](#modifystatechange)
+  * [stateReducer](#statereducer)
 * [Control Props](#control-props)
 * [Render Prop Function](#render-prop-function)
   * [prop getters](#prop-getters)
@@ -399,7 +399,7 @@ const ui = (
 
 This callback will only be called if `isOpen` is `true`.
 
-### modifyStateChange
+### stateReducer
 
 > `function(state: object, stateToBeSet: object)` | optional
 
@@ -420,12 +420,10 @@ This is a pure function. You _might_ think of it as a simple reducer!
 
 ```jsx
 const ui = (
-  <Downshift modifyStateChange={modifyStateChange}>
-    {/* your callback */}
-  </Downshift>
+  <Downshift stateReducer={stateReducer}>{/* your callback */}</Downshift>
 )
 
-function modifyStateChange(state, stateToBeSet) {
+function stateReducer(state, stateToBeSet) {
   // this prevents the menu from being closed when the user
   // selects an item with a keyboard or mouse
   switch (stateToSet.type) {
