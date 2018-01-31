@@ -324,16 +324,16 @@ const ui = (
 function stateReducer(state, changes) {
   // this prevents the menu from being closed when the user
   // selects an item with a keyboard or mouse
-  switch (stateToSet.type) {
+  switch (changes.type) {
     case Downshift.stateChangeTypes.keyDownEnter:
     case Downshift.stateChangeTypes.clickItem:
       return {
-        ...stateToSet,
+        ...changes,
         isOpen: state.isOpen,
         highlightedIndex: state.highlightedIndex,
       }
     default:
-      return stateToSet
+      return changes
   }
 }
 ```
