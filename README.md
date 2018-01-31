@@ -409,14 +409,13 @@ This function will be called each time `downshift` sets its internal state
 (or calls your `onStateChange` handler for control props). It allows you to
 modify the state change that will take place which can give you fine grain
 control over how the component interacts with user updates without having to
-use [Control Props](#control-props).
+use [Control Props](#control-props). It gives you the current state and the
+state that will be set, and you return the state that you want to set.
 
 * `state`: The full current state of downshift.
 * `stateToBeSet`: The state that is about to be set (including the `type` or
   origin of the change which has references in `Downshift.stateChangeTypes`
   as in [`onStateChange`](#onstatechange).
-
-This is a pure function. You _might_ think of it as a simple reducer!
 
 ```jsx
 const ui = (
