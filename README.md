@@ -471,7 +471,7 @@ that state from other components, `redux`, `react-router`, or anywhere else.
 > in react (like `<input />`). If you want to learn more about this concept, you
 > can learn about that from this the ["Controlled Components"
 > lecture][controlled-components-lecture] and exercises from [React
-> Training's][react-training] > [Advanced React][advanced-react] course.
+> Training's][react-training] [Advanced React][advanced-react] course.
 
 ## Render Prop Function
 
