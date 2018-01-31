@@ -192,7 +192,7 @@ test('defaultHighlightedIndex will be used for the highlighted index on reset', 
 test('modifyStateChange customizes the final state after keyDownEnter handled', () => {
   const {renderSpy, openMenu, selectHighlightedItem} = setup({
     defaultHighlightedIndex: 0,
-    modifyStateChange: (stateToSet, state) => {
+    modifyStateChange: (state, stateToSet) => {
       switch (stateToSet.type) {
         case Downshift.stateChangeTypes.keyDownEnter:
           return {
