@@ -189,6 +189,35 @@ test('defaultHighlightedIndex will be used for the highlighted index on reset', 
   )
 })
 
+test('modifyStateChange customizes the final state after keyDownEnter handled', () => {
+  const {renderSpy, openMenu, selectHighlightedItem} = setup({
+    defaultHighlightedIndex: 0,
+    modifyStateChange: (stateToSet, state) => {
+      switch (stateToSet.type) {
+        case Downshift.stateChangeTypes.keyDownEnter:
+          return {
+            ...stateToSet,
+            isOpen: state.isOpen,
+            highlightedIndex: state.highlightedIndex,
+          }
+        default:
+          return stateToSet
+      }
+    },
+  })
+  renderSpy.mockClear()
+  openMenu()
+  selectHighlightedItem({
+    type: Downshift.stateChangeTypes.keyDownEnter,
+  })
+  expect(renderSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      isOpen: true,
+      highlightedIndex: 0,
+    }),
+  )
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
