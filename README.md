@@ -72,6 +72,7 @@ harder to contribute to.
   * [onChange](#onchange)
   * [onSelect](#onselect)
   * [onStateChange](#onstatechange)
+  * [stateReducer](#statereducer)
   * [onInputValueChange](#oninputvaluechange)
   * [itemCount](#itemcount)
   * [highlightedIndex](#highlightedindex)
@@ -82,7 +83,7 @@ harder to contribute to.
   * [id](#id)
   * [environment](#environment)
   * [onOuterClick](#onouterclick)
-  * [stateReducer](#statereducer)
+* [`stateChangeTypes`](#statechangetypes)
 * [Control Props](#control-props)
 * [Render Prop Function](#render-prop-function)
   * [prop getters](#prop-getters)
@@ -288,7 +289,8 @@ The parameters both take the shape of internal state (`{highlightedIndex: number
 slightly.
 
 * `changes`: These are the properties that actually have changed since the last
-  state change.
+  state change. This also has a `type` property which you can learn more about
+  in the [`stateChangeTypes`](#statechangetypes) section.
 * `stateAndHelpers`: This is the exact same thing your `render` prop function is
   called with (see [Render Prop Function](#render-prop-function))
 
@@ -296,10 +298,45 @@ slightly.
 > way to determine whether any particular state was changed, you can use
 > `changes.hasOwnProperty('propName')`.
 
-> Note: the `changes` object will also have a `type` property that corresponds
-> to a `Downshift.stateChangeTypes` property. This is an experimental feature so
-> it's not recommended to use it if you can avoid it. If you need it, please
-> open an issue to discuss solidifying the API.
+### stateReducer
+
+> `function(state: object, changes: object)` | optional
+
+**🚨 This is a really handy power feature 🚨**
+
+This function will be called each time `downshift` sets its internal state
+(or calls your `onStateChange` handler for control props). It allows you to
+modify the state change that will take place which can give you fine grain
+control over how the component interacts with user updates without having to
+use [Control Props](#control-props). It gives you the current state and the
+state that will be set, and you return the state that you want to set.
+
+* `state`: The full current state of downshift.
+* `changes`: These are the properties that are about to change. This also has a
+  `type` property which you can learn more about in the
+  [`stateChangeTypes`](#statechangetypes) section.
+
+```jsx
+const ui = (
+  <Downshift stateReducer={stateReducer}>{/* your callback */}</Downshift>
+)
+
+function stateReducer(state, changes) {
+  // this prevents the menu from being closed when the user
+  // selects an item with a keyboard or mouse
+  switch (stateToSet.type) {
+    case Downshift.stateChangeTypes.keyDownEnter:
+    case Downshift.stateChangeTypes.clickItem:
+      return {
+        ...stateToSet,
+        isOpen: state.isOpen,
+        highlightedIndex: state.highlightedIndex,
+      }
+    default:
+      return stateToSet
+  }
+}
+```
 
 ### onInputValueChange
 
@@ -399,44 +436,18 @@ const ui = (
 
 This callback will only be called if `isOpen` is `true`.
 
-### stateReducer
+## `stateChangeTypes`
 
-> `function(state: object, stateToBeSet: object)` | optional
+There are a few props that expose changes to state
+([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)).
+For you to make the most of these APIs, it's important for you to understand
+why state is being changed. To accomplish this, there's a `type` property on the
+`changes` object you get. This `type` corresponds to a
+`Downshift.stateChangeTypes` property. If you want to see what change types
+are available, run this in your app:
 
-**🚨 This is a really handy power feature 🚨**
-
-This function will be called each time `downshift` sets its internal state
-(or calls your `onStateChange` handler for control props). It allows you to
-modify the state change that will take place which can give you fine grain
-control over how the component interacts with user updates without having to
-use [Control Props](#control-props). It gives you the current state and the
-state that will be set, and you return the state that you want to set.
-
-* `state`: The full current state of downshift.
-* `stateToBeSet`: The state that is about to be set (including the `type` or
-  origin of the change which has references in `Downshift.stateChangeTypes`
-  as in [`onStateChange`](#onstatechange).
-
-```jsx
-const ui = (
-  <Downshift stateReducer={stateReducer}>{/* your callback */}</Downshift>
-)
-
-function stateReducer(state, stateToBeSet) {
-  // this prevents the menu from being closed when the user
-  // selects an item with a keyboard or mouse
-  switch (stateToSet.type) {
-    case Downshift.stateChangeTypes.keyDownEnter:
-    case Downshift.stateChangeTypes.clickItem:
-      return {
-        ...stateToSet,
-        isOpen: state.isOpen,
-        highlightedIndex: state.highlightedIndex,
-      }
-    default:
-      return stateToSet
-  }
-}
+```javascript
+console.log(Object.keys(Downshift.stateChangeTypes))
 ```
 
 ## Control Props
