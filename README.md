@@ -427,7 +427,7 @@ const ui = (
 
 function modifyStateChange(state, stateToBeSet) {
   // this prevents the menu from being closed when the user
-  // selects an item with the keyboard
+  // selects an item with a keyboard or mouse
   switch (stateToSet.type) {
     case Downshift.stateChangeTypes.keyDownEnter:
     case Downshift.stateChangeTypes.clickItem:
