@@ -83,7 +83,7 @@ harder to contribute to.
   * [id](#id)
   * [environment](#environment)
   * [onOuterClick](#onouterclick)
-* [`stateChangeTypes`](#statechangetypes)
+* [stateChangeTypes](#statechangetypes)
 * [Control Props](#control-props)
 * [Render Prop Function](#render-prop-function)
   * [prop getters](#prop-getters)
@@ -436,7 +436,7 @@ const ui = (
 
 This callback will only be called if `isOpen` is `true`.
 
-## `stateChangeTypes`
+## stateChangeTypes
 
 There are a few props that expose changes to state
 ([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)).
