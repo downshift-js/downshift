@@ -261,16 +261,8 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      () => {
-        this.focusInput()
-        cbToCb(cb)()
-      },
+      cb,
     )
-  }
-
-  focusInput() {
-    const inputNode = this._rootNode.querySelector(`[id="${this.inputId}"]`)
-    inputNode && inputNode.focus && inputNode.focus()
   }
 
   selectItem = (item, otherStateToSet, cb) => {
@@ -287,10 +279,7 @@ class Downshift extends Component {
             : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      (...args) => {
-        this.focusInput()
-        typeof cb === 'function' && cb(...args)
-      },
+      cb,
     )
   }
 
@@ -481,7 +470,7 @@ class Downshift extends Component {
   rootRef = node => (this._rootNode = node)
 
   getRootProps = (
-    {refKey = 'ref', ...rest} = {},
+    {refKey = 'ref', onBlur, ...rest} = {},
     {suppressRefError = false} = {},
   ) => {
     // this is used in the render to know whether the user has called getRootProps.
@@ -491,8 +480,13 @@ class Downshift extends Component {
     this.getRootProps.suppressRefError = suppressRefError
     return {
       [refKey]: this.rootRef,
+      onBlur: composeEventHandlers(onBlur, this.root_handleBlur),
       ...rest,
     }
+  }
+
+  root_handleBlur = event => {
+    this._lastBlurredNode = event.target
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
@@ -733,9 +727,17 @@ class Downshift extends Component {
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onClick: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(index, {
-          type: Downshift.stateChangeTypes.clickItem,
-        })
+        this.selectItemAtIndex(
+          index,
+          {
+            type: Downshift.stateChangeTypes.clickItem,
+          },
+          () => {
+            this._lastBlurredNode &&
+              this._lastBlurredNode.focus &&
+              this._lastBlurredNode.focus()
+          },
+        )
       }),
       ...rest,
     }
