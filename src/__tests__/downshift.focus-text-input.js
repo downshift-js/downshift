@@ -2,18 +2,20 @@ import React from 'react'
 import {mount} from 'enzyme'
 import Downshift from '../'
 
-test('input is focused upon item mouse click', () => {
-  const wrapper = getWrapper(['A', 'B'])
+test('input focus restored upon item mouse click', () => {
+  const inputProps = {
+    id: 'test-input',
+    autoFocus: true,
+  }
+  const wrapper = getWrapper(['A', 'B'], inputProps)
+  const input = wrapper.find(`input[id="${inputProps.id}"]`).first()
   const item = wrapper.find('[data-test="A"]').first()
 
-  expect(document.activeElement.nodeName).toEqual('BODY')
-
   item.simulate('click')
-
-  expect(document.activeElement.nodeName).toEqual('INPUT')
+  expect(document.activeElement).toBe(input.getDOMNode())
 })
 
-function getWrapper(items) {
+function getWrapper(items, inputProps) {
   const id = 'languages[0].name'
 
   return mount(
@@ -21,7 +23,7 @@ function getWrapper(items) {
       id={id}
       render={({getInputProps, getItemProps}) => (
         <div>
-          <input {...getInputProps({id})} />
+          <input {...getInputProps(inputProps)} />
           <div>
             {items.map(item => (
               <div data-test={item} key={item} {...getItemProps({item})}>

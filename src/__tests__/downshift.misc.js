@@ -53,7 +53,7 @@ test('selectItemAtIndex can select item that is an empty string', () => {
 test('clearSelection with an input node focuses the input node', () => {
   const render = ({getInputProps}) => (
     <div>
-      <input {...getInputProps()} />
+      <input autoFocus {...getInputProps()} />
     </div>
   )
   const {wrapper, openMenu, selectItem, clearSelection} = setup({render})
