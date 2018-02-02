@@ -50,20 +50,6 @@ test('selectItemAtIndex can select item that is an empty string', () => {
   )
 })
 
-test('clearSelection with an input node focuses the input node', () => {
-  const render = ({getInputProps}) => (
-    <div>
-      <input {...getInputProps()} />
-    </div>
-  )
-  const {wrapper, openMenu, selectItem, clearSelection} = setup({render})
-  openMenu()
-  selectItem('foo')
-  clearSelection()
-  const input = wrapper.find('input').first()
-  expect(document.activeElement).toBe(input.getDOMNode())
-})
-
 test('toggleMenu can take no arguments at all', () => {
   const {toggleMenu, renderSpy} = setup()
   toggleMenu()

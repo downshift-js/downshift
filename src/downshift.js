@@ -261,16 +261,8 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      () => {
-        this.focusInput()
-        cbToCb(cb)()
-      },
+      cb,
     )
-  }
-
-  focusInput() {
-    const inputNode = this._rootNode.querySelector(`[id="${this.inputId}"]`)
-    inputNode && inputNode.focus && inputNode.focus()
   }
 
   selectItem = (item, otherStateToSet, cb) => {
@@ -287,10 +279,7 @@ class Downshift extends Component {
             : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      (...args) => {
-        this.focusInput()
-        typeof cb === 'function' && cb(...args)
-      },
+      cb,
     )
   }
 
@@ -701,6 +690,7 @@ class Downshift extends Component {
 
   getItemProps = ({
     onMouseMove,
+    onMouseDown,
     onClick,
     index,
     item = requiredProp('getItemProps', 'item'),
@@ -731,6 +721,12 @@ class Downshift extends Component {
         // cursor
         this.avoidScrolling = true
         setTimeout(() => (this.avoidScrolling = false), 250)
+      }),
+      onMouseDown: composeEventHandlers(onMouseDown, event => {
+        // This prevents the activeElement from being changed
+        // to the item so it can remain with the current activeElement
+        // which is a more common use case.
+        event.preventDefault()
       }),
       onClick: composeEventHandlers(onClick, () => {
         this.selectItemAtIndex(index, {
