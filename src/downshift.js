@@ -690,6 +690,7 @@ class Downshift extends Component {
 
   getItemProps = ({
     onMouseMove,
+    onMouseDown,
     onClick,
     index,
     item = requiredProp('getItemProps', 'item'),
@@ -721,8 +722,11 @@ class Downshift extends Component {
         this.avoidScrolling = true
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
+      onMouseDown: composeEventHandlers(onMouseDown, event => {
+        // Avoid of change active element.
+        event.preventDefault()
+      }),
       onClick: composeEventHandlers(onClick, () => {
-        this.restoreFocusAfterClick()
         this.selectItemAtIndex(index, {
           type: Downshift.stateChangeTypes.clickItem,
         })
@@ -801,7 +805,6 @@ class Downshift extends Component {
     // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
     // trigger hiding the menu.
     const onMouseDown = () => {
-      this._activeNodeBeforeClick = document.activeElement
       this.isMouseDown = true
     }
     const onMouseUp = event => {
@@ -824,12 +827,6 @@ class Downshift extends Component {
       this.props.environment.removeEventListener('mousedown', onMouseDown)
       this.props.environment.removeEventListener('mouseup', onMouseUp)
     }
-  }
-
-  restoreFocusAfterClick = () => {
-    this._activeNodeBeforeClick &&
-      this._activeNodeBeforeClick.focus &&
-      this._activeNodeBeforeClick.focus()
   }
 
   componentDidUpdate(prevProps, prevState) {
