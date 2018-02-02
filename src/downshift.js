@@ -723,7 +723,9 @@ class Downshift extends Component {
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onMouseDown: composeEventHandlers(onMouseDown, event => {
-        // Avoid of change active element.
+        // This prevents the activeElement from being changed
+        // to the item so it can remain with the current activeElement
+        // which is a more common use case.
         event.preventDefault()
       }),
       onClick: composeEventHandlers(onClick, () => {
