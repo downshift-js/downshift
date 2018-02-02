@@ -66,6 +66,27 @@ test('on mousemove of the highlighted item should not emit changes', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
+test('on mousedown of the item should not change current focus element', () => {
+  const renderSpy = jest.fn(({getItemProps}) => (
+    <div>
+      <button id="external-button" />
+      <div {...getItemProps({item: 'item-0'})}>
+        <button id="in-item-button" />
+      </div>
+    </div>
+  ))
+  const wrapper = mount(<Downshift render={renderSpy} />)
+  const externalButton = wrapper.find('button[id="external-button"]').first()
+  const externalButtonNode = externalButton.getDOMNode()
+  const inItemButton = wrapper.find('button[id="in-item-button"]').first()
+  renderSpy.mockClear()
+
+  externalButtonNode.focus()
+  expect(document.activeElement).toBe(externalButtonNode)
+  inItemButton.simulate('mousedown')
+  expect(document.activeElement).toBe(externalButtonNode)
+})
+
 test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
   const {Component, renderSpy} = setup()
   const wrapper = mount(<Component defaultHighlightedIndex={1} />)
