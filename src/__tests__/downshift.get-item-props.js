@@ -66,7 +66,7 @@ test('on mousemove of the highlighted item should not emit changes', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
-test('on mousedown of the item should not change current focus element', () => {
+test('on mousedown of the item should not change current focused element', () => {
   const renderSpy = jest.fn(({getItemProps}) => (
     <div>
       <button id="external-button" />
