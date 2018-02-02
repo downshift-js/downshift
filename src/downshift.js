@@ -470,7 +470,7 @@ class Downshift extends Component {
   rootRef = node => (this._rootNode = node)
 
   getRootProps = (
-    {refKey = 'ref', onBlur, ...rest} = {},
+    {refKey = 'ref', ...rest} = {},
     {suppressRefError = false} = {},
   ) => {
     // this is used in the render to know whether the user has called getRootProps.
@@ -480,19 +480,8 @@ class Downshift extends Component {
     this.getRootProps.suppressRefError = suppressRefError
     return {
       [refKey]: this.rootRef,
-      onBlur: composeEventHandlers(onBlur, this.root_handleBlur),
       ...rest,
     }
-  }
-
-  root_handleBlur = event => {
-    this._lastBlurredNode = event.target
-  }
-
-  focusLastBlurredNode = () => {
-    this._lastBlurredNode &&
-      this._lastBlurredNode.focus &&
-      this._lastBlurredNode.focus()
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
@@ -733,11 +722,10 @@ class Downshift extends Component {
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onClick: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(
-          index,
-          {type: Downshift.stateChangeTypes.clickItem},
-          this.focusLastBlurredNode,
-        )
+        this.restoreFocusAfterClick()
+        this.selectItemAtIndex(index, {
+          type: Downshift.stateChangeTypes.clickItem,
+        })
       }),
       ...rest,
     }
@@ -813,6 +801,7 @@ class Downshift extends Component {
     // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
     // trigger hiding the menu.
     const onMouseDown = () => {
+      this._activeNodeBeforeClick = document.activeElement
       this.isMouseDown = true
     }
     const onMouseUp = event => {
@@ -835,6 +824,12 @@ class Downshift extends Component {
       this.props.environment.removeEventListener('mousedown', onMouseDown)
       this.props.environment.removeEventListener('mouseup', onMouseUp)
     }
+  }
+
+  restoreFocusAfterClick = () => {
+    this._activeNodeBeforeClick &&
+      this._activeNodeBeforeClick.focus &&
+      this._activeNodeBeforeClick.focus()
   }
 
   componentDidUpdate(prevProps, prevState) {
