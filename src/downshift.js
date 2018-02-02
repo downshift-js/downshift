@@ -489,6 +489,12 @@ class Downshift extends Component {
     this._lastBlurredNode = event.target
   }
 
+  focusLastBlurredNode = () => {
+    this._lastBlurredNode &&
+      this._lastBlurredNode.focus &&
+      this._lastBlurredNode.focus()
+  }
+
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
 
   keyDownHandlers = {
@@ -729,14 +735,8 @@ class Downshift extends Component {
       onClick: composeEventHandlers(onClick, () => {
         this.selectItemAtIndex(
           index,
-          {
-            type: Downshift.stateChangeTypes.clickItem,
-          },
-          () => {
-            this._lastBlurredNode &&
-              this._lastBlurredNode.focus &&
-              this._lastBlurredNode.focus()
-          },
+          {type: Downshift.stateChangeTypes.clickItem},
+          this.focusLastBlurredNode,
         )
       }),
       ...rest,
