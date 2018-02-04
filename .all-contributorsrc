@@ -609,6 +609,19 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "notruth",
+      "name": "S S",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11996139?v=4",
+      "profile": "https://github.com/notruth",
+      "contributions": [
+        "question",
+        "code",
+        "doc",
+        "ideas",
+        "test"
+      ]
     }
   ]
 }
