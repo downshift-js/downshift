@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
@@ -13,8 +14,6 @@ import {
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
-  isPreact,
-  isReactNative,
   getElementProps,
   noop,
   requiredProp,
@@ -218,7 +217,7 @@ class Downshift extends Component {
 
   scrollHighlightedItemIntoView = () => {
     /* istanbul ignore else (react-native) */
-    if (!isReactNative) {
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       const rootNode = this._rootNode
       scrollIntoView(node, rootNode)
@@ -538,7 +537,7 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
-    const enabledEventHandlers = isReactNative
+    const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
         {
           onPress: composeEventHandlers(onClick, this.button_handleClick),
@@ -668,10 +667,12 @@ class Downshift extends Component {
 
   input_getOnChangeKey() {
     /* istanbul ignore next (preact) */
-    if (isPreact) {
+    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
       return 'onInput'
       /* istanbul ignore next (react-native) */
-    } else if (isReactNative) {
+    } else if (
+      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    ) {
       return 'onChangeText'
     } else {
       return 'onChange'
@@ -688,7 +689,7 @@ class Downshift extends Component {
     this.internalSetState({
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative
+      inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
         ? /* istanbul ignore next (react-native) */ event
         : event.target.value,
     })
@@ -721,7 +722,7 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative
+    const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
     return {
@@ -815,7 +816,7 @@ class Downshift extends Component {
     })
     this.previousResultCount = resultCount
     /* istanbul ignore else (react-native) */
-    if (!isReactNative) {
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       setA11yStatus(status)
     }
   }, 200)
@@ -825,7 +826,7 @@ class Downshift extends Component {
     // and we don't want to update the status if the component has been umounted
     this._isMounted = true
     /* istanbul ignore if (react-native) */
-    if (isReactNative) {
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
       this.cleanup = () => {
         this._isMounted = false
       }
