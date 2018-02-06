@@ -632,12 +632,22 @@ class Downshift extends Component {
       rest.id,
       generateId('downshift-input'),
     )
-    const onChangeKey = this.input_getOnChangeKey()
+    let onChangeKey
+    /* istanbul ignore next (preact) */
+    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
+      onChangeKey = 'onInput'
+      /* istanbul ignore next (react-native) */
+    } else if (
+      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    ) {
+      onChangeKey = 'onChangeText'
+    } else {
+      onChangeKey = 'onChange'
+    }
     const {inputValue, isOpen, highlightedIndex} = this.getState()
     const eventHandlers = rest.disabled
       ? {}
       : {
-          // preact compatibility
           [onChangeKey]: composeEventHandlers(
             onChange,
             onInput,
@@ -659,20 +669,6 @@ class Downshift extends Component {
       ...eventHandlers,
       ...rest,
       id: this.inputId,
-    }
-  }
-
-  input_getOnChangeKey() {
-    /* istanbul ignore next (preact) */
-    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
-      return 'onInput'
-      /* istanbul ignore next (react-native) */
-    } else if (
-      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
-    ) {
-      return 'onChangeText'
-    } else {
-      return 'onChange'
     }
   }
 
@@ -704,16 +700,14 @@ class Downshift extends Component {
     return `${this.props.id}-item-${index}`
   }
 
-  getItemProps = (
-    {
-      onMouseMove,
-      onMouseDown,
-      onClick,
-      index,
-      item = requiredProp('getItemProps', 'item'),
-      ...rest
-    } = {},
-  ) => {
+  getItemProps = ({
+    onMouseMove,
+    onMouseDown,
+    onClick,
+    index,
+    item = requiredProp('getItemProps', 'item'),
+    ...rest
+  } = {}) => {
     if (index === undefined) {
       this.items.push(item)
       index = this.items.indexOf(item)
@@ -948,16 +942,12 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
     )
   } else if (!isComposite && refKeySpecified) {
     throw new Error(
-      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${
-        refKey
-      }"`,
+      `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
   if (!getElementProps(element)[refKey]) {
     throw new Error(
-      `downshift: You must apply the ref prop "${
-        refKey
-      }" from getRootProps onto your root element.`,
+      `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }
 }

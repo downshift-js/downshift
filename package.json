@@ -4,14 +4,14 @@
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
   "jsnext:main": "dist/downshift.esm.js",
-  "react-native": "native/index.js",
+  "react-native": "dist/downshift.native.cjs.js",
   "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
   "scripts": {
     "add-contributor": "kcd-scripts contributors add",
-    "build": "npm run build:web --silent && npm run build:native --silent",
+    "build": "npm run build:web --silent && npm run build:native --silent -- --no-clean",
     "build:web": "kcd-scripts build --bundle --p-react",
-    "build:native": "BUILD_REACT_NATIVE=true BUILD_FILENAME_PREFIX=react-native kcd-scripts build --out-dir native",
+    "build:native": "BUILD_REACT_NATIVE=true BUILD_FILENAME_SUFFIX=.native kcd-scripts build --bundle cjs",
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
@@ -29,8 +29,7 @@
   "files": [
     "dist",
     "typings",
-    "preact",
-    "react-native"
+    "preact"
   ],
   "keywords": [
     "enhanced input",
