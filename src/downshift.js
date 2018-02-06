@@ -208,9 +208,12 @@ class Downshift extends Component {
   }
 
   scrollHighlightedItemIntoView = () => {
-    const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-    const rootNode = this._rootNode
-    scrollIntoView(node, rootNode)
+    /* istanbul ignore else (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+      const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
+      const rootNode = this._rootNode
+      scrollIntoView(node, rootNode)
+    }
   }
 
   openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
@@ -526,13 +529,17 @@ class Downshift extends Component {
 
   getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
-    const eventHandlers = rest.disabled
-      ? {}
+    const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      ? /* istanbul ignore next (react-native) */
+        {
+          onPress: composeEventHandlers(onClick, this.button_handleClick),
+        }
       : {
           onClick: composeEventHandlers(onClick, this.button_handleClick),
           onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
           onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
         }
+    const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
       type: 'button',
       role: 'button',
@@ -620,19 +627,22 @@ class Downshift extends Component {
       rest.id,
       generateId('downshift-input'),
     )
-    // the boolean cast here is necessary due to a weird deal with
-    // babel-plugin-istanbul + preval.macro. No idea...
-    const isPreact = Boolean(
-      preval`module.exports = process.env.BUILD_PREACT === 'true'`,
-    )
-    const onChangeKey = isPreact /* istanbul ignore next (preact) */
-      ? 'onInput'
-      : 'onChange'
+    let onChangeKey
+    /* istanbul ignore next (preact) */
+    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
+      onChangeKey = 'onInput'
+      /* istanbul ignore next (react-native) */
+    } else if (
+      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    ) {
+      onChangeKey = 'onChangeText'
+    } else {
+      onChangeKey = 'onChange'
+    }
     const {inputValue, isOpen, highlightedIndex} = this.getState()
     const eventHandlers = rest.disabled
       ? {}
       : {
-          // preact compatibility
           [onChangeKey]: composeEventHandlers(
             onChange,
             onInput,
@@ -667,7 +677,9 @@ class Downshift extends Component {
     this.internalSetState({
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: event.target.value,
+      inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+        ? /* istanbul ignore next (react-native) */ event
+        : event.target.value,
     })
   }
 
@@ -697,6 +709,10 @@ class Downshift extends Component {
     } else {
       this.items[index] = item
     }
+
+    const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      ? /* istanbul ignore next (react-native) */ 'onPress'
+      : 'onClick'
     return {
       id: this.getItemId(index),
       // onMouseMove is used over onMouseEnter here. onMouseMove
@@ -723,10 +739,8 @@ class Downshift extends Component {
         // which is a more common use case.
         event.preventDefault()
       }),
-      onClick: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(index, {
-          type: Downshift.stateChangeTypes.clickItem,
-        })
+      [onSelectKey]: composeEventHandlers(onClick, () => {
+        this.selectItemAtIndex(index)
       }),
       ...rest,
     }
@@ -789,40 +803,50 @@ class Downshift extends Component {
       ...state,
     })
     this.previousResultCount = resultCount
-    setA11yStatus(status)
+    /* istanbul ignore else (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+      setA11yStatus(status)
+    }
   }, 200)
 
   componentDidMount() {
     // the _isMounted property is because we have `updateStatus` in a `debounce`
     // and we don't want to update the status if the component has been umounted
     this._isMounted = true
-    // this.isMouseDown helps us track whether the mouse is currently held down.
-    // This is useful when the user clicks on an item in the list, but holds the mouse
-    // down long enough for the list to disappear (because the blur event fires on the input)
-    // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
-    // trigger hiding the menu.
-    const onMouseDown = () => {
-      this.isMouseDown = true
-    }
-    const onMouseUp = event => {
-      this.isMouseDown = false
-      if (
-        (event.target === this._rootNode ||
-          !this._rootNode.contains(event.target)) &&
-        this.getState().isOpen
-      ) {
-        this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
-          this.props.onOuterClick(this.getStateAndHelpers()),
-        )
+    /* istanbul ignore if (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+      this.cleanup = () => {
+        this._isMounted = false
       }
-    }
-    this.props.environment.addEventListener('mousedown', onMouseDown)
-    this.props.environment.addEventListener('mouseup', onMouseUp)
+    } else {
+      // this.isMouseDown helps us track whether the mouse is currently held down.
+      // This is useful when the user clicks on an item in the list, but holds the mouse
+      // down long enough for the list to disappear (because the blur event fires on the input)
+      // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
+      // trigger hiding the menu.
+      const onMouseDown = () => {
+        this.isMouseDown = true
+      }
+      const onMouseUp = event => {
+        this.isMouseDown = false
+        if (
+          (event.target === this._rootNode ||
+            !this._rootNode.contains(event.target)) &&
+          this.getState().isOpen
+        ) {
+          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+            this.props.onOuterClick(this.getStateAndHelpers()),
+          )
+        }
+      }
+      this.props.environment.addEventListener('mousedown', onMouseDown)
+      this.props.environment.addEventListener('mouseup', onMouseUp)
 
-    this.cleanup = () => {
-      this._isMounted = false
-      this.props.environment.removeEventListener('mousedown', onMouseDown)
-      this.props.environment.removeEventListener('mouseup', onMouseUp)
+      this.cleanup = () => {
+        this._isMounted = false
+        this.props.environment.removeEventListener('mousedown', onMouseDown)
+        this.props.environment.removeEventListener('mouseup', onMouseUp)
+      }
     }
   }
 
