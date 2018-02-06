@@ -36,7 +36,6 @@ class Downshift extends Component {
     onStateChange: PropTypes.func,
     onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
-    onClick: PropTypes.func,
     onOuterClick: PropTypes.func,
     selectedItemChanged: PropTypes.func,
     stateReducer: PropTypes.func,
@@ -132,10 +131,6 @@ class Downshift extends Component {
     this.state = state
   }
 
-  root_handleClick = composeEventHandlers(
-    this.props.onClick,
-    this.root_handleClick,
-  )
   input = null
   items = []
   // itemCount can be changed asynchronously
