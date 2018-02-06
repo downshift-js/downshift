@@ -11,7 +11,7 @@
     "add-contributor": "kcd-scripts contributors add",
     "build": "npm run build:web --silent && npm run build:native --silent -- --no-clean",
     "build:web": "kcd-scripts build --bundle --p-react",
-    "build:native": "BUILD_REACT_NATIVE=true BUILD_FILENAME_SUFFIX=.native kcd-scripts build --bundle cjs",
+    "build:native": "cross-env BUILD_REACT_NATIVE=true BUILD_FILENAME_SUFFIX=.native kcd-scripts build --bundle cjs",
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@storybook/react": "^3.3.3",
+    "cross-env": "^5.1.3",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.2.2",
