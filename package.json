@@ -18,7 +18,7 @@
     "test:ssr": "kcd-scripts test --config other/ssr/jest.config.js --no-watch",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:ts": "tsc --noEmit -p ./tsconfig.json",
-    "test:build": "jest --projects other/misc-tests other/react-native --no-watch",
+    "test:build": "jest --projects other/misc-tests other/react-native",
     "test:cypress:dev": "npm-run-all --parallel --race storybook cy:open",
     "pretest:cypress": "npm run storybook:build --silent",
     "test:cypress": "npm-run-all --parallel --race storybook:serve cy:run",
