@@ -39,3 +39,10 @@ test('renders selected items', () => {
     .toJSON()
   expect(tree).toMatchSnapshot()
 })
+
+/*
+ eslint
+  react/prop-types: 0,
+  import/extensions: 0,
+  import/no-unresolved: 0
+ */

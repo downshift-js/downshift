@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React from 'react'
 import {Text, TextInput, TouchableOpacity, View} from 'react-native'
 import Downshift from '../../dist/downshift.native.cjs'
@@ -57,3 +55,10 @@ const BasicAutocomplete = ({items, ...rest}) => (
 )
 
 export default BasicAutocomplete
+
+/*
+ eslint
+  react/prop-types: 0,
+  import/extensions: 0,
+  import/no-unresolved: 0
+ */
