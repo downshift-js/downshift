@@ -15,11 +15,10 @@
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",
-    "test:native": "kcd-scripts test --config other/react-native/jest.config.js --rootDir .",
     "test:ssr": "kcd-scripts test --config other/ssr/jest.config.js --no-watch",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:ts": "tsc --noEmit -p ./tsconfig.json",
-    "test:build": "kcd-scripts test --config other/misc-tests/jest.config.js --no-watch",
+    "test:build": "jest --projects other/misc-tests other/react-native --no-watch",
     "test:cypress:dev": "npm-run-all --parallel --race storybook cy:open",
     "pretest:cypress": "npm run storybook:build --silent",
     "test:cypress": "npm-run-all --parallel --race storybook:serve cy:run",
@@ -31,7 +30,7 @@
     "storybook:install": "cd stories && npm install",
     "storybook:serve": "serve ./storybook-static -p 6006",
     "setup": "npm install && npm run storybook:install -s && npm run storybook:build -s && npm run validate",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:native,test:cypress",
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:cypress",
     "precommit": "kcd-scripts precommit"
   },
   "files": [
