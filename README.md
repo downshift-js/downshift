@@ -212,7 +212,7 @@ This is the initial `isOpen` value.
 > `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
 
 Used to determine the string value for the selected item (which is used to
-compute the `inputValue`.
+compute the `inputValue`).
 
 ### selectedItemChanged
 
@@ -528,7 +528,7 @@ check could fail even if the ref is correctly forwarded to the root DOM
 component. In these cases, you can provide the object `{suppressRefError : true}` as the second argument to `getRootProps` to completely bypass the check.\
 **Please use it with extreme care and only if you are absolutely sure that the ref
 is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
-See issue paypal/downshift#235 for the discussion that lead to this.
+See [#235](https://github.com/paypal/downshift/issues/235) for the discussion that lead to this.
 
 #### `getInputProps`
 
