@@ -1,5 +1,12 @@
 import * as React from 'react'
 
+export interface DownshiftState {
+  highlightedIndex: number | null
+  inputValue: string | null
+  isOpen: boolean
+  selectedItem: any
+}
+
 export interface DownshiftProps {
   defaultSelectedItem?: any
   defaultHighlightedIndex?: number | null
@@ -24,6 +31,10 @@ export interface DownshiftProps {
     inputValue: string,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  stateReducer?: (
+    state: DownshiftState,
+    changes: StateChangeOptions,
+  ) => StateChangeOptions
   itemCount?: number
   highlightedIndex?: number
   inputValue?: string
@@ -91,15 +102,15 @@ export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
   item: any
 }
 
-export interface ControllerStateAndHelpers {
-  // prop getters
+export interface PropGetters {
   getRootProps: (options: GetRootPropsOptions) => any
   getButtonProps: (options?: GetButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions) => any
+}
 
-  // actions
+export interface Actions {
   openMenu: (cb?: Function) => void
   closeMenu: (cb?: Function) => void
   toggleMenu: (cb?: Function) => void
@@ -119,13 +130,9 @@ export interface ControllerStateAndHelpers {
   clearItems: () => void
   reset: (otherStateToSet?: object, cb?: Function) => void
   itemToString: (item: any) => void
-
-  // state
-  highlightedIndex: number | null
-  inputValue: string | null
-  isOpen: boolean
-  selectedItem: any
 }
+
+export type ControllerStateAndHelpers = DownshiftState & PropGetters & Actions
 
 export type ChildrenFunction = (
   options: ControllerStateAndHelpers,
