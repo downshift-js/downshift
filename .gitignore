@@ -9,6 +9,9 @@ dist
 storybook-static
 preact/
 
+cypress/videos
+cypress/screenshots
+
 # these cause more harm than good
 # when working with contributors
 package-lock.json
