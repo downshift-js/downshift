@@ -116,10 +116,19 @@ function BasicAutocomplete({items, onChange}) {
         inputValue,
         isOpen,
         selectedItem,
+        clearSelection,
       }) => (
         <Root {...getRootProps({refKey: 'innerRef'})}>
           <Label {...getLabelProps()}>What is your favorite color?</Label>
-          <Input {...getInputProps({placeholder: 'Enter color here'})} />
+          <Input
+            {...getInputProps({
+              placeholder: 'Enter color here',
+              'data-test': 'basic-input',
+            })}
+          />
+          <button data-test="clear-selection" onClick={clearSelection}>
+            clear
+          </button>
           {isOpen && (
             <div
               style={{
@@ -133,6 +142,7 @@ function BasicAutocomplete({items, onChange}) {
                   <Item
                     key={item}
                     {...getItemProps({
+                      'data-test': `downshift-item-${index}`,
                       item,
                       isActive: highlightedIndex === index,
                       isSelected: selectedItem === item,
