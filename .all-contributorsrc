@@ -622,6 +622,17 @@
         "ideas",
         "test"
       ]
+    },
+    {
+      "login": "austintackaberry",
+      "name": "Austin Tackaberry",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/29493001?v=4",
+      "profile": "http://austintackaberry.co",
+      "contributions": [
+        "question",
+        "code",
+        "doc"
+      ]
     }
   ]
 }
