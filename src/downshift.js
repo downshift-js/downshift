@@ -793,7 +793,7 @@ class Downshift extends Component {
       return
     }
     const state = this.getState()
-    const item = this.items[state.highlightedIndex] || {}
+    const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
     const status = this.props.getA11yStatusMessage({
       itemToString: this.props.itemToString,
