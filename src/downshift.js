@@ -10,6 +10,7 @@ import {
   debounce,
   scrollIntoView,
   generateId,
+  getPrefixedId,
   firstDefined,
   getA11yStatusMessage,
   unwrapArray,
@@ -69,7 +70,6 @@ class Downshift extends Component {
     defaultInputValue: '',
     defaultIsOpen: false,
     getA11yStatusMessage,
-    id: generateId('downshift'),
     itemToString: i => {
       if (i == null) {
         return ''
@@ -129,6 +129,8 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
+    this.uniqueId = generateId()
+    this.id = this.props.id || getPrefixedId('downshift', this.uniqueId)
   }
 
   input = null
@@ -409,7 +411,8 @@ class Downshift extends Component {
 
   getStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
-    const {id, itemToString} = this.props
+    const {itemToString} = this.props
+    const {id} = this
     const {
       getRootProps,
       getButtonProps,
@@ -453,6 +456,8 @@ class Downshift extends Component {
 
       //props
       itemToString,
+
+      //derived
       id,
 
       // state
@@ -599,7 +604,7 @@ class Downshift extends Component {
     this.inputId = firstDefined(
       this.inputId,
       props.htmlFor,
-      generateId('downshift-input'),
+      getPrefixedId('downshift-input', this.uniqueId),
     )
     return {
       ...props,
@@ -625,7 +630,7 @@ class Downshift extends Component {
     this.inputId = firstDefined(
       this.inputId,
       rest.id,
-      generateId('downshift-input'),
+      getPrefixedId('downshift-input', this.uniqueId),
     )
     let onChangeKey
     /* istanbul ignore next (preact) */
@@ -692,7 +697,7 @@ class Downshift extends Component {
 
   /////////////////////////////// ITEM
   getItemId(index) {
-    return `${this.props.id}-item-${index}`
+    return `${this.id}-item-${index}`
   }
 
   getItemProps = ({

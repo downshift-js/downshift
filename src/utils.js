@@ -1,4 +1,4 @@
-let idCounter = 1
+let idCounter = 0
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -146,12 +146,21 @@ function composeEventHandlers(...fns) {
 }
 
 /**
- * This generates a unique ID for all autocomplete inputs
- * @param {String} prefix the prefix for the id
+ * This generates a unique ID for an instance of Downshift
  * @return {String} the unique ID
  */
-function generateId(prefix) {
-  return `${prefix}-${idCounter++}`
+function generateId() {
+  return `${idCounter++}`
+}
+
+/**
+ * This generates a prefixed id used for different components inside Downshift
+ * @param {String} prefix the prefix for the id
+ * @param {String} id the unique ID
+ * @return {String} the prefixed unique ID
+ */
+function getPrefixedId(prefix, id) {
+  return `${prefix}-${id}`
 }
 
 /**
@@ -283,6 +292,7 @@ export {
   scrollIntoView,
   findParent,
   generateId,
+  getPrefixedId,
   firstDefined,
   getA11yStatusMessage,
   unwrapArray,
