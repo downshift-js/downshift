@@ -73,6 +73,7 @@ harder to contribute to.
   * [onSelect](#onselect)
   * [onStateChange](#onstatechange)
   * [stateReducer](#statereducer)
+  * [keyDownHandlers](#keydownhandlers)
   * [onInputValueChange](#oninputvaluechange)
   * [itemCount](#itemcount)
   * [highlightedIndex](#highlightedindex)
@@ -337,6 +338,31 @@ function stateReducer(state, changes) {
   }
 }
 ```
+
+### keyDownHandlers
+
+> `{ ...handlers }` | optional
+
+NOTE: Normally if you want to add keydown handlers to the button or input, you can simply pass `onKeyDown` to `getInputProps` and `getButtonProps` (respectively). However, if you want to override built-in handling of specific keys, you can use this prop.
+
+Also if you want to override the built-in behavior of _all_ the keys, you can add `event.preventDefault()` in your own handler and that will signal to downshift to skip it's built-in event handler.
+
+This prop allows you to use your own keydown handlers which can be handy if you want custom behavior. If a key and handler you pass is already defined in downshift, the custom handler you pass will be used instead.
+
+For example, if you create an Enter handler, this will not change the default behavior of the other keyDown events: ArrowUp, ArrowDown, and Escape.
+
+```jsx
+const handlers = {
+  Enter(event) {
+    // Custom behavior for ENTER keydown
+  },
+}
+
+const ui = <Downshift keyDownHandlers={handlers} />
+```
+
+⚠️ **This is an advanced feature and you should avoid using it** ⚠️
+This feature exposes the downshift instance in a way that could lead to your code breaking if we decide to change a method you are relying on.
 
 ### onInputValueChange
 

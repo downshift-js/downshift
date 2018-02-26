@@ -218,6 +218,23 @@ test('stateReducer customizes the final state after keyDownEnter handled', () =>
   )
 })
 
+test('calls key handlers when keyDownHandlers is passed', () => {
+  const keyDownHandlers = {
+    Enter: jest.fn(),
+    Escape: jest.fn(),
+    ArrowUp: jest.fn(),
+    ArrowDown: jest.fn(),
+  }
+  const keyPresses = Object.keys(keyDownHandlers)
+  const render = ({getInputProps}) => <input {...getInputProps()} />
+  const {wrapper} = setup({render, keyDownHandlers})
+
+  keyPresses.forEach(key => {
+    wrapper.find('input').simulate('keyDown', {key})
+    expect(keyDownHandlers[key]).toHaveBeenCalled()
+  })
+})
+
 function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
