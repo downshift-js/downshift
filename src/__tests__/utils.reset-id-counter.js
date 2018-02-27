@@ -3,10 +3,6 @@ import {mount} from 'enzyme'
 import Downshift from '../'
 import {resetIdCounter} from '../utils'
 
-test('does not throw', () => {
-  expect(() => resetIdCounter()).not.toThrow()
-})
-
 test('renders with correct and predictable auto generated id upon resetIdCounter call', () => {
   resetIdCounter()
 
