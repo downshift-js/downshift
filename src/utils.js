@@ -154,16 +154,6 @@ function generateId() {
 }
 
 /**
- * This generates a prefixed id used for different components inside Downshift
- * @param {String} prefix the prefix for the id
- * @param {String} id the unique ID
- * @return {String} the prefixed unique ID
- */
-function getPrefixedId(prefix, id) {
-  return `${prefix}-${id}`
-}
-
-/**
  * This is only used in tests
  * @param {Number} num The number to set the idCounter to
  */
@@ -292,7 +282,6 @@ export {
   scrollIntoView,
   findParent,
   generateId,
-  getPrefixedId,
   firstDefined,
   getA11yStatusMessage,
   unwrapArray,

@@ -10,7 +10,6 @@ import {
   debounce,
   scrollIntoView,
   generateId,
-  getPrefixedId,
   firstDefined,
   getA11yStatusMessage,
   unwrapArray,
@@ -130,7 +129,7 @@ class Downshift extends Component {
     }
     this.state = state
     this.uniqueId = generateId()
-    this.id = this.props.id || getPrefixedId('downshift', this.uniqueId)
+    this.id = this.props.id || `downshift-${this.uniqueId}`
   }
 
   input = null
@@ -601,11 +600,7 @@ class Downshift extends Component {
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
-    this.inputId = firstDefined(
-      this.inputId,
-      props.htmlFor,
-      getPrefixedId('downshift-input', this.uniqueId),
-    )
+    this.inputId = firstDefined(this.inputId, props.htmlFor, `${this.id}-input`)
     return {
       ...props,
       htmlFor: this.inputId,
@@ -627,11 +622,7 @@ class Downshift extends Component {
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
-    this.inputId = firstDefined(
-      this.inputId,
-      rest.id,
-      getPrefixedId('downshift-input', this.uniqueId),
-    )
+    this.inputId = firstDefined(this.inputId, rest.id, `${this.id}-input`)
     let onChangeKey
     /* istanbul ignore next (preact) */
     if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
