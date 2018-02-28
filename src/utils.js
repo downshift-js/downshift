@@ -1,4 +1,4 @@
-let idCounter = 1
+let idCounter = 0
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -146,12 +146,11 @@ function composeEventHandlers(...fns) {
 }
 
 /**
- * This generates a unique ID for all autocomplete inputs
- * @param {String} prefix the prefix for the id
+ * This generates a unique ID for an instance of Downshift
  * @return {String} the unique ID
  */
-function generateId(prefix) {
-  return `${prefix}-${idCounter++}`
+function generateId() {
+  return String(idCounter++)
 }
 
 /**
