@@ -128,8 +128,7 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
-    this.uniqueId = generateId()
-    this.id = this.props.id || `downshift-${this.uniqueId}`
+    this.id = this.props.id || `downshift-${generateId()}`
   }
 
   input = null

@@ -150,7 +150,7 @@ function composeEventHandlers(...fns) {
  * @return {String} the unique ID
  */
 function generateId() {
-  return `${idCounter++}`
+  return String(idCounter++)
 }
 
 /**
