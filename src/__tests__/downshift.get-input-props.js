@@ -188,17 +188,6 @@ test('on input blur does not reset the state when the mouse is down', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
-test('on mouseup while input is focused the state should not be reset', () => {
-  const {input} = setupDownshiftWithState()
-  input.simulate('change', {target: {value: 'a'}})
-  input.simulate('focus')
-  expect(input.instance().value).toBe('a')
-  document.body.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
-  expect(input.instance().value).toBe('a')
-  input.simulate('blur')
-  expect(input.instance().value).toBe('animal')
-})
-
 test('keydown of things that are not handled do nothing', () => {
   const modifiers = [undefined, 'Shift']
   const {Component, renderSpy} = setup()
