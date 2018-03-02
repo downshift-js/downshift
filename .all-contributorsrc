@@ -1,6 +1,7 @@
 {
   "projectName": "downshift",
   "projectOwner": "paypal",
+  "repoType": "github",
   "files": [
     "README.md"
   ],
@@ -632,6 +633,16 @@
         "question",
         "code",
         "doc"
+      ]
+    },
+    {
+      "login": "jduthon",
+      "name": "Jean Duthon",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/4168055?v=4",
+      "profile": "https://github.com/jduthon",
+      "contributions": [
+        "bug",
+        "code"
       ]
     }
   ]

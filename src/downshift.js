@@ -683,6 +683,7 @@ class Downshift extends Component {
       this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
   }
+
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
   /////////////////////////////// ITEM
@@ -823,11 +824,13 @@ class Downshift extends Component {
         this.isMouseDown = true
       }
       const onMouseUp = event => {
+        const {document} = this.props.environment
         this.isMouseDown = false
         if (
           (event.target === this._rootNode ||
             !this._rootNode.contains(event.target)) &&
-          this.getState().isOpen
+          this.getState().isOpen &&
+          (!this.inputId || document.activeElement.id !== this.inputId)
         ) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
