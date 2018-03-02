@@ -736,7 +736,9 @@ class Downshift extends Component {
         event.preventDefault()
       }),
       [onSelectKey]: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(index)
+        this.selectItemAtIndex(index, {
+          type: Downshift.stateChangeTypes.clickItem,
+        })
       }),
       ...rest,
     }
