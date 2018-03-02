@@ -8,6 +8,7 @@ notifications:
 node_js: '8'
 install: npm install
 before_script:
+  - npx cypress verify &
   - cd stories
   - npm install
   - cd ..
