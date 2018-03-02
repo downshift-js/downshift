@@ -687,10 +687,10 @@ class Downshift extends Component {
   }
 
   input_handleBlur = () => {
+    this.isInputFocused = false
     if (!this.isMouseDown) {
       this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
-    this.isInputFocused = false
   }
 
   input_handleFocus = () => {
