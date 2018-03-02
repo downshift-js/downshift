@@ -1,6 +1,7 @@
 {
   "projectName": "downshift",
   "projectOwner": "paypal",
+  "repoType": "github",
   "files": [
     "README.md"
   ],
@@ -644,6 +645,5 @@
         "code"
       ]
     }
-  ],
-  "repoType": "github"
+  ]
 }
