@@ -610,7 +610,14 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
+  getInputProps = ({
+    onKeyDown,
+    onBlur,
+    onChange,
+    onInput,
+    onFocus,
+    ...rest
+  } = {}) => {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
@@ -645,6 +652,7 @@ class Downshift extends Component {
           ),
           onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
           onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+          onFocus: composeEventHandlers(onFocus, this.input_handleFocus),
         }
     return {
       role: 'combobox',
@@ -682,6 +690,11 @@ class Downshift extends Component {
     if (!this.isMouseDown) {
       this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
+    this.isInputFocused = false
+  }
+
+  input_handleFocus = () => {
+    this.isInputFocused = true
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
@@ -827,7 +840,8 @@ class Downshift extends Component {
         if (
           (event.target === this._rootNode ||
             !this._rootNode.contains(event.target)) &&
-          this.getState().isOpen
+          this.getState().isOpen &&
+          !this.isInputFocused
         ) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
