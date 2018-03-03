@@ -31,6 +31,7 @@ class Downshift extends Component {
     defaultIsOpen: PropTypes.bool,
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
+    keyDownHandlers: PropTypes.object,
     onChange: PropTypes.func,
     onSelect: PropTypes.func,
     onStateChange: PropTypes.func,
@@ -83,6 +84,7 @@ class Downshift extends Component {
       }
       return String(i)
     },
+    keyDownHandlers: {},
     onStateChange: () => {},
     onInputValueChange: () => {},
     onUserAction: () => {},
@@ -424,6 +426,7 @@ class Downshift extends Component {
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
+      moveHighlightedIndex,
       clearSelection,
       clearItems,
       reset,
@@ -447,6 +450,7 @@ class Downshift extends Component {
       selectItemAtIndex,
       selectHighlightedItem,
       setHighlightedIndex,
+      moveHighlightedIndex,
       clearSelection,
       clearItems,
       setItemCount,
@@ -505,7 +509,7 @@ class Downshift extends Component {
     },
 
     Enter(event) {
-      if (this.getState().isOpen) {
+      if (this.isOpen) {
         event.preventDefault()
         this.selectHighlightedItem({
           type: Downshift.stateChangeTypes.keyDownEnter,
@@ -663,8 +667,10 @@ class Downshift extends Component {
   }
 
   input_handleKeyDown = event => {
-    if (event.key && this.keyDownHandlers[event.key]) {
-      this.keyDownHandlers[event.key].call(this, event)
+    const handler =
+      this.props.keyDownHandlers[event.key] || this.keyDownHandlers[event.key]
+    if (handler) {
+      handler.call(this.getStateAndHelpers(), event)
     }
   }
 
