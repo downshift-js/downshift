@@ -69,7 +69,6 @@ class Downshift extends Component {
     defaultInputValue: '',
     defaultIsOpen: false,
     getA11yStatusMessage,
-    id: generateId('downshift'),
     itemToString: i => {
       if (i == null) {
         return ''
@@ -129,6 +128,7 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
+    this.id = this.props.id || `downshift-${generateId()}`
   }
 
   input = null
@@ -409,7 +409,8 @@ class Downshift extends Component {
 
   getStateAndHelpers() {
     const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
-    const {id, itemToString} = this.props
+    const {itemToString} = this.props
+    const {id} = this
     const {
       getRootProps,
       getButtonProps,
@@ -453,6 +454,8 @@ class Downshift extends Component {
 
       //props
       itemToString,
+
+      //derived
       id,
 
       // state
@@ -596,11 +599,7 @@ class Downshift extends Component {
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
-    this.inputId = firstDefined(
-      this.inputId,
-      props.htmlFor,
-      generateId('downshift-input'),
-    )
+    this.inputId = firstDefined(this.inputId, props.htmlFor, `${this.id}-input`)
     return {
       ...props,
       htmlFor: this.inputId,
@@ -622,11 +621,7 @@ class Downshift extends Component {
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
-    this.inputId = firstDefined(
-      this.inputId,
-      rest.id,
-      generateId('downshift-input'),
-    )
+    this.inputId = firstDefined(this.inputId, rest.id, `${this.id}-input`)
     let onChangeKey
     /* istanbul ignore next (preact) */
     if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
@@ -688,11 +683,12 @@ class Downshift extends Component {
       this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
   }
+
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
   /////////////////////////////// ITEM
   getItemId(index) {
-    return `${this.props.id}-item-${index}`
+    return `${this.id}-item-${index}`
   }
 
   getItemProps = ({
@@ -740,7 +736,9 @@ class Downshift extends Component {
         event.preventDefault()
       }),
       [onSelectKey]: composeEventHandlers(onClick, () => {
-        this.selectItemAtIndex(index)
+        this.selectItemAtIndex(index, {
+          type: Downshift.stateChangeTypes.clickItem,
+        })
       }),
       ...rest,
     }
@@ -828,11 +826,13 @@ class Downshift extends Component {
         this.isMouseDown = true
       }
       const onMouseUp = event => {
+        const {document} = this.props.environment
         this.isMouseDown = false
         if (
           (event.target === this._rootNode ||
             !this._rootNode.contains(event.target)) &&
-          this.getState().isOpen
+          this.getState().isOpen &&
+          (!this.inputId || document.activeElement.id !== this.inputId)
         ) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),

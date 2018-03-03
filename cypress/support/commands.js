@@ -14,7 +14,7 @@ function getInStory(selector) {
   })
 }
 
+// see the baseUrl config in cypress.json
 Cypress.Commands.add('visitStory', name => {
-  const url = `http://localhost:6006/?selectedKind=Examples&selectedStory=${name}&full=1`
-  return cy.visit(url)
+  return cy.visit(`/?selectedKind=Examples&selectedStory=${name}&full=1`)
 })
