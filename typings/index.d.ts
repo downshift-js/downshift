@@ -146,7 +146,7 @@ export interface Actions {
   clearSelection: (cb?: Function) => void
   clearItems: () => void
   reset: (otherStateToSet?: object, cb?: Function) => void
-  itemToString: (item: any) => void
+  itemToString: (item: any) => string
 }
 
 export type ControllerStateAndHelpers = DownshiftState & PropGetters & Actions
