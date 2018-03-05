@@ -663,19 +663,29 @@ As a convenience, the `id` and `itemToString` props which you pass to
 
 ## EventHandlers
 
-You can provide your own event handlers to Downshift which will be called before the default handlers.
+You can provide your own event handlers to Downshift which will be called before the default handlers:
+
+```javascript
+<input
+  {...getInputProps({
+    onKeyDown: event => {
+      // your handler code
+    },
+  })}
+/>
+```
 
 If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `false`:
 
 ```javascript
 <input
   {...getInputProps({
-    onKeyDown(event) {
+    onKeyDown: event => {
       if (event.key === 'Enter') {
         // Prevent Downshift's default 'Enter' behavior.
         event.preventDownshiftDefault = false
 
-        // my own behavior...
+        // your handler code
       }
     },
   })}
@@ -688,7 +698,7 @@ If you would like to completely override Downshift's behavior for a handler, in 
 <input
   {...getInputProps()}
   onKeyDown={event => {
-    /* my own behavior... */
+    // your handler code
   }}
 />
 ```
