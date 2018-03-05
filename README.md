@@ -681,7 +681,7 @@ const ui = (
 )
 ```
 
-If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `false`:
+If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
 const ui = (
@@ -692,7 +692,7 @@ const ui = (
           onKeyDown: event => {
             if (event.key === 'Enter') {
               // Prevent Downshift's default 'Enter' behavior.
-              event.preventDownshiftDefault = false
+              event.preventDownshiftDefault = true
 
               // your handler code
             }
