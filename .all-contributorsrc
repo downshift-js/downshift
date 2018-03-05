@@ -654,6 +654,18 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "ericedem",
+      "name": "Eric Edem",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1060669?v=4",
+      "profile": "https://github.com/ericedem",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "test"
+      ]
     }
   ]
 }

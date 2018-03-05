@@ -130,10 +130,9 @@ function debounce(fn, time) {
 }
 
 /**
- * This is intended to be used to compose event handlers
- * They are executed in order until one of them calls
- * `event.preventDefault()`. Not sure this is the best
- * way to do this, but it seems legit...
+ * This is intended to be used to compose event handlers.
+ * They are executed in order until one of them sets
+ * `event.preventDownshiftDefault = true`.
  * @param {Function} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
@@ -141,7 +140,8 @@ function composeEventHandlers(...fns) {
   return (event, ...args) =>
     fns.some(fn => {
       fn && fn(event, ...args)
-      return event.defaultPrevented
+      // TODO: remove everything after the || in the next breaking change
+      return event.preventDownshiftDefault || event.defaultPrevented
     })
 }
 
