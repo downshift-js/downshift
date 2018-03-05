@@ -1,5 +1,29 @@
 import * as React from 'react'
 
+export interface DownshiftState {
+  highlightedIndex: number | null
+  inputValue: string | null
+  isOpen: boolean
+  selectedItem: any
+}
+
+export enum StateChangeTypes {
+  unknown = '__autocomplete_unknown__',
+  mouseUp = '__autocomplete_mouseup__',
+  itemMouseEnter = '__autocomplete_item_mouseenter__',
+  keyDownArrowUp = '__autocomplete_keydown_arrow_up__',
+  keyDownArrowDown = '__autocomplete_keydown_arrow_down__',
+  keyDownEscape = '__autocomplete_keydown_escape__',
+  keyDownEnter = '__autocomplete_keydown_enter__',
+  clickItem = '__autocomplete_click_item__',
+  blurInput = '__autocomplete_blur_input__',
+  changeInput = '__autocomplete_change_input__',
+  keyDownSpaceButton = '__autocomplete_keydown_space_button__',
+  clickButton = '__autocomplete_click_button__',
+  blurButton = '__autocomplete_blur_button__',
+  controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
+}
+
 export interface DownshiftProps {
   defaultSelectedItem?: any
   defaultHighlightedIndex?: number | null
@@ -24,6 +48,10 @@ export interface DownshiftProps {
     inputValue: string,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  stateReducer?: (
+    state: DownshiftState,
+    changes: StateChangeOptions,
+  ) => StateChangeOptions
   itemCount?: number
   highlightedIndex?: number
   inputValue?: string
@@ -62,7 +90,7 @@ export interface A11yStatusMessageOptions {
 }
 
 export interface StateChangeOptions {
-  type: string
+  type: StateChangeTypes
   highlightedIndex: number
   inputValue: string
   isOpen: boolean
@@ -91,15 +119,15 @@ export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
   item: any
 }
 
-export interface ControllerStateAndHelpers {
-  // prop getters
+export interface PropGetters {
   getRootProps: (options: GetRootPropsOptions) => any
   getButtonProps: (options?: GetButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions) => any
+}
 
-  // actions
+export interface Actions {
   openMenu: (cb?: Function) => void
   closeMenu: (cb?: Function) => void
   toggleMenu: (cb?: Function) => void
@@ -119,18 +147,31 @@ export interface ControllerStateAndHelpers {
   clearItems: () => void
   reset: (otherStateToSet?: object, cb?: Function) => void
   itemToString: (item: any) => void
-
-  // state
-  highlightedIndex: number | null
-  inputValue: string | null
-  isOpen: boolean
-  selectedItem: any
 }
+
+export type ControllerStateAndHelpers = DownshiftState & PropGetters & Actions
 
 export type ChildrenFunction = (
   options: ControllerStateAndHelpers,
 ) => React.ReactNode
-export type DownshiftInterface = React.ComponentClass<DownshiftProps>
+export type DownshiftInterface = React.ComponentClass<DownshiftProps> & {
+  stateChangeTypes: {
+    unknown: StateChangeTypes.unknown
+    mouseUp: StateChangeTypes.mouseUp
+    itemMouseEnter: StateChangeTypes.itemMouseEnter
+    keyDownArrowUp: StateChangeTypes.keyDownArrowUp
+    keyDownArrowDown: StateChangeTypes.keyDownArrowDown
+    keyDownEscape: StateChangeTypes.keyDownEscape
+    keyDownEnter: StateChangeTypes.keyDownEnter
+    clickItem: StateChangeTypes.clickItem
+    blurInput: StateChangeTypes.blurInput
+    changeInput: StateChangeTypes.changeInput
+    keyDownSpaceButton: StateChangeTypes.keyDownSpaceButton
+    clickButton: StateChangeTypes.clickButton
+    blurButton: StateChangeTypes.blurButton
+    controlledPropUpdatedSelectedItem: StateChangeTypes.controlledPropUpdatedSelectedItem
+  }
+}
 
 declare const Downshift: DownshiftInterface
 export default Downshift
