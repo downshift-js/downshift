@@ -132,9 +132,7 @@ function debounce(fn, time) {
 /**
  * This is intended to be used to compose event handlers.
  * They are executed in order until one of them sets
- * `event.preventDownshiftDefault = true`. This allows the
- * normal event to maintain its intended `event.defaultPrevented`
- * state.
+ * `event.preventDownshiftDefault = true`.
  * @param {Function} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
