@@ -663,21 +663,32 @@ As a convenience, the `id` and `itemToString` props which you pass to
 
 ## EventHandlers
 
-You can provide your own input handlers to Downshift which will be called before the default handlers.
+You can provide your own event handlers to Downshift which will be called before the default handlers.
 
-If you would like to prevent the default behavior, you can set the event's `preventDownshiftDefault` property to `false`.
+If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `false`:
 
-For example:
-
-```
+```javascript
 getInputProps({
   onKeyDown(event) {
-    // Prevent Downshift's default behavior.
-    event.preventDownshiftDefault = false;
+    if (event.key === 'Enter') {
+      // Prevent Downshift's default 'Enter' behavior.
+      event.preventDownshiftDefault = false
 
-    // Implement my own behavior...
-  }
+      // Implement my own behavior...
+    }
+  },
 })
+```
+
+If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
+
+```javascript
+let inputProps = {
+  ...getInputProps(customProps),
+  onKeyDown(event) {
+    // Implement my own behavior...
+  },
+}
 ```
 
 ## Utilities
