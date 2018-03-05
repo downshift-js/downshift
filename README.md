@@ -668,27 +668,29 @@ You can provide your own event handlers to Downshift which will be called before
 If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `false`:
 
 ```javascript
-getInputProps({
-  onKeyDown(event) {
-    if (event.key === 'Enter') {
-      // Prevent Downshift's default 'Enter' behavior.
-      event.preventDownshiftDefault = false
+<input
+  {...getInputProps({
+    onKeyDown(event) {
+      if (event.key === 'Enter') {
+        // Prevent Downshift's default 'Enter' behavior.
+        event.preventDownshiftDefault = false
 
-      // Implement my own behavior...
-    }
-  },
-})
+        // my own behavior...
+      }
+    },
+  })}
+/>
 ```
 
 If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
 
 ```javascript
-let inputProps = {
-  ...getInputProps(customProps),
-  onKeyDown(event) {
-    // Implement my own behavior...
-  },
-}
+<input
+  {...getInputProps()}
+  onKeyDown={event => {
+    /* my own behavior... */
+  }}
+/>
 ```
 
 ## Utilities
