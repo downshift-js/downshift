@@ -90,7 +90,7 @@ harder to contribute to.
   * [actions](#actions)
   * [state](#state)
   * [props](#props)
-* [EventHandlers](#eventhandlers)
+* [Event Handlers](#event-handlers)
 * [Utilities](#utilities)
   * [resetIdCounter](#resetidcounter)
 * [Examples](#examples)
@@ -661,46 +661,64 @@ These are values that represent the current state of the downshift component.
 As a convenience, the `id` and `itemToString` props which you pass to
 `<Downshift />` are available here as well.
 
-## EventHandlers
+## Event Handlers
 
 You can provide your own event handlers to Downshift which will be called before the default handlers:
 
 ```javascript
-<input
-  {...getInputProps({
-    onKeyDown: event => {
-      // your handler code
-    },
-  })}
-/>
+const ui = (
+  <Downshift>
+    {({getInputProps}) => (
+      <input
+        {...getInputProps({
+          onKeyDown: event => {
+            // your handler code
+          }
+        })}
+      />
+    )}
+  </Downshift>
+)
 ```
 
 If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `false`:
 
 ```javascript
-<input
-  {...getInputProps({
-    onKeyDown: event => {
-      if (event.key === 'Enter') {
-        // Prevent Downshift's default 'Enter' behavior.
-        event.preventDownshiftDefault = false
+const ui = (
+  <Downshift>
+    {({getInputProps}) => (
+      <input
+        {...getInputProps({
+          onKeyDown: event => {
+            if (event.key === 'Enter') {
+              // Prevent Downshift's default 'Enter' behavior.
+              event.preventDownshiftDefault = false
 
-        // your handler code
-      }
-    },
-  })}
-/>
+              // your handler code
+            }
+          }
+        })}
+      />
+    )}
+  </Downshift>
+)
 ```
 
 If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
 
 ```javascript
-<input
-  {...getInputProps()}
-  onKeyDown={event => {
-    // your handler code
-  }}
-/>
+const ui = (
+  <Downshift>
+    {({getInputProps}) => (
+      <input
+        {...getInputProps()}
+        onKeyDown={event => {
+          // your handler code
+        }}
+      />
+    )}
+  </Downshift>
+)
 ```
 
 ## Utilities
