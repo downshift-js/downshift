@@ -90,6 +90,7 @@ harder to contribute to.
   * [actions](#actions)
   * [state](#state)
   * [props](#props)
+* [EventHandlers](#eventhandlers)
 * [Utilities](#utilities)
   * [resetIdCounter](#resetidcounter)
 * [Examples](#examples)
@@ -659,6 +660,25 @@ These are values that represent the current state of the downshift component.
 
 As a convenience, the `id` and `itemToString` props which you pass to
 `<Downshift />` are available here as well.
+
+## EventHandlers
+
+You can provide your own input handlers to Downshift which will be called before the default handlers.
+
+If you would like to prevent the default behavior, you can set the event's `preventDownshiftDefault` property to `false`.
+
+For example:
+
+```
+getInputProps({
+  onKeyDown(event) {
+    // Prevent Downshift's default behavior.
+    event.preventDownshiftDefault = false;
+
+    // Implement my own behavior...
+  }
+})
+```
 
 ## Utilities
 
