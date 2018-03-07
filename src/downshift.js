@@ -709,8 +709,8 @@ class Downshift extends Component {
     const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
-    return {
-      id: this.getItemId(index),
+
+    const enabledEventHandlers = {
       // onMouseMove is used over onMouseEnter here. onMouseMove
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
@@ -740,6 +740,13 @@ class Downshift extends Component {
           type: Downshift.stateChangeTypes.clickItem,
         })
       }),
+    }
+
+    const eventHandlers = rest.disabled ? {} : enabledEventHandlers
+
+    return {
+      id: this.getItemId(index),
+      ...eventHandlers,
       ...rest,
     }
   }
