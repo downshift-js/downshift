@@ -146,6 +146,25 @@ test('getItemProps throws when no item is given', () => {
   ).toThrowErrorMatchingSnapshot()
 })
 
+// normally this test would be like the others where we render and then simulate a click on an
+// item to ensure that a disabled item cannot be clicked, however this is only a problem in IE11
+// so we have to get into the implementation details a little bit (unless we want to run these tests
+// in IE11... no thank you 🙅)
+test(`getItemProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
+  const {getItemProps} = setupWithDownshiftController()
+  const props = getItemProps({item: 'dog', disabled: true})
+  const entry = Object.entries(props).find(
+    ([_key, value]) => typeof value === 'function',
+  )
+  if (entry) {
+    throw new Error(
+      `getItemProps should not have any props that are callbacks. It has ${
+        entry[0]
+      }.`,
+    )
+  }
+})
+
 function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
   const renderSpy = jest.fn(({getItemProps}) => (
     <div>
@@ -171,6 +190,19 @@ function setup({items = ['Chess', 'Dominion', 'Checkers']} = {}) {
     )
   }
   return {Component: BasicDownshift, renderSpy}
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  mount(
+    <Downshift
+      render={controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    />,
+  )
+  return renderArg
 }
 
 /* eslint no-console:0 */

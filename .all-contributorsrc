@@ -632,7 +632,12 @@
       "contributions": [
         "question",
         "code",
-        "doc"
+        "doc",
+        "bug",
+        "example",
+        "ideas",
+        "review",
+        "test"
       ]
     },
     {
