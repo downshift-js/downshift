@@ -542,7 +542,7 @@ There are no required properties for this method.
 
 Optional properties:
 
-* `disabled`: If this is set to true, then all of the `getInputProps` event handlers will be disabled. The input element won't focus when clicked, the `inputValue` won't change when a key is pressed, and the input won't reset `onBlur`. Essentially, the entire functionality of the input element will need to be re-created.
+* `disabled`: If this is set to true, then no event handlers will be returned from `getInputProps` and a `disabled` prop will be returned (effectively disabling the input).
 
 #### `getLabelProps`
 
@@ -605,7 +605,7 @@ Optional properties:
   explicitly. It's probably best to be explicit about `index` when using a
   windowing library like `react-virtualized`.
 * `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be disabled. Items will not be highlighted when hovered,
+  handlers will be omitted. Items will not be highlighted when hovered,
   and items will not be selected when clicked.
 
 #### `getButtonProps`
@@ -613,11 +613,14 @@ Optional properties:
 Call this and apply the returned props to a `button`. It allows you to toggle
 the `Menu` component. You can definitely build something like this yourself (all
 of the available APIs are exposed to you), but this is nice because it will also
-apply all of the proper ARIA attributes. If a `disabled` property is passed and
-set to `true`, then the downshift button event handlers will be disabled. The
-menu will not be toggled on click or when the Space key is pressed. The `aria-label`
-prop is in English. You should probably override this yourself so you can
-provide translations:
+apply all of the proper ARIA attributes.
+
+Optional properties:
+
+* `disabled`: If this is set to `true`, then all of the downshift button event
+  handlers will be omitted (it wont toggle the menu when clicked).
+* `aria-label`: The `aria-label` prop is in English. You should probably override
+  this yourself so you can provide translations:
 
 ```jsx
 const myButton = (
