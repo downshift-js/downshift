@@ -146,8 +146,8 @@ test('getItemProps throws when no item is given', () => {
   ).toThrowErrorMatchingSnapshot()
 })
 
-// normally this test would be like the others where we render and then simulate a click on the
-// button to ensure that a disabled button cannot be clicked, however this is only a problem in IE11
+// normally this test would be like the others where we render and then simulate a click on an
+// item to ensure that a disabled item cannot be clicked, however this is only a problem in IE11
 // so we have to get into the implementation details a little bit (unless we want to run these tests
 // in IE11... no thank you 🙅)
 test(`getItemProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
