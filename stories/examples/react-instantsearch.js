@@ -39,7 +39,7 @@ function RawAutoComplete({refine, hits}) {
                     },
                   })}
                 >
-                  <Highlight attributeName="name" hit={item} tagName="mark" />
+                  <Highlight attribute="name" hit={item} tagName="mark" />
                 </div>
               ))}
             </div>
