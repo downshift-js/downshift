@@ -29,6 +29,7 @@ class Downshift extends Component {
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
     defaultIsOpen: PropTypes.bool,
+    shouldOpenOnFocus: propTypes.bool,
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
@@ -68,6 +69,7 @@ class Downshift extends Component {
     defaultSelectedItem: null,
     defaultInputValue: '',
     defaultIsOpen: false,
+    shouldOpenOnFocus: false,
     getA11yStatusMessage,
     itemToString: i => {
       if (i == null) {
@@ -108,10 +110,12 @@ class Downshift extends Component {
     keyDownEnter: '__autocomplete_keydown_enter__',
     clickItem: '__autocomplete_click_item__',
     blurInput: '__autocomplete_blur_input__',
+    focusInput: '__autocomplete_focus_input__',
     changeInput: '__autocomplete_change_input__',
     keyDownSpaceButton: '__autocomplete_keydown_space_button__',
     clickButton: '__autocomplete_click_button__',
     blurButton: '__autocomplete_blur_button__',
+    focusButton: '__autocomplete_focus_button__',
     controlledPropUpdatedSelectedItem:
       '__autocomplete_controlled_prop_updated_selected_item__',
   }
@@ -530,7 +534,7 @@ class Downshift extends Component {
     },
   }
 
-  getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
+  getButtonProps = ({onClick, onKeyDown, onBlur, onFocus, ...rest} = {}) => {
     const {isOpen} = this.getState()
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
@@ -541,6 +545,7 @@ class Downshift extends Component {
           onClick: composeEventHandlers(onClick, this.button_handleClick),
           onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
           onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
+          onFocus: composeEventHandlers(onFocus, this.button_handleFocus),
         }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
@@ -580,6 +585,10 @@ class Downshift extends Component {
     }
   }
 
+  button_handleFocus = () => {
+    this.internalSetState({type: Downshift.stateChangeTypes.focusButton})
+  }
+
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
 
   /////////////////////////////// LABEL
@@ -610,7 +619,7 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
+  getInputProps = ({onKeyDown, onBlur, onFocus, onChange, onInput, ...rest} = {}) => {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
@@ -645,6 +654,7 @@ class Downshift extends Component {
           ),
           onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
           onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+          onFocus: composeEventHandlers(onFocus, this.input_handleFocus),
         }
     return {
       role: 'combobox',
@@ -682,6 +692,14 @@ class Downshift extends Component {
     if (!this.isMouseDown) {
       this.reset({type: Downshift.stateChangeTypes.blurInput})
     }
+  }
+
+  input_handleFocus = () => {
+    const {isOpen} = this.getState()
+    this.internalSetState({
+      isOpen: this.props.shouldOpenOnFocus ? true : isOpen,
+      type: Downshift.stateChangeTypes.focusInput,
+    })
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT

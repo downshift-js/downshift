@@ -17,10 +17,12 @@ export enum StateChangeTypes {
   keyDownEnter = '__autocomplete_keydown_enter__',
   clickItem = '__autocomplete_click_item__',
   blurInput = '__autocomplete_blur_input__',
+  focusInput = '__autocomplete_focus_input__',
   changeInput = '__autocomplete_change_input__',
   keyDownSpaceButton = '__autocomplete_keydown_space_button__',
   clickButton = '__autocomplete_click_button__',
   blurButton = '__autocomplete_blur_button__',
+  focusButton = '__autocomplete_focus_button__',
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
 }
 
@@ -29,6 +31,7 @@ export interface DownshiftProps {
   defaultHighlightedIndex?: number | null
   defaultInputValue?: string
   defaultIsOpen?: boolean
+  shouldOpenOnFocus?: boolean
   itemToString?: (item: any) => string
   selectedItemChanged?: (prevItem: any, item: any) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any
@@ -165,10 +168,12 @@ export type DownshiftInterface = React.ComponentClass<DownshiftProps> & {
     keyDownEnter: StateChangeTypes.keyDownEnter
     clickItem: StateChangeTypes.clickItem
     blurInput: StateChangeTypes.blurInput
+    focusInput: StateChangeTypes.focusInput
     changeInput: StateChangeTypes.changeInput
     keyDownSpaceButton: StateChangeTypes.keyDownSpaceButton
     clickButton: StateChangeTypes.clickButton
     blurButton: StateChangeTypes.blurButton
+    focusButton: StateChangeTypes.focusButton
     controlledPropUpdatedSelectedItem: StateChangeTypes.controlledPropUpdatedSelectedItem
   }
 }

@@ -66,6 +66,7 @@ harder to contribute to.
   * [defaultHighlightedIndex](#defaulthighlightedindex)
   * [defaultInputValue](#defaultinputvalue)
   * [defaultIsOpen](#defaultisopen)
+  * [shouldOpenOnFocus](#shouldOpenOnFocus)
   * [itemToString](#itemtostring)
   * [selectedItemChanged](#selecteditemchanged)
   * [getA11yStatusMessage](#geta11ystatusmessage)
@@ -207,6 +208,12 @@ This is the initial input value.
 > `boolean` | defaults to `false`
 
 This is the initial `isOpen` value.
+
+### shouldOpenOnFocus
+
+> `boolean` | defaults to `false`
+
+Used to determine if the menu should be open on input focus.
 
 ### itemToString
 
