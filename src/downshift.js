@@ -562,15 +562,25 @@ class Downshift extends Component {
 
   button_handleClick = event => {
     event.preventDefault()
+
+    if (
+      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'` &&
+      this._inputNode
+    ) {
+      this._inputNode.focus()
+    }
+
     // handle odd case for Safari and Firefox which
     // don't give the button the focus properly.
     /* istanbul ignore if (can't reasonably test this) */
     if (
+      !preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'` &&
       this.props.environment.document.activeElement ===
-      this.props.environment.document.body
+        this.props.environment.document.body
     ) {
       event.target.focus()
     }
+
     this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
   }
 
@@ -610,7 +620,16 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
+  inputRef = node => (this._inputNode = node)
+
+  getInputProps = ({
+    onKeyDown,
+    onBlur,
+    onChange,
+    onInput,
+    refKey = 'ref',
+    ...rest
+  } = {}) => {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
@@ -659,6 +678,9 @@ class Downshift extends Component {
       ...eventHandlers,
       ...rest,
       id: this.inputId,
+      [refKey]: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+        ? this.inputRef
+        : null,
     }
   }
 
