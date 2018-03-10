@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders with React Native components 1`] = `
+<View>
+  <TextInput
+    allowFontScaling={true}
+    aria-activedescendant={null}
+    aria-autocomplete="list"
+    aria-expanded={false}
+    autoComplete="off"
+    id="downshift-0-input"
+    onBlur={[Function]}
+    onChangeText={[Function]}
+    onKeyDown={[Function]}
+    role="combobox"
+    value=""
+  />
+  <View>
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      id="downshift-0-item-0"
+      onMouseDown={[Function]}
+      onMouseMove={[Function]}
+      onPress={[Function]}
+    >
+      foo
+    </Text>
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      id="downshift-0-item-1"
+      onMouseDown={[Function]}
+      onMouseMove={[Function]}
+      onPress={[Function]}
+    >
+      bar
+    </Text>
+  </View>
+</View>
+`;
