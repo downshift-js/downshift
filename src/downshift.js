@@ -564,6 +564,7 @@ class Downshift extends Component {
     event.preventDefault()
 
     if (
+      /* istanbul ignore next (react-native) */
       preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'` &&
       this._inputNode
     ) {
@@ -574,6 +575,7 @@ class Downshift extends Component {
     // don't give the button the focus properly.
     /* istanbul ignore if (can't reasonably test this) */
     if (
+      /* istanbul ignore next (react-native) */
       !preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'` &&
       this.props.environment.document.activeElement ===
         this.props.environment.document.body
