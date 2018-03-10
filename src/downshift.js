@@ -29,7 +29,7 @@ class Downshift extends Component {
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
     defaultIsOpen: PropTypes.bool,
-    shouldOpenOnFocus: propTypes.bool,
+    shouldOpenOnFocus: PropTypes.bool, 
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
