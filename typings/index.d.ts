@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+type Callback = () => void
+
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
@@ -31,7 +33,7 @@ export interface DownshiftProps<Item> {
   defaultIsOpen?: boolean
   itemToString?: (item: Item) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => any
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   onChange?: (
     selectedItem: Item,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
@@ -69,14 +71,13 @@ export interface DownshiftProps<Item> {
 }
 
 export interface Environment {
-  addEventListener: (type: string, cb: Function) => void
-  removeEventListener: (type: string, cb: Function) => void
+  addEventListener: typeof window.addEventListener
+  removeEventListener: typeof window.removeEventListener
   document: Document
 }
 
 export interface A11yStatusMessageOptions<Item> {
   highlightedIndex: number | null
-  highlightedValue: any
   inputValue: string
   isOpen: boolean
   itemToString: (item: Item) => string
@@ -126,24 +127,24 @@ export interface PropGetters<Item> {
 }
 
 export interface Actions<Item> {
-  openMenu: (cb?: Function) => void
-  closeMenu: (cb?: Function) => void
-  toggleMenu: (cb?: Function) => void
-  selectItem: (item: Item, otherStateToSet?: object, cb?: Function) => void
+  openMenu: (cb?: Callback) => void
+  closeMenu: (cb?: Callback) => void
+  toggleMenu: (cb?: Callback) => void
+  selectItem: (item: Item, otherStateToSet?: {}, cb?: Callback) => void
   selectItemAtIndex: (
     index: number,
-    otherStateToSet?: object,
-    cb?: Function,
+    otherStateToSet?: {},
+    cb?: Callback,
   ) => void
-  selectHighlightedItem: (otherStateToSet?: object, cb?: Function) => void
+  selectHighlightedItem: (otherStateToSet?: {}, cb?: Callback) => void
   setHighlightedIndex: (
     index: number,
-    otherStateToSet?: object,
-    cb?: Function,
+    otherStateToSet?: {},
+    cb?: Callback,
   ) => void
-  clearSelection: (cb?: Function) => void
+  clearSelection: (cb?: Callback) => void
   clearItems: () => void
-  reset: (otherStateToSet?: object, cb?: Function) => void
+  reset: (otherStateToSet?: {}, cb?: Callback) => void
   itemToString: (item: Item) => string
 }
 

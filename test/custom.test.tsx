@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Downshift, {ControllerStateAndHelpers, DownshiftInterface} from '../'
+import Downshift, {DownshiftInterface} from '../'
 
 type Item = string
 const TypedDownShift: DownshiftInterface<Item> = Downshift
@@ -40,7 +40,7 @@ export default class App extends React.Component<Props, State> {
           getItemProps,
           selectedItem,
           isOpen,
-        }: ControllerStateAndHelpers<Item>) => (
+        }) => (
           <div style={{position: 'relative'}}>
             <div {...getButtonProps()}>{selectedItem}</div>
             <CustomList isOpen={isOpen}>
