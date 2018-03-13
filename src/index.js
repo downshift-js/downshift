@@ -9,4 +9,6 @@ import {resetIdCounter} from './utils'
 Downshift.default = Downshift
 Downshift.resetIdCounter = resetIdCounter
 
+export const downshiftFactory = () => Downshift
+
 export default Downshift
