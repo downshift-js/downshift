@@ -79,7 +79,8 @@
     "react-test-renderer": "^16.2.0",
     "react-testing-library": "^1.1.0",
     "serve": "^6.5.3",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "@types/react": "^16.0.40"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
