@@ -114,27 +114,97 @@ declare module downshift {
   declare export type StateChangeFunction<Item> = (
     state: DownshiftState<Item>,
   ) => StateChangeOptions<Item>
+
+  declare export type GetRootPropsReturn = {
+    role: 'combobox';
+    // 'aria-expanded': boolean;
+    // 'aria-haspopup': 'listbox';
+    // 'aria-owns': string | null;
+    // 'aria-labelledby': string;
+  }
   declare export interface GetRootPropsOptions {
     refKey: string;
   }
-  declare export interface GetInputPropsOptions
-    extends React.HTMLProps<HTMLInputElement> {}
-  declare export interface GetLabelPropsOptions
-    extends React.HTMLProps<HTMLLabelElement> {}
+
+  declare type GetToggleButtonCallbacks = {
+    onMouseMove: (e: React.MouseEvent<Element>) => void;
+    onMouseDown: (e: React.MouseEvent<Element>) => void;
+    onBlur: (e: React.MouseEvent<Element>) => void;
+  } | {
+    onPress: (e: React.MouseEvent<Element>) => void; // should be react native type
+  } | {}
+  declare export type GetToggleButtonReturn = {
+    type: 'button';
+    role: 'button';
+    // 'aria-label': 'close menu' | 'open menu';
+    // 'aria-haspopup': true;
+    // 'data-toggle': true;
+  // } & GetInputPropsCallbacks
+  }
   declare export interface getToggleButtonPropsOptions
     extends React.HTMLProps<HTMLButtonElement> {}
+
+  declare export interface GetLabelPropsReturn {
+    htmlFor: string;
+    id: string;
+  }
+  declare export interface GetLabelPropsOptions
+    extends React.HTMLProps<HTMLLabelElement> {}
+
+  declare export type getMenuPropsReturn = {
+    role: 'listbox';
+    // 'aria-labelledby': string | null;
+    id: string;
+  }
+
+  declare type GetInputPropsCallbacks = ({
+    onKeyDown: (e: React.MouseEvent<Element>) => void;
+    onBlur: (e: React.MouseEvent<Element>) => void;
+  } & ({
+    onInput: (e: React.MouseEvent<Element>) => void;
+  } | {
+    onChangeText: (e: React.MouseEvent<Element>) => void;
+  } | {
+    onChange: (e: React.MouseEvent<Element>) => void;
+  })) | {}
+  declare export type GetInputPropsReturn = {
+    // 'aria-autocomplete': 'list';
+    // 'aria-activedescendant': string | null;
+    // 'aria-controls': string | null;
+    // 'aria-labelledby': string;
+    autoComplete: 'off';
+    value: string;
+    id: string;
+  } & GetInputPropsCallbacks;
+  declare export interface GetInputPropsOptions
+    extends React.HTMLProps<HTMLInputElement> {}
+
+  declare type GetItemPropsCallbacks = {
+    onMouseMove: (e: React.MouseEvent<Element>) => void;
+    onMouseDown: (e: React.MouseEvent<Element>) => void;
+  } & ({
+    onPress: (e: React.MouseEvent<Element>) => void;
+  } | {
+    onClick: (e: React.MouseEvent<Element>) => void;
+  })
+  declare export type GetItemPropsReturn = {
+    id: string;
+    role: 'option';
+    // 'aria-selected': boolean;
+  } & GetItemPropsCallbacks
   declare export type GetItemPropsOptions<Item> = {
     index?: number,
     item: Item,
   }
+
   declare export interface PropGetters<Item> {
-    getRootProps: (options: GetRootPropsOptions) => any;
-    getButtonProps: (options?: getToggleButtonPropsOptions) => any;
-    getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any;
-    getLabelProps: (options?: GetLabelPropsOptions) => any;
-    getMenuProps: (options?: {}) => any;
-    getInputProps: (options?: GetInputPropsOptions) => any;
-    getItemProps: (options: GetItemPropsOptions<Item>) => any;
+    getRootProps: <T:{}>(options: GetRootPropsOptions & T) => GetRootPropsReturn & T;
+    getButtonProps: <T:{}>(options?: getToggleButtonPropsOptions & T) => GetToggleButtonReturn & T;
+    getToggleButtonProps: <T:{}>(options?: getToggleButtonPropsOptions & T) => GetToggleButtonReturn & T;
+    getLabelProps: <T:{}>(options?: GetLabelPropsOptions & T) => GetLabelPropsReturn & T;
+    getMenuProps: <T:{}>(options?: T) => getMenuPropsReturn & T;
+    getInputProps: <T:{}>(options?: GetInputPropsOptions & T) => GetInputPropsReturn & T;
+    getItemProps: <T:{}>(options: GetItemPropsOptions<Item> & T) => GetItemPropsReturn & T;
   }
   declare export interface Actions<Item> {
     reset: (otherStateToSet?: {}, cb?: Callback) => void;
