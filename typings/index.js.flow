@@ -6,7 +6,9 @@
  * Repo: http://github.com/joarwilk/flowgen
  */
 
-declare module 'downshift' {
+import React from 'react'
+
+declare module downshift {
   declare type StateChangeTypes = {
     unknown: '__autocomplete_unknown__',
     mouseUp: '__autocomplete_mouseup__',
