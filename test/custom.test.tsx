@@ -1,8 +1,7 @@
 import * as React from 'react'
-import Downshift, {DownshiftInterface} from '../'
+import Downshift, {ControllerStateAndHelpers} from '../'
 
 type Item = string
-const TypedDownShift: DownshiftInterface<Item> = Downshift
 
 interface Props {}
 
@@ -34,13 +33,13 @@ export default class App extends React.Component<Props, State> {
     const defaultSelectedItem = this.state.items[0]
 
     return (
-      <TypedDownShift defaultSelectedItem={defaultSelectedItem}>
+      <Downshift defaultSelectedItem={defaultSelectedItem}>
         {({
           getButtonProps,
           getItemProps,
           selectedItem,
           isOpen,
-        }) => (
+        }: ControllerStateAndHelpers<Item>) => (
           <div style={{position: 'relative'}}>
             <div {...getButtonProps()}>{selectedItem}</div>
             <CustomList isOpen={isOpen}>
@@ -59,7 +58,7 @@ export default class App extends React.Component<Props, State> {
             </CustomList>
           </div>
         )}
-      </TypedDownShift>
+      </Downshift>
     )
   }
 }
