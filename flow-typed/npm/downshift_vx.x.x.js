@@ -6,9 +6,9 @@
  * Repo: http://github.com/joarwilk/flowgen
  */
 
-import React from 'react'
+// import React from 'react'
 
-declare module downshift {
+declare module 'downshift' {
   declare type StateChangeTypes = {
     unknown: '__autocomplete_unknown__',
     mouseUp: '__autocomplete_mouseup__',
@@ -163,6 +163,7 @@ declare module downshift {
   > & {
     stateChangeTypes: StateChangeTypes,
   }
-  declare var Downshift: DownshiftInterface<any>
-  declare module.exports: typeof Downshift
+  declare export var downshiftFactory: <T>(item: T) => DownshiftInterface<T>
+  declare export default DownshiftInterface<any>
+  // declare module.exports: DownshiftInterface<any>
 }

@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import Downshift, { type ControllerStateAndHelpers, type DownshiftInterface } from 'downshift';
-
+import Downshift, { downshiftFactory, type ControllerStateAndHelpers, type DownshiftInterface } from 'downshift';
 
 type Item = string
-const TypedDownShift: DownshiftInterface<Item> = Downshift
+const x:Item = "";
+const DownshiftTyped:DownshiftInterface<string> = downshiftFactory(x)
 
 type Props = {}
 
@@ -12,11 +12,11 @@ type State = {
     items: Array<Item>;
 }
 
-const CustomList = ({ isOpen, children }) => (
+const CustomList = ({ isOpen, children }: {isOpen: boolean, children: React.Node }) => (
     <div className={isOpen ? 'open' : ''}>{children}</div>
 )
 
-const CustomListItem = ({ isSelected, children }) => (
+const CustomListItem = ({ isSelected, children }: {isSelected: boolean, children: React.Node }) => (
     <div className={isSelected ? 'selected' : ''}>{children}</div>
 )
 
@@ -34,7 +34,7 @@ export default class App extends React.Component<Props, State> {
         const defaultSelectedItem = this.state.items[0];
 
         return (
-            <Downshift defaultSelectedItem={defaultSelectedItem}>
+            <DownshiftTyped defaultSelectedItem={defaultSelectedItem}>
                 {({
                     getButtonProps,
                     getItemProps,
@@ -59,7 +59,7 @@ export default class App extends React.Component<Props, State> {
                         </CustomList>
                     </div>
                 )}
-            </Downshift>
+            </DownshiftTyped>
         );
     }
 }

@@ -85,7 +85,7 @@
     "react-test-renderer": "^16.2.0",
     "serve": "^6.4.11",
     "typescript": "^2.7.2",
-    "flow-bin": "^0.67.1",
+    "flow-bin": "^0.68.0",
     "flow-coverage-report": "^0.5.0"
   },
   "eslintConfig": {
@@ -122,6 +122,9 @@
       "test/**/*.jsx"
     ],
     "threshold": 100,
-    "type": ["text", "html"]
+    "type": [
+      "text",
+      "html"
+    ]
   }
 }

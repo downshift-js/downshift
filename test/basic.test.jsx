@@ -1,14 +1,15 @@
 // @flow
 import React from 'react';
-import Downshift, { type StateChangeOptions, type DownshiftInterface } from 'downshift';
+import Downshift, { downshiftFactory, type StateChangeOptions, type DownshiftInterface } from 'downshift';
 
 type Item = string
-const TypedDownShift = (Downshift:DownshiftInterface<Item>)
+const x:Item = "";
+const DownshiftTyped = downshiftFactory(x) //:DownshiftInterface<string>
 
 type Props = {}
 
 type State = {
-    items: Array<Item>;
+    items: Array<Item>
 }
 
 export default class App extends React.Component<Props, State> {
@@ -28,7 +29,7 @@ export default class App extends React.Component<Props, State> {
         const items = this.state.items;
 
         return (
-            <TypedDownShift onChange={this.onChange}>
+            <DownshiftTyped onChange={this.onChange}>
                 {({
                     getButtonProps,
                     getInputProps,
@@ -80,7 +81,7 @@ export default class App extends React.Component<Props, State> {
                               </div>
                             : null}
                     </div>}
-            </TypedDownShift>
+            </DownshiftTyped>
         );
     }
 }

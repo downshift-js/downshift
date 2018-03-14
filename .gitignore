@@ -16,3 +16,4 @@ cypress/screenshots
 # when working with contributors
 package-lock.json
 yarn.lock
+flow-coverage/
