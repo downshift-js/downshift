@@ -1,6 +1,6 @@
 /* eslint camelcase:0 */
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
@@ -83,12 +83,12 @@ class Downshift extends Component {
       }
       return String(i)
     },
-    onStateChange: () => {},
-    onInputValueChange: () => {},
-    onUserAction: () => {},
-    onChange: () => {},
-    onSelect: () => {},
-    onOuterClick: () => {},
+    onStateChange: () => { },
+    onInputValueChange: () => { },
+    onUserAction: () => { },
+    onChange: () => { },
+    onSelect: () => { },
+    onOuterClick: () => { },
     selectedItemChanged: (prevItem, item) => prevItem !== item,
     environment:
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
@@ -204,7 +204,7 @@ class Downshift extends Component {
     otherStateToSet = {},
   ) => {
     otherStateToSet = pickState(otherStateToSet)
-    this.internalSetState({highlightedIndex, ...otherStateToSet})
+    this.internalSetState({ highlightedIndex, ...otherStateToSet })
   }
 
   scrollHighlightedItemIntoView = () => {
@@ -217,7 +217,7 @@ class Downshift extends Component {
   }
 
   openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
-    this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
+    this.setHighlightedIndex(undefined, { isOpen: true, ...otherStateToSet })
   }
 
   highlightDefaultIndex = (otherStateToSet = {}) => {
@@ -238,7 +238,7 @@ class Downshift extends Component {
     if (itemsLastIndex < 0) {
       return
     }
-    const {highlightedIndex} = this.getState()
+    const { highlightedIndex } = this.getState()
     let baseIndex = highlightedIndex
     if (baseIndex === null) {
       baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
@@ -272,7 +272,7 @@ class Downshift extends Component {
         selectedItem: item,
         inputValue:
           this.isControlledProp('selectedItem') &&
-          this.props.breakingChanges.resetInputOnSelection
+            this.props.breakingChanges.resetInputOnSelection
             ? this.props.defaultInputValue
             : this.props.itemToString(item),
         ...otherStateToSet,
@@ -408,9 +408,9 @@ class Downshift extends Component {
   }
 
   getStateAndHelpers() {
-    const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
-    const {itemToString} = this.props
-    const {id} = this
+    const { highlightedIndex, inputValue, selectedItem, isOpen } = this.getState()
+    const { itemToString } = this.props
+    const { id } = this
     const {
       getRootProps,
       getButtonProps,
@@ -471,8 +471,8 @@ class Downshift extends Component {
   rootRef = node => (this._rootNode = node)
 
   getRootProps = (
-    {refKey = 'ref', ...rest} = {},
-    {suppressRefError = false} = {},
+    { refKey = 'ref', ...rest } = {},
+    { suppressRefError = false } = {},
   ) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
@@ -515,7 +515,7 @@ class Downshift extends Component {
 
     Escape(event) {
       event.preventDefault()
-      this.reset({type: Downshift.stateChangeTypes.keyDownEscape})
+      this.reset({ type: Downshift.stateChangeTypes.keyDownEscape })
     },
   }
 
@@ -526,22 +526,22 @@ class Downshift extends Component {
 
     ' '(event) {
       event.preventDefault()
-      this.toggleMenu({type: Downshift.stateChangeTypes.keyDownSpaceButton})
+      this.toggleMenu({ type: Downshift.stateChangeTypes.keyDownSpaceButton })
     },
   }
 
-  getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
-    const {isOpen} = this.getState()
+  getButtonProps = ({ onClick, onKeyDown, onBlur, ...rest } = {}) => {
+    const { isOpen } = this.getState()
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
-        {
-          onPress: composeEventHandlers(onClick, this.button_handleClick),
-        }
+      {
+        onPress: composeEventHandlers(onClick, this.button_handleClick),
+      }
       : {
-          onClick: composeEventHandlers(onClick, this.button_handleClick),
-          onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
-        }
+        onClick: composeEventHandlers(onClick, this.button_handleClick),
+        onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
+        onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
+      }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
       type: 'button',
@@ -571,13 +571,16 @@ class Downshift extends Component {
     ) {
       event.target.focus()
     }
-    this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
+    this.toggleMenu({ type: Downshift.stateChangeTypes.clickButton })
   }
 
   button_handleBlur = () => {
-    if (!this.isMouseDown) {
-      this.reset({type: Downshift.stateChangeTypes.blurButton})
-    }
+    // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not <body>
+    setTimeout(() => {
+      if (!this.isMouseDown && this.props.environment.document.activeElement.id !== this.inputId) {
+        this.reset({ type: Downshift.stateChangeTypes.blurButton })
+      }
+    }, 1);
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
@@ -593,9 +596,9 @@ class Downshift extends Component {
     ) {
       throw new Error(
         `downshift: You provided the htmlFor of "${
-          props.htmlFor
+        props.htmlFor
         }" for your label, but the id of your input is "${
-          this.inputId
+        this.inputId
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
@@ -610,14 +613,14 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
+  getInputProps = ({ onKeyDown, onBlur, onChange, onInput, ...rest } = {}) => {
     this.getInputProps.called = true
     if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
       throw new Error(
         `downshift: You provided the id of "${
-          rest.id
+        rest.id
         }" for your input, but the htmlFor of your label is "${
-          this.inputId
+        this.inputId
         }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
       )
     }
@@ -634,18 +637,18 @@ class Downshift extends Component {
     } else {
       onChangeKey = 'onChange'
     }
-    const {inputValue, isOpen, highlightedIndex} = this.getState()
+    const { inputValue, isOpen, highlightedIndex } = this.getState()
     const eventHandlers = rest.disabled
       ? {}
       : {
-          [onChangeKey]: composeEventHandlers(
-            onChange,
-            onInput,
-            this.input_handleChange,
-          ),
-          onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
-        }
+        [onChangeKey]: composeEventHandlers(
+          onChange,
+          onInput,
+          this.input_handleChange,
+        ),
+        onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
+        onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+      }
     return {
       role: 'combobox',
       'aria-autocomplete': 'list',
@@ -679,9 +682,13 @@ class Downshift extends Component {
   }
 
   input_handleBlur = () => {
-    if (!this.isMouseDown) {
-      this.reset({type: Downshift.stateChangeTypes.blurInput})
-    }
+    // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not <body>
+    setTimeout(() => {
+      const downshiftButtonIsActive = document.activeElement.tagName === "BUTTON" && this._rootNode.contains(this.props.environment.document.activeElement)
+      if (!this.isMouseDown && !downshiftButtonIsActive) {
+        this.reset({ type: Downshift.stateChangeTypes.blurInput })
+      }
+    }, 1);
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
@@ -759,7 +766,7 @@ class Downshift extends Component {
   reset = (otherStateToSet = {}, cb) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
-      ({selectedItem}) => ({
+      ({ selectedItem }) => ({
         isOpen: false,
         highlightedIndex: this.props.defaultHighlightedIndex,
         inputValue: this.props.itemToString(selectedItem),
@@ -772,11 +779,11 @@ class Downshift extends Component {
   toggleMenu = (otherStateToSet = {}, cb) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
-      ({isOpen}) => {
-        return {isOpen: !isOpen, ...otherStateToSet}
+      ({ isOpen }) => {
+        return { isOpen: !isOpen, ...otherStateToSet }
       },
       () => {
-        const {isOpen} = this.getState()
+        const { isOpen } = this.getState()
         if (isOpen) {
           this.highlightDefaultIndex()
         }
@@ -786,11 +793,11 @@ class Downshift extends Component {
   }
 
   openMenu = cb => {
-    this.internalSetState({isOpen: true}, cbToCb(cb))
+    this.internalSetState({ isOpen: true }, cbToCb(cb))
   }
 
   closeMenu = cb => {
-    this.internalSetState({isOpen: false}, cbToCb(cb))
+    this.internalSetState({ isOpen: false }, cbToCb(cb))
   }
 
   updateStatus = debounce(() => {
@@ -833,7 +840,7 @@ class Downshift extends Component {
         this.isMouseDown = true
       }
       const onMouseUp = event => {
-        const {document} = this.props.environment
+        const { document } = this.props.environment
         this.isMouseDown = false
         if (
           (event.target === this._rootNode ||
@@ -841,7 +848,7 @@ class Downshift extends Component {
           this.getState().isOpen &&
           (!this.inputId || document.activeElement.id !== this.inputId)
         ) {
-          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.reset({ type: Downshift.stateChangeTypes.mouseUp }, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -935,7 +942,7 @@ class Downshift extends Component {
 
 export default Downshift
 
-function validateGetRootPropsCalledCorrectly(element, {refKey}) {
+function validateGetRootPropsCalledCorrectly(element, { refKey }) {
   const refKeySpecified = refKey !== 'ref'
   const isComposite = !isDOMElement(element)
   if (isComposite && !refKeySpecified) {

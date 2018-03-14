@@ -1,6 +1,6 @@
 import React from 'react'
 import matchSorter from 'match-sorter'
-import glamorous, {Div} from 'glamorous'
+import glamorous, { Div } from 'glamorous'
 import items from '../countries'
 
 import Downshift from '../../src'
@@ -44,7 +44,7 @@ const Item = glamorous.div(
     whiteSpace: 'normal',
     wordWrap: 'normal',
   },
-  ({isActive, isSelected}) => {
+  ({ isActive, isSelected }) => {
     const styles = []
     if (isActive) {
       styles.push({
@@ -88,12 +88,12 @@ const Input = glamorous.input(
       boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
     },
   },
-  ({isOpen}) =>
+  ({ isOpen }) =>
     isOpen
       ? {
-          borderBottomLeftRadius: '0',
-          borderBottomRightRadius: '0',
-        }
+        borderBottomLeftRadius: '0',
+        borderBottomRightRadius: '0',
+      }
       : null,
 )
 
@@ -146,53 +146,58 @@ function SemanticUIAutocomplete() {
         getInputProps,
         getItemProps,
       }) => (
-        <Div {...getRootProps({refKey: 'innerRef'})}>
-          <Div position="relative" css={{paddingRight: '1.75em'}}>
-            <Input
-              {...getInputProps({
-                isOpen,
-                placeholder: 'Enter some info',
-              })}
-            />
-            {selectedItem ? (
-              <ControlButton
-                css={{paddingTop: 4}}
-                onClick={clearSelection}
-                aria-label="clear selection"
-              >
-                <XIcon />
-              </ControlButton>
-            ) : (
-              <ControlButton {...getButtonProps()}>
-                <ArrowIcon isOpen={isOpen} />
-              </ControlButton>
+          <Div {...getRootProps({ refKey: 'innerRef' })}>
+            <Div position="relative" css={{ paddingRight: '1.75em' }}>
+              <Input
+                {...getInputProps({
+                  isOpen,
+                  placeholder: 'Enter some info',
+                  'data-test': 'semantic-ui-input',
+                })}
+              />
+              {selectedItem ? (
+                <ControlButton
+                  css={{ paddingTop: 4 }}
+                  onClick={clearSelection}
+                  aria-label="clear selection"
+                  data-test='semantic-ui-clear-button'
+                >
+                  <XIcon />
+                </ControlButton>
+              ) : (
+                  <ControlButton {...getButtonProps({
+                    'data-test': 'semantic-ui-toggle-button',
+                  })}>
+                    <ArrowIcon isOpen={isOpen} />
+                  </ControlButton>
+                )}
+            </Div>
+            {isOpen && (
+              <Menu>
+                {(inputValue ? advancedFilter(items, inputValue) : items).map(
+                  (item, index) => (
+                    <Item
+                      key={item.code}
+                      {...getItemProps({
+                        item,
+                        'data-test': `downshift-item-${index}`,
+                        isActive: highlightedIndex === index,
+                        isSelected: selectedItem === item,
+                      })}
+                    >
+                      {item.name}
+                    </Item>
+                  ),
+                )}
+              </Menu>
             )}
-          </Div>
-          {isOpen && (
-            <Menu>
-              {(inputValue ? advancedFilter(items, inputValue) : items).map(
-                (item, index) => (
-                  <Item
-                    key={item.code}
-                    {...getItemProps({
-                      item,
-                      isActive: highlightedIndex === index,
-                      isSelected: selectedItem === item,
-                    })}
-                  >
-                    {item.name}
-                  </Item>
-                ),
-              )}
-            </Menu>
-          )}
-        </Div>
-      )}
+          </ Div>
+        )}
     />
   )
 }
 
-function ArrowIcon({isOpen}) {
+function ArrowIcon({ isOpen }) {
   return (
     <svg
       viewBox="0 0 20 20"
