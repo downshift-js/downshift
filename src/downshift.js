@@ -549,6 +549,7 @@ class Downshift extends Component {
       'aria-label': isOpen ? 'close menu' : 'open menu',
       'aria-expanded': isOpen,
       'aria-haspopup': true,
+      'data-toggle': true,
       ...eventHandlers,
       ...rest,
     }
@@ -575,9 +576,15 @@ class Downshift extends Component {
   }
 
   button_handleBlur = () => {
-    if (!this.isMouseDown) {
-      this.reset({type: Downshift.stateChangeTypes.blurButton})
-    }
+    // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
+    setTimeout(() => {
+      if (
+        !this.isMouseDown &&
+        this.props.environment.document.activeElement.id !== this.inputId
+      ) {
+        this.reset({type: Downshift.stateChangeTypes.blurButton})
+      }
+    })
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
@@ -679,9 +686,15 @@ class Downshift extends Component {
   }
 
   input_handleBlur = () => {
-    if (!this.isMouseDown) {
-      this.reset({type: Downshift.stateChangeTypes.blurInput})
-    }
+    // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
+    setTimeout(() => {
+      const downshiftButtonIsActive =
+        this.props.environment.document.activeElement.dataset.toggle &&
+        this._rootNode.contains(this.props.environment.document.activeElement)
+      if (!this.isMouseDown && !downshiftButtonIsActive) {
+        this.reset({type: Downshift.stateChangeTypes.blurInput})
+      }
+    })
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT

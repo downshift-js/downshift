@@ -166,9 +166,12 @@ test('escape on an input with a selection should reset downshift and close the m
   )
 })
 
+jest.useFakeTimers()
+
 test('on input blur resets the state', () => {
   const {input, renderSpy, items} = setupDownshiftWithState()
   input.simulate('blur')
+  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -185,6 +188,16 @@ test('on input blur does not reset the state when the mouse is down', () => {
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
   input.simulate('blur')
+  jest.runAllTimers()
+  expect(renderSpy).not.toHaveBeenCalled()
+})
+
+test('on input blur does not reset the state when new focus is on downshift button', () => {
+  const {input, renderSpy, button} = setupDownshiftWithState()
+  const buttonNode = button.getDOMNode()
+  input.simulate('blur')
+  buttonNode.focus()
+  jest.runAllTimers()
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
@@ -309,6 +322,7 @@ function setupDownshiftWithState() {
   const {Component, renderSpy} = setup({items})
   const wrapper = mount(<Component />)
   const input = wrapper.find(sel('input'))
+  const button = wrapper.find(sel('button'))
   input.simulate('keydown')
   input.simulate('change', {target: {value: 'a'}})
   // ↓
@@ -320,28 +334,31 @@ function setupDownshiftWithState() {
   input.simulate('keydown', {key: 'ArrowDown'})
   input.simulate('change', {target: {value: 'bu'}})
   renderSpy.mockClear()
-  return {renderSpy, input, items, wrapper}
+  return {renderSpy, input, button, items, wrapper}
 }
 
 function setup({items = colors} = {}) {
   /* eslint-disable react/jsx-closing-bracket-location */
-  const renderSpy = jest.fn(({isOpen, getInputProps, getItemProps}) => (
-    <div>
-      <input {...getInputProps({'data-test': 'input'})} />
-      {isOpen && (
-        <div>
-          {items.map((item, index) => (
-            <div
-              key={item.index || index}
-              {...getItemProps({item, index: item.index || index})}
-            >
-              {item.value ? item.value : item}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  ))
+  const renderSpy = jest.fn(
+    ({isOpen, getInputProps, getButtonProps, getItemProps}) => (
+      <div>
+        <input {...getInputProps({'data-test': 'input'})} />
+        <button {...getButtonProps({'data-test': 'button'})} />
+        {isOpen && (
+          <div>
+            {items.map((item, index) => (
+              <div
+                key={item.index || index}
+                {...getItemProps({item, index: item.index || index})}
+              >
+                {item.value ? item.value : item}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ),
+  )
 
   function BasicDownshift(props) {
     return <Downshift {...props} render={renderSpy} />

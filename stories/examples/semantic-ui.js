@@ -152,6 +152,7 @@ function SemanticUIAutocomplete() {
               {...getInputProps({
                 isOpen,
                 placeholder: 'Enter some info',
+                'data-test': 'semantic-ui-input',
               })}
             />
             {selectedItem ? (
@@ -159,11 +160,16 @@ function SemanticUIAutocomplete() {
                 css={{paddingTop: 4}}
                 onClick={clearSelection}
                 aria-label="clear selection"
+                data-test="semantic-ui-clear-button"
               >
                 <XIcon />
               </ControlButton>
             ) : (
-              <ControlButton {...getButtonProps()}>
+              <ControlButton
+                {...getButtonProps({
+                  'data-test': 'semantic-ui-toggle-button',
+                })}
+              >
                 <ArrowIcon isOpen={isOpen} />
               </ControlButton>
             )}
@@ -176,6 +182,7 @@ function SemanticUIAutocomplete() {
                     key={item.code}
                     {...getItemProps({
                       item,
+                      'data-test': `downshift-item-${index}`,
                       isActive: highlightedIndex === index,
                       isSelected: selectedItem === item,
                     })}
