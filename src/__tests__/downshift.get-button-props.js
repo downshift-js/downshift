@@ -33,9 +33,12 @@ test('button ignores key events it does not handle', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
+jest.useFakeTimers()
+
 test('on button blur resets the state', () => {
   const {button, renderSpy} = setup()
   button.simulate('blur')
+  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -51,6 +54,7 @@ test('on button blur does not reset the state when the mouse is down', () => {
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
   button.simulate('blur')
+  jest.runAllTimers()
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
