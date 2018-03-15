@@ -60,6 +60,7 @@ export interface DownshiftProps {
   render?: ChildrenFunction
   children?: ChildrenFunction
   id?: string
+  style?: React.CSSProperties
   environment?: Environment
   onOuterClick?: () => void
   onUserAction?: (
