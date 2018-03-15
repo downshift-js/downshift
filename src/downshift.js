@@ -583,7 +583,7 @@ class Downshift extends Component {
       ) {
         this.reset({type: Downshift.stateChangeTypes.blurButton})
       }
-    }, 1)
+    })
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ BUTTON
@@ -693,7 +693,7 @@ class Downshift extends Component {
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: Downshift.stateChangeTypes.blurInput})
       }
-    }, 1)
+    })
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
