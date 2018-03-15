@@ -689,8 +689,8 @@ class Downshift extends Component {
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
     setTimeout(() => {
       const downshiftButtonIsActive =
-        this.props.environment.document.activeElement.tagName === 'BUTTON' &&
-        this.props.environment.document.activeElement.dataset.toggle
+        this.props.environment.document.activeElement.dataset.toggle &&
+        this._rootNode.contains(this.props.environment.document.activeElement)
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: Downshift.stateChangeTypes.blurInput})
       }
