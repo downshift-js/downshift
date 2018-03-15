@@ -549,6 +549,7 @@ class Downshift extends Component {
       'aria-label': isOpen ? 'close menu' : 'open menu',
       'aria-expanded': isOpen,
       'aria-haspopup': true,
+      'data-toggle': true,
       ...eventHandlers,
       ...rest,
     }
@@ -689,7 +690,7 @@ class Downshift extends Component {
     setTimeout(() => {
       const downshiftButtonIsActive =
         this.props.environment.document.activeElement.tagName === 'BUTTON' &&
-        this._rootNode.contains(this.props.environment.document.activeElement)
+        this.props.environment.document.activeElement.dataset.toggle
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: Downshift.stateChangeTypes.blurInput})
       }

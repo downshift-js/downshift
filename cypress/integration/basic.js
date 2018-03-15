@@ -64,4 +64,14 @@ describe('Basic', () => {
       .getInStoryByTestId('basic-input')
       .should('have.value', 'Red')
   })
+
+  it('resets when tabbing from input to button', () => {
+    cy
+      .getInStoryByTestId('basic-input')
+      .type('re')
+      .getInStoryByTestId('clear-selection')
+      .focus()
+      .getInStoryByTestId('downshift-item-0')
+      .should('not.be.visible')
+  })
 })
