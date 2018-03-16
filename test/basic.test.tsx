@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Downshift, { StateChangeOptions, DownshiftInterface } from '../'
+import Downshift, {StateChangeOptions, DownshiftInterface} from '../'
 
 type Item = string
 const TypedDownShift: DownshiftInterface<Item> = Downshift
