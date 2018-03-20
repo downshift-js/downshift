@@ -211,8 +211,7 @@ class Downshift extends Component {
     /* istanbul ignore else (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      const rootNode = this._rootNode
-      scrollIntoView(node, rootNode)
+      scrollIntoView(node, this._rootNode)
     }
   }
 
@@ -690,7 +689,10 @@ class Downshift extends Component {
     setTimeout(() => {
       const downshiftButtonIsActive =
         this.props.environment.document.activeElement.dataset.toggle &&
-        this._rootNode.contains(this.props.environment.document.activeElement)
+        (this._rootNode &&
+          this._rootNode.contains(
+            this.props.environment.document.activeElement,
+          ))
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: Downshift.stateChangeTypes.blurInput})
       }
@@ -848,11 +850,16 @@ class Downshift extends Component {
       const onMouseUp = event => {
         const {document} = this.props.environment
         this.isMouseDown = false
+        const targetIsRoot = event.target === this._rootNode
+        const rootContainsTarget =
+          this._rootNode && this._rootNode.contains(event.target)
+        const targetInDownshift = targetIsRoot || rootContainsTarget
+        const targetIsDownshiftInput =
+          this.inputId && document.activeElement.id === this.inputId
         if (
-          (event.target === this._rootNode ||
-            !this._rootNode.contains(event.target)) &&
+          !targetInDownshift &&
           this.getState().isOpen &&
-          (!this.inputId || document.activeElement.id !== this.inputId)
+          !targetIsDownshiftInput
         ) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
