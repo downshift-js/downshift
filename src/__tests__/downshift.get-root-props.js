@@ -1,5 +1,5 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render} from 'react-testing-library'
 import Downshift from '../'
 
 const MyDiv = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
@@ -16,24 +16,24 @@ afterEach(() => {
 
 test('no children provided renders nothing', () => {
   const MyComponent = () => <Downshift />
-  expect(mount(<MyComponent />).html()).toBe(null)
+  expect(render(<MyComponent />).container.firstChild).toBe(null)
 })
 
 test('returning null renders nothing', () => {
   const MyComponent = () => <Downshift render={() => null} />
-  expect(mount(<MyComponent />).html()).toBe(null)
+  expect(render(<MyComponent />).container.firstChild).toBe(null)
 })
 
 test('returning a composite component without calling getRootProps results in an error', () => {
   const MyComponent = () => <Downshift render={() => <MyDiv />} />
-  expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
 test('returning a composite component and calling getRootProps without a refKey results in an error', () => {
   const MyComponent = () => (
     <Downshift render={({getRootProps}) => <MyDiv {...getRootProps()} />} />
   )
-  expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
 test('returning a DOM element and calling getRootProps with a refKey results in an error', () => {
@@ -42,7 +42,7 @@ test('returning a DOM element and calling getRootProps with a refKey results in 
       render={({getRootProps}) => <div {...getRootProps({refKey: 'blah'})} />}
     />
   )
-  expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
 test('not applying the ref prop results in an error', () => {
@@ -54,7 +54,7 @@ test('not applying the ref prop results in an error', () => {
       }}
     />
   )
-  expect(() => mount(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
 test('renders fine when rendering a composite component and applying getRootProps properly', () => {
@@ -65,7 +65,7 @@ test('renders fine when rendering a composite component and applying getRootProp
       )}
     />
   )
-  expect(() => mount(<MyComponent />)).not.toThrow()
+  expect(() => render(<MyComponent />)).not.toThrow()
 })
 
 test('returning a composite component and calling getRootProps without a refKey does not result in an error if suppressRefError is true', () => {
@@ -76,7 +76,7 @@ test('returning a composite component and calling getRootProps without a refKey 
       )}
     />
   )
-  expect(() => mount(<MyComponent />)).not.toThrow()
+  expect(() => render(<MyComponent />)).not.toThrow()
 })
 
 test('returning a DOM element and calling getRootProps with a refKey does not result in an error if suppressRefError is true', () => {
@@ -87,7 +87,7 @@ test('returning a DOM element and calling getRootProps with a refKey does not re
       )}
     />
   )
-  expect(() => mount(<MyComponent />)).not.toThrow()
+  expect(() => render(<MyComponent />)).not.toThrow()
 })
 
 test('not applying the ref prop results in an error does not result in an error if suppressRefError is true', () => {
@@ -99,7 +99,7 @@ test('not applying the ref prop results in an error does not result in an error 
       }}
     />
   )
-  expect(() => mount(<MyComponent />)).not.toThrow()
+  expect(() => render(<MyComponent />)).not.toThrow()
 })
 
 test('renders fine when rendering a composite component and applying getRootProps properly even if suppressRefError is true', () => {
@@ -112,7 +112,5 @@ test('renders fine when rendering a composite component and applying getRootProp
       )}
     />
   )
-  expect(() => mount(<MyComponent />)).not.toThrow()
+  expect(() => render(<MyComponent />)).not.toThrow()
 })
-
-/* eslint no-console:0 */

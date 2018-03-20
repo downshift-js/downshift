@@ -2,7 +2,7 @@
 // but we still want to have tested.
 
 import React from 'react'
-import {mount} from 'enzyme'
+import {render} from 'react-testing-library'
 import Downshift from '../'
 
 test('onStateChange called with changes and downshift state and helpers', () => {
@@ -124,17 +124,17 @@ test('uses given environment', () => {
       getElementById: jest.fn(() => document.createElement('div')),
     },
   }
-  const {wrapper, setHighlightedIndex} = setup({environment})
+  const {unmount, setHighlightedIndex} = setup({environment})
   setHighlightedIndex()
-  wrapper.unmount()
+  unmount()
   expect(environment.addEventListener).toHaveBeenCalledTimes(2)
   expect(environment.removeEventListener).toHaveBeenCalledTimes(2)
 })
 
 test('can override onOuterClick callback to maintain isOpen state', () => {
-  const render = () => <div />
+  const renderFn = () => <div />
   const onOuterClick = jest.fn()
-  const {openMenu} = setup({render, onOuterClick})
+  const {openMenu} = setup({render: renderFn, onOuterClick})
   openMenu()
   mouseDownAndUp(document.body)
   expect(onOuterClick).toHaveBeenCalledTimes(1)
@@ -223,12 +223,12 @@ function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
 }
 
-function setup({render = () => <div />, ...props} = {}) {
+function setup({render: renderFn = () => <div />, ...props} = {}) {
   let renderArg
   const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return render(controllerArg)
+    return renderFn(controllerArg)
   })
-  const wrapper = mount(<Downshift {...props} render={renderSpy} />)
-  return {renderSpy, wrapper, ...renderArg}
+  const utils = render(<Downshift {...props} render={renderSpy} />)
+  return {renderSpy, ...utils, ...renderArg}
 }

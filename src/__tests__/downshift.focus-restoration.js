@@ -1,35 +1,32 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render, Simulate} from 'react-testing-library'
 import Downshift from '../'
 
 test('focus restored upon item mouse click', () => {
-  const wrapper = getWrapper(['A', 'B'])
-  const input = wrapper.find(`input`).first()
-  const button = wrapper.find('button').first()
-  const item = wrapper.find('[data-test="A"]').first()
+  const {queryByTestId, container} = renderDownshift(['A', 'B'])
+  const inputNode = container.querySelector(`input`)
+  const buttonNode = container.querySelector('button')
+  const item = queryByTestId('A')
 
   expect(document.activeElement.nodeName).toEqual('BODY')
-
-  const inputNode = input.getDOMNode()
-  const buttonNode = button.getDOMNode()
 
   inputNode.focus()
   expect(document.activeElement).toBe(inputNode)
 
-  item.simulate('click')
+  Simulate.click(item)
   expect(document.activeElement).toBe(inputNode)
 
   buttonNode.focus()
   expect(document.activeElement).toBe(buttonNode)
 
-  item.simulate('click')
+  Simulate.click(item)
   expect(document.activeElement).toBe(buttonNode)
 })
 
-function getWrapper(items) {
+function renderDownshift(items) {
   const id = 'languages[0].name'
 
-  return mount(
+  return render(
     <Downshift
       id={id}
       render={({getInputProps, getItemProps, getButtonProps}) => (
@@ -38,7 +35,7 @@ function getWrapper(items) {
           <button {...getButtonProps()} />
           <div>
             {items.map(item => (
-              <div data-test={item} key={item} {...getItemProps({item})}>
+              <div data-testid={item} key={item} {...getItemProps({item})}>
                 {item}
               </div>
             ))}

@@ -1,5 +1,5 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render, Simulate} from 'react-testing-library'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
 import * as utils from '../utils'
@@ -11,25 +11,22 @@ test('handles mouse events properly to reset state', () => {
   const handleStateChange = jest.fn()
   const renderSpy = jest.fn(({getInputProps}) => (
     <div>
-      <input {...getInputProps({'data-test': 'input'})} />
+      <input {...getInputProps({'data-testid': 'input'})} />
     </div>
   ))
   const MyComponent = () => (
     <Downshift onStateChange={handleStateChange} render={renderSpy} />
   )
-  const wrapper = mount(<MyComponent />)
-  const inputWrapper = wrapper.find(sel('input'))
-  const node = wrapper.getDOMNode().parentNode
-  document.body.appendChild(node)
+  const {queryByTestId, container, unmount} = render(<MyComponent />)
+  const input = queryByTestId('input')
+  document.body.appendChild(container)
 
   // open the menu
-  inputWrapper.simulate('keydown', {key: 'ArrowDown'})
+  Simulate.keyDown(input, {key: 'ArrowDown'})
   handleStateChange.mockClear()
 
-  const inputNode = inputWrapper.getDOMNode()
-
   // mouse down and up on within the autocomplete node
-  mouseDownAndUp(inputNode)
+  mouseDownAndUp(input)
   expect(handleStateChange).toHaveBeenCalledTimes(0)
 
   // mouse down and up on outside the autocomplete node
@@ -44,7 +41,7 @@ test('handles mouse events properly to reset state', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 
   // cleans up
-  wrapper.unmount()
+  unmount()
   mouseDownAndUp(document.body)
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 })
@@ -56,25 +53,25 @@ test('props update causes the a11y status to be updated', () => {
       isOpen={false}
       render={({getInputProps, getItemProps, isOpen}) => (
         <div>
-          <input {...getInputProps({'data-test': 'input'})} />
+          <input {...getInputProps()} />
           {isOpen ? <div {...getItemProps({item: 'foo', index: 0})} /> : null}
         </div>
       )}
     />
   )
-  const wrapper = mount(<MyComponent />)
-  wrapper.setProps({isOpen: true})
+  const {container, unmount} = render(<MyComponent />)
+  render(<MyComponent isOpen={true} />, {container})
   jest.runAllTimers()
   expect(setA11yStatus).toHaveBeenCalledTimes(1)
-  wrapper.setProps({isOpen: false})
-  wrapper.unmount()
+  render(<MyComponent isOpen={false} />, {container})
+  unmount()
   jest.runAllTimers()
   expect(setA11yStatus).toHaveBeenCalledTimes(1)
 })
 
 test('inputValue initializes properly if the selectedItem is controlled and set', () => {
   const renderSpy = jest.fn(() => null)
-  mount(<Downshift selectedItem={'foo'} render={renderSpy} />)
+  render(<Downshift selectedItem={'foo'} render={renderSpy} />)
   expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',
@@ -84,9 +81,11 @@ test('inputValue initializes properly if the selectedItem is controlled and set'
 
 test('props update of selectedItem will update the inputValue state', () => {
   const renderSpy = jest.fn(() => null)
-  const wrapper = mount(<Downshift selectedItem={null} render={renderSpy} />)
+  const {container} = render(
+    <Downshift selectedItem={null} render={renderSpy} />,
+  )
   renderSpy.mockClear()
-  wrapper.setProps({selectedItem: 'foo'})
+  render(<Downshift selectedItem="foo" render={renderSpy} />, {container})
   expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',
@@ -101,16 +100,15 @@ test('item selection when selectedItem is controlled will update the inputValue 
     renderArg = controllerArg
     return <div />
   })
-  const wrapper = mount(
-    <Downshift
-      selectedItem="foo"
-      itemToString={itemToString}
-      breakingChanges={{resetInputOnSelection: false}}
-      // Explicitly set to false even if this is the default behaviour to highlight that this test
-      // will fail on v2.
-      render={renderSpy}
-    />,
-  )
+  const initialProps = {
+    selectedItem: 'foo',
+    itemToString,
+    breakingChanges: {resetInputOnSelection: false},
+    // Explicitly set to false even if this is the default behaviour to highlight that this test
+    // will fail on v2.
+    render: renderSpy,
+  }
+  const {container} = render(<Downshift {...initialProps} />)
   renderSpy.mockClear()
   itemToString.mockClear()
   const newSelectedItem = 'newfoo'
@@ -118,7 +116,9 @@ test('item selection when selectedItem is controlled will update the inputValue 
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({inputValue: newSelectedItem}),
   )
-  wrapper.setProps({selectedItem: newSelectedItem})
+  render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
+    container,
+  })
   expect(itemToString).toHaveBeenCalledTimes(2)
   expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
   expect(renderSpy).toHaveBeenLastCalledWith(
@@ -133,14 +133,13 @@ test('v2 BREAKING CHANGE item selection when selectedItem is controlled will upd
     renderArg = controllerArg
     return <div />
   })
-  const wrapper = mount(
-    <Downshift
-      selectedItem="foo"
-      itemToString={itemToString}
-      breakingChanges={{resetInputOnSelection: true}}
-      render={renderSpy}
-    />,
-  )
+  const initialProps = {
+    selectedItem: 'foo',
+    itemToString,
+    breakingChanges: {resetInputOnSelection: true},
+    render: renderSpy,
+  }
+  const {container} = render(<Downshift {...initialProps} />)
   renderSpy.mockClear()
   itemToString.mockClear()
   const newSelectedItem = 'newfoo'
@@ -148,7 +147,9 @@ test('v2 BREAKING CHANGE item selection when selectedItem is controlled will upd
   expect(renderSpy).not.toHaveBeenLastCalledWith(
     expect.objectContaining({inputValue: newSelectedItem}),
   )
-  wrapper.setProps({selectedItem: newSelectedItem})
+  render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
+    container,
+  })
   expect(itemToString).toHaveBeenCalledTimes(1)
   expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
   expect(renderSpy).toHaveBeenLastCalledWith(
@@ -163,7 +164,7 @@ test('the callback is invoked on selected item only if it is a function', () => 
     return <div />
   })
   const callbackSpy = jest.fn(x => x)
-  mount(<Downshift selectedItem="foo" render={renderSpy} />)
+  render(<Downshift selectedItem="foo" render={renderSpy} />)
 
   renderSpy.mockClear()
   callbackSpy.mockClear()
@@ -174,17 +175,22 @@ test('the callback is invoked on selected item only if it is a function', () => 
 
 test('props update of selectedItem will not update inputValue state', () => {
   const onInputValueChangeSpy = jest.fn(() => null)
-  const wrapper = mount(
-    <Downshift
-      onInputValueChange={onInputValueChangeSpy}
-      selectedItemChanged={(prevItem, item) => prevItem.id !== item.id}
-      selectedItem={{id: '123', value: 'wow'}}
-      itemToString={i => (i ? i.value : '')}
-      render={() => null}
-    />,
-  )
+  const initialProps = {
+    onInputValueChange: onInputValueChangeSpy,
+    selectedItemChanged: (prevItem, item) => prevItem.id !== item.id,
+    selectedItem: {id: '123', value: 'wow'},
+    itemToString: i => (i ? i.value : ''),
+    render: () => null,
+  }
+  const {container} = render(<Downshift {...initialProps} />)
   onInputValueChangeSpy.mockClear()
-  wrapper.setProps({selectedItem: {id: '123', value: 'not wow'}})
+  render(
+    <Downshift
+      {...initialProps}
+      selectedItem={{id: '123', value: 'not wow'}}
+    />,
+    {container},
+  )
   expect(onInputValueChangeSpy).not.toHaveBeenCalled()
 })
 
@@ -197,30 +203,27 @@ test('controlled highlighted index change scrolls the item into view', () => {
   // this functionality doesn't break.
   jest.spyOn(utils, 'scrollIntoView').mockImplementation(() => {})
   const oneHundredItems = Array.from({length: 100})
-  const div = document.createElement('div')
-  document.body.appendChild(div)
-  const {wrapper} = setup({
-    mountOptions: {attachTo: div},
+  const renderFn = jest.fn(({getItemProps}) => (
+    <div data-testid="root">
+      {oneHundredItems.map((x, i) => (
+        <div key={i} {...getItemProps({item: i})} data-testid={`item-${i}`} />
+      ))}
+    </div>
+  ))
+  const {container, updateProps, queryByTestId} = setup({
     highlightedIndex: 1,
-    render({getItemProps}) {
-      return (
-        <div>
-          {oneHundredItems.map((x, i) => (
-            <div key={i} {...getItemProps({item: i})} />
-          ))}
-        </div>
-      )
-    },
+    render: renderFn,
   })
-  wrapper.setProps({highlightedIndex: 75})
+  document.body.appendChild(container)
+  renderFn.mockClear()
+  updateProps({highlightedIndex: 75})
+  expect(renderFn).toHaveBeenCalledTimes(1)
+
   expect(utils.scrollIntoView).toHaveBeenCalledTimes(1)
-  const rootDivWrapper = wrapper.find('div').first()
+  const rootDiv = queryByTestId('root')
   expect(utils.scrollIntoView).toHaveBeenCalledWith(
-    rootDivWrapper
-      .find('div')
-      .at(76)
-      .instance(),
-    rootDivWrapper.instance(),
+    queryByTestId('item-75'),
+    rootDiv,
   )
 
   utils.scrollIntoView.mockRestore()
@@ -231,19 +234,24 @@ function mouseDownAndUp(node) {
   node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
 }
 
-function sel(id) {
-  return `[data-test="${id}"]`
-}
-
-function setup({render = () => <div />, mountOptions, ...props} = {}) {
-  let renderArg
+function setup({render: renderFn = () => <div />, ...props} = {}) {
+  // eslint-disable-next-line prefer-const
+  let container, renderArg
   const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return render(controllerArg)
+    return renderFn(controllerArg)
   })
-  const wrapper = mount(
-    <Downshift {...props} render={renderSpy} />,
-    mountOptions,
-  )
-  return {renderSpy, wrapper, ...renderArg}
+  const updateProps = newProps => {
+    return render(<Downshift render={renderSpy} {...props} {...newProps} />, {
+      container,
+    })
+  }
+  const renderUtils = updateProps()
+  container = renderUtils.container
+  return {
+    renderSpy,
+    updateProps,
+    ...renderUtils,
+    ...renderArg,
+  }
 }

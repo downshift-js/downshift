@@ -1,5 +1,5 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render} from 'react-testing-library'
 import Downshift from '../'
 
 beforeEach(() => {
@@ -12,29 +12,21 @@ afterEach(() => {
 })
 
 test('label "for" attribute is set to the input "id" attribute', () => {
-  const wrapper = mount(<BasicDownshift />)
-  const label = wrapper.find('label').first()
-  const input = wrapper.find('input').first()
-  expect(label.instance().getAttribute('for')).toBeDefined()
-  expect(label.instance().getAttribute('for')).toBe(
-    input.instance().getAttribute('id'),
-  )
+  const {label, input} = renderDownshift()
+  expect(label.getAttribute('for')).toBeDefined()
+  expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
 })
 
 test('when the input id is set, the label for is set to it', () => {
   const id = 'foo'
-  const wrapper = mount(<BasicDownshift inputProps={{id}} />)
-  const label = wrapper.find('label').first()
-  const input = wrapper.find('input').first()
-  expect(label.instance().getAttribute('for')).toBe(id)
-  expect(label.instance().getAttribute('for')).toBe(
-    input.instance().getAttribute('id'),
-  )
+  const {label, input} = renderDownshift({props: {inputProps: {id}}})
+  expect(label.getAttribute('for')).toBe(id)
+  expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
 })
 
 test('when the input id is set, and the label for is set to something else, an error is thrown', () => {
   expect(() =>
-    mount(
+    render(
       <BasicDownshift inputProps={{id: 'foo'}} labelProps={{htmlFor: 'bar'}} />,
     ),
   ).toThrowErrorMatchingSnapshot()
@@ -42,7 +34,7 @@ test('when the input id is set, and the label for is set to something else, an e
 
 test('when the label for is set, and the input id is set to something else, an error is thrown', () => {
   expect(() =>
-    mount(
+    render(
       <BasicDownshift
         getLabelPropsFirst
         inputProps={{id: 'foo'}}
@@ -51,6 +43,15 @@ test('when the label for is set, and the input id is set to something else, an e
     ),
   ).toThrowErrorMatchingSnapshot()
 })
+
+function renderDownshift({props} = {}) {
+  const utils = render(<BasicDownshift {...props} />)
+  return {
+    ...utils,
+    input: utils.queryByTestId('input'),
+    label: utils.queryByTestId('label'),
+  }
+}
 
 function BasicDownshift({
   inputProps,
@@ -71,13 +72,11 @@ function BasicDownshift({
         }
         return (
           <div>
-            <input {...inputProps} />
-            <label {...labelProps} />
+            <input data-testid="input" {...inputProps} />
+            <label data-testid="label" {...labelProps} />
           </div>
         )
       }}
     />
   )
 }
-
-/* eslint no-console:0 */
