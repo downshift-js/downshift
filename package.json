@@ -18,6 +18,8 @@
     "test:ssr": "kcd-scripts test --config other/ssr/jest.config.js --no-watch",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:ts": "tsc --noEmit -p ./tsconfig.json",
+    "test:flow": "flow",
+    "test:flow:coverage": "flow-coverage-report",
     "test:build": "jest --projects other/misc-tests other/react-native",
     "test:cypress:dev": "npm-run-all --parallel --race storybook cy:open",
     "pretest:cypress": "npm run storybook:build --silent",
@@ -82,7 +84,9 @@
     "react-native": "^0.53.0",
     "react-test-renderer": "^16.2.0",
     "serve": "^6.4.11",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "flow-bin": "^0.68.0",
+    "flow-coverage-report": "^0.5.0"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
@@ -112,5 +116,15 @@
     "url": "https://github.com/paypal/downshift/issues"
   },
   "homepage": "https://github.com/paypal/downshift#readme",
-  "dependencies": {}
+  "flow-coverage-report": {
+    "includeGlob": [
+      "test/**/*.js",
+      "test/**/*.jsx"
+    ],
+    "threshold": 100,
+    "type": [
+      "text",
+      "html"
+    ]
+  }
 }
