@@ -1,10 +1,12 @@
 import * as React from 'react'
 
-export interface DownshiftState {
+type Callback = () => void
+
+export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
   isOpen: boolean
-  selectedItem: any
+  selectedItem: Item
 }
 
 export enum StateChangeTypes {
@@ -24,77 +26,72 @@ export enum StateChangeTypes {
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
 }
 
-export interface DownshiftProps {
-  defaultSelectedItem?: any
+export interface DownshiftProps<Item> {
+  defaultSelectedItem?: Item
   defaultHighlightedIndex?: number | null
   defaultInputValue?: string
   defaultIsOpen?: boolean
-  itemToString?: (item: any) => string
-  selectedItemChanged?: (prevItem: any, item: any) => boolean
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions) => any
+  itemToString?: (item: Item) => string
+  selectedItemChanged?: (prevItem: Item, item: Item) => boolean
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   onChange?: (
-    selectedItem: any,
-    stateAndHelpers: ControllerStateAndHelpers,
+    selectedItem: Item,
+    stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   onSelect?: (
-    selectedItem: any,
-    stateAndHelpers: ControllerStateAndHelpers,
+    selectedItem: Item,
+    stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   onStateChange?: (
-    options: StateChangeOptions,
-    stateAndHelpers: ControllerStateAndHelpers,
+    options: StateChangeOptions<Item>,
+    stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   onInputValueChange?: (
     inputValue: string,
-    stateAndHelpers: ControllerStateAndHelpers,
+    stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   stateReducer?: (
-    state: DownshiftState,
-    changes: StateChangeOptions,
-  ) => StateChangeOptions
+    state: DownshiftState<Item>,
+    changes: StateChangeOptions<Item>,
+  ) => StateChangeOptions<Item>
   itemCount?: number
   highlightedIndex?: number
   inputValue?: string
   isOpen?: boolean
-  selectedItem?: any
-  render?: ChildrenFunction
-  children?: ChildrenFunction
+  selectedItem?: Item
+  render?: ChildrenFunction<Item>
+  children?: ChildrenFunction<Item>
   id?: string
   environment?: Environment
   onOuterClick?: () => void
   onUserAction?: (
-    options: StateChangeOptions,
-    stateAndHelpers: ControllerStateAndHelpers,
+    options: StateChangeOptions<Item>,
+    stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
 }
 
 export interface Environment {
-  addEventListener: (type: string, cb: Function) => void
-  removeEventListener: (type: string, cb: Function) => void
+  addEventListener: typeof window.addEventListener
+  removeEventListener: typeof window.removeEventListener
   document: Document
 }
 
-export interface Document {
-  getElementById: (id: string) => HTMLElement
-}
-
-export interface A11yStatusMessageOptions {
+export interface A11yStatusMessageOptions<Item> {
   highlightedIndex: number | null
-  highlightedValue: any
   inputValue: string
   isOpen: boolean
-  itemToString: (item: any) => string
+  itemToString: (item: Item) => string
   previousResultCount: number
   resultCount: number
-  selectedItem: any
+  selectedItem: Item
 }
 
-export interface StateChangeOptions {
+export interface StateChangeOptions<Item> {
   type: StateChangeTypes
   highlightedIndex: number
   inputValue: string
   isOpen: boolean
-  selectedItem: any
+  selectedItem: Item
 }
 
 export interface GetRootPropsOptions {
@@ -114,48 +111,54 @@ interface OptionalExtraGetItemPropsOptions {
   [key: string]: any
 }
 
-export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
+export interface GetItemPropsOptions<Item>
+  extends OptionalExtraGetItemPropsOptions {
   index?: number
-  item: any
+  item: Item
 }
 
-export interface PropGetters {
+export interface PropGetters<Item> {
   getRootProps: (options: GetRootPropsOptions) => any
   getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any
   getButtonProps: (options?: getToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getInputProps: (options?: GetInputPropsOptions) => any
-  getItemProps: (options: GetItemPropsOptions) => any
+  getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
 
-export interface Actions {
-  openMenu: (cb?: Function) => void
-  closeMenu: (cb?: Function) => void
-  toggleMenu: (cb?: Function) => void
-  selectItem: (item: any, otherStateToSet?: object, cb?: Function) => void
+export interface Actions<Item> {
+  openMenu: (cb?: Callback) => void
+  closeMenu: (cb?: Callback) => void
+  toggleMenu: (cb?: Callback) => void
+  selectItem: (item: Item, otherStateToSet?: {}, cb?: Callback) => void
   selectItemAtIndex: (
     index: number,
-    otherStateToSet?: object,
-    cb?: Function,
+    otherStateToSet?: {},
+    cb?: Callback,
   ) => void
-  selectHighlightedItem: (otherStateToSet?: object, cb?: Function) => void
+  selectHighlightedItem: (otherStateToSet?: {}, cb?: Callback) => void
   setHighlightedIndex: (
     index: number,
-    otherStateToSet?: object,
-    cb?: Function,
+    otherStateToSet?: {},
+    cb?: Callback,
   ) => void
-  clearSelection: (cb?: Function) => void
+  clearSelection: (cb?: Callback) => void
   clearItems: () => void
-  reset: (otherStateToSet?: object, cb?: Function) => void
-  itemToString: (item: any) => string
+  reset: (otherStateToSet?: {}, cb?: Callback) => void
+  itemToString: (item: Item) => string
 }
 
-export type ControllerStateAndHelpers = DownshiftState & PropGetters & Actions
+export type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
+  PropGetters<Item> &
+  Actions<Item>
 
-export type ChildrenFunction = (
-  options: ControllerStateAndHelpers,
+export type ChildrenFunction<Item> = (
+  options: ControllerStateAndHelpers<Item>,
 ) => React.ReactNode
-export type DownshiftInterface = React.ComponentClass<DownshiftProps> & {
+
+export type DownshiftInterface<Item> = React.ComponentClass<
+  DownshiftProps<Item>
+> & {
   stateChangeTypes: {
     unknown: StateChangeTypes.unknown
     mouseUp: StateChangeTypes.mouseUp
@@ -174,5 +177,5 @@ export type DownshiftInterface = React.ComponentClass<DownshiftProps> & {
   }
 }
 
-declare const Downshift: DownshiftInterface
+declare const Downshift: DownshiftInterface<any>
 export default Downshift
