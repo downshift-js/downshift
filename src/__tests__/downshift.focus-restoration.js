@@ -29,10 +29,10 @@ function renderDownshift(items) {
   return render(
     <Downshift
       id={id}
-      render={({getInputProps, getItemProps, getButtonProps}) => (
+      render={({getInputProps, getItemProps, getToggleButtonProps}) => (
         <div>
           <input {...getInputProps()} />
-          <button {...getButtonProps()} />
+          <button {...getToggleButtonProps()} />
           <div>
             {items.map(item => (
               <div data-testid={item} key={item} {...getItemProps({item})}>

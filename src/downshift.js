@@ -405,7 +405,7 @@ class Downshift extends Component {
     const {id} = this
     const {
       getRootProps,
-      getButtonProps,
+      getToggleButtonProps,
       getLabelProps,
       getInputProps,
       getItemProps,
@@ -426,7 +426,7 @@ class Downshift extends Component {
     return {
       // prop getters
       getRootProps,
-      getButtonProps,
+      getToggleButtonProps,
       getLabelProps,
       getInputProps,
       getItemProps,
@@ -524,7 +524,7 @@ class Downshift extends Component {
     },
   }
 
-  getButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
+  getToggleButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
     const {isOpen} = this.getState()
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
@@ -548,6 +548,8 @@ class Downshift extends Component {
       ...rest,
     }
   }
+  // TODO: remove this in 2.0.0 and just call it `getToggleButtonProps`
+  getButtonProps = this.getToggleButtonProps
 
   button_handleKeyDown = event => {
     if (this.buttonKeyDownHandlers[event.key]) {

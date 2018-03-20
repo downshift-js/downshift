@@ -107,7 +107,7 @@ export interface GetInputPropsOptions
 export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
 
-export interface GetButtonPropsOptions
+export interface getToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {}
 
 interface OptionalExtraGetItemPropsOptions {
@@ -121,7 +121,8 @@ export interface GetItemPropsOptions extends OptionalExtraGetItemPropsOptions {
 
 export interface PropGetters {
   getRootProps: (options: GetRootPropsOptions) => any
-  getButtonProps: (options?: GetButtonPropsOptions) => any
+  getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any
+  getButtonProps: (options?: getToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions) => any

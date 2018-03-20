@@ -26,7 +26,7 @@ export default class App extends React.Component<Props, State> {
         return (
             <Downshift onChange={this.onChange}>
                 {({
-                    getButtonProps,
+                    getToggleButtonProps,
                     getInputProps,
                     getItemProps,
                     isOpen,
@@ -41,7 +41,7 @@ export default class App extends React.Component<Props, State> {
                             })}
                         />
                         <button
-                            {...getButtonProps()}
+                            {...getToggleButtonProps()}
                         />
                         {isOpen
                             ? <div style={{ border: '1px solid #ccc' }}>

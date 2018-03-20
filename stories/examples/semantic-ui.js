@@ -142,7 +142,7 @@ function SemanticUIAutocomplete() {
         getRootProps,
         inputValue,
         selectedItem,
-        getButtonProps,
+        getToggleButtonProps,
         getInputProps,
         getItemProps,
       }) => (
@@ -166,7 +166,7 @@ function SemanticUIAutocomplete() {
               </ControlButton>
             ) : (
               <ControlButton
-                {...getButtonProps({
+                {...getToggleButtonProps({
                   'data-test': 'semantic-ui-toggle-button',
                 })}
               >

@@ -329,10 +329,10 @@ function setupDownshiftWithState() {
 function setup({items = colors} = {}) {
   /* eslint-disable react/jsx-closing-bracket-location */
   const renderSpy = jest.fn(
-    ({isOpen, getInputProps, getButtonProps, getItemProps}) => (
+    ({isOpen, getInputProps, getToggleButtonProps, getItemProps}) => (
       <div>
         <input {...getInputProps({'data-testid': 'input'})} />
-        <button {...getButtonProps({'data-testid': 'button'})} />
+        <button {...getToggleButtonProps({'data-testid': 'button'})} />
         {isOpen && (
           <div>
             {items.map((item, index) => (

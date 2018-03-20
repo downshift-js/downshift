@@ -503,7 +503,7 @@ overridden (or overriding the props returned). For example:
 
 | property         | type              | description                                                                                 |
 | ---------------- | ----------------- | ------------------------------------------------------------------------------------------- |
-| `getButtonProps` | `function({})`    | returns the props you should apply to any menu toggle button element you render.            |
+| `getToggleButtonProps` | `function({})`    | returns the props you should apply to any menu toggle button element you render.            |
 | `getInputProps`  | `function({})`    | returns the props you should apply to the `input` element that you render.                  |
 | `getItemProps`   | `function({})`    | returns the props you should apply to any menu item elements you render.                    |
 | `getLabelProps`  | `function({})`    | returns the props you should apply to the `label` element that you render.                  |
@@ -610,7 +610,7 @@ Optional properties:
   handlers will be omitted. Items will not be highlighted when hovered,
   and items will not be selected when clicked.
 
-#### `getButtonProps`
+#### `getToggleButtonProps`
 
 Call this and apply the returned props to a `button`. It allows you to toggle
 the `Menu` component. You can definitely build something like this yourself (all
@@ -627,7 +627,7 @@ Optional properties:
 ```jsx
 const myButton = (
   <button
-    {...getButtonProps({
+    {...getToggleButtonProps({
       'aria-label': translateWithId(isOpen ? 'close.menu' : 'open.menu'),
     })}
   />

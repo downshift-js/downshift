@@ -37,13 +37,13 @@ const Dropdown = ({items, selectedItem, onChange}) => (
     onChange={onChange}
     render={({
       isOpen,
-      getButtonProps,
+      getToggleButtonProps,
       getItemProps,
       highlightedIndex,
       selectedItem: dsSelectedItem,
     }) => (
       <div>
-        <button {...getButtonProps()}>
+        <button {...getToggleButtonProps()}>
           {selectedItem ? selectedItem : 'Select an item ...'}
         </button>
         <div style={{position: 'relative'}}>

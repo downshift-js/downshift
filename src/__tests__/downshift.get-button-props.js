@@ -58,7 +58,7 @@ test('on button blur does not reset the state when the mouse is down', () => {
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
-test('getButtonProps returns all given props', () => {
+test('getToggleButtonProps returns all given props', () => {
   const buttonProps = {'data-foo': 'bar'}
   const Button = jest.fn(props => <button {...props} />)
   setup({buttonProps, Button})
@@ -74,15 +74,15 @@ test('getButtonProps returns all given props', () => {
 // button to ensure that a disabled button cannot be clicked, however this is only a problem in IE11
 // so we have to get into the implementation details a little bit (unless we want to run these tests
 // in IE11... no thank you 🙅)
-test(`getButtonProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
-  const {getButtonProps} = setup()
-  const props = getButtonProps({disabled: true})
+test(`getToggleButtonProps doesn't include event handlers when disabled is passed (for IE11 support)`, () => {
+  const {getToggleButtonProps} = setup()
+  const props = getToggleButtonProps({disabled: true})
   const entry = Object.entries(props).find(
     ([_key, value]) => typeof value === 'function',
   )
   if (entry) {
     throw new Error(
-      `getButtonProps should not have any props that are callbacks. It has ${
+      `getToggleButtonProps should not have any props that are callbacks. It has ${
         entry[0]
       }.`,
     )
@@ -95,7 +95,7 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
     renderArg = controllerArg
     return (
       <div>
-        <Button {...controllerArg.getButtonProps(buttonProps)} />
+        <Button {...controllerArg.getToggleButtonProps(buttonProps)} />
       </div>
     )
   })
