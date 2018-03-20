@@ -196,7 +196,7 @@ class Downshift extends Component {
   setItemCount = count => (this.itemCount = count)
   unsetItemCount = () => (this.itemCount = null)
 
-  getItemNodeFromIndex = index => {
+  getItemNodeFromIndex(index) {
     return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
@@ -208,7 +208,7 @@ class Downshift extends Component {
     this.internalSetState({highlightedIndex, ...otherStateToSet})
   }
 
-  scrollHighlightedItemIntoView = () => {
+  scrollHighlightedItemIntoView() {
     /* istanbul ignore else (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
@@ -216,24 +216,16 @@ class Downshift extends Component {
     }
   }
 
-  openAndHighlightDefaultIndex = otherStateToSet => {
-    this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
-  }
-
-  highlightDefaultIndex = (otherStateToSet = {}) => {
-    this.setHighlightedIndex(undefined, otherStateToSet)
-  }
-
-  moveHighlightedIndex = (amount, otherStateToSet) => {
+  moveHighlightedIndex(amount, otherStateToSet) {
     if (this.getState().isOpen) {
       this.changeHighlightedIndex(amount, otherStateToSet)
     } else {
-      this.openAndHighlightDefaultIndex(otherStateToSet)
+      this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
     }
   }
 
   // eslint-disable-next-line complexity
-  changeHighlightedIndex = (moveAmount, otherStateToSet) => {
+  changeHighlightedIndex(moveAmount, otherStateToSet) {
     const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0) {
       return
@@ -305,7 +297,7 @@ class Downshift extends Component {
   //
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
-  internalSetState(stateToSet, cb) {
+  internalSetState = (stateToSet, cb) => {
     let isItemSelected, onChangeArg
 
     const onStateChangeArg = {}
@@ -429,6 +421,7 @@ class Downshift extends Component {
       reset,
       setItemCount,
       unsetItemCount,
+      internalSetState: setState,
     } = this
     return {
       // prop getters
@@ -451,6 +444,7 @@ class Downshift extends Component {
       clearItems,
       setItemCount,
       unsetItemCount,
+      setState,
 
       //props
       itemToString,
@@ -794,7 +788,8 @@ class Downshift extends Component {
       () => {
         const {isOpen} = this.getState()
         if (isOpen) {
-          this.highlightDefaultIndex()
+          // highlight default index
+          this.setHighlightedIndex(undefined, otherStateToSet)
         }
         cbToCb(cb)()
       },
