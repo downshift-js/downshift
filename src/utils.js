@@ -108,6 +108,15 @@ function scrollIntoView(node, rootNode) {
 }
 
 /**
+ * @param {HTMLElement} parent the parent node
+ * @param {HTMLElement} child the child node
+ * @return {Boolean} whether the parent is the child or the child is in the parent
+ */
+function isOrContainsNode(parent, child) {
+  return parent === child || parent.contains(child)
+}
+
+/**
  * Simple debounce implementation. Will call the given
  * function once after the time given has passed since
  * it was last called.
@@ -287,6 +296,7 @@ export {
   unwrapArray,
   isDOMElement,
   getElementProps,
+  isOrContainsNode,
   noop,
   requiredProp,
   setIdCounter,
