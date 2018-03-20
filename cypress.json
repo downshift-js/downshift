@@ -1,3 +1,4 @@
 {
-  "baseUrl": "http://localhost:6006"
+  "baseUrl": "http://localhost:6006",
+  "videoRecording": false
 }
