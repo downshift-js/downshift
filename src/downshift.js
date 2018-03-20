@@ -14,6 +14,7 @@ import {
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
+  isOrContainsNode,
   getElementProps,
   noop,
   requiredProp,
@@ -850,16 +851,15 @@ class Downshift extends Component {
       const onMouseUp = event => {
         const {document} = this.props.environment
         this.isMouseDown = false
-        const targetIsRoot = event.target === this._rootNode
-        const rootContainsTarget =
-          this._rootNode && this._rootNode.contains(event.target)
-        const targetInDownshift = targetIsRoot || rootContainsTarget
-        const targetIsDownshiftInput =
-          this.inputId && document.activeElement.id === this.inputId
+        const targetInDownshift =
+          this._rootNode && isOrContainsNode(this._rootNode, event.target)
+        const activeElementInDownshift =
+          this._rootNode &&
+          isOrContainsNode(this._rootNode, document.activeElement)
         if (
           !targetInDownshift &&
-          this.getState().isOpen &&
-          !targetIsDownshiftInput
+          !activeElementInDownshift &&
+          this.getState().isOpen
         ) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
