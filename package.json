@@ -67,7 +67,6 @@
     "cross-env": "^5.1.4",
     "cypress": "^2.1.0",
     "eslint-plugin-cypress": "^2.0.1",
-    "jest-serializer-html": "^5.0.0",
     "kcd-scripts": "^0.36.1",
     "npm-run-all": "^4.1.2",
     "preact": "^8.2.6",
