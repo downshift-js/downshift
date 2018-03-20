@@ -29,7 +29,7 @@ export default class App extends React.Component<Props, State> {
     return (
       <TypedDownShift onChange={this.onChange}>
         {({
-          getButtonProps,
+          getToggleButtonProps,
           getInputProps,
           getItemProps,
           isOpen,
@@ -43,7 +43,7 @@ export default class App extends React.Component<Props, State> {
                 placeholder: 'Favorite color ?',
               })}
             />
-            <button {...getButtonProps()} />
+            <button {...getToggleButtonProps()} />
             {isOpen ? (
               <div style={{border: '1px solid #ccc'}}>
                 {items
