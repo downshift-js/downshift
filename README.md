@@ -782,12 +782,12 @@ Examples exist on [codesandbox.io][examples]:
 
 If you would like to add an example, follow these steps:
 
-1.  Fork [this codesandbox](http://kcd.im/ds-example)
-2.  Make sure your version (under dependencies) is the latest available version.
-3.  Update the title and description
-4.  Update the code for your example (add some form of documentation to explain
-    what it is)
-5.  Add the tag: `downshift:example`
+1. Fork [this codesandbox](http://kcd.im/ds-example)
+2. Make sure your version (under dependencies) is the latest available version.
+3. Update the title and description
+4. Update the code for your example (add some form of documentation to explain
+   what it is)
+5. Add the tag: `downshift:example`
 
 You'll find other examples in the `stories/examples` folder of the repo. And
 you'll find
@@ -853,8 +853,8 @@ const ui = (
 To opt-into a breaking change, simply provide the key and value in the
 `breakingChanges` object prop for each breaking change mentioned below:
 
-1.  `resetInputOnSelection` - Enable with the value of `true`. For more
-    information, see [#243](https://github.com/paypal/downshift/issues/243)
+1. `resetInputOnSelection` - Enable with the value of `true`. For more
+   information, see [#243](https://github.com/paypal/downshift/issues/243)
 
 When a new major version is released, then the code to support the old
 functionality will be removed and the breaking change version will be the
@@ -938,7 +938,7 @@ MIT
 [chat]: https://gitter.im/paypal/downshift
 [chat-badge]: https://img.shields.io/gitter/room/paypal/downshift.svg?style=flat-square
 [coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
-[coc]: https://github.com/paypal/downshift/blob/master/other/CODE_OF_CONDUCT.md
+[coc]: https://github.com/paypal/downshift/blob/master/CODE_OF_CONDUCT.md
 [react-badge]: https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
 [react]: https://facebook.github.io/react/
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
