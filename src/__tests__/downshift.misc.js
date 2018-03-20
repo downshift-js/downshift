@@ -116,6 +116,16 @@ test('can use children instead of render prop', () => {
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
+test('can use setState for ultimate power', () => {
+  const {renderSpy, setState} = setup()
+  renderSpy.mockClear()
+  setState({isOpen: true, selectedItem: 'hi'})
+  expect(renderSpy).toHaveBeenCalledTimes(1)
+  expect(renderSpy).toHaveBeenCalledWith(
+    expect.objectContaining({isOpen: true, selectedItem: 'hi'}),
+  )
+})
+
 describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
   const originalEnv = process.env.NODE_ENV
 
