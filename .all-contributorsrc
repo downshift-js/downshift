@@ -682,6 +682,15 @@
         "doc",
         "review"
       ]
+    },
+    {
+      "login": "mmmurray",
+      "name": "Mark Murray",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/14275790?v=4",
+      "profile": "https://github.com/mmmurray",
+      "contributions": [
+        "infra"
+      ]
     }
   ]
 }

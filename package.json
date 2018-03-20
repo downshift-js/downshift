@@ -57,7 +57,7 @@
   "license": "MIT",
   "peerDependencies": {
     "prop-types": ">=15",
-    "react": ">=15"
+    "react": ">=0.14.x"
   },
   "devDependencies": {
     "@storybook/react": "^3.3.14",
