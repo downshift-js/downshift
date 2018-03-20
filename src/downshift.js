@@ -10,7 +10,6 @@ import {
   debounce,
   scrollIntoView,
   generateId,
-  firstDefined,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
@@ -58,6 +57,10 @@ class Downshift extends Component {
     isOpen: PropTypes.bool,
     inputValue: PropTypes.string,
     highlightedIndex: PropTypes.number,
+    labelId: PropTypes.string,
+    inputId: PropTypes.string,
+    menuId: PropTypes.string,
+    getItemId: PropTypes.func,
     breakingChanges: PropTypes.shape({
       resetInputOnSelection: PropTypes.bool,
     }),
@@ -129,8 +132,13 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
-    this.id = this.props.id || `downshift-${generateId()}`
   }
+
+  id = this.props.id || `downshift-${generateId()}`
+  menuId = this.props.menuId || `${this.id}-menu`
+  labelId = this.props.labelId || `${this.id}-label`
+  inputId = this.props.inputId || `${this.id}-input`
+  getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
 
   input = null
   items = []
@@ -408,6 +416,7 @@ class Downshift extends Component {
       getButtonProps,
       getToggleButtonProps,
       getLabelProps,
+      getMenuProps,
       getInputProps,
       getItemProps,
       openMenu,
@@ -430,6 +439,7 @@ class Downshift extends Component {
       getButtonProps,
       getToggleButtonProps,
       getLabelProps,
+      getMenuProps,
       getInputProps,
       getItemProps,
 
@@ -477,6 +487,11 @@ class Downshift extends Component {
     this.getRootProps.suppressRefError = suppressRefError
     return {
       [refKey]: this.rootRef,
+      role: 'combobox',
+      'aria-expanded': this.getState().isOpen,
+      'aria-haspopup': 'listbox',
+      'aria-owns': this.menuId,
+      'aria-labelledby': this.labelId,
       ...rest,
     }
   }
@@ -589,26 +604,8 @@ class Downshift extends Component {
 
   /////////////////////////////// LABEL
 
-  getLabelProps = (props = {}) => {
-    this.getLabelProps.called = true
-    if (
-      this.getInputProps.called &&
-      props.htmlFor &&
-      props.htmlFor !== this.inputId
-    ) {
-      throw new Error(
-        `downshift: You provided the htmlFor of "${
-          props.htmlFor
-        }" for your label, but the id of your input is "${
-          this.inputId
-        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
-      )
-    }
-    this.inputId = firstDefined(this.inputId, props.htmlFor, `${this.id}-input`)
-    return {
-      ...props,
-      htmlFor: this.inputId,
-    }
+  getLabelProps = props => {
+    return {htmlFor: this.inputId, id: this.labelId, ...props}
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ LABEL
@@ -616,17 +613,6 @@ class Downshift extends Component {
   /////////////////////////////// INPUT
 
   getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
-    this.getInputProps.called = true
-    if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
-      throw new Error(
-        `downshift: You provided the id of "${
-          rest.id
-        }" for your input, but the htmlFor of your label is "${
-          this.inputId
-        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
-      )
-    }
-    this.inputId = firstDefined(this.inputId, rest.id, `${this.id}-input`)
     let onChangeKey
     /* istanbul ignore next (preact) */
     if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
@@ -652,18 +638,20 @@ class Downshift extends Component {
           onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
         }
     return {
-      role: 'combobox',
+      role: 'listbox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
+      'aria-controls': this.menuId,
+      'aria-labelledby': this.labelId,
       autoComplete: 'off',
       value: inputValue,
+      id: this.inputId,
       ...eventHandlers,
       ...rest,
-      id: this.inputId,
     }
   }
 
@@ -700,11 +688,18 @@ class Downshift extends Component {
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
-  /////////////////////////////// ITEM
-  getItemId(index) {
-    return `${this.id}-item-${index}`
+  /////////////////////////////// MENU
+  getMenuProps = props => {
+    return {
+      role: 'listbox',
+      'aria-labelledby': this.labelId,
+      id: this.menuId,
+      ...props,
+    }
   }
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
 
+  /////////////////////////////// ITEM
   getItemProps = ({
     onMouseMove,
     onMouseDown,
@@ -760,6 +755,8 @@ class Downshift extends Component {
 
     return {
       id: this.getItemId(index),
+      role: 'option',
+      'aria-selected': this.getState().selectedItem === item,
       ...eventHandlers,
       ...rest,
     }
