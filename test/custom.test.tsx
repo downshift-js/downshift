@@ -1,26 +1,30 @@
 import * as React from 'react'
 import Downshift, {ControllerStateAndHelpers} from '../'
 
+type Item = string
+
 interface Props {}
 
 interface State {
-  items: Array<any>
+  items: Array<Item>
 }
 
-const CustomList = ({isOpen, children}) => (
-  <div className={isOpen ? 'open' : ''}>{children}</div>
-)
+const CustomList: React.StatelessComponent<{isOpen: boolean}> = ({
+  isOpen,
+  children,
+}) => <div className={isOpen ? 'open' : ''}>{children}</div>
 
-const CustomListItem = ({isSelected, children}) => (
-  <div className={isSelected ? 'selected' : ''}>{children}</div>
-)
+const CustomListItem: React.StatelessComponent<{isSelected: boolean}> = ({
+  isSelected,
+  children,
+}) => <div className={isSelected ? 'selected' : ''}>{children}</div>
 
 export default class App extends React.Component<Props, State> {
   state: State = {
     items: ['apple', 'orange', 'carrot'],
   }
 
-  onChange = (selectedItem: any) => {
+  onChange = (selectedItem: Item) => {
     console.log('selectedItem', selectedItem)
   }
 
@@ -35,7 +39,7 @@ export default class App extends React.Component<Props, State> {
           getItemProps,
           selectedItem,
           isOpen,
-        }: ControllerStateAndHelpers) => (
+        }: ControllerStateAndHelpers<Item>) => (
           <div style={{position: 'relative'}}>
             <div {...getToggleButtonProps()}>{selectedItem}</div>
             <CustomList isOpen={isOpen}>

@@ -177,15 +177,6 @@ function resetIdCounter() {
   idCounter = 0
 }
 
-/**
- * Returns the first argument that is not undefined
- * @param {...*} args the arguments
- * @return {*} the defined value
- */
-function firstDefined(...args) {
-  return args.find(a => typeof a !== 'undefined')
-}
-
 // eslint-disable-next-line complexity
 function getA11yStatusMessage({
   isOpen,
@@ -305,7 +296,6 @@ export {
   scrollIntoView,
   findParent,
   generateId,
-  firstDefined,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,

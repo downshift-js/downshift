@@ -1,13 +1,18 @@
-import * as React from 'react'
-import Downshift, {StateChangeOptions, DownshiftInterface} from '../'
+// @flow
+import React from 'react'
+import Downshift, {
+  type StateChangeOptions,
+  type ControllerStateAndHelpers,
+  type DownshiftType,
+} from 'downshift' // eslint-disable-line import/no-unresolved
 
 type Item = string
-const TypedDownShift: DownshiftInterface<Item> = Downshift
+const DownshiftTyped: DownshiftType<Item> = Downshift
 
-interface Props {}
+type Props = {}
 
-interface State {
-  items: Array<Item>
+type State = {
+  items: Array<Item>,
 }
 
 export default class App extends React.Component<Props, State> {
@@ -16,43 +21,43 @@ export default class App extends React.Component<Props, State> {
   }
 
   onChange = (selectedItem: Item) => {
-    console.log('selectedItem', selectedItem)
+    selectedItem
   }
 
   onUserAction = (changes: StateChangeOptions<Item>) => {
-    console.log('type', changes.type)
+    changes.type
   }
 
   render() {
     const items = this.state.items
 
     return (
-      <TypedDownShift onChange={this.onChange}>
+      <DownshiftTyped onChange={this.onChange}>
         {({
-          getToggleButtonProps,
+          getButtonProps,
           getInputProps,
           getItemProps,
           isOpen,
           inputValue,
           selectedItem,
           highlightedIndex,
-        }) => (
+        }: ControllerStateAndHelpers<Item>) => (
           <div>
             <input
               {...getInputProps({
                 placeholder: 'Favorite color ?',
               })}
             />
-            <button {...getToggleButtonProps()} />
+            <button {...getButtonProps()} />
             {isOpen ? (
               <div style={{border: '1px solid #ccc'}}>
                 {items
                   .filter(
                     i =>
-                      !inputValue ||
+                      inputValue === null ||
                       i.toLowerCase().includes(inputValue.toLowerCase()),
                   )
-                  .map((item, index: number) => (
+                  .map((item: Item, index: number) => (
                     <div
                       {...getItemProps({item, index})}
                       key={item}
@@ -69,7 +74,7 @@ export default class App extends React.Component<Props, State> {
             ) : null}
           </div>
         )}
-      </TypedDownShift>
+      </DownshiftTyped>
     )
   }
 }
