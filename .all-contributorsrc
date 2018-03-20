@@ -701,6 +701,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "stereobooster",
+      "name": "stereobooster",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/179534?v=4",
+      "profile": "https://github.com/stereobooster",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ]
 }

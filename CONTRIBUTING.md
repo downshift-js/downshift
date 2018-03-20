@@ -7,9 +7,9 @@ series [How to Contribute to an Open Source Project on GitHub][egghead]
 
 ## Project setup
 
-1. Fork and clone the repo
-2. `npm run setup` to setup and validate your clone of the project
-3. Create a branch for your PR
+1.  Fork and clone the repo
+2.  `npm run setup` to setup and validate your clone of the project
+3.  Create a branch for your PR
 
 > Tip: Keep your `master` branch pointing at the original repository and make
 > pull requests from branches on your fork. To do this, run:
