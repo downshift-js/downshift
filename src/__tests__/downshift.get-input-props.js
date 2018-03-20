@@ -1,6 +1,8 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render, Simulate} from 'react-testing-library'
 import Downshift from '../'
+
+jest.useFakeTimers()
 
 const colors = [
   'Red',
@@ -15,119 +17,109 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
+  const {arrowUpInput, arrowDownInput, renderSpy} = renderDownshift()
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true, highlightedIndex: null}),
   )
 
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
 
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 1}),
   )
 
   // <Shift>↓
-  input.simulate('keydown', {key: 'ArrowDown', shiftKey: true})
+  arrowDownInput({shiftKey: true})
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 6}),
   )
 
   // ↑
-  input.simulate('keydown', {key: 'ArrowUp'})
+  arrowUpInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 5}),
   )
 
   // <Shift>↑
-  input.simulate('keydown', {key: 'ArrowUp', shiftKey: true})
+  arrowUpInput({shiftKey: true})
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
 
   // ↑
-  input.simulate('keydown', {key: 'ArrowUp'})
+  arrowUpInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: colors.length - 1}),
   )
 
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
 })
 
 test('arrow key down events do nothing when no items are rendered', () => {
-  const {Component, renderSpy} = setup({items: []})
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
+  const {arrowDownInput, renderSpy} = renderDownshift({items: []})
   // ↓↓
-  input.simulate('keydown', {key: 'ArrowDown'})
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
+  arrowDownInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: null}),
   )
 })
 
 test('arrow up on a closed menu opens the menu', () => {
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
+  const {arrowUpInput, renderSpy} = renderDownshift()
   // ↑
-  input.simulate('keydown', {key: 'ArrowUp'})
+  arrowUpInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true, highlightedIndex: null}),
   )
 
   // ↑
-  input.simulate('keydown', {key: 'ArrowUp'})
+  arrowUpInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: colors.length - 1}),
   )
 })
 
 test('enter on an input with a closed menu does nothing', () => {
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
-  // ENTER
+  const {enterOnInput, renderSpy} = renderDownshift()
   renderSpy.mockClear()
-  input.simulate('keydown', {key: 'Enter'})
+  // ENTER
+  enterOnInput()
   // does not even rerender
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('enter on an input with an open menu does nothing without a highlightedIndex', () => {
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component isOpen={true} />)
-  const input = wrapper.find(sel('input'))
-  // ENTER
+  const {enterOnInput, renderSpy} = renderDownshift({props: {isOpen: true}})
   renderSpy.mockClear()
-  input.simulate('keydown', {key: 'Enter'})
+  // ENTER
+  enterOnInput()
   // does not even rerender
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('enter on an input with an open menu and a highlightedIndex selects that item', () => {
-  const {Component, renderSpy} = setup()
   const onChange = jest.fn()
   const isOpen = true
-  const wrapper = mount(<Component isOpen={isOpen} onChange={onChange} />)
-  const input = wrapper.find(sel('input'))
+  const {arrowDownInput, enterOnInput, renderSpy} = renderDownshift({
+    props: {isOpen, onChange},
+  })
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   // ENTER
-  input.simulate('keydown', {key: 'Enter'})
+  enterOnInput()
   expect(onChange).toHaveBeenCalledTimes(1)
   const newState = expect.objectContaining({
     selectedItem: colors[0],
@@ -140,12 +132,10 @@ test('enter on an input with an open menu and a highlightedIndex selects that it
 })
 
 test('escape on an input without a selection should reset downshift and close the menu', () => {
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
-  input.simulate('change', {target: {value: 'p'}})
-  input.simulate('keydown', {key: 'Escape'})
-  expect(input.instance().value).toBe('')
+  const {changeInputValue, input, escapeOnInput, renderSpy} = renderDownshift()
+  changeInputValue('p')
+  escapeOnInput()
+  expect(input.value).toBe('')
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -155,8 +145,8 @@ test('escape on an input without a selection should reset downshift and close th
 })
 
 test('escape on an input with a selection should reset downshift and close the menu', () => {
-  const {input, renderSpy, items} = setupDownshiftWithState()
-  input.simulate('keydown', {key: 'Escape'})
+  const {escapeOnInput, renderSpy, items} = setupDownshiftWithState()
+  escapeOnInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -166,11 +156,9 @@ test('escape on an input with a selection should reset downshift and close the m
   )
 })
 
-jest.useFakeTimers()
-
 test('on input blur resets the state', () => {
-  const {input, renderSpy, items} = setupDownshiftWithState()
-  input.simulate('blur')
+  const {blurOnInput, renderSpy, items} = setupDownshiftWithState()
+  blurOnInput()
   jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
@@ -182,45 +170,42 @@ test('on input blur resets the state', () => {
 })
 
 test('on input blur does not reset the state when the mouse is down', () => {
-  const {input, renderSpy} = setupDownshiftWithState()
+  const {blurOnInput, renderSpy} = setupDownshiftWithState()
   // mousedown somwhere
   document.body.dispatchEvent(
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
-  input.simulate('blur')
+  blurOnInput()
   jest.runAllTimers()
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('on input blur does not reset the state when new focus is on downshift button', () => {
-  const {input, renderSpy, button} = setupDownshiftWithState()
-  const buttonNode = button.getDOMNode()
-  input.simulate('blur')
-  buttonNode.focus()
+  const {blurOnInput, renderSpy, button} = setupDownshiftWithState()
+  blurOnInput()
+  button.focus()
   jest.runAllTimers()
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('keydown of things that are not handled do nothing', () => {
   const modifiers = [undefined, 'Shift']
-  const {Component, renderSpy} = setup()
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
+  const {input, renderSpy} = renderDownshift()
   renderSpy.mockClear()
   modifiers.forEach(key => {
-    input.simulate('keydown', {key})
+    Simulate.keyDown(input, {key})
   })
   // does not even rerender
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
 test('highlightedIndex uses the given itemCount prop to determine the last index', () => {
-  const {Component, renderSpy} = setup()
   const itemCount = 200
-  const wrapper = mount(<Component itemCount={itemCount} isOpen={true} />)
-  const input = wrapper.find(sel('input'))
+  const {arrowUpInput, renderSpy} = renderDownshift({
+    props: {itemCount, isOpen: true},
+  })
   // ↑
-  input.simulate('keydown', {key: 'ArrowUp'})
+  arrowUpInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: itemCount - 1}),
   )
@@ -232,16 +217,16 @@ test('itemCount can be set and unset asynchronously', () => {
     downshift = d
     return (
       <div>
-        <input {...d.getInputProps({'data-test': 'input'})} />
+        <input {...d.getInputProps({'data-testid': 'input'})} />
       </div>
     )
   })
-  const wrapper = mount(
+  const {queryByTestId} = render(
     <Downshift isOpen={true} render={renderSpy} itemCount={10} />,
   )
-  const input = wrapper.find(sel('input'))
-  const up = () => input.simulate('keydown', {key: 'ArrowUp'})
-  const down = () => input.simulate('keydown', {key: 'ArrowDown'})
+  const input = queryByTestId('input')
+  const up = () => Simulate.keyDown(input, {key: 'ArrowUp'})
+  const down = () => Simulate.keyDown(input, {key: 'ArrowDown'})
 
   downshift.setItemCount(100)
   up()
@@ -277,20 +262,20 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
     {value: 'bird', index: 3},
     {value: 'cheetah', index: 4},
   ]
-  const {Component, renderSpy} = setup({items})
-  const wrapper = mount(
-    <Component
-      itemToString={i => (i ? i.value : '')}
-      defaultHighlightedIndex={1}
-      isOpen={true}
-    />,
-  )
-  const input = wrapper.find(sel('input'))
+  const {arrowDownInput, enterOnInput, renderSpy} = renderDownshift({
+    items,
+    props: {
+      itemToString: i => (i ? i.value : ''),
+      defaultHighlightedIndex: 1,
+      isOpen: true,
+    },
+  })
+
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   // ENTER
   renderSpy.mockClear()
-  input.simulate('keydown', {key: 'Enter'})
+  enterOnInput()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       selectedItem: items[1],
@@ -319,22 +304,26 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
 
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
-  const {Component, renderSpy} = setup({items})
-  const wrapper = mount(<Component />)
-  const input = wrapper.find(sel('input'))
-  const button = wrapper.find(sel('button'))
-  input.simulate('keydown')
-  input.simulate('change', {target: {value: 'a'}})
+  const utils = renderDownshift({items})
+  const {
+    input,
+    changeInputValue,
+    arrowDownInput,
+    enterOnInput,
+    renderSpy,
+  } = utils
+  // input.simulate('keydown')
+  changeInputValue('a')
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
+  arrowDownInput()
   // ENTER to select the first one
-  input.simulate('keydown', {key: 'Enter'})
-  expect(input.instance().value).toBe(items[0])
+  enterOnInput()
+  expect(input.value).toBe(items[0])
   // ↓
-  input.simulate('keydown', {key: 'ArrowDown'})
-  input.simulate('change', {target: {value: 'bu'}})
+  arrowDownInput()
+  changeInputValue('bu')
   renderSpy.mockClear()
-  return {renderSpy, input, button, items, wrapper}
+  return {renderSpy, items, ...utils}
 }
 
 function setup({items = colors} = {}) {
@@ -342,8 +331,8 @@ function setup({items = colors} = {}) {
   const renderSpy = jest.fn(
     ({isOpen, getInputProps, getButtonProps, getItemProps}) => (
       <div>
-        <input {...getInputProps({'data-test': 'input'})} />
-        <button {...getButtonProps({'data-test': 'button'})} />
+        <input {...getInputProps({'data-testid': 'input'})} />
+        <button {...getButtonProps({'data-testid': 'button'})} />
         {isOpen && (
           <div>
             {items.map((item, index) => (
@@ -369,9 +358,33 @@ function setup({items = colors} = {}) {
   }
 }
 
+function renderDownshift({items, props} = {}) {
+  const {Component, renderSpy} = setup({items})
+  const utils = render(<Component {...props} />)
+  const input = utils.queryByTestId('input')
+  return {
+    Component,
+    renderSpy,
+    ...utils,
+    input,
+    button: utils.queryByTestId('button'),
+    arrowDownInput: extraEventProps =>
+      Simulate.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
+    arrowUpInput: extraEventProps =>
+      Simulate.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+    escapeOnInput: extraEventProps =>
+      Simulate.keyDown(input, {key: 'Escape', ...extraEventProps}),
+    enterOnInput: extraEventProps =>
+      Simulate.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    changeInputValue: (value, extraEventProps) =>
+      Simulate.change(input, {target: {value}, ...extraEventProps}),
+    blurOnInput: extraEventProps => Simulate.blur(input, extraEventProps),
+  }
+}
+
 function setupWithDownshiftController() {
   let renderArg
-  mount(
+  render(
     <Downshift
       render={controllerArg => {
         renderArg = controllerArg
@@ -380,8 +393,4 @@ function setupWithDownshiftController() {
     />,
   )
   return renderArg
-}
-
-function sel(id) {
-  return `[data-test="${id}"]`
 }

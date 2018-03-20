@@ -216,7 +216,7 @@ class Downshift extends Component {
     }
   }
 
-  openAndHighlightDefaultIndex = (otherStateToSet = {}) => {
+  openAndHighlightDefaultIndex = otherStateToSet => {
     this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
   }
 

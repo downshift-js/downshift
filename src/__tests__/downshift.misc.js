@@ -2,7 +2,8 @@
 // but we still want to have tested.
 
 import React from 'react'
-import {mount, render as enzymeRender} from 'enzyme'
+import ReactDOM from 'react-dom'
+import {render} from 'react-testing-library'
 import Downshift from '../'
 
 test('closeMenu closes the menu', () => {
@@ -34,7 +35,7 @@ test('selectItemAtIndex does nothing if there is no item at that index', () => {
 
 test('selectItemAtIndex can select item that is an empty string', () => {
   const items = ['Chess', '']
-  const render = ({getItemProps}) => (
+  const renderFn = ({getItemProps}) => (
     <div>
       {items.map((item, index) => (
         <div key={index} {...getItemProps({item})}>
@@ -43,7 +44,7 @@ test('selectItemAtIndex can select item that is an empty string', () => {
       ))}
     </div>
   )
-  const {selectItemAtIndex, renderSpy} = setup({render})
+  const {selectItemAtIndex, renderSpy} = setup({render: renderFn})
   selectItemAtIndex(1)
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: ''}),
@@ -62,16 +63,22 @@ test('toggleMenu can take no arguments at all', () => {
 
 test('clearItems clears the all items', () => {
   const item = 'Chess'
-  const render = ({getItemProps}) => (
+  const renderFn = ({getItemProps}) => (
     <div>
       <div key={item} {...getItemProps({item})}>
         {item}
       </div>
     </div>
   )
-  const {wrapper, clearItems} = setup({render})
-  clearItems()
-  expect(wrapper.instance().items).toEqual([])
+  // IMPLEMENTATION DETAIL TEST :-(
+  // eslint-disable-next-line react/no-render-return-value
+  const downshiftInstance = ReactDOM.render(
+    <Downshift render={renderFn} />,
+    document.createElement('div'),
+  )
+  expect(downshiftInstance.items).toEqual([item])
+  downshiftInstance.clearItems()
+  expect(downshiftInstance.items).toEqual([])
 })
 
 test('reset can take no arguments at all', () => {
@@ -97,20 +104,6 @@ test('setHighlightedIndex can take no arguments at all', () => {
   )
 })
 
-test('openAndHighlightDefaultIndex can take no arguments at all', () => {
-  const defaultHighlightedIndex = 2
-  const {wrapper, renderSpy} = setup({
-    defaultHighlightedIndex,
-  })
-  const {openAndHighlightDefaultIndex} = wrapper.instance()
-  openAndHighlightDefaultIndex()
-  expect(renderSpy).toHaveBeenCalledWith(
-    expect.objectContaining({
-      highlightedIndex: defaultHighlightedIndex,
-    }),
-  )
-})
-
 test('can specify a custom ID which is used in item IDs (good for SSR)', () => {
   const id = 'my-custom-id'
   const {getItemProps} = setup({id})
@@ -119,7 +112,7 @@ test('can specify a custom ID which is used in item IDs (good for SSR)', () => {
 
 test('can use children instead of render prop', () => {
   const childrenSpy = jest.fn()
-  enzymeRender(<Downshift>{childrenSpy}</Downshift>)
+  render(<Downshift>{childrenSpy}</Downshift>)
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
@@ -151,14 +144,12 @@ describe('expect console.warn to fire—depending on process.env.NODE_ENV value'
   })
 })
 
-function setup({render = () => <div />, ...props} = {}) {
+function setup({render: renderFn = () => <div />, ...props} = {}) {
   let renderArg
   const renderSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return render(controllerArg)
+    return renderFn(controllerArg)
   })
-  const wrapper = mount(<Downshift {...props} render={renderSpy} />)
-  return {renderSpy, wrapper, ...renderArg}
+  const renderUtils = render(<Downshift {...props} render={renderSpy} />)
+  return {renderSpy, ...renderUtils, ...renderArg}
 }
-
-/* eslint no-console:0 */

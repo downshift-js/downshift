@@ -1,14 +1,16 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {render, Simulate} from 'react-testing-library'
 import Downshift from '../'
+
+jest.useFakeTimers()
 
 test('space on button opens and closes the menu', () => {
   const {button, renderSpy} = setup()
-  button.simulate('keydown', {key: ' '})
+  Simulate.keyDown(button, {key: ' '})
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
-  button.simulate('keydown', {key: ' '})
+  Simulate.keyDown(button, {key: ' '})
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -16,11 +18,11 @@ test('space on button opens and closes the menu', () => {
 
 test('clicking on the button opens and closes the menu', () => {
   const {button, renderSpy} = setup()
-  button.simulate('click')
+  Simulate.click(button)
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
-  button.simulate('click')
+  Simulate.click(button)
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -29,15 +31,13 @@ test('clicking on the button opens and closes the menu', () => {
 test('button ignores key events it does not handle', () => {
   const {button, renderSpy} = setup()
   renderSpy.mockClear()
-  button.simulate('keydown', {key: 's'})
+  Simulate.keyDown(button, {key: 's'})
   expect(renderSpy).not.toHaveBeenCalled()
 })
 
-jest.useFakeTimers()
-
 test('on button blur resets the state', () => {
   const {button, renderSpy} = setup()
-  button.simulate('blur')
+  Simulate.blur(button)
   jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
@@ -53,7 +53,7 @@ test('on button blur does not reset the state when the mouse is down', () => {
   document.body.dispatchEvent(
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
-  button.simulate('blur')
+  Simulate.blur(button)
   jest.runAllTimers()
   expect(renderSpy).not.toHaveBeenCalled()
 })
@@ -99,7 +99,7 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
       </div>
     )
   })
-  const wrapper = mount(<Downshift render={renderSpy} />)
-  const button = wrapper.find('button')
-  return {button, renderSpy, ...renderArg}
+  const utils = render(<Downshift render={renderSpy} />)
+  const button = utils.container.querySelector('button')
+  return {...utils, button, renderSpy, ...renderArg}
 }
