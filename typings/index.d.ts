@@ -146,6 +146,9 @@ export interface Actions {
   ) => void
   clearSelection: (cb?: Function) => void
   clearItems: () => void
+  setItemCount: (count: number) => void
+  unsetItemCount: () => void
+  setState: (stateToSet: object, cb?: Function) => void
   reset: (otherStateToSet?: object, cb?: Function) => void
   itemToString: (item: any) => string
 }

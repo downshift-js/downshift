@@ -701,6 +701,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "Sharakai",
+      "name": "Kyle Smith",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/24813609?v=4",
+      "profile": "https://github.com/Sharakai",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
