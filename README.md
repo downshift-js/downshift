@@ -774,9 +774,8 @@ Allows reseting the internal id counter which is used to generate unique ids for
 You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
 
 ```javascript
-import Downshift from 'downshift';
+import {resetIdCounter} from 'downshift';
 
-Downshift.resetIdCounter();
 ReactDOMServer.renderToString(...);
 ```
 
@@ -813,12 +812,12 @@ Examples exist on [codesandbox.io][examples]:
 
 If you would like to add an example, follow these steps:
 
-1.  Fork [this codesandbox](http://kcd.im/ds-example)
-2.  Make sure your version (under dependencies) is the latest available version.
-3.  Update the title and description
-4.  Update the code for your example (add some form of documentation to explain
-    what it is)
-5.  Add the tag: `downshift:example`
+1. Fork [this codesandbox](http://kcd.im/ds-example)
+2. Make sure your version (under dependencies) is the latest available version.
+3. Update the title and description
+4. Update the code for your example (add some form of documentation to explain
+   what it is)
+5. Add the tag: `downshift:example`
 
 You'll find other examples in the `stories/examples` folder of the repo. And
 you'll find
@@ -884,8 +883,8 @@ const ui = (
 To opt-into a breaking change, simply provide the key and value in the
 `breakingChanges` object prop for each breaking change mentioned below:
 
-1.  `resetInputOnSelection` - Enable with the value of `true`. For more
-    information, see [#243](https://github.com/paypal/downshift/issues/243)
+1. `resetInputOnSelection` - Enable with the value of `true`. For more
+   information, see [#243](https://github.com/paypal/downshift/issues/243)
 
 When a new major version is released, then the code to support the old
 functionality will be removed and the breaking change version will be the
