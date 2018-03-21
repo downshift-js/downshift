@@ -691,6 +691,16 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "gsimone",
+      "name": "Gianmarco",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1862172?v=4",
+      "profile": "https://github.com/gsimone",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }

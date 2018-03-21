@@ -405,6 +405,7 @@ class Downshift extends Component {
     const {id} = this
     const {
       getRootProps,
+      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
       getInputProps,
@@ -426,6 +427,7 @@ class Downshift extends Component {
     return {
       // prop getters
       getRootProps,
+      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
       getInputProps,
