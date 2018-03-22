@@ -144,6 +144,8 @@ export interface Actions<Item> {
   ) => void
   clearSelection: (cb?: Callback) => void
   clearItems: () => void
+  setItemCount: (count: number) => void
+  unsetItemCount: () => void
   reset: (otherStateToSet?: {}, cb?: Callback) => void
   itemToString: (item: Item) => string
 }
