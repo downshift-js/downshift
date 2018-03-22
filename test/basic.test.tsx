@@ -1,82 +1,75 @@
-import * as React from 'react';
-import Downshift, { ControllerStateAndHelpers, StateChangeOptions } from '../';
+import * as React from 'react'
+import Downshift, {StateChangeOptions, DownshiftInterface} from '../'
+
+type Item = string
+const TypedDownShift: DownshiftInterface<Item> = Downshift
 
 interface Props {}
 
 interface State {
-    items: Array<any>;
+  items: Array<Item>
 }
 
 export default class App extends React.Component<Props, State> {
-    state: State = {
-        items: ['apple', 'orange', 'carrot'],
-    };
+  state: State = {
+    items: ['apple', 'orange', 'carrot'],
+  }
 
-    onChange = (selectedItem: any) => {
-        console.log('selectedItem', selectedItem);
-    };
+  onChange = (selectedItem: Item) => {
+    console.log('selectedItem', selectedItem)
+  }
 
-    onUserAction = (changes: StateChangeOptions) => {
-        console.log('type', changes.type);
-    }
+  onUserAction = (changes: StateChangeOptions<Item>) => {
+    console.log('type', changes.type)
+  }
 
-    render() {
-        const items = this.state.items;
+  render() {
+    const items = this.state.items
 
-        return (
-            <Downshift onChange={this.onChange}>
-                {({
-                    getToggleButtonProps,
-                    getInputProps,
-                    getItemProps,
-                    isOpen,
-                    inputValue,
-                    selectedItem,
-                    highlightedIndex,
-                }: ControllerStateAndHelpers) =>
-                    <div>
-                        <input
-                            {...getInputProps({
-                                placeholder: 'Favorite color ?',
-                            })}
-                        />
-                        <button
-                            {...getToggleButtonProps()}
-                        />
-                        {isOpen
-                            ? <div style={{ border: '1px solid #ccc' }}>
-                                  {items
-                                      .filter(
-                                          (i: any) =>
-                                              !inputValue ||
-                                              i
-                                                  .toLowerCase()
-                                                  .includes(
-                                                      inputValue.toLowerCase()
-                                                  )
-                                      )
-                                      .map((item: any, index: number) =>
-                                          <div
-                                              {...getItemProps({ item, index })}
-                                              key={item}
-                                              style={{
-                                                  backgroundColor:
-                                                      highlightedIndex === index
-                                                          ? 'gray'
-                                                          : 'white',
-                                                  fontWeight:
-                                                      selectedItem === item
-                                                          ? 'bold'
-                                                          : 'normal',
-                                              }}
-                                          >
-                                              {item}
-                                          </div>
-                                      )}
-                              </div>
-                            : null}
-                    </div>}
-            </Downshift>
-        );
-    }
+    return (
+      <TypedDownShift onChange={this.onChange}>
+        {({
+          getToggleButtonProps,
+          getInputProps,
+          getItemProps,
+          isOpen,
+          inputValue,
+          selectedItem,
+          highlightedIndex,
+        }) => (
+          <div>
+            <input
+              {...getInputProps({
+                placeholder: 'Favorite color ?',
+              })}
+            />
+            <button {...getToggleButtonProps()} />
+            {isOpen ? (
+              <div style={{border: '1px solid #ccc'}}>
+                {items
+                  .filter(
+                    i =>
+                      !inputValue ||
+                      i.toLowerCase().includes(inputValue.toLowerCase()),
+                  )
+                  .map((item, index: number) => (
+                    <div
+                      {...getItemProps({item, index})}
+                      key={item}
+                      style={{
+                        backgroundColor:
+                          highlightedIndex === index ? 'gray' : 'white',
+                        fontWeight: selectedItem === item ? 'bold' : 'normal',
+                      }}
+                    >
+                      {item}
+                    </div>
+                  ))}
+              </div>
+            ) : null}
+          </div>
+        )}
+      </TypedDownShift>
+    )
+  }
 }

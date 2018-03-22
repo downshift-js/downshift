@@ -34,14 +34,20 @@ test('stuff is good', () => {
     'CJS build has a problem with ES Modules',
   )
 
-  assert(isDownshiftComponent(cjsRequire), 'CJS build has a problem with CJS')
+  assert(
+    isDownshiftComponent(cjsRequire.default),
+    'CJS build has a problem with CJS',
+  )
 
   assert(
     isDownshiftComponent(umdImport),
     'UMD build has a problem with ES Modules',
   )
 
-  assert(isDownshiftComponent(umdRequire), 'UMD build has a problem with CJS')
+  assert(
+    isDownshiftComponent(umdRequire.default),
+    'UMD build has a problem with CJS',
+  )
 
   // TODO: how could we validate the global export?
 })
