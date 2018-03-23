@@ -13,7 +13,6 @@ exports[`renders with React Native components 1`] = `
     aria-activedescendant={null}
     aria-autocomplete="list"
     aria-controls={null}
-    aria-expanded={false}
     aria-labelledby="downshift-0-label"
     autoComplete="off"
     id="downshift-0-input"

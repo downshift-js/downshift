@@ -16,7 +16,6 @@ exports[`basic snapshot 1`] = `
   </label>
   <input
     aria-autocomplete="list"
-    aria-expanded="false"
     aria-labelledby="downshift-0-label"
     autocomplete="off"
     data-testid="input"
@@ -65,7 +64,6 @@ exports[`can override the ids 1`] = `
   </label>
   <input
     aria-autocomplete="list"
-    aria-expanded="false"
     aria-labelledby="custom-label-id"
     autocomplete="off"
     data-testid="input"
