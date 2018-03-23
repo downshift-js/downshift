@@ -485,12 +485,13 @@ class Downshift extends Component {
     this.getRootProps.called = true
     this.getRootProps.refKey = refKey
     this.getRootProps.suppressRefError = suppressRefError
+    const {isOpen} = this.getState()
     return {
       [refKey]: this.rootRef,
       role: 'combobox',
-      'aria-expanded': this.getState().isOpen,
+      'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
-      'aria-owns': this.menuId,
+      'aria-owns': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
       ...rest,
     }
@@ -558,7 +559,6 @@ class Downshift extends Component {
       type: 'button',
       role: 'button',
       'aria-label': isOpen ? 'close menu' : 'open menu',
-      'aria-expanded': isOpen,
       'aria-haspopup': true,
       'data-toggle': true,
       ...eventHandlers,
@@ -638,14 +638,13 @@ class Downshift extends Component {
           onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
         }
     return {
-      role: 'listbox',
       'aria-autocomplete': 'list',
       'aria-expanded': isOpen,
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
-      'aria-controls': this.menuId,
+      'aria-controls': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
       autoComplete: 'off',
       value: inputValue,
@@ -692,7 +691,7 @@ class Downshift extends Component {
   getMenuProps = props => {
     return {
       role: 'listbox',
-      'aria-labelledby': this.labelId,
+      'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
       ...props,
     }

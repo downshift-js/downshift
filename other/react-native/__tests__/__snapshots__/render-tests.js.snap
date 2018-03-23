@@ -5,14 +5,14 @@ exports[`renders with React Native components 1`] = `
   aria-expanded={false}
   aria-haspopup="listbox"
   aria-labelledby="downshift-0-label"
-  aria-owns="downshift-0-menu"
+  aria-owns={null}
   role="combobox"
 >
   <TextInput
     allowFontScaling={true}
     aria-activedescendant={null}
     aria-autocomplete="list"
-    aria-controls="downshift-0-menu"
+    aria-controls={null}
     aria-expanded={false}
     aria-labelledby="downshift-0-label"
     autoComplete="off"
@@ -20,7 +20,6 @@ exports[`renders with React Native components 1`] = `
     onBlur={[Function]}
     onChangeText={[Function]}
     onKeyDown={[Function]}
-    role="listbox"
     value=""
   />
   <View>

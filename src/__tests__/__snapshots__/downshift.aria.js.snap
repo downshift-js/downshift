@@ -5,7 +5,6 @@ exports[`basic snapshot 1`] = `
   aria-expanded="false"
   aria-haspopup="listbox"
   aria-labelledby="downshift-0-label"
-  aria-owns="downshift-0-menu"
   role="combobox"
 >
   <label
@@ -17,17 +16,14 @@ exports[`basic snapshot 1`] = `
   </label>
   <input
     aria-autocomplete="list"
-    aria-controls="downshift-0-menu"
     aria-expanded="false"
     aria-labelledby="downshift-0-label"
     autocomplete="off"
     data-testid="input"
     id="downshift-0-input"
-    role="listbox"
     value="item"
   />
   <button
-    aria-expanded="false"
     aria-haspopup="true"
     aria-label="open menu"
     data-testid="button"
@@ -58,7 +54,6 @@ exports[`can override the ids 1`] = `
   aria-expanded="false"
   aria-haspopup="listbox"
   aria-labelledby="custom-label-id"
-  aria-owns="custom-menu-id"
   role="combobox"
 >
   <label
@@ -70,17 +65,14 @@ exports[`can override the ids 1`] = `
   </label>
   <input
     aria-autocomplete="list"
-    aria-controls="custom-menu-id"
     aria-expanded="false"
     aria-labelledby="custom-label-id"
     autocomplete="off"
     data-testid="input"
     id="custom-input-id"
-    role="listbox"
     value=""
   />
   <button
-    aria-expanded="false"
     aria-haspopup="true"
     aria-label="open menu"
     data-testid="button"
