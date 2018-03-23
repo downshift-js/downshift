@@ -95,6 +95,8 @@ harder to contribute to.
   * [customizing handlers](#customizing-handlers)
 * [Utilities](#utilities)
   * [resetIdCounter](#resetidcounter)
+* [React Native](#react-native)
+  * [Gotchas](#gotchas)
 * [Examples](#examples)
 * [FAQ](#faq)
 * [Upcoming Breaking Changes](#upcoming-breaking-changes)
@@ -780,6 +782,15 @@ Downshift.resetIdCounter();
 ReactDOMServer.renderToString(...);
 ```
 
+## React Native
+
+Since Downshift renders it's UI using render props, Downshift supports rendering on React Native with ease. Use components like `<View>`, `<Text>`, `<TouchableOpacity>` and others inside of your render method to generate awesome autocomplete, dropdown, or selection components.
+
+### Gotchas
+
+* Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
+* When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
+
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
@@ -810,6 +821,7 @@ Examples exist on [codesandbox.io][examples]:
 * [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
 * [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
 * [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
+* [React Native example](https://snack.expo.io/SkE0LxXqM)
 
 If you would like to add an example, follow these steps:
 
