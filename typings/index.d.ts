@@ -94,6 +94,10 @@ export interface StateChangeOptions<Item> {
   selectedItem: Item
 }
 
+type StateChangeFunction<Item> = (
+  state: DownshiftState<Item>,
+) => StateChangeOptions<Item>
+
 export interface GetRootPropsOptions {
   refKey: string
 }
@@ -119,17 +123,19 @@ export interface GetItemPropsOptions<Item>
 
 export interface PropGetters<Item> {
   getRootProps: (options: GetRootPropsOptions) => any
-  getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any
   getButtonProps: (options?: getToggleButtonPropsOptions) => any
+  getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
+  getMenuProps: (options?: {}) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
 
 export interface Actions<Item> {
+  reset: (otherStateToSet?: {}, cb?: Callback) => void
   openMenu: (cb?: Callback) => void
   closeMenu: (cb?: Callback) => void
-  toggleMenu: (cb?: Callback) => void
+  toggleMenu: (otherStateToSet?: {}, cb?: Callback) => void
   selectItem: (item: Item, otherStateToSet?: {}, cb?: Callback) => void
   selectItemAtIndex: (
     index: number,
@@ -146,7 +152,11 @@ export interface Actions<Item> {
   clearItems: () => void
   setItemCount: (count: number) => void
   unsetItemCount: () => void
-  reset: (otherStateToSet?: {}, cb?: Callback) => void
+  setState: (
+    stateToSet: StateChangeOptions<Item> | StateChangeFunction<Item>,
+    cb?: Callback,
+  ) => void
+  // props
   itemToString: (item: Item) => string
 }
 
