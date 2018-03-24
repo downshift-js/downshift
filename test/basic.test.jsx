@@ -1,14 +1,13 @@
 // @flow
 import React from 'react'
-import {
-  downshiftFactory,
+import Downshift, {
   type StateChangeOptions,
   type ControllerStateAndHelpers,
   type DownshiftType,
 } from 'downshift'
 
 type Item = string
-const DownshiftTyped: DownshiftType<Item> = downshiftFactory()
+const DownshiftTyped: DownshiftType<Item> = Downshift;
 
 type Props = {}
 

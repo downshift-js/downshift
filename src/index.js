@@ -1,5 +1,2 @@
-import Downshift from './downshift'
-
-export default Downshift
-export const downshiftFactory = () => Downshift
+export {default} from './downshift'
 export {resetIdCounter} from './utils'

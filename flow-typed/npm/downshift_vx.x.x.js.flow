@@ -177,6 +177,4 @@ declare module downshift {
   }
   declare var DownshiftComponent: DownshiftType<any>
   declare export default DownshiftComponent
-
-  declare export var downshiftFactory: <Item>() => DownshiftType<Item>
 }
