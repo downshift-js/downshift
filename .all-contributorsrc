@@ -701,6 +701,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "pastr",
+      "name": "Emmanuel Pastor",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6838136?v=4",
+      "profile": "https://github.com/pastr",
+      "contributions": [
+        "example"
+      ]
     }
   ]
 }
