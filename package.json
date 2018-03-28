@@ -18,6 +18,8 @@
     "test:ssr": "kcd-scripts test --config other/ssr/jest.config.js --no-watch",
     "test:update": "npm run test:cover -s -- --updateSnapshot",
     "test:ts": "tsc --noEmit -p ./tsconfig.json",
+    "test:flow": "flow",
+    "test:flow:coverage": "flow-coverage-report",
     "test:build": "jest --projects other/misc-tests other/react-native",
     "test:cypress:dev": "npm-run-all --parallel --race storybook cy:open",
     "pretest:cypress": "npm run storybook:build --silent",
@@ -30,7 +32,7 @@
     "storybook:install": "cd stories && npm install",
     "storybook:serve": "serve ./storybook-static -p 6006",
     "setup": "npm install && npm run storybook:install -s && npm run storybook:build -s && npm run validate",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:cypress",
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:flow:coverage,test:ssr,test:cypress",
     "precommit": "kcd-scripts precommit"
   },
   "files": [
@@ -80,7 +82,9 @@
     "react-testing-library": "^1.1.0",
     "serve": "^6.5.3",
     "typescript": "^2.7.2",
-    "@types/react": "^16.0.40"
+    "@types/react": "^16.0.40",
+    "flow-bin": "^0.68.0",
+    "flow-coverage-report": "^0.5.0"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
@@ -110,5 +114,13 @@
     "url": "https://github.com/paypal/downshift/issues"
   },
   "homepage": "https://github.com/paypal/downshift#readme",
-  "dependencies": {}
+  "flow-coverage-report": {
+    "includeGlob": [
+      "test/**/*.js"
+    ],
+    "threshold": 95,
+    "type": [
+      "text"
+    ]
+  }
 }
