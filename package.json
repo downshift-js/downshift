@@ -116,8 +116,7 @@
   "homepage": "https://github.com/paypal/downshift#readme",
   "flow-coverage-report": {
     "includeGlob": [
-      "test/**/*.js",
-      "test/**/*.jsx"
+      "test/**/*.js"
     ],
     "threshold": 95,
     "type": [

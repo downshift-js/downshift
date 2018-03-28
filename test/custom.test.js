@@ -3,10 +3,10 @@ import * as React from 'react'
 import Downshift, {
   type ControllerStateAndHelpers,
   type DownshiftType,
-} from 'downshift'
+} from 'downshift' // eslint-disable-line import/no-unresolved
 
 type Item = string
-const DownshiftTyped: DownshiftType<Item> = Downshift;
+const DownshiftTyped: DownshiftType<Item> = Downshift
 
 type Props = {}
 
@@ -36,7 +36,7 @@ export default class App extends React.Component<Props, State> {
   }
 
   onChange = (selectedItem: Item) => {
-    console.log('selectedItem', selectedItem)
+    selectedItem
   }
 
   render() {
