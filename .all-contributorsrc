@@ -721,6 +721,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "franklixuefei",
+      "name": "Xuefei Li",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1334982?v=4",
+      "profile": "http://xuefei-frank.com",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }

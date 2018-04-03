@@ -26,6 +26,10 @@ export enum StateChangeTypes {
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
 }
 
+export interface BreakingChangesProps {
+  resetInputOnSelection?: boolean;
+}
+
 export interface DownshiftProps<Item> {
   defaultSelectedItem?: Item
   defaultHighlightedIndex?: number | null
@@ -68,6 +72,7 @@ export interface DownshiftProps<Item> {
     options: StateChangeOptions<Item>,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
+  breakingChanges?: BreakingChangesProps;
 }
 
 export interface Environment {
@@ -86,17 +91,13 @@ export interface A11yStatusMessageOptions<Item> {
   selectedItem: Item
 }
 
-export interface StateChangeOptions<Item> {
+export interface StateChangeOptions<Item> extends DownshiftState<Item>  {
   type: StateChangeTypes
-  highlightedIndex: number
-  inputValue: string
-  isOpen: boolean
-  selectedItem: Item
 }
 
 type StateChangeFunction<Item> = (
   state: DownshiftState<Item>,
-) => StateChangeOptions<Item>
+) => Partial<StateChangeOptions<Item>>
 
 export interface GetRootPropsOptions {
   refKey: string
@@ -132,20 +133,20 @@ export interface PropGetters<Item> {
 }
 
 export interface Actions<Item> {
-  reset: (otherStateToSet?: {}, cb?: Callback) => void
+  reset: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
   openMenu: (cb?: Callback) => void
   closeMenu: (cb?: Callback) => void
-  toggleMenu: (otherStateToSet?: {}, cb?: Callback) => void
-  selectItem: (item: Item, otherStateToSet?: {}, cb?: Callback) => void
+  toggleMenu: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
+  selectItem: (item: Item, otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
   selectItemAtIndex: (
     index: number,
-    otherStateToSet?: {},
+    otherStateToSet?: StateChangeOptions<Item>,
     cb?: Callback,
   ) => void
-  selectHighlightedItem: (otherStateToSet?: {}, cb?: Callback) => void
+  selectHighlightedItem: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
   setHighlightedIndex: (
     index: number,
-    otherStateToSet?: {},
+    otherStateToSet?: StateChangeOptions<Item>,
     cb?: Callback,
   ) => void
   clearSelection: (cb?: Callback) => void
