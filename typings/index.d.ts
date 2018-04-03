@@ -7,6 +7,10 @@ export interface DownshiftState {
   selectedItem: any
 }
 
+export interface DownshiftStateWithType extends DownshiftState {
+  type: StateChangeTypes;
+}
+
 export enum StateChangeTypes {
   unknown = '__autocomplete_unknown__',
   mouseUp = '__autocomplete_mouseup__',
@@ -22,6 +26,10 @@ export enum StateChangeTypes {
   clickButton = '__autocomplete_click_button__',
   blurButton = '__autocomplete_blur_button__',
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
+}
+
+export interface BreakingChangesProps {
+  resetInputOnSelection?: boolean;
 }
 
 export interface DownshiftProps {
@@ -66,6 +74,7 @@ export interface DownshiftProps {
     options: StateChangeOptions,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  breakingChanges?: BreakingChangesProps;
 }
 
 export interface Environment {
@@ -132,21 +141,29 @@ export interface Actions {
   openMenu: (cb?: Function) => void
   closeMenu: (cb?: Function) => void
   toggleMenu: (cb?: Function) => void
-  selectItem: (item: any, otherStateToSet?: object, cb?: Function) => void
+  selectItem: (item: any, otherStateToSet?: Partial<DownshiftStateWithType>, cb?: Function) => void
   selectItemAtIndex: (
     index: number,
-    otherStateToSet?: object,
+    otherStateToSet?: Partial<DownshiftStateWithType>,
     cb?: Function,
   ) => void
-  selectHighlightedItem: (otherStateToSet?: object, cb?: Function) => void
+  selectHighlightedItem: (otherStateToSet?: Partial<DownshiftStateWithType>, cb?: Function) => void
   setHighlightedIndex: (
     index: number,
-    otherStateToSet?: object,
+    otherStateToSet?: Partial<DownshiftStateWithType>,
     cb?: Function,
   ) => void
   clearSelection: (cb?: Function) => void
   clearItems: () => void
-  reset: (otherStateToSet?: object, cb?: Function) => void
+  reset: (otherStateToSet?: Partial<DownshiftStateWithType>, cb?: Function) => void
+  setItemCount: (count: number) => void
+  unsetItemCount: () => void
+  setState: (
+    stateToSet: 
+      Partial<DownshiftStateWithType> |
+      ((state: DownshiftStateWithType) => Partial<DownshiftStateWithType>),
+    cb?: Function
+  ) => void
   itemToString: (item: any) => string
 }
 
