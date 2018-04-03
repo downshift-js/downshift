@@ -133,20 +133,20 @@ export interface PropGetters<Item> {
 }
 
 export interface Actions<Item> {
-  reset: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
+  reset: (otherStateToSet?: Partial<StateChangeOptions<Item>>, cb?: Callback) => void
   openMenu: (cb?: Callback) => void
   closeMenu: (cb?: Callback) => void
-  toggleMenu: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
-  selectItem: (item: Item, otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
+  toggleMenu: (otherStateToSet?: Partial<StateChangeOptions<Item>>, cb?: Callback) => void
+  selectItem: (item: Item, otherStateToSet?: Partial<StateChangeOptions<Item>>, cb?: Callback) => void
   selectItemAtIndex: (
     index: number,
-    otherStateToSet?: StateChangeOptions<Item>,
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
   ) => void
-  selectHighlightedItem: (otherStateToSet?: StateChangeOptions<Item>, cb?: Callback) => void
+  selectHighlightedItem: (otherStateToSet?: Partial<StateChangeOptions<Item>>, cb?: Callback) => void
   setHighlightedIndex: (
     index: number,
-    otherStateToSet?: StateChangeOptions<Item>,
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
   ) => void
   clearSelection: (cb?: Callback) => void
@@ -154,7 +154,7 @@ export interface Actions<Item> {
   setItemCount: (count: number) => void
   unsetItemCount: () => void
   setState: (
-    stateToSet: StateChangeOptions<Item> | StateChangeFunction<Item>,
+    stateToSet: Partial<StateChangeOptions<Item>> | StateChangeFunction<Item>,
     cb?: Callback,
   ) => void
   // props
