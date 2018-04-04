@@ -710,6 +710,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "cleverfranke",
+      "name": "CLEVER°FRANKE",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/25341154?v=4",
+      "profile": "http://www.cleverfranke.com",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
