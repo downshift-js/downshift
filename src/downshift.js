@@ -955,7 +955,9 @@ class Downshift extends Component {
 }
 
 // Polyfill your component so the new lifecycles will work with older versions of React:
-polyfill(Downshift)
+if (Component.prototype && Component.prototype.isReactComponent) {
+  polyfill(Downshift)
+}
 
 export default Downshift
 
