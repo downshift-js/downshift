@@ -109,5 +109,7 @@
     "url": "https://github.com/paypal/downshift/issues"
   },
   "homepage": "https://github.com/paypal/downshift#readme",
-  "dependencies": {}
+  "dependencies": {
+    "react-lifecycles-compat": "^1.1.4"
+  }
 }
