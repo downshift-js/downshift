@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+export function resetIdCounter(): void
+
 export interface DownshiftState {
   highlightedIndex: number | null
   inputValue: string | null
