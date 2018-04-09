@@ -668,7 +668,9 @@ class Downshift extends Component {
   }
 
   input_handleKeyDown = event => {
-    var key = event.key
+    let key = event.key
+    // handle issue with IE/Edge not including "Arrow" as a prefix for the key
+    /* istanbul ignore next (ie) */
     if ((event.keyCode >= 37 && event.keyCode <= 40) && !key.startsWith('Arrow')) {
       key = 'Arrow' + event.key
     }
