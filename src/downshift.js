@@ -1,6 +1,8 @@
 /* eslint camelcase:0 */
 
 import React, {Component} from 'react'
+import polyfill from 'react-lifecycles-compat'
+
 import PropTypes from 'prop-types'
 import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
@@ -957,6 +959,12 @@ class Downshift extends Component {
       )
     }
   }
+}
+
+// Polyfill your component so the new lifecycles will work with older versions of React:
+/* istanbul ignore else (preact) */
+if (Component.prototype && Component.prototype.isReactComponent) {
+  polyfill(Downshift)
 }
 
 export default Downshift
