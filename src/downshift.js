@@ -668,8 +668,13 @@ class Downshift extends Component {
   }
 
   input_handleKeyDown = event => {
-    if (event.key && this.keyDownHandlers[event.key]) {
-      this.keyDownHandlers[event.key].call(this, event)
+    var key = event.key
+    if ((event.keyCode >= 37 && event.keyCode <= 40) && !key.startsWith('Arrow')) {
+      key = 'Arrow' + event.key
+    }
+
+    if (key && this.keyDownHandlers[key]) {
+      this.keyDownHandlers[key].call(this, event)
     }
   }
 
