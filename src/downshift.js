@@ -20,6 +20,7 @@ import {
   requiredProp,
   pickState,
   isPlainObject,
+  normalizeArrowKey,
 } from './utils'
 
 class Downshift extends Component {
@@ -554,8 +555,9 @@ class Downshift extends Component {
   getButtonProps = this.getToggleButtonProps
 
   button_handleKeyDown = event => {
-    if (this.buttonKeyDownHandlers[event.key]) {
-      this.buttonKeyDownHandlers[event.key].call(this, event)
+    const key = normalizeArrowKey(event)
+    if (this.buttonKeyDownHandlers[key]) {
+      this.buttonKeyDownHandlers[key].call(this, event)
     }
   }
 
@@ -668,13 +670,7 @@ class Downshift extends Component {
   }
 
   input_handleKeyDown = event => {
-    let key = event.key
-    // handle issue with IE/Edge not including "Arrow" as a prefix for the key
-    /* istanbul ignore next (ie) */
-    if ((event.keyCode >= 37 && event.keyCode <= 40) && !key.startsWith('Arrow')) {
-      key = `Arrow${event.key}`
-    }
-
+    const key = normalizeArrowKey(event)
     if (key && this.keyDownHandlers[key]) {
       this.keyDownHandlers[key].call(this, event)
     }
