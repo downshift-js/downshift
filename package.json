@@ -67,7 +67,7 @@
     "cross-env": "^5.1.4",
     "cypress": "^2.1.0",
     "eslint-plugin-cypress": "^2.0.1",
-    "kcd-scripts": "^0.36.1",
+    "kcd-scripts": "^0.37.0",
     "npm-run-all": "^4.1.2",
     "preact": "^8.2.6",
     "preact-render-to-string": "^3.7.0",
