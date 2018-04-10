@@ -284,6 +284,20 @@ function pickState(state = {}) {
   return result
 }
 
+/**
+ * Normalizes the 'key' property of a KeyboardEvent in IE/Edge
+ * @param {Object} event a KeyboardEvent object
+ * @return {String} keyboard key
+ */
+function normalizeArrowKey(event) {
+  const { key, keyCode } = event
+  /* istanbul ignore next (ie) */
+  if (keyCode >= 37 && keyCode <= 40 && !key.startsWith('Arrow')) {
+    return `Arrow${key}`
+  }
+  return key
+}
+
 export {
   cbToCb,
   composeEventHandlers,
@@ -303,6 +317,7 @@ export {
   resetIdCounter,
   pickState,
   isPlainObject,
+  normalizeArrowKey,
 }
 
 /**

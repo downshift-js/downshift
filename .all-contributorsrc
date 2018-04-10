@@ -710,6 +710,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "dalehurwitz",
+      "name": "dalehurwitz",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/10345034?v=4",
+      "profile": "https://github.com/dalehurwitz",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
