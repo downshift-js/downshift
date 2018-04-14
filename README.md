@@ -823,6 +823,7 @@ Examples exist on [codesandbox.io][examples]:
 * [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
 * [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
 * [React Native example](https://snack.expo.io/SkE0LxXqM)
+* [React VR example](https://github.com/infiniteluke/bassdrop)
 
 If you would like to add an example, follow these steps:
 
