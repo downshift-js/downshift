@@ -719,6 +719,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "blobor",
+      "name": "Bogdan Lobor",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4813007?v=4",
+      "profile": "https://github.com/blobor",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
