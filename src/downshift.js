@@ -580,7 +580,8 @@ class Downshift extends Component {
     setTimeout(() => {
       if (
         !this.isMouseDown &&
-        this.props.environment.document.activeElement.id !== this.inputId
+        (this.props.environment.document.activeElement == null ||
+          this.props.environment.document.activeElement.id !== this.inputId)
       ) {
         this.reset({type: Downshift.stateChangeTypes.blurButton})
       }
