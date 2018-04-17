@@ -316,8 +316,8 @@ class Downshift extends Component {
       })
     }
     return this.setState(
-      prevState => {
-        const state = this.getState(prevState)
+      state => {
+        state = this.getState(state)
         let newStateToSet = isStateToSetFunction
           ? stateToSet(state)
           : stateToSet
