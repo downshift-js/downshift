@@ -57,7 +57,7 @@ export interface DownshiftProps<Item> {
   stateReducer?: (
     state: DownshiftState<Item>,
     changes: StateChangeOptions<Item>,
-  ) => StateChangeOptions<Item>
+  ) => Partial<StateChangeOptions<Item>>
   itemCount?: number
   highlightedIndex?: number
   inputValue?: string
@@ -91,7 +91,8 @@ export interface A11yStatusMessageOptions<Item> {
   selectedItem: Item
 }
 
-export interface StateChangeOptions<Item> extends DownshiftState<Item> {
+export interface StateChangeOptions<Item>
+  extends Partial<DownshiftState<Item>> {
   type: StateChangeTypes
 }
 
