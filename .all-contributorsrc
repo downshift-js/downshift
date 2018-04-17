@@ -738,6 +738,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "drobannx",
+      "name": "Brandon Clemons",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/6361167?v=4",
+      "profile": "https://github.com/drobannx",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
