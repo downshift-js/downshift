@@ -116,6 +116,22 @@ test('can use children instead of render prop', () => {
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
+test('should not throw error during strict mode during reset', () => {
+  let renderArg
+  const renderFn = () => <div />
+  const renderSpy = jest.fn(controllerArg => {
+    renderArg = controllerArg
+    return renderFn(controllerArg)
+  })
+  render(
+    <React.StrictMode>
+      <Downshift render={renderSpy} />
+    </React.StrictMode>,
+  )
+
+  renderArg.reset()
+})
+
 test('can use setState for ultimate power', () => {
   const {renderSpy, setState} = setup()
   renderSpy.mockClear()

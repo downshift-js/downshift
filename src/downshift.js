@@ -318,15 +318,17 @@ class Downshift extends Component {
     return this.setState(
       state => {
         state = this.getState(state)
-        stateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet
+        let newStateToSet = isStateToSetFunction
+          ? stateToSet(state)
+          : stateToSet
 
         // Your own function that could modify the state that will be set.
-        stateToSet = this.props.stateReducer(state, stateToSet)
+        newStateToSet = this.props.stateReducer(state, newStateToSet)
 
         // checks if an item is selected, regardless of if it's different from
         // what was selected before
         // used to determine if onSelect and onChange callbacks should be called
-        isItemSelected = stateToSet.hasOwnProperty('selectedItem')
+        isItemSelected = newStateToSet.hasOwnProperty('selectedItem')
         // this keeps track of the object we want to call with setState
         const nextState = {}
         // this is just used to tell whether the state changed
@@ -334,16 +336,20 @@ class Downshift extends Component {
         // we need to call on change if the outside world is controlling any of our state
         // and we're trying to update that state. OR if the selection has changed and we're
         // trying to update the selection
-        if (isItemSelected && stateToSet.selectedItem !== state.selectedItem) {
-          onChangeArg = stateToSet.selectedItem
+        if (
+          isItemSelected &&
+          newStateToSet.selectedItem !== state.selectedItem
+        ) {
+          onChangeArg = newStateToSet.selectedItem
         }
-        stateToSet.type = stateToSet.type || Downshift.stateChangeTypes.unknown
+        newStateToSet.type =
+          newStateToSet.type || Downshift.stateChangeTypes.unknown
 
-        Object.keys(stateToSet).forEach(key => {
+        Object.keys(newStateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
           // actually changing
-          if (state[key] !== stateToSet[key]) {
-            onStateChangeArg[key] = stateToSet[key]
+          if (state[key] !== newStateToSet[key]) {
+            onStateChangeArg[key] = newStateToSet[key]
           }
           // the type is useful for the onStateChangeArg
           // but we don't actually want to set it in internal state.
@@ -354,19 +360,22 @@ class Downshift extends Component {
           if (key === 'type') {
             return
           }
-          nextFullState[key] = stateToSet[key]
+          nextFullState[key] = newStateToSet[key]
           // if it's coming from props, then we don't care to set it internally
           if (!this.isControlledProp(key)) {
-            nextState[key] = stateToSet[key]
+            nextState[key] = newStateToSet[key]
           }
         })
 
         // if stateToSet is a function, then we weren't able to call onInputValueChange
         // earlier, so we'll call it now that we know what the inputValue state will be.
-        if (isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
-          this.props.onInputValueChange(stateToSet.inputValue, {
+        if (
+          isStateToSetFunction &&
+          newStateToSet.hasOwnProperty('inputValue')
+        ) {
+          this.props.onInputValueChange(newStateToSet.inputValue, {
             ...this.getStateAndHelpers(),
-            ...stateToSet,
+            ...newStateToSet,
           })
         }
 
