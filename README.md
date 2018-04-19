@@ -440,6 +440,7 @@ const ui = (
 ```
 
 This callback will only be called if `isOpen` is `true`.
+First parameter is `stateAndHelpers`, same as `onChange`.
 
 ## stateChangeTypes
 
