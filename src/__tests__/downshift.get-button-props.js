@@ -19,10 +19,12 @@ test('space on button opens and closes the menu', () => {
 test('clicking on the button opens and closes the menu', () => {
   const {button, renderSpy} = setup()
   Simulate.click(button)
+  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   Simulate.click(button)
+  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )

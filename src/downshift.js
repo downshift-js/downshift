@@ -581,7 +581,10 @@ class Downshift extends Component {
     ) {
       event.target.focus()
     }
-    this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
+    // Ensure that toggle of menu occurs after the potential blur event in iOS
+    setTimeout(() =>
+      this.toggleMenu({type: Downshift.stateChangeTypes.clickButton}),
+    )
   }
 
   button_handleBlur = () => {
