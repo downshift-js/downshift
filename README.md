@@ -420,7 +420,7 @@ running, for example an iframe.
 
 ### onOuterClick
 
-> `function` | optional
+> `function(stateAndHelpers: object)` | optional
 
 A helper callback to help control internal state of downshift like `isOpen` as
 mentioned in [this issue](https://github.com/paypal/downshift/issues/206). The
@@ -440,7 +440,6 @@ const ui = (
 ```
 
 This callback will only be called if `isOpen` is `true`.
-First parameter is `stateAndHelpers`, same as `onChange`.
 
 ## stateChangeTypes
 
