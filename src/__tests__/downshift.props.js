@@ -127,8 +127,8 @@ test('uses given environment', () => {
   const {unmount, setHighlightedIndex} = setup({environment})
   setHighlightedIndex()
   unmount()
-  expect(environment.addEventListener).toHaveBeenCalledTimes(2)
-  expect(environment.removeEventListener).toHaveBeenCalledTimes(2)
+  expect(environment.addEventListener).toHaveBeenCalledTimes(3)
+  expect(environment.removeEventListener).toHaveBeenCalledTimes(3)
 })
 
 test('can override onOuterClick callback to maintain isOpen state', () => {
