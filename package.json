@@ -83,7 +83,7 @@
     "serve": "^6.5.3",
     "typescript": "^2.7.2",
     "@types/react": "^16.0.40",
-    "flow-bin": "^0.68.0",
+    "flow-bin": "^0.70.0",
     "flow-coverage-report": "^0.5.0"
   },
   "eslintConfig": {
@@ -118,7 +118,7 @@
     "includeGlob": [
       "test/**/*.js"
     ],
-    "threshold": 98,
+    "threshold": 97,
     "type": [
       "text"
     ]

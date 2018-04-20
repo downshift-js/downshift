@@ -117,30 +117,29 @@ declare module downshift {
 
   declare export type GetRootPropsReturn = {
     role: 'combobox';
-    // 'aria-expanded': boolean;
-    // 'aria-haspopup': 'listbox';
-    // 'aria-owns': string | null;
-    // 'aria-labelledby': string;
+    'aria-expanded': boolean;
+    'aria-haspopup': 'listbox';
+    'aria-owns': string | null;
+    'aria-labelledby': string;
   }
   declare export interface GetRootPropsOptions {
     refKey: string;
   }
 
   declare type GetToggleButtonCallbacks = {
-    onMouseMove: (e: React.MouseEvent<Element>) => void;
-    onMouseDown: (e: React.MouseEvent<Element>) => void;
-    onBlur: (e: React.MouseEvent<Element>) => void;
+    onMouseMove: (e: SyntheticEvent<Element>) => void;
+    onMouseDown: (e: SyntheticEvent<Element>) => void;
+    onBlur: (e: SyntheticEvent<Element>) => void;
   } | {
-    onPress: (e: React.MouseEvent<Element>) => void; // should be react native type
+    onPress: (e: SyntheticEvent<Element>) => void; // should be react native type
   } | {}
   declare export type GetToggleButtonReturn = {
     type: 'button';
     role: 'button';
-    // 'aria-label': 'close menu' | 'open menu';
-    // 'aria-haspopup': true;
-    // 'data-toggle': true;
-  // } & GetInputPropsCallbacks
-  }
+    'aria-label': 'close menu' | 'open menu';
+    'aria-haspopup': true;
+    'data-toggle': true;
+  } & GetInputPropsCallbacks
   declare export interface getToggleButtonPropsOptions
     extends React.HTMLProps<HTMLButtonElement> {}
 
@@ -153,25 +152,25 @@ declare module downshift {
 
   declare export type getMenuPropsReturn = {
     role: 'listbox';
-    // 'aria-labelledby': string | null;
+    'aria-labelledby': string | null;
     id: string;
   }
 
   declare type GetInputPropsCallbacks = ({
-    onKeyDown: (e: React.MouseEvent<Element>) => void;
-    onBlur: (e: React.MouseEvent<Element>) => void;
+    onKeyDown: (e: SyntheticEvent<Element>) => void;
+    onBlur: (e: SyntheticEvent<Element>) => void;
   } & ({
-    onInput: (e: React.MouseEvent<Element>) => void;
+    onInput: (e: SyntheticEvent<Element>) => void;
   } | {
-    onChangeText: (e: React.MouseEvent<Element>) => void;
+    onChangeText: (e: SyntheticEvent<Element>) => void;
   } | {
-    onChange: (e: React.MouseEvent<Element>) => void;
+    onChange: (e: SyntheticEvent<Element>) => void;
   })) | {}
   declare export type GetInputPropsReturn = {
-    // 'aria-autocomplete': 'list';
-    // 'aria-activedescendant': string | null;
-    // 'aria-controls': string | null;
-    // 'aria-labelledby': string;
+    'aria-autocomplete': 'list';
+    'aria-activedescendant': string | null;
+    'aria-controls': string | null;
+    'aria-labelledby': string;
     autoComplete: 'off';
     value: string;
     id: string;
@@ -180,17 +179,17 @@ declare module downshift {
     extends React.HTMLProps<HTMLInputElement> {}
 
   declare type GetItemPropsCallbacks = {
-    onMouseMove: (e: React.MouseEvent<Element>) => void;
-    onMouseDown: (e: React.MouseEvent<Element>) => void;
+    onMouseMove: (e: SyntheticEvent<Element>) => void;
+    onMouseDown: (e: SyntheticEvent<Element>) => void;
   } & ({
-    onPress: (e: React.MouseEvent<Element>) => void;
+    onPress: (e: SyntheticEvent<Element>) => void;
   } | {
-    onClick: (e: React.MouseEvent<Element>) => void;
+    onClick: (e: SyntheticEvent<Element>) => void;
   })
   declare export type GetItemPropsReturn = {
     id: string;
     role: 'option';
-    // 'aria-selected': boolean;
+    'aria-selected': boolean;
   } & GetItemPropsCallbacks
   declare export type GetItemPropsOptions<Item> = {
     index?: number,
