@@ -116,6 +116,7 @@ class Downshift extends Component {
     blurButton: '__autocomplete_blur_button__',
     controlledPropUpdatedSelectedItem:
       '__autocomplete_controlled_prop_updated_selected_item__',
+    touchStart: '__autocomplete_touchstart__',
   }
 
   constructor(...args) {
@@ -881,13 +882,28 @@ class Downshift extends Component {
           )
         }
       }
+      // Touching an element in iOS gives focus and hover states, but touching out of
+      // the element will remove hover, and persist the focus state, resulting in the
+      // blur event not being triggered.
+      const onTouchStart = event => {
+        const targetInDownshift =
+          this._rootNode && isOrContainsNode(this._rootNode, event.target)
+        if (!targetInDownshift && this.getState().isOpen) {
+          this.reset({type: Downshift.stateChangeTypes.touchStart}, () =>
+            this.props.onOuterClick(this.getStateAndHelpers()),
+          )
+        }
+      }
+
       this.props.environment.addEventListener('mousedown', onMouseDown)
       this.props.environment.addEventListener('mouseup', onMouseUp)
+      this.props.environment.addEventListener('touchstart', onTouchStart)
 
       this.cleanup = () => {
         this._isMounted = false
         this.props.environment.removeEventListener('mousedown', onMouseDown)
         this.props.environment.removeEventListener('mouseup', onMouseUp)
+        this.props.environment.removeEventListener('touchstart', onTouchStart)
       }
     }
   }

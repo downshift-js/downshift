@@ -46,6 +46,42 @@ test('handles mouse events properly to reset state', () => {
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 })
 
+test('handles state change for touchevent events', () => {
+  const handleStateChange = jest.fn()
+  const renderSpy = jest.fn(({getToggleButtonProps}) => (
+    <button {...getToggleButtonProps({'data-testid': 'button'})} />
+  ))
+
+  const MyComponent = () => (
+    <Downshift onStateChange={handleStateChange} render={renderSpy} />
+  )
+  const {queryByTestId, container, unmount} = render(<MyComponent />)
+  document.body.appendChild(container)
+
+  const button = queryByTestId('button')
+
+  // touch outside for coverage
+  document.body.dispatchEvent(
+    new window.TouchEvent('touchstart', {bubbles: true}),
+  )
+
+  // open menu
+  Simulate.click(button)
+  jest.runAllTimers()
+
+  expect(handleStateChange).toHaveBeenCalledTimes(1)
+
+  // touch outside downshift
+  document.body.dispatchEvent(
+    new window.TouchEvent('touchstart', {bubbles: true}),
+  )
+
+  jest.runAllTimers()
+  expect(handleStateChange).toHaveBeenCalledTimes(2)
+
+  unmount()
+})
+
 test('props update causes the a11y status to be updated', () => {
   setA11yStatus.mockReset()
   const MyComponent = () => (
