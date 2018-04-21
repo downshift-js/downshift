@@ -116,6 +116,7 @@ class Downshift extends Component {
     blurButton: '__autocomplete_blur_button__',
     controlledPropUpdatedSelectedItem:
       '__autocomplete_controlled_prop_updated_selected_item__',
+    touchStart: '__autocomplete_touchstart__',
   }
 
   constructor(...args) {
@@ -888,7 +889,7 @@ class Downshift extends Component {
         const targetInDownshift =
           this._rootNode && isOrContainsNode(this._rootNode, event.target)
         if (!targetInDownshift && this.getState().isOpen) {
-          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.reset({type: Downshift.stateChangeTypes.touchStart}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
