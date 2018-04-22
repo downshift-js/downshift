@@ -115,6 +115,16 @@ test('inputValue initializes properly if the selectedItem is controlled and set'
   )
 })
 
+test('inputValue initializes properly if selectedItem is set to 0', () => {
+  const renderSpy = jest.fn(() => null)
+  render(<Downshift selectedItem={0} render={renderSpy} />)
+  expect(renderSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      inputValue: '0',
+    }),
+  )
+})
+
 test('props update of selectedItem will update the inputValue state', () => {
   const renderSpy = jest.fn(() => null)
   const {container} = render(
