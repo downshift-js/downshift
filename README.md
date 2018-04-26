@@ -132,8 +132,8 @@ import Downshift from 'downshift'
 function BasicAutocomplete({items, onChange}) {
   return (
     <Downshift
-      onChange={onChange}
-      render={({
+      onChange={onChange}>
+      {({
         getInputProps,
         getItemProps,
         isOpen,
@@ -168,7 +168,7 @@ function BasicAutocomplete({items, onChange}) {
           ) : null}
         </div>
       )}
-    />
+    </Downshift>
   )
 }
 
