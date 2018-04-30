@@ -514,6 +514,12 @@ class Downshift extends Component {
     Enter(event) {
       if (this.getState().isOpen) {
         event.preventDefault()
+        const itemIndex = this.getState().highlightedIndex
+        const item = this.items[itemIndex]
+        const itemNode = this.getItemNodeFromIndex(itemIndex)
+        if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
+          return
+        }
         this.selectHighlightedItem({
           type: Downshift.stateChangeTypes.keyDownEnter,
         })
