@@ -19,12 +19,10 @@ test('space on button opens and closes the menu', () => {
 test('clicking on the button opens and closes the menu', () => {
   const {button, renderSpy} = setup()
   Simulate.click(button)
-  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   Simulate.click(button)
-  jest.runAllTimers()
   expect(renderSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -89,6 +87,29 @@ test(`getToggleButtonProps doesn't include event handlers when disabled is passe
       }.`,
     )
   }
+})
+
+describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () => {
+  const originalEnv = process.env.NODE_ENV
+
+  afterEach(() => {
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('clicking on the button opens and closes the menu for test', () => {
+    process.env.NODE_ENV = 'production'
+    const {button, renderSpy} = setup()
+    Simulate.click(button)
+    jest.runAllTimers()
+    expect(renderSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({isOpen: true}),
+    )
+    Simulate.click(button)
+    jest.runAllTimers()
+    expect(renderSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({isOpen: false}),
+    )
+  })
 })
 
 function setup({buttonProps, Button = props => <button {...props} />} = {}) {
