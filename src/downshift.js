@@ -582,6 +582,9 @@ class Downshift extends Component {
     ) {
       event.target.focus()
     }
+    // to simplify testing components that use downshift, we'll not wrap this in a setTimeout
+    // if the NODE_ENV is test. With the proper build system, this should be dead code eliminated
+    // when building for production and should therefore have no impact on production code.
     if (process.env.NODE_ENV === 'test') {
       this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
     } else {
