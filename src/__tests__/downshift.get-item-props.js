@@ -4,6 +4,7 @@ import {
   renderIntoDocument,
   cleanup,
   Simulate,
+  fireEvent,
 } from 'react-testing-library'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
@@ -179,7 +180,6 @@ test(`disabled item can't be selected by pressing enter`, () => {
   const firstItem = utils.queryByTestId('item-0')
   expect(firstItem.hasAttribute('disabled')).toBe(true)
 
-  // input.simulate('keydown')
   changeInputValue('c')
   // ↓
   arrowDownInput()
@@ -224,16 +224,15 @@ function renderDownshift({
     renderSpy,
     input,
     arrowDownInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
-    escapeOnInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'Escape', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
     enterOnInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'Enter', ...extraEventProps}),
-    changeInputValue: (value, extraEventProps) =>
-      Simulate.change(input, {target: {value}, ...extraEventProps}),
-    blurOnInput: extraEventProps => Simulate.blur(input, extraEventProps),
+      fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    changeInputValue: (value, extraEventProps) => {
+      input.value = value
+      fireEvent.change(input, {...extraEventProps})
+    },
   }
 }
 
