@@ -1,5 +1,11 @@
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {
+  render,
+  renderIntoDocument,
+  cleanup,
+  Simulate,
+  fireEvent,
+} from 'react-testing-library'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
 
@@ -12,18 +18,19 @@ beforeEach(() => {
 
 afterEach(() => {
   console.error = oldError
+  cleanup()
 })
 
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/paypal/downshift/issues/113
-  const items = ['Chess', 'Dominion', 'Checkers']
+  const items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}]
   const {queryByTestId, renderSpy} = renderDownshift({items})
   const firstButton = queryByTestId('item-0-button')
   renderSpy.mockClear()
   Simulate.click(firstButton)
   expect(renderSpy).toHaveBeenCalledWith(
     expect.objectContaining({
-      selectedItem: items[0],
+      selectedItem: items[0].item,
     }),
   )
 })
@@ -161,24 +168,49 @@ test(`getItemProps doesn't include event handlers when disabled is passed (for I
   }
 })
 
+test(`disabled item can't be selected by pressing enter`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion', disabled: true},
+    {item: 'Checkers', disabled: true},
+  ]
+  const utils = renderDownshift({items})
+  const {input, arrowDownInput, enterOnInput, changeInputValue} = utils
+
+  const firstItem = utils.queryByTestId('item-0')
+  expect(firstItem.hasAttribute('disabled')).toBe(true)
+
+  changeInputValue('c')
+  // ↓
+  arrowDownInput()
+  // ENTER to select the first one
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('c')
+})
+
 function renderDownshift({
-  items = ['Chess', 'Dominion', 'Checkers'],
+  items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,
 } = {}) {
-  const renderSpy = jest.fn(({getItemProps}) => (
+  const renderSpy = jest.fn(({getItemProps, getInputProps}) => (
     <div>
+      <input {...getInputProps({'data-testid': 'input'})} />
       {items.map((item, index) => (
         <div
-          {...getItemProps({item, index})}
+          {...getItemProps({
+            ...item,
+            index,
+          })}
           key={index}
           data-testid={`item-${index}`}
         >
-          <button data-testid={`item-${index}-button`}>{item}</button>
+          <button data-testid={`item-${index}-button`}>{item.item}</button>
         </div>
       ))}
     </div>
   ))
-  const utils = render(
+  const utils = renderIntoDocument(
     <Downshift
       isOpen={true}
       onChange={() => {}}
@@ -186,7 +218,22 @@ function renderDownshift({
       {...props}
     />,
   )
-  return {...utils, renderSpy}
+  const input = utils.queryByTestId('input')
+  return {
+    ...utils,
+    renderSpy,
+    input,
+    arrowDownInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
+    arrowUpInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+    enterOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    changeInputValue: (value, extraEventProps) => {
+      input.value = value
+      fireEvent.change(input, {...extraEventProps})
+    },
+  }
 }
 
 function setupWithDownshiftController() {
