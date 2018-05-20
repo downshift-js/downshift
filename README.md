@@ -24,7 +24,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![Code of Conduct][coc-badge]][coc]
 
 [![Supports React and Preact][react-badge]][react]
-[![size][size-badge]][unpkg-dist] [![gzip size][gzip-badge]][unpkg-dist]
+[![size][size-badge]][unpkg-dist] [![gzip size][gzip-badge]][unpkg-dist] [![install size][install-size-badge]][install-size]
 [![module formats: umd, cjs, and es][module-formats-badge]][unpkg-dist]
 
 [![Watch on GitHub][github-watch-badge]][github-watch]
@@ -987,6 +987,8 @@ MIT
 [react]: https://facebook.github.io/react/
 [gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
 [size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
+[install-size]: https://packagephobia.now.sh/result?p=downshift
+[install-size-badge]: https://packagephobia.now.sh/badge?p=downshift
 [unpkg-dist]: https://unpkg.com/downshift/dist/
 [module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
 [github-watch-badge]: https://img.shields.io/github/watchers/paypal/downshift.svg?style=social
