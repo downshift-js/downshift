@@ -144,7 +144,7 @@ const items = [
 render(
   <Downshift
     onChange={selection => alert(`You selected ${selection.value}`)}
-    itemToString={item => (item ? '' : item.value)}
+    itemToString={item => (item ? item.value : '')}
   >
     {({
       getInputProps,
