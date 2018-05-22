@@ -184,9 +184,9 @@ render(
 )
 ```
 
-`downshift` is the only component. It doesn't render anything itself, it just
+`<Downshift />` is the only component. It doesn't render anything itself, it just
 calls the render function and renders that. ["Use a render
-prop!"][use-a-render-prop]! `<Downshift render={/* your JSX here! */} />`.
+prop!"][use-a-render-prop]! `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Props
 
