@@ -143,7 +143,8 @@ render(
   <Downshift
     onChange={selection => alert(`You selected ${selection.value}`)}
     itemToString={item => (item ? '' : item.value)}
-    render={({
+  >
+    {({
       getInputProps,
       getItemProps,
       getLabelProps,
@@ -179,7 +180,7 @@ render(
         ) : null}
       </div>
     )}
-  />,
+  </Downshift>,
   document.getElementById('root'),
 )
 ```
