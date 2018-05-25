@@ -63,13 +63,14 @@ export interface DownshiftProps {
   children?: ChildrenFunction
   id?: string
   environment?: Environment
-  onOuterClick?: (
-    stateAndHelpers: ControllerStateAndHelpers,
-  ) => void
+  onOuterClick?: (stateAndHelpers: ControllerStateAndHelpers) => void
   onUserAction?: (
     options: StateChangeOptions,
     stateAndHelpers: ControllerStateAndHelpers,
   ) => void
+  breakingChanges?: {
+    resetInputOnSelection?: boolean
+  }
 }
 
 export interface Environment {
