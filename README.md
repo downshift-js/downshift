@@ -126,64 +126,70 @@ npm install --save downshift
 
 ## Usage
 
+> [Try it out in the browser](https://codesandbox.io/s/6z67jvklw3)
+
 ```jsx
+import React from 'react'
+import {render} from 'react-dom'
 import Downshift from 'downshift'
 
-function BasicAutocomplete({items, onChange}) {
-  return (
-    <Downshift onChange={onChange}>
-      {({
-        getInputProps,
-        getItemProps,
-        isOpen,
-        inputValue,
-        selectedItem,
-        highlightedIndex,
-      }) => (
-        <div>
-          <input {...getInputProps({placeholder: 'Favorite fruit ?'})} />
-          {isOpen ? (
-            <div style={{border: '1px solid #ccc'}}>
-              {items
-                .filter(
-                  i =>
-                    !inputValue ||
-                    i.toLowerCase().includes(inputValue.toLowerCase()),
-                )
-                .map((item, index) => (
-                  <div
-                    {...getItemProps({item})}
-                    key={item}
-                    style={{
-                      backgroundColor:
-                        highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                    }}
-                  >
-                    {item}
-                  </div>
-                ))}
-            </div>
-          ) : null}
-        </div>
-      )}
-    </Downshift>
-  )
-}
+const items = [
+  {value: 'apple'},
+  {value: 'pear'},
+  {value: 'orange'},
+  {value: 'grape'},
+  {value: 'banana'},
+]
 
-function App() {
-  return (
-    <BasicAutocomplete
-      items={['apple', 'orange', 'carrot']}
-      onChange={selectedItem => console.log(selectedItem)}
-    />
-  )
-}
+render(
+  <Downshift
+    onChange={selection => alert(`You selected ${selection.value}`)}
+    itemToString={item => (item ? item.value : '')}
+  >
+    {({
+      getInputProps,
+      getItemProps,
+      getLabelProps,
+      isOpen,
+      inputValue,
+      highlightedIndex,
+      selectedItem,
+    }) => (
+      <div>
+        <label {...getLabelProps()}>Enter a fruit</label>
+        <input {...getInputProps()} />
+        {isOpen ? (
+          <div>
+            {items
+              .filter(item => !inputValue || item.value.includes(inputValue))
+              .map((item, index) => (
+                <div
+                  {...getItemProps({
+                    key: item.value,
+                    index,
+                    item,
+                    style: {
+                      backgroundColor:
+                        highlightedIndex === index ? 'lightgray' : 'white',
+                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                    },
+                  })}
+                >
+                  {item.value}
+                </div>
+              ))}
+          </div>
+        ) : null}
+      </div>
+    )}
+  </Downshift>,
+  document.getElementById('root'),
+)
 ```
 
-`downshift` is the only component. It doesn't render anything itself, it just
+`<Downshift />` is the only component. It doesn't render anything itself, it just
 calls the render function and renders that. ["Use a render
-prop!"][use-a-render-prop]! `<Downshift render={/* your JSX here! */} />`.
+prop!"][use-a-render-prop]! `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Props
 
