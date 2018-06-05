@@ -27,7 +27,7 @@
     "storybook": "start-storybook -p 6006 -c stories",
     "storybook:build": "build-storybook -c stories",
     "storybook:install": "cd stories && npm install",
-    "storybook:serve": "serve ./storybook-static -p 6006",
+    "storybook:serve": "serve --listen 13370 ./storybook-static",
     "setup": "npm install && npm run storybook:install -s && npm run storybook:build -s && npm run validate",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:cypress",
     "precommit": "kcd-scripts precommit"
@@ -77,7 +77,7 @@
     "react-native": "^0.54.2",
     "react-test-renderer": "^16.3.2",
     "react-testing-library": "^2.3.0",
-    "serve": "^6.5.3",
+    "serve": "^7.2.0",
     "typescript": "^2.7.2",
     "wait-port": "^0.2.2"
   },
