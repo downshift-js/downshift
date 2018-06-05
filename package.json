@@ -21,7 +21,7 @@
     "test:cypress:dev": "npm-run-all --parallel --race storybook cy:open",
     "pretest:cypress": "npm run storybook:build --silent",
     "test:cypress": "npm-run-all --parallel --race storybook:serve cy:run",
-    "cy:run": "cypress run",
+    "cy:run": "wait-port --timeout 10000 localhost:13370 && cypress run",
     "cy:open": "cypress open",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "storybook": "start-storybook -p 6006 -c stories",
@@ -78,7 +78,8 @@
     "react-test-renderer": "^16.3.2",
     "react-testing-library": "^2.3.0",
     "serve": "^6.5.3",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "wait-port": "^0.2.2"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
