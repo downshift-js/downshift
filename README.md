@@ -19,7 +19,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-78-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-79-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 
@@ -56,55 +56,54 @@ harder to contribute to.
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Props](#props)
-  * [defaultSelectedItem](#defaultselecteditem)
-  * [defaultHighlightedIndex](#defaulthighlightedindex)
-  * [defaultInputValue](#defaultinputvalue)
-  * [defaultIsOpen](#defaultisopen)
-  * [itemToString](#itemtostring)
-  * [selectedItemChanged](#selecteditemchanged)
-  * [getA11yStatusMessage](#geta11ystatusmessage)
-  * [onChange](#onchange)
-  * [onSelect](#onselect)
-  * [onStateChange](#onstatechange)
-  * [stateReducer](#statereducer)
-  * [onInputValueChange](#oninputvaluechange)
-  * [itemCount](#itemcount)
-  * [highlightedIndex](#highlightedindex)
-  * [inputValue](#inputvalue)
-  * [isOpen](#isopen)
-  * [selectedItem](#selecteditem)
-  * [render](#render)
-  * [id](#id)
-  * [environment](#environment)
-  * [onOuterClick](#onouterclick)
-* [stateChangeTypes](#statechangetypes)
-* [Control Props](#control-props)
-* [Render Prop Function](#render-prop-function)
-  * [prop getters](#prop-getters)
-  * [actions](#actions)
-  * [state](#state)
-  * [props](#props)
-* [Event Handlers](#event-handlers)
-  * [default handlers](#default-handlers)
-  * [customizing handlers](#customizing-handlers)
-* [Utilities](#utilities)
-  * [resetIdCounter](#resetidcounter)
-* [React Native](#react-native)
-  * [Gotchas](#gotchas)
-* [Examples](#examples)
-* [FAQ](#faq)
-* [Upcoming Breaking Changes](#upcoming-breaking-changes)
-* [Inspiration](#inspiration)
-* [Other Solutions](#other-solutions)
-* [Bindings for ReasonML](#bindings-for-reasonml)
-* [Contributors](#contributors)
-* [LICENSE](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Props](#props)
+  - [defaultSelectedItem](#defaultselecteditem)
+  - [defaultHighlightedIndex](#defaulthighlightedindex)
+  - [defaultInputValue](#defaultinputvalue)
+  - [defaultIsOpen](#defaultisopen)
+  - [itemToString](#itemtostring)
+  - [selectedItemChanged](#selecteditemchanged)
+  - [getA11yStatusMessage](#geta11ystatusmessage)
+  - [onChange](#onchange)
+  - [onSelect](#onselect)
+  - [onStateChange](#onstatechange)
+  - [stateReducer](#statereducer)
+  - [onInputValueChange](#oninputvaluechange)
+  - [itemCount](#itemcount)
+  - [highlightedIndex](#highlightedindex)
+  - [inputValue](#inputvalue)
+  - [isOpen](#isopen)
+  - [selectedItem](#selecteditem)
+  - [render](#render)
+  - [id](#id)
+  - [environment](#environment)
+  - [onOuterClick](#onouterclick)
+- [stateChangeTypes](#statechangetypes)
+- [Control Props](#control-props)
+- [Render Prop Function](#render-prop-function)
+  - [prop getters](#prop-getters)
+  - [actions](#actions)
+  - [state](#state)
+  - [props](#props)
+- [Event Handlers](#event-handlers)
+  - [default handlers](#default-handlers)
+  - [customizing handlers](#customizing-handlers)
+- [Utilities](#utilities)
+  - [resetIdCounter](#resetidcounter)
+- [React Native](#react-native)
+  - [Gotchas](#gotchas)
+- [Examples](#examples)
+- [FAQ](#faq)
+- [Upcoming Breaking Changes](#upcoming-breaking-changes)
+- [Inspiration](#inspiration)
+- [Other Solutions](#other-solutions)
+- [Bindings for ReasonML](#bindings-for-reasonml)
+- [Contributors](#contributors)
+- [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -269,8 +268,8 @@ Called when the user selects an item and the selected item has changed. Called
 with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
-* `selectedItem`: The item that was just selected
-* `stateAndHelpers`: This is the same thing your `render` prop function is
+- `selectedItem`: The item that was just selected
+- `stateAndHelpers`: This is the same thing your `render` prop function is
   called with (see [Render Prop Function](#render-prop-function))
 
 ### onSelect
@@ -282,8 +281,8 @@ Called when the user selects an item, regardless of the previous selected item.
 Called with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
-* `selectedItem`: The item that was just selected
-* `stateAndHelpers`: This is the same thing your `render` prop function is
+- `selectedItem`: The item that was just selected
+- `stateAndHelpers`: This is the same thing your `render` prop function is
   called with (see [Render Prop Function](#render-prop-function))
 
 ### onStateChange
@@ -298,10 +297,10 @@ pass it as props, rather than letting downshift control all its state itself.
 The parameters both take the shape of internal state (`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`) but differ
 slightly.
 
-* `changes`: These are the properties that actually have changed since the last
+- `changes`: These are the properties that actually have changed since the last
   state change. This also has a `type` property which you can learn more about
   in the [`stateChangeTypes`](#statechangetypes) section.
-* `stateAndHelpers`: This is the exact same thing your `render` prop function is
+- `stateAndHelpers`: This is the exact same thing your `render` prop function is
   called with (see [Render Prop Function](#render-prop-function))
 
 > Tip: This function will be called any time _any_ state is changed. The best
@@ -321,8 +320,8 @@ control over how the component interacts with user updates without having to
 use [Control Props](#control-props). It gives you the current state and the
 state that will be set, and you return the state that you want to set.
 
-* `state`: The full current state of downshift.
-* `changes`: These are the properties that are about to change. This also has a
+- `state`: The full current state of downshift.
+- `changes`: These are the properties that are about to change. This also has a
   `type` property which you can learn more about in the
   [`stateChangeTypes`](#statechangetypes) section.
 
@@ -357,8 +356,8 @@ Called whenever the input value changes. Useful to use instead or in combination
 of `onStateChange` when `inputValue` is a controlled prop to
 [avoid issues with cursor positions](https://github.com/paypal/downshift/issues/217).
 
-* `inputValue`: The current value of the input
-* `stateAndHelpers`: This is the same thing your `render` prop function is
+- `inputValue`: The current value of the input
+- `stateAndHelpers`: This is the same thing your `render` prop function is
   called with (see [Render Prop Function](#render-prop-function))
 
 ### itemCount
@@ -526,7 +525,7 @@ your root element.
 
 Required properties:
 
-* `refKey`: if you're rendering a composite component, that component will need
+- `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})` and
   your composite component would forward like: `<div ref={props.innerRef} />`
@@ -551,7 +550,7 @@ There are no required properties for this method.
 
 Optional properties:
 
-* `disabled`: If this is set to true, then no event handlers will be returned from `getInputProps` and a `disabled` prop will be returned (effectively disabling the input).
+- `disabled`: If this is set to true, then no event handlers will be returned from `getInputProps` and a `disabled` prop will be returned (effectively disabling the input).
 
 #### `getLabelProps`
 
@@ -602,18 +601,18 @@ items.filter(shouldRenderItem).map(item => <div {...getItemProps({item})} />)
 
 Required properties:
 
-* `item`: this is the item data that will be selected when the user selects a
+- `item`: this is the item data that will be selected when the user selects a
   particular item.
 
 Optional properties:
 
-* `index`: This is how `downshift` keeps track of your item when updating the
+- `index`: This is how `downshift` keeps track of your item when updating the
   `highlightedIndex` as the user keys around. By default, `downshift` will
   assume the `index` is the order in which you're calling `getItemProps`. This
   is often good enough, but if you find odd behavior, try setting this
   explicitly. It's probably best to be explicit about `index` when using a
   windowing library like `react-virtualized`.
-* `disabled`: If this is set to `true`, then all of the downshift item event
+- `disabled`: If this is set to `true`, then all of the downshift item event
   handlers will be omitted. Items will not be highlighted when hovered,
   and items will not be selected when clicked.
 
@@ -626,9 +625,9 @@ apply all of the proper ARIA attributes.
 
 Optional properties:
 
-* `disabled`: If this is set to `true`, then all of the downshift button event
+- `disabled`: If this is set to `true`, then all of the downshift button event
   handlers will be omitted (it wont toggle the menu when clicked).
-* `aria-label`: The `aria-label` prop is in English. You should probably override
+- `aria-label`: The `aria-label` prop is in English. You should probably override
   this yourself so you can provide translations:
 
 ```jsx
@@ -692,23 +691,23 @@ described below.
 
 ### default handlers
 
-* `ArrowDown`: moves the highlighted index down by 1. If this shift key is held
+- `ArrowDown`: moves the highlighted index down by 1. If this shift key is held
   when this event fires, the highlighted index will jump down 5 indices instead of 1.
   NOTE: if the current highlighed index is within the bottom 5 indices, the top-most
   index will be highlighted.)
 
-* `ArrowUp`: moves the highlighted index up by 1. If this shift key is held when
+- `ArrowUp`: moves the highlighted index up by 1. If this shift key is held when
   this event fires, the highlighted index will jump up 5 indices instead of 1. NOTE:
   if the current highlighed index is within the top 5 indices, the bottom-most index
   will be highlighted.)
 
-* `Enter`: if the menu is open, select the currently highlighted item. If the menu
+- `Enter`: if the menu is open, select the currently highlighted item. If the menu
   is open, the usual 'Enter' event is prevented by Downshift's default implicit enter
   handler; so, for example, a form submission event will not work as one might expect
   (though if the menu is closed the form submission will work normally). See below
   for customizing the handlers.
 
-* `Escape`: will reset downshift's state. This means that `highlightedIndex` will be
+- `Escape`: will reset downshift's state. This means that `highlightedIndex` will be
   set to the `defaultHighlightedIndex`, the `inputValue` will be set to the `itemToString`
   value of the `selectedItem`, and the `isOpen` state will be set to `false`.
 
@@ -793,43 +792,43 @@ Since Downshift renders it's UI using render props, Downshift supports rendering
 
 ### Gotchas
 
-* Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
-* When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
+- Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
+- When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
 
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
 
-* [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
-* [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled
+- [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
+- [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled
   `selectedItem` API).
-* [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled
+- [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled
   `selectedItem` API).
-* [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
-* [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
-* [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83)
+- [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
+- [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
+- [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83)
   from Algolia
-* [Material-UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
-* [Material-UI (1.0.0-beta.33) Multiple select with autocomplete](https://codesandbox.io/s/7k3674z09q)
-* [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl)
+- [Material-UI (1.0.0-beta.4) Combobox Using Downshift](https://codesandbox.io/s/QMGq4kAY)
+- [Material-UI (1.0.0-beta.33) Multiple select with autocomplete](https://codesandbox.io/s/7k3674z09q)
+- [Integration with `GenieJS`](https://codesandbox.io/s/jRLKrxwgl)
   ([learn more about `genie` here](https://github.com/kentcdodds/genie))
-* [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
-* [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
-* [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/v670kq95l)
-* [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
-* [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
-* [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
-* [Multiple editable tag selection](https://codesandbox.io/s/o4yp9vmm8z)
-* [Downshift implemented as compound components and a Higher Order Component](https://codesandbox.io/s/017n1jqo00)
+- [Handling and displaying errors](https://codesandbox.io/s/zKE37vorr)
+- [Integration with React Router](https://codesandbox.io/s/ww9lwloy8w)
+- [Windowing with `react-tiny-virtual-list`](https://codesandbox.io/s/v670kq95l)
+- [Section/option group example](https://codesandbox.io/s/zx1kj58npl)
+- [Integration with `fuzzaldrin-plus` (Fuzzy matching)](https://codesandbox.io/s/pyq3v4o3j)
+- [Dropdown/select implementation with Bootstrap](https://codesandbox.io/s/53y8jvpj0k)
+- [Multiple editable tag selection](https://codesandbox.io/s/o4yp9vmm8z)
+- [Downshift implemented as compound components and a Higher Order Component](https://codesandbox.io/s/017n1jqo00)
   (exposes a `withDownshift` higher order component which you can use to get at
   the state, actions, prop getters in a rendered downshift tree).
-* [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
-* [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
-* [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
-* [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
-* [React Native example](https://snack.expo.io/SkE0LxXqM)
-* [React VR example](https://github.com/infiniteluke/bassdrop)
-* [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
+- [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
+- [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
+- [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
+- [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
+- [React Native example](https://snack.expo.io/SkE0LxXqM)
+- [React VR example](https://github.com/infiniteluke/bassdrop)
+- [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
 
 If you would like to add an example, follow these steps:
 
@@ -926,8 +925,8 @@ Autocomplete][jquery-complete].
 
 You can watch me build the first iteration of `downshift` on YouTube:
 
-* [Part 1](https://www.youtube.com/watch?v=2kzD1IjDy5s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=11)
-* [Part 2](https://www.youtube.com/watch?v=w1Z7Jvj08_s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=10)
+- [Part 1](https://www.youtube.com/watch?v=2kzD1IjDy5s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=11)
+- [Part 2](https://www.youtube.com/watch?v=w1Z7Jvj08_s&list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE&index=10)
 
 You'll find more recordings of me working on `downshift` on [my livestream
 YouTube playlist][yt-playlist].
@@ -937,8 +936,8 @@ YouTube playlist][yt-playlist].
 You can implement these other solutions using `downshift`, but if you'd prefer
 to use these out of the box solutions, then that's fine too:
 
-* [`react-select`](https://github.com/JedWatson/react-select)
-* [`react-autocomplete`](https://github.com/reactjs/react-autocomplete)
+- [`react-select`](https://github.com/JedWatson/react-select)
+- [`react-autocomplete`](https://github.com/reactjs/react-autocomplete)
 
 ## Bindings for ReasonML
 
@@ -949,7 +948,6 @@ If you're developing some React in ReasonML, check out the [`Downshift` bindings
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore -->
 | [<img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;"/><br /><sub><b>Kent C. Dodds</b></sub>](https://kentcdodds.com)<br />[💻](https://github.com/paypal/downshift/commits?author=kentcdodds "Code") [📖](https://github.com/paypal/downshift/commits?author=kentcdodds "Documentation") [🚇](#infra-kentcdodds "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/paypal/downshift/commits?author=kentcdodds "Tests") [👀](#review-kentcdodds "Reviewed Pull Requests") [📝](#blog-kentcdodds "Blogposts") [🐛](https://github.com/paypal/downshift/issues?q=author%3Akentcdodds "Bug reports") [💡](#example-kentcdodds "Examples") [🤔](#ideas-kentcdodds "Ideas, Planning, & Feedback") [📢](#talk-kentcdodds "Talks") | [<img src="https://avatars0.githubusercontent.com/u/100200?v=4" width="100px;"/><br /><sub><b>Ryan Florence</b></sub>](http://twitter.com/ryanflorence)<br />[🤔](#ideas-ryanflorence "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/112170?v=4" width="100px;"/><br /><sub><b>Jared Forsyth</b></sub>](http://jaredforsyth.com)<br />[🤔](#ideas-jaredly "Ideas, Planning, & Feedback") [📖](https://github.com/paypal/downshift/commits?author=jaredly "Documentation") | [<img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;"/><br /><sub><b>Jack Moore</b></sub>](https://github.com/jtmthf)<br />[💡](#example-jtmthf "Examples") | [<img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;"/><br /><sub><b>Travis Arnold</b></sub>](http://travisrayarnold.com)<br />[💻](https://github.com/paypal/downshift/commits?author=souporserious "Code") [📖](https://github.com/paypal/downshift/commits?author=souporserious "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/1045233?v=4" width="100px;"/><br /><sub><b>Marcy Sutton</b></sub>](http://marcysutton.com)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Amarcysutton "Bug reports") [🤔](#ideas-marcysutton "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;"/><br /><sub><b>Jeremy Gayed</b></sub>](http://www.jeremygayed.com)<br />[💡](#example-tizmagik "Examples") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -963,7 +961,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars0.githubusercontent.com/u/410792?v=4" width="100px;"/><br /><sub><b>Dony Sukardi</b></sub>](http://dsds.io)<br />[💡](#example-donysukardi "Examples") [💬](#question-donysukardi "Answering Questions") [💻](https://github.com/paypal/downshift/commits?author=donysukardi "Code") [⚠️](https://github.com/paypal/downshift/commits?author=donysukardi "Tests") | [<img src="https://avatars1.githubusercontent.com/u/2755722?v=4" width="100px;"/><br /><sub><b>Dillon Mulroy</b></sub>](https://dillonmulroy.com)<br />[📖](https://github.com/paypal/downshift/commits?author=dmmulroy "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/12440573?v=4" width="100px;"/><br /><sub><b>Curtis Tate Wilkinson</b></sub>](https://twitter.com/curtytate)<br />[💻](https://github.com/paypal/downshift/commits?author=curtiswilkinson "Code") | [<img src="https://avatars3.githubusercontent.com/u/383212?v=4" width="100px;"/><br /><sub><b>Brice BERNARD</b></sub>](https://github.com/brikou)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Abrikou "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=brikou "Code") | [<img src="https://avatars3.githubusercontent.com/u/14304503?v=4" width="100px;"/><br /><sub><b>Tony Xu</b></sub>](https://github.com/xutopia)<br />[💻](https://github.com/paypal/downshift/commits?author=xutopia "Code") | [<img src="https://avatars1.githubusercontent.com/u/14035529?v=4" width="100px;"/><br /><sub><b>Anthony Ng</b></sub>](http://anthonyng.me)<br />[📖](https://github.com/paypal/downshift/commits?author=newyork-anthonyng "Documentation") | [<img src="https://avatars2.githubusercontent.com/u/11996139?v=4" width="100px;"/><br /><sub><b>S S</b></sub>](https://github.com/notruth)<br />[💬](#question-notruth "Answering Questions") [💻](https://github.com/paypal/downshift/commits?author=notruth "Code") [📖](https://github.com/paypal/downshift/commits?author=notruth "Documentation") [🤔](#ideas-notruth "Ideas, Planning, & Feedback") [⚠️](https://github.com/paypal/downshift/commits?author=notruth "Tests") |
 | [<img src="https://avatars0.githubusercontent.com/u/29493001?v=4" width="100px;"/><br /><sub><b>Austin Tackaberry</b></sub>](http://austintackaberry.co)<br />[💬](#question-austintackaberry "Answering Questions") [💻](https://github.com/paypal/downshift/commits?author=austintackaberry "Code") [📖](https://github.com/paypal/downshift/commits?author=austintackaberry "Documentation") [🐛](https://github.com/paypal/downshift/issues?q=author%3Aaustintackaberry "Bug reports") [💡](#example-austintackaberry "Examples") [🤔](#ideas-austintackaberry "Ideas, Planning, & Feedback") [👀](#review-austintackaberry "Reviewed Pull Requests") [⚠️](https://github.com/paypal/downshift/commits?author=austintackaberry "Tests") | [<img src="https://avatars3.githubusercontent.com/u/4168055?v=4" width="100px;"/><br /><sub><b>Jean Duthon</b></sub>](https://github.com/jduthon)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ajduthon "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=jduthon "Code") | [<img src="https://avatars3.githubusercontent.com/u/3889580?v=4" width="100px;"/><br /><sub><b>Anton Telesh</b></sub>](http://antontelesh.github.io)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3AAntontelesh "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=Antontelesh "Code") | [<img src="https://avatars3.githubusercontent.com/u/1060669?v=4" width="100px;"/><br /><sub><b>Eric Edem</b></sub>](https://github.com/ericedem)<br />[💻](https://github.com/paypal/downshift/commits?author=ericedem "Code") [📖](https://github.com/paypal/downshift/commits?author=ericedem "Documentation") [🤔](#ideas-ericedem "Ideas, Planning, & Feedback") [⚠️](https://github.com/paypal/downshift/commits?author=ericedem "Tests") | [<img src="https://avatars3.githubusercontent.com/u/3409645?v=4" width="100px;"/><br /><sub><b>Austin Wood</b></sub>](https://github.com/indiesquidge)<br />[💬](#question-indiesquidge "Answering Questions") [📖](https://github.com/paypal/downshift/commits?author=indiesquidge "Documentation") [👀](#review-indiesquidge "Reviewed Pull Requests") | [<img src="https://avatars3.githubusercontent.com/u/14275790?v=4" width="100px;"/><br /><sub><b>Mark Murray</b></sub>](https://github.com/mmmurray)<br />[🚇](#infra-mmmurray "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars0.githubusercontent.com/u/1862172?v=4" width="100px;"/><br /><sub><b>Gianmarco</b></sub>](https://github.com/gsimone)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Agsimone "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=gsimone "Code") |
 | [<img src="https://avatars2.githubusercontent.com/u/6838136?v=4" width="100px;"/><br /><sub><b>Emmanuel Pastor</b></sub>](https://github.com/pastr)<br />[💡](#example-pastr "Examples") | [<img src="https://avatars2.githubusercontent.com/u/10345034?v=4" width="100px;"/><br /><sub><b>dalehurwitz</b></sub>](https://github.com/dalehurwitz)<br />[💻](https://github.com/paypal/downshift/commits?author=dalehurwitz "Code") | [<img src="https://avatars1.githubusercontent.com/u/4813007?v=4" width="100px;"/><br /><sub><b>Bogdan Lobor</b></sub>](https://github.com/blobor)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Ablobor "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=blobor "Code") | [<img src="https://avatars0.githubusercontent.com/u/1127238?v=4" width="100px;"/><br /><sub><b>Luke Herrington</b></sub>](https://github.com/infiniteluke)<br />[💡](#example-infiniteluke "Examples") | [<img src="https://avatars2.githubusercontent.com/u/6361167?v=4" width="100px;"/><br /><sub><b>Brandon Clemons</b></sub>](https://github.com/drobannx)<br />[💻](https://github.com/paypal/downshift/commits?author=drobannx "Code") | [<img src="https://avatars0.githubusercontent.com/u/10591587?v=4" width="100px;"/><br /><sub><b>Kieran</b></sub>](https://github.com/aMollusk)<br />[💻](https://github.com/paypal/downshift/commits?author=aMollusk "Code") | [<img src="https://avatars3.githubusercontent.com/u/11570627?v=4" width="100px;"/><br /><sub><b>Brushedoctopus</b></sub>](https://github.com/Brushedoctopus)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3ABrushedoctopus "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=Brushedoctopus "Code") |
-| [<img src="https://avatars3.githubusercontent.com/u/5456216?v=4" width="100px;"/><br /><sub><b>Cameron Edwards</b></sub>](http://cameronpedwards.com)<br />[💻](https://github.com/paypal/downshift/commits?author=cameronprattedwards "Code") |
+| [<img src="https://avatars3.githubusercontent.com/u/5456216?v=4" width="100px;"/><br /><sub><b>Cameron Edwards</b></sub>](http://cameronpedwards.com)<br />[💻](https://github.com/paypal/downshift/commits?author=cameronprattedwards "Code") | [<img src="https://avatars0.githubusercontent.com/u/7252803?v=4" width="100px;"/><br /><sub><b>Alfred Ringstad</b></sub>](https://hyperlab.se)<br />[💻](https://github.com/paypal/downshift/commits?author=alfredringstad "Code") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
