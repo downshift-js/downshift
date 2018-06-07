@@ -601,13 +601,15 @@ class Downshift extends Component {
     }
   }
 
-  button_handleBlur = () => {
+  button_handleBlur = event => {
+    const blurTarget = event.target // Save blur target for comparison with activeElement later
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
     setTimeout(() => {
       if (
         !this.isMouseDown &&
         (this.props.environment.document.activeElement == null ||
-          this.props.environment.document.activeElement.id !== this.inputId)
+          this.props.environment.document.activeElement.id !== this.inputId) &&
+        this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
       ) {
         this.reset({type: Downshift.stateChangeTypes.blurButton})
       }
