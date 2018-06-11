@@ -12,8 +12,7 @@ describe('Semantic-UI', () => {
   })
 
   it('does not reset when tabbing from input to button', () => {
-    cy
-      .getInStoryByTestId('semantic-ui-input')
+    cy.getInStoryByTestId('semantic-ui-input')
       .type('Alg')
       .getInStoryByTestId('semantic-ui-toggle-button')
       .focus()
@@ -24,8 +23,7 @@ describe('Semantic-UI', () => {
   })
 
   it('does not reset when tabbing from button to input', () => {
-    cy
-      .getInStoryByTestId('semantic-ui-toggle-button')
+    cy.getInStoryByTestId('semantic-ui-toggle-button')
       .click()
       .getInStoryByTestId('semantic-ui-input')
       .focus()

@@ -8,23 +8,20 @@ describe('Basic', () => {
   })
 
   it('can select an item', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('ee{downarrow}{enter}')
       .should('have.value', 'Green')
   })
 
   it('can down arrow to select an item', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('{downarrow}') // open menu
       .type('{downarrow}{downarrow}{enter}') // select second item
       .should('have.value', 'Red')
   })
 
   it('resets the item on blur', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('{downarrow}{downarrow}{enter}{backspace}') // select first item
       .should('have.value', 'Black')
       .getInStory('body')
@@ -34,8 +31,7 @@ describe('Basic', () => {
   })
 
   it('can use the mouse to click an item', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('red')
       .getInStoryByTestId('downshift-item-0')
       .click()
@@ -44,8 +40,7 @@ describe('Basic', () => {
   })
 
   it('does not reset the input when mouseup outside while the input is focused', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('red')
       .getInStoryByTestId('downshift-item-0')
       .click()
@@ -66,8 +61,7 @@ describe('Basic', () => {
   })
 
   it('resets when tabbing from input to button', () => {
-    cy
-      .getInStoryByTestId('basic-input')
+    cy.getInStoryByTestId('basic-input')
       .type('re')
       .getInStoryByTestId('clear-selection')
       .focus()
