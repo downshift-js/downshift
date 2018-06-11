@@ -123,10 +123,10 @@ function BasicAutocomplete({items, onChange}) {
           <Input
             {...getInputProps({
               placeholder: 'Enter color here',
-              'data-test': 'basic-input',
+              'data-testid': 'basic-input',
             })}
           />
-          <button data-test="clear-selection" onClick={clearSelection}>
+          <button data-testid="clear-selection" onClick={clearSelection}>
             clear
           </button>
           {isOpen && (
@@ -142,7 +142,7 @@ function BasicAutocomplete({items, onChange}) {
                   <Item
                     key={item}
                     {...getItemProps({
-                      'data-test': `downshift-item-${index}`,
+                      'data-testid': `downshift-item-${index}`,
                       item,
                       isActive: highlightedIndex === index,
                       isSelected: selectedItem === item,

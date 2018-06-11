@@ -290,7 +290,7 @@ function pickState(state = {}) {
  * @return {String} keyboard key
  */
 function normalizeArrowKey(event) {
-  const { key, keyCode } = event
+  const {key, keyCode} = event
   /* istanbul ignore next (ie) */
   if (keyCode >= 37 && keyCode <= 40 && key.indexOf('Arrow') !== 0) {
     return `Arrow${key}`
