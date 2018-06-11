@@ -7,9 +7,9 @@ series [How to Contribute to an Open Source Project on GitHub][egghead]
 
 ## Project setup
 
-1. Fork and clone the repo
-2. `npm run setup` to setup and validate your clone of the project
-3. Create a branch for your PR
+1.  Fork and clone the repo
+2.  `npm run setup` to setup and validate your clone of the project
+3.  Create a branch for your PR
 
 > Tip: Keep your `master` branch pointing at the original repository and make
 > pull requests from branches on your fork. To do this, run:
@@ -51,12 +51,12 @@ sure to include those changes (if they exist) in your commit.
 There are quite a few test scripts that run as part of a `validate` script in
 this project:
 
-* lint - ESLint stuff, pretty basic. Please fix any errors/warnings :)
-* build-and-test - This ensures that the built version of `downshift` is what we expect. These tests live in `other/misc-tests/__tests__`.
-* test:cover - This is primarily unit tests on the source code and accounts for most of the coverage. We enforce 100% code coverage on this library. These tests live in `src/__tests__`
-* test:ts - This runs `tsc` on the codebase to make sure the type script definitions are correct for the `tsx` files in the `test` directory.
-* test:ssr - This ensures that downshift works with server-side rendering (it can run and render in an environment without the DOM). These tests live in `other/ssr/__tests__`
-* test:cypress - This runs tests in an actual browser. It runs and tests the storybook examples. These tests live in `cypress/integration`.
+- lint - ESLint stuff, pretty basic. Please fix any errors/warnings :)
+- build-and-test - This ensures that the built version of `downshift` is what we expect. These tests live in `other/misc-tests/__tests__`.
+- test:cover - This is primarily unit tests on the source code and accounts for most of the coverage. We enforce 100% code coverage on this library. These tests live in `src/__tests__`
+- test:ts - This runs `tsc` on the codebase to make sure the type script definitions are correct for the `tsx` files in the `test` directory.
+- test:ssr - This ensures that downshift works with server-side rendering (it can run and render in an environment without the DOM). These tests live in `other/ssr/__tests__`
+- test:cypress - This runs tests in an actual browser. It runs and tests the storybook examples. These tests live in `cypress/integration`.
 
 ### opt into git hooks
 
