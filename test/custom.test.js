@@ -46,14 +46,14 @@ export default class App extends React.Component<Props, State> {
     return (
       <DownshiftTyped defaultSelectedItem={defaultSelectedItem}>
         {({
-          getButtonProps,
+          getToggleButtonProps,
           getItemProps,
           selectedItem,
           isOpen,
         }: ControllerStateAndHelpers<Item>) => {
           return (
             <div style={{position: 'relative'}}>
-              <div {...getButtonProps()}>{selectedItem}</div>
+              <div {...getToggleButtonProps()}>{selectedItem}</div>
               <CustomList isOpen={isOpen}>
                 {items.map((item, index) => (
                   <CustomListItem

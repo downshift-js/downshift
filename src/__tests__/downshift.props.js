@@ -15,40 +15,6 @@ test('onStateChange called with changes and downshift state and helpers', () => 
     ...controlledState,
     onStateChange: handleStateChange,
     breakingChanges: {
-      resetInputOnSelection: false,
-      // Explicitly set to false even if this is the default behaviour to highlight that this test
-      // will fail on v2.
-    },
-  })
-  const itemToSelect = 'foo'
-  selectItem(itemToSelect)
-  const changes = {
-    type: Downshift.stateChangeTypes.unknown,
-    selectedItem: itemToSelect,
-    inputValue: itemToSelect,
-  }
-  const stateAndHelpers = {
-    ...controlledState,
-    isOpen: false,
-    highlightedIndex: null,
-    selectItem,
-  }
-  expect(handleStateChange).toHaveBeenLastCalledWith(
-    changes,
-    expect.objectContaining(stateAndHelpers),
-  )
-})
-
-test('v2 BREAKING CHANGE onStateChange called with changes and downshift state and helpers', () => {
-  const handleStateChange = jest.fn()
-  const controlledState = {
-    inputValue: '',
-    selectedItem: null,
-  }
-  const {selectItem} = setup({
-    ...controlledState,
-    onStateChange: handleStateChange,
-    breakingChanges: {
       resetInputOnSelection: true,
     },
   })

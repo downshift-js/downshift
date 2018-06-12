@@ -145,12 +145,11 @@ function debounce(fn, time) {
  * @param {Function} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
-function composeEventHandlers(...fns) {
+function callAllEventHandlers(...fns) {
   return (event, ...args) =>
     fns.some(fn => {
       fn && fn(event, ...args)
-      // TODO: remove everything after the || in the next breaking change
-      return event.preventDownshiftDefault || event.defaultPrevented
+      return event.preventDownshiftDefault
     })
 }
 
@@ -291,7 +290,7 @@ function normalizeArrowKey(event) {
 
 export {
   cbToCb,
-  composeEventHandlers,
+  callAllEventHandlers,
   debounce,
   scrollIntoView,
   findParent,

@@ -149,39 +149,6 @@ test('item selection when selectedItem is controlled will update the inputValue 
   const initialProps = {
     selectedItem: 'foo',
     itemToString,
-    breakingChanges: {resetInputOnSelection: false},
-    // Explicitly set to false even if this is the default behaviour to highlight that this test
-    // will fail on v2.
-    render: renderSpy,
-  }
-  const {container} = render(<Downshift {...initialProps} />)
-  renderSpy.mockClear()
-  itemToString.mockClear()
-  const newSelectedItem = 'newfoo'
-  renderArg.selectItem(newSelectedItem)
-  expect(renderSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-  render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
-    container,
-  })
-  expect(itemToString).toHaveBeenCalledTimes(2)
-  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
-  expect(renderSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-})
-
-test('v2 BREAKING CHANGE item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
-  const itemToString = jest.fn(x => x)
-  let renderArg
-  const renderSpy = jest.fn(controllerArg => {
-    renderArg = controllerArg
-    return <div />
-  })
-  const initialProps = {
-    selectedItem: 'foo',
-    itemToString,
     breakingChanges: {resetInputOnSelection: true},
     render: renderSpy,
   }
@@ -216,7 +183,7 @@ test('the callback is invoked on selected item only if it is a function', () => 
   callbackSpy.mockClear()
   renderArg.selectItem('foo', {}, callbackSpy)
   expect(callbackSpy).toHaveBeenCalledTimes(1)
-  renderArg.selectItem('foo', {}, {})
+  renderArg.selectItem('foo', {})
 })
 
 test('props update of selectedItem will not update inputValue state', () => {

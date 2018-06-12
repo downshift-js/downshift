@@ -117,7 +117,7 @@
     "includeGlob": [
       "test/**/*.js"
     ],
-    "threshold": 97,
+    "threshold": 90,
     "type": [
       "text"
     ]

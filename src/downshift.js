@@ -6,7 +6,7 @@ import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
-  composeEventHandlers,
+  callAllEventHandlers,
   debounce,
   scrollIntoView,
   generateId,
@@ -62,9 +62,6 @@ class Downshift extends Component {
     inputId: PropTypes.string,
     menuId: PropTypes.string,
     getItemId: PropTypes.func,
-    breakingChanges: PropTypes.shape({
-      resetInputOnSelection: PropTypes.bool,
-    }),
     /* eslint-enable */
   }
 
@@ -100,7 +97,6 @@ class Downshift extends Component {
         ? {}
         : window,
     stateReducer: (state, stateToSet) => stateToSet,
-    breakingChanges: {},
   }
 
   static stateChangeTypes = {
@@ -272,11 +268,9 @@ class Downshift extends Component {
         isOpen: false,
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
-        inputValue:
-          this.isControlledProp('selectedItem') &&
-          this.props.breakingChanges.resetInputOnSelection
-            ? this.props.defaultInputValue
-            : this.props.itemToString(item),
+        inputValue: this.isControlledProp('selectedItem')
+          ? this.props.defaultInputValue
+          : this.props.itemToString(item),
         ...otherStateToSet,
       },
       cb,
@@ -391,7 +385,7 @@ class Downshift extends Component {
         return nextState
       },
       () => {
-        // call the provided callback if it's a callback
+        // call the provided callback if it's a function
         cbToCb(cb)()
 
         // only call the onStateChange and onChange callbacks if
@@ -424,7 +418,6 @@ class Downshift extends Component {
     const {id} = this
     const {
       getRootProps,
-      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
       getMenuProps,
@@ -447,7 +440,6 @@ class Downshift extends Component {
     return {
       // prop getters
       getRootProps,
-      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
       getMenuProps,
@@ -564,12 +556,12 @@ class Downshift extends Component {
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
         {
-          onPress: composeEventHandlers(onClick, this.button_handleClick),
+          onPress: callAllEventHandlers(onClick, this.button_handleClick),
         }
       : {
-          onClick: composeEventHandlers(onClick, this.button_handleClick),
-          onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
+          onClick: callAllEventHandlers(onClick, this.button_handleClick),
+          onKeyDown: callAllEventHandlers(onKeyDown, this.button_handleKeyDown),
+          onBlur: callAllEventHandlers(onBlur, this.button_handleBlur),
         }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
@@ -582,8 +574,6 @@ class Downshift extends Component {
       ...rest,
     }
   }
-  // TODO: remove this in 2.0.0 and just call it `getToggleButtonProps`
-  getButtonProps = this.getToggleButtonProps
 
   button_handleKeyDown = event => {
     const key = normalizeArrowKey(event)
@@ -660,13 +650,13 @@ class Downshift extends Component {
     const eventHandlers = rest.disabled
       ? {}
       : {
-          [onChangeKey]: composeEventHandlers(
+          [onChangeKey]: callAllEventHandlers(
             onChange,
             onInput,
             this.input_handleChange,
           ),
-          onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
+          onKeyDown: callAllEventHandlers(onKeyDown, this.input_handleKeyDown),
+          onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
         }
     return {
       'aria-autocomplete': 'list',
@@ -753,7 +743,7 @@ class Downshift extends Component {
       // onMouseMove is used over onMouseEnter here. onMouseMove
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
-      onMouseMove: composeEventHandlers(onMouseMove, () => {
+      onMouseMove: callAllEventHandlers(onMouseMove, () => {
         if (index === this.getState().highlightedIndex) {
           return
         }
@@ -768,13 +758,13 @@ class Downshift extends Component {
         this.avoidScrolling = true
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
-      onMouseDown: composeEventHandlers(onMouseDown, event => {
+      onMouseDown: callAllEventHandlers(onMouseDown, event => {
         // This prevents the activeElement from being changed
         // to the item so it can remain with the current activeElement
         // which is a more common use case.
         event.preventDefault()
       }),
-      [onSelectKey]: composeEventHandlers(onClick, () => {
+      [onSelectKey]: callAllEventHandlers(onClick, () => {
         this.selectItemAtIndex(index, {
           type: Downshift.stateChangeTypes.clickItem,
         })
@@ -806,7 +796,7 @@ class Downshift extends Component {
         inputValue: this.props.itemToString(selectedItem),
         ...otherStateToSet,
       }),
-      cbToCb(cb),
+      cb,
     )
   }
 
@@ -828,11 +818,11 @@ class Downshift extends Component {
   }
 
   openMenu = cb => {
-    this.internalSetState({isOpen: true}, cbToCb(cb))
+    this.internalSetState({isOpen: true}, cb)
   }
 
   closeMenu = cb => {
-    this.internalSetState({isOpen: false}, cbToCb(cb))
+    this.internalSetState({isOpen: false}, cb)
   }
 
   updateStatus = debounce(() => {
