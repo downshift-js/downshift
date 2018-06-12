@@ -26,7 +26,6 @@ import {
 class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
-    render: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
@@ -947,9 +946,10 @@ class Downshift extends Component {
 
   // eslint-disable-next-line complexity
   render() {
-    const children = unwrapArray(this.props.render || this.props.children, noop)
+    const children = unwrapArray(this.props.children, noop)
     // because the items are rerendered every time we call the children
-    // we clear this out each render and
+    // we clear this out each render and it will be populated again as
+    // getItemProps is called.
     this.clearItems()
     // we reset this so we know whether the user calls getRootProps during
     // this render. If they do then we don't need to do anything,

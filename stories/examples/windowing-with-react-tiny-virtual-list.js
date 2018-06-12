@@ -38,7 +38,8 @@ class Example extends React.Component {
             itemToString={i => (i ? i.name : '')}
             onStateChange={this.handleStateChange}
             itemCount={items.length}
-            render={({
+          >
+            {({
               getInputProps,
               getItemProps,
               isOpen,
@@ -77,7 +78,7 @@ class Example extends React.Component {
                 ) : null}
               </div>
             )}
-          />
+          </Downshift>
         </div>
       </div>
     )

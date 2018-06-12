@@ -145,10 +145,10 @@ test('onInputValueChange called with empty string on reset', () => {
 })
 
 test('defaultHighlightedIndex will be used for the highlighted index on reset', () => {
-  const {reset, renderSpy} = setup({defaultHighlightedIndex: 0})
-  renderSpy.mockClear()
+  const {reset, childrenSpy} = setup({defaultHighlightedIndex: 0})
+  childrenSpy.mockClear()
   reset()
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 0,
     }),
@@ -156,7 +156,7 @@ test('defaultHighlightedIndex will be used for the highlighted index on reset', 
 })
 
 test('stateReducer customizes the final state after keyDownEnter handled', () => {
-  const {renderSpy, openMenu, selectHighlightedItem} = setup({
+  const {childrenSpy, openMenu, selectHighlightedItem} = setup({
     defaultHighlightedIndex: 0,
     stateReducer: (state, stateToSet) => {
       switch (stateToSet.type) {
@@ -171,12 +171,12 @@ test('stateReducer customizes the final state after keyDownEnter handled', () =>
       }
     },
   })
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   openMenu()
   selectHighlightedItem({
     type: Downshift.stateChangeTypes.keyDownEnter,
   })
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: true,
       highlightedIndex: 0,
@@ -191,10 +191,10 @@ function mouseDownAndUp(node) {
 
 function setup({render: renderFn = () => <div />, ...props} = {}) {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return renderFn(controllerArg)
   })
-  const utils = render(<Downshift {...props} render={renderSpy} />)
-  return {renderSpy, ...utils, ...renderArg}
+  const utils = render(<Downshift {...props}>{childrenSpy}</Downshift>)
+  return {childrenSpy, ...utils, ...renderArg}
 }

@@ -31,9 +31,8 @@ function Examples() {
 
 function ApolloAutocomplete() {
   return (
-    <Downshift
-      onChange={selectedItem => alert(selectedItem)}
-      render={({
+    <Downshift onChange={selectedItem => alert(selectedItem)}>
+      {({
         inputValue,
         getInputProps,
         getItemProps,
@@ -56,7 +55,7 @@ function ApolloAutocomplete() {
           ) : null}
         </div>
       )}
-    />
+    </Downshift>
   )
 }
 

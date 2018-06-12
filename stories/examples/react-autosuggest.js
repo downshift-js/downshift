@@ -101,7 +101,8 @@ function BasicAutocomplete({
       selectedItem={selectedItem}
       onChange={onChange}
       onUserAction={onUserAction}
-      render={({getInputProps, getItemProps, highlightedIndex, isOpen}) => (
+    >
+      {({getInputProps, getItemProps, highlightedIndex, isOpen}) => (
         <div>
           <input {...getInputProps({placeholder: 'Enter color here'})} />
           {isOpen && (
@@ -130,7 +131,7 @@ function BasicAutocomplete({
           )}
         </div>
       )}
-    />
+    </Downshift>
   )
 }
 export default Examples

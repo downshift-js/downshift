@@ -10,7 +10,8 @@ function RawAutoComplete({refine, hits}) {
     <Downshift
       itemToString={i => (i ? i.name : i)}
       onChange={item => alert(JSON.stringify(item))}
-      render={({
+    >
+      {({
         getInputProps,
         getItemProps,
         selectedItem,
@@ -46,7 +47,7 @@ function RawAutoComplete({refine, hits}) {
           )}
         </div>
       )}
-    />
+    </Downshift>
   )
 }
 

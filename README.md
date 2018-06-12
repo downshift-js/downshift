@@ -61,7 +61,7 @@ harder to contribute to.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Basic Props](#basic-props)
-  - [render](#render)
+  - [children](#children)
   - [itemToString](#itemtostring)
   - [onChange](#onchange)
   - [stateReducer](#statereducer)
@@ -89,7 +89,7 @@ harder to contribute to.
   - [onOuterClick](#onouterclick)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
-- [Render Prop Function](#render-prop-function)
+- [Children Function](#children-function)
   - [prop getters](#prop-getters)
   - [actions](#actions)
   - [state](#state)
@@ -101,9 +101,9 @@ harder to contribute to.
   - [resetIdCounter](#resetidcounter)
 - [React Native](#react-native)
   - [Gotchas](#gotchas)
+- [Advanced React Component Patterns course](#advanced-react-component-patterns-course)
 - [Examples](#examples)
 - [FAQ](#faq)
-- [Upcoming Breaking Changes](#upcoming-breaking-changes)
 - [Inspiration](#inspiration)
 - [Other Solutions](#other-solutions)
 - [Bindings for ReasonML](#bindings-for-reasonml)
@@ -154,20 +154,21 @@ render(
       getInputProps,
       getItemProps,
       getLabelProps,
+      getMenuProps,
       isOpen,
       inputValue,
       highlightedIndex,
       selectedItem,
     }) => (
-      <div>
+      <li>
         <label {...getLabelProps()}>Enter a fruit</label>
         <input {...getInputProps()} />
-        {isOpen ? (
-          <div>
-            {items
+        <ul {...getMenuProps()}>
+          {isOpen ? (
+            items
               .filter(item => !inputValue || item.value.includes(inputValue))
               .map((item, index) => (
-                <div
+                <li
                   {...getItemProps({
                     key: item.value,
                     index,
@@ -180,10 +181,10 @@ render(
                   })}
                 >
                   {item.value}
-                </div>
-              ))}
-          </div>
-        ) : null}
+                </li>
+              ))
+          ) : null}
+        </ul>
       </div>
     )}
   </Downshift>,
@@ -191,21 +192,22 @@ render(
 )
 ```
 
-`<Downshift />` is the only component. It doesn't render anything itself, it just
-calls the render function and renders that. ["Use a render
-prop!"][use-a-render-prop]! `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
+`<Downshift />` is the only component exposed by this package. It doesn't render
+anything itself, it just calls the render function and renders that.
+["Use a render prop!"][use-a-render-prop]!
+`<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Basic Props
 
 This is the list of props that you should probably know about. There are some
 [advanced props](#advanced-props) below as well.
 
-### render
+### children
 
 > `function({})` | _required_
 
 This is called with an object. Read more about the properties of this object in
-the section "[Render Prop Function](#render-prop-function)".
+the section "[Children Function](#children-function)".
 
 ### itemToString
 
@@ -224,8 +226,8 @@ with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the same thing your `render` prop function is
-  called with (see [Render Prop Function](#render-prop-function))
+- `stateAndHelpers`: This is the same thing your `children` function is
+  called with (see [Children Function](#children-function))
 
 ### stateReducer
 
@@ -339,8 +341,8 @@ Called with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the same thing your `render` prop function is
-  called with (see [Render Prop Function](#render-prop-function))
+- `stateAndHelpers`: This is the same thing your `children` function is
+  called with (see [Children Function](#children-function))
 
 ### onStateChange
 
@@ -357,8 +359,8 @@ slightly.
 - `changes`: These are the properties that actually have changed since the last
   state change. This also has a `type` property which you can learn more about
   in the [`stateChangeTypes`](#statechangetypes) section.
-- `stateAndHelpers`: This is the exact same thing your `render` prop function is
-  called with (see [Render Prop Function](#render-prop-function))
+- `stateAndHelpers`: This is the exact same thing your `children` function is
+  called with (see [Children Function](#children-function))
 
 > Tip: This function will be called any time _any_ state is changed. The best
 > way to determine whether any particular state was changed, you can use
@@ -374,8 +376,8 @@ of `onStateChange` when `inputValue` is a controlled prop to
 [avoid issues with cursor positions](https://github.com/paypal/downshift/issues/217).
 
 - `inputValue`: The current value of the input
-- `stateAndHelpers`: This is the same thing your `render` prop function is
-  called with (see [Render Prop Function](#render-prop-function))
+- `stateAndHelpers`: This is the same thing your `children` function is
+  called with (see [Children Function](#children-function))
 
 ### itemCount
 
@@ -502,9 +504,8 @@ console.log(Object.keys(Downshift.stateChangeTypes))
 downshift manages its own state internally and calls your `onChange` and
 `onStateChange` handlers with any relevant changes. The state that downshift
 manages includes: `isOpen`, `selectedItem`, `inputValue`, and
-`highlightedIndex`. Your render prop function (read more below) can be used to
-manipulate this state from within the render function and can likely support
-many of your use cases.
+`highlightedIndex`. Your Children function (read more below) can be used to
+manipulate this state and can likely support many of your use cases.
 
 However, if more control is needed, you can pass any of these pieces of state as
 a prop (as indicated above) and that state becomes controlled. As soon as
@@ -516,20 +517,28 @@ that state from other components, `redux`, `react-router`, or anywhere else.
 
 > Note: This is very similar to how normal controlled components work elsewhere
 > in react (like `<input />`). If you want to learn more about this concept, you
-> can learn about that from this the ["Controlled Components"
-> lecture][controlled-components-lecture] and exercises from [React
-> Training's][react-training] [Advanced React][advanced-react] course.
+> can learn about that from this the
+> [Advanced React Component Patterns course](#advanced-react-component-patterns-course)
 
-## Render Prop Function
+## Children Function
 
 This is where you render whatever you want to based on the state of `downshift`.
-It's a regular prop called `render`: `<Downshift render={/* right here*/} />`.
+You use it like so:
 
-> You can also pass it as the children prop if you prefer to do things that way
-> `<Downshift>{/* right here*/}</Downshift>`
+```javascript
+const ui = (
+  <Downshift>
+    {downshift => (
+      // use downshift utilities and state here, like downshift.isOpen,
+      // downshift.getInputProps, etc.
+      <div>{/* more jsx here */}</div>
+    )}
+  </Downshift>
+)
+```
 
-The properties of this object can be split into three categories as indicated
-below:
+The properties of this `downshift` object can be split into three categories as
+indicated below:
 
 ### prop getters
 
@@ -560,6 +569,10 @@ overridden (or overriding the props returned). For example:
 
 #### `getRootProps`
 
+<details>
+
+<summary>If you cannot render a div as the root element, then read this</summary>
+
 Most of the time, you can just render a `div` yourself and `Downshift` will
 apply the props it needs to do its job (and you don't need to call this
 function). However, if you're rendering a composite component (custom component)
@@ -581,6 +594,8 @@ component. In these cases, you can provide the object `{suppressRefError : true}
 **Please use it with extreme care and only if you are absolutely sure that the ref
 is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
 See [#235](https://github.com/paypal/downshift/issues/235) for the discussion that lead to this.
+
+</details>
 
 #### `getInputProps`
 
@@ -863,6 +878,16 @@ Since Downshift renders it's UI using render props, Downshift supports rendering
 - Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
 - When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
 
+## Advanced React Component Patterns course
+
+[Kent C. Dodds](https://twitter.com/kentcdodds) has created learning material
+based on the patterns implemented in this component. You can find it on various
+platforms:
+
+1.  [egghead.io](https://egghead.io/courses/advanced-react-component-patterns)
+2.  [Frontend Masters](https://frontendmasters.com/courses/advanced-react-patterns/)
+3.  YouTube (for free!): [Part 1](https://www.youtube.com/watch?v=SuzutbwjUp8&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf) and [Part 2](https://www.youtube.com/watch?v=ubXtOROjILU&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
+
 ## Examples
 
 Examples exist on [codesandbox.io][examples]:
@@ -937,42 +962,13 @@ const ui = (
     labelId="autocomplete-label"
     inputId="autocomplete-input"
     menuId="autocomplete-menu"
-    render={({getInputProps, getLabelProps}) => <div>{/* your UI */}</div>}
-  />
+  >
+    {({getInputProps, getLabelProps}) => <div>{/* your UI */}</div>}
+  </Downshift>
 )
 ```
 
 </details>
-
-## Upcoming Breaking Changes
-
-We try to avoid breaking changes when possible and try to adhere to
-[semver][semver]. Sometimes breaking changes are necessary and we'll make the
-transition as smooth as possible. This is why there's a prop available which
-will allow you to opt into breaking changes. It looks like this:
-
-```javascript
-const ui = (
-  <Downshift
-    breakingChanges={
-      {
-        /* breaking change flags here */
-      }
-    }
-    render={() => <div />}
-  />
-)
-```
-
-To opt-into a breaking change, simply provide the key and value in the
-`breakingChanges` object prop for each breaking change mentioned below:
-
-1.  `resetInputOnSelection` - Enable with the value of `true`. For more
-    information, see [#243](https://github.com/paypal/downshift/issues/243)
-
-When a new major version is released, then the code to support the old
-functionality will be removed and the breaking change version will be the
-default, so it's suggested you enable these as soon as you are aware of them.
 
 ## Inspiration
 

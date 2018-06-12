@@ -176,9 +176,8 @@ const Item = glamorous.div(
 
 function ControlledAutocomplete({onInputChange, items, ...rest}) {
   return (
-    <Downshift
-      {...rest}
-      render={({
+    <Downshift {...rest}>
+      {({
         getInputProps,
         getItemProps,
         highlightedIndex,
@@ -213,7 +212,7 @@ function ControlledAutocomplete({onInputChange, items, ...rest}) {
           )}
         </div>
       )}
-    />
+    </Downshift>
   )
 }
 export default Examples

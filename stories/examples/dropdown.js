@@ -32,10 +32,8 @@ const Item = glamorous.div(
 )
 
 const Dropdown = ({items, selectedItem, onChange}) => (
-  <Downshift
-    selectedItem={selectedItem}
-    onChange={onChange}
-    render={({
+  <Downshift selectedItem={selectedItem} onChange={onChange}>
+    {({
       isOpen,
       getToggleButtonProps,
       getItemProps,
@@ -76,7 +74,7 @@ const Dropdown = ({items, selectedItem, onChange}) => (
         </div>
       </div>
     )}
-  />
+  </Downshift>
 )
 
 class Examples extends Component {

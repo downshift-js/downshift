@@ -40,9 +40,8 @@ function BasicDownshift({
   ...rest
 }) {
   return (
-    <Downshift
-      {...rest}
-      render={({getInputProps, getLabelProps}) => {
+    <Downshift {...rest}>
+      {({getInputProps, getLabelProps}) => {
         if (getLabelPropsFirst) {
           labelProps = getLabelProps(labelProps)
           inputProps = getInputProps(inputProps)
@@ -57,6 +56,6 @@ function BasicDownshift({
           </div>
         )
       }}
-    />
+    </Downshift>
   )
 }

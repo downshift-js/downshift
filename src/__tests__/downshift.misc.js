@@ -7,30 +7,30 @@ import {render} from 'react-testing-library'
 import Downshift from '../'
 
 test('closeMenu closes the menu', () => {
-  const {openMenu, closeMenu, renderSpy} = setup()
+  const {openMenu, closeMenu, childrenSpy} = setup()
   openMenu()
   closeMenu()
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('clearSelection clears an existing selection', () => {
-  const {openMenu, selectItem, renderSpy, clearSelection} = setup()
+  const {openMenu, selectItem, childrenSpy, clearSelection} = setup()
   openMenu()
   selectItem('foo')
   clearSelection()
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: null}),
   )
 })
 
 test('selectItemAtIndex does nothing if there is no item at that index', () => {
-  const {openMenu, selectItemAtIndex, renderSpy} = setup()
+  const {openMenu, selectItemAtIndex, childrenSpy} = setup()
   openMenu()
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   selectItemAtIndex(100)
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('selectItemAtIndex can select item that is an empty string', () => {
@@ -44,17 +44,17 @@ test('selectItemAtIndex can select item that is an empty string', () => {
       ))}
     </div>
   )
-  const {selectItemAtIndex, renderSpy} = setup({render: renderFn})
+  const {selectItemAtIndex, childrenSpy} = setup({render: renderFn})
   selectItemAtIndex(1)
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: ''}),
   )
 })
 
 test('toggleMenu can take no arguments at all', () => {
-  const {toggleMenu, renderSpy} = setup()
+  const {toggleMenu, childrenSpy} = setup()
   toggleMenu()
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: true,
     }),
@@ -73,7 +73,7 @@ test('clearItems clears the all items', () => {
   // IMPLEMENTATION DETAIL TEST :-(
   // eslint-disable-next-line react/no-render-return-value
   const downshiftInstance = ReactDOM.render(
-    <Downshift render={renderFn} />,
+    <Downshift>{renderFn}</Downshift>,
     document.createElement('div'),
   )
   expect(downshiftInstance.items).toEqual([item])
@@ -82,9 +82,9 @@ test('clearItems clears the all items', () => {
 })
 
 test('reset can take no arguments at all', () => {
-  const {reset, renderSpy} = setup()
+  const {reset, childrenSpy} = setup()
   reset()
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
     }),
@@ -93,11 +93,11 @@ test('reset can take no arguments at all', () => {
 
 test('setHighlightedIndex can take no arguments at all', () => {
   const defaultHighlightedIndex = 2
-  const {setHighlightedIndex, renderSpy} = setup({
+  const {setHighlightedIndex, childrenSpy} = setup({
     defaultHighlightedIndex,
   })
   setHighlightedIndex()
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: defaultHighlightedIndex,
     }),
@@ -119,13 +119,13 @@ test('can use children instead of render prop', () => {
 test('should not throw error during strict mode during reset', () => {
   let renderArg
   const renderFn = () => <div />
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return renderFn(controllerArg)
   })
   render(
     <React.StrictMode>
-      <Downshift render={renderSpy} />
+      <Downshift>{childrenSpy}</Downshift>
     </React.StrictMode>,
   )
 
@@ -133,11 +133,11 @@ test('should not throw error during strict mode during reset', () => {
 })
 
 test('can use setState for ultimate power', () => {
-  const {renderSpy, setState} = setup()
-  renderSpy.mockClear()
+  const {childrenSpy, setState} = setup()
+  childrenSpy.mockClear()
   setState({isOpen: true, selectedItem: 'hi'})
-  expect(renderSpy).toHaveBeenCalledTimes(1)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledTimes(1)
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({isOpen: true, selectedItem: 'hi'}),
   )
 })
@@ -172,10 +172,10 @@ describe('expect console.warn to fire—depending on process.env.NODE_ENV value'
 
 function setup({render: renderFn = () => <div />, ...props} = {}) {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return renderFn(controllerArg)
   })
-  const renderUtils = render(<Downshift {...props} render={renderSpy} />)
-  return {renderSpy, ...renderUtils, ...renderArg}
+  const renderUtils = render(<Downshift {...props}>{childrenSpy}</Downshift>)
+  return {childrenSpy, ...renderUtils, ...renderArg}
 }

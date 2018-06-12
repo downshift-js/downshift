@@ -10,7 +10,7 @@ import Downshift from '../../../dist/downshift.native.cjs'
 
 test('renders with React Native components', () => {
   const RootView = ({innerRef, ...rest}) => <View ref={innerRef} {...rest} />
-  const renderSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
+  const childrenSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
     <RootView {...getRootProps({refKey: 'innerRef'})}>
       <TextInput {...getInputProps()} />
       <View>
@@ -19,9 +19,9 @@ test('renders with React Native components', () => {
       </View>
     </RootView>
   ))
-  const element = <Downshift render={renderSpy} />
+  const element = <Downshift>{childrenSpy}</Downshift>
   const renderer = TestRenderer.create(element)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
       highlightedIndex: null,
@@ -35,7 +35,7 @@ test('renders with React Native components', () => {
 
 test('can use children instead of render prop', () => {
   const RootView = ({innerRef, ...rest}) => <View ref={innerRef} {...rest} />
-  const renderSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
+  const childrenSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
     <RootView {...getRootProps({refKey: 'innerRef'})}>
       <TextInput {...getInputProps()} />
       <View>
@@ -44,9 +44,9 @@ test('can use children instead of render prop', () => {
       </View>
     </RootView>
   ))
-  const element = <Downshift>{renderSpy}</Downshift>
+  const element = <Downshift>{childrenSpy}</Downshift>
   TestRenderer.create(element)
-  expect(renderSpy).toHaveBeenCalledTimes(1)
+  expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
 test('calls onChange when TextInput changes values', () => {
@@ -54,7 +54,7 @@ test('calls onChange when TextInput changes values', () => {
   const Input = jest.fn(props => <TextInput {...props} />)
 
   const RootView = ({innerRef, ...rest}) => <View ref={innerRef} {...rest} />
-  const renderSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
+  const childrenSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
     <RootView {...getRootProps({refKey: 'innerRef'})}>
       <Input {...getInputProps({onChange})} />
       <View>
@@ -63,9 +63,9 @@ test('calls onChange when TextInput changes values', () => {
       </View>
     </RootView>
   ))
-  const element = <Downshift>{renderSpy}</Downshift>
+  const element = <Downshift>{childrenSpy}</Downshift>
   TestRenderer.create(element)
-  expect(renderSpy).toHaveBeenCalledTimes(1)
+  expect(childrenSpy).toHaveBeenCalledTimes(1)
 
   const [[firstArg]] = Input.mock.calls
   expect(firstArg).toMatchObject({

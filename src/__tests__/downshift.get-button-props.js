@@ -5,41 +5,41 @@ import Downshift from '../'
 jest.useFakeTimers()
 
 test('space on button opens and closes the menu', () => {
-  const {button, renderSpy} = setup()
+  const {button, childrenSpy} = setup()
   Simulate.keyDown(button, {key: ' '})
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   Simulate.keyDown(button, {key: ' '})
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('clicking on the button opens and closes the menu', () => {
-  const {button, renderSpy} = setup()
+  const {button, childrenSpy} = setup()
   Simulate.click(button)
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   Simulate.click(button)
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
 })
 
 test('button ignores key events it does not handle', () => {
-  const {button, renderSpy} = setup()
-  renderSpy.mockClear()
+  const {button, childrenSpy} = setup()
+  childrenSpy.mockClear()
   Simulate.keyDown(button, {key: 's'})
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('on button blur resets the state', () => {
-  const {button, renderSpy} = setup()
+  const {button, childrenSpy} = setup()
   Simulate.blur(button)
   jest.runAllTimers()
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
     }),
@@ -47,15 +47,15 @@ test('on button blur resets the state', () => {
 })
 
 test('on button blur does not reset the state when the mouse is down', () => {
-  const {button, renderSpy} = setup()
-  renderSpy.mockClear()
+  const {button, childrenSpy} = setup()
+  childrenSpy.mockClear()
   // mousedown somwhere
   document.body.dispatchEvent(
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
   Simulate.blur(button)
   jest.runAllTimers()
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('getToggleButtonProps returns all given props', () => {
@@ -98,15 +98,15 @@ describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () =>
 
   test('clicking on the button opens and closes the menu for test', () => {
     process.env.NODE_ENV = 'production'
-    const {button, renderSpy} = setup()
+    const {button, childrenSpy} = setup()
     Simulate.click(button)
     jest.runAllTimers()
-    expect(renderSpy).toHaveBeenLastCalledWith(
+    expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: true}),
     )
     Simulate.click(button)
     jest.runAllTimers()
-    expect(renderSpy).toHaveBeenLastCalledWith(
+    expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: false}),
     )
   })
@@ -114,7 +114,7 @@ describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () =>
 
 function setup({buttonProps, Button = props => <button {...props} />} = {}) {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return (
       <div>
@@ -122,7 +122,7 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
       </div>
     )
   })
-  const utils = render(<Downshift render={renderSpy} />)
+  const utils = render(<Downshift>{childrenSpy}</Downshift>)
   const button = utils.container.querySelector('button')
-  return {...utils, button, renderSpy, ...renderArg}
+  return {...utils, button, childrenSpy, ...renderArg}
 }

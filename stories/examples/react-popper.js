@@ -45,9 +45,8 @@ class ReactPopperAutocomplete extends PureComponent {
         }}
       >
         <Manager>
-          <Downshift
-            style={{display: 'inline-block', position: 'relative'}}
-            render={({
+          <Downshift style={{display: 'inline-block', position: 'relative'}}>
+            {({
               getInputProps,
               getItemProps,
               inputValue,
@@ -92,7 +91,7 @@ class ReactPopperAutocomplete extends PureComponent {
                 </div>
               </div>
             )}
-          />
+          </Downshift>
         </Manager>
       </div>
     )

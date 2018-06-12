@@ -58,11 +58,11 @@ function renderDownshift({renderFn, props, menuProps} = {}) {
   }
 
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return renderFn || defaultRenderFn(controllerArg)
   })
-  const utils = renderToDOM(<Downshift {...props} render={renderSpy} />)
+  const utils = renderToDOM(<Downshift {...props}>{childrenSpy}</Downshift>)
   return {
     ...utils,
     renderArg,
