@@ -68,7 +68,7 @@ test('will not reset when clicking within the menu', () => {
   fireEvent.mouseUp(notAnItem)
   expect(getByTestId('menu')).toBeInTheDOM()
 
-  // getByTestId('item').click()
-  // expect(queryByTestId('menu')).not.toBeInTheDOM()
-  // expect(getByTestId('selection')).toHaveTextContent('The item')
+  getByTestId('item').click()
+  expect(queryByTestId('menu')).not.toBeInTheDOM()
+  expect(getByTestId('selection')).toHaveTextContent('The item')
 })

@@ -149,7 +149,11 @@ function callAllEventHandlers(...fns) {
   return (event, ...args) =>
     fns.some(fn => {
       fn && fn(event, ...args)
-      return event.preventDownshiftDefault
+      return (
+        event.preventDownshiftDefault ||
+        (event.hasOwnProperty('nativeEvent') &&
+          event.nativeEvent.preventDownshiftDefault)
+      )
     })
 }
 
@@ -161,7 +165,11 @@ function callAllEventHandlers(...fns) {
  * @return {Function} the function that calls all the functions
  */
 function callAll(...fns) {
-  return (...args) => fns.forEach(fn => fn && fn(...args))
+  return (...args) => {
+    fns.forEach(fn => {
+      fn && fn(...args)
+    })
+  }
 }
 
 /**

@@ -27,12 +27,6 @@ class Example extends React.Component {
       <div>
         <h1>Windowing example</h1>
         <div>
-          This is a work in progress See{' '}
-          <a href="https://github.com/clauderic/react-tiny-virtual-list/issues/19">
-            issue #19 on <pre>react-tiny-virtual-list</pre>
-          </a>
-        </div>
-        <div>
           <Downshift
             inputValue={inputValue}
             itemToString={i => (i ? i.name : '')}

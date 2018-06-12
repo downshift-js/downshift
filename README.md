@@ -826,7 +826,7 @@ const ui = (
           onKeyDown: event => {
             if (event.key === 'Enter') {
               // Prevent Downshift's default 'Enter' behavior.
-              event.preventDownshiftDefault = true
+              event.nativeEvent.preventDownshiftDefault = true
 
               // your handler code
             }
@@ -866,6 +866,7 @@ You should never need to use this in the browser. Only if you are running an uni
 ```javascript
 import {resetIdCounter} from 'downshift';
 
+resetIdCounter()
 ReactDOMServer.renderToString(...);
 ```
 
