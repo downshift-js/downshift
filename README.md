@@ -22,14 +22,11 @@ autocomplete/dropdown/select/combobox components</p>
 [![All Contributors](https://img.shields.io/badge/all_contributors-83-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
+[![Join the community on Spectrum][spectrum-badge]][spectrum]
 
 [![Supports React and Preact][react-badge]][react]
 [![size][size-badge]][unpkg-dist] [![gzip size][gzip-badge]][unpkg-dist]
 [![module formats: umd, cjs, and es][module-formats-badge]][unpkg-dist]
-
-[![Watch on GitHub][github-watch-badge]][github-watch]
-[![Star on GitHub][github-star-badge]][github-star]
-[![Tweet][twitter-badge]][twitter]
 
 ## The problem
 
@@ -1057,12 +1054,8 @@ MIT
 [size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/downshift/dist/
 [module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
-[github-watch-badge]: https://img.shields.io/github/watchers/paypal/downshift.svg?style=social
-[github-watch]: https://github.com/paypal/downshift/watchers
-[github-star-badge]: https://img.shields.io/github/stars/paypal/downshift.svg?style=social
-[github-star]: https://github.com/paypal/downshift/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20downshift!%20https://github.com/paypal/downshift%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/paypal/downshift.svg?style=social
+[spectrum-badge]: https://withspectrum.github.io/badge/badge.svg
+[spectrum]: https://spectrum.chat/downshift
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence
