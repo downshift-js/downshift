@@ -6,6 +6,7 @@ import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
+  callAll,
   callAllEventHandlers,
   debounce,
   scrollIntoView,
@@ -709,8 +710,12 @@ class Downshift extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
   /////////////////////////////// MENU
-  getMenuProps = props => {
+
+  menuRef = node => (this._menuNode = node)
+
+  getMenuProps = ({refKey = 'ref', ref, ...props} = {}) => {
     return {
+      [refKey]: callAll(ref, this.menuRef),
       role: 'listbox',
       'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
@@ -867,16 +872,15 @@ class Downshift extends Component {
       const onMouseUp = event => {
         const {document} = this.props.environment
         this.isMouseDown = false
-        const targetInDownshift =
-          this._rootNode && isOrContainsNode(this._rootNode, event.target)
-        const activeElementInDownshift =
-          this._rootNode &&
-          isOrContainsNode(this._rootNode, document.activeElement)
-        if (
-          !targetInDownshift &&
-          !activeElementInDownshift &&
-          this.getState().isOpen
-        ) {
+        // if the target element or the activeElement is within a downshift node
+        // then we don't want to reset downshift
+        const contextWithinDownshift = [this._rootNode, this._menuNode].some(
+          contextNode =>
+            contextNode &&
+            (isOrContainsNode(contextNode, event.target) ||
+              isOrContainsNode(contextNode, document.activeElement)),
+        )
+        if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
