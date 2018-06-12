@@ -551,12 +551,18 @@ class Downshift extends Component {
     },
   }
 
-  getToggleButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
+  getToggleButtonProps = ({
+    onClick,
+    onPress,
+    onKeyDown,
+    onBlur,
+    ...rest
+  } = {}) => {
     const {isOpen} = this.getState()
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
         {
-          onPress: callAllEventHandlers(onClick, this.button_handleClick),
+          onPress: callAllEventHandlers(onPress, this.button_handleClick),
         }
       : {
           onClick: callAllEventHandlers(onClick, this.button_handleClick),
@@ -728,6 +734,7 @@ class Downshift extends Component {
     onMouseMove,
     onMouseDown,
     onClick,
+    onPress,
     index,
     item = requiredProp('getItemProps', 'item'),
     ...rest
@@ -742,6 +749,9 @@ class Downshift extends Component {
     const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
+    const customClickHandler = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      ? /* istanbul ignore next (react-native) */ onPress
+      : onClick
 
     const enabledEventHandlers = {
       // onMouseMove is used over onMouseEnter here. onMouseMove
@@ -768,7 +778,7 @@ class Downshift extends Component {
         // which is a more common use case.
         event.preventDefault()
       }),
-      [onSelectKey]: callAllEventHandlers(onClick, () => {
+      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
         this.selectItemAtIndex(index, {
           type: Downshift.stateChangeTypes.clickItem,
         })
