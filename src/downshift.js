@@ -639,31 +639,49 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
+  getInputProps = ({
+    onKeyDown,
+    onBlur,
+    onChange,
+    onInput,
+    onChangeText,
+    ...rest
+  } = {}) => {
     let onChangeKey
+    let eventHandlers = {}
+
     /* istanbul ignore next (preact) */
     if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
       onChangeKey = 'onInput'
-      /* istanbul ignore next (react-native) */
-    } else if (
-      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
-    ) {
-      onChangeKey = 'onChangeText'
     } else {
       onChangeKey = 'onChange'
     }
     const {inputValue, isOpen, highlightedIndex} = this.getState()
-    const eventHandlers = rest.disabled
-      ? {}
-      : {
-          [onChangeKey]: callAllEventHandlers(
-            onChange,
-            onInput,
-            this.input_handleChange,
-          ),
-          onKeyDown: callAllEventHandlers(onKeyDown, this.input_handleKeyDown),
-          onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
-        }
+
+    if (!rest.disabled) {
+      eventHandlers = {
+        [onChangeKey]: callAllEventHandlers(
+          onChange,
+          onInput,
+          this.input_handleChange,
+        ),
+        onKeyDown: callAllEventHandlers(onKeyDown, this.input_handleKeyDown),
+        onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
+      }
+    }
+
+    /* istanbul ignore if (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+      eventHandlers = {
+        ...eventHandlers,
+        onChangeText: callAllEventHandlers(
+          onChangeText,
+          onInput,
+          this.input_handleTextChange,
+        ),
+      }
+    }
+
     return {
       'aria-autocomplete': 'list',
       'aria-activedescendant':
@@ -692,8 +710,16 @@ class Downshift extends Component {
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
-        ? /* istanbul ignore next (react-native) */ event
+        ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
+    })
+  }
+
+  input_handleTextChange /* istanbul ignore next (react-native) */ = text => {
+    this.internalSetState({
+      type: Downshift.stateChangeTypes.changeInput,
+      isOpen: true,
+      inputValue: text,
     })
   }
 
