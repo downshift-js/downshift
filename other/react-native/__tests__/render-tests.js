@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-// eslint-disable-next-line import/no-unassigned-import
 import {Text, TextInput, View} from 'react-native'
 import React from 'react'
 
@@ -47,37 +45,6 @@ test('can use children instead of render prop', () => {
   const element = <Downshift>{childrenSpy}</Downshift>
   TestRenderer.create(element)
   expect(childrenSpy).toHaveBeenCalledTimes(1)
-})
-
-test('calls onChange when TextInput changes values', () => {
-  const onChange = jest.fn()
-  const Input = jest.fn(props => <TextInput {...props} />)
-
-  const RootView = ({innerRef, ...rest}) => <View ref={innerRef} {...rest} />
-  const childrenSpy = jest.fn(({getRootProps, getInputProps, getItemProps}) => (
-    <RootView {...getRootProps({refKey: 'innerRef'})}>
-      <Input {...getInputProps({onChange})} />
-      <View>
-        <Text {...getItemProps({item: 'foo', index: 0})}>foo</Text>
-        <Text {...getItemProps({item: 'bar', index: 1})}>bar</Text>
-      </View>
-    </RootView>
-  ))
-  const element = <Downshift>{childrenSpy}</Downshift>
-  TestRenderer.create(element)
-  expect(childrenSpy).toHaveBeenCalledTimes(1)
-
-  const [[firstArg]] = Input.mock.calls
-  expect(firstArg).toMatchObject({
-    // TODO: We shouldn't need to know about the internals of how we're affecting the TextInput and what props we're supplying.
-    // See https://github.com/paypal/downshift/issues/361
-    onChangeText: expect.any(Function),
-  })
-  const fakeEvent = 'foobar'
-  firstArg.onChangeText(fakeEvent)
-
-  expect(onChange).toHaveBeenCalledTimes(1)
-  expect(onChange).toHaveBeenCalledWith(fakeEvent)
 })
 
 /*
