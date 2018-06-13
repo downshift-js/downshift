@@ -26,10 +26,6 @@ export enum StateChangeTypes {
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
 }
 
-export interface BreakingChangesProps {
-  resetInputOnSelection?: boolean
-}
-
 export interface DownshiftProps<Item> {
   defaultSelectedItem?: Item
   defaultHighlightedIndex?: number | null
@@ -72,7 +68,6 @@ export interface DownshiftProps<Item> {
     options: StateChangeOptions<Item>,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
-  breakingChanges?: BreakingChangesProps
 }
 
 export interface Environment {

@@ -14,9 +14,6 @@ test('onStateChange called with changes and downshift state and helpers', () => 
   const {selectItem} = setup({
     ...controlledState,
     onStateChange: handleStateChange,
-    breakingChanges: {
-      resetInputOnSelection: true,
-    },
   })
   const itemToSelect = 'foo'
   selectItem(itemToSelect)

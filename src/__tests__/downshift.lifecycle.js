@@ -148,7 +148,6 @@ test('item selection when selectedItem is controlled will update the inputValue 
   const initialProps = {
     selectedItem: 'foo',
     itemToString,
-    breakingChanges: {resetInputOnSelection: true},
     children: childrenSpy,
   }
   const {container} = render(<Downshift {...initialProps} />)
