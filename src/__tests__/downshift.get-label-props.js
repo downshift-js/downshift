@@ -17,31 +17,11 @@ test('label "for" attribute is set to the input "id" attribute', () => {
   expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
 })
 
-test('when the input id is set, the label for is set to it', () => {
+test('when the inputId prop is set, the label for is set to it', () => {
   const id = 'foo'
-  const {label, input} = renderDownshift({props: {inputProps: {id}}})
+  const {label, input} = renderDownshift({props: {inputId: id}})
   expect(label.getAttribute('for')).toBe(id)
   expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
-})
-
-test('when the input id is set, and the label for is set to something else, an error is thrown', () => {
-  expect(() =>
-    render(
-      <BasicDownshift inputProps={{id: 'foo'}} labelProps={{htmlFor: 'bar'}} />,
-    ),
-  ).toThrowErrorMatchingSnapshot()
-})
-
-test('when the label for is set, and the input id is set to something else, an error is thrown', () => {
-  expect(() =>
-    render(
-      <BasicDownshift
-        getLabelPropsFirst
-        inputProps={{id: 'foo'}}
-        labelProps={{htmlFor: 'bar'}}
-      />,
-    ),
-  ).toThrowErrorMatchingSnapshot()
 })
 
 function renderDownshift({props} = {}) {
@@ -60,9 +40,8 @@ function BasicDownshift({
   ...rest
 }) {
   return (
-    <Downshift
-      {...rest}
-      render={({getInputProps, getLabelProps}) => {
+    <Downshift {...rest}>
+      {({getInputProps, getLabelProps}) => {
         if (getLabelPropsFirst) {
           labelProps = getLabelProps(labelProps)
           inputProps = getInputProps(inputProps)
@@ -77,6 +56,6 @@ function BasicDownshift({
           </div>
         )
       }}
-    />
+    </Downshift>
   )
 }

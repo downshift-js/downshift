@@ -46,11 +46,11 @@ test('renders with correct and predictable auto generated id upon resetIdCounter
 
 function setup({render = () => <div />, ...props} = {}) {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return render(controllerArg)
   })
-  const domUtils = renderToDOM(<Downshift {...props} render={renderSpy} />)
+  const domUtils = renderToDOM(<Downshift {...props}>{childrenSpy}</Downshift>)
   const input = domUtils.queryByTestId('input')
   const label = domUtils.queryByTestId('label')
   const item = domUtils.queryByTestId('item-0')

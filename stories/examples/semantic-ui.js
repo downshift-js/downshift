@@ -135,7 +135,8 @@ function SemanticUIAutocomplete() {
       style={{
         width: '250px',
       }}
-      render={({
+    >
+      {({
         highlightedIndex,
         isOpen,
         clearSelection,
@@ -195,7 +196,7 @@ function SemanticUIAutocomplete() {
           )}
         </Div>
       )}
-    />
+    </Downshift>
   )
 }
 

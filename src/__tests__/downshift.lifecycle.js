@@ -9,13 +9,13 @@ jest.mock('../set-a11y-status')
 
 test('handles mouse events properly to reset state', () => {
   const handleStateChange = jest.fn()
-  const renderSpy = jest.fn(({getInputProps}) => (
+  const childrenSpy = jest.fn(({getInputProps}) => (
     <div>
       <input {...getInputProps({'data-testid': 'input'})} />
     </div>
   ))
   const MyComponent = () => (
-    <Downshift onStateChange={handleStateChange} render={renderSpy} />
+    <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
   )
   const {queryByTestId, container, unmount} = render(<MyComponent />)
   const input = queryByTestId('input')
@@ -33,12 +33,12 @@ test('handles mouse events properly to reset state', () => {
   mouseDownAndUp(document.body)
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   // does not call our state change handler when no state changes
   mouseDownAndUp(document.body)
   expect(handleStateChange).toHaveBeenCalledTimes(1)
   // does not rerender when no state changes
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 
   // cleans up
   unmount()
@@ -48,12 +48,12 @@ test('handles mouse events properly to reset state', () => {
 
 test('handles state change for touchevent events', () => {
   const handleStateChange = jest.fn()
-  const renderSpy = jest.fn(({getToggleButtonProps}) => (
+  const childrenSpy = jest.fn(({getToggleButtonProps}) => (
     <button {...getToggleButtonProps({'data-testid': 'button'})} />
   ))
 
   const MyComponent = () => (
-    <Downshift onStateChange={handleStateChange} render={renderSpy} />
+    <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
   )
   const {queryByTestId, container, unmount} = render(<MyComponent />)
   document.body.appendChild(container)
@@ -85,15 +85,14 @@ test('handles state change for touchevent events', () => {
 test('props update causes the a11y status to be updated', () => {
   setA11yStatus.mockReset()
   const MyComponent = () => (
-    <Downshift
-      isOpen={false}
-      render={({getInputProps, getItemProps, isOpen}) => (
+    <Downshift isOpen={false}>
+      {({getInputProps, getItemProps, isOpen}) => (
         <div>
           <input {...getInputProps()} />
           {isOpen ? <div {...getItemProps({item: 'foo', index: 0})} /> : null}
         </div>
       )}
-    />
+    </Downshift>
   )
   const {container, unmount} = render(<MyComponent />)
   render(<MyComponent isOpen={true} />, {container})
@@ -106,9 +105,9 @@ test('props update causes the a11y status to be updated', () => {
 })
 
 test('inputValue initializes properly if the selectedItem is controlled and set', () => {
-  const renderSpy = jest.fn(() => null)
-  render(<Downshift selectedItem={'foo'} render={renderSpy} />)
-  expect(renderSpy).toHaveBeenCalledWith(
+  const childrenSpy = jest.fn(() => null)
+  render(<Downshift selectedItem={'foo'}>{childrenSpy}</Downshift>)
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',
     }),
@@ -116,9 +115,9 @@ test('inputValue initializes properly if the selectedItem is controlled and set'
 })
 
 test('inputValue initializes properly if selectedItem is set to 0', () => {
-  const renderSpy = jest.fn(() => null)
-  render(<Downshift selectedItem={0} render={renderSpy} />)
-  expect(renderSpy).toHaveBeenCalledWith(
+  const childrenSpy = jest.fn(() => null)
+  render(<Downshift selectedItem={0}>{childrenSpy}</Downshift>)
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: '0',
     }),
@@ -126,13 +125,13 @@ test('inputValue initializes properly if selectedItem is set to 0', () => {
 })
 
 test('props update of selectedItem will update the inputValue state', () => {
-  const renderSpy = jest.fn(() => null)
+  const childrenSpy = jest.fn(() => null)
   const {container} = render(
-    <Downshift selectedItem={null} render={renderSpy} />,
+    <Downshift selectedItem={null}>{childrenSpy}</Downshift>,
   )
-  renderSpy.mockClear()
-  render(<Downshift selectedItem="foo" render={renderSpy} />, {container})
-  expect(renderSpy).toHaveBeenCalledWith(
+  childrenSpy.mockClear()
+  render(<Downshift selectedItem="foo">{childrenSpy}</Downshift>, {container})
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',
     }),
@@ -142,55 +141,21 @@ test('props update of selectedItem will update the inputValue state', () => {
 test('item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
   const itemToString = jest.fn(x => x)
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return <div />
   })
   const initialProps = {
     selectedItem: 'foo',
     itemToString,
-    breakingChanges: {resetInputOnSelection: false},
-    // Explicitly set to false even if this is the default behaviour to highlight that this test
-    // will fail on v2.
-    render: renderSpy,
+    children: childrenSpy,
   }
   const {container} = render(<Downshift {...initialProps} />)
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   itemToString.mockClear()
   const newSelectedItem = 'newfoo'
   renderArg.selectItem(newSelectedItem)
-  expect(renderSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-  render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
-    container,
-  })
-  expect(itemToString).toHaveBeenCalledTimes(2)
-  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
-  expect(renderSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-})
-
-test('v2 BREAKING CHANGE item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
-  const itemToString = jest.fn(x => x)
-  let renderArg
-  const renderSpy = jest.fn(controllerArg => {
-    renderArg = controllerArg
-    return <div />
-  })
-  const initialProps = {
-    selectedItem: 'foo',
-    itemToString,
-    breakingChanges: {resetInputOnSelection: true},
-    render: renderSpy,
-  }
-  const {container} = render(<Downshift {...initialProps} />)
-  renderSpy.mockClear()
-  itemToString.mockClear()
-  const newSelectedItem = 'newfoo'
-  renderArg.selectItem(newSelectedItem)
-  expect(renderSpy).not.toHaveBeenLastCalledWith(
+  expect(childrenSpy).not.toHaveBeenLastCalledWith(
     expect.objectContaining({inputValue: newSelectedItem}),
   )
   render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
@@ -198,25 +163,25 @@ test('v2 BREAKING CHANGE item selection when selectedItem is controlled will upd
   })
   expect(itemToString).toHaveBeenCalledTimes(1)
   expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
-  expect(renderSpy).toHaveBeenLastCalledWith(
+  expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({inputValue: newSelectedItem}),
   )
 })
 
 test('the callback is invoked on selected item only if it is a function', () => {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return <div />
   })
   const callbackSpy = jest.fn(x => x)
-  render(<Downshift selectedItem="foo" render={renderSpy} />)
+  render(<Downshift selectedItem="foo">{childrenSpy}</Downshift>)
 
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   callbackSpy.mockClear()
   renderArg.selectItem('foo', {}, callbackSpy)
   expect(callbackSpy).toHaveBeenCalledTimes(1)
-  renderArg.selectItem('foo', {}, {})
+  renderArg.selectItem('foo', {})
 })
 
 test('props update of selectedItem will not update inputValue state', () => {
@@ -283,19 +248,22 @@ function mouseDownAndUp(node) {
 function setup({render: renderFn = () => <div />, ...props} = {}) {
   // eslint-disable-next-line prefer-const
   let container, renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return renderFn(controllerArg)
   })
   const updateProps = newProps => {
-    return render(<Downshift render={renderSpy} {...props} {...newProps} />, {
-      container,
-    })
+    return render(
+      <Downshift children={childrenSpy} {...props} {...newProps} />,
+      {
+        container,
+      },
+    )
   }
   const renderUtils = updateProps()
   container = renderUtils.container
   return {
-    renderSpy,
+    childrenSpy,
     updateProps,
     ...renderUtils,
     ...renderArg,

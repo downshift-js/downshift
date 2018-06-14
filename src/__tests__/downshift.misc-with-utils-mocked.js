@@ -22,14 +22,15 @@ test('does not scroll from an onMouseMove event', () => {
         <Downshift
           onStateChange={this.handleStateChange}
           highlightedIndex={this.state.highlightedIndex}
-          render={({getInputProps, getItemProps}) => (
+        >
+          {({getInputProps, getItemProps}) => (
             <div>
               <input data-testid="input" {...getInputProps()} />
               <div {...getItemProps({item: 'hi', 'data-testid': 'item-1'})} />
               <div {...getItemProps({item: 'hey', 'data-testid': 'item-2'})} />
             </div>
           )}
-        />
+        </Downshift>
       )
     }
   }

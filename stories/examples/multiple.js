@@ -129,7 +129,8 @@ class MultipleAutocomplete extends React.Component {
         inputValue={this.state.input}
         onChange={this.handleChange}
         selectedItem={values}
-        render={({
+      >
+        {({
           getInputProps,
           getItemProps,
           getRootProps,
@@ -194,7 +195,7 @@ class MultipleAutocomplete extends React.Component {
             )}
           </Root>
         )}
-      />
+      </Downshift>
     )
   }
 

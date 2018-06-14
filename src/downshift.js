@@ -6,11 +6,11 @@ import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
-  composeEventHandlers,
+  callAll,
+  callAllEventHandlers,
   debounce,
   scrollIntoView,
   generateId,
-  firstDefined,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
@@ -26,7 +26,6 @@ import {
 class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
-    render: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
     defaultSelectedItem: PropTypes.any,
     defaultInputValue: PropTypes.string,
@@ -59,9 +58,10 @@ class Downshift extends Component {
     isOpen: PropTypes.bool,
     inputValue: PropTypes.string,
     highlightedIndex: PropTypes.number,
-    breakingChanges: PropTypes.shape({
-      resetInputOnSelection: PropTypes.bool,
-    }),
+    labelId: PropTypes.string,
+    inputId: PropTypes.string,
+    menuId: PropTypes.string,
+    getItemId: PropTypes.func,
     /* eslint-enable */
   }
 
@@ -97,7 +97,6 @@ class Downshift extends Component {
         ? {}
         : window,
     stateReducer: (state, stateToSet) => stateToSet,
-    breakingChanges: {},
   }
 
   static stateChangeTypes = {
@@ -131,8 +130,13 @@ class Downshift extends Component {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
-    this.id = this.props.id || `downshift-${generateId()}`
   }
+
+  id = this.props.id || `downshift-${generateId()}`
+  menuId = this.props.menuId || `${this.id}-menu`
+  labelId = this.props.labelId || `${this.id}-label`
+  inputId = this.props.inputId || `${this.id}-input`
+  getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
 
   input = null
   items = []
@@ -264,11 +268,9 @@ class Downshift extends Component {
         isOpen: false,
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
-        inputValue:
-          this.isControlledProp('selectedItem') &&
-          this.props.breakingChanges.resetInputOnSelection
-            ? this.props.defaultInputValue
-            : this.props.itemToString(item),
+        inputValue: this.isControlledProp('selectedItem')
+          ? this.props.defaultInputValue
+          : this.props.itemToString(item),
         ...otherStateToSet,
       },
       cb,
@@ -383,7 +385,7 @@ class Downshift extends Component {
         return nextState
       },
       () => {
-        // call the provided callback if it's a callback
+        // call the provided callback if it's a function
         cbToCb(cb)()
 
         // only call the onStateChange and onChange callbacks if
@@ -416,9 +418,9 @@ class Downshift extends Component {
     const {id} = this
     const {
       getRootProps,
-      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
+      getMenuProps,
       getInputProps,
       getItemProps,
       openMenu,
@@ -438,9 +440,9 @@ class Downshift extends Component {
     return {
       // prop getters
       getRootProps,
-      getButtonProps,
       getToggleButtonProps,
       getLabelProps,
+      getMenuProps,
       getInputProps,
       getItemProps,
 
@@ -486,8 +488,14 @@ class Downshift extends Component {
     this.getRootProps.called = true
     this.getRootProps.refKey = refKey
     this.getRootProps.suppressRefError = suppressRefError
+    const {isOpen} = this.getState()
     return {
       [refKey]: this.rootRef,
+      role: 'combobox',
+      'aria-expanded': isOpen,
+      'aria-haspopup': 'listbox',
+      'aria-owns': isOpen ? this.menuId : null,
+      'aria-labelledby': this.labelId,
       ...rest,
     }
   }
@@ -543,32 +551,35 @@ class Downshift extends Component {
     },
   }
 
-  getToggleButtonProps = ({onClick, onKeyDown, onBlur, ...rest} = {}) => {
+  getToggleButtonProps = ({
+    onClick,
+    onPress,
+    onKeyDown,
+    onBlur,
+    ...rest
+  } = {}) => {
     const {isOpen} = this.getState()
     const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */
         {
-          onPress: composeEventHandlers(onClick, this.button_handleClick),
+          onPress: callAllEventHandlers(onPress, this.button_handleClick),
         }
       : {
-          onClick: composeEventHandlers(onClick, this.button_handleClick),
-          onKeyDown: composeEventHandlers(onKeyDown, this.button_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.button_handleBlur),
+          onClick: callAllEventHandlers(onClick, this.button_handleClick),
+          onKeyDown: callAllEventHandlers(onKeyDown, this.button_handleKeyDown),
+          onBlur: callAllEventHandlers(onBlur, this.button_handleBlur),
         }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
       type: 'button',
       role: 'button',
       'aria-label': isOpen ? 'close menu' : 'open menu',
-      'aria-expanded': isOpen,
       'aria-haspopup': true,
       'data-toggle': true,
       ...eventHandlers,
       ...rest,
     }
   }
-  // TODO: remove this in 2.0.0 and just call it `getToggleButtonProps`
-  getButtonProps = this.getToggleButtonProps
 
   button_handleKeyDown = event => {
     const key = normalizeArrowKey(event)
@@ -620,81 +631,70 @@ class Downshift extends Component {
 
   /////////////////////////////// LABEL
 
-  getLabelProps = (props = {}) => {
-    this.getLabelProps.called = true
-    if (
-      this.getInputProps.called &&
-      props.htmlFor &&
-      props.htmlFor !== this.inputId
-    ) {
-      throw new Error(
-        `downshift: You provided the htmlFor of "${
-          props.htmlFor
-        }" for your label, but the id of your input is "${
-          this.inputId
-        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
-      )
-    }
-    this.inputId = firstDefined(this.inputId, props.htmlFor, `${this.id}-input`)
-    return {
-      ...props,
-      htmlFor: this.inputId,
-    }
+  getLabelProps = props => {
+    return {htmlFor: this.inputId, id: this.labelId, ...props}
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ LABEL
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({onKeyDown, onBlur, onChange, onInput, ...rest} = {}) => {
-    this.getInputProps.called = true
-    if (this.getLabelProps.called && rest.id && rest.id !== this.inputId) {
-      throw new Error(
-        `downshift: You provided the id of "${
-          rest.id
-        }" for your input, but the htmlFor of your label is "${
-          this.inputId
-        }". You must either remove the id from your input or set the htmlFor of the label equal to the input id.`,
-      )
-    }
-    this.inputId = firstDefined(this.inputId, rest.id, `${this.id}-input`)
+  getInputProps = ({
+    onKeyDown,
+    onBlur,
+    onChange,
+    onInput,
+    onChangeText,
+    ...rest
+  } = {}) => {
     let onChangeKey
+    let eventHandlers = {}
+
     /* istanbul ignore next (preact) */
     if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
       onChangeKey = 'onInput'
-      /* istanbul ignore next (react-native) */
-    } else if (
-      preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
-    ) {
-      onChangeKey = 'onChangeText'
     } else {
       onChangeKey = 'onChange'
     }
     const {inputValue, isOpen, highlightedIndex} = this.getState()
-    const eventHandlers = rest.disabled
-      ? {}
-      : {
-          [onChangeKey]: composeEventHandlers(
-            onChange,
-            onInput,
-            this.input_handleChange,
-          ),
-          onKeyDown: composeEventHandlers(onKeyDown, this.input_handleKeyDown),
-          onBlur: composeEventHandlers(onBlur, this.input_handleBlur),
-        }
+
+    if (!rest.disabled) {
+      eventHandlers = {
+        [onChangeKey]: callAllEventHandlers(
+          onChange,
+          onInput,
+          this.input_handleChange,
+        ),
+        onKeyDown: callAllEventHandlers(onKeyDown, this.input_handleKeyDown),
+        onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
+      }
+    }
+
+    /* istanbul ignore if (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+      eventHandlers = {
+        ...eventHandlers,
+        onChangeText: callAllEventHandlers(
+          onChangeText,
+          onInput,
+          this.input_handleTextChange,
+        ),
+      }
+    }
+
     return {
-      role: 'combobox',
       'aria-autocomplete': 'list',
-      'aria-expanded': isOpen,
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
+      'aria-controls': isOpen ? this.menuId : null,
+      'aria-labelledby': this.labelId,
       autoComplete: 'off',
       value: inputValue,
+      id: this.inputId,
       ...eventHandlers,
       ...rest,
-      id: this.inputId,
     }
   }
 
@@ -710,8 +710,16 @@ class Downshift extends Component {
       type: Downshift.stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
-        ? /* istanbul ignore next (react-native) */ event
+        ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
+    })
+  }
+
+  input_handleTextChange /* istanbul ignore next (react-native) */ = text => {
+    this.internalSetState({
+      type: Downshift.stateChangeTypes.changeInput,
+      isOpen: true,
+      inputValue: text,
     })
   }
 
@@ -732,15 +740,27 @@ class Downshift extends Component {
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ INPUT
 
-  /////////////////////////////// ITEM
-  getItemId(index) {
-    return `${this.id}-item-${index}`
-  }
+  /////////////////////////////// MENU
 
+  menuRef = node => (this._menuNode = node)
+
+  getMenuProps = ({refKey = 'ref', ref, ...props} = {}) => {
+    return {
+      [refKey]: callAll(ref, this.menuRef),
+      role: 'listbox',
+      'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
+      id: this.menuId,
+      ...props,
+    }
+  }
+  //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
+
+  /////////////////////////////// ITEM
   getItemProps = ({
     onMouseMove,
     onMouseDown,
     onClick,
+    onPress,
     index,
     item = requiredProp('getItemProps', 'item'),
     ...rest
@@ -755,12 +775,15 @@ class Downshift extends Component {
     const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
+    const customClickHandler = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      ? /* istanbul ignore next (react-native) */ onPress
+      : onClick
 
     const enabledEventHandlers = {
       // onMouseMove is used over onMouseEnter here. onMouseMove
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
-      onMouseMove: composeEventHandlers(onMouseMove, () => {
+      onMouseMove: callAllEventHandlers(onMouseMove, () => {
         if (index === this.getState().highlightedIndex) {
           return
         }
@@ -775,13 +798,13 @@ class Downshift extends Component {
         this.avoidScrolling = true
         setTimeout(() => (this.avoidScrolling = false), 250)
       }),
-      onMouseDown: composeEventHandlers(onMouseDown, event => {
+      onMouseDown: callAllEventHandlers(onMouseDown, event => {
         // This prevents the activeElement from being changed
         // to the item so it can remain with the current activeElement
         // which is a more common use case.
         event.preventDefault()
       }),
-      [onSelectKey]: composeEventHandlers(onClick, () => {
+      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
         this.selectItemAtIndex(index, {
           type: Downshift.stateChangeTypes.clickItem,
         })
@@ -792,6 +815,8 @@ class Downshift extends Component {
 
     return {
       id: this.getItemId(index),
+      role: 'option',
+      'aria-selected': this.getState().selectedItem === item,
       ...eventHandlers,
       ...rest,
     }
@@ -811,7 +836,7 @@ class Downshift extends Component {
         inputValue: this.props.itemToString(selectedItem),
         ...otherStateToSet,
       }),
-      cbToCb(cb),
+      cb,
     )
   }
 
@@ -833,11 +858,11 @@ class Downshift extends Component {
   }
 
   openMenu = cb => {
-    this.internalSetState({isOpen: true}, cbToCb(cb))
+    this.internalSetState({isOpen: true}, cb)
   }
 
   closeMenu = cb => {
-    this.internalSetState({isOpen: false}, cbToCb(cb))
+    this.internalSetState({isOpen: false}, cb)
   }
 
   updateStatus = debounce(() => {
@@ -882,16 +907,15 @@ class Downshift extends Component {
       const onMouseUp = event => {
         const {document} = this.props.environment
         this.isMouseDown = false
-        const targetInDownshift =
-          this._rootNode && isOrContainsNode(this._rootNode, event.target)
-        const activeElementInDownshift =
-          this._rootNode &&
-          isOrContainsNode(this._rootNode, document.activeElement)
-        if (
-          !targetInDownshift &&
-          !activeElementInDownshift &&
-          this.getState().isOpen
-        ) {
+        // if the target element or the activeElement is within a downshift node
+        // then we don't want to reset downshift
+        const contextWithinDownshift = [this._rootNode, this._menuNode].some(
+          contextNode =>
+            contextNode &&
+            (isOrContainsNode(contextNode, event.target) ||
+              isOrContainsNode(contextNode, document.activeElement)),
+        )
+        if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
@@ -958,9 +982,10 @@ class Downshift extends Component {
 
   // eslint-disable-next-line complexity
   render() {
-    const children = unwrapArray(this.props.render || this.props.children, noop)
+    const children = unwrapArray(this.props.children, noop)
     // because the items are rerendered every time we call the children
-    // we clear this out each render and
+    // we clear this out each render and it will be populated again as
+    // getItemProps is called.
     this.clearItems()
     // we reset this so we know whether the user calls getRootProps during
     // this render. If they do then we don't need to do anything,

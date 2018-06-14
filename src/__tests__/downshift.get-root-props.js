@@ -20,18 +20,18 @@ test('no children provided renders nothing', () => {
 })
 
 test('returning null renders nothing', () => {
-  const MyComponent = () => <Downshift render={() => null} />
+  const MyComponent = () => <Downshift children={() => null} />
   expect(render(<MyComponent />).container.firstChild).toBe(null)
 })
 
 test('returning a composite component without calling getRootProps results in an error', () => {
-  const MyComponent = () => <Downshift render={() => <MyDiv />} />
+  const MyComponent = () => <Downshift children={() => <MyDiv />} />
   expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
 
 test('returning a composite component and calling getRootProps without a refKey results in an error', () => {
   const MyComponent = () => (
-    <Downshift render={({getRootProps}) => <MyDiv {...getRootProps()} />} />
+    <Downshift children={({getRootProps}) => <MyDiv {...getRootProps()} />} />
   )
   expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
 })
@@ -39,7 +39,7 @@ test('returning a composite component and calling getRootProps without a refKey 
 test('returning a DOM element and calling getRootProps with a refKey results in an error', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => <div {...getRootProps({refKey: 'blah'})} />}
+      children={({getRootProps}) => <div {...getRootProps({refKey: 'blah'})} />}
     />
   )
   expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
@@ -48,7 +48,7 @@ test('returning a DOM element and calling getRootProps with a refKey results in 
 test('not applying the ref prop results in an error', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => {
+      children={({getRootProps}) => {
         const {onClick} = getRootProps()
         return <div onClick={onClick} />
       }}
@@ -60,7 +60,7 @@ test('not applying the ref prop results in an error', () => {
 test('renders fine when rendering a composite component and applying getRootProps properly', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => (
+      children={({getRootProps}) => (
         <MyDiv {...getRootProps({refKey: 'innerRef'})} />
       )}
     />
@@ -71,7 +71,7 @@ test('renders fine when rendering a composite component and applying getRootProp
 test('returning a composite component and calling getRootProps without a refKey does not result in an error if suppressRefError is true', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => (
+      children={({getRootProps}) => (
         <MyDiv {...getRootProps({}, {suppressRefError: true})} />
       )}
     />
@@ -82,7 +82,7 @@ test('returning a composite component and calling getRootProps without a refKey 
 test('returning a DOM element and calling getRootProps with a refKey does not result in an error if suppressRefError is true', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => (
+      children={({getRootProps}) => (
         <div {...getRootProps({refKey: 'blah'}, {suppressRefError: true})} />
       )}
     />
@@ -93,7 +93,7 @@ test('returning a DOM element and calling getRootProps with a refKey does not re
 test('not applying the ref prop results in an error does not result in an error if suppressRefError is true', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => {
+      children={({getRootProps}) => {
         const {onClick} = getRootProps({}, {suppressRefError: true})
         return <div onClick={onClick} />
       }}
@@ -105,7 +105,7 @@ test('not applying the ref prop results in an error does not result in an error 
 test('renders fine when rendering a composite component and applying getRootProps properly even if suppressRefError is true', () => {
   const MyComponent = () => (
     <Downshift
-      render={({getRootProps}) => (
+      children={({getRootProps}) => (
         <MyDiv
           {...getRootProps({refKey: 'innerRef'}, {suppressRefError: true})}
         />

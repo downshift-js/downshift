@@ -24,11 +24,11 @@ afterEach(() => {
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/paypal/downshift/issues/113
   const items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}]
-  const {queryByTestId, renderSpy} = renderDownshift({items})
+  const {queryByTestId, childrenSpy} = renderDownshift({items})
   const firstButton = queryByTestId('item-0-button')
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   Simulate.click(firstButton)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       selectedItem: items[0].item,
     }),
@@ -36,23 +36,23 @@ test('clicking on a DOM node within an item selects that item', () => {
 })
 
 test('clicking anywhere within the rendered downshift but outside an item does not select an item', () => {
-  const renderSpy = jest.fn(() => (
+  const childrenSpy = jest.fn(() => (
     <div>
       <button />
     </div>
   ))
-  const {container} = render(<Downshift render={renderSpy} />)
-  renderSpy.mockClear()
+  const {container} = render(<Downshift>{childrenSpy}</Downshift>)
+  childrenSpy.mockClear()
   Simulate.click(container.querySelector('button'))
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('on mousemove of an item updates the highlightedIndex to that item', () => {
-  const {queryByTestId, renderSpy} = renderDownshift()
+  const {queryByTestId, childrenSpy} = renderDownshift()
   const thirdButton = queryByTestId('item-2-button')
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   Simulate.mouseMove(thirdButton)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 2,
     }),
@@ -60,17 +60,17 @@ test('on mousemove of an item updates the highlightedIndex to that item', () => 
 })
 
 test('on mousemove of the highlighted item should not emit changes', () => {
-  const {queryByTestId, renderSpy} = renderDownshift({
+  const {queryByTestId, childrenSpy} = renderDownshift({
     props: {defaultHighlightedIndex: 1},
   })
   const secondButton = queryByTestId('item-1-button')
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   Simulate.mouseMove(secondButton)
-  expect(renderSpy).not.toHaveBeenCalled()
+  expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('on mousedown of the item should not change current focused element', () => {
-  const renderSpy = jest.fn(({getItemProps}) => (
+  const childrenSpy = jest.fn(({getItemProps}) => (
     <div>
       <button data-testid="external-button" />
       <div {...getItemProps({item: 'item-0'})}>
@@ -78,10 +78,10 @@ test('on mousedown of the item should not change current focused element', () =>
       </div>
     </div>
   ))
-  const {queryByTestId} = render(<Downshift render={renderSpy} />)
+  const {queryByTestId} = render(<Downshift>{childrenSpy}</Downshift>)
   const externalButton = queryByTestId('external-button')
   const inItemButton = queryByTestId('in-item-button')
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
 
   externalButton.focus()
   expect(document.activeElement).toBe(externalButton)
@@ -90,13 +90,13 @@ test('on mousedown of the item should not change current focused element', () =>
 })
 
 test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
-  const {queryByTestId, renderSpy} = renderDownshift({
+  const {queryByTestId, childrenSpy} = renderDownshift({
     props: {defaultHighlightedIndex: 1},
   })
   const firstButton = queryByTestId('item-0-button')
-  renderSpy.mockClear()
+  childrenSpy.mockClear()
   Simulate.click(firstButton)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 1,
     }),
@@ -106,13 +106,13 @@ test('after selecting an item highlightedIndex should be reset to defaultHighlig
 test('getItemProps throws a helpful error when no object is given', () => {
   expect(() =>
     render(
-      <Downshift
-        render={({getItemProps}) => (
+      <Downshift>
+        {({getItemProps}) => (
           <div>
             <span {...getItemProps()} />
           </div>
         )}
-      />,
+      </Downshift>,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
@@ -120,8 +120,8 @@ test('getItemProps throws a helpful error when no object is given', () => {
 test('getItemProps defaults the index when no index is given', () => {
   expect(
     render(
-      <Downshift
-        render={({getItemProps}) => (
+      <Downshift>
+        {({getItemProps}) => (
           <div>
             <span {...getItemProps({item: 0})}>0</span>
             <span {...getItemProps({item: 1})}>1</span>
@@ -130,7 +130,7 @@ test('getItemProps defaults the index when no index is given', () => {
             <span {...getItemProps({item: 4})}>4</span>
           </div>
         )}
-      />,
+      </Downshift>,
     ).container.firstChild,
   ).toMatchSnapshot()
 })
@@ -138,13 +138,13 @@ test('getItemProps defaults the index when no index is given', () => {
 test('getItemProps throws when no item is given', () => {
   expect(() =>
     render(
-      <Downshift
-        render={({getItemProps}) => (
+      <Downshift>
+        {({getItemProps}) => (
           <div>
             <span {...getItemProps({index: 0})} />
           </div>
         )}
-      />,
+      </Downshift>,
     ),
   ).toThrowErrorMatchingSnapshot()
 })
@@ -193,7 +193,7 @@ function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,
 } = {}) {
-  const renderSpy = jest.fn(({getItemProps, getInputProps}) => (
+  const childrenSpy = jest.fn(({getItemProps, getInputProps}) => (
     <div>
       <input {...getInputProps({'data-testid': 'input'})} />
       {items.map((item, index) => (
@@ -214,14 +214,14 @@ function renderDownshift({
     <Downshift
       isOpen={true}
       onChange={() => {}}
-      render={renderSpy}
+      children={childrenSpy}
       {...props}
     />,
   )
   const input = utils.queryByTestId('input')
   return {
     ...utils,
-    renderSpy,
+    childrenSpy,
     input,
     arrowDownInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
@@ -239,12 +239,12 @@ function renderDownshift({
 function setupWithDownshiftController() {
   let renderArg
   render(
-    <Downshift
-      render={controllerArg => {
+    <Downshift>
+      {controllerArg => {
         renderArg = controllerArg
         return null
       }}
-    />,
+    </Downshift>,
   )
   return renderArg
 }

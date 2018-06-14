@@ -51,8 +51,8 @@ class AxiosAutocomplete extends Component {
 
   render() {
     return (
-      <Downshift
-        render={({
+      <Downshift>
+        {({
           selectedItem,
           getInputProps,
           getItemProps,
@@ -95,7 +95,7 @@ class AxiosAutocomplete extends Component {
             </div>
           )
         }}
-      />
+      </Downshift>
     )
   }
 }

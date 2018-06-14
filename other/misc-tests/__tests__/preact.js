@@ -22,7 +22,7 @@ import render from 'preact-render-to-string'
 import Downshift from '../../../preact'
 
 test('works with preact', () => {
-  const renderSpy = jest.fn(({getInputProps, getItemProps}) => (
+  const childrenSpy = jest.fn(({getInputProps, getItemProps}) => (
     <div>
       <input {...getInputProps()} />
       <div>
@@ -31,9 +31,9 @@ test('works with preact', () => {
       </div>
     </div>
   ))
-  const ui = <Downshift render={renderSpy} />
+  const ui = <Downshift>{childrenSpy}</Downshift>
   render(ui)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
       highlightedIndex: null,
@@ -45,12 +45,12 @@ test('works with preact', () => {
 
 test('can render a composite component', () => {
   const Div = ({innerRef, ...props}) => <div {...props} ref={innerRef} />
-  const renderSpy = jest.fn(({getRootProps}) => (
+  const childrenSpy = jest.fn(({getRootProps}) => (
     <Div {...getRootProps({refKey: 'innerRef'})} />
   ))
-  const ui = <Downshift render={renderSpy} />
+  const ui = <Downshift>{childrenSpy}</Downshift>
   render(ui)
-  expect(renderSpy).toHaveBeenCalledWith(
+  expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: false,
       highlightedIndex: null,
@@ -96,10 +96,10 @@ test('can use children instead of render prop', () => {
 
 function setup({children = () => <div />, ...props} = {}) {
   let renderArg
-  const renderSpy = jest.fn(controllerArg => {
+  const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return children(controllerArg)
   })
-  const ui = <Downshift {...props}>{renderSpy}</Downshift>
-  return {renderSpy, ui, ...renderArg}
+  const ui = <Downshift {...props}>{childrenSpy}</Downshift>
+  return {childrenSpy, ui, ...renderArg}
 }

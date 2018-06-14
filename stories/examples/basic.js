@@ -105,9 +105,8 @@ function Root({innerRef, ...rest}) {
 }
 function BasicAutocomplete({items, onChange}) {
   return (
-    <Downshift
-      onChange={onChange}
-      render={({
+    <Downshift onChange={onChange}>
+      {({
         getInputProps,
         getItemProps,
         getRootProps,
@@ -156,7 +155,7 @@ function BasicAutocomplete({items, onChange}) {
           )}
         </Root>
       )}
-    />
+    </Downshift>
   )
 }
 export default Examples

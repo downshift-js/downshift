@@ -27,9 +27,8 @@ function renderDownshift(items) {
   const id = 'languages[0].name'
 
   return render(
-    <Downshift
-      id={id}
-      render={({getInputProps, getItemProps, getToggleButtonProps}) => (
+    <Downshift id={id}>
+      {({getInputProps, getItemProps, getToggleButtonProps}) => (
         <div>
           <input {...getInputProps()} />
           <button {...getToggleButtonProps()} />
@@ -42,6 +41,6 @@ function renderDownshift(items) {
           </div>
         </div>
       )}
-    />,
+    </Downshift>,
   )
 }

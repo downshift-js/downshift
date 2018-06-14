@@ -142,16 +142,34 @@ function debounce(fn, time) {
  * This is intended to be used to compose event handlers.
  * They are executed in order until one of them sets
  * `event.preventDownshiftDefault = true`.
- * @param {Function} fns the event handler functions
+ * @param {...Function} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
-function composeEventHandlers(...fns) {
+function callAllEventHandlers(...fns) {
   return (event, ...args) =>
     fns.some(fn => {
       fn && fn(event, ...args)
-      // TODO: remove everything after the || in the next breaking change
-      return event.preventDownshiftDefault || event.defaultPrevented
+      return (
+        event.preventDownshiftDefault ||
+        (event.hasOwnProperty('nativeEvent') &&
+          event.nativeEvent.preventDownshiftDefault)
+      )
     })
+}
+
+/**
+ * This return a function that will call all the given functions with
+ * the arguments with which it's called. It does a null-check before
+ * attempting to call the functions and can take any number of functions.
+ * @param {...Function} fns the functions to call
+ * @return {Function} the function that calls all the functions
+ */
+function callAll(...fns) {
+  return (...args) => {
+    fns.forEach(fn => {
+      fn && fn(...args)
+    })
+  }
 }
 
 /**
@@ -175,15 +193,6 @@ function setIdCounter(num) {
  */
 function resetIdCounter() {
   idCounter = 0
-}
-
-/**
- * Returns the first argument that is not undefined
- * @param {...*} args the arguments
- * @return {*} the defined value
- */
-function firstDefined(...args) {
-  return args.find(a => typeof a !== 'undefined')
 }
 
 // eslint-disable-next-line complexity
@@ -300,12 +309,12 @@ function normalizeArrowKey(event) {
 
 export {
   cbToCb,
-  composeEventHandlers,
+  callAllEventHandlers,
+  callAll,
   debounce,
   scrollIntoView,
   findParent,
   generateId,
-  firstDefined,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
