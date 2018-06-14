@@ -157,7 +157,7 @@ render(
       highlightedIndex,
       selectedItem,
     }) => (
-      <li>
+      <div>
         <label {...getLabelProps()}>Enter a fruit</label>
         <input {...getInputProps()} />
         <ul {...getMenuProps()}>
