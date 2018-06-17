@@ -59,7 +59,7 @@
   "peerDependencies": {
     "react": ">=0.14.x"
   },
-  "dependencies": {
+  "dependencies": {
     "prop-types": "^15.6.1",
   },
   "devDependencies": {
