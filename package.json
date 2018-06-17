@@ -57,8 +57,10 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "peerDependencies": {
-    "prop-types": ">=15",
     "react": ">=0.14.x"
+  },
+  "dependencies: {
+    "prop-types": "^15.6.1",
   },
   "devDependencies": {
     "@storybook/react": "^3.4.7",
@@ -76,7 +78,6 @@
     "preact": "^8.2.6",
     "preact-render-to-string": "^3.7.0",
     "preval.macro": "^1.0.2",
-    "prop-types": "^15.6.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-native": "^0.55.4",
