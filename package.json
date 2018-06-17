@@ -60,7 +60,7 @@
     "react": ">=0.14.x"
   },
   "dependencies": {
-    "prop-types": "^15.6.1",
+    "prop-types": "^15.6.1"
   },
   "devDependencies": {
     "@storybook/react": "^3.4.7",
