@@ -59,7 +59,6 @@ export interface DownshiftProps<Item> {
   inputValue?: string
   isOpen?: boolean
   selectedItem?: Item
-  render?: ChildrenFunction<Item>
   children?: ChildrenFunction<Item>
   id?: string
   environment?: Environment
