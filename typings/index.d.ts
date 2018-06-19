@@ -6,7 +6,7 @@ export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
   isOpen: boolean
-  selectedItem: Item
+  selectedItem: Item | null
 }
 
 export enum StateChangeTypes {
@@ -55,10 +55,10 @@ export interface DownshiftProps<Item> {
     changes: StateChangeOptions<Item>,
   ) => Partial<StateChangeOptions<Item>>
   itemCount?: number
-  highlightedIndex?: number
-  inputValue?: string
+  highlightedIndex?: number | null
+  inputValue?: string | null
   isOpen?: boolean
-  selectedItem?: Item
+  selectedItem?: Item | null
   children?: ChildrenFunction<Item>
   id?: string
   environment?: Environment
