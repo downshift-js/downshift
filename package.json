@@ -58,7 +58,7 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=0.14.x"
+    "react": ">=0.14.9"
   },
   "dependencies": {
     "prop-types": "^15.6.0"
