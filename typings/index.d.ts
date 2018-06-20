@@ -62,7 +62,7 @@ export interface DownshiftProps<Item> {
   children?: ChildrenFunction<Item>
   id?: string
   environment?: Environment
-  onOuterClick?: () => void
+  onOuterClick?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => void
   onUserAction?: (
     options: StateChangeOptions<Item>,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
