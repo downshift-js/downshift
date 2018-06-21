@@ -302,6 +302,9 @@ class Downshift extends Component {
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
   internalSetState = (stateToSet, cb) => {
+    // Prevent setState on onMounted components.
+    if (!this._isMounted) return
+
     let isItemSelected, onChangeArg
 
     const onStateChangeArg = {}
