@@ -7,6 +7,30 @@ import * as utils from '../utils'
 jest.useFakeTimers()
 jest.mock('../set-a11y-status')
 
+test('do not set state after unmount', () => {
+  const handleStateChange = jest.fn()
+  const childrenSpy = jest.fn(({getInputProps}) => (
+    <div>
+      <input {...getInputProps({'data-testid': 'input'})} />
+      <button {...getInputProps({'data-testid': 'button'})}>Toggle</button>
+    </div>
+  ))
+  const MyComponent = () => (
+    <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
+  )
+  const {queryByTestId, container, unmount} = render(<MyComponent />)
+  const button = queryByTestId('button')
+  document.body.appendChild(container)
+
+  // blur toggle button
+  Simulate.blur(button)
+  handleStateChange.mockClear()
+
+  // unmount
+  unmount()
+  expect(handleStateChange).toHaveBeenCalledTimes(0)
+})
+
 test('handles mouse events properly to reset state', () => {
   const handleStateChange = jest.fn()
   const childrenSpy = jest.fn(({getInputProps}) => (
