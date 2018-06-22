@@ -75,7 +75,11 @@ class Downshift extends Component {
       if (i == null) {
         return ''
       }
-      if (process.env.NODE_ENV !== 'production' && isPlainObject(i) && !i.hasOwnProperty('toString')) {
+      if (
+        process.env.NODE_ENV !== 'production' &&
+        isPlainObject(i) &&
+        !i.hasOwnProperty('toString')
+      ) {
         //eslint-disable-next-line no-console
         console.warn(
           'downshift: An object was passed to the default implementation of `itemToString`. You should probably provide your own `itemToString` implementation. Please refer to the `itemToString` API documentation.',
@@ -906,6 +910,16 @@ class Downshift extends Component {
         this._isMounted = false
       }
     } else {
+      const targetWithinDownshift = (target, checkActiveElement = true) => {
+        const {document} = this.props.environment
+        return [this._rootNode, this._menuNode].some(
+          contextNode =>
+            contextNode &&
+            (isOrContainsNode(contextNode, target) ||
+              (checkActiveElement &&
+                isOrContainsNode(contextNode, document.activeElement))),
+        )
+      }
       // this.isMouseDown helps us track whether the mouse is currently held down.
       // This is useful when the user clicks on an item in the list, but holds the mouse
       // down long enough for the list to disappear (because the blur event fires on the input)
@@ -915,16 +929,10 @@ class Downshift extends Component {
         this.isMouseDown = true
       }
       const onMouseUp = event => {
-        const {document} = this.props.environment
         this.isMouseDown = false
         // if the target element or the activeElement is within a downshift node
         // then we don't want to reset downshift
-        const contextWithinDownshift = [this._rootNode, this._menuNode].some(
-          contextNode =>
-            contextNode &&
-            (isOrContainsNode(contextNode, event.target) ||
-              isOrContainsNode(contextNode, document.activeElement)),
-        )
+        const contextWithinDownshift = targetWithinDownshift(event.target)
         if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
@@ -935,9 +943,11 @@ class Downshift extends Component {
       // the element will remove hover, and persist the focus state, resulting in the
       // blur event not being triggered.
       const onTouchStart = event => {
-        const targetInDownshift =
-          this._rootNode && isOrContainsNode(this._rootNode, event.target)
-        if (!targetInDownshift && this.getState().isOpen) {
+        const contextWithinDownshift = targetWithinDownshift(
+          event.target,
+          false,
+        )
+        if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: Downshift.stateChangeTypes.touchStart}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )

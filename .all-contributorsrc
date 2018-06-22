@@ -852,6 +852,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "green-arrow",
+      "name": "Andrew Walton",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2180127?v=4",
+      "profile": "http://www.greenarrow.me",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
