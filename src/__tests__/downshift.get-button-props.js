@@ -7,10 +7,12 @@ jest.useFakeTimers()
 test('space on button opens and closes the menu', () => {
   const {button, childrenSpy} = setup()
   Simulate.keyDown(button, {key: ' '})
+  Simulate.keyUp(button, {key: ' '})
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   Simulate.keyDown(button, {key: ' '})
+  Simulate.keyUp(button, {key: ' '})
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )

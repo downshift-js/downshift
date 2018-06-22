@@ -523,11 +523,11 @@ class Downshift extends Component {
     },
 
     Enter(event) {
-      if (this.getState().isOpen) {
+      const {isOpen, highlightedIndex} = this.getState()
+      if (isOpen && highlightedIndex != null) {
         event.preventDefault()
-        const itemIndex = this.getState().highlightedIndex
-        const item = this.items[itemIndex]
-        const itemNode = this.getItemNodeFromIndex(itemIndex)
+        const item = this.items[highlightedIndex]
+        const itemNode = this.getItemNodeFromIndex(highlightedIndex)
         if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
           return
         }
@@ -558,6 +558,7 @@ class Downshift extends Component {
     onClick,
     onPress,
     onKeyDown,
+    onKeyUp,
     onBlur,
     ...rest
   } = {}) => {
@@ -570,6 +571,7 @@ class Downshift extends Component {
       : {
           onClick: callAllEventHandlers(onClick, this.button_handleClick),
           onKeyDown: callAllEventHandlers(onKeyDown, this.button_handleKeyDown),
+          onKeyUp: callAllEventHandlers(onKeyUp, this.button_handleKeyUp),
           onBlur: callAllEventHandlers(onBlur, this.button_handleBlur),
         }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
@@ -582,6 +584,11 @@ class Downshift extends Component {
       ...eventHandlers,
       ...rest,
     }
+  }
+
+  button_handleKeyUp = event => {
+    // Prevent click event from emitting in Firefox
+    event.preventDefault()
   }
 
   button_handleKeyDown = event => {
