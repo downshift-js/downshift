@@ -63,9 +63,16 @@ test('will not reset when clicking within the menu', () => {
   expect(getByTestId('menu')).toBeInTheDOM()
 
   const notAnItem = getByTestId('not-an-item')
+
+  // Mouse events
   fireEvent.mouseDown(notAnItem)
   notAnItem.focus() // sets document.activeElement
   fireEvent.mouseUp(notAnItem)
+  expect(getByTestId('menu')).toBeInTheDOM()
+
+  // Touch events
+  fireEvent.touchStart(notAnItem)
+  notAnItem.focus() // sets document.activeElement
   expect(getByTestId('menu')).toBeInTheDOM()
 
   getByTestId('item').click()
