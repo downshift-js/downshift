@@ -75,7 +75,7 @@ class Downshift extends Component {
       if (i == null) {
         return ''
       }
-      if (process.env.NODE_ENV !== 'production' && isPlainObject(i)) {
+      if (process.env.NODE_ENV !== 'production' && isPlainObject(i) && !i.hasOwnProperty('toString')) {
         //eslint-disable-next-line no-console
         console.warn(
           'downshift: An object was passed to the default implementation of `itemToString`. You should probably provide your own `itemToString` implementation. Please refer to the `itemToString` API documentation.',
