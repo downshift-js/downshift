@@ -3,13 +3,13 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import preval from 'preval.macro'
-import scrollIntoView from 'scroll-into-view-if-needed'
 import setA11yStatus from './set-a11y-status'
 import {
   cbToCb,
   callAll,
   callAllEventHandlers,
   debounce,
+  scrollIntoView,
   generateId,
   getA11yStatusMessage,
   unwrapArray,
@@ -222,7 +222,7 @@ class Downshift extends Component {
     /* istanbul ignore else (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      node && scrollIntoView(node, {boundary: this._rootNode, block: 'nearest', scrollMode: 'if-needed'})
+      scrollIntoView(node, this._rootNode)
     }
   }
 

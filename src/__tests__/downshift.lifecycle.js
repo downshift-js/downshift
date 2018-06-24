@@ -1,11 +1,10 @@
 import React from 'react'
 import {render, Simulate} from 'react-testing-library'
-import scrollIntoView from 'scroll-into-view-if-needed'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
+import * as utils from '../utils'
 
 jest.useFakeTimers()
-jest.mock('scroll-into-view-if-needed', () => jest.fn())
 jest.mock('../set-a11y-status')
 
 test('do not set state after unmount', () => {
@@ -234,10 +233,10 @@ test('controlled highlighted index change scrolls the item into view', () => {
   // sadly, testing scroll is really difficult in a jsdom environment.
   // Perhaps eventually we'll add real integration tests with cypress
   // or something, but for now we'll just mock the implementation of
-  // scrollIntoView and ensure it's called with the proper arguments
-  // assuming that the test suite for scrollIntoView will ensure
+  // utils.scrollIntoView and ensure it's called with the proper arguments
+  // assuming that the test suite for utils.scrollIntoView will ensure
   // this functionality doesn't break.
-
+  jest.spyOn(utils, 'scrollIntoView').mockImplementation(() => {})
   const oneHundredItems = Array.from({length: 100})
   const renderFn = jest.fn(({getItemProps}) => (
     <div data-testid="root">
@@ -255,9 +254,14 @@ test('controlled highlighted index change scrolls the item into view', () => {
   updateProps({highlightedIndex: 75})
   expect(renderFn).toHaveBeenCalledTimes(1)
 
-  expect(scrollIntoView).toHaveBeenCalledTimes(1)
+  expect(utils.scrollIntoView).toHaveBeenCalledTimes(1)
   const rootDiv = queryByTestId('root')
-  expect(scrollIntoView).toHaveBeenCalledWith(queryByTestId('item-75'), expect.objectContaining({boundary: rootDiv}))
+  expect(utils.scrollIntoView).toHaveBeenCalledWith(
+    queryByTestId('item-75'),
+    rootDiv,
+  )
+
+  utils.scrollIntoView.mockRestore()
 })
 
 function mouseDownAndUp(node) {
