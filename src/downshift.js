@@ -222,7 +222,7 @@ class Downshift extends Component {
     /* istanbul ignore else (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      node && scrollIntoView(node, {block: 'nearest', scrollMode: 'if-needed'})
+      node && scrollIntoView(node, {boundary: this._rootNode, block: 'nearest', scrollMode: 'if-needed'})
     }
   }
 
