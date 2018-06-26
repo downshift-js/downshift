@@ -1,5 +1,6 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render as renderToDOM} from 'react-testing-library'
+import {render} from 'react-testing-library'
 import Downshift from '../'
 import {resetIdCounter} from '../utils'
 
@@ -62,7 +63,7 @@ function renderDownshift({renderFn, props, menuProps} = {}) {
     renderArg = controllerArg
     return renderFn || defaultRenderFn(controllerArg)
   })
-  const utils = renderToDOM(<Downshift {...props}>{childrenSpy}</Downshift>)
+  const utils = render(<Downshift {...props}>{childrenSpy}</Downshift>)
   return {
     ...utils,
     renderArg,

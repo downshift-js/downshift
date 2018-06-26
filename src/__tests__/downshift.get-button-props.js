@@ -1,18 +1,19 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 
 jest.useFakeTimers()
 
 test('space on button opens and closes the menu', () => {
   const {button, childrenSpy} = setup()
-  Simulate.keyDown(button, {key: ' '})
-  Simulate.keyUp(button, {key: ' '})
+  fireEvent.keyDown(button, {key: ' '})
+  fireEvent.keyUp(button, {key: ' '})
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
-  Simulate.keyDown(button, {key: ' '})
-  Simulate.keyUp(button, {key: ' '})
+  fireEvent.keyDown(button, {key: ' '})
+  fireEvent.keyUp(button, {key: ' '})
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -20,11 +21,11 @@ test('space on button opens and closes the menu', () => {
 
 test('clicking on the button opens and closes the menu', () => {
   const {button, childrenSpy} = setup()
-  Simulate.click(button)
+  fireEvent.click(button)
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
-  Simulate.click(button)
+  fireEvent.click(button)
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -33,13 +34,13 @@ test('clicking on the button opens and closes the menu', () => {
 test('button ignores key events it does not handle', () => {
   const {button, childrenSpy} = setup()
   childrenSpy.mockClear()
-  Simulate.keyDown(button, {key: 's'})
+  fireEvent.keyDown(button, {key: 's'})
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
 test('on button blur resets the state', () => {
   const {button, childrenSpy} = setup()
-  Simulate.blur(button)
+  fireEvent.blur(button)
   jest.runAllTimers()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
@@ -55,7 +56,7 @@ test('on button blur does not reset the state when the mouse is down', () => {
   document.body.dispatchEvent(
     new window.MouseEvent('mousedown', {bubbles: true}),
   )
-  Simulate.blur(button)
+  fireEvent.blur(button)
   jest.runAllTimers()
   expect(childrenSpy).not.toHaveBeenCalled()
 })
@@ -101,12 +102,12 @@ describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () =>
   test('clicking on the button opens and closes the menu for test', () => {
     process.env.NODE_ENV = 'production'
     const {button, childrenSpy} = setup()
-    Simulate.click(button)
+    fireEvent.click(button)
     jest.runAllTimers()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: true}),
     )
-    Simulate.click(button)
+    fireEvent.click(button)
     jest.runAllTimers()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: false}),

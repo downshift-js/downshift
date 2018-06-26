@@ -1,5 +1,6 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -198,7 +199,7 @@ test('keydown of things that are not handled do nothing', () => {
   const {input, childrenSpy} = renderDownshift()
   childrenSpy.mockClear()
   modifiers.forEach(key => {
-    Simulate.keyDown(input, {key})
+    fireEvent.keyDown(input, {key})
   })
   // does not even rerender
   expect(childrenSpy).not.toHaveBeenCalled()
@@ -232,8 +233,8 @@ test('itemCount can be set and unset asynchronously', () => {
     </Downshift>,
   )
   const input = queryByTestId('input')
-  const up = () => Simulate.keyDown(input, {key: 'ArrowUp'})
-  const down = () => Simulate.keyDown(input, {key: 'ArrowDown'})
+  const up = () => fireEvent.keyDown(input, {key: 'ArrowUp'})
+  const down = () => fireEvent.keyDown(input, {key: 'ArrowDown'})
 
   downshift.setItemCount(100)
   up()
@@ -319,7 +320,7 @@ function setupDownshiftWithState() {
     enterOnInput,
     childrenSpy,
   } = utils
-  // input.simulate('keydown')
+  // input.fireEvent('keydown')
   changeInputValue('a')
   // ↓
   arrowDownInput()
@@ -376,16 +377,16 @@ function renderDownshift({items, props} = {}) {
     input,
     button: utils.queryByTestId('button'),
     arrowDownInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
     escapeOnInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'Escape', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'Escape', ...extraEventProps}),
     enterOnInput: extraEventProps =>
-      Simulate.keyDown(input, {key: 'Enter', ...extraEventProps}),
+      fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
     changeInputValue: (value, extraEventProps) =>
-      Simulate.change(input, {target: {value}, ...extraEventProps}),
-    blurOnInput: extraEventProps => Simulate.blur(input, extraEventProps),
+      fireEvent.change(input, {target: {value}, ...extraEventProps}),
+    blurOnInput: extraEventProps => fireEvent.blur(input, extraEventProps),
   }
 }
 

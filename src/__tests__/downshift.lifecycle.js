@@ -1,5 +1,6 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
 import * as utils from '../utils'
@@ -23,7 +24,7 @@ test('do not set state after unmount', () => {
   document.body.appendChild(container)
 
   // blur toggle button
-  Simulate.blur(button)
+  fireEvent.blur(button)
   handleStateChange.mockClear()
 
   // unmount
@@ -46,7 +47,7 @@ test('handles mouse events properly to reset state', () => {
   document.body.appendChild(container)
 
   // open the menu
-  Simulate.keyDown(input, {key: 'ArrowDown'})
+  fireEvent.keyDown(input, {key: 'ArrowDown'})
   handleStateChange.mockClear()
 
   // mouse down and up on within the autocomplete node
@@ -90,7 +91,7 @@ test('handles state change for touchevent events', () => {
   )
 
   // open menu
-  Simulate.click(button)
+  fireEvent.click(button)
   jest.runAllTimers()
 
   expect(handleStateChange).toHaveBeenCalledTimes(1)
