@@ -1,8 +1,9 @@
 // this is stuff that I couldn't think fit anywhere else
 // but we still want to have tested.
 
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 import {scrollIntoView} from '../utils'
 
@@ -37,11 +38,11 @@ test('does not scroll from an onMouseMove event', () => {
   const {queryByTestId} = render(<HighlightedIndexController />)
   const input = queryByTestId('input')
   const item = queryByTestId('item-1')
-  Simulate.mouseMove(item)
+  fireEvent.mouseMove(item)
   jest.runAllTimers()
   expect(scrollIntoView).not.toHaveBeenCalled()
   // now let's make sure that we can still scroll items into view
   // ↓
-  Simulate.keyDown(input, {key: 'ArrowDown'})
+  fireEvent.keyDown(input, {key: 'ArrowDown'})
   expect(scrollIntoView).toHaveBeenCalled()
 })
