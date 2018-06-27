@@ -1,22 +1,20 @@
 import React from 'react'
-import {
-  ApolloClient,
-  ApolloProvider,
-  createNetworkInterface,
-  gql,
-  graphql,
-} from 'react-apollo'
+import {ApolloProvider, Query} from 'react-apollo'
+import ApolloClient from 'apollo-boost'
+import gql from 'graphql-tag'
 import Downshift from '../../src'
 
-export default Examples
-
-const networkInterface = createNetworkInterface({
+const client = new ApolloClient({
   uri: 'https://api.graph.cool/simple/v1/cj5k7w90bjt2i0122z6v0syvu',
 })
 
-const client = new ApolloClient({
-  networkInterface,
-})
+const SEARCH_COLORS = gql`
+  query AllColors($inputValue: String!) {
+    allColors(filter: {name_contains: $inputValue}) {
+      name
+    }
+  }
+`
 
 function Examples() {
   return (
@@ -35,6 +33,7 @@ function ApolloAutocomplete() {
       {({
         inputValue,
         getInputProps,
+        getMenuProps,
         getItemProps,
         selectedItem,
         highlightedIndex,
@@ -42,17 +41,16 @@ function ApolloAutocomplete() {
       }) => (
         <div>
           <input {...getInputProps()} />
-          {inputValue ? (
-            <ApolloAutocompleteMenuWithData
-              {...{
-                inputValue,
-                getItemProps,
-                selectedItem,
-                highlightedIndex,
-                isOpen,
-              }}
-            />
-          ) : null}
+          <ApolloAutocompleteMenu
+            {...{
+              inputValue,
+              getMenuProps,
+              getItemProps,
+              selectedItem,
+              highlightedIndex,
+              isOpen,
+            }}
+          />
         </div>
       )}
     </Downshift>
@@ -60,46 +58,62 @@ function ApolloAutocomplete() {
 }
 
 function ApolloAutocompleteMenu({
-  data: {allColors = [], loading} = {},
   selectedItem,
   highlightedIndex,
   isOpen,
   getItemProps,
+  getMenuProps,
+  inputValue,
 }) {
   if (!isOpen) {
     return null
   }
-  if (loading) {
-    return <div>Loading...</div>
-  }
+
   return (
-    <div>
-      {allColors.map(({name: item}, index) => (
-        <div
-          key={item}
-          {...getItemProps({
-            item,
-            style: {
-              backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-              fontWeight: selectedItem === item ? 'bold' : 'normal',
-            },
-          })}
-        >
-          {item}
-        </div>
-      ))}
-    </div>
+    <Query
+      query={SEARCH_COLORS}
+      variables={{
+        inputValue,
+      }}
+    >
+      {({loading, error, data}) => {
+        const allColors = (data && data.allColors) || []
+
+        if (loading) {
+          return <div>Loading...</div>
+        }
+
+        if (error) {
+          return <div>Error! ${error.message}</div>
+        }
+
+        return (
+          <ul
+            {...getMenuProps({
+              style: {padding: 0, margin: 0, listStyle: 'none'},
+            })}
+          >
+            {allColors.map(({name: item}, index) => (
+              <li
+                key={item}
+                {...getItemProps({
+                  index,
+                  item,
+                  style: {
+                    backgroundColor:
+                      highlightedIndex === index ? 'lightgray' : 'white',
+                    fontWeight: selectedItem === item ? 'bold' : 'normal',
+                  },
+                })}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        )
+      }}
+    </Query>
   )
 }
 
-const SEARCH_COLORS = gql`
-  query AllColors($inputValue: String!) {
-    allColors(filter: {name_contains: $inputValue}) {
-      name
-    }
-  }
-`
-
-const ApolloAutocompleteMenuWithData = graphql(SEARCH_COLORS)(
-  ApolloAutocompleteMenu,
-)
+export default Examples

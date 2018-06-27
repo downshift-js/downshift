@@ -10,20 +10,22 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.16.2",
-    "glamor": "^2.20.37",
-    "glamorous": "^3.24.0",
-    "match-sorter": "^1.8.0",
-    "react": "^15.6.1",
-    "react-apollo": "^1.4.8",
-    "react-dom": "^15.6.1",
-    "react-instantsearch": "^5.0.0",
+    "apollo-boost": "^0.1.10",
+    "axios": "^0.18.0",
+    "glamor": "^2.20.40",
+    "glamorous": "^4.13.1",
+    "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.2",
+    "match-sorter": "^2.2.3",
+    "react": "^16.4.1",
+    "react-apollo": "^2.1.6",
+    "react-dom": "^16.4.1",
+    "react-instantsearch": "^5.1.0",
     "react-popper": "^0.7.2",
-    "react-tiny-virtual-list": "^2.1.1",
-    "react-virtualized": "9.18.3",
-    "throttle-debounce": "^1.0.1"
+    "react-tiny-virtual-list": "^2.1.6",
+    "react-virtualized": "^9.20.0"
   },
   "devDependencies": {
-    "babel-macros": "^1.0.2"
+    "babel-macros": "^2.0.0"
   }
 }
