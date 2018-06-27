@@ -15,24 +15,24 @@ learn how: http://kcd.im/pull-request
 - `node` version:
 - `npm` (or `yarn`) version:
 
-Relevant code or config
+**Relevant code or config**
 
 ```javascript
 ```
 
-What you did:
+**What you did**:
 
-What happened:
+**What happened**:
 
 <!-- Please provide the full error message/screenshots/anything -->
 
-Reproduction repository:
+**Reproduction repository**:
 
 <!--
 If possible, please create a repository that reproduces the issue with the
 minimal amount of code possible.
 -->
 
-Problem description:
+**Problem description**:
 
-Suggested solution:
+**Suggested solution**:
