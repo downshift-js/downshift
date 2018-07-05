@@ -153,6 +153,7 @@ function getNode({
 
   Object.defineProperties(div, {
     clientHeight: {value: clientHeight},
+    offsetHeight: {value: clientHeight},
     scrollHeight: {value: scrollHeight},
   })
   children.forEach(child => div.appendChild(child))
