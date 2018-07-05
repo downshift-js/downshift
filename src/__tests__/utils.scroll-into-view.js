@@ -123,7 +123,6 @@ function getScrollableNode(overrides = {}) {
     height: 100,
     top: 0,
     scrollTop: 0,
-    clientHeight: 50,
     scrollHeight: 150,
     ...overrides,
   })
