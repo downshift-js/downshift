@@ -1,3 +1,4 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
 import {render} from 'react-testing-library'
 import Downshift from '../'
@@ -19,7 +20,9 @@ test('label "for" attribute is set to the input "id" attribute', () => {
 
 test('when the inputId prop is set, the label for is set to it', () => {
   const id = 'foo'
-  const {label, input} = renderDownshift({props: {inputId: id}})
+  const {label, input} = renderDownshift({
+    props: {inputId: id},
+  })
   expect(label.getAttribute('for')).toBe(id)
   expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
 })

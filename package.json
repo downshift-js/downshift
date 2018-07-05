@@ -84,7 +84,7 @@
     "react-dom": "^16.4.0",
     "react-native": "^0.55.4",
     "react-test-renderer": "^16.3.2",
-    "react-testing-library": "^3.1.6",
+    "react-testing-library": "^4.0.2",
     "serve": "^8.1.4",
     "start-server-and-test": "^1.4.1",
     "typescript": "^2.7.2"

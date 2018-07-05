@@ -1,10 +1,9 @@
 import 'jest-dom/extend-expect'
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {renderIntoDocument, cleanup, fireEvent} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
-
-afterEach(cleanup)
 
 test('will not reset when clicking within the menu', () => {
   class MyMenu extends React.Component {
@@ -55,9 +54,7 @@ test('will not reset when clicking within the menu', () => {
       </Downshift>
     )
   }
-  const {getByTestId, queryByTestId} = renderIntoDocument(
-    <MyPortalAutocomplete />,
-  )
+  const {getByTestId, queryByTestId} = render(<MyPortalAutocomplete />)
   expect(queryByTestId('menu')).not.toBeInTheDOM()
   getByTestId('button').click()
   expect(getByTestId('menu')).toBeInTheDOM()

@@ -1,11 +1,6 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {
-  render,
-  renderIntoDocument,
-  cleanup,
-  Simulate,
-  fireEvent,
-} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
 
@@ -18,7 +13,6 @@ beforeEach(() => {
 
 afterEach(() => {
   console.error = oldError
-  cleanup()
 })
 
 test('clicking on a DOM node within an item selects that item', () => {
@@ -27,7 +21,7 @@ test('clicking on a DOM node within an item selects that item', () => {
   const {queryByTestId, childrenSpy} = renderDownshift({items})
   const firstButton = queryByTestId('item-0-button')
   childrenSpy.mockClear()
-  Simulate.click(firstButton)
+  fireEvent.click(firstButton)
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       selectedItem: items[0].item,
@@ -43,7 +37,7 @@ test('clicking anywhere within the rendered downshift but outside an item does n
   ))
   const {container} = render(<Downshift>{childrenSpy}</Downshift>)
   childrenSpy.mockClear()
-  Simulate.click(container.querySelector('button'))
+  fireEvent.click(container.querySelector('button'))
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
@@ -51,7 +45,7 @@ test('on mousemove of an item updates the highlightedIndex to that item', () => 
   const {queryByTestId, childrenSpy} = renderDownshift()
   const thirdButton = queryByTestId('item-2-button')
   childrenSpy.mockClear()
-  Simulate.mouseMove(thirdButton)
+  fireEvent.mouseMove(thirdButton)
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 2,
@@ -65,7 +59,7 @@ test('on mousemove of the highlighted item should not emit changes', () => {
   })
   const secondButton = queryByTestId('item-1-button')
   childrenSpy.mockClear()
-  Simulate.mouseMove(secondButton)
+  fireEvent.mouseMove(secondButton)
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
@@ -85,7 +79,7 @@ test('on mousedown of the item should not change current focused element', () =>
 
   externalButton.focus()
   expect(document.activeElement).toBe(externalButton)
-  Simulate.mouseDown(inItemButton)
+  fireEvent.mouseDown(inItemButton)
   expect(document.activeElement).toBe(externalButton)
 })
 
@@ -95,7 +89,7 @@ test('after selecting an item highlightedIndex should be reset to defaultHighlig
   })
   const firstButton = queryByTestId('item-0-button')
   childrenSpy.mockClear()
-  Simulate.click(firstButton)
+  fireEvent.click(firstButton)
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 1,
@@ -210,7 +204,7 @@ function renderDownshift({
       ))}
     </div>
   ))
-  const utils = renderIntoDocument(
+  const utils = render(
     <Downshift
       isOpen={true}
       onChange={() => {}}

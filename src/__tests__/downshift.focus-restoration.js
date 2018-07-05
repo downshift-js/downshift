@@ -1,5 +1,6 @@
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render, Simulate} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 
 test('focus restored upon item mouse click', () => {
@@ -13,13 +14,13 @@ test('focus restored upon item mouse click', () => {
   inputNode.focus()
   expect(document.activeElement).toBe(inputNode)
 
-  Simulate.click(item)
+  fireEvent.click(item)
   expect(document.activeElement).toBe(inputNode)
 
   buttonNode.focus()
   expect(document.activeElement).toBe(buttonNode)
 
-  Simulate.click(item)
+  fireEvent.click(item)
   expect(document.activeElement).toBe(buttonNode)
 })
 
