@@ -20,7 +20,7 @@ test('does nothing if the node is within the scrollable area', () => {
   expect(scrollableNode.scrollTop).toBe(scrollableScrollTop)
 })
 
-test.skip('does nothing if parent.top is above view area and node within view', () => {
+test('does nothing if parent.top is above view area and node within view', () => {
   const scrollableScrollTop = 1000
   const node = getNode({height: 40, top: 300})
   // parent bounds is [-1000 + 1000, -500 + 1000] = [0, 500]
@@ -49,28 +49,6 @@ test('aligns to top when the node is above the scrollable parent', () => {
   expect(scrollableNode.scrollTop).toBe(5)
 })
 
-test.skip('aligns to top when the node is above view area', () => {
-  const node = getNode({height: 40, top: -15})
-  const scrollableNode = getScrollableNode({
-    top: -50,
-    scrollTop: 100,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(85)
-})
-
-test.skip('aligns to top of view area when the node is above view area and scrollable parent top', () => {
-  const node = getNode({height: 40, top: -75})
-  const scrollableNode = getScrollableNode({
-    top: -50,
-    scrollTop: 100,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(25)
-})
-
 test('aligns to top of scrollable parent when the node is above view area', () => {
   const node = getNode({height: 40, top: -50})
   const scrollableNode = getScrollableNode({
@@ -82,19 +60,7 @@ test('aligns to top of scrollable parent when the node is above view area', () =
   expect(scrollableNode.scrollTop).toBe(0)
 })
 
-test.skip('aligns to bottom when the node is below the scrollable parent and parent top above view area', () => {
-  const node = getNode({height: 40, top: 280})
-  const scrollableNode = getScrollableNode({
-    top: -60,
-    height: 360,
-    scrollTop: 28,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(48)
-})
-
-test.skip('aligns to bottom when the node is below the scrollable parent', () => {
+test('aligns to bottom when the node is below the scrollable parent', () => {
   const nodeTop = 115
   const node = getNode({height: 10, top: nodeTop})
   const scrollableNode = getScrollableNode({
@@ -103,19 +69,6 @@ test.skip('aligns to bottom when the node is below the scrollable parent', () =>
   })
   scrollIntoView(node, scrollableNode)
   expect(scrollableNode.scrollTop).toBe(25)
-})
-
-test.skip('aligns to bottom when the the node is below the scrollable parent and scrollable parent has a border', () => {
-  const nodeTop = 115
-  const node = getNode({height: 10, top: nodeTop})
-  const scrollableNode = getScrollableNode({
-    height: 100,
-    children: [node],
-    borderBottomWidth: '2px',
-    borderTopWidth: '2px',
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(27)
 })
 
 function getScrollableNode(overrides = {}) {
