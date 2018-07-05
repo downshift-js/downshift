@@ -863,6 +863,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "stipsan",
+      "name": "Cody Olsen",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/81981?v=4",
+      "profile": "http://twitter.com/stipsan",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
