@@ -61,8 +61,8 @@
     "react": ">=0.14.9"
   },
   "dependencies": {
-    "prop-types": "^15.6.0",
-    "scroll-into-view-if-needed": "^2.2.7"
+    "compute-scroll-into-view": "^1.0.0",
+    "prop-types": "^15.6.0"
   },
   "devDependencies": {
     "@storybook/react": "^3.4.7",
