@@ -157,5 +157,6 @@ function getNode({
     scrollHeight: {value: scrollHeight},
   })
   children.forEach(child => div.appendChild(child))
+  document.documentElement.appendChild(div)
   return div
 }
