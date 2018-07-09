@@ -199,3 +199,4 @@ export type DownshiftInterface<Item> = React.ComponentClass<
 
 declare const Downshift: DownshiftInterface<any>
 export default Downshift
+export function resetIdCounter(): void
