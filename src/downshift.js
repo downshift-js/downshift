@@ -704,7 +704,9 @@ class Downshift extends Component {
           : null,
       'aria-controls': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
-      autoComplete: 'off',
+      // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
+      // Using nope instead of off because some browsers will ignore off
+      autoComplete: 'nope',
       value: inputValue,
       id: this.inputId,
       ...eventHandlers,
