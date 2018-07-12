@@ -193,13 +193,13 @@ class Downshift extends Component {
     // 2. `this.props.itemCount`
     // 3. `this.items.length`
     /* eslint-disable no-negated-condition */
+    let itemCount = this.items.length
     if (this.itemCount != null) {
-      return this.itemCount
+      itemCount = this.itemCount
     } else if (this.props.itemCount !== undefined) {
-      return this.props.itemCount
-    } else {
-      return this.items.length
+      itemCount = this.props.itemCount
     }
+    return itemCount
     /* eslint-enable no-negated-condition */
   }
 
@@ -261,7 +261,7 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      cb,
+      cb
     )
   }
 
@@ -277,7 +277,7 @@ class Downshift extends Component {
           : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      cb,
+      cb
     )
   }
 
@@ -293,7 +293,7 @@ class Downshift extends Component {
     return this.selectItemAtIndex(
       this.getState().highlightedIndex,
       otherStateToSet,
-      cb,
+      cb
     )
   }
 
