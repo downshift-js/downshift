@@ -30,7 +30,7 @@
     "storybook:build": "build-storybook -c stories",
     "storybook:install": "cd stories && npm install",
     "storybook:serve": "serve ./storybook-static -p 6006",
-    "setup": "npm install && npm run validate",
+    "setup": "npm install && npm run storybook:install && npm run validate",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:flow:coverage,test:ssr,test:cypress",
     "precommit": "kcd-scripts precommit"
   },
