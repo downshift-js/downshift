@@ -31,7 +31,7 @@ export interface DownshiftProps<Item> {
   defaultHighlightedIndex?: number | null
   defaultInputValue?: string
   defaultIsOpen?: boolean
-  itemToString?: (item: Item) => string
+  itemToString?: (item: Item | null) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   onChange?: (
