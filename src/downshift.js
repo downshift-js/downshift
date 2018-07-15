@@ -168,10 +168,8 @@ class Downshift extends Component {
    * @return {Object} the state
    */
   getState(stateToMerge = this.state) {
-    return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isControlledProp(key)
-        ? this.props[key]
-        : stateToMerge[key]
+    return Object.entries(stateToMerge).reduce((state, [key, value]) => {
+      state[key] = this.isControlledProp(key) ? this.props[key] : value
       return state
     }, {})
   }
@@ -261,7 +259,7 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      cb
+      cb,
     )
   }
 
@@ -277,7 +275,7 @@ class Downshift extends Component {
           : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      cb
+      cb,
     )
   }
 
@@ -293,7 +291,7 @@ class Downshift extends Component {
     return this.selectItemAtIndex(
       this.getState().highlightedIndex,
       otherStateToSet,
-      cb
+      cb,
     )
   }
 
