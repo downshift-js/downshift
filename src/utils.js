@@ -13,6 +13,7 @@ let idCounter = 0
 function cbToCb(cb) {
   return typeof cb === 'function' ? cb : noop
 }
+
 function noop() {}
 
 /**
@@ -124,7 +125,6 @@ function resetIdCounter() {
   idCounter = 0
 }
 
-// eslint-disable-next-line complexity
 function getA11yStatusMessage({
   isOpen,
   highlightedItem,
@@ -236,6 +236,15 @@ function normalizeArrowKey(event) {
   return key
 }
 
+/**
+ * Simple check if the value passed is object literal
+ * @param {*} obj any things
+ * @return {Boolean} whether it's object literal
+ */
+function isPlainObject(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
 export {
   cbToCb,
   callAllEventHandlers,
@@ -255,13 +264,4 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-}
-
-/**
- * Simple check if the value passed is object literal
- * @param {*} obj any things
- * @return {Boolean} whether it's object literal
- */
-function isPlainObject(obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]'
 }
