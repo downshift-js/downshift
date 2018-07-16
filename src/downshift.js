@@ -62,7 +62,7 @@ class Downshift extends Component {
     inputId: PropTypes.string,
     menuId: PropTypes.string,
     getItemId: PropTypes.func,
-    /* eslint-enable */
+    /* eslint-enable react/no-unused-prop-types */
   }
 
   static defaultProps = {
@@ -80,7 +80,7 @@ class Downshift extends Component {
         isPlainObject(i) &&
         !i.hasOwnProperty('toString')
       ) {
-        //eslint-disable-next-line no-console
+        // eslint-disable-next-line no-console
         console.warn(
           'downshift: An object was passed to the default implementation of `itemToString`. You should probably provide your own `itemToString` implementation. Please refer to the `itemToString` API documentation.',
           'The object that was passed:',
@@ -192,7 +192,6 @@ class Downshift extends Component {
     // 1. `this.itemCount`
     // 2. `this.props.itemCount`
     // 3. `this.items.length`
-    /* eslint-disable no-negated-condition */
     let itemCount = this.items.length
     if (this.itemCount != null) {
       itemCount = this.itemCount
@@ -200,7 +199,6 @@ class Downshift extends Component {
       itemCount = this.props.itemCount
     }
     return itemCount
-    /* eslint-enable no-negated-condition */
   }
 
   setItemCount = count => (this.itemCount = count)
@@ -234,7 +232,6 @@ class Downshift extends Component {
     }
   }
 
-  // eslint-disable-next-line complexity
   changeHighlightedIndex(moveAmount, otherStateToSet) {
     const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0) {
@@ -261,7 +258,7 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      cb
+      cb,
     )
   }
 
@@ -277,7 +274,7 @@ class Downshift extends Component {
           : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      cb
+      cb,
     )
   }
 
@@ -293,7 +290,7 @@ class Downshift extends Component {
     return this.selectItemAtIndex(
       this.getState().highlightedIndex,
       otherStateToSet,
-      cb
+      cb,
     )
   }
 
@@ -468,10 +465,10 @@ class Downshift extends Component {
       unsetItemCount,
       setState,
 
-      //props
+      // props
       itemToString,
 
-      //derived
+      // derived
       id,
 
       // state
@@ -1002,7 +999,6 @@ class Downshift extends Component {
     this.cleanup() // avoids memory leak
   }
 
-  // eslint-disable-next-line complexity
   render() {
     const children = unwrapArray(this.props.children, noop)
     // because the items are rerendered every time we call the children
