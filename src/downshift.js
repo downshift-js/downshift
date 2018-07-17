@@ -168,10 +168,8 @@ class Downshift extends Component {
    * @return {Object} the state
    */
   getState(stateToMerge = this.state) {
-    return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isControlledProp(key)
-        ? this.props[key]
-        : stateToMerge[key]
+    return Object.entries(stateToMerge).reduce((state, [key, value]) => {
+      state[key] = this.isControlledProp(key) ? this.props[key] : value
       return state
     }, {})
   }
