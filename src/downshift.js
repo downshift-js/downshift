@@ -89,12 +89,12 @@ class Downshift extends Component {
       }
       return String(i)
     },
-    onStateChange: () => {},
-    onInputValueChange: () => {},
-    onUserAction: () => {},
-    onChange: () => {},
-    onSelect: () => {},
-    onOuterClick: () => {},
+    onStateChange: noop,
+    onInputValueChange: noop,
+    onUserAction: noop,
+    onChange: noop,
+    onSelect: noop,
+    onOuterClick: noop,
     selectedItemChanged: (prevItem, item) => prevItem !== item,
     environment:
       typeof window === 'undefined' /* istanbul ignore next (ssr) */
