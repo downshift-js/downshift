@@ -24,6 +24,7 @@ export enum StateChangeTypes {
   clickButton = '__autocomplete_click_button__',
   blurButton = '__autocomplete_blur_button__',
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
+  touchStart = '__autocomplete_touchstart__',
 }
 
 export interface DownshiftProps<Item> {
