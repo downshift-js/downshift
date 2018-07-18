@@ -178,9 +178,7 @@ test('on input blur resets the state', () => {
 test('on input blur does not reset the state when the mouse is down', () => {
   const {blurOnInput, childrenSpy} = setupDownshiftWithState()
   // mousedown somwhere
-  document.body.dispatchEvent(
-    new window.MouseEvent('mousedown', {bubbles: true}),
-  )
+  fireEvent.mouseDown(document.body)
   blurOnInput()
   jest.runAllTimers()
   expect(childrenSpy).not.toHaveBeenCalled()
