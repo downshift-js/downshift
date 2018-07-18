@@ -18,8 +18,8 @@ function noop() {}
 
 /**
  * Scroll node into view if necessary
- * @param {HTMLElement} node - the element that should scroll into view
- * @param {HTMLElement} rootNode - the root element of the component
+ * @param {HTMLElement} node the element that should scroll into view
+ * @param {HTMLElement} rootNode the root element of the component
  */
 function scrollIntoView(node, rootNode) {
   if (node === null) {
@@ -112,7 +112,7 @@ function generateId() {
 
 /**
  * This is only used in tests
- * @param {Number} num The number to set the idCounter to
+ * @param {Number} num the number to set the idCounter to
  */
 function setIdCounter(num) {
   idCounter = num
@@ -213,8 +213,8 @@ const stateKeys = [
   'type',
 ]
 /**
- * @param {Object} state The state object
- * @return {Object} State that is relevant to downshift
+ * @param {Object} state the state object
+ * @return {Object} state that is relevant to downshift
  */
 function pickState(state = {}) {
   const result = {}
@@ -228,7 +228,7 @@ function pickState(state = {}) {
 
 /**
  * Normalizes the 'key' property of a KeyboardEvent in IE/Edge
- * @param {Object} event a KeyboardEvent object
+ * @param {Object} event a keyboardEvent object
  * @return {String} keyboard key
  */
 function normalizeArrowKey(event) {
