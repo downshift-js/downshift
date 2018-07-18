@@ -195,6 +195,7 @@ export type DownshiftInterface<Item> = React.ComponentClass<
     clickButton: StateChangeTypes.clickButton
     blurButton: StateChangeTypes.blurButton
     controlledPropUpdatedSelectedItem: StateChangeTypes.controlledPropUpdatedSelectedItem
+    touchStart: StateChangeTypes.touchStart
   }
 }
 
