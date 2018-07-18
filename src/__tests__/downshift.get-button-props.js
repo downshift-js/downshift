@@ -22,10 +22,12 @@ test('space on button opens and closes the menu', () => {
 test('clicking on the button opens and closes the menu', () => {
   const {button, childrenSpy} = setup()
   fireEvent.click(button)
+  jest.runAllTimers()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: true}),
   )
   fireEvent.click(button)
+  jest.runAllTimers()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false}),
   )
@@ -119,11 +121,20 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
     renderArg = controllerArg
     return (
       <div>
-        <Button {...controllerArg.getToggleButtonProps(buttonProps)} />
+        <Button
+          {...controllerArg.getToggleButtonProps({
+            'data-testid': 'button',
+            ...buttonProps,
+          })}
+        />
       </div>
     )
   })
   const utils = render(<Downshift>{childrenSpy}</Downshift>)
-  const button = utils.container.querySelector('button')
-  return {...utils, button, childrenSpy, ...renderArg}
+  return {
+    ...utils,
+    button: utils.getByTestId('button'),
+    childrenSpy,
+    ...renderArg,
+  }
 }

@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom'
 import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 
+jest.useFakeTimers()
+
 test('will not reset when clicking within the menu', () => {
   class MyMenu extends React.Component {
     el = document.createElement('div')
@@ -57,6 +59,7 @@ test('will not reset when clicking within the menu', () => {
   const {getByTestId, queryByTestId} = render(<MyPortalAutocomplete />)
   expect(queryByTestId('menu')).not.toBeInTheDOM()
   getByTestId('button').click()
+  jest.runAllTimers()
   expect(getByTestId('menu')).toBeInTheDOM()
 
   const notAnItem = getByTestId('not-an-item')
