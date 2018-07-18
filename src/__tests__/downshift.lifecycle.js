@@ -86,9 +86,7 @@ test('handles state change for touchevent events', () => {
   const button = queryByTestId('button')
 
   // touch outside for coverage
-  document.body.dispatchEvent(
-    new window.TouchEvent('touchstart', {bubbles: true}),
-  )
+  fireEvent.touchStart(document.body)
 
   // open menu
   fireEvent.click(button)
@@ -97,9 +95,7 @@ test('handles state change for touchevent events', () => {
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 
   // touch outside downshift
-  document.body.dispatchEvent(
-    new window.TouchEvent('touchstart', {bubbles: true}),
-  )
+  fireEvent.touchStart(document.body)
 
   jest.runAllTimers()
   expect(handleStateChange).toHaveBeenCalledTimes(2)
@@ -266,8 +262,8 @@ test('controlled highlighted index change scrolls the item into view', () => {
 })
 
 function mouseDownAndUp(node) {
-  node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
-  node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
+  fireEvent.mouseDown(node)
+  fireEvent.mouseUp(node)
 }
 
 function setup({render: renderFn = () => <div />, ...props} = {}) {
