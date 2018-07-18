@@ -125,6 +125,10 @@ function resetIdCounter() {
   idCounter = 0
 }
 
+/**
+ * @param {Object} param the downshift state and other relevant properties
+ * @return {String} the a11y status message
+ */
 function getA11yStatusMessage({
   isOpen,
   highlightedItem,
