@@ -30,7 +30,7 @@
     "storybook:build": "build-storybook -c stories",
     "storybook:install": "cd stories && npm install",
     "storybook:serve": "serve ./storybook-static -p 6006",
-    "setup": "npm install && npm run validate",
+    "setup": "npm install && npm run storybook:install && npm run validate",
     "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:flow:coverage,test:ssr,test:cypress",
     "precommit": "kcd-scripts precommit"
   },
@@ -61,6 +61,7 @@
     "react": ">=0.14.9"
   },
   "dependencies": {
+    "compute-scroll-into-view": "^1.0.2",
     "prop-types": "^15.6.0"
   },
   "devDependencies": {
@@ -69,7 +70,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react-native": "^4.0.0",
     "cross-env": "^5.1.4",
-    "cypress": "^3.0.1",
+    "cypress": "3.0.1",
     "eslint-plugin-cypress": "^2.0.1",
     "flow-bin": "^0.74.0",
     "flow-coverage-report": "^0.5.0",
@@ -84,7 +85,7 @@
     "react-native": "^0.55.4",
     "react-test-renderer": "^16.3.2",
     "react-testing-library": "^4.0.2",
-    "serve": "^8.1.4",
+    "serve": "^9.2.0",
     "start-server-and-test": "^1.4.1",
     "typescript": "^2.7.2"
   },

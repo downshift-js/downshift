@@ -1,3 +1,5 @@
+import computeScrollIntoView from 'compute-scroll-into-view'
+
 let idCounter = 0
 
 /**
@@ -11,100 +13,28 @@ let idCounter = 0
 function cbToCb(cb) {
   return typeof cb === 'function' ? cb : noop
 }
+
 function noop() {}
-
-function findParent(finder, node, rootNode) {
-  if (node !== null && node !== rootNode.parentNode) {
-    if (finder(node)) {
-      if (node === document.body && node.scrollTop === 0) {
-        // in chrome body.scrollTop always return 0
-        return document.documentElement
-      }
-      return node
-    } else {
-      return findParent(finder, node.parentNode, rootNode)
-    }
-  } else {
-    return null
-  }
-}
-
-/**
- * Get the closest element that scrolls
- * @param {HTMLElement} node - the child element to start searching for scroll parent at
- * @param {HTMLElement} rootNode - the root element of the component
- * @return {HTMLElement} the closest parentNode that scrolls
- */
-const getClosestScrollParent = findParent.bind(
-  null,
-  node => node.scrollHeight > node.clientHeight,
-)
 
 /**
  * Scroll node into view if necessary
- * @param {HTMLElement} node - the element that should scroll into view
- * @param {HTMLElement} rootNode - the root element of the component
- * @param {Boolean} alignToTop - align element to the top of the visible area of the scrollable ancestor
+ * @param {HTMLElement} node the element that should scroll into view
+ * @param {HTMLElement} rootNode the root element of the component
  */
-// eslint-disable-next-line complexity
 function scrollIntoView(node, rootNode) {
-  const scrollParent = getClosestScrollParent(node, rootNode)
-  if (scrollParent === null) {
-    return
-  }
-  const scrollParentStyles = getComputedStyle(scrollParent)
-  const scrollParentRect = scrollParent.getBoundingClientRect()
-  const scrollParentBorderTopWidth = parseInt(
-    scrollParentStyles.borderTopWidth,
-    10,
-  )
-  const scrollParentBorderBottomWidth = parseInt(
-    scrollParentStyles.borderBottomWidth,
-    10,
-  )
-  const bordersWidth =
-    scrollParentBorderTopWidth + scrollParentBorderBottomWidth
-  const scrollParentTop = scrollParentRect.top + scrollParentBorderTopWidth
-  const nodeRect = node.getBoundingClientRect()
-
-  if (nodeRect.top < 0 && scrollParentRect.top < 0) {
-    scrollParent.scrollTop += nodeRect.top
+  if (node === null) {
     return
   }
 
-  if (nodeRect.top < 0) {
-    // the item is above the viewport and the parent is not above the viewport
-    scrollParent.scrollTop += nodeRect.top - scrollParentTop
-    return
-  }
-
-  if (nodeRect.top > 0 && scrollParentRect.top < 0) {
-    if (
-      scrollParentRect.bottom > 0 &&
-      nodeRect.bottom + bordersWidth > scrollParentRect.bottom
-    ) {
-      // the item is below scrollable area
-      scrollParent.scrollTop +=
-        nodeRect.bottom - scrollParentRect.bottom + bordersWidth
-    }
-    // item and parent top are on different sides of view top border (do nothing)
-    return
-  }
-
-  const nodeOffsetTop = nodeRect.top + scrollParent.scrollTop
-  const nodeTop = nodeOffsetTop - scrollParentTop
-  if (nodeTop < scrollParent.scrollTop) {
-    // the item is above the scrollable area
-    scrollParent.scrollTop = nodeTop
-  } else if (
-    nodeTop + nodeRect.height + bordersWidth >
-    scrollParent.scrollTop + scrollParentRect.height
-  ) {
-    // the item is below the scrollable area
-    scrollParent.scrollTop =
-      nodeTop + nodeRect.height - scrollParentRect.height + bordersWidth
-  }
-  // the item is within the scrollable area (do nothing)
+  const actions = computeScrollIntoView(node, {
+    boundary: rootNode,
+    block: 'nearest',
+    scrollMode: 'if-needed',
+  })
+  actions.forEach(({el, top, left}) => {
+    el.scrollTop = top
+    el.scrollLeft = left
+  })
 }
 
 /**
@@ -182,7 +112,7 @@ function generateId() {
 
 /**
  * This is only used in tests
- * @param {Number} num The number to set the idCounter to
+ * @param {Number} num the number to set the idCounter to
  */
 function setIdCounter(num) {
   idCounter = num
@@ -195,7 +125,10 @@ function resetIdCounter() {
   idCounter = 0
 }
 
-// eslint-disable-next-line complexity
+/**
+ * @param {Object} param the downshift state and other relevant properties
+ * @return {String} the a11y status message
+ */
 function getA11yStatusMessage({
   isOpen,
   highlightedItem,
@@ -280,8 +213,8 @@ const stateKeys = [
   'type',
 ]
 /**
- * @param {Object} state The state object
- * @return {Object} State that is relevant to downshift
+ * @param {Object} state the state object
+ * @return {Object} state that is relevant to downshift
  */
 function pickState(state = {}) {
   const result = {}
@@ -295,7 +228,7 @@ function pickState(state = {}) {
 
 /**
  * Normalizes the 'key' property of a KeyboardEvent in IE/Edge
- * @param {Object} event a KeyboardEvent object
+ * @param {Object} event a keyboardEvent object
  * @return {String} keyboard key
  */
 function normalizeArrowKey(event) {
@@ -307,13 +240,21 @@ function normalizeArrowKey(event) {
   return key
 }
 
+/**
+ * Simple check if the value passed is object literal
+ * @param {*} obj any things
+ * @return {Boolean} whether it's object literal
+ */
+function isPlainObject(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
 export {
   cbToCb,
   callAllEventHandlers,
   callAll,
   debounce,
   scrollIntoView,
-  findParent,
   generateId,
   getA11yStatusMessage,
   unwrapArray,
@@ -327,13 +268,4 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-}
-
-/**
- * Simple check if the value passed is object literal
- * @param {*} obj any things
- * @return {Boolean} whether it's object literal
- */
-function isPlainObject(obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]'
 }

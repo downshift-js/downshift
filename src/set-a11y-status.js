@@ -6,6 +6,9 @@ let statusDiv =
 
 let statuses = []
 
+/**
+ * @param {String} status the status message
+ */
 function setStatus(status) {
   const isSameAsLast = statuses[statuses.length - 1] === status
   if (isSameAsLast) {
@@ -25,6 +28,11 @@ function setStatus(status) {
   })
 }
 
+/**
+ * @param {String} status the status message
+ * @param {Number} index the index
+ * @return {HTMLElement} the child node
+ */
 function getStatusChildDiv(status, index) {
   const display = index === statuses.length - 1 ? 'block' : 'none'
 
@@ -35,6 +43,10 @@ function getStatusChildDiv(status, index) {
   return childDiv
 }
 
+/**
+ * Get the status node or create it if it does not already exist
+ * @return {HTMLElement} the status node
+ */
 function getStatusDiv() {
   if (statusDiv) {
     return statusDiv

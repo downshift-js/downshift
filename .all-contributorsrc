@@ -872,6 +872,33 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "stipsan",
+      "name": "Cody Olsen",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/81981?v=4",
+      "profile": "http://twitter.com/stipsan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "TLadd",
+      "name": "Thomas Ladd",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5084492?v=4",
+      "profile": "https://github.com/TLadd",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "lixualinta",
+      "name": "lixualinta",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/34634369?v=4",
+      "profile": "https://github.com/lixualinta",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
