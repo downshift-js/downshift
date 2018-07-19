@@ -841,7 +841,7 @@ class Downshift extends Component {
     this.items = []
   }
 
-  reset = (otherStateToSet = {}, cb) => {
+  reset = (cb, otherStateToSet = {}) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({selectedItem}) => ({
@@ -854,7 +854,7 @@ class Downshift extends Component {
     )
   }
 
-  toggleMenu = (otherStateToSet = {}, cb) => {
+  toggleMenu = (cb, otherStateToSet = {}) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({isOpen}) => {
