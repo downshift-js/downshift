@@ -893,13 +893,29 @@ platforms:
 > (which you can open, interact with, and contribute back to live on
 > [codesandbox](https://codesandbox.io/s/github/kentcdodds/downshift-examples))
 
-Old Examples exist on [codesandbox.io][examples]:
+**Ordered Examples:**
 
-- [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
-- [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled
-  `selectedItem` API).
-- [Type Ahead Example](https://codesandbox.io/s/82m2px40q9) (uses controlled
-  `selectedItem` API).
+If you're just learning downshift, review these in order:
+
+1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) - very bare bones, not styled at all. Good place to start.
+2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) - more complete autocomplete solution using emotion for styling and match-sorter for filtering the items.
+3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) - Shows how to control the `selectedItem` so the selected item can be one of your items or whatever the user types.
+4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) - Shows how to create a MultiDownshift component that allows for an array of selectedItems for multiple selection using a state reducer
+
+**Other Examples:**
+
+Check out these examples of more advanced use/edge cases:
+
+- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) - An example of using one of downshift's actions as an event handler.
+- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) - An example of a highly complex autocomplete component featuring asynchronously loading items, multiple selection, and windowing (with react-virtualized)
+- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) - An example of how to implementat compound components with `React.createContext` and a downshift higher order component. This is generally not recommended because the render prop API exported by downshift is generally good enough for everyone, but there's nothing technically wrong with doing something like this.
+
+**Old Examples exist on [codesandbox.io][examples]:**
+
+*🚨 This is a great contribution opportunity!* These are examples that have not yet been migrated to
+[downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
+You're more than welcome to make PRs to the examples repository to move these examples over there.
+
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
 - [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
 - [Integration with `react-instantsearch`](https://codesandbox.io/s/kvn0lpp83)
@@ -925,19 +941,6 @@ Old Examples exist on [codesandbox.io][examples]:
 - [React Native example](https://snack.expo.io/SkE0LxXqM)
 - [React VR example](https://github.com/infiniteluke/bassdrop)
 - [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
-
-If you would like to add an example, follow these steps:
-
-1.  Fork [this codesandbox](http://kcd.im/ds-example)
-2.  Make sure your version (under dependencies) is the latest available version.
-3.  Update the title and description
-4.  Update the code for your example (add some form of documentation to explain
-    what it is)
-5.  Add the tag: `downshift:example`
-
-You'll find other examples in the `stories/examples` folder of the repo. And
-you'll find
-[a live version of those examples here](https://downshift.netlify.com)
 
 ## FAQ
 
