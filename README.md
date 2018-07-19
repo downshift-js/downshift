@@ -914,6 +914,7 @@ Check out these examples of more advanced use/edge cases:
 
 *🚨 This is a great contribution opportunity!* These are examples that have not yet been migrated to
 [downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
+You're more than welcome to make PRs to the examples repository to move these examples over there.
 
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
 - [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
@@ -940,19 +941,6 @@ Check out these examples of more advanced use/edge cases:
 - [React Native example](https://snack.expo.io/SkE0LxXqM)
 - [React VR example](https://github.com/infiniteluke/bassdrop)
 - [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
-
-If you would like to add an example, follow these steps:
-
-1.  Fork [this codesandbox](http://kcd.im/ds-example)
-2.  Make sure your version (under dependencies) is the latest available version.
-3.  Update the title and description
-4.  Update the code for your example (add some form of documentation to explain
-    what it is)
-5.  Add the tag: `downshift:example`
-
-You'll find other examples in the `stories/examples` folder of the repo. And
-you'll find
-[a live version of those examples here](https://downshift.netlify.com)
 
 ## FAQ
 
