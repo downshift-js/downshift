@@ -218,6 +218,9 @@ class Downshift extends Component {
     // 1. `this.itemCount`
     // 2. `this.props.itemCount`
     // 3. `this.items.length`
+    
+    /* eslint-disable no-negated-condition */
+
     let itemCount = this.items.length
     if (this.itemCount != null) {
       itemCount = this.itemCount
@@ -225,6 +228,8 @@ class Downshift extends Component {
       itemCount = this.props.itemCount
     }
     return itemCount
+    /* eslint-enable no-negated-condition */
+
   }
 
   setItemCount = count => (this.itemCount = count)
@@ -284,7 +289,7 @@ class Downshift extends Component {
         inputValue: '',
         isOpen: false,
       },
-      cb,
+      cb
     )
   }
 
@@ -300,7 +305,7 @@ class Downshift extends Component {
           : this.props.itemToString(item),
         ...otherStateToSet,
       },
-      cb,
+      cb
     )
   }
 
@@ -316,7 +321,7 @@ class Downshift extends Component {
     return this.selectItemAtIndex(
       this.getState().highlightedIndex,
       otherStateToSet,
-      cb,
+      cb
     )
   }
 
@@ -863,7 +868,7 @@ class Downshift extends Component {
     this.items = []
   }
 
-  reset = (otherStateToSet = {}, cb) => {
+  reset = (cb, otherStateToSet = {}) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({selectedItem}) => ({
@@ -876,7 +881,7 @@ class Downshift extends Component {
     )
   }
 
-  toggleMenu = (otherStateToSet = {}, cb) => {
+  toggleMenu = (cb, otherStateToSet = {}) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({isOpen}) => {
