@@ -152,6 +152,32 @@ class Downshift extends Component {
   itemCount = null
   previousResultCount = 0
 
+  timeoutIds = []
+
+  /**
+   * @param {Function} fn the function to call after the time
+   * @param {Number} time the time to wait
+   */
+  internalSetTimeout = (fn, time) => {
+    const id = setTimeout(() => {
+      this.timeoutIds = this.timeoutIds.filter(i => i !== id)
+      fn()
+    }, time)
+
+    this.timeoutIds.push(id)
+  }
+
+  /**
+   * Clear all running timeouts
+   */
+  internalClearTimeouts() {
+    this.timeoutIds.forEach(id => {
+      clearTimeout(id)
+    })
+
+    this.timeoutIds = []
+  }
+
   /**
    * Gets the state based on internal state or props
    * If a state value is passed via props, then that
@@ -303,9 +329,6 @@ class Downshift extends Component {
   // In addition, we'll call this.props.onChange if the
   // selectedItem is changed.
   internalSetState = (stateToSet, cb) => {
-    // Prevent setState on unmounted components.
-    if (!this._isMounted) return undefined
-
     let isItemSelected, onChangeArg
 
     const onStateChangeArg = {}
@@ -617,7 +640,7 @@ class Downshift extends Component {
       this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
     } else {
       // Ensure that toggle of menu occurs after the potential blur event in iOS
-      setTimeout(() =>
+      this.internalSetTimeout(() =>
         this.toggleMenu({type: Downshift.stateChangeTypes.clickButton}),
       )
     }
@@ -626,7 +649,7 @@ class Downshift extends Component {
   button_handleBlur = event => {
     const blurTarget = event.target // Save blur target for comparison with activeElement later
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
-    setTimeout(() => {
+    this.internalSetTimeout(() => {
       if (
         !this.isMouseDown &&
         (this.props.environment.document.activeElement == null ||
@@ -738,7 +761,7 @@ class Downshift extends Component {
 
   input_handleBlur = () => {
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
-    setTimeout(() => {
+    this.internalSetTimeout(() => {
       const downshiftButtonIsActive =
         this.props.environment.document.activeElement.dataset.toggle &&
         (this._rootNode &&
@@ -809,7 +832,7 @@ class Downshift extends Component {
         // from under the user which is currently scrolling/moving the
         // cursor
         this.avoidScrolling = true
-        setTimeout(() => (this.avoidScrolling = false), 250)
+        this.internalSetTimeout(() => (this.avoidScrolling = false), 250)
       }),
       onMouseDown: callAllEventHandlers(onMouseDown, event => {
         // This prevents the activeElement from being changed
@@ -879,9 +902,6 @@ class Downshift extends Component {
   }
 
   updateStatus = debounce(() => {
-    if (!this._isMounted) {
-      return
-    }
     const state = this.getState()
     const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
@@ -900,13 +920,10 @@ class Downshift extends Component {
   }, 200)
 
   componentDidMount() {
-    // the _isMounted property is because we have `updateStatus` in a `debounce`
-    // and we don't want to update the status if the component has been umounted
-    this._isMounted = true
     /* istanbul ignore if (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
       this.cleanup = () => {
-        this._isMounted = false
+        this.internalClearTimeouts()
       }
     } else {
       const targetWithinDownshift = (target, checkActiveElement = true) => {
@@ -958,7 +975,8 @@ class Downshift extends Component {
       this.props.environment.addEventListener('touchstart', onTouchStart)
 
       this.cleanup = () => {
-        this._isMounted = false
+        this.internalClearTimeouts()
+        this.updateStatus.cancel()
         this.props.environment.removeEventListener('mousedown', onMouseDown)
         this.props.environment.removeEventListener('mouseup', onMouseUp)
         this.props.environment.removeEventListener('touchstart', onTouchStart)

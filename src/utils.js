@@ -56,16 +56,24 @@ function isOrContainsNode(parent, child) {
  */
 function debounce(fn, time) {
   let timeoutId
-  return wrapper
-  function wrapper(...args) {
+
+  function cancel() {
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
+  }
+
+  function wrapper(...args) {
+    cancel()
     timeoutId = setTimeout(() => {
       timeoutId = null
       fn(...args)
     }, time)
   }
+
+  wrapper.cancel = cancel
+
+  return wrapper
 }
 
 /**
