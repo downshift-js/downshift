@@ -24,6 +24,7 @@ export enum StateChangeTypes {
   clickButton = '__autocomplete_click_button__',
   blurButton = '__autocomplete_blur_button__',
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
+  touchStart = '__autocomplete_touchstart__',
 }
 
 export interface DownshiftProps<Item> {
@@ -31,7 +32,7 @@ export interface DownshiftProps<Item> {
   defaultHighlightedIndex?: number | null
   defaultInputValue?: string
   defaultIsOpen?: boolean
-  itemToString?: (item: Item) => string
+  itemToString?: (item: Item | null) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   onChange?: (
@@ -194,8 +195,10 @@ export type DownshiftInterface<Item> = React.ComponentClass<
     clickButton: StateChangeTypes.clickButton
     blurButton: StateChangeTypes.blurButton
     controlledPropUpdatedSelectedItem: StateChangeTypes.controlledPropUpdatedSelectedItem
+    touchStart: StateChangeTypes.touchStart
   }
 }
 
 declare const Downshift: DownshiftInterface<any>
 export default Downshift
+export function resetIdCounter(): void

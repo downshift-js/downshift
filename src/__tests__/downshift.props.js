@@ -1,8 +1,9 @@
 // this is stuff that I couldn't think fit anywhere else
 // but we still want to have tested.
 
+import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render} from 'react-testing-library'
+import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 
 test('onStateChange called with changes and downshift state and helpers', () => {
@@ -182,8 +183,8 @@ test('stateReducer customizes the final state after keyDownEnter handled', () =>
 })
 
 function mouseDownAndUp(node) {
-  node.dispatchEvent(new window.MouseEvent('mousedown', {bubbles: true}))
-  node.dispatchEvent(new window.MouseEvent('mouseup', {bubbles: true}))
+  fireEvent.mouseDown(node)
+  fireEvent.mouseUp(node)
 }
 
 function setup({render: renderFn = () => <div />, ...props} = {}) {

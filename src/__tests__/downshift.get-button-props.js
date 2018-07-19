@@ -53,9 +53,7 @@ test('on button blur does not reset the state when the mouse is down', () => {
   const {button, childrenSpy} = setup()
   childrenSpy.mockClear()
   // mousedown somwhere
-  document.body.dispatchEvent(
-    new window.MouseEvent('mousedown', {bubbles: true}),
-  )
+  fireEvent.mouseDown(document.body)
   fireEvent.blur(button)
   jest.runAllTimers()
   expect(childrenSpy).not.toHaveBeenCalled()

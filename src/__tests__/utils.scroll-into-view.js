@@ -49,28 +49,6 @@ test('aligns to top when the node is above the scrollable parent', () => {
   expect(scrollableNode.scrollTop).toBe(5)
 })
 
-test('aligns to top when the node is above view area', () => {
-  const node = getNode({height: 40, top: -15})
-  const scrollableNode = getScrollableNode({
-    top: -50,
-    scrollTop: 100,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(85)
-})
-
-test('aligns to top of view area when the node is above view area and scrollable parent top', () => {
-  const node = getNode({height: 40, top: -75})
-  const scrollableNode = getScrollableNode({
-    top: -50,
-    scrollTop: 100,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(25)
-})
-
 test('aligns to top of scrollable parent when the node is above view area', () => {
   const node = getNode({height: 40, top: -50})
   const scrollableNode = getScrollableNode({
@@ -80,18 +58,6 @@ test('aligns to top of scrollable parent when the node is above view area', () =
   })
   scrollIntoView(node, scrollableNode)
   expect(scrollableNode.scrollTop).toBe(0)
-})
-
-test('aligns to bottom when the node is below the scrollable parent and parent top above view area', () => {
-  const node = getNode({height: 40, top: 280})
-  const scrollableNode = getScrollableNode({
-    top: -60,
-    height: 360,
-    scrollTop: 28,
-    children: [node],
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(48)
 })
 
 test('aligns to bottom when the node is below the scrollable parent', () => {
@@ -105,25 +71,11 @@ test('aligns to bottom when the node is below the scrollable parent', () => {
   expect(scrollableNode.scrollTop).toBe(25)
 })
 
-test('aligns to bottom when the the node is below the scrollable parent and scrollable parent has a border', () => {
-  const nodeTop = 115
-  const node = getNode({height: 10, top: nodeTop})
-  const scrollableNode = getScrollableNode({
-    height: 100,
-    children: [node],
-    borderBottomWidth: '2px',
-    borderTopWidth: '2px',
-  })
-  scrollIntoView(node, scrollableNode)
-  expect(scrollableNode.scrollTop).toBe(27)
-})
-
 function getScrollableNode(overrides = {}) {
   return getNode({
     height: 100,
     top: 0,
     scrollTop: 0,
-    clientHeight: 50,
     scrollHeight: 150,
     ...overrides,
   })
@@ -154,8 +106,10 @@ function getNode({
 
   Object.defineProperties(div, {
     clientHeight: {value: clientHeight},
+    offsetHeight: {value: clientHeight},
     scrollHeight: {value: scrollHeight},
   })
   children.forEach(child => div.appendChild(child))
+  document.documentElement.appendChild(div)
   return div
 }
