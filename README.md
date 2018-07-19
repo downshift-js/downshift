@@ -888,7 +888,12 @@ platforms:
 
 ## Examples
 
-Examples exist on [codesandbox.io][examples]:
+> 🚨 We're in the process of moving all examples to the
+> [downshift-examples](https://github.com/kentcdodds/downshift-examples) repo
+> (which you can open, interact with, and contribute back to live on
+> [codesandbox](https://codesandbox.io/s/github/kentcdodds/downshift-examples))
+
+Old Examples exist on [codesandbox.io][examples]:
 
 - [Bare bones autocomplete](https://codesandbox.io/s/6z67jvklw3)
 - [Multiple selection](https://codesandbox.io/s/W6gyJ30kn) (uses controlled
