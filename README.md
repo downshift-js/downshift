@@ -915,6 +915,7 @@ Check out these examples of more advanced use/edge cases:
 *🚨 This is a great contribution opportunity!* These are examples that have not yet been migrated to
 [downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
 You're more than welcome to make PRs to the examples repository to move these examples over there.
+[Watch this to learn how to contribute completely in the browser](https://www.youtube.com/watch?v=3PAQbhdkTtI&index=2&t=21s&list=PLV5CVI1eNcJgCrPH_e6d57KRUTiDZgs0u)
 
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
 - [Integration with Redux](https://codesandbox.io/s/3ywmnyr0zq)
