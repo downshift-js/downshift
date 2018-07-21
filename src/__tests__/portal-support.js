@@ -55,9 +55,9 @@ test('will not reset when clicking within the menu', () => {
     )
   }
   const {getByTestId, queryByTestId} = render(<MyPortalAutocomplete />)
-  expect(queryByTestId('menu')).not.toBeInTheDOM()
+  expect(queryByTestId('menu')).toBeNull()
   getByTestId('button').click()
-  expect(getByTestId('menu')).toBeInTheDOM()
+  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   const notAnItem = getByTestId('not-an-item')
 
@@ -65,14 +65,14 @@ test('will not reset when clicking within the menu', () => {
   fireEvent.mouseDown(notAnItem)
   notAnItem.focus() // sets document.activeElement
   fireEvent.mouseUp(notAnItem)
-  expect(getByTestId('menu')).toBeInTheDOM()
+  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   // Touch events
   fireEvent.touchStart(notAnItem)
   notAnItem.focus() // sets document.activeElement
-  expect(getByTestId('menu')).toBeInTheDOM()
+  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   getByTestId('item').click()
-  expect(queryByTestId('menu')).not.toBeInTheDOM()
+  expect(queryByTestId('menu')).toBeNull()
   expect(getByTestId('selection')).toHaveTextContent('The item')
 })
