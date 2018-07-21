@@ -913,10 +913,8 @@ class Downshift extends Component {
       ...state,
     })
     this.previousResultCount = resultCount
-    /* istanbul ignore else (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
-      setA11yStatus(status)
-    }
+
+    setA11yStatus(status)
   }, 200)
 
   componentDidMount() {
@@ -1010,7 +1008,10 @@ class Downshift extends Component {
       this.scrollHighlightedItemIntoView()
     }
 
-    this.updateStatus()
+    /* istanbul ignore else (react-native) */
+    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+      this.updateStatus()
+    }
   }
 
   componentWillUnmount() {
