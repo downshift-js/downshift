@@ -780,7 +780,14 @@ class Downshift extends Component {
 
   menuRef = node => (this._menuNode = node)
 
-  getMenuProps = ({refKey = 'ref', ref, ...props} = {}) => {
+  getMenuProps = (
+    {refKey = 'ref', ref, ...props} = {},
+    {suppressRefError = false} = {},
+  ) => {
+    this.getMenuProps.called = true
+    this.getMenuProps.refKey = refKey
+    this.getMenuProps.suppressRefError = suppressRefError
+
     return {
       [refKey]: callAll(ref, this.menuRef),
       role: 'listbox',
@@ -918,6 +925,10 @@ class Downshift extends Component {
   }, 200)
 
   componentDidMount() {
+    if (this.getMenuProps.called && !this.getMenuProps.suppressRefError) {
+      validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
+    }
+
     /* istanbul ignore if (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
       this.cleanup = () => {
@@ -983,6 +994,10 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.getMenuProps.called && !this.getMenuProps.suppressRefError) {
+      validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
+    }
+
     if (
       this.isControlledProp('selectedItem') &&
       this.props.selectedItemChanged(
@@ -1031,6 +1046,10 @@ class Downshift extends Component {
     this.getRootProps.called = false
     this.getRootProps.refKey = undefined
     this.getRootProps.suppressRefError = undefined
+    // we do something similar for getMenuProps
+    this.getMenuProps.called = false
+    this.getMenuProps.refKey = undefined
+    this.getMenuProps.suppressRefError = undefined
     // we do something similar for getLabelProps
     this.getLabelProps.called = false
     // and something similar for getInputProps
@@ -1062,6 +1081,14 @@ class Downshift extends Component {
 }
 
 export default Downshift
+
+function validateGetMenuPropsCalledCorrectly(node, {refKey}) {
+  if (!node) {
+    throw new Error(
+      `downshift: The ref prop "${refKey}" from getMenuProps was not applied correctly on your menu element.`,
+    )
+  }
+}
 
 function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'
