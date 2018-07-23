@@ -122,8 +122,8 @@ class Downshift extends Component {
     touchStart: '__autocomplete_touchstart__',
   }
 
-  constructor(...args) {
-    super(...args)
+  constructor(props) {
+    super(props)
     const state = this.getState({
       highlightedIndex: this.props.defaultHighlightedIndex,
       isOpen: this.props.defaultIsOpen,
