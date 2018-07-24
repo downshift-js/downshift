@@ -925,7 +925,11 @@ class Downshift extends Component {
   }, 200)
 
   componentDidMount() {
-    if (this.getMenuProps.called && !this.getMenuProps.suppressRefError) {
+    if (
+      this.getMenuProps.called &&
+      !this.getMenuProps.suppressRefError &&
+      preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+    ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
@@ -994,7 +998,11 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.getMenuProps.called && !this.getMenuProps.suppressRefError) {
+    if (
+      this.getMenuProps.called &&
+      !this.getMenuProps.suppressRefError &&
+      preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+    ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
