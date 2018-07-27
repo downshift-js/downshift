@@ -51,6 +51,7 @@ class Downshift extends Component {
         body: PropTypes.any,
       }),
     }),
+    suppressRefError: PropTypes.bool,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -101,6 +102,7 @@ class Downshift extends Component {
         ? {}
         : window,
     stateReducer: (state, stateToSet) => stateToSet,
+    suppressRefError: false,
   }
 
   static stateChangeTypes = {
@@ -1039,8 +1041,8 @@ class Downshift extends Component {
     if (!element) {
       return null
     }
-    if (this.getRootProps.called) {
-      if (!this.getRootProps.suppressRefError) {
+    if (this.getRootProps.called || this.props.suppressRefError) {
+      if (!this.getRootProps.suppressRefError && !this.props.suppressRefError) {
         validateGetRootPropsCalledCorrectly(element, this.getRootProps)
       }
       return element
