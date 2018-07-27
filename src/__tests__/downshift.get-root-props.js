@@ -114,3 +114,13 @@ test('renders fine when rendering a composite component and applying getRootProp
   )
   expect(() => render(<MyComponent />)).not.toThrow()
 })
+
+test('renders fine when rendering a composite component and suppressRefError prop is true', () => {
+  const MyComponent = () => (
+    <Downshift
+      suppressRefError
+      children={({getRootProps}) => <MyDiv {...getRootProps()} />}
+    />
+  )
+  expect(() => render(<MyComponent />)).not.toThrow()
+})
