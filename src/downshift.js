@@ -928,7 +928,7 @@ class Downshift extends Component {
     if (
       this.getMenuProps.called &&
       !this.getMenuProps.suppressRefError &&
-      preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
@@ -1001,7 +1001,7 @@ class Downshift extends Component {
     if (
       this.getMenuProps.called &&
       !this.getMenuProps.suppressRefError &&
-      preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
