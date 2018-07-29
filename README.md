@@ -561,7 +561,7 @@ overridden (or overriding the props returned). For example:
 | `getInputProps`        | `function({})`    | returns the props you should apply to the `input` element that you render.                     |
 | `getItemProps`         | `function({})`    | returns the props you should apply to any menu item elements you render.                       |
 | `getLabelProps`        | `function({})`    | returns the props you should apply to the `label` element that you render.                     |
-| `getMenuProps`         | `function({})`    | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
+| `getMenuProps`         | `function({},{})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
 | `getRootProps`         | `function({},{})` | returns the props you should apply to the root element that you render. It can be optional.    |
 
 #### `getRootProps`
@@ -627,6 +627,13 @@ This method should be applied to the element which contains your list of items.
 Typically, this will be a `<div>` or a `<ul>` that surrounds a `map` expression.
 This handles the proper ARIA roles and attributes.
 
+Required properties:
+
+- `refKey`: if you're rendering a composite component, that component will need
+  to accept a prop which it forwards to the root DOM element. Commonly, folks
+  call this `innerRef`. So you'd call: `getMenuProps({refKey: 'innerRef'})` and
+  your composite component would forward like: `<ul ref={props.innerRef} />`
+
 Optional properties:
 
 - `aria-label`: By default the menu will add an `aria-labelledby` that refers
@@ -634,6 +641,12 @@ Optional properties:
   `aria-label` to give a more specific label that describes the options
   available, then `aria-labelledby` will not be provided and screen readers
   can use your `aria-label` instead.
+
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getMenuProps`.
+**Please use it with extreme care and only if you are absolutely sure that the ref
+is correctly forwarded otherwise `Downshift` will unexpectedly fail.**
 
 ```jsx
 <ul {...getMenuProps()}>
