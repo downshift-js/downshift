@@ -44,7 +44,9 @@ contribution, you can run it again and select the added contribution type.
 
 Please make sure to run the tests before you commit your changes. You can run
 `npm run test:update` which will update any snapshots that need updating. Make
-sure to include those changes (if they exist) in your commit.
+sure to include those changes (if they exist) in your commit. We also track the
+bundle sizes in a `.size-snapshot.json` file, this will likely update when you
+make changes to the codebase.
 
 ### Tests
 

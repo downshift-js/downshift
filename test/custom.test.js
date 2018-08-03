@@ -36,7 +36,8 @@ export default class App extends React.Component<Props, State> {
   }
 
   onChange = (selectedItem: Item) => {
-    selectedItem
+    // eslint-disable-next-line no-console
+    console.log('selectedItem', selectedItem)
   }
 
   render() {

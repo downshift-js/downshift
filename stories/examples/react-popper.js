@@ -30,9 +30,6 @@ class ReactPopperAutocomplete extends PureComponent {
       'bottom-end',
     ],
   }
-  state = {
-    selected: 'bottom-start',
-  }
 
   render() {
     return (
