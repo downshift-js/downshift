@@ -127,7 +127,7 @@ test('props update causes the a11y status to be updated', () => {
 
 test('inputValue initializes properly if the selectedItem is controlled and set', () => {
   const childrenSpy = jest.fn(() => null)
-  render(<Downshift selectedItem={'foo'}>{childrenSpy}</Downshift>)
+  render(<Downshift selectedItem="foo">{childrenSpy}</Downshift>)
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       inputValue: 'foo',

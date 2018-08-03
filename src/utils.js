@@ -86,7 +86,9 @@ function debounce(fn, time) {
 function callAllEventHandlers(...fns) {
   return (event, ...args) =>
     fns.some(fn => {
-      fn && fn(event, ...args)
+      if (fn) {
+        fn(event, ...args)
+      }
       return (
         event.preventDownshiftDefault ||
         (event.hasOwnProperty('nativeEvent') &&
@@ -105,7 +107,9 @@ function callAllEventHandlers(...fns) {
 function callAll(...fns) {
   return (...args) => {
     fns.forEach(fn => {
-      fn && fn(...args)
+      if (fn) {
+        fn(...args)
+      }
     })
   }
 }
