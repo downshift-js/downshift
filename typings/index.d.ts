@@ -111,7 +111,7 @@ export interface GetToggleButtonPropsOptions
 export interface GetMenuPropsOptions<Item>
   extends Record<string, any> {
   refKey?: string;
-};
+}
 
 export interface GetMenuPropsOtherOptions<Item> {
   suppressRefError?: boolean;
