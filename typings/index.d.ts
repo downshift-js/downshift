@@ -127,7 +127,7 @@ export interface PropGetters<Item> {
   getRootProps: (options: GetRootPropsOptions) => any
   getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
-  getMenuProps: (options?: GetMenuPropsOptions, otherOptions?: GetMenuPropsOtherOptions) => any
+  getMenuProps: (options?: GetMenuPropsOptions<Item>, otherOptions?: GetMenuPropsOtherOptions<Item>) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
