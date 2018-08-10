@@ -52,6 +52,7 @@ class Downshift extends Component {
       }),
     }),
     suppressRefError: PropTypes.bool,
+    scrollIntoView: PropTypes.func,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -103,6 +104,7 @@ class Downshift extends Component {
         : window,
     stateReducer: (state, stateToSet) => stateToSet,
     suppressRefError: false,
+    scrollIntoView,
   }
 
   static stateChangeTypes = {
@@ -248,7 +250,7 @@ class Downshift extends Component {
     /* istanbul ignore else (react-native) */
     if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      scrollIntoView(node, this._rootNode)
+      this.props.scrollIntoView(node, this._rootNode)
     }
   }
 

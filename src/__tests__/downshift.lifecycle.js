@@ -7,6 +7,17 @@ import * as utils from '../utils'
 
 jest.useFakeTimers()
 jest.mock('../set-a11y-status')
+jest.mock('../utils', () => {
+  const realUtils = require.requireActual('../utils')
+  return {
+    ...realUtils,
+    scrollIntoView: jest.fn(),
+  }
+})
+
+afterEach(() => {
+  utils.scrollIntoView.mockReset()
+})
 
 test('do not set state after unmount', () => {
   const handleStateChange = jest.fn()
@@ -233,7 +244,6 @@ test('controlled highlighted index change scrolls the item into view', () => {
   // utils.scrollIntoView and ensure it's called with the proper arguments
   // assuming that the test suite for utils.scrollIntoView will ensure
   // this functionality doesn't break.
-  jest.spyOn(utils, 'scrollIntoView').mockImplementation(() => {})
   const oneHundredItems = Array.from({length: 100})
   const renderFn = jest.fn(({getItemProps}) => (
     <div data-testid="root">
@@ -257,8 +267,6 @@ test('controlled highlighted index change scrolls the item into view', () => {
     queryByTestId('item-75'),
     rootDiv,
   )
-
-  utils.scrollIntoView.mockRestore()
 })
 
 function mouseDownAndUp(node) {

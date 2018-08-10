@@ -1,23 +1,23 @@
 {
   "preact/dist/downshift.cjs.js": {
-    "bundled": 55985,
-    "minified": 23755,
-    "gzipped": 7059
+    "bundled": 56030,
+    "minified": 23804,
+    "gzipped": 7068
   },
   "preact/dist/downshift.umd.min.js": {
-    "bundled": 58032,
-    "minified": 21519,
-    "gzipped": 6612
+    "bundled": 58079,
+    "minified": 21567,
+    "gzipped": 6626
   },
   "preact/dist/downshift.umd.js": {
-    "bundled": 58668,
-    "minified": 21867,
-    "gzipped": 6747
+    "bundled": 58715,
+    "minified": 21915,
+    "gzipped": 6762
   },
   "dist/downshift.umd.min.js": {
-    "bundled": 61008,
-    "minified": 22733,
-    "gzipped": 7167
+    "bundled": 63274,
+    "minified": 23314,
+    "gzipped": 7396
   },
   "dist/downshift.cjs.js": {
     "bundled": 85379,
