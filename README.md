@@ -84,6 +84,7 @@ harder to contribute to.
   - [getItemId](#getitemid)
   - [environment](#environment)
   - [onOuterClick](#onouterclick)
+  - [scrollIntoView](#scrollintoview)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
 - [Children Function](#children-function)
@@ -482,6 +483,18 @@ const ui = (
 
 This callback will only be called if `isOpen` is `true`.
 
+### scrollIntoView
+
+> `function(node: HTMLElement, rootNode: HTMLElement)` | defaults to internal
+> implementation
+
+This allows you to customize how the scrolling works when the highlighted index
+changes. It receives the node to be scrolled to and the root node (the root
+node you render in downshift). Internally we use
+[`compute-scroll-into-view`](https://www.npmjs.com/package/compute-scroll-into-view)
+so if you use that package then you wont be adding any additional bytes to your
+bundle :)
+
 ## stateChangeTypes
 
 There are a few props that expose changes to state
@@ -635,7 +648,7 @@ Optional properties:
   your composite component would forward like: `<ul ref={props.innerRef} />`.
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property.
-  
+
   Please keep in mind that menus, for accessiblity purposes, should always be
   rendered, regardless of whether you hide it or not. Otherwise, `getMenuProps`
   may throw error if you unmount and remount the menu.
