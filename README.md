@@ -972,6 +972,7 @@ You're more than welcome to make PRs to the examples repository to move these ex
 - [React Native example](https://snack.expo.io/SkE0LxXqM)
 - [React VR example](https://github.com/infiniteluke/bassdrop)
 - [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
+- [Unconventional Dropdown that allows select items on alpha keypress] (https://codesandbox.io/s/p4lr9xox)
 
 ## FAQ
 
