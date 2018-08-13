@@ -19,6 +19,11 @@
     "minified": 21915,
     "gzipped": 6762
   },
+  "dist/downshift.umd.min.js": {
+    "bundled": 61054,
+    "minified": 22781,
+    "gzipped": 7184
+  },
   "dist/downshift.cjs.js": {
     "bundled": 85458,
     "minified": 34565,
@@ -56,5 +61,10 @@
         "code": 23512
       }
     }
+  },
+  "dist/downshift.native.cjs.js": {
+    "bundled": 81756,
+    "minified": 32873,
+    "gzipped": 9728
   }
 }
