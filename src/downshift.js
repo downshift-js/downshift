@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import preval from 'preval.macro'
+import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
@@ -232,7 +232,7 @@ class Downshift extends Component {
 
   scrollHighlightedItemIntoView() {
     /* istanbul ignore else (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+    if (!isReactNative) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       this.props.scrollIntoView(node, this._rootNode)
     }
@@ -574,7 +574,7 @@ class Downshift extends Component {
     ...rest
   } = {}) => {
     const {isOpen} = this.getState()
-    const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const enabledEventHandlers = isReactNative
       ? /* istanbul ignore next (react-native) */
         {
           onPress: callAllEventHandlers(onPress, this.button_handleClick),
@@ -672,7 +672,7 @@ class Downshift extends Component {
     let eventHandlers = {}
 
     /* istanbul ignore next (preact) */
-    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
+    if (isPreact) {
       onChangeKey = 'onInput'
     } else {
       onChangeKey = 'onChange'
@@ -692,7 +692,7 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore if (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+    if (isReactNative) {
       eventHandlers = {
         ...eventHandlers,
         onChangeText: callAllEventHandlers(
@@ -732,7 +732,7 @@ class Downshift extends Component {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      inputValue: isReactNative
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
     })
@@ -802,10 +802,10 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const onSelectKey = isReactNative
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
-    const customClickHandler = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const customClickHandler = isReactNative
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick
 
@@ -912,16 +912,17 @@ class Downshift extends Component {
   }, 200)
 
   componentDidMount() {
+    /* istanbul ignore if (react-native) */
     if (
+      !isReactNative &&
       this.getMenuProps.called &&
-      !this.getMenuProps.suppressRefError &&
-      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      !this.getMenuProps.suppressRefError
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
     /* istanbul ignore if (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+    if (isReactNative) {
       this.cleanup = () => {
         this.internalClearTimeouts()
       }
@@ -986,9 +987,9 @@ class Downshift extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
+      /* istanbul ignore next (react-native) */ !isReactNative &&
       this.getMenuProps.called &&
-      !this.getMenuProps.suppressRefError &&
-      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      !this.getMenuProps.suppressRefError
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
@@ -1019,7 +1020,7 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore else (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+    if (!isReactNative) {
       this.updateStatus()
     }
   }
