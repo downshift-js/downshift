@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import preval from 'preval.macro'
 import setA11yStatus from './set-a11y-status'
+import * as stateChangeTypes from './stateChangeTypes'
 import {
   cbToCb,
   callAll,
@@ -107,24 +108,7 @@ class Downshift extends Component {
     scrollIntoView,
   }
 
-  static stateChangeTypes = {
-    unknown: '__autocomplete_unknown__',
-    mouseUp: '__autocomplete_mouseup__',
-    itemMouseEnter: '__autocomplete_item_mouseenter__',
-    keyDownArrowUp: '__autocomplete_keydown_arrow_up__',
-    keyDownArrowDown: '__autocomplete_keydown_arrow_down__',
-    keyDownEscape: '__autocomplete_keydown_escape__',
-    keyDownEnter: '__autocomplete_keydown_enter__',
-    clickItem: '__autocomplete_click_item__',
-    blurInput: '__autocomplete_blur_input__',
-    changeInput: '__autocomplete_change_input__',
-    keyDownSpaceButton: '__autocomplete_keydown_space_button__',
-    clickButton: '__autocomplete_click_button__',
-    blurButton: '__autocomplete_blur_button__',
-    controlledPropUpdatedSelectedItem:
-      '__autocomplete_controlled_prop_updated_selected_item__',
-    touchStart: '__autocomplete_touchstart__',
-  }
+  static stateChangeTypes = stateChangeTypes
 
   constructor(props) {
     super(props)
@@ -376,8 +360,7 @@ class Downshift extends Component {
         ) {
           onChangeArg = newStateToSet.selectedItem
         }
-        newStateToSet.type =
-          newStateToSet.type || Downshift.stateChangeTypes.unknown
+        newStateToSet.type = newStateToSet.type || stateChangeTypes.unknown
 
         Object.keys(newStateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
@@ -538,7 +521,7 @@ class Downshift extends Component {
       event.preventDefault()
       const amount = event.shiftKey ? 5 : 1
       this.moveHighlightedIndex(amount, {
-        type: Downshift.stateChangeTypes.keyDownArrowDown,
+        type: stateChangeTypes.keyDownArrowDown,
       })
     },
 
@@ -546,7 +529,7 @@ class Downshift extends Component {
       event.preventDefault()
       const amount = event.shiftKey ? -5 : -1
       this.moveHighlightedIndex(amount, {
-        type: Downshift.stateChangeTypes.keyDownArrowUp,
+        type: stateChangeTypes.keyDownArrowUp,
       })
     },
 
@@ -560,14 +543,14 @@ class Downshift extends Component {
           return
         }
         this.selectHighlightedItem({
-          type: Downshift.stateChangeTypes.keyDownEnter,
+          type: stateChangeTypes.keyDownEnter,
         })
       }
     },
 
     Escape(event) {
       event.preventDefault()
-      this.reset({type: Downshift.stateChangeTypes.keyDownEscape})
+      this.reset({type: stateChangeTypes.keyDownEscape})
     },
   }
 
@@ -578,7 +561,7 @@ class Downshift extends Component {
 
     ' '(event) {
       event.preventDefault()
-      this.toggleMenu({type: Downshift.stateChangeTypes.keyDownSpaceButton})
+      this.toggleMenu({type: stateChangeTypes.keyDownSpaceButton})
     },
   }
 
@@ -641,11 +624,11 @@ class Downshift extends Component {
     // if the NODE_ENV is test. With the proper build system, this should be dead code eliminated
     // when building for production and should therefore have no impact on production code.
     if (process.env.NODE_ENV === 'test') {
-      this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
+      this.toggleMenu({type: stateChangeTypes.clickButton})
     } else {
       // Ensure that toggle of menu occurs after the potential blur event in iOS
       this.internalSetTimeout(() =>
-        this.toggleMenu({type: Downshift.stateChangeTypes.clickButton}),
+        this.toggleMenu({type: stateChangeTypes.clickButton}),
       )
     }
   }
@@ -660,7 +643,7 @@ class Downshift extends Component {
           this.props.environment.document.activeElement.id !== this.inputId) &&
         this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
       ) {
-        this.reset({type: Downshift.stateChangeTypes.blurButton})
+        this.reset({type: stateChangeTypes.blurButton})
       }
     })
   }
@@ -747,7 +730,7 @@ class Downshift extends Component {
 
   input_handleChange = event => {
     this.internalSetState({
-      type: Downshift.stateChangeTypes.changeInput,
+      type: stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
@@ -757,7 +740,7 @@ class Downshift extends Component {
 
   input_handleTextChange /* istanbul ignore next (react-native) */ = text => {
     this.internalSetState({
-      type: Downshift.stateChangeTypes.changeInput,
+      type: stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: text,
     })
@@ -773,7 +756,7 @@ class Downshift extends Component {
             this.props.environment.document.activeElement,
           ))
       if (!this.isMouseDown && !downshiftButtonIsActive) {
-        this.reset({type: Downshift.stateChangeTypes.blurInput})
+        this.reset({type: stateChangeTypes.blurInput})
       }
     })
   }
@@ -835,7 +818,7 @@ class Downshift extends Component {
           return
         }
         this.setHighlightedIndex(index, {
-          type: Downshift.stateChangeTypes.itemMouseEnter,
+          type: stateChangeTypes.itemMouseEnter,
         })
 
         // We never want to manually scroll when changing state based
@@ -853,7 +836,7 @@ class Downshift extends Component {
       }),
       [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
         this.selectItemAtIndex(index, {
-          type: Downshift.stateChangeTypes.clickItem,
+          type: stateChangeTypes.clickItem,
         })
       }),
     }
@@ -967,7 +950,7 @@ class Downshift extends Component {
         // then we don't want to reset downshift
         const contextWithinDownshift = targetWithinDownshift(event.target)
         if (!contextWithinDownshift && this.getState().isOpen) {
-          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.reset({type: stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -981,7 +964,7 @@ class Downshift extends Component {
           false,
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
-          this.reset({type: Downshift.stateChangeTypes.touchStart}, () =>
+          this.reset({type: stateChangeTypes.touchStart}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -1018,7 +1001,7 @@ class Downshift extends Component {
       )
     ) {
       this.internalSetState({
-        type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,
+        type: stateChangeTypes.controlledPropUpdatedSelectedItem,
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
