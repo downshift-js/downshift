@@ -919,13 +919,13 @@
       ]
     },
     {
-      "login": "amyscript",
-      "name": "Amy Wah",
-      "avatar_url": "https://avatars2.githubusercontent.com/u/24494020?s=400&v=4,
+      "login": "AmyScript",
+      "name": "Amy",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/24494020?v=4",
       "profile": "https://github.com/AmyScript",
       "contributions": [
         "example"
       ]
-    },
+    }
   ]
 }
