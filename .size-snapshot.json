@@ -9,6 +9,11 @@
     "minified": 21567,
     "gzipped": 6626
   },
+  "dist/downshift.umd.min.js": {
+    "bundled": 61054,
+    "minified": 22781,
+    "gzipped": 7184
+  },
   "preact/dist/downshift.umd.js": {
     "bundled": 58715,
     "minified": 21915,
