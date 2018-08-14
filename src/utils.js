@@ -1,4 +1,5 @@
 import computeScrollIntoView from 'compute-scroll-into-view'
+import {isPreact} from './is.macro'
 
 let idCounter = 0
 
@@ -189,13 +190,13 @@ function unwrapArray(arg, defaultValue) {
  */
 function isDOMElement(element) {
   /* istanbul ignore if */
-  if (element.nodeName) {
+  if (isPreact) {
     // then this is preact
     return typeof element.nodeName === 'string'
-  } else {
-    // then we assume this is react
-    return typeof element.type === 'string'
   }
+
+  // then we assume this is react
+  return typeof element.type === 'string'
 }
 
 /**
@@ -204,7 +205,13 @@ function isDOMElement(element) {
  */
 function getElementProps(element) {
   // props for react, attributes for preact
-  return element.props || /* istanbul ignore next (preact) */ element.attributes
+
+  /* istanbul ignore if */
+  if (isPreact) {
+    return element.attributes
+  }
+
+  return element.props
 }
 
 /**
