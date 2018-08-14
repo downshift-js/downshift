@@ -215,8 +215,13 @@ class Downshift extends Component {
     return itemCount
   }
 
-  setItemCount = count => (this.itemCount = count)
-  unsetItemCount = () => (this.itemCount = null)
+  setItemCount = count => {
+    this.itemCount = count
+  }
+
+  unsetItemCount = () => {
+    this.itemCount = null
+  }
 
   getItemNodeFromIndex(index) {
     return this.props.environment.document.getElementById(this.getItemId(index))
@@ -765,7 +770,9 @@ class Downshift extends Component {
 
   /////////////////////////////// MENU
 
-  menuRef = node => (this._menuNode = node)
+  menuRef = node => {
+    this._menuNode = node
+  }
 
   getMenuProps = (
     {refKey = 'ref', ref, ...props} = {},
@@ -792,7 +799,9 @@ class Downshift extends Component {
     onClick,
     onPress,
     index,
-    item = requiredProp('getItemProps', 'item'),
+    item = process.env.NODE_ENV === 'production'
+      ? /* istanbul ignore next */ undefined
+      : requiredProp('getItemProps', 'item'),
     ...rest
   } = {}) => {
     if (index === undefined) {
@@ -914,6 +923,7 @@ class Downshift extends Component {
   componentDidMount() {
     /* istanbul ignore if (react-native) */
     if (
+      process.env.NODE_ENV !== 'production' &&
       !isReactNative &&
       this.getMenuProps.called &&
       !this.getMenuProps.suppressRefError
@@ -986,8 +996,10 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    /* istanbul ignore if (react-native) */
     if (
-      /* istanbul ignore next (react-native) */ !isReactNative &&
+      process.env.NODE_ENV !== 'production' &&
+      !isReactNative &&
       this.getMenuProps.called &&
       !this.getMenuProps.suppressRefError
     ) {
@@ -1054,8 +1066,13 @@ class Downshift extends Component {
     if (!element) {
       return null
     }
+
     if (this.getRootProps.called || this.props.suppressRefError) {
-      if (!this.getRootProps.suppressRefError && !this.props.suppressRefError) {
+      if (
+        process.env.NODE_ENV !== 'production' &&
+        !this.getRootProps.suppressRefError &&
+        !this.props.suppressRefError
+      ) {
         validateGetRootPropsCalledCorrectly(element, this.getRootProps)
       }
       return element
@@ -1066,13 +1083,20 @@ class Downshift extends Component {
         element,
         this.getRootProps(getElementProps(element)),
       )
-    } else {
+    }
+
+    /* istanbul ignore else */
+    if (process.env.NODE_ENV !== 'production') {
       // they didn't apply the root props, but they need to
       // otherwise we can't query around the autocomplete
+
       throw new Error(
         'downshift: If you return a non-DOM element, you must use apply the getRootProps function',
       )
     }
+
+    /* istanbul ignore next */
+    return undefined
   }
 }
 
@@ -1080,7 +1104,8 @@ export default Downshift
 
 function validateGetMenuPropsCalledCorrectly(node, {refKey}) {
   if (!node) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: The ref prop "${refKey}" from getMenuProps was not applied correctly on your menu element.`,
     )
   }
@@ -1090,16 +1115,19 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'
   const isComposite = !isDOMElement(element)
   if (isComposite && !refKeySpecified) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       'downshift: You returned a non-DOM element. You must specify a refKey in getRootProps',
     )
   } else if (!isComposite && refKeySpecified) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
   if (!getElementProps(element)[refKey]) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }

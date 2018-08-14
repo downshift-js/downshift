@@ -221,7 +221,8 @@ function getElementProps(element) {
  * @param {String} propName the prop name
  */
 function requiredProp(fnName, propName) {
-  throw new Error(`The property "${propName}" is required in "${fnName}"`)
+  // eslint-disable-next-line no-console
+  console.error(`The property "${propName}" is required in "${fnName}"`)
 }
 
 const stateKeys = [

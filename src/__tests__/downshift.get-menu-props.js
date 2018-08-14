@@ -2,15 +2,8 @@ import React from 'react'
 import {render} from 'react-testing-library'
 import Downshift from '../'
 
-const oldError = console.error
-
-beforeEach(() => {
-  console.error = jest.fn()
-})
-
-afterEach(() => {
-  console.error = oldError
-})
+beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+afterEach(() => console.error.mockRestore())
 
 const Menu = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
 
@@ -24,7 +17,8 @@ test('using a composite component and calling getMenuProps without a refKey resu
       )}
     />
   )
-  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  render(<MyComponent />)
+  expect(console.error.mock.calls[1][0]).toMatchSnapshot()
 })
 
 test('not applying the ref prop results in an error', () => {
@@ -40,7 +34,8 @@ test('not applying the ref prop results in an error', () => {
       }}
     />
   )
-  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  render(<MyComponent />)
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 test('renders fine when rendering a composite component and applying getMenuProps properly', () => {
@@ -53,7 +48,8 @@ test('renders fine when rendering a composite component and applying getMenuProp
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('using a composite component and calling getMenuProps without a refKey does not result in an error if suppressRefError is true', () => {
@@ -66,7 +62,8 @@ test('using a composite component and calling getMenuProps without a refKey does
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('returning a DOM element and calling getMenuProps with a refKey does not result in an error if suppressRefError is true', () => {
@@ -79,7 +76,8 @@ test('returning a DOM element and calling getMenuProps with a refKey does not re
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(1)
 })
 
 test('not applying the ref prop results in an error does not result in an error if suppressRefError is true', () => {
@@ -95,7 +93,8 @@ test('not applying the ref prop results in an error does not result in an error 
       }}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('renders fine when rendering a composite component and applying getMenuProps properly even if suppressRefError is true', () => {
@@ -110,5 +109,6 @@ test('renders fine when rendering a composite component and applying getMenuProp
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
