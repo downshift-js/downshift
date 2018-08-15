@@ -1,15 +1,13 @@
-/* istanbul ignore next */
 const {createMacro, MacroError} = require('babel-plugin-macros')
 
-/* istanbul ignore next */
+const importToEnvVar = {
+  isPreact: 'BUILD_PREACT',
+  isReactNative: 'BUILD_REACT_NATIVE',
+}
+
+const arrToStr = arr => arr.join(', ')
+
 module.exports = createMacro(({references, babel: {types: t}}) => {
-  const importToEnvVar = {
-    isPreact: 'BUILD_PREACT',
-    isReactNative: 'BUILD_REACT_NATIVE',
-  }
-
-  const arrToStr = arr => arr.join(', ')
-
   const usedReferences = Object.keys(references)
   const allowedReferences = Object.keys(importToEnvVar)
 
