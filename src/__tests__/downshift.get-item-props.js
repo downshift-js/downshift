@@ -219,8 +219,7 @@ function renderDownshift({
     enterOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
     changeInputValue: (value, extraEventProps) => {
-      input.value = value
-      fireEvent.change(input, {...extraEventProps})
+      fireEvent.change(input, {target: {value}, ...extraEventProps})
     },
   }
 }
