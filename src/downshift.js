@@ -2,8 +2,9 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import preval from 'preval.macro'
+import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
+import * as stateChangeTypes from './stateChangeTypes'
 import {
   cbToCb,
   callAll,
@@ -107,24 +108,7 @@ class Downshift extends Component {
     scrollIntoView,
   }
 
-  static stateChangeTypes = {
-    unknown: '__autocomplete_unknown__',
-    mouseUp: '__autocomplete_mouseup__',
-    itemMouseEnter: '__autocomplete_item_mouseenter__',
-    keyDownArrowUp: '__autocomplete_keydown_arrow_up__',
-    keyDownArrowDown: '__autocomplete_keydown_arrow_down__',
-    keyDownEscape: '__autocomplete_keydown_escape__',
-    keyDownEnter: '__autocomplete_keydown_enter__',
-    clickItem: '__autocomplete_click_item__',
-    blurInput: '__autocomplete_blur_input__',
-    changeInput: '__autocomplete_change_input__',
-    keyDownSpaceButton: '__autocomplete_keydown_space_button__',
-    clickButton: '__autocomplete_click_button__',
-    blurButton: '__autocomplete_blur_button__',
-    controlledPropUpdatedSelectedItem:
-      '__autocomplete_controlled_prop_updated_selected_item__',
-    touchStart: '__autocomplete_touchstart__',
-  }
+  static stateChangeTypes = stateChangeTypes
 
   constructor(props) {
     super(props)
@@ -231,8 +215,13 @@ class Downshift extends Component {
     return itemCount
   }
 
-  setItemCount = count => (this.itemCount = count)
-  unsetItemCount = () => (this.itemCount = null)
+  setItemCount = count => {
+    this.itemCount = count
+  }
+
+  unsetItemCount = () => {
+    this.itemCount = null
+  }
 
   getItemNodeFromIndex(index) {
     return this.props.environment.document.getElementById(this.getItemId(index))
@@ -248,7 +237,7 @@ class Downshift extends Component {
 
   scrollHighlightedItemIntoView() {
     /* istanbul ignore else (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+    if (!isReactNative) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
       this.props.scrollIntoView(node, this._rootNode)
     }
@@ -376,8 +365,7 @@ class Downshift extends Component {
         ) {
           onChangeArg = newStateToSet.selectedItem
         }
-        newStateToSet.type =
-          newStateToSet.type || Downshift.stateChangeTypes.unknown
+        newStateToSet.type = newStateToSet.type || stateChangeTypes.unknown
 
         Object.keys(newStateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
@@ -538,7 +526,7 @@ class Downshift extends Component {
       event.preventDefault()
       const amount = event.shiftKey ? 5 : 1
       this.moveHighlightedIndex(amount, {
-        type: Downshift.stateChangeTypes.keyDownArrowDown,
+        type: stateChangeTypes.keyDownArrowDown,
       })
     },
 
@@ -546,7 +534,7 @@ class Downshift extends Component {
       event.preventDefault()
       const amount = event.shiftKey ? -5 : -1
       this.moveHighlightedIndex(amount, {
-        type: Downshift.stateChangeTypes.keyDownArrowUp,
+        type: stateChangeTypes.keyDownArrowUp,
       })
     },
 
@@ -560,14 +548,14 @@ class Downshift extends Component {
           return
         }
         this.selectHighlightedItem({
-          type: Downshift.stateChangeTypes.keyDownEnter,
+          type: stateChangeTypes.keyDownEnter,
         })
       }
     },
 
     Escape(event) {
       event.preventDefault()
-      this.reset({type: Downshift.stateChangeTypes.keyDownEscape})
+      this.reset({type: stateChangeTypes.keyDownEscape})
     },
   }
 
@@ -578,7 +566,7 @@ class Downshift extends Component {
 
     ' '(event) {
       event.preventDefault()
-      this.toggleMenu({type: Downshift.stateChangeTypes.keyDownSpaceButton})
+      this.toggleMenu({type: stateChangeTypes.keyDownSpaceButton})
     },
   }
 
@@ -591,7 +579,7 @@ class Downshift extends Component {
     ...rest
   } = {}) => {
     const {isOpen} = this.getState()
-    const enabledEventHandlers = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const enabledEventHandlers = isReactNative
       ? /* istanbul ignore next (react-native) */
         {
           onPress: callAllEventHandlers(onPress, this.button_handleClick),
@@ -641,11 +629,11 @@ class Downshift extends Component {
     // if the NODE_ENV is test. With the proper build system, this should be dead code eliminated
     // when building for production and should therefore have no impact on production code.
     if (process.env.NODE_ENV === 'test') {
-      this.toggleMenu({type: Downshift.stateChangeTypes.clickButton})
+      this.toggleMenu({type: stateChangeTypes.clickButton})
     } else {
       // Ensure that toggle of menu occurs after the potential blur event in iOS
       this.internalSetTimeout(() =>
-        this.toggleMenu({type: Downshift.stateChangeTypes.clickButton}),
+        this.toggleMenu({type: stateChangeTypes.clickButton}),
       )
     }
   }
@@ -660,7 +648,7 @@ class Downshift extends Component {
           this.props.environment.document.activeElement.id !== this.inputId) &&
         this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
       ) {
-        this.reset({type: Downshift.stateChangeTypes.blurButton})
+        this.reset({type: stateChangeTypes.blurButton})
       }
     })
   }
@@ -689,7 +677,7 @@ class Downshift extends Component {
     let eventHandlers = {}
 
     /* istanbul ignore next (preact) */
-    if (preval`module.exports = process.env.BUILD_PREACT === 'true'`) {
+    if (isPreact) {
       onChangeKey = 'onInput'
     } else {
       onChangeKey = 'onChange'
@@ -709,7 +697,7 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore if (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+    if (isReactNative) {
       eventHandlers = {
         ...eventHandlers,
         onChangeText: callAllEventHandlers(
@@ -747,9 +735,9 @@ class Downshift extends Component {
 
   input_handleChange = event => {
     this.internalSetState({
-      type: Downshift.stateChangeTypes.changeInput,
+      type: stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+      inputValue: isReactNative
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
     })
@@ -757,7 +745,7 @@ class Downshift extends Component {
 
   input_handleTextChange /* istanbul ignore next (react-native) */ = text => {
     this.internalSetState({
-      type: Downshift.stateChangeTypes.changeInput,
+      type: stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: text,
     })
@@ -773,7 +761,7 @@ class Downshift extends Component {
             this.props.environment.document.activeElement,
           ))
       if (!this.isMouseDown && !downshiftButtonIsActive) {
-        this.reset({type: Downshift.stateChangeTypes.blurInput})
+        this.reset({type: stateChangeTypes.blurInput})
       }
     })
   }
@@ -782,7 +770,9 @@ class Downshift extends Component {
 
   /////////////////////////////// MENU
 
-  menuRef = node => (this._menuNode = node)
+  menuRef = node => {
+    this._menuNode = node
+  }
 
   getMenuProps = (
     {refKey = 'ref', ref, ...props} = {},
@@ -809,7 +799,9 @@ class Downshift extends Component {
     onClick,
     onPress,
     index,
-    item = requiredProp('getItemProps', 'item'),
+    item = process.env.NODE_ENV === 'production'
+      ? /* istanbul ignore next */ undefined
+      : requiredProp('getItemProps', 'item'),
     ...rest
   } = {}) => {
     if (index === undefined) {
@@ -819,10 +811,10 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const onSelectKey = isReactNative
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
-    const customClickHandler = preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`
+    const customClickHandler = isReactNative
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick
 
@@ -835,7 +827,7 @@ class Downshift extends Component {
           return
         }
         this.setHighlightedIndex(index, {
-          type: Downshift.stateChangeTypes.itemMouseEnter,
+          type: stateChangeTypes.itemMouseEnter,
         })
 
         // We never want to manually scroll when changing state based
@@ -853,7 +845,7 @@ class Downshift extends Component {
       }),
       [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
         this.selectItemAtIndex(index, {
-          type: Downshift.stateChangeTypes.clickItem,
+          type: stateChangeTypes.clickItem,
         })
       }),
     }
@@ -929,16 +921,18 @@ class Downshift extends Component {
   }, 200)
 
   componentDidMount() {
+    /* istanbul ignore if (react-native) */
     if (
+      process.env.NODE_ENV !== 'production' &&
+      !isReactNative &&
       this.getMenuProps.called &&
-      !this.getMenuProps.suppressRefError &&
-      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      !this.getMenuProps.suppressRefError
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
     /* istanbul ignore if (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE === 'true'`) {
+    if (isReactNative) {
       this.cleanup = () => {
         this.internalClearTimeouts()
       }
@@ -967,7 +961,7 @@ class Downshift extends Component {
         // then we don't want to reset downshift
         const contextWithinDownshift = targetWithinDownshift(event.target)
         if (!contextWithinDownshift && this.getState().isOpen) {
-          this.reset({type: Downshift.stateChangeTypes.mouseUp}, () =>
+          this.reset({type: stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -981,7 +975,7 @@ class Downshift extends Component {
           false,
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
-          this.reset({type: Downshift.stateChangeTypes.touchStart}, () =>
+          this.reset({type: stateChangeTypes.touchStart}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -1002,10 +996,12 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    /* istanbul ignore if (react-native) */
     if (
+      process.env.NODE_ENV !== 'production' &&
+      !isReactNative &&
       this.getMenuProps.called &&
-      !this.getMenuProps.suppressRefError &&
-      /* istanbul ignore next (react-native) */ preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`
+      !this.getMenuProps.suppressRefError
     ) {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
@@ -1018,7 +1014,7 @@ class Downshift extends Component {
       )
     ) {
       this.internalSetState({
-        type: Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem,
+        type: stateChangeTypes.controlledPropUpdatedSelectedItem,
         inputValue: this.props.itemToString(this.props.selectedItem),
       })
     }
@@ -1036,7 +1032,7 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore else (react-native) */
-    if (preval`module.exports = process.env.BUILD_REACT_NATIVE !== 'true'`) {
+    if (!isReactNative) {
       this.updateStatus()
     }
   }
@@ -1070,8 +1066,13 @@ class Downshift extends Component {
     if (!element) {
       return null
     }
+
     if (this.getRootProps.called || this.props.suppressRefError) {
-      if (!this.getRootProps.suppressRefError && !this.props.suppressRefError) {
+      if (
+        process.env.NODE_ENV !== 'production' &&
+        !this.getRootProps.suppressRefError &&
+        !this.props.suppressRefError
+      ) {
         validateGetRootPropsCalledCorrectly(element, this.getRootProps)
       }
       return element
@@ -1082,13 +1083,20 @@ class Downshift extends Component {
         element,
         this.getRootProps(getElementProps(element)),
       )
-    } else {
+    }
+
+    /* istanbul ignore else */
+    if (process.env.NODE_ENV !== 'production') {
       // they didn't apply the root props, but they need to
       // otherwise we can't query around the autocomplete
+
       throw new Error(
         'downshift: If you return a non-DOM element, you must use apply the getRootProps function',
       )
     }
+
+    /* istanbul ignore next */
+    return undefined
   }
 }
 
@@ -1096,7 +1104,8 @@ export default Downshift
 
 function validateGetMenuPropsCalledCorrectly(node, {refKey}) {
   if (!node) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: The ref prop "${refKey}" from getMenuProps was not applied correctly on your menu element.`,
     )
   }
@@ -1106,16 +1115,19 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'
   const isComposite = !isDOMElement(element)
   if (isComposite && !refKeySpecified) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       'downshift: You returned a non-DOM element. You must specify a refKey in getRootProps',
     )
   } else if (!isComposite && refKeySpecified) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
   if (!getElementProps(element)[refKey]) {
-    throw new Error(
+    // eslint-disable-next-line no-console
+    console.error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }

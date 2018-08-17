@@ -4,16 +4,12 @@ import {render, fireEvent} from 'react-testing-library'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
 
-const oldError = console.error
-
 beforeEach(() => {
   setIdCounter(1)
-  console.error = jest.fn()
+  jest.spyOn(console, 'error').mockImplementation(() => {})
 })
 
-afterEach(() => {
-  console.error = oldError
-})
+afterEach(() => console.error.mockRestore())
 
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/paypal/downshift/issues/113
@@ -97,18 +93,17 @@ test('after selecting an item highlightedIndex should be reset to defaultHighlig
   )
 })
 
-test('getItemProps throws a helpful error when no object is given', () => {
-  expect(() =>
-    render(
-      <Downshift>
-        {({getItemProps}) => (
-          <div>
-            <span {...getItemProps()} />
-          </div>
-        )}
-      </Downshift>,
-    ),
-  ).toThrowErrorMatchingSnapshot()
+test('getItemProps logs a helpful error when no object is given', () => {
+  render(
+    <Downshift>
+      {({getItemProps}) => (
+        <div>
+          <span {...getItemProps()} />
+        </div>
+      )}
+    </Downshift>,
+  )
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 test('getItemProps defaults the index when no index is given', () => {
@@ -129,18 +124,18 @@ test('getItemProps defaults the index when no index is given', () => {
   ).toMatchSnapshot()
 })
 
-test('getItemProps throws when no item is given', () => {
-  expect(() =>
-    render(
-      <Downshift>
-        {({getItemProps}) => (
-          <div>
-            <span {...getItemProps({index: 0})} />
-          </div>
-        )}
-      </Downshift>,
-    ),
-  ).toThrowErrorMatchingSnapshot()
+test('getItemProps logs error when no item is given', () => {
+  render(
+    <Downshift>
+      {({getItemProps}) => (
+        <div>
+          <span {...getItemProps({index: 0})} />
+        </div>
+      )}
+    </Downshift>,
+  )
+
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 // normally this test would be like the others where we render and then simulate a click on an

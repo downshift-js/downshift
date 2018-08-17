@@ -7,6 +7,9 @@ import ReactDOM from 'react-dom'
 import {render} from 'react-testing-library'
 import Downshift from '../'
 
+beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+afterEach(() => console.error.mockRestore())
+
 test('closeMenu closes the menu', () => {
   const {openMenu, closeMenu, childrenSpy} = setup()
   openMenu()
@@ -117,20 +120,15 @@ test('can use children instead of render prop', () => {
   expect(childrenSpy).toHaveBeenCalledTimes(1)
 })
 
-test('should not throw error during strict mode during reset', () => {
-  let renderArg
+test('should not log error during strict mode during reset', () => {
   const renderFn = () => <div />
-  const childrenSpy = jest.fn(controllerArg => {
-    renderArg = controllerArg
-    return renderFn(controllerArg)
-  })
   render(
     <React.StrictMode>
-      <Downshift>{childrenSpy}</Downshift>
+      <Downshift>{renderFn}</Downshift>
     </React.StrictMode>,
   )
 
-  renderArg.reset()
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('can use setState for ultimate power', () => {

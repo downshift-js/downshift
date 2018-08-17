@@ -3,14 +3,8 @@ import React from 'react'
 import {render} from 'react-testing-library'
 import Downshift from '../'
 
-beforeEach(() => {
-  jest.spyOn(console, 'error')
-  console.error.mockImplementation(() => {})
-})
-
-afterEach(() => {
-  console.error.mockRestore()
-})
+beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+afterEach(() => console.error.mockRestore())
 
 test('label "for" attribute is set to the input "id" attribute', () => {
   const {label, input} = renderDownshift()

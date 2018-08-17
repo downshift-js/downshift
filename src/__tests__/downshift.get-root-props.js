@@ -33,7 +33,8 @@ test('returning a composite component and calling getRootProps without a refKey 
   const MyComponent = () => (
     <Downshift children={({getRootProps}) => <MyDiv {...getRootProps()} />} />
   )
-  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  render(<MyComponent />)
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 test('returning a DOM element and calling getRootProps with a refKey results in an error', () => {
@@ -42,7 +43,8 @@ test('returning a DOM element and calling getRootProps with a refKey results in 
       children={({getRootProps}) => <div {...getRootProps({refKey: 'blah'})} />}
     />
   )
-  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  render(<MyComponent />)
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 test('not applying the ref prop results in an error', () => {
@@ -54,7 +56,8 @@ test('not applying the ref prop results in an error', () => {
       }}
     />
   )
-  expect(() => render(<MyComponent />)).toThrowErrorMatchingSnapshot()
+  render(<MyComponent />)
+  expect(console.error.mock.calls[0][0]).toMatchSnapshot()
 })
 
 test('renders fine when rendering a composite component and applying getRootProps properly', () => {
@@ -65,7 +68,8 @@ test('renders fine when rendering a composite component and applying getRootProp
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('returning a composite component and calling getRootProps without a refKey does not result in an error if suppressRefError is true', () => {
@@ -76,7 +80,8 @@ test('returning a composite component and calling getRootProps without a refKey 
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('returning a DOM element and calling getRootProps with a refKey does not result in an error if suppressRefError is true', () => {
@@ -87,7 +92,8 @@ test('returning a DOM element and calling getRootProps with a refKey does not re
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('not applying the ref prop results in an error does not result in an error if suppressRefError is true', () => {
@@ -99,7 +105,8 @@ test('not applying the ref prop results in an error does not result in an error 
       }}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('renders fine when rendering a composite component and applying getRootProps properly even if suppressRefError is true', () => {
@@ -112,7 +119,8 @@ test('renders fine when rendering a composite component and applying getRootProp
       )}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })
 
 test('renders fine when rendering a composite component and suppressRefError prop is true', () => {
@@ -122,5 +130,6 @@ test('renders fine when rendering a composite component and suppressRefError pro
       children={({getRootProps}) => <MyDiv {...getRootProps()} />}
     />
   )
-  expect(() => render(<MyComponent />)).not.toThrow()
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
 })

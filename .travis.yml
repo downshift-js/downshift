@@ -13,7 +13,9 @@ before_script:
   - cd stories
   - npm install
   - cd ..
-script: npm run validate
+script:
+  - kcd-scripts validate lint,build-and-test,test:cover,test:ts
+  - kcd-scripts validate test:flow:coverage,test:ssr,test:cypress
 after_success: kcd-scripts travis-after-success
 branches:
   only: master
