@@ -24,7 +24,7 @@ class Examples extends Component {
           }}
         >
           <h2>basic example</h2>
-          <Div display="flex" justifyContent="center">
+          <Div display="flex" justifyContent="center" alignItems="center">
             <span
               style={{
                 height: '2em',
@@ -47,7 +47,20 @@ class Examples extends Component {
 
 const Label = glamorous.label({fontWeight: 'bold', display: 'block'})
 
-const Item = glamorous.div(
+const Menu = glamorous.ul(
+  {
+    margin: '0',
+    padding: '0',
+    border: '1px solid rgba(34,36,38,.15)',
+    maxHeight: 100,
+    overflowY: 'scroll',
+  },
+  ({isOpen}) => ({
+    border: isOpen ? null : 'none',
+  }),
+)
+
+const Item = glamorous.li(
   {
     cursor: 'pointer',
     display: 'block',
@@ -103,6 +116,7 @@ const Input = glamorous.input({
 function Root({innerRef, ...rest}) {
   return <div ref={innerRef} {...rest} />
 }
+
 function BasicAutocomplete({items, onChange}) {
   return (
     <Downshift onChange={onChange}>
@@ -110,6 +124,7 @@ function BasicAutocomplete({items, onChange}) {
         getInputProps,
         getItemProps,
         getRootProps,
+        getMenuProps,
         getLabelProps,
         highlightedIndex,
         inputValue,
@@ -128,15 +143,14 @@ function BasicAutocomplete({items, onChange}) {
           <button data-testid="clear-selection" onClick={clearSelection}>
             clear
           </button>
-          {isOpen && (
-            <div
-              style={{
-                border: '1px solid rgba(34,36,38,.15)',
-                maxHeight: 100,
-                overflowY: 'scroll',
-              }}
-            >
-              {(inputValue ? matchSorter(items, inputValue) : items).map(
+          <Menu
+            {...getMenuProps({
+              refKey: 'innerRef',
+              isOpen,
+            })}
+          >
+            {isOpen &&
+              (inputValue ? matchSorter(items, inputValue) : items).map(
                 (item, index) => (
                   <Item
                     key={item}
@@ -151,8 +165,7 @@ function BasicAutocomplete({items, onChange}) {
                   </Item>
                 ),
               )}
-            </div>
-          )}
+          </Menu>
         </Root>
       )}
     </Downshift>
