@@ -926,6 +926,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "roginfarrer",
+      "name": "Rogin Farrer",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/9063669?v=4",
+      "profile": "http://twitter.com/roginfarrer",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
