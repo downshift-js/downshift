@@ -115,7 +115,7 @@ export interface GetToggleButtonPropsOptions
 export interface GetMenuPropsOptions {
   refKey?: string;
   ['aria-label']?: string;
-};
+}
 
 export interface GetMenuPropsOtherOptions {
   suppressRefError?: boolean;
