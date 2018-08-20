@@ -850,7 +850,9 @@ class Downshift extends Component {
       }),
     }
 
-    const eventHandlers = rest.disabled ? {} : enabledEventHandlers
+    const eventHandlers = rest.disabled
+      ? {onMouseDown: enabledEventHandlers.onMouseDown}
+      : enabledEventHandlers
 
     return {
       id: this.getItemId(index),
