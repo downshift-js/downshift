@@ -109,24 +109,29 @@ export interface GetInputPropsOptions
 export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
 
-export interface getToggleButtonPropsOptions
+export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {}
 
-interface OptionalExtraGetItemPropsOptions {
-  [key: string]: any
+export interface GetMenuPropsOptions {
+  refKey?: string;
+  ['aria-label']?: string;
+};
+
+export interface GetMenuPropsOtherOptions {
+  suppressRefError?: boolean;
 }
 
 export interface GetItemPropsOptions<Item>
-  extends OptionalExtraGetItemPropsOptions {
+  extends Record<string, any> {
   index?: number
   item: Item
 }
 
 export interface PropGetters<Item> {
   getRootProps: (options: GetRootPropsOptions) => any
-  getToggleButtonProps: (options?: getToggleButtonPropsOptions) => any
+  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
-  getMenuProps: (options?: {}) => any
+  getMenuProps: (options?: GetMenuPropsOptions, otherOptions?: GetMenuPropsOtherOptions) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
