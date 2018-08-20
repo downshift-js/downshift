@@ -62,6 +62,10 @@ export interface DownshiftProps<Item> {
   selectedItem?: Item | null
   children?: ChildrenFunction<Item>
   id?: string
+  inputId?: string
+  labelId?: string
+  menuId?: string
+  getItemId?: (index?: number) => string
   environment?: Environment
   onOuterClick?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => void
   onUserAction?: (
