@@ -850,6 +850,8 @@ class Downshift extends Component {
       }),
     }
 
+    // Passing down the onMouseDown handler to prevent redirect
+    // of the activeElement if clicking on disabled items
     const eventHandlers = rest.disabled
       ? {onMouseDown: enabledEventHandlers.onMouseDown}
       : enabledEventHandlers
