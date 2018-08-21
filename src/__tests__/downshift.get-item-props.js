@@ -146,7 +146,7 @@ test(`getItemProps doesn't include event handlers when disabled is passed (for I
   const {getItemProps} = setupWithDownshiftController()
   const props = getItemProps({item: 'dog', disabled: true})
   const entry = Object.entries(props).find(
-    ([_key, value]) => typeof value === 'function',
+    ([key, value]) => key !== 'onMouseDown' && typeof value === 'function',
   )
   if (entry) {
     throw new Error(
