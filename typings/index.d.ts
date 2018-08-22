@@ -72,6 +72,7 @@ export interface DownshiftProps<Item> {
     options: StateChangeOptions<Item>,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
+  suppressRefError?: boolean
 }
 
 export interface Environment {
@@ -113,25 +114,30 @@ export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {}
 
 export interface GetMenuPropsOptions {
-  refKey?: string;
-  ['aria-label']?: string;
+  refKey?: string
+  ['aria-label']?: string
 }
 
-export interface GetMenuPropsOtherOptions {
-  suppressRefError?: boolean;
+export interface GetPropsCommonOptions {
+  suppressRefError?: boolean
 }
 
-export interface GetItemPropsOptions<Item>
-  extends Record<string, any> {
+export interface GetItemPropsOptions<Item> extends Record<string, any> {
   index?: number
   item: Item
 }
 
 export interface PropGetters<Item> {
-  getRootProps: (options: GetRootPropsOptions) => any
+  getRootProps: (
+    options: GetRootPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
-  getMenuProps: (options?: GetMenuPropsOptions, otherOptions?: GetMenuPropsOtherOptions) => any
+  getMenuProps: (
+    options?: GetMenuPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getInputProps: (options?: GetInputPropsOptions) => any
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
