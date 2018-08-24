@@ -71,6 +71,17 @@ test('getToggleButtonProps returns all given props', () => {
   )
 })
 
+test('getToggleButtonProps accepts a mapStateToProps function', () => {
+  const {getToggleButtonProps} = setup()
+  const props = getToggleButtonProps({disabled: true}, api => {
+    expect(Object.keys(api)).toMatchSnapshot()
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
+})
+
 // normally this test would be like the others where we render and then simulate a click on the
 // button to ensure that a disabled button cannot be clicked, however this is only a problem in IE11
 // so we have to get into the implementation details a little bit (unless we want to run these tests

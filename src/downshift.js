@@ -501,6 +501,7 @@ class Downshift extends Component {
   getRootProps = (
     {refKey = 'ref', ...rest} = {},
     {suppressRefError = false} = {},
+    mapStateToProps = () => ({}),
   ) => {
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
@@ -516,6 +517,7 @@ class Downshift extends Component {
       'aria-owns': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
       ...rest,
+      ...mapStateToProps(this.getStateAndHelpers()),
     }
   }
 
@@ -570,15 +572,17 @@ class Downshift extends Component {
     },
   }
 
-  getToggleButtonProps = ({
-    onClick,
-    onPress,
-    onKeyDown,
-    onKeyUp,
-    onBlur,
-    ...rest
-  } = {}) => {
+  getToggleButtonProps = (props = {}, mapStateToProps) => {
     const {isOpen} = this.getState()
+
+    const {onClick, onPress, onKeyDown, onKeyUp, onBlur, ...rest} =
+      mapStateToProps && typeof mapStateToProps === 'function'
+        ? {
+            ...props,
+            ...mapStateToProps(this.getStateAndHelpers()),
+          }
+        : props
+
     const enabledEventHandlers = isReactNative
       ? /* istanbul ignore next (react-native) */
         {
@@ -658,24 +662,30 @@ class Downshift extends Component {
 
   /////////////////////////////// LABEL
 
-  getLabelProps = props => {
-    return {htmlFor: this.inputId, id: this.labelId, ...props}
+  getLabelProps = (props, mapStateToProps = () => ({})) => {
+    return {
+      htmlFor: this.inputId,
+      id: this.labelId,
+      ...props,
+      ...mapStateToProps(this.getStateAndHelpers()),
+    }
   }
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ LABEL
 
   /////////////////////////////// INPUT
 
-  getInputProps = ({
-    onKeyDown,
-    onBlur,
-    onChange,
-    onInput,
-    onChangeText,
-    ...rest
-  } = {}) => {
+  getInputProps = (props = {}, mapStateToProps) => {
     let onChangeKey
     let eventHandlers = {}
+
+    const {onKeyDown, onBlur, onChange, onInput, onChangeText, ...rest} =
+      mapStateToProps && typeof mapStateToProps === 'function'
+        ? {
+            ...props,
+            ...mapStateToProps(this.getStateAndHelpers()),
+          }
+        : props
 
     /* istanbul ignore next (preact) */
     if (isPreact) {
@@ -783,6 +793,7 @@ class Downshift extends Component {
   getMenuProps = (
     {refKey = 'ref', ref, ...props} = {},
     {suppressRefError = false} = {},
+    mapStateToProps = () => ({}),
   ) => {
     this.getMenuProps.called = true
     this.getMenuProps.refKey = refKey
@@ -794,28 +805,44 @@ class Downshift extends Component {
       'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
       ...props,
+      ...mapStateToProps(this.getStateAndHelpers()),
     }
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
 
   /////////////////////////////// ITEM
-  getItemProps = ({
-    onMouseMove,
-    onMouseDown,
-    onClick,
-    onPress,
-    index,
-    item = process.env.NODE_ENV === 'production'
-      ? /* istanbul ignore next */ undefined
-      : requiredProp('getItemProps', 'item'),
-    ...rest
-  } = {}) => {
+  getItemProps = (
+    {
+      item = process.env.NODE_ENV === 'production'
+        ? /* istanbul ignore next */ undefined
+        : requiredProp('getItemProps', 'item'),
+      index,
+      ...args
+    } = {},
+    mapStateToProps,
+  ) => {
     if (index === undefined) {
       this.items.push(item)
       index = this.items.indexOf(item)
     } else {
       this.items[index] = item
     }
+
+    const isHighlighted = index === this.getState().highlightedIndex
+    const isSelected = this.getState().selectedItem === item
+
+    const {onMouseMove, onMouseDown, onClick, onPress, ...rest} =
+      mapStateToProps && typeof mapStateToProps === 'function'
+        ? {
+            ...args,
+            ...mapStateToProps({
+              isHighlighted,
+              isSelected,
+              index,
+              ...this.getStateAndHelpers(),
+            }),
+          }
+        : args
 
     const onSelectKey = isReactNative
       ? /* istanbul ignore next (react-native) */ 'onPress'
@@ -829,7 +856,7 @@ class Downshift extends Component {
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
       onMouseMove: callAllEventHandlers(onMouseMove, () => {
-        if (index === this.getState().highlightedIndex) {
+        if (isHighlighted) {
           return
         }
         this.setHighlightedIndex(index, {
@@ -865,7 +892,7 @@ class Downshift extends Component {
     return {
       id: this.getItemId(index),
       role: 'option',
-      'aria-selected': this.getState().selectedItem === item,
+      'aria-selected': isSelected,
       ...eventHandlers,
       ...rest,
     }

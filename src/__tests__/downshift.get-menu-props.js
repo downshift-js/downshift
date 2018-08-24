@@ -112,3 +112,37 @@ test('renders fine when rendering a composite component and applying getMenuProp
   render(<MyComponent />)
   expect(console.error.mock.calls).toHaveLength(0)
 })
+
+test('getMenuProps mapStateToProps function provides API', () => {
+  render(
+    <Downshift
+      children={({getMenuProps}) => (
+        <div>
+          <Menu
+            {...getMenuProps({refKey: 'innerRef'}, undefined, api => {
+              expect(Object.keys(api)).toMatchSnapshot()
+            })}
+          />
+        </div>
+      )}
+    />,
+  )
+})
+
+test('getMenuProps mapStateToProps function maps props', () => {
+  render(
+    <Downshift
+      children={({getMenuProps}) => {
+        const props = getMenuProps({refKey: 'innerRef'}, undefined, () => {
+          return {
+            isDownshiftCool: true,
+          }
+        })
+
+        expect(props.isDownshiftCool).toBe(true)
+
+        return null
+      }}
+    />,
+  )
+})

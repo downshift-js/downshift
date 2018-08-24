@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getMenuProps mapStateToProps function provides API 1`] = `
+exports[`getInputProps accepts a mapStateToProps function 1`] = `
 Array [
   "getRootProps",
   "getToggleButtonProps",
@@ -29,7 +29,3 @@ Array [
   "selectedItem",
 ]
 `;
-
-exports[`not applying the ref prop results in an error 1`] = `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your menu element."`;
-
-exports[`using a composite component and calling getMenuProps without a refKey results in an error 1`] = `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your menu element."`;

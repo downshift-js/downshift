@@ -139,15 +139,35 @@ export interface PropGetters<Item> {
   getRootProps: (
     options: GetRootPropsOptions,
     otherOptions?: GetPropsCommonOptions,
+    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
   ) => any
-  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
-  getLabelProps: (options?: GetLabelPropsOptions) => any
+  getToggleButtonProps: (
+    options?: GetToggleButtonPropsOptions,
+    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+  ) => any
+  getLabelProps: (
+    options?: GetLabelPropsOptions,
+    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+  ) => any
   getMenuProps: (
     options?: GetMenuPropsOptions,
     otherOptions?: GetPropsCommonOptions,
+    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
   ) => any
-  getInputProps: (options?: GetInputPropsOptions) => any
-  getItemProps: (options: GetItemPropsOptions<Item>) => any
+  getInputProps: (
+    options?: GetInputPropsOptions,
+    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+  ) => any
+  getItemProps: (
+    options: GetItemPropsOptions<Item>,
+    mapStateToProps?: (
+      stateAndHelpers: {
+        isSelected: boolean
+        isHighlighted: boolean
+        index: number
+      } & ControllerStateAndHelpers<Item>,
+    ) => any,
+  ) => any
 }
 
 export interface Actions<Item> {

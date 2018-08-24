@@ -308,6 +308,18 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   }
 })
 
+test(`getInputProps accepts a mapStateToProps function`, () => {
+  const {getInputProps} = setupWithDownshiftController()
+  const props = getInputProps(undefined, api => {
+    expect(Object.keys(api)).toMatchSnapshot()
+
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})

@@ -178,6 +178,102 @@ test(`disabled item can't be selected by pressing enter`, () => {
   expect(input.value).toBe('c')
 })
 
+test(`getItemProps mapStateToProps function provides isSelected`, () => {
+  render(
+    <Downshift defaultSelectedItem={0}>
+      {({getItemProps}) => (
+        <div>
+          <span
+            {...getItemProps({item: 0}, ({isSelected}) => {
+              expect(isSelected).toBe(true)
+            })}
+          >
+            0
+          </span>
+          <span
+            {...getItemProps({item: 1}, ({isSelected}) => {
+              expect(isSelected).toBe(false)
+            })}
+          >
+            1
+          </span>
+        </div>
+      )}
+    </Downshift>,
+  )
+})
+
+test(`getItemProps mapStateToProps function provides isHighlighted`, () => {
+  render(
+    <Downshift defaultHighlightedIndex={0}>
+      {({getItemProps}) => (
+        <div>
+          <span
+            {...getItemProps({item: 0}, ({isHighlighted}) => {
+              expect(isHighlighted).toBe(true)
+            })}
+          >
+            0
+          </span>
+          <span
+            {...getItemProps({item: 1}, ({isHighlighted}) => {
+              expect(isHighlighted).toBe(false)
+            })}
+          >
+            1
+          </span>
+        </div>
+      )}
+    </Downshift>,
+  )
+})
+
+test(`getItemProps mapStateToProps function provides index`, () => {
+  render(
+    <Downshift>
+      {({getItemProps}) => (
+        <div>
+          <span
+            {...getItemProps({item: 0}, ({index}) => {
+              expect(index).toEqual(0)
+            })}
+          >
+            0
+          </span>
+        </div>
+      )}
+    </Downshift>,
+  )
+})
+
+test(`getItemProps mapStateToProps function provides expected api`, () => {
+  render(
+    <Downshift>
+      {({getItemProps}) => {
+        return (
+          <div>
+            <span
+              {...getItemProps({item: 0}, api => {
+                expect(Object.keys(api)).toMatchSnapshot()
+              })}
+            >
+              0
+            </span>
+          </div>
+        )
+      }}
+    </Downshift>,
+  )
+})
+
+test(`getItemProps mapStateToProps function maps props`, () => {
+  const {getItemProps} = setupWithDownshiftController()
+  const props = getItemProps({item: 'dog'}, () => ({
+    isDownshiftCool: true,
+  }))
+  expect(props.isDownshiftCool).toBe(true)
+})
+
 function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,

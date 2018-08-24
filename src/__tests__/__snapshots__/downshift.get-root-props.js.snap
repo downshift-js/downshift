@@ -1,5 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`accepts a mapStateToProps function 1`] = `
+Array [
+  "getRootProps",
+  "getToggleButtonProps",
+  "getLabelProps",
+  "getMenuProps",
+  "getInputProps",
+  "getItemProps",
+  "reset",
+  "openMenu",
+  "closeMenu",
+  "toggleMenu",
+  "selectItem",
+  "selectItemAtIndex",
+  "selectHighlightedItem",
+  "setHighlightedIndex",
+  "clearSelection",
+  "clearItems",
+  "setItemCount",
+  "unsetItemCount",
+  "setState",
+  "itemToString",
+  "id",
+  "highlightedIndex",
+  "inputValue",
+  "isOpen",
+  "selectedItem",
+]
+`;
+
 exports[`not applying the ref prop results in an error 1`] = `"downshift: You must apply the ref prop \\"ref\\" from getRootProps onto your root element."`;
 
 exports[`returning a DOM element and calling getRootProps with a refKey results in an error 1`] = `"downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified \\"blah\\""`;
