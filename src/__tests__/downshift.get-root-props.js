@@ -137,13 +137,17 @@ test('renders fine when rendering a composite component and suppressRefError pro
 test('accepts a mapStateToProps function', () => {
   const MyComponent = () => (
     <Downshift
-      children={({getRootProps}) => {
-        const props = getRootProps(undefined, undefined, api => {
-          expect(Object.keys(api)).toMatchSnapshot()
-          return {
-            isDownshiftCool: true,
-          }
-        })
+      children={stateAndHelpers => {
+        const props = stateAndHelpers.getRootProps(
+          undefined,
+          undefined,
+          api => {
+            expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+            return {
+              isDownshiftCool: true,
+            }
+          },
+        )
 
         expect(props.isDownshiftCool).toBe(true)
 

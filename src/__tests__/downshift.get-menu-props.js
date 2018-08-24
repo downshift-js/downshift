@@ -116,12 +116,16 @@ test('renders fine when rendering a composite component and applying getMenuProp
 test('getMenuProps mapStateToProps function provides API', () => {
   render(
     <Downshift
-      children={({getMenuProps}) => (
+      children={stateAndHelpers => (
         <div>
           <Menu
-            {...getMenuProps({refKey: 'innerRef'}, undefined, api => {
-              expect(Object.keys(api)).toMatchSnapshot()
-            })}
+            {...stateAndHelpers.getMenuProps(
+              {refKey: 'innerRef'},
+              undefined,
+              api => {
+                expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+              },
+            )}
           />
         </div>
       )}

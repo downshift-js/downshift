@@ -72,14 +72,24 @@ test('getToggleButtonProps returns all given props', () => {
 })
 
 test('getToggleButtonProps accepts a mapStateToProps function', () => {
-  const {getToggleButtonProps} = setup()
-  const props = getToggleButtonProps({disabled: true}, api => {
-    expect(Object.keys(api)).toMatchSnapshot()
-    return {
-      isDownshiftCool: true,
-    }
-  })
-  expect(props.isDownshiftCool).toBe(true)
+  render(
+    <Downshift>
+      {stateAndHelpers => {
+        const props = stateAndHelpers.getToggleButtonProps(
+          {disabled: true},
+          api => {
+            expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+            return {
+              isDownshiftCool: true,
+            }
+          },
+        )
+        expect(props.isDownshiftCool).toBe(true)
+
+        return null
+      }}
+    </Downshift>,
+  )
 })
 
 // normally this test would be like the others where we render and then simulate a click on the

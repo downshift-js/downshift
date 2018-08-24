@@ -24,9 +24,9 @@ test('when the inputId prop is set, the label for is set to it', () => {
 test('getLabelProps mapStateToProps API', () => {
   render(
     <Downshift>
-      {({getLabelProps}) => {
-        const props = getLabelProps(undefined, api => {
-          expect(Object.keys(api)).toMatchSnapshot()
+      {stateAndHelpers => {
+        const props = stateAndHelpers.getLabelProps(undefined, api => {
+          expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
           return {
             isDownshiftCool: true,
           }

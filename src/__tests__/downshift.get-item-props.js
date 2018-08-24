@@ -249,12 +249,19 @@ test(`getItemProps mapStateToProps function provides index`, () => {
 test(`getItemProps mapStateToProps function provides expected api`, () => {
   render(
     <Downshift>
-      {({getItemProps}) => {
+      {stateAndHelpers => {
         return (
           <div>
             <span
-              {...getItemProps({item: 0}, api => {
-                expect(Object.keys(api)).toMatchSnapshot()
+              {...stateAndHelpers.getItemProps({item: 0}, api => {
+                expect(Object.keys(api).sort()).toEqual(
+                  [
+                    ...Object.keys(stateAndHelpers),
+                    'isSelected',
+                    'isHighlighted',
+                    'index',
+                  ].sort(),
+                )
               })}
             >
               0
