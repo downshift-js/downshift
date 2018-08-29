@@ -1000,14 +1000,16 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    /* istanbul ignore if (react-native) */
-    if (
-      process.env.NODE_ENV !== 'production' &&
-      !isReactNative &&
-      this.getMenuProps.called &&
-      !this.getMenuProps.suppressRefError
-    ) {
-      validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
+    if (process.env.NODE_ENV !== 'production') {
+      validateControlledUnchanged(prevProps, this.props)
+      /* istanbul ignore if (react-native) */
+      if (
+        !isReactNative &&
+        this.getMenuProps.called &&
+        !this.getMenuProps.suppressRefError
+      ) {
+        validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
+      }
     }
 
     if (
@@ -1135,4 +1137,29 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
     )
   }
+}
+
+function validateControlledUnchanged(prevProps, nextProps) {
+  const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/paypal/downshift#control-props`
+  ;['selectedItem', 'isOpen', 'inputValue', 'highlightedIndex'].forEach(
+    propKey => {
+      if (
+        prevProps[propKey] !== undefined &&
+        nextProps[propKey] === undefined
+      ) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `downshift: A component has changed the controlled prop "${propKey}" to be uncontrolled. ${warningDescription}`,
+        )
+      } else if (
+        prevProps[propKey] === undefined &&
+        nextProps[propKey] !== undefined
+      ) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `downshift: A component has changed the uncontrolled prop "${propKey}" to be controlled. ${warningDescription}`,
+        )
+      }
+    },
+  )
 }
