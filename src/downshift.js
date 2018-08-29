@@ -1000,9 +1000,9 @@ class Downshift extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    /* istanbul ignore if (react-native) */
     if (process.env.NODE_ENV !== 'production') {
       validateControlledUnchanged(prevProps, this.props)
+      /* istanbul ignore if (react-native) */
       if (
         !isReactNative &&
         this.getMenuProps.called &&
