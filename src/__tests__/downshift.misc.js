@@ -141,6 +141,22 @@ test('can use setState for ultimate power', () => {
   )
 })
 
+test('warns when controlled component becomes uncontrolled', () => {
+  const renderFn = () => <div />
+  const {rerender} = render(<Downshift selectedItem="hi">{renderFn}</Downshift>)
+  rerender(<Downshift selectedItem={undefined}>{renderFn}</Downshift>)
+  expect(console.error.mock.calls).toHaveLength(1)
+  expect(console.error.mock.calls).toMatchSnapshot()
+})
+
+test('warns when uncontrolled component becomes controlled', () => {
+  const renderFn = () => <div />
+  const {rerender} = render(<Downshift>{renderFn}</Downshift>)
+  rerender(<Downshift selectedItem="hi">{renderFn}</Downshift>)
+  expect(console.error.mock.calls).toHaveLength(1)
+  expect(console.error.mock.calls).toMatchSnapshot()
+})
+
 describe('expect console.warn to fire—depending on process.env.NODE_ENV value', () => {
   const originalEnv = process.env.NODE_ENV
 
