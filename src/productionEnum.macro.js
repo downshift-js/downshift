@@ -13,6 +13,7 @@ module.exports = createMacro(({references, babel: {types: t, template}}) => {
 
   const tmpl = template(
     'process.env.NODE_ENV !== "production" ? DEV_VALUE : NUMBER',
+    {placeholderPattern: /(DEV_VALUE)|(NUMBER)/},
   )
 
   references.default.forEach(({parentPath: ref}, index) => {
