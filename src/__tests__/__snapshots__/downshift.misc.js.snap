@@ -10,3 +10,19 @@ Array [
   },
 ]
 `;
+
+exports[`warns when controlled component becomes uncontrolled 1`] = `
+Array [
+  Array [
+    "downshift: A component has changed the controlled prop \\"selectedItem\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/paypal/downshift#control-props",
+  ],
+]
+`;
+
+exports[`warns when uncontrolled component becomes controlled 1`] = `
+Array [
+  Array [
+    "downshift: A component has changed the uncontrolled prop \\"selectedItem\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/paypal/downshift#control-props",
+  ],
+]
+`;
