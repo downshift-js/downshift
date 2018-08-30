@@ -1,14 +1,14 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": "ie >= 10"
         }
       }
     ],
-    "react"
+    "@babel/preset-react"
   ],
-  "plugins": ["babel-plugin-macros", "transform-class-properties", "transform-object-rest-spread"]
+  "plugins": ["babel-plugin-macros", "@babel/plugin-proposal-class-properties"]
 }
