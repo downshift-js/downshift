@@ -20,14 +20,12 @@ exports[`renders with React Native components 1`] = `
     onChange={[Function]}
     onChangeText={[Function]}
     onKeyDown={[Function]}
+    underlineColorAndroid="transparent"
     value=""
   />
   <View>
     <Text
-      accessible={true}
-      allowFontScaling={true}
       aria-selected={false}
-      ellipsizeMode="tail"
       id="downshift-0-item-0"
       onMouseDown={[Function]}
       onMouseMove={[Function]}
@@ -37,10 +35,7 @@ exports[`renders with React Native components 1`] = `
       foo
     </Text>
     <Text
-      accessible={true}
-      allowFontScaling={true}
       aria-selected={false}
-      ellipsizeMode="tail"
       id="downshift-0-item-1"
       onMouseDown={[Function]}
       onMouseMove={[Function]}
