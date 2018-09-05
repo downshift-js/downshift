@@ -700,6 +700,11 @@ class Downshift extends Component {
     /* istanbul ignore if (react-native) */
     if (isReactNative) {
       eventHandlers = {
+        onChange: callAllEventHandlers(
+          onChange,
+          onInput,
+          this.input_handleChange,
+        ),
         onChangeText: callAllEventHandlers(
           onChangeText,
           onInput,
