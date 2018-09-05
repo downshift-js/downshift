@@ -620,8 +620,9 @@ class Downshift extends Component {
     // don't give the button the focus properly.
     /* istanbul ignore if (can't reasonably test this) */
     if (
+      !isReactNative &&
       this.props.environment.document.activeElement ===
-      this.props.environment.document.body
+        this.props.environment.document.body
     ) {
       event.target.focus()
     }
@@ -699,12 +700,12 @@ class Downshift extends Component {
     /* istanbul ignore if (react-native) */
     if (isReactNative) {
       eventHandlers = {
-        ...eventHandlers,
         onChangeText: callAllEventHandlers(
           onChangeText,
           onInput,
           this.input_handleTextChange,
         ),
+        onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
       }
     }
 
