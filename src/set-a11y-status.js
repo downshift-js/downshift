@@ -56,16 +56,15 @@ function getStatusDiv() {
   statusDiv.setAttribute('role', 'status')
   statusDiv.setAttribute('aria-live', 'assertive')
   statusDiv.setAttribute('aria-relevant', 'additions text')
-  Object.assign(statusDiv.style, {
-    border: '0',
-    clip: 'rect(0 0 0 0)',
-    height: '1px',
-    margin: '-1px',
-    overflow: 'hidden',
-    padding: '0',
-    position: 'absolute',
-    width: '1px',
-  })
+  statusDiv.style.border = '0'
+  statusDiv.style.clip = 'rect(0 0 0 0)'
+  statusDiv.style.height = '1px'
+  statusDiv.style.margin = '-1px'
+  statusDiv.style.overflow = 'hidden'
+  statusDiv.style.padding = '0'
+  statusDiv.style.position = 'absolute'
+  statusDiv.style.width = '1px'
+
   document.body.appendChild(statusDiv)
   return statusDiv
 }
