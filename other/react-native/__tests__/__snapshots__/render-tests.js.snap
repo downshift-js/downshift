@@ -19,7 +19,6 @@ exports[`renders with React Native components 1`] = `
     onBlur={[Function]}
     onChange={[Function]}
     onChangeText={[Function]}
-    onKeyDown={[Function]}
     underlineColorAndroid="transparent"
     value=""
   />
