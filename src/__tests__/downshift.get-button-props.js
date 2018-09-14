@@ -71,6 +71,18 @@ test('getToggleButtonProps returns all given props', () => {
   )
 })
 
+test(`getToggleButtonProps accepts a mapStateToProps function`, () => {
+  const stateAndHelpers = setupWithDownshiftController()
+  const props = stateAndHelpers.getToggleButtonProps(api => {
+    expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
+})
+
 // normally this test would be like the others where we render and then simulate a click on the
 // button to ensure that a disabled button cannot be clicked, however this is only a problem in IE11
 // so we have to get into the implementation details a little bit (unless we want to run these tests
@@ -126,4 +138,17 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
   const utils = render(<Downshift>{childrenSpy}</Downshift>)
   const button = utils.container.querySelector('button')
   return {...utils, button, childrenSpy, ...renderArg}
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  render(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    </Downshift>,
+  )
+  return renderArg
 }
