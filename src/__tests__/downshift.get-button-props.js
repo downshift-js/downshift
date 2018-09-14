@@ -71,25 +71,16 @@ test('getToggleButtonProps returns all given props', () => {
   )
 })
 
-test('getToggleButtonProps accepts a mapStateToProps function', () => {
-  render(
-    <Downshift>
-      {stateAndHelpers => {
-        const props = stateAndHelpers.getToggleButtonProps(
-          {disabled: true},
-          api => {
-            expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
-            return {
-              isDownshiftCool: true,
-            }
-          },
-        )
-        expect(props.isDownshiftCool).toBe(true)
+test(`getToggleButtonProps accepts a mapStateToProps function`, () => {
+  const stateAndHelpers = setupWithDownshiftController()
+  const props = stateAndHelpers.getToggleButtonProps(api => {
+    expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
 
-        return null
-      }}
-    </Downshift>,
-  )
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
 })
 
 // normally this test would be like the others where we render and then simulate a click on the
@@ -147,4 +138,17 @@ function setup({buttonProps, Button = props => <button {...props} />} = {}) {
   const utils = render(<Downshift>{childrenSpy}</Downshift>)
   const button = utils.container.querySelector('button')
   return {...utils, button, childrenSpy, ...renderArg}
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  render(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    </Downshift>,
+  )
+  return renderArg
 }

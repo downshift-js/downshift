@@ -134,27 +134,27 @@ test('renders fine when rendering a composite component and suppressRefError pro
   expect(console.error.mock.calls).toHaveLength(0)
 })
 
-test('accepts a mapStateToProps function', () => {
-  const MyComponent = () => (
-    <Downshift
-      children={stateAndHelpers => {
-        const props = stateAndHelpers.getRootProps(
-          undefined,
-          undefined,
-          api => {
-            expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
-            return {
-              isDownshiftCool: true,
-            }
-          },
-        )
+test(`getRootProps accepts a mapStateToProps function`, () => {
+  const stateAndHelpers = setupWithDownshiftController()
+  const props = stateAndHelpers.getRootProps(api => {
+    expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
 
-        expect(props.isDownshiftCool).toBe(true)
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
+})
 
+function setupWithDownshiftController() {
+  let renderArg
+  render(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
         return null
       }}
-    />
+    </Downshift>,
   )
-  render(<MyComponent />)
-  expect(console.error.mock.calls).toHaveLength(0)
-})
+  return renderArg
+}

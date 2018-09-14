@@ -113,40 +113,27 @@ test('renders fine when rendering a composite component and applying getMenuProp
   expect(console.error.mock.calls).toHaveLength(0)
 })
 
-test('getMenuProps mapStateToProps function provides API', () => {
-  render(
-    <Downshift
-      children={stateAndHelpers => (
-        <div>
-          <Menu
-            {...stateAndHelpers.getMenuProps(
-              {refKey: 'innerRef'},
-              undefined,
-              api => {
-                expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
-              },
-            )}
-          />
-        </div>
-      )}
-    />,
-  )
+test(`getMenuProps accepts a mapStateToProps function`, () => {
+  const stateAndHelpers = setupWithDownshiftController()
+  const props = stateAndHelpers.getMenuProps(api => {
+    expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
 })
 
-test('getMenuProps mapStateToProps function maps props', () => {
+function setupWithDownshiftController() {
+  let renderArg
   render(
-    <Downshift
-      children={({getMenuProps}) => {
-        const props = getMenuProps({refKey: 'innerRef'}, undefined, () => {
-          return {
-            isDownshiftCool: true,
-          }
-        })
-
-        expect(props.isDownshiftCool).toBe(true)
-
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
         return null
       }}
-    />,
+    </Downshift>,
   )
-})
+  return renderArg
+}

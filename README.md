@@ -566,6 +566,10 @@ rather than applying them on the element yourself to avoid your props being
 overridden (or overriding the props returned). For example:
 `getInputProps({onKeyUp(event) {console.log(event)}})`.
 
+#### mapStateToProps
+
+Instead of providing Prop Getters with an object you may pass a function to map Downshift's internal state to your props. This function will be called with `stateAndHelpers`. `getItemProps` is a special case that provides you some extra state related to each item. See `getItemProps` notes below.
+
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
 | property               | type              | description                                                                                    |
@@ -726,6 +730,10 @@ Optional properties:
 - `disabled`: If this is set to `true`, then all of the downshift item event
   handlers will be omitted. Items will not be highlighted when hovered,
   and items will not be selected when clicked.
+
+mapStateToProps:
+
+You can optionally pass a function as well as your `{ item }` object to map Downshift state into item props. The function will be called with a signature of `{ isSelected, isHighlighted, index, ...stateAndHelpers }`
 
 #### `getToggleButtonProps`
 

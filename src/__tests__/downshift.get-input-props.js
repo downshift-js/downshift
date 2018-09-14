@@ -310,7 +310,7 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
 
 test(`getInputProps accepts a mapStateToProps function`, () => {
   const stateAndHelpers = setupWithDownshiftController()
-  const props = stateAndHelpers.getInputProps(undefined, api => {
+  const props = stateAndHelpers.getInputProps(api => {
     expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
 
     return {

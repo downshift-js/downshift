@@ -498,11 +498,9 @@ class Downshift extends Component {
 
   rootRef = node => (this._rootNode = node)
 
-  getRootProps = (
-    {refKey = 'ref', ...rest} = {},
-    {suppressRefError = false} = {},
-    mapStateToProps = () => ({}),
-  ) => {
+  getRootProps = (props = {}, {suppressRefError = false} = {}) => {
+    const {refKey = 'ref', ...rest} =
+      typeof props === 'function' ? props(this.getStateAndHelpers()) : props
     // this is used in the render to know whether the user has called getRootProps.
     // It uses that to know whether to apply the props automatically
     this.getRootProps.called = true
@@ -517,7 +515,6 @@ class Downshift extends Component {
       'aria-owns': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
       ...rest,
-      ...mapStateToProps(this.getStateAndHelpers()),
     }
   }
 
@@ -572,16 +569,11 @@ class Downshift extends Component {
     },
   }
 
-  getToggleButtonProps = (props = {}, mapStateToProps) => {
+  getToggleButtonProps = (props = {}) => {
     const {isOpen} = this.getState()
 
     const {onClick, onPress, onKeyDown, onKeyUp, onBlur, ...rest} =
-      mapStateToProps && typeof mapStateToProps === 'function'
-        ? {
-            ...props,
-            ...mapStateToProps(this.getStateAndHelpers()),
-          }
-        : props
+      typeof props === 'function' ? props(this.getStateAndHelpers()) : props
 
     const enabledEventHandlers = isReactNative
       ? /* istanbul ignore next (react-native) */
@@ -662,12 +654,13 @@ class Downshift extends Component {
 
   /////////////////////////////// LABEL
 
-  getLabelProps = (props, mapStateToProps = () => ({})) => {
+  getLabelProps = props => {
     return {
       htmlFor: this.inputId,
       id: this.labelId,
-      ...props,
-      ...mapStateToProps(this.getStateAndHelpers()),
+      ...(typeof props === 'function'
+        ? props(this.getStateAndHelpers())
+        : props),
     }
   }
 
@@ -675,17 +668,12 @@ class Downshift extends Component {
 
   /////////////////////////////// INPUT
 
-  getInputProps = (props = {}, mapStateToProps) => {
+  getInputProps = (props = {}) => {
     let onChangeKey
     let eventHandlers = {}
 
     const {onKeyDown, onBlur, onChange, onInput, onChangeText, ...rest} =
-      mapStateToProps && typeof mapStateToProps === 'function'
-        ? {
-            ...props,
-            ...mapStateToProps(this.getStateAndHelpers()),
-          }
-        : props
+      typeof props === 'function' ? props(this.getStateAndHelpers()) : props
 
     /* istanbul ignore next (preact) */
     if (isPreact) {
@@ -790,11 +778,10 @@ class Downshift extends Component {
     this._menuNode = node
   }
 
-  getMenuProps = (
-    {refKey = 'ref', ref, ...props} = {},
-    {suppressRefError = false} = {},
-    mapStateToProps = () => ({}),
-  ) => {
+  getMenuProps = (props = {}, {suppressRefError = false} = {}) => {
+    const {refKey = 'ref', ref, ...rest} =
+      typeof props === 'function' ? props(this.getStateAndHelpers()) : props
+
     this.getMenuProps.called = true
     this.getMenuProps.refKey = refKey
     this.getMenuProps.suppressRefError = suppressRefError
@@ -804,8 +791,7 @@ class Downshift extends Component {
       role: 'listbox',
       'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
-      ...props,
-      ...mapStateToProps(this.getStateAndHelpers()),
+      ...rest,
     }
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU

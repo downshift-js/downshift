@@ -21,21 +21,16 @@ test('when the inputId prop is set, the label for is set to it', () => {
   expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
 })
 
-test('getLabelProps mapStateToProps API', () => {
-  render(
-    <Downshift>
-      {stateAndHelpers => {
-        const props = stateAndHelpers.getLabelProps(undefined, api => {
-          expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
-          return {
-            isDownshiftCool: true,
-          }
-        })
-        expect(props.isDownshiftCool).toBe(true)
-        return null
-      }}
-    </Downshift>,
-  )
+test(`getLabelProps accepts a mapStateToProps function`, () => {
+  const stateAndHelpers = setupWithDownshiftController()
+  const props = stateAndHelpers.getLabelProps(api => {
+    expect(Object.keys(api)).toEqual(Object.keys(stateAndHelpers))
+
+    return {
+      isDownshiftCool: true,
+    }
+  })
+  expect(props.isDownshiftCool).toBe(true)
 })
 
 function renderDownshift({props} = {}) {
@@ -72,4 +67,17 @@ function BasicDownshift({
       }}
     </Downshift>
   )
+}
+
+function setupWithDownshiftController() {
+  let renderArg
+  render(
+    <Downshift>
+      {controllerArg => {
+        renderArg = controllerArg
+        return null
+      }}
+    </Downshift>,
+  )
+  return renderArg
 }
