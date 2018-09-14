@@ -106,19 +106,18 @@ export interface GetRootPropsOptions {
 
 export interface GetInputPropsOptions
   extends React.HTMLProps<HTMLInputElement> {
-    disabled?: boolean
-  }
+  disabled?: boolean
+}
 
 export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
 
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
-    disabled?: boolean
-  }
+  disabled?: boolean
+}
 
-export interface GetMenuPropsOptions
-  extends React.HTMLProps<HTMLElement> {
+export interface GetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
   ['aria-label']?: string
 }
@@ -130,33 +129,32 @@ export interface GetPropsCommonOptions {
 export interface GetItemPropsOptions<Item>
   extends React.HTMLProps<HTMLElement> {
   index?: number
-  item: Item,
-  isSelected?: boolean,
+  item: Item
+  isSelected?: boolean
   disabled?: boolean
 }
 
+type MapStateToPropFunction<Item> = (
+  stateAndHelpers: ControllerStateAndHelpers<Item>,
+) => any
+
 export interface PropGetters<Item> {
   getRootProps: (
-    options: GetRootPropsOptions,
+    options: GetRootPropsOptions | MapStateToPropFunction<Item>,
     otherOptions?: GetPropsCommonOptions,
-    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
   ) => any
   getToggleButtonProps: (
-    options?: GetToggleButtonPropsOptions,
-    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+    options?: GetToggleButtonPropsOptions | MapStateToPropFunction<Item>,
   ) => any
   getLabelProps: (
-    options?: GetLabelPropsOptions,
-    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+    options?: GetLabelPropsOptions | MapStateToPropFunction<Item>,
   ) => any
   getMenuProps: (
-    options?: GetMenuPropsOptions,
+    options?: GetMenuPropsOptions | MapStateToPropFunction<Item>,
     otherOptions?: GetPropsCommonOptions,
-    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
   ) => any
   getInputProps: (
-    options?: GetInputPropsOptions,
-    mapStateToProps?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => any,
+    options?: GetInputPropsOptions | MapStateToPropFunction<Item>,
   ) => any
   getItemProps: (
     options: GetItemPropsOptions<Item>,
