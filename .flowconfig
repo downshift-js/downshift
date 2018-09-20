@@ -10,3 +10,6 @@
 all=error
 
 [options]
+suppress_comment=\\(.\\|\n\\)*\\$ExpectError
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
+include_warnings=true

@@ -37,8 +37,7 @@
   "files": [
     "dist",
     "typings",
-    "preact",
-    "flow-typed"
+    "preact"
   ],
   "keywords": [
     "enhanced input",

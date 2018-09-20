@@ -3,9 +3,10 @@ import * as React from 'react'
 import Downshift, {
   type ControllerStateAndHelpers,
   type DownshiftType,
-} from 'downshift' // eslint-disable-line import/no-unresolved
+} from '../typings/downshift.js.flow'
 
 type Item = string
+//$FlowFixMe
 const DownshiftTyped: DownshiftType<Item> = Downshift
 
 type Props = {}
