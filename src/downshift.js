@@ -761,6 +761,7 @@ class Downshift extends Component {
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
     this.internalSetTimeout(() => {
       const downshiftButtonIsActive =
+        this.props.environment.document &&
         this.props.environment.document.activeElement.dataset.toggle &&
         (this._rootNode &&
           this._rootNode.contains(
