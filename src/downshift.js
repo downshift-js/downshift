@@ -118,7 +118,7 @@ class Downshift extends Component {
       inputValue: this.props.defaultInputValue,
       selectedItem: this.props.defaultSelectedItem,
     })
-    if (state.selectedItem != null) {
+    if (this.props.defaultInputValue == null && state.selectedItem != null) {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
