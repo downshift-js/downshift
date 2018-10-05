@@ -28,9 +28,11 @@ class Downshift extends Component {
   static propTypes = {
     children: PropTypes.func,
     defaultHighlightedIndex: PropTypes.number,
-    defaultSelectedItem: PropTypes.any,
-    defaultInputValue: PropTypes.string,
     defaultIsOpen: PropTypes.bool,
+    initialHighlightedIndex: PropTypes.number,
+    initialSelectedItem: PropTypes.any,
+    initialInputValue: PropTypes.string,
+    initialIsOpen: PropTypes.bool,
     getA11yStatusMessage: PropTypes.func,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
@@ -70,8 +72,6 @@ class Downshift extends Component {
 
   static defaultProps = {
     defaultHighlightedIndex: null,
-    defaultSelectedItem: null,
-    defaultInputValue: '',
     defaultIsOpen: false,
     getA11yStatusMessage,
     itemToString: i => {
@@ -112,13 +112,27 @@ class Downshift extends Component {
 
   constructor(props) {
     super(props)
+    // fancy destructuring + defaults + aliases
+    // this basically says each value of state should either be set to
+    // the initial value or the default value if the initial value is not provided
+    const {
+      defaultHighlightedIndex,
+      initialHighlightedIndex: highlightedIndex = defaultHighlightedIndex,
+      defaultIsOpen,
+      initialIsOpen: isOpen = defaultIsOpen,
+      initialInputValue: inputValue = '',
+      initialSelectedItem: selectedItem = null,
+    } = this.props
     const state = this.getState({
-      highlightedIndex: this.props.defaultHighlightedIndex,
-      isOpen: this.props.defaultIsOpen,
-      inputValue: this.props.defaultInputValue,
-      selectedItem: this.props.defaultSelectedItem,
+      highlightedIndex,
+      isOpen,
+      inputValue,
+      selectedItem,
     })
-    if (state.selectedItem != null) {
+    if (
+      state.selectedItem != null &&
+      this.props.initialInputValue === undefined
+    ) {
       state.inputValue = this.props.itemToString(state.selectedItem)
     }
     this.state = state
@@ -291,7 +305,8 @@ class Downshift extends Component {
       {
         selectedItem: null,
         inputValue: '',
-        isOpen: false,
+        highlightedIndex: this.props.defaultHighlightedIndex,
+        isOpen: this.props.defaultIsOpen,
       },
       cb,
     )
@@ -301,7 +316,7 @@ class Downshift extends Component {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       {
-        isOpen: false,
+        isOpen: this.props.defaultIsOpen,
         highlightedIndex: this.props.defaultHighlightedIndex,
         selectedItem: item,
         inputValue: this.props.itemToString(item),
@@ -895,7 +910,7 @@ class Downshift extends Component {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({selectedItem}) => ({
-        isOpen: false,
+        isOpen: this.props.defaultIsOpen,
         highlightedIndex: this.props.defaultHighlightedIndex,
         inputValue: this.props.itemToString(selectedItem),
         ...otherStateToSet,
