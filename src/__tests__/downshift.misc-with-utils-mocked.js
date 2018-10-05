@@ -37,7 +37,7 @@ test('does not scroll from an onMouseMove event', () => {
   }
   const {queryByTestId} = render(<HighlightedIndexController />)
   const input = queryByTestId('input')
-  const item = queryByTestId('item-1')
+  const item = queryByTestId('item-2')
   fireEvent.mouseMove(item)
   jest.runAllTimers()
   expect(scrollIntoView).not.toHaveBeenCalled()

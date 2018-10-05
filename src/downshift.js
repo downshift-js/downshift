@@ -247,7 +247,23 @@ class Downshift extends Component {
     if (this.getState().isOpen) {
       this.changeHighlightedIndex(amount, otherStateToSet)
     } else {
-      this.setHighlightedIndex(undefined, {isOpen: true, ...otherStateToSet})
+      this.openMenu(() => {
+        const {type} = otherStateToSet
+        const itemCount = this.getItemCount()
+        let newHighlightedIndex
+        // if there are items in the menu and event type is present.
+        if (itemCount && type) {
+          // on Arrow Down we highlight first option.
+          if (type === stateChangeTypes.keyDownArrowDown) {
+            newHighlightedIndex = 0
+          }
+          // on Arrow Up we highlight last option
+          if (type === stateChangeTypes.keyDownArrowUp) {
+            newHighlightedIndex = itemCount - 1
+          }
+        }
+        this.setHighlightedIndex(newHighlightedIndex, {...otherStateToSet})
+      })
     }
   }
 

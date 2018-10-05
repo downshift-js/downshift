@@ -106,19 +106,18 @@ export interface GetRootPropsOptions {
 
 export interface GetInputPropsOptions
   extends React.HTMLProps<HTMLInputElement> {
-    disabled?: boolean
-  }
+  disabled?: boolean
+}
 
 export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
 
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
-    disabled?: boolean
-  }
+  disabled?: boolean
+}
 
-export interface GetMenuPropsOptions
-  extends React.HTMLProps<HTMLElement> {
+export interface GetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
   ['aria-label']?: string
 }
@@ -130,8 +129,8 @@ export interface GetPropsCommonOptions {
 export interface GetItemPropsOptions<Item>
   extends React.HTMLProps<HTMLElement> {
   index?: number
-  item: Item,
-  isSelected?: boolean,
+  item: Item
+  isSelected?: boolean
   disabled?: boolean
 }
 
