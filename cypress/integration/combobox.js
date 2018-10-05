@@ -13,16 +13,27 @@ describe('combobox', () => {
       .should('have.value', 'Green')
   })
 
+  it('can up arrow to select last item', () => {
+    cy.getByTestId('combobox-input')
+      .type('{uparrow}{enter}') // open menu, last option is focused
+      .should('have.value', 'Purple')
+  })
+
+  it('can up arrow down select first item', () => {
+    cy.getByTestId('combobox-input')
+      .type('{downarrow}{enter}') // open menu, first option is focused
+      .should('have.value', 'Black')
+  })
+
   it('can down arrow to select an item', () => {
     cy.getByTestId('combobox-input')
-      .type('{downarrow}') // open menu
-      .type('{downarrow}{downarrow}{enter}') // select second item
+      .type('{downarrow}{downarrow}{enter}') // open and select second item
       .should('have.value', 'Red')
   })
 
   it('resets the item on blur', () => {
     cy.getByTestId('combobox-input')
-      .type('{downarrow}{downarrow}{enter}') // select first item
+      .type('{downarrow}{enter}') // open and select first item
       .should('have.value', 'Black')
       .get('body')
       .click()

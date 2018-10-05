@@ -972,6 +972,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "silviuavram",
+      "name": "Silviu Alexandru Avram",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11275392?v=4",
+      "profile": "https://github.com/silviuavram",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ]
 }
