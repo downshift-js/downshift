@@ -247,7 +247,6 @@ class Downshift extends Component {
     if (this.getState().isOpen) {
       this.changeHighlightedIndex(amount, otherStateToSet)
     } else {
-      // if menu was closed, will open it.
       this.openMenu(() => {
         const {type} = otherStateToSet
         const itemCount = this.getItemCount()

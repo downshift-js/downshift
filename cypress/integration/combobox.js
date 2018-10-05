@@ -14,13 +14,13 @@ describe('combobox', () => {
   })
 
   it('can up arrow to select last item', () => {
-    cy.getInStoryByTestId('basic-input')
+    cy.getByTestId('combobox-input')
       .type('{uparrow}{enter}') // open menu, last option is focused
       .should('have.value', 'Purple')
   })
 
   it('can up arrow down select first item', () => {
-    cy.getInStoryByTestId('basic-input')
+    cy.getByTestId('combobox-input')
       .type('{downarrow}{enter}') // open menu, first option is focused
       .should('have.value', 'Black')
   })
