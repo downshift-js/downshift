@@ -39,7 +39,7 @@ test('selectItemAtIndex does nothing if there is no item at that index', () => {
 
 test('selectItemAtIndex can select item that is an empty string', () => {
   const items = ['Chess', '']
-  const renderFn = ({getItemProps}) => (
+  const children = ({getItemProps}) => (
     <div>
       {items.map((item, index) => (
         <div key={index} {...getItemProps({item})}>
@@ -48,7 +48,7 @@ test('selectItemAtIndex can select item that is an empty string', () => {
       ))}
     </div>
   )
-  const {selectItemAtIndex, childrenSpy} = setup({render: renderFn})
+  const {selectItemAtIndex, childrenSpy} = setup({children})
   selectItemAtIndex(1)
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: ''}),
@@ -67,7 +67,7 @@ test('toggleMenu can take no arguments at all', () => {
 
 test('clearItems clears the all items', () => {
   const item = 'Chess'
-  const renderFn = ({getItemProps}) => (
+  const children = ({getItemProps}) => (
     <div>
       <div key={item} {...getItemProps({item})}>
         {item}
@@ -77,7 +77,7 @@ test('clearItems clears the all items', () => {
   // IMPLEMENTATION DETAIL TEST :-(
   // eslint-disable-next-line react/no-render-return-value
   const downshiftInstance = ReactDOM.render(
-    <Downshift>{renderFn}</Downshift>,
+    <Downshift>{children}</Downshift>,
     document.createElement('div'),
   )
   expect(downshiftInstance.items).toEqual([item])
@@ -121,10 +121,10 @@ test('can use children instead of render prop', () => {
 })
 
 test('should not log error during strict mode during reset', () => {
-  const renderFn = () => <div />
+  const children = () => <div />
   render(
     <React.StrictMode>
-      <Downshift>{renderFn}</Downshift>
+      <Downshift>{children}</Downshift>
     </React.StrictMode>,
   )
 
@@ -142,17 +142,17 @@ test('can use setState for ultimate power', () => {
 })
 
 test('warns when controlled component becomes uncontrolled', () => {
-  const renderFn = () => <div />
-  const {rerender} = render(<Downshift selectedItem="hi">{renderFn}</Downshift>)
-  rerender(<Downshift selectedItem={undefined}>{renderFn}</Downshift>)
+  const children = () => <div />
+  const {rerender} = render(<Downshift selectedItem="hi">{children}</Downshift>)
+  rerender(<Downshift selectedItem={undefined}>{children}</Downshift>)
   expect(console.error.mock.calls).toHaveLength(1)
   expect(console.error.mock.calls).toMatchSnapshot()
 })
 
 test('warns when uncontrolled component becomes controlled', () => {
-  const renderFn = () => <div />
-  const {rerender} = render(<Downshift>{renderFn}</Downshift>)
-  rerender(<Downshift selectedItem="hi">{renderFn}</Downshift>)
+  const children = () => <div />
+  const {rerender} = render(<Downshift>{children}</Downshift>)
+  rerender(<Downshift selectedItem="hi">{children}</Downshift>)
   expect(console.error.mock.calls).toHaveLength(1)
   expect(console.error.mock.calls).toMatchSnapshot()
 })
@@ -185,11 +185,29 @@ describe('expect console.warn to fire—depending on process.env.NODE_ENV value'
   })
 })
 
-function setup({render: renderFn = () => <div />, ...props} = {}) {
+test('initializes with the initial* props', () => {
+  const initialState = {
+    initialIsOpen: true,
+    initialHighlightedIndex: 2,
+    initialInputValue: 'hey',
+    initialSelectedItem: 'sup',
+  }
+  const {childrenSpy} = setup(initialState)
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      isOpen: initialState.initialIsOpen,
+      highlightedIndex: initialState.initialHighlightedIndex,
+      inputValue: initialState.initialInputValue,
+      selectedItem: initialState.initialSelectedItem,
+    }),
+  )
+})
+
+function setup({children = () => <div />, ...props} = {}) {
   let renderArg
   const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
-    return renderFn(controllerArg)
+    return children(controllerArg)
   })
   const renderUtils = render(<Downshift {...props}>{childrenSpy}</Downshift>)
   return {childrenSpy, ...renderUtils, ...renderArg}

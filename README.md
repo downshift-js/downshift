@@ -63,9 +63,11 @@ harder to contribute to.
   - [onChange](#onchange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
-  - [defaultSelectedItem](#defaultselecteditem)
+  - [initialSelectedItem](#initialselecteditem)
+  - [initialInputValue](#initialinputvalue)
+  - [initialHighlightedIndex](#initialhighlightedindex)
+  - [initialIsOpen](#initialisopen)
   - [defaultHighlightedIndex](#defaulthighlightedindex)
-  - [defaultInputValue](#defaultinputvalue)
   - [defaultIsOpen](#defaultisopen)
   - [selectedItemChanged](#selecteditemchanged)
   - [getA11yStatusMessage](#geta11ystatusmessage)
@@ -269,29 +271,43 @@ function stateReducer(state, changes) {
 
 ## Advanced Props
 
-### defaultSelectedItem
+### initialSelectedItem
 
 > `any` | defaults to `null`
 
-Pass an item or an array of items that should be selected by default.
+Pass an item or an array of items that should be selected when downshift is initialized.
+
+### initialInputValue
+
+> `string` | defaults to `''`
+
+This is the initial input value when downshift is initialized.
+
+### initialHighlightedIndex
+
+> `number`/`null` | defaults to `defaultHighlightedIndex`
+
+This is the initial value to set the highlighted index to when downshift is initialized.
+
+### initialIsOpen
+
+> `boolean` | defaults to `defaultIsOpen`
+
+This is the initial `isOpen` value when downshift is initialized.
 
 ### defaultHighlightedIndex
 
 > `number`/`null` | defaults to `null`
 
-This is the initial index to highlight when the menu first opens.
-
-### defaultInputValue
-
-> `string` | defaults to `''`
-
-This is the initial input value.
+This is the value to set the `highlightedIndex` to anytime downshift is reset,
+when the the selection is cleared, or when an item is selected.
 
 ### defaultIsOpen
 
 > `boolean` | defaults to `false`
 
-This is the initial `isOpen` value.
+This is the value to set the `isOpen` to anytime downshift is reset, when the
+the selection is cleared, or when an item is selected.
 
 ### selectedItemChanged
 
@@ -818,7 +834,7 @@ described below.
 
 - `Escape`: will reset downshift's state. This means that `highlightedIndex` will be
   set to the `defaultHighlightedIndex`, the `inputValue` will be set to the `itemToString`
-  value of the `selectedItem`, and the `isOpen` state will be set to `false`.
+  value of the `selectedItem`, and the `isOpen` state will be set to the `defaultIsOpen`.
 
 ### customizing handlers
 
