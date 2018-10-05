@@ -170,36 +170,6 @@ test('props update of selectedItem will update the inputValue state', () => {
   )
 })
 
-test('item selection when selectedItem is controlled will update the inputValue state after selectedItem prop has been updated', () => {
-  const itemToString = jest.fn(x => x)
-  let renderArg
-  const childrenSpy = jest.fn(controllerArg => {
-    renderArg = controllerArg
-    return <div />
-  })
-  const initialProps = {
-    selectedItem: 'foo',
-    itemToString,
-    children: childrenSpy,
-  }
-  const {container} = render(<Downshift {...initialProps} />)
-  childrenSpy.mockClear()
-  itemToString.mockClear()
-  const newSelectedItem = 'newfoo'
-  renderArg.selectItem(newSelectedItem)
-  expect(childrenSpy).not.toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-  render(<Downshift {...initialProps} selectedItem={newSelectedItem} />, {
-    container,
-  })
-  expect(itemToString).toHaveBeenCalledTimes(1)
-  expect(itemToString).toHaveBeenCalledWith(newSelectedItem)
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({inputValue: newSelectedItem}),
-  )
-})
-
 test('the callback is invoked on selected item only if it is a function', () => {
   let renderArg
   const childrenSpy = jest.fn(controllerArg => {
