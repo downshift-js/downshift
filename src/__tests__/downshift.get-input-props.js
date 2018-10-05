@@ -22,13 +22,7 @@ test('manages arrow up and down behavior', () => {
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({isOpen: true, highlightedIndex: null}),
-  )
-
-  // ↓
-  arrowDownInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: 0}),
+    expect.objectContaining({isOpen: true, highlightedIndex: 0}),
   )
 
   // ↓
@@ -37,8 +31,20 @@ test('manages arrow up and down behavior', () => {
     expect.objectContaining({highlightedIndex: 1}),
   )
 
+  // ↓
+  arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 2}),
+  )
+
   // <Shift>↓
   arrowDownInput({shiftKey: true})
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 7}),
+  )
+
+  // ↑
+  arrowUpInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 6}),
   )
@@ -78,18 +84,21 @@ test('arrow key down events do nothing when no items are rendered', () => {
   )
 })
 
-test('arrow up on a closed menu opens the menu', () => {
+test('arrow up on a closed menu opens the menu and highlights last option', () => {
   const {arrowUpInput, childrenSpy} = renderDownshift()
   // ↑
   arrowUpInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({isOpen: true, highlightedIndex: null}),
+    expect.objectContaining({
+      isOpen: true,
+      highlightedIndex: colors.length - 1,
+    }),
   )
 
   // ↑
   arrowUpInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: colors.length - 1}),
+    expect.objectContaining({highlightedIndex: colors.length - 2}),
   )
 })
 
