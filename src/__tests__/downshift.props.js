@@ -20,6 +20,7 @@ test('onStateChange called with changes and downshift state and helpers', () => 
   selectItem(itemToSelect)
   const changes = {
     type: Downshift.stateChangeTypes.unknown,
+    inputValue: itemToSelect,
     selectedItem: itemToSelect,
   }
   const stateAndHelpers = {
