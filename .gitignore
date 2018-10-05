@@ -6,6 +6,7 @@ dist
 .DS_Store
 .next
 .eslintcache
+.docz
 storybook-static
 preact/
 

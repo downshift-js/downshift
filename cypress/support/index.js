@@ -1,2 +1,2 @@
 // eslint-disable-next-line
-import './commands'
+import 'cypress-testing-library/add-commands'
