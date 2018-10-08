@@ -68,6 +68,7 @@
     "@types/react": "^16.4.14",
     "babel-plugin-macros": "^2.4.2",
     "babel-preset-react-native": "^5.0.0",
+    "buble": "0.19.3",
     "cross-env": "^5.1.4",
     "cypress": "^3.1.0",
     "cypress-testing-library": "^2.2.2",
