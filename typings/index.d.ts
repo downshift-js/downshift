@@ -136,7 +136,7 @@ export interface GetItemPropsOptions<Item>
 
 export interface PropGetters<Item> {
   getRootProps: (
-    options: GetRootPropsOptions,
+    options?: GetRootPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
   getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
