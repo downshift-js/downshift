@@ -983,6 +983,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "willcaul",
+      "name": "Will Caulfield",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/34461499?v=4",
+      "profile": "https://github.com/willcaul",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
