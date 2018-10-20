@@ -28,9 +28,11 @@ export enum StateChangeTypes {
 }
 
 export interface DownshiftProps<Item> {
-  defaultSelectedItem?: Item
+  initialSelectedItem?: Item
+  initialInputValue?: string
+  initialHighlightedIndex?: number | null
+  initialIsOpen?: boolean
   defaultHighlightedIndex?: number | null
-  defaultInputValue?: string
   defaultIsOpen?: boolean
   itemToString?: (item: Item | null) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
