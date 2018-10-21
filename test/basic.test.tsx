@@ -15,7 +15,7 @@ export default class App extends React.Component<Props, State> {
     items: ['apple', 'orange', 'carrot'],
   }
 
-  onChange = (selectedItem: Item) => {
+  onChange = (selectedItem: Item | null) => {
     console.log('selectedItem', selectedItem)
   }
 

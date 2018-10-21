@@ -38,11 +38,11 @@ export interface DownshiftProps<Item> {
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   onChange?: (
-    selectedItem: Item,
+    selectedItem: Item | null,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   onSelect?: (
-    selectedItem: Item,
+    selectedItem: Item | null,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
   ) => void
   onStateChange?: (
