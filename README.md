@@ -603,7 +603,9 @@ function). However, if you're rendering a composite component (custom component)
 as the root element, then you'll need to call `getRootProps` and apply that to
 your root element (downshift will throw an error otherwise).
 
-Required properties:
+There are no required properties for this method.
+
+Optional properties:
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
