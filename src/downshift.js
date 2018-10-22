@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -1156,7 +1157,7 @@ function validateGetMenuPropsCalledCorrectly(node, {refKey}) {
 function validateGetRootPropsCalledCorrectly(element, {refKey}) {
   const refKeySpecified = refKey !== 'ref'
   const isComposite = !isDOMElement(element)
-  if (isComposite && !refKeySpecified) {
+  if (isComposite && !refKeySpecified && !isForwardRef(element)) {
     // eslint-disable-next-line no-console
     console.error(
       'downshift: You returned a non-DOM element. You must specify a refKey in getRootProps',

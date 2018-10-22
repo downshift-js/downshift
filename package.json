@@ -63,7 +63,8 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "compute-scroll-into-view": "^1.0.9",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-is": "^16.5.2"
   },
   "devDependencies": {
     "@babel/helpers": "^7.1.2",
