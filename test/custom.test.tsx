@@ -30,10 +30,10 @@ export default class App extends React.Component<Props, State> {
 
   render() {
     const items = this.state.items
-    const defaultSelectedItem = this.state.items[0]
+    const initialSelectedItem = this.state.items[0]
 
     return (
-      <Downshift defaultSelectedItem={defaultSelectedItem}>
+      <Downshift initialSelectedItem={initialSelectedItem}>
         {({
           getToggleButtonProps,
           getItemProps,
