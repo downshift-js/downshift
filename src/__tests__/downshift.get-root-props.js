@@ -4,6 +4,10 @@ import Downshift from '../'
 
 const MyDiv = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
 
+const MyDivWithForwardedRef = React.forwardRef((props, ref) => (
+  <div ref={ref} {...props} />
+))
+
 const oldError = console.error
 
 beforeEach(() => {
@@ -128,6 +132,18 @@ test('renders fine when rendering a composite component and suppressRefError pro
     <Downshift
       suppressRefError
       children={({getRootProps}) => <MyDiv {...getRootProps()} />}
+    />
+  )
+  render(<MyComponent />)
+  expect(console.error.mock.calls).toHaveLength(0)
+})
+
+test('renders fine when rendering a composite component that uses refs forwarding', () => {
+  const MyComponent = () => (
+    <Downshift
+      children={({getRootProps}) => (
+        <MyDivWithForwardedRef {...getRootProps()} />
+      )}
     />
   )
   render(<MyComponent />)
