@@ -1168,7 +1168,7 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
       `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "${refKey}"`,
     )
   }
-  if (!getElementProps(element)[refKey] && !isForwardRef(element)) {
+  if (!isForwardRef(element) && !getElementProps(element)[refKey]) {
     // eslint-disable-next-line no-console
     console.error(
       `downshift: You must apply the ref prop "${refKey}" from getRootProps onto your root element.`,
