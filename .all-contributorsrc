@@ -993,6 +993,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "keeganstreet",
+      "name": "Keegan Street",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/513363?v=4",
+      "profile": "http://keegan.st",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ]
 }
