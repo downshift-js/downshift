@@ -102,4 +102,25 @@ describe('combobox', () => {
       .getByTestId('combobox-input')
       .should('have.value', 'Black')
   })
+
+  it('resets when tapping outside on a touch screen', () => {
+    cy.getByTestId('combobox-input')
+      .type('re')
+      .get('body')
+      .trigger('touchstart')
+      .trigger('touchend')
+      .queryByTestId('downshift-item-0', {timeout: 10})
+      .should('not.be.visible')
+  })
+
+  it('does not reset when swiping outside to scroll a touch screen', () => {
+    cy.getByTestId('combobox-input')
+      .type('re')
+      .get('body')
+      .trigger('touchstart')
+      .trigger('touchmove')
+      .trigger('touchend')
+      .queryByTestId('downshift-item-0', {timeout: 10})
+      .should('be.visible')
+  })
 })

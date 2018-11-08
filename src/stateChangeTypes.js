@@ -22,4 +22,4 @@ export const blurButton = productionEnum('__autocomplete_blur_button__')
 export const controlledPropUpdatedSelectedItem = productionEnum(
   '__autocomplete_controlled_prop_updated_selected_item__',
 )
-export const touchStart = productionEnum('__autocomplete_touchstart__')
+export const touchEnd = productionEnum('__autocomplete_touchend__')
