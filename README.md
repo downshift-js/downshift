@@ -516,12 +516,28 @@ There are a few props that expose changes to state
 For you to make the most of these APIs, it's important for you to understand
 why state is being changed. To accomplish this, there's a `type` property on the
 `changes` object you get. This `type` corresponds to a
-`Downshift.stateChangeTypes` property. If you want to see what change types
-are available, run this in your app:
+`Downshift.stateChangeTypes` property.
 
-```javascript
-console.log(Object.keys(Downshift.stateChangeTypes))
-```
+The list of all possible values this `type` property can take is as follows:
+
+  - `Downshift.stateChangeTypes.unknown`
+  - `Downshift.stateChangeTypes.mouseUp`
+  - `Downshift.stateChangeTypes.itemMouseEnter`
+  - `Downshift.stateChangeTypes.keyDownArrowUp`
+  - `Downshift.stateChangeTypes.keyDownArrowDown`
+  - `Downshift.stateChangeTypes.keyDownEscape`
+  - `Downshift.stateChangeTypes.keyDownEnter`
+  - `Downshift.stateChangeTypes.clickItem`
+  - `Downshift.stateChangeTypes.blurInput`
+  - `Downshift.stateChangeTypes.changeInput`
+  - `Downshift.stateChangeTypes.keyDownSpaceButton`
+  - `Downshift.stateChangeTypes.clickButton`
+  - `Downshift.stateChangeTypes.blurButton`
+  - `Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem`
+  - `Downshift.stateChangeTypes.touchEnd`
+
+See [`stateReducer`](#statereducer) for a concrete example on how to use the
+`type` property.
 
 ## Control Props
 
