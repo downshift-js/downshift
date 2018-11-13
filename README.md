@@ -518,7 +518,9 @@ why state is being changed. To accomplish this, there's a `type` property on the
 `changes` object you get. This `type` corresponds to a
 `Downshift.stateChangeTypes` property.
 
-The list of all possible values this `type` property can take is as follows:
+The list of all possible values this `type` property can take is defined in
+[this file](https://github.com/paypal/downshift/blob/master/src/stateChangeTypes.js)
+and is as follows:
 
   - `Downshift.stateChangeTypes.unknown`
   - `Downshift.stateChangeTypes.mouseUp`
