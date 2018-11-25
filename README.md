@@ -19,7 +19,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-102-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-103-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
@@ -522,21 +522,21 @@ The list of all possible values this `type` property can take is defined in
 [this file](https://github.com/paypal/downshift/blob/master/src/stateChangeTypes.js)
 and is as follows:
 
-  - `Downshift.stateChangeTypes.unknown`
-  - `Downshift.stateChangeTypes.mouseUp`
-  - `Downshift.stateChangeTypes.itemMouseEnter`
-  - `Downshift.stateChangeTypes.keyDownArrowUp`
-  - `Downshift.stateChangeTypes.keyDownArrowDown`
-  - `Downshift.stateChangeTypes.keyDownEscape`
-  - `Downshift.stateChangeTypes.keyDownEnter`
-  - `Downshift.stateChangeTypes.clickItem`
-  - `Downshift.stateChangeTypes.blurInput`
-  - `Downshift.stateChangeTypes.changeInput`
-  - `Downshift.stateChangeTypes.keyDownSpaceButton`
-  - `Downshift.stateChangeTypes.clickButton`
-  - `Downshift.stateChangeTypes.blurButton`
-  - `Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem`
-  - `Downshift.stateChangeTypes.touchEnd`
+- `Downshift.stateChangeTypes.unknown`
+- `Downshift.stateChangeTypes.mouseUp`
+- `Downshift.stateChangeTypes.itemMouseEnter`
+- `Downshift.stateChangeTypes.keyDownArrowUp`
+- `Downshift.stateChangeTypes.keyDownArrowDown`
+- `Downshift.stateChangeTypes.keyDownEscape`
+- `Downshift.stateChangeTypes.keyDownEnter`
+- `Downshift.stateChangeTypes.clickItem`
+- `Downshift.stateChangeTypes.blurInput`
+- `Downshift.stateChangeTypes.changeInput`
+- `Downshift.stateChangeTypes.keyDownSpaceButton`
+- `Downshift.stateChangeTypes.clickButton`
+- `Downshift.stateChangeTypes.blurButton`
+- `Downshift.stateChangeTypes.controlledPropUpdatedSelectedItem`
+- `Downshift.stateChangeTypes.touchEnd`
 
 See [`stateReducer`](#statereducer) for a concrete example on how to use the
 `type` property.
@@ -655,6 +655,11 @@ Optional properties:
 - `disabled`: If this is set to true, then no event handlers will be returned
   from `getInputProps` and a `disabled` prop will be returned (effectively
   disabling the input).
+- `useAriaActiveDescendant`: If this is set to true, Downshift will add an
+  `aria-activedescendant` attribute to the input matching the id of the currently
+  highlighted item. This is false by default because some browsers have screen
+  readers read the active descendant, at the same time that Downshift's built-in
+  live region is reading the selected item. This leads to a "double reading" effect.
 
 #### `getLabelProps`
 
@@ -1096,7 +1101,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars3.githubusercontent.com/u/5456216?v=4" width="100px;"/><br /><sub><b>Cameron Edwards</b></sub>](http://cameronpedwards.com)<br />[💻](https://github.com/paypal/downshift/commits?author=cameronprattedwards "Code") [⚠️](https://github.com/paypal/downshift/commits?author=cameronprattedwards "Tests") | [<img src="https://avatars2.githubusercontent.com/u/179534?v=4" width="100px;"/><br /><sub><b>stereobooster</b></sub>](https://github.com/stereobooster)<br />[💻](https://github.com/paypal/downshift/commits?author=stereobooster "Code") [⚠️](https://github.com/paypal/downshift/commits?author=stereobooster "Tests") | [<img src="https://avatars0.githubusercontent.com/u/934879?v=4" width="100px;"/><br /><sub><b>Trevor Pierce</b></sub>](https://github.com/1Copenut)<br />[👀](#review-1Copenut "Reviewed Pull Requests") | [<img src="https://avatars1.githubusercontent.com/u/1334982?v=4" width="100px;"/><br /><sub><b>Xuefei Li</b></sub>](http://xuefei-frank.com)<br />[💻](https://github.com/paypal/downshift/commits?author=franklixuefei "Code") | [<img src="https://avatars0.githubusercontent.com/u/7252803?v=4" width="100px;"/><br /><sub><b>Alfred Ringstad</b></sub>](https://hyperlab.se)<br />[💻](https://github.com/paypal/downshift/commits?author=alfredringstad "Code") | [<img src="https://avatars0.githubusercontent.com/u/6895497?v=4" width="100px;"/><br /><sub><b>D[oa]vid Weisz</b></sub>](https://github.com/dovidweisz)<br />[💻](https://github.com/paypal/downshift/commits?author=dovidweisz "Code") | [<img src="https://avatars0.githubusercontent.com/u/19773?v=4" width="100px;"/><br /><sub><b>Royston Shufflebotham</b></sub>](https://github.com/RoystonS)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3ARoystonS "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=RoystonS "Code") |
 | [<img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;"/><br /><sub><b>Michaël De Boey</b></sub>](http://michaeldeboey.be)<br />[💻](https://github.com/paypal/downshift/commits?author=MichaelDeBoey "Code") | [<img src="https://avatars3.githubusercontent.com/u/4412771?v=4" width="100px;"/><br /><sub><b>Henry</b></sub>](https://github.com/EricHenry)<br />[💻](https://github.com/paypal/downshift/commits?author=EricHenry "Code") | [<img src="https://avatars3.githubusercontent.com/u/2180127?v=4" width="100px;"/><br /><sub><b>Andrew Walton</b></sub>](http://www.greenarrow.me)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Agreen-arrow "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=green-arrow "Code") [⚠️](https://github.com/paypal/downshift/commits?author=green-arrow "Tests") | [<img src="https://avatars0.githubusercontent.com/u/13774309?v=4" width="100px;"/><br /><sub><b>Arthur Denner</b></sub>](https://github.com/arthurdenner)<br />[💻](https://github.com/paypal/downshift/commits?author=arthurdenner "Code") | [<img src="https://avatars2.githubusercontent.com/u/81981?v=4" width="100px;"/><br /><sub><b>Cody Olsen</b></sub>](http://twitter.com/stipsan)<br />[💻](https://github.com/paypal/downshift/commits?author=stipsan "Code") | [<img src="https://avatars0.githubusercontent.com/u/5084492?v=4" width="100px;"/><br /><sub><b>Thomas Ladd</b></sub>](https://github.com/TLadd)<br />[💻](https://github.com/paypal/downshift/commits?author=TLadd "Code") | [<img src="https://avatars3.githubusercontent.com/u/34634369?v=4" width="100px;"/><br /><sub><b>lixualinta</b></sub>](https://github.com/lixualinta)<br />[💻](https://github.com/paypal/downshift/commits?author=lixualinta "Code") |
 | [<img src="https://avatars2.githubusercontent.com/u/2118956?v=4" width="100px;"/><br /><sub><b>Jacob Cofman</b></sub>](https://twitter.com/JCofman)<br />[💻](https://github.com/paypal/downshift/commits?author=JCofman "Code") | [<img src="https://avatars3.githubusercontent.com/u/19275184?v=4" width="100px;"/><br /><sub><b>Joshua Freedman</b></sub>](https://github.com/jf248)<br />[💻](https://github.com/paypal/downshift/commits?author=jf248 "Code") | [<img src="https://avatars1.githubusercontent.com/u/24494020?v=4" width="100px;"/><br /><sub><b>Amy</b></sub>](https://github.com/AmyScript)<br />[💡](#example-AmyScript "Examples") | [<img src="https://avatars1.githubusercontent.com/u/9063669?v=4" width="100px;"/><br /><sub><b>Rogin Farrer</b></sub>](http://twitter.com/roginfarrer)<br />[💻](https://github.com/paypal/downshift/commits?author=roginfarrer "Code") | [<img src="https://avatars3.githubusercontent.com/u/871583" width="100px;"/><br /><sub><b>Dmitrii Kanatnikov</b></sub>](https://github.com/rifler)<br />[💻](https://github.com/paypal/downshift/commits?author=rifler "Code") | [<img src="https://avatars2.githubusercontent.com/u/346300?v=4" width="100px;"/><br /><sub><b>Dallon Feldner</b></sub>](https://github.com/dallonf)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Adallonf "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=dallonf "Code") | [<img src="https://avatars2.githubusercontent.com/u/10165959?v=4" width="100px;"/><br /><sub><b>Samuel Fuller Thomas</b></sub>](https://samuelfullerthomas.com)<br />[💻](https://github.com/paypal/downshift/commits?author=samuelfullerthomas "Code") |
-| [<img src="https://avatars1.githubusercontent.com/u/2430381?v=4" width="100px;"/><br /><sub><b>Ryan Castner</b></sub>](http://audiolion.github.io)<br />[💻](https://github.com/paypal/downshift/commits?author=audiolion "Code") | [<img src="https://avatars2.githubusercontent.com/u/11275392?v=4" width="100px;"/><br /><sub><b>Silviu Alexandru Avram</b></sub>](https://github.com/silviuavram)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Asilviuavram "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=silviuavram "Code") [⚠️](https://github.com/paypal/downshift/commits?author=silviuavram "Tests") | [<img src="https://avatars1.githubusercontent.com/u/15676655?v=4" width="100px;"/><br /><sub><b>Anton Volkov</b></sub>](https://github.com/akronb)<br />[💻](https://github.com/paypal/downshift/commits?author=akronb "Code") [⚠️](https://github.com/paypal/downshift/commits?author=akronb "Tests") | [<img src="https://avatars3.githubusercontent.com/u/513363?v=4" width="100px;"/><br /><sub><b>Keegan Street</b></sub>](http://keegan.st)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Akeeganstreet "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=keeganstreet "Code") |
+| [<img src="https://avatars1.githubusercontent.com/u/2430381?v=4" width="100px;"/><br /><sub><b>Ryan Castner</b></sub>](http://audiolion.github.io)<br />[💻](https://github.com/paypal/downshift/commits?author=audiolion "Code") | [<img src="https://avatars2.githubusercontent.com/u/11275392?v=4" width="100px;"/><br /><sub><b>Silviu Alexandru Avram</b></sub>](https://github.com/silviuavram)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Asilviuavram "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=silviuavram "Code") [⚠️](https://github.com/paypal/downshift/commits?author=silviuavram "Tests") | [<img src="https://avatars1.githubusercontent.com/u/15676655?v=4" width="100px;"/><br /><sub><b>Anton Volkov</b></sub>](https://github.com/akronb)<br />[💻](https://github.com/paypal/downshift/commits?author=akronb "Code") [⚠️](https://github.com/paypal/downshift/commits?author=akronb "Tests") | [<img src="https://avatars3.githubusercontent.com/u/513363?v=4" width="100px;"/><br /><sub><b>Keegan Street</b></sub>](http://keegan.st)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Akeeganstreet "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=keeganstreet "Code") | [<img src="https://avatars3.githubusercontent.com/u/11726925?v=4" width="100px;"/><br /><sub><b>dstapleton92</b></sub>](https://github.com/dstapleton92)<br />[💻](https://github.com/paypal/downshift/commits?author=dstapleton92 "Code") [📖](https://github.com/paypal/downshift/commits?author=dstapleton92 "Documentation") [⚠️](https://github.com/paypal/downshift/commits?author=dstapleton92 "Tests") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

@@ -702,6 +702,7 @@ class Downshift extends Component {
     onChange,
     onInput,
     onChangeText,
+    useAriaActiveDescendant = false,
     ...rest
   } = {}) => {
     let onChangeKey
@@ -747,7 +748,10 @@ class Downshift extends Component {
     return {
       'aria-autocomplete': 'list',
       'aria-activedescendant':
-        isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
+        useAriaActiveDescendant &&
+        isOpen &&
+        typeof highlightedIndex === 'number' &&
+        highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
       'aria-controls': isOpen ? this.menuId : null,

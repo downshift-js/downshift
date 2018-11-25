@@ -34,7 +34,24 @@ test('if aria-label is provided to the menu then aria-labelledby is not applied 
   expect(menu.getAttribute('aria-label')).toBe(customLabel)
 })
 
-function renderDownshift({renderFn, props, menuProps} = {}) {
+test('specifies a null aria-activedescendant by default', () => {
+  const {input} = renderDownshift({
+    props: {initialHighlightedIndex: 0, initialIsOpen: true},
+  })
+  expect(input.getAttribute('aria-activedescendant')).toBeNull()
+})
+
+test('specifies aria-activedescendant when useAriaActiveDescendant is true', () => {
+  const {input} = renderDownshift({
+    props: {initialHighlightedIndex: 0, initialIsOpen: true},
+    inputProps: {useAriaActiveDescendant: true},
+  })
+  expect(input.getAttribute('aria-activedescendant')).toEqual(
+    'downshift-0-item-0',
+  )
+})
+
+function renderDownshift({renderFn, props, menuProps, inputProps} = {}) {
   function defaultRenderFn({
     getInputProps,
     getToggleButtonProps,
@@ -47,7 +64,7 @@ function renderDownshift({renderFn, props, menuProps} = {}) {
         <label data-testid="label" {...getLabelProps()}>
           label
         </label>
-        <input data-testid="input" {...getInputProps()} />
+        <input data-testid="input" {...getInputProps(inputProps)} />
         <button data-testid="button" {...getToggleButtonProps()} />
         <ul data-testid="menu" {...getMenuProps(menuProps)}>
           <li data-testid="item-0" {...getItemProps({item: 'item', index: 0})}>
