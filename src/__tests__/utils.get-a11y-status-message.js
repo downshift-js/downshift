@@ -23,14 +23,15 @@ const tests = [
       isOpen: true,
       resultCount: 0,
     },
-    output: 'No results.',
+    output: 'No results are available.',
   },
   {
     input: {
       isOpen: true,
       resultCount: 10,
     },
-    output: '10 results are available, use up and down arrow keys to navigate.',
+    output:
+      '10 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
   },
   {
     input: {
@@ -38,7 +39,8 @@ const tests = [
       resultCount: 9,
       previousResultCount: 12,
     },
-    output: '9 results are available, use up and down arrow keys to navigate.',
+    output:
+      '9 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
   },
   {
     input: {
@@ -47,14 +49,16 @@ const tests = [
       previousResultCount: 20,
       highlightedItem: 'Oranges',
     },
-    output: '8 results are available, use up and down arrow keys to navigate.',
+    output:
+      '8 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
   },
   {
     input: {
       isOpen: true,
       resultCount: 1,
     },
-    output: '1 result is available, use up and down arrow keys to navigate.',
+    output:
+      '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
   },
   {
     input: {
@@ -65,7 +69,7 @@ const tests = [
       selectedItem: 'Raspberries',
       highlightedItem: 'Raspberries',
     },
-    output: 'Raspberries',
+    output: '',
   },
 ]
 

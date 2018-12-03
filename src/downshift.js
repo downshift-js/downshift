@@ -901,7 +901,7 @@ class Downshift extends Component {
     return {
       id: this.getItemId(index),
       role: 'option',
-      'aria-selected': this.getState().selectedItem === item,
+      'aria-selected': this.getState().highlightedIndex === index,
       ...eventHandlers,
       ...rest,
     }
@@ -952,13 +952,11 @@ class Downshift extends Component {
 
   updateStatus = debounce(() => {
     const state = this.getState()
-    const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
     const status = this.props.getA11yStatusMessage({
       itemToString: this.props.itemToString,
       previousResultCount: this.previousResultCount,
       resultCount,
-      highlightedItem: item,
       ...state,
     })
     this.previousResultCount = resultCount

@@ -37,7 +37,7 @@ exports[`basic snapshot 1`] = `
     role="listbox"
   >
     <li
-      aria-selected="true"
+      aria-selected="false"
       data-testid="item-0"
       id="downshift-0-item-0"
       role="option"

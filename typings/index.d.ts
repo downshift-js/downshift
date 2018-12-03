@@ -90,6 +90,7 @@ export interface A11yStatusMessageOptions<Item> {
   itemToString: (item: Item) => string
   previousResultCount: number
   resultCount: number
+  highlightedItem: Item
   selectedItem: Item
 }
 

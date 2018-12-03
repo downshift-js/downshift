@@ -2,7 +2,7 @@
 
 exports[`clears statuses when a change appears 1`] = `
 <div
-  aria-live="assertive"
+  aria-live="polite"
   aria-relevant="additions text"
   id="a11y-status-message"
   role="status"
@@ -18,7 +18,7 @@ exports[`clears statuses when a change appears 1`] = `
 
 exports[`does add anything for an empty string 1`] = `
 <div
-  aria-live="assertive"
+  aria-live="polite"
   aria-relevant="additions text"
   id="a11y-status-message"
   role="status"
@@ -28,7 +28,7 @@ exports[`does add anything for an empty string 1`] = `
 
 exports[`escapes HTML 1`] = `
 <div
-  aria-live="assertive"
+  aria-live="polite"
   aria-relevant="additions text"
   id="a11y-status-message"
   role="status"
@@ -44,7 +44,7 @@ exports[`escapes HTML 1`] = `
 
 exports[`repeat statuses get appended as children 1`] = `
 <div
-  aria-live="assertive"
+  aria-live="polite"
   aria-relevant="additions text"
   id="a11y-status-message"
   role="status"
@@ -70,7 +70,7 @@ exports[`repeat statuses get appended as children 1`] = `
 
 exports[`sets the status 1`] = `
 <div
-  aria-live="assertive"
+  aria-live="polite"
   aria-relevant="additions text"
   id="a11y-status-message"
   role="status"
