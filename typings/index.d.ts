@@ -147,7 +147,7 @@ export interface PropGetters<Item> {
     options?: GetMenuPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
-  getInputProps: (options?: GetInputPropsOptions) => any
+  getInputProps: <T>(options?: T) => T & GetInputPropsOptions
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
 
