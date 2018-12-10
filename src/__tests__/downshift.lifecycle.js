@@ -98,6 +98,7 @@ test('handles state change for touchevent events', () => {
 
   // touch outside for coverage
   fireEvent.touchStart(document.body)
+  fireEvent.touchEnd(document.body)
 
   // open menu
   fireEvent.click(button)
@@ -105,8 +106,17 @@ test('handles state change for touchevent events', () => {
 
   expect(handleStateChange).toHaveBeenCalledTimes(1)
 
+  // touchmove (scroll) outside downshift should not trigger state change
+  fireEvent.touchStart(document.body)
+  fireEvent.touchMove(document.body)
+  fireEvent.touchEnd(document.body)
+
+  jest.runAllTimers()
+  expect(handleStateChange).toHaveBeenCalledTimes(1)
+
   // touch outside downshift
   fireEvent.touchStart(document.body)
+  fireEvent.touchEnd(document.body)
 
   jest.runAllTimers()
   expect(handleStateChange).toHaveBeenCalledTimes(2)

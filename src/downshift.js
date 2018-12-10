@@ -1010,13 +1010,28 @@ class Downshift extends Component {
       // Touching an element in iOS gives focus and hover states, but touching out of
       // the element will remove hover, and persist the focus state, resulting in the
       // blur event not being triggered.
-      const onTouchStart = event => {
+      // this.isTouchMove helps us track whether the user is tapping or swiping on a touch screen.
+      // If the user taps outside of Downshift, the component should be reset,
+      // but not if the user is swiping
+      const onTouchStart = () => {
+        this.isTouchMove = false
+      }
+
+      const onTouchMove = () => {
+        this.isTouchMove = true
+      }
+
+      const onTouchEnd = event => {
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
           false,
         )
-        if (!contextWithinDownshift && this.getState().isOpen) {
-          this.reset({type: stateChangeTypes.touchStart}, () =>
+        if (
+          !this.isTouchMove &&
+          !contextWithinDownshift &&
+          this.getState().isOpen
+        ) {
+          this.reset({type: stateChangeTypes.touchEnd}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
           )
         }
@@ -1025,6 +1040,8 @@ class Downshift extends Component {
       this.props.environment.addEventListener('mousedown', onMouseDown)
       this.props.environment.addEventListener('mouseup', onMouseUp)
       this.props.environment.addEventListener('touchstart', onTouchStart)
+      this.props.environment.addEventListener('touchmove', onTouchMove)
+      this.props.environment.addEventListener('touchend', onTouchEnd)
 
       this.cleanup = () => {
         this.internalClearTimeouts()
@@ -1032,6 +1049,8 @@ class Downshift extends Component {
         this.props.environment.removeEventListener('mousedown', onMouseDown)
         this.props.environment.removeEventListener('mouseup', onMouseUp)
         this.props.environment.removeEventListener('touchstart', onTouchStart)
+        this.props.environment.removeEventListener('touchmove', onTouchMove)
+        this.props.environment.removeEventListener('touchend', onTouchEnd)
       }
     }
   }

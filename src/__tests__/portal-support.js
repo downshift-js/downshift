@@ -69,6 +69,7 @@ test('will not reset when clicking within the menu', () => {
 
   // Touch events
   fireEvent.touchStart(notAnItem)
+  fireEvent.touchEnd(notAnItem)
   notAnItem.focus() // sets document.activeElement
   expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
