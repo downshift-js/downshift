@@ -1,3 +1,9 @@
+// the combobox happens to be in the center of the page.
+// without specifying an x and y for the body events
+// we actually wind up firing events on the combobox.
+const bodyX = 100
+const bodyY = 300
+
 describe('combobox', () => {
   before(() => {
     cy.visit('/tests/combobox')
@@ -36,7 +42,7 @@ describe('combobox', () => {
       .type('{downarrow}{enter}') // open and select first item
       .should('have.value', 'Black')
       .get('body')
-      .click()
+      .click(bodyX, bodyY)
       .getByTestId('combobox-input')
       .should('have.value', 'Black')
   })
@@ -61,12 +67,12 @@ describe('combobox', () => {
       .should('have.value', 'R')
       .click()
       .get('body')
-      .trigger('mouseup')
+      .trigger('mouseup', bodyX, bodyY)
       .getByTestId('combobox-input')
       .should('have.value', 'R')
       .blur()
       .get('body')
-      .trigger('click')
+      .trigger('click', bodyX, bodyY)
       .getByTestId('combobox-input')
       .should('have.value', 'Red')
   })
@@ -107,8 +113,8 @@ describe('combobox', () => {
     cy.getByTestId('combobox-input')
       .type('re')
       .get('body')
-      .trigger('touchstart')
-      .trigger('touchend')
+      .trigger('touchstart', bodyX, bodyY)
+      .trigger('touchend', bodyX, bodyY)
       .queryByTestId('downshift-item-0', {timeout: 10})
       .should('not.be.visible')
   })
@@ -117,9 +123,9 @@ describe('combobox', () => {
     cy.getByTestId('combobox-input')
       .type('re')
       .get('body')
-      .trigger('touchstart')
-      .trigger('touchmove')
-      .trigger('touchend')
+      .trigger('touchstart', bodyX, bodyY)
+      .trigger('touchmove', bodyX, bodyY + 20)
+      .trigger('touchend', bodyX, bodyY + 20)
       .queryByTestId('downshift-item-0', {timeout: 10})
       .should('be.visible')
   })
