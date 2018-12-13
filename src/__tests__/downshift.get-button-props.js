@@ -90,6 +90,26 @@ test(`getToggleButtonProps doesn't include event handlers when disabled is passe
   }
 })
 
+test('stops key events that downshift has handled from propagating', () => {
+  const keyDownSpy = jest.fn()
+  const {container} = render(
+    <div onKeyDown={keyDownSpy}>
+      <Downshift isOpen highlightedIndex={1}>
+        {({getToggleButtonProps}) => <button {...getToggleButtonProps()} />}
+      </Downshift>
+    </div>,
+  )
+
+  const button = container.querySelector('button')
+
+  fireEvent.keyDown(button, {key: 'ArrowDown'})
+  fireEvent.keyDown(button, {key: 'ArrowUp'})
+  fireEvent.keyDown(button, {key: 'Enter'})
+  fireEvent.keyDown(button, {key: 'Escape'})
+
+  expect(keyDownSpy).toHaveBeenCalledTimes(0)
+})
+
 describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () => {
   const originalEnv = process.env.NODE_ENV
 

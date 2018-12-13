@@ -554,6 +554,7 @@ class Downshift extends Component {
   keyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
+      event.stopPropagation()
       const amount = event.shiftKey ? 5 : 1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowDown,
@@ -562,6 +563,7 @@ class Downshift extends Component {
 
     ArrowUp(event) {
       event.preventDefault()
+      event.stopPropagation()
       const amount = event.shiftKey ? -5 : -1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowUp,
@@ -572,6 +574,7 @@ class Downshift extends Component {
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
         event.preventDefault()
+        event.stopPropagation()
         const item = this.items[highlightedIndex]
         const itemNode = this.getItemNodeFromIndex(highlightedIndex)
         if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
@@ -585,6 +588,7 @@ class Downshift extends Component {
 
     Escape(event) {
       event.preventDefault()
+      event.stopPropagation()
       this.reset({type: stateChangeTypes.keyDownEscape})
     },
   }

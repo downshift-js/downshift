@@ -317,6 +317,26 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   }
 })
 
+test('stops events that downshift has handled from propagating', () => {
+  const keyDownSpy = jest.fn()
+  const {container} = render(
+    <div onKeyDown={keyDownSpy}>
+      <Downshift isOpen highlightedIndex={1}>
+        {({getInputProps}) => <input {...getInputProps()} />}
+      </Downshift>
+    </div>,
+  )
+
+  const input = container.querySelector('input')
+
+  fireEvent.keyDown(input, {key: 'ArrowDown'})
+  fireEvent.keyDown(input, {key: 'ArrowUp'})
+  fireEvent.keyDown(input, {key: 'Enter'})
+  fireEvent.keyDown(input, {key: 'Escape'})
+
+  expect(keyDownSpy).toHaveBeenCalledTimes(0)
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})
