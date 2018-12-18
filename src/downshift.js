@@ -1157,7 +1157,7 @@ class Downshift extends Component {
       // otherwise we can't query around the autocomplete
 
       throw new Error(
-        'downshift: If you return a non-DOM element, you must use apply the getRootProps function',
+        'downshift: If you return a non-DOM element, you must apply the getRootProps function',
       )
     }
 
