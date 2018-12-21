@@ -796,6 +796,7 @@ class Downshift extends Component {
     this.internalSetTimeout(() => {
       const downshiftButtonIsActive =
         this.props.environment.document &&
+        !!this.props.environment.document.activeElement.dataset &&
         this.props.environment.document.activeElement.dataset.toggle &&
         (this._rootNode &&
           this._rootNode.contains(
