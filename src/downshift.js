@@ -901,7 +901,7 @@ class Downshift extends Component {
     return {
       id: this.getItemId(index),
       role: 'option',
-      'aria-selected': this.getState().selectedItem === item,
+      'aria-selected': this.getState().highlightedIndex === index,
       ...eventHandlers,
       ...rest,
     }

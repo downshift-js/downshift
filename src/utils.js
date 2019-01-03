@@ -144,28 +144,23 @@ function resetIdCounter() {
  */
 function getA11yStatusMessage({
   isOpen,
-  highlightedItem,
   selectedItem,
   resultCount,
   previousResultCount,
   itemToString,
 }) {
   if (!isOpen) {
-    if (selectedItem) {
-      return itemToString(selectedItem)
-    } else {
-      return ''
-    }
+    return selectedItem ? itemToString(selectedItem) : ''
   }
-  const resultCountChanged = resultCount !== previousResultCount
   if (!resultCount) {
-    return 'No results.'
-  } else if (!highlightedItem || resultCountChanged) {
-    return `${resultCount} ${
-      resultCount === 1 ? 'result is' : 'results are'
-    } available, use up and down arrow keys to navigate.`
+    return 'No results are available.'
   }
-  return itemToString(highlightedItem)
+  if (resultCount !== previousResultCount) {
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
+  return ''
 }
 
 /**

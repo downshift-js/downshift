@@ -54,7 +54,7 @@ function getStatusDiv() {
   statusDiv = document.createElement('div')
   statusDiv.setAttribute('id', 'a11y-status-message')
   statusDiv.setAttribute('role', 'status')
-  statusDiv.setAttribute('aria-live', 'assertive')
+  statusDiv.setAttribute('aria-live', 'polite')
   statusDiv.setAttribute('aria-relevant', 'additions text')
   Object.assign(statusDiv.style, {
     border: '0',
