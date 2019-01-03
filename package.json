@@ -31,8 +31,12 @@
     "docs:dev": "docz dev",
     "docs:serve": "serve ./.docz/dist --listen 6006 --single",
     "setup": "npm install && npm run validate",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:flow:coverage,test:ssr,test:cypress",
-    "precommit": "kcd-scripts precommit"
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:flow:coverage,test:ssr,test:cypress"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "kcd-scripts pre-commit"
+    }
   },
   "files": [
     "dist",
@@ -68,23 +72,23 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.1.2",
-    "@types/react": "^16.4.14",
+    "@types/react": "^16.7.18",
     "babel-plugin-macros": "^2.4.2",
     "babel-preset-react-native": "^5.0.0",
-    "buble": "0.19.3",
+    "buble": "^0.19.6",
     "cross-env": "^5.1.4",
-    "cypress": "^3.1.0",
-    "cypress-testing-library": "^2.2.2",
-    "docz": "^0.12.5",
-    "docz-theme-default": "^0.13.5",
-    "eslint-plugin-cypress": "^2.0.1",
-    "flow-bin": "^0.82.0",
+    "cypress": "^3.1.4",
+    "cypress-testing-library": "^2.3.5",
+    "docz": "^0.13.7",
+    "docz-theme-default": "^0.13.7",
+    "eslint-plugin-cypress": "^2.2.0",
+    "flow-bin": "^0.89.0",
     "flow-coverage-report": "^0.6.0",
-    "jest-dom": "^2.0.2",
-    "kcd-scripts": "^0.45.0",
+    "jest-dom": "^3.0.0",
+    "kcd-scripts": "^0.49.0",
     "npm-run-all": "^4.1.2",
     "preact": "^8.2.6",
-    "preact-render-to-string": "^3.7.0",
+    "preact-render-to-string": "^4.1.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-native": "^0.57.2",
