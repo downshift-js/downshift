@@ -13,8 +13,7 @@ before_script:
 script:
   - kcd-scripts validate lint,build-and-test,test:cover
   - kcd-scripts validate test:ssr,test:cypress
-  # TODO: fix typescript/flow
-  # - kcd-scripts validate test:flow:coverage,test:ts
+  - kcd-scripts validate test:flow:coverage,test:ts
 after_success: kcd-scripts travis-after-success
 branches:
   only: master
