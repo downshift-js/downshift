@@ -269,6 +269,14 @@ function stateReducer(state, changes) {
 }
 ```
 
+> NOTE: This is only called when state actually changes. You should not attempt
+> to use this to handle events. If you wish to handle events, put your event
+> handlers directly on the elements (make sure to use the prop getters though!
+> For example: `<input onBlur={handleBlur} />` should be
+> `<input {...getInputProps({onBlur: handleBlur})} />`). Also, your reducer
+> function should be "pure." This means it should do nothing other than return
+> the state changes you want to have happen.
+
 ## Advanced Props
 
 ### initialSelectedItem
@@ -379,6 +387,12 @@ slightly.
 > Tip: This function will be called any time _any_ state is changed. The best
 > way to determine whether any particular state was changed, you can use
 > `changes.hasOwnProperty('propName')`.
+
+> NOTE: This is only called when state actually changes. You should not attempt
+> to use this to handle events. If you wish to handle events, put your event
+> handlers directly on the elements (make sure to use the prop getters though!
+> For example: `<input onBlur={handleBlur} />` should be
+> `<input {...getInputProps({onBlur: handleBlur})} />`).
 
 ### onInputValueChange
 
