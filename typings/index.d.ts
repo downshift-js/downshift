@@ -108,7 +108,7 @@ export interface GetRootPropsOptions {
 }
 
 export interface GetInputPropsOptions
-  extends React.HTMLProps<HTMLInputElement | HTMLTextAreaElement> {
+  extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
 }
 
