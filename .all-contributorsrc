@@ -1012,6 +1012,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "timvracer",
+      "name": "Tim Villanueva",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1521598?v=4",
+      "profile": "https://github.com/timvracer",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "test"
+      ]
     }
   ]
 }
