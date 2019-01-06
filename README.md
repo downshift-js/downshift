@@ -513,7 +513,7 @@ This callback will only be called if `isOpen` is `true`.
 
 ### scrollIntoView
 
-> `function(node: HTMLElement, rootNode: HTMLElement)` | defaults to internal
+> `function(node: HTMLElement, menuNode: HTMLElement)` | defaults to internal
 > implementation
 
 This allows you to customize how the scrolling works when the highlighted index
