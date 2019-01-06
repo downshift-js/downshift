@@ -110,6 +110,51 @@ test('stops key events that downshift has handled from propagating', () => {
   expect(keyDownSpy).toHaveBeenCalledTimes(0)
 })
 
+test('propagates the indicated control key if specified in propagateControlKeys and menu is closed', () => {
+  const keyDownSpy = jest.fn()
+  const {container} = render(
+    <div onKeyDown={keyDownSpy}>
+      <Downshift
+        propagateControlKeys={['Enter', 'Escape']}
+        highlightedIndex={1}
+      >
+        {({getToggleButtonProps}) => <button {...getToggleButtonProps()} />}
+      </Downshift>
+    </div>,
+  )
+
+  const button = container.querySelector('button')
+
+  fireEvent.keyDown(button, {key: 'Enter'})
+  fireEvent.keyDown(button, {key: 'Escape'})
+  fireEvent.keyDown(button, {key: 'ArrowUp'})
+  fireEvent.keyDown(button, {key: 'ArrowDown'})
+
+  expect(keyDownSpy).toHaveBeenCalledTimes(2)
+})
+
+test('propagates the indicated control key for each control key when specified', () => {
+  ;['Enter', 'Escape', 'ArrowUp', 'ArrowDown'].forEach(key => {
+    const keyDownSpy = jest.fn()
+    const {container} = render(
+      <div onKeyDown={keyDownSpy}>
+        <Downshift propagateControlKeys={[key]} highlightedIndex={1}>
+          {({getToggleButtonProps}) => <button {...getToggleButtonProps()} />}
+        </Downshift>
+      </div>,
+    )
+
+    const button = container.querySelector('button')
+
+    fireEvent.keyDown(button, {key: 'Enter'})
+    fireEvent.keyDown(button, {key: 'Escape'})
+    fireEvent.keyDown(button, {key: 'ArrowUp'})
+    fireEvent.keyDown(button, {key: 'ArrowDown'})
+
+    expect(keyDownSpy).toHaveBeenCalledTimes(1)
+  })
+})
+
 describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () => {
   const originalEnv = process.env.NODE_ENV
 

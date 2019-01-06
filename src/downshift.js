@@ -42,6 +42,7 @@ class Downshift extends Component {
     onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onOuterClick: PropTypes.func,
+    propagateControlKeys: PropTypes.array,
     selectedItemChanged: PropTypes.func,
     stateReducer: PropTypes.func,
     itemCount: PropTypes.number,
@@ -551,10 +552,24 @@ class Downshift extends Component {
 
   //\\\\\\\\\\\\\\\\\\\\\\\\\\ ROOT
 
+  maybeStopPropagation = (event, key) => {
+    const {isOpen} = this.state
+    const {propagateControlKeys} = this.props
+    // We only stop propagation if the user has requested it in the propagateControlKeys property
+    // This only takes effect when the menu is closed, EXCEPT in the case of ArrowDown which has already
+    // opened the menu when we get this event
+    const stopPropagation =
+      (isOpen && key !== 'ArrowDown') ||
+      !propagateControlKeys ||
+      propagateControlKeys.indexOf(key) < 0
+    if (stopPropagation) {
+      event.stopPropagation()
+    }
+  }
+
   keyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
-      event.stopPropagation()
       const amount = event.shiftKey ? 5 : 1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowDown,
@@ -563,7 +578,6 @@ class Downshift extends Component {
 
     ArrowUp(event) {
       event.preventDefault()
-      event.stopPropagation()
       const amount = event.shiftKey ? -5 : -1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowUp,
@@ -574,7 +588,6 @@ class Downshift extends Component {
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
         event.preventDefault()
-        event.stopPropagation()
         const item = this.items[highlightedIndex]
         const itemNode = this.getItemNodeFromIndex(highlightedIndex)
         if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
@@ -588,7 +601,6 @@ class Downshift extends Component {
 
     Escape(event) {
       event.preventDefault()
-      event.stopPropagation()
       this.reset({type: stateChangeTypes.keyDownEscape})
     },
   }
@@ -643,7 +655,8 @@ class Downshift extends Component {
 
   button_handleKeyDown = event => {
     const key = normalizeArrowKey(event)
-    if (this.buttonKeyDownHandlers[key]) {
+    if (key && this.buttonKeyDownHandlers[key]) {
+      this.maybeStopPropagation(event, key)
       this.buttonKeyDownHandlers[key].call(this, event)
     }
   }
@@ -769,6 +782,7 @@ class Downshift extends Component {
   input_handleKeyDown = event => {
     const key = normalizeArrowKey(event)
     if (key && this.keyDownHandlers[key]) {
+      this.maybeStopPropagation(event, key)
       this.keyDownHandlers[key].call(this, event)
     }
   }

@@ -337,6 +337,51 @@ test('stops events that downshift has handled from propagating', () => {
   expect(keyDownSpy).toHaveBeenCalledTimes(0)
 })
 
+test('propagates the indicated control key if specified in propagateControlKeys and menu is closed', () => {
+  const keyDownSpy = jest.fn()
+  const {container} = render(
+    <div onKeyDown={keyDownSpy}>
+      <Downshift
+        propagateControlKeys={['Enter', 'Escape']}
+        highlightedIndex={1}
+      >
+        {({getInputProps}) => <input {...getInputProps()} />}
+      </Downshift>
+    </div>,
+  )
+
+  const input = container.querySelector('input')
+
+  fireEvent.keyDown(input, {key: 'Enter'})
+  fireEvent.keyDown(input, {key: 'Escape'})
+  fireEvent.keyDown(input, {key: 'ArrowUp'})
+  fireEvent.keyDown(input, {key: 'ArrowDown'})
+
+  expect(keyDownSpy).toHaveBeenCalledTimes(2)
+})
+
+test('propagates the indicated control key for each control key when specified', () => {
+  ;['Enter', 'Escape', 'ArrowUp', 'ArrowDown'].forEach(key => {
+    const keyDownSpy = jest.fn()
+    const {container} = render(
+      <div onKeyDown={keyDownSpy}>
+        <Downshift propagateControlKeys={[key]} highlightedIndex={1}>
+          {({getInputProps}) => <input {...getInputProps()} />}
+        </Downshift>
+      </div>,
+    )
+
+    const input = container.querySelector('input')
+
+    fireEvent.keyDown(input, {key: 'Enter'})
+    fireEvent.keyDown(input, {key: 'Escape'})
+    fireEvent.keyDown(input, {key: 'ArrowUp'})
+    fireEvent.keyDown(input, {key: 'ArrowDown'})
+
+    expect(keyDownSpy).toHaveBeenCalledTimes(1)
+  })
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})

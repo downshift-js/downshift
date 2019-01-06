@@ -87,6 +87,7 @@ harder to contribute to.
   - [environment](#environment)
   - [onOuterClick](#onouterclick)
   - [scrollIntoView](#scrollintoview)
+  - [propagateControlKeys](#propagatecontrolkeys)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
 - [Children Function](#children-function)
@@ -522,6 +523,13 @@ node you render in downshift). Internally we use
 [`compute-scroll-into-view`](https://www.npmjs.com/package/compute-scroll-into-view)
 so if you use that package then you wont be adding any additional bytes to your
 bundle :)
+
+### propagateControlKeys
+
+> `Array` | an array of strings, valid values are 'Enter', 'Escape', 'ArrowUp', and 'ArrowDown'
+
+This allows you to specify whether the special control key events that trigger Downshift events will be further propagated.
+If this value is not specified, then none of the control key events are propagated
 
 ## stateChangeTypes
 
