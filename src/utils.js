@@ -20,15 +20,15 @@ function noop() {}
 /**
  * Scroll node into view if necessary
  * @param {HTMLElement} node the element that should scroll into view
- * @param {HTMLElement} rootNode the root element of the component
+ * @param {HTMLElement} menuNode the menu element of the component
  */
-function scrollIntoView(node, rootNode) {
+function scrollIntoView(node, menuNode) {
   if (node === null) {
     return
   }
 
   const actions = computeScrollIntoView(node, {
-    boundary: rootNode,
+    boundary: menuNode,
     block: 'nearest',
     scrollMode: 'if-needed',
   })

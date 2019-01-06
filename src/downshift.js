@@ -1,28 +1,28 @@
 /* eslint camelcase:0 */
 
-import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import React, {Component} from 'react'
 import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
-  cbToCb,
   callAll,
   callAllEventHandlers,
+  cbToCb,
   debounce,
-  scrollIntoView,
   generateId,
   getA11yStatusMessage,
-  unwrapArray,
+  getElementProps,
   isDOMElement,
   isOrContainsNode,
-  getElementProps,
-  noop,
-  requiredProp,
-  pickState,
   isPlainObject,
+  noop,
   normalizeArrowKey,
+  pickState,
+  requiredProp,
+  scrollIntoView,
+  unwrapArray,
 } from './utils'
 
 class Downshift extends Component {
@@ -254,7 +254,7 @@ class Downshift extends Component {
     /* istanbul ignore else (react-native) */
     if (!isReactNative) {
       const node = this.getItemNodeFromIndex(this.getState().highlightedIndex)
-      this.props.scrollIntoView(node, this._rootNode)
+      this.props.scrollIntoView(node, this._menuNode)
     }
   }
 
