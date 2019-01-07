@@ -18,7 +18,7 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {arrowUpInput, arrowDownInput, childrenSpy} = renderDownshift()
+  const {arrowUpInput, arrowDownInput, childrenSpy, endOnInput, homeOnInput} = renderDownshift()
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
@@ -69,6 +69,16 @@ test('manages arrow up and down behavior', () => {
 
   // ↓
   arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 0}),
+  )
+
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: colors.length - 1}),
+  )
+
+  homeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
@@ -407,10 +417,14 @@ function renderDownshift({items, props} = {}) {
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+    endOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'End', ...extraEventProps}),
     escapeOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Escape', ...extraEventProps}),
     enterOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    homeOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'Home', ...extraEventProps}),
     changeInputValue: (value, extraEventProps) =>
       fireEvent.change(input, {target: {value}, ...extraEventProps}),
     blurOnInput: extraEventProps => fireEvent.blur(input, extraEventProps),

@@ -301,6 +301,21 @@ class Downshift extends Component {
     this.setHighlightedIndex(newIndex, otherStateToSet)
   }
 
+  highlightFirstIndex(otherStateToSet) {
+    if (this.getItemCount() === 0) {
+      return
+    }
+    this.setHighlightedIndex(0, otherStateToSet)
+  }
+
+  highlightLastIndex(otherStateToSet) {
+    const itemsLastIndex = this.getItemCount() - 1
+    if (itemsLastIndex < 0) {
+      return
+    }
+    this.setHighlightedIndex(itemsLastIndex, otherStateToSet)
+  }
+
   clearSelection = cb => {
     this.internalSetState(
       {
@@ -568,6 +583,18 @@ class Downshift extends Component {
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowUp,
       })
+    },
+
+    Home(event) {
+      event.preventDefault()
+      event.stopPropagation()
+      this.highlightFirstIndex({ type: stateChangeTypes.keyDownHome})
+    },
+
+    End(event) {
+      event.preventDefault()
+      event.stopPropagation()
+      this.highlightLastIndex({ type: stateChangeTypes.keyDownEnd})
     },
 
     Enter(event) {
