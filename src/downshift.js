@@ -585,14 +585,12 @@ class Downshift extends Component {
 
     Home(event) {
       event.preventDefault()
-      event.stopPropagation()
-      this.highlightFirstIndex({ type: stateChangeTypes.keyDownHome})
+      this.highlightFirstIndex({type: stateChangeTypes.keyDownHome})
     },
 
     End(event) {
       event.preventDefault()
-      event.stopPropagation()
-      this.highlightLastIndex({ type: stateChangeTypes.keyDownEnd})
+      this.highlightLastIndex({type: stateChangeTypes.keyDownEnd})
     },
 
     Enter(event) {
