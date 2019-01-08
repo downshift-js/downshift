@@ -18,7 +18,7 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {arrowUpInput, arrowDownInput, childrenSpy} = renderDownshift()
+  const {arrowUpInput, arrowDownInput, childrenSpy, endOnInput, homeOnInput} = renderDownshift()
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
@@ -72,13 +72,38 @@ test('manages arrow up and down behavior', () => {
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
+
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: colors.length - 1}),
+  )
+
+  homeOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 0}),
+  )
 })
 
-test('arrow key down events do nothing when no items are rendered', () => {
-  const {arrowDownInput, childrenSpy} = renderDownshift({items: []})
-  // ↓↓
+test('navigation key down events do nothing when no items are rendered', () => {
+  const {arrowDownInput, arrowUpInput, endOnInput, homeOnInput, childrenSpy} = renderDownshift({items: []})
+  // ↓ ↓ ↑ end home
+  arrowDownInput() // open dropdown, nothing highlighted if no options
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
   arrowDownInput()
-  arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  arrowUpInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  homeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: null}),
   )
@@ -407,10 +432,14 @@ function renderDownshift({items, props} = {}) {
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+    endOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'End', ...extraEventProps}),
     escapeOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Escape', ...extraEventProps}),
     enterOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    homeOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'Home', ...extraEventProps}),
     changeInputValue: (value, extraEventProps) =>
       fireEvent.change(input, {target: {value}, ...extraEventProps}),
     blurOnInput: extraEventProps => fireEvent.blur(input, extraEventProps),
