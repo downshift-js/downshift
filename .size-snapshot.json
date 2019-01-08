@@ -27,7 +27,7 @@
   "preact/dist/downshift.esm.js": {
     "bundled": 51438,
     "minified": 22014,
-    "gzipped": 6270,
+    "gzipped": 6269,
     "treeshaked": {
       "rollup": {
         "code": 16252,
@@ -41,14 +41,14 @@
   "dist/downshift.esm.js": {
     "bundled": 52849,
     "minified": 23149,
-    "gzipped": 6465,
+    "gzipped": 6463,
     "treeshaked": {
       "rollup": {
         "code": 16262,
         "import_statements": 354
       },
       "webpack": {
-        "code": 17561
+        "code": 17563
       }
     }
   },
