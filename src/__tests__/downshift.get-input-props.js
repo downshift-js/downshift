@@ -84,11 +84,26 @@ test('manages arrow up and down behavior', () => {
   )
 })
 
-test('arrow key down events do nothing when no items are rendered', () => {
-  const {arrowDownInput, childrenSpy} = renderDownshift({items: []})
-  // ↓↓
+test('navigation key down events do nothing when no items are rendered', () => {
+  const {arrowDownInput, arrowUpInput, endOnInput, homeOnInput, childrenSpy} = renderDownshift({items: []})
+  // ↓ ↓ ↑ end home
+  arrowDownInput() // open dropdown, nothing highlighted if no options
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
   arrowDownInput()
-  arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  arrowUpInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  homeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: null}),
   )
