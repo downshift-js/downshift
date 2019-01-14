@@ -23,6 +23,7 @@ import {
   requiredProp,
   scrollIntoView,
   unwrapArray,
+  computeNewIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -259,61 +260,53 @@ class Downshift extends Component {
   }
 
   moveHighlightedIndex(amount, otherStateToSet) {
-    if (this.getState().isOpen) {
-      this.changeHighlightedIndex(amount, otherStateToSet)
+    if (this.getState().isOpen && this.getItemCount() > 0) {
+      this.setHighlightedIndex(
+        computeNewIndex(
+          amount,
+          this.getState().highlightedIndex,
+          this.getItemCount(),
+        ),
+        otherStateToSet,
+      )
     } else {
       this.openMenu(() => {
-        const {type} = otherStateToSet
-        const itemCount = this.getItemCount()
-        let newHighlightedIndex
-        // if there are items in the menu and event type is present.
-        if (itemCount && type) {
-          // on Arrow Down we highlight first option.
-          if (type === stateChangeTypes.keyDownArrowDown) {
-            newHighlightedIndex = 0
-          }
-          // on Arrow Up we highlight last option
-          if (type === stateChangeTypes.keyDownArrowUp) {
-            newHighlightedIndex = itemCount - 1
-          }
+        if (this.getItemCount() === 0) {
+          return
         }
-        this.setHighlightedIndex(newHighlightedIndex, {...otherStateToSet})
+        const {type} = otherStateToSet
+        if (type === stateChangeTypes.keyDownArrowDown) {
+          this.setHighlightedIndex(
+            computeNewIndex(
+              1,
+              this.props.defaultHighlightedIndex,
+              this.getItemCount(),
+            ),
+            otherStateToSet,
+          )
+        }
+        if (type === stateChangeTypes.keyDownArrowUp) {
+          this.setHighlightedIndex(
+            computeNewIndex(
+              -1,
+              this.props.defaultHighlightedIndex,
+              this.getItemCount(),
+            ),
+            otherStateToSet,
+          )
+        }
       })
     }
   }
 
-  changeHighlightedIndex(moveAmount, otherStateToSet) {
+  highlightFirstOrLastIndex(event, first = true, otherStateToSet) {
     const itemsLastIndex = this.getItemCount() - 1
-    if (itemsLastIndex < 0) {
+    if (itemsLastIndex < 0 || !this.getState().isOpen) {
       return
     }
-    const {highlightedIndex} = this.getState()
-    let baseIndex = highlightedIndex
-    if (baseIndex === null) {
-      baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
-    }
-    let newIndex = baseIndex + moveAmount
-    if (newIndex < 0) {
-      newIndex = itemsLastIndex
-    } else if (newIndex > itemsLastIndex) {
-      newIndex = 0
-    }
-    this.setHighlightedIndex(newIndex, otherStateToSet)
-  }
-
-  highlightFirstIndex(otherStateToSet) {
-    if (this.getItemCount() === 0) {
-      return
-    }
-    this.setHighlightedIndex(0, otherStateToSet)
-  }
-
-  highlightLastIndex(otherStateToSet) {
-    const itemsLastIndex = this.getItemCount() - 1
-    if (itemsLastIndex < 0) {
-      return
-    }
-    this.setHighlightedIndex(itemsLastIndex, otherStateToSet)
+    event.preventDefault()
+    event.stopPropagation()
+    this.setHighlightedIndex(first ? 0 : itemsLastIndex, otherStateToSet)
   }
 
   clearSelection = cb => {
@@ -584,13 +577,15 @@ class Downshift extends Component {
     },
 
     Home(event) {
-      event.preventDefault()
-      this.highlightFirstIndex({type: stateChangeTypes.keyDownHome})
+      this.highlightFirstOrLastIndex(event, true, {
+        type: stateChangeTypes.keyDownHome,
+      })
     },
 
     End(event) {
-      event.preventDefault()
-      this.highlightLastIndex({type: stateChangeTypes.keyDownEnd})
+      this.highlightFirstOrLastIndex(event, false, {
+        type: stateChangeTypes.keyDownEnd,
+      })
     },
 
     Enter(event) {
@@ -1081,6 +1076,19 @@ class Downshift extends Component {
     }
   }
 
+  shouldScroll(prevState, prevProps) {
+    const {highlightedIndex: currentHighlightedIndex} =
+      this.props.highlightedIndex === undefined ? this.state : this.props
+    const {highlightedIndex: prevHighlightedIndex} =
+      prevProps.highlightedIndex === undefined ? prevState : prevProps
+    const scrollWhenOpen =
+      currentHighlightedIndex && this.state.isOpen && !prevState.isOpen
+    const scrollWhenNavigating =
+      currentHighlightedIndex !== prevHighlightedIndex
+
+    return scrollWhenOpen || scrollWhenNavigating
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (process.env.NODE_ENV !== 'production') {
       validateControlledUnchanged(prevProps, this.props)
@@ -1107,15 +1115,7 @@ class Downshift extends Component {
       })
     }
 
-    const current =
-      this.props.highlightedIndex === undefined ? this.state : this.props
-    const prev =
-      prevProps.highlightedIndex === undefined ? prevState : prevProps
-
-    if (
-      current.highlightedIndex !== prev.highlightedIndex &&
-      !this.avoidScrolling
-    ) {
+    if (!this.avoidScrolling && this.shouldScroll(prevState, prevProps)) {
       this.scrollHighlightedItemIntoView()
     }
 

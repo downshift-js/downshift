@@ -18,7 +18,13 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {arrowUpInput, arrowDownInput, childrenSpy, endOnInput, homeOnInput} = renderDownshift()
+  const {
+    arrowUpInput,
+    arrowDownInput,
+    childrenSpy,
+    endOnInput,
+    homeOnInput,
+  } = renderDownshift()
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
@@ -84,32 +90,16 @@ test('manages arrow up and down behavior', () => {
   )
 })
 
-test('navigation key down events do nothing when no items are rendered', () => {
-  const {arrowDownInput, arrowUpInput, endOnInput, homeOnInput, childrenSpy} = renderDownshift({items: []})
-  // ↓ ↓ ↑ end home
-  arrowDownInput() // open dropdown, nothing highlighted if no options
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: null}),
-  )
+test('arrow down opens menu and highlights first item by default', () => {
+  const {arrowDownInput, childrenSpy} = renderDownshift()
+  // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: null}),
-  )
-  arrowUpInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: null}),
-  )
-  endOnInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: null}),
-  )
-  homeOnInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: null}),
+    expect.objectContaining({isOpen: true, highlightedIndex: 0}),
   )
 })
 
-test('arrow up on a closed menu opens the menu and highlights last option', () => {
+test('arrow up opens menu and highlights last item by default', () => {
   const {arrowUpInput, childrenSpy} = renderDownshift()
   // ↑
   arrowUpInput()
@@ -119,12 +109,54 @@ test('arrow up on a closed menu opens the menu and highlights last option', () =
       highlightedIndex: colors.length - 1,
     }),
   )
+})
 
+test('arrow down opens menu and highlights defaultHighlightedIndex + 1 if provided', () => {
+  const defaultHighlightedIndex = 2
+  const {arrowDownInput, childrenSpy} = renderDownshift({
+    props: {defaultHighlightedIndex},
+  })
+  // ↓
+  arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      isOpen: true,
+      highlightedIndex: defaultHighlightedIndex + 1,
+    }),
+  )
+})
+
+test('arrow up opens menu and highlights defaultHighlightedIndex - 1 if provided', () => {
+  const defaultHighlightedIndex = 2
+  const {arrowUpInput, childrenSpy} = renderDownshift({
+    props: {defaultHighlightedIndex},
+  })
   // ↑
   arrowUpInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({highlightedIndex: colors.length - 2}),
+    expect.objectContaining({
+      isOpen: true,
+      highlightedIndex: defaultHighlightedIndex - 1,
+    }),
   )
+})
+
+test('navigation key down events do nothing when no items are rendered', () => {
+  const {
+    arrowDownInput,
+    arrowUpInput,
+    endOnInput,
+    homeOnInput,
+    childrenSpy,
+  } = renderDownshift({items: []})
+  const keysOnInput = [arrowDownInput, arrowUpInput, endOnInput, homeOnInput]
+  // ↓ ↑ end home
+  keysOnInput.forEach(keyOnInput => {
+    keyOnInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({highlightedIndex: null}),
+    )
+  })
 })
 
 test('enter on an input with a closed menu does nothing', () => {
