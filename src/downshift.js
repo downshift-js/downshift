@@ -299,7 +299,7 @@ class Downshift extends Component {
     }
   }
 
-  highlightFirstOrLastIndex(event, first = true, otherStateToSet) {
+  highlightFirstOrLastIndex(event, first, otherStateToSet) {
     const itemsLastIndex = this.getItemCount() - 1
     if (itemsLastIndex < 0 || !this.getState().isOpen) {
       return

@@ -159,6 +159,21 @@ test('navigation key down events do nothing when no items are rendered', () => {
   })
 })
 
+test('home and end keys should not call highlighting method when menu is closed', () => {
+  const {childrenSpy, endOnInput, homeOnInput} = renderDownshift()
+  // home
+  homeOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({isOpen: false, highlightedIndex: null}),
+  )
+
+  // end
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({isOpen: false, highlightedIndex: null}),
+  )
+})
+
 test('enter on an input with a closed menu does nothing', () => {
   const {enterOnInput, childrenSpy} = renderDownshift()
   childrenSpy.mockClear()
