@@ -271,7 +271,7 @@ function isPlainObject(obj) {
  * @param {number} itemCount The total number of items.
  * @returns {number} The new index after the move.
  */
-function computeNewIndex(moveAmount, baseIndex, itemCount) {
+function getNewIndex(moveAmount, baseIndex, itemCount) {
   const itemsLastIndex = itemCount - 1
 
   if (baseIndex === null) {
@@ -305,5 +305,5 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-  computeNewIndex,
+  getNewIndex,
 }

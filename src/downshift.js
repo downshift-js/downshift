@@ -23,7 +23,7 @@ import {
   requiredProp,
   scrollIntoView,
   unwrapArray,
-  computeNewIndex,
+  getNewIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -262,7 +262,7 @@ class Downshift extends Component {
   moveHighlightedIndex(amount, otherStateToSet) {
     if (this.getState().isOpen && this.getItemCount() > 0) {
       this.setHighlightedIndex(
-        computeNewIndex(
+        getNewIndex(
           amount,
           this.getState().highlightedIndex,
           this.getItemCount(),
@@ -277,7 +277,7 @@ class Downshift extends Component {
         const {type} = otherStateToSet
         if (type === stateChangeTypes.keyDownArrowDown) {
           this.setHighlightedIndex(
-            computeNewIndex(
+            getNewIndex(
               1,
               this.props.defaultHighlightedIndex,
               this.getItemCount(),
@@ -287,7 +287,7 @@ class Downshift extends Component {
         }
         if (type === stateChangeTypes.keyDownArrowUp) {
           this.setHighlightedIndex(
-            computeNewIndex(
+            getNewIndex(
               -1,
               this.props.defaultHighlightedIndex,
               this.getItemCount(),
