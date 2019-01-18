@@ -1056,7 +1056,7 @@ const ui = (
 
 </details>
 
-## Inspiration
+## Inspiration 
 
 I was heavily inspired by [Ryan Florence][ryan]. Watch his (free) lesson about
 ["Compound Components"][compound-components-lecture]. Initially downshift was a
