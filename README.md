@@ -34,6 +34,7 @@ You need an autocomplete/dropdown/select experience in your application and you
 want it to be accessible. You also want it to be simple and flexible to account
 for your use cases.
 
+
 ## This solution
 
 This is a component that controls user interactions and state for you so you can
