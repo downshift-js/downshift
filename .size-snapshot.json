@@ -1,65 +1,60 @@
 {
+  "dist/downshift.cjs.js": {
+    "bundled": 54264,
+    "minified": 24037,
+    "gzipped": 6628
+  },
   "preact/dist/downshift.cjs.js": {
-    "bundled": 51792,
-    "minified": 22290,
-    "gzipped": 6337
+    "bundled": 52833,
+    "minified": 22887,
+    "gzipped": 6433
   },
   "preact/dist/downshift.umd.min.js": {
-    "bundled": 64448,
-    "minified": 21905,
-    "gzipped": 7058
+    "bundled": 63298,
+    "minified": 22029,
+    "gzipped": 7062
   },
   "dist/downshift.umd.min.js": {
-    "bundled": 68904,
-    "minified": 23079,
-    "gzipped": 7602
+    "bundled": 67475,
+    "minified": 23203,
+    "gzipped": 7603
   },
-  "dist/downshift.cjs.js": {
-    "bundled": 53223,
-    "minified": 23440,
-    "gzipped": 6533
+  "preact/dist/downshift.umd.js": {
+    "bundled": 75473,
+    "minified": 27153,
+    "gzipped": 8435
   },
   "dist/downshift.umd.js": {
-    "bundled": 105230,
-    "minified": 35594,
-    "gzipped": 11025
-  },
-  "preact/dist/downshift.esm.js": {
-    "bundled": 51438,
-    "minified": 22014,
-    "gzipped": 6269,
-    "treeshaked": {
-      "rollup": {
-        "code": 16252,
-        "import_statements": 336
-      },
-      "webpack": {
-        "code": 17518
-      }
-    }
+    "bundled": 104362,
+    "minified": 35748,
+    "gzipped": 11020
   },
   "dist/downshift.esm.js": {
-    "bundled": 52849,
-    "minified": 23149,
-    "gzipped": 6463,
+    "bundled": 53890,
+    "minified": 23746,
+    "gzipped": 6561,
     "treeshaked": {
       "rollup": {
-        "code": 16262,
+        "code": 16665,
         "import_statements": 354
       },
       "webpack": {
-        "code": 17563
+        "code": 17966
       }
     }
   },
-  "dist/downshift.native.cjs.js": {
-    "bundled": 81756,
-    "minified": 32873,
-    "gzipped": 9728
-  },
-  "preact/dist/downshift.umd.js": {
-    "bundled": 77156,
-    "minified": 27099,
-    "gzipped": 8425
+  "preact/dist/downshift.esm.js": {
+    "bundled": 52479,
+    "minified": 22611,
+    "gzipped": 6366,
+    "treeshaked": {
+      "rollup": {
+        "code": 16655,
+        "import_statements": 336
+      },
+      "webpack": {
+        "code": 17921
+      }
+    }
   }
 }

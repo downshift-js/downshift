@@ -18,7 +18,7 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {arrowUpInput, arrowDownInput, childrenSpy} = renderDownshift()
+  const {arrowUpInput, arrowDownInput, childrenSpy, endOnInput, homeOnInput} = renderDownshift()
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
@@ -72,13 +72,38 @@ test('manages arrow up and down behavior', () => {
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: 0}),
   )
+
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: colors.length - 1}),
+  )
+
+  homeOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: 0}),
+  )
 })
 
-test('arrow key down events do nothing when no items are rendered', () => {
-  const {arrowDownInput, childrenSpy} = renderDownshift({items: []})
-  // ↓↓
+test('navigation key down events do nothing when no items are rendered', () => {
+  const {arrowDownInput, arrowUpInput, endOnInput, homeOnInput, childrenSpy} = renderDownshift({items: []})
+  // ↓ ↓ ↑ end home
+  arrowDownInput() // open dropdown, nothing highlighted if no options
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
   arrowDownInput()
-  arrowDownInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  arrowUpInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  endOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex: null}),
+  )
+  homeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({highlightedIndex: null}),
   )
@@ -317,26 +342,6 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   }
 })
 
-test('stops events that downshift has handled from propagating', () => {
-  const keyDownSpy = jest.fn()
-  const {container} = render(
-    <div onKeyDown={keyDownSpy}>
-      <Downshift isOpen highlightedIndex={1}>
-        {({getInputProps}) => <input {...getInputProps()} />}
-      </Downshift>
-    </div>,
-  )
-
-  const input = container.querySelector('input')
-
-  fireEvent.keyDown(input, {key: 'ArrowDown'})
-  fireEvent.keyDown(input, {key: 'ArrowUp'})
-  fireEvent.keyDown(input, {key: 'Enter'})
-  fireEvent.keyDown(input, {key: 'Escape'})
-
-  expect(keyDownSpy).toHaveBeenCalledTimes(0)
-})
-
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})
@@ -407,10 +412,14 @@ function renderDownshift({items, props} = {}) {
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowUp', ...extraEventProps}),
+    endOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'End', ...extraEventProps}),
     escapeOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Escape', ...extraEventProps}),
     enterOnInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'Enter', ...extraEventProps}),
+    homeOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'Home', ...extraEventProps}),
     changeInputValue: (value, extraEventProps) =>
       fireEvent.change(input, {target: {value}, ...extraEventProps}),
     blurOnInput: extraEventProps => fireEvent.blur(input, extraEventProps),

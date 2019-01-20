@@ -301,6 +301,21 @@ class Downshift extends Component {
     this.setHighlightedIndex(newIndex, otherStateToSet)
   }
 
+  highlightFirstIndex(otherStateToSet) {
+    if (this.getItemCount() === 0) {
+      return
+    }
+    this.setHighlightedIndex(0, otherStateToSet)
+  }
+
+  highlightLastIndex(otherStateToSet) {
+    const itemsLastIndex = this.getItemCount() - 1
+    if (itemsLastIndex < 0) {
+      return
+    }
+    this.setHighlightedIndex(itemsLastIndex, otherStateToSet)
+  }
+
   clearSelection = cb => {
     this.internalSetState(
       {
@@ -554,7 +569,6 @@ class Downshift extends Component {
   keyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
-      event.stopPropagation()
       const amount = event.shiftKey ? 5 : 1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowDown,
@@ -563,18 +577,26 @@ class Downshift extends Component {
 
     ArrowUp(event) {
       event.preventDefault()
-      event.stopPropagation()
       const amount = event.shiftKey ? -5 : -1
       this.moveHighlightedIndex(amount, {
         type: stateChangeTypes.keyDownArrowUp,
       })
     },
 
+    Home(event) {
+      event.preventDefault()
+      this.highlightFirstIndex({type: stateChangeTypes.keyDownHome})
+    },
+
+    End(event) {
+      event.preventDefault()
+      this.highlightLastIndex({type: stateChangeTypes.keyDownEnd})
+    },
+
     Enter(event) {
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
         event.preventDefault()
-        event.stopPropagation()
         const item = this.items[highlightedIndex]
         const itemNode = this.getItemNodeFromIndex(highlightedIndex)
         if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
@@ -588,7 +610,6 @@ class Downshift extends Component {
 
     Escape(event) {
       event.preventDefault()
-      event.stopPropagation()
       this.reset({type: stateChangeTypes.keyDownEscape})
     },
   }
