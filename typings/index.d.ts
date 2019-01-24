@@ -24,7 +24,7 @@ export enum StateChangeTypes {
   clickButton = '__autocomplete_click_button__',
   blurButton = '__autocomplete_blur_button__',
   controlledPropUpdatedSelectedItem = '__autocomplete_controlled_prop_updated_selected_item__',
-  touchStart = '__autocomplete_touchstart__',
+  touchEnd = '__autocomplete_touchend__',
 }
 
 export interface DownshiftProps<Item> {
@@ -220,7 +220,7 @@ export type DownshiftInterface<Item> = React.ComponentClass<
     clickButton: StateChangeTypes.clickButton
     blurButton: StateChangeTypes.blurButton
     controlledPropUpdatedSelectedItem: StateChangeTypes.controlledPropUpdatedSelectedItem
-    touchStart: StateChangeTypes.touchStart
+    touchEnd: StateChangeTypes.touchEnd
   }
 }
 
