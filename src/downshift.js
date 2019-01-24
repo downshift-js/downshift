@@ -305,7 +305,6 @@ class Downshift extends Component {
       return
     }
     event.preventDefault()
-    event.stopPropagation()
     this.setHighlightedIndex(first ? 0 : itemsLastIndex, otherStateToSet)
   }
 
@@ -576,18 +575,6 @@ class Downshift extends Component {
       })
     },
 
-    Home(event) {
-      this.highlightFirstOrLastIndex(event, true, {
-        type: stateChangeTypes.keyDownHome,
-      })
-    },
-
-    End(event) {
-      this.highlightFirstOrLastIndex(event, false, {
-        type: stateChangeTypes.keyDownEnd,
-      })
-    },
-
     Enter(event) {
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
@@ -617,6 +604,21 @@ class Downshift extends Component {
     ' '(event) {
       event.preventDefault()
       this.toggleMenu({type: stateChangeTypes.keyDownSpaceButton})
+    },
+  }
+
+  inputKeyDownHandlers = {
+    ...this.keyDownHandlers,
+    Home(event) {
+      this.highlightFirstOrLastIndex(event, true, {
+        type: stateChangeTypes.keyDownHome,
+      })
+    },
+
+    End(event) {
+      this.highlightFirstOrLastIndex(event, false, {
+        type: stateChangeTypes.keyDownEnd,
+      })
     },
   }
 
@@ -784,8 +786,8 @@ class Downshift extends Component {
 
   inputHandleKeyDown = event => {
     const key = normalizeArrowKey(event)
-    if (key && this.keyDownHandlers[key]) {
-      this.keyDownHandlers[key].call(this, event)
+    if (key && this.inputKeyDownHandlers[key]) {
+      this.inputKeyDownHandlers[key].call(this, event)
     }
   }
 
