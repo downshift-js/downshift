@@ -637,13 +637,13 @@ class Downshift extends Component {
     const enabledEventHandlers = isReactNative
       ? /* istanbul ignore next (react-native) */
         {
-          onPress: callAllEventHandlers(onPress, this.button_handleClick),
+          onPress: callAllEventHandlers(onPress, this.buttonHandleClick),
         }
       : {
-          onClick: callAllEventHandlers(onClick, this.button_handleClick),
-          onKeyDown: callAllEventHandlers(onKeyDown, this.button_handleKeyDown),
-          onKeyUp: callAllEventHandlers(onKeyUp, this.button_handleKeyUp),
-          onBlur: callAllEventHandlers(onBlur, this.button_handleBlur),
+          onClick: callAllEventHandlers(onClick, this.buttonHandleClick),
+          onKeyDown: callAllEventHandlers(onKeyDown, this.buttonHandleKeyDown),
+          onKeyUp: callAllEventHandlers(onKeyUp, this.buttonHandleKeyUp),
+          onBlur: callAllEventHandlers(onBlur, this.buttonHandleBlur),
         }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
@@ -657,19 +657,19 @@ class Downshift extends Component {
     }
   }
 
-  button_handleKeyUp = event => {
+  buttonHandleKeyUp = event => {
     // Prevent click event from emitting in Firefox
     event.preventDefault()
   }
 
-  button_handleKeyDown = event => {
+  buttonHandleKeyDown = event => {
     const key = normalizeArrowKey(event)
     if (this.buttonKeyDownHandlers[key]) {
       this.buttonKeyDownHandlers[key].call(this, event)
     }
   }
 
-  button_handleClick = event => {
+  buttonHandleClick = event => {
     event.preventDefault()
     // handle odd case for Safari and Firefox which
     // don't give the button the focus properly.
@@ -694,7 +694,7 @@ class Downshift extends Component {
     }
   }
 
-  button_handleBlur = event => {
+  buttonHandleBlur = event => {
     const blurTarget = event.target // Save blur target for comparison with activeElement later
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
     this.internalSetTimeout(() => {
@@ -745,10 +745,10 @@ class Downshift extends Component {
         [onChangeKey]: callAllEventHandlers(
           onChange,
           onInput,
-          this.input_handleChange,
+          this.inputHandleChange,
         ),
-        onKeyDown: callAllEventHandlers(onKeyDown, this.input_handleKeyDown),
-        onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
+        onKeyDown: callAllEventHandlers(onKeyDown, this.inputHandleKeyDown),
+        onBlur: callAllEventHandlers(onBlur, this.inputHandleBlur),
       }
     }
 
@@ -758,14 +758,14 @@ class Downshift extends Component {
         onChange: callAllEventHandlers(
           onChange,
           onInput,
-          this.input_handleChange,
+          this.inputHandleChange,
         ),
         onChangeText: callAllEventHandlers(
           onChangeText,
           onInput,
-          this.input_handleTextChange,
+          this.inputHandleTextChange,
         ),
-        onBlur: callAllEventHandlers(onBlur, this.input_handleBlur),
+        onBlur: callAllEventHandlers(onBlur, this.inputHandleBlur),
       }
     }
 
@@ -787,14 +787,14 @@ class Downshift extends Component {
     }
   }
 
-  input_handleKeyDown = event => {
+  inputHandleKeyDown = event => {
     const key = normalizeArrowKey(event)
     if (key && this.keyDownHandlers[key]) {
       this.keyDownHandlers[key].call(this, event)
     }
   }
 
-  input_handleChange = event => {
+  inputHandleChange = event => {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
@@ -804,7 +804,7 @@ class Downshift extends Component {
     })
   }
 
-  input_handleTextChange /* istanbul ignore next (react-native) */ = text => {
+  inputHandleTextChange /* istanbul ignore next (react-native) */ = text => {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
@@ -812,7 +812,7 @@ class Downshift extends Component {
     })
   }
 
-  input_handleBlur = () => {
+  inputHandleBlur = () => {
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
     this.internalSetTimeout(() => {
       const downshiftButtonIsActive =
