@@ -264,6 +264,28 @@ function isPlainObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
 
+/**
+ * Returns the new index in the list, in a circular way.
+ * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
+ * @param {number} baseIndex The initial position to move from.
+ * @param {number} itemCount The total number of items.
+ * @returns {number} The new index after the move.
+ */
+function getNewIndex(moveAmount, baseIndex, itemCount) {
+  const itemsLastIndex = itemCount - 1
+
+  if (baseIndex === null) {
+    baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+  }
+  let newIndex = baseIndex + moveAmount
+  if (newIndex < 0) {
+    newIndex = itemsLastIndex
+  } else if (newIndex > itemsLastIndex) {
+    newIndex = 0
+  }
+  return newIndex
+}
+
 export {
   cbToCb,
   callAllEventHandlers,
@@ -283,4 +305,5 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
+  getNewIndex,
 }

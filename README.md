@@ -850,17 +850,27 @@ described below.
 
 ### default handlers
 
-- `ArrowDown`: moves the highlighted index down by 1. If this shift key is held
-  when this event fires, the highlighted index will jump down 5 indices instead of 1.
-  NOTE: if the current highlighed index is within the bottom 5 indices, the top-most
-  index will be highlighted.)
+- `ArrowDown`: if menu is closed, opens it and moves the highlighted index to
+  `defaultHighlightedIndex + 1`, if `defaultHighlightedIndex` is provided, or
+  to the top-most item, if not. If menu is open, it moves the highlighted index
+  down by 1. If the shift key is held when this event fires, the highlighted
+  index will jump down 5 indices instead of 1. NOTE: if the current highlighed
+  index is within the bottom 5 indices, the top-most index will be highlighted.)
 
-- `ArrowUp`: moves the highlighted index up by 1. If this shift key is held when
-  this event fires, the highlighted index will jump up 5 indices instead of 1. NOTE:
-  if the current highlighed index is within the top 5 indices, the bottom-most index
-  will be highlighted.)
+- `ArrowUp`: if menu is closed, opens it and moves the highlighted index to
+  `defaultHighlightedIndex - 1`, if `defaultHighlightedIndex` is provided, or
+  to the bottom-most item, if not. If menu is open, moves the highlighted index
+  up by 1. If the shift key is held when this event fires, the highlighted
+  index will jump up 5 indices instead of 1. NOTE: if the current highlighed
+  index is within the top 5 indices, the bottom-most index will be highlighted.)
 
-- `Enter`: if the menu is open, select the currently highlighted item. If the menu
+- `Home`: if menu is closed, it will not add any other behavior. If menu is open,
+  the top-most index will get highlighted.
+
+- `End`: if menu is closed, it will not add any other behavior. If menu is open,
+  the bottom-most index will get highlighted.
+
+- `Enter`: if the menu is open, selects the currently highlighted item. If the menu
   is open, the usual 'Enter' event is prevented by Downshift's default implicit enter
   handler; so, for example, a form submission event will not work as one might expect
   (though if the menu is closed the form submission will work normally). See below
