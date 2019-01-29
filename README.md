@@ -1,7 +1,7 @@
 <h1 align="center">
   downshift 🏎
   <br>
-  <img src="https://cdn.rawgit.com/downshift-js/downshift/d9e94139/other/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <img src="https://downshift.netlify.com/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
@@ -627,7 +627,9 @@ overridden (or overriding the props returned). For example:
 
 <details>
 
-<summary>If you cannot render a div as the root element, then read this</summary>
+<summary>
+  If you cannot render a div as the root element, then read this
+</summary>
 
 Most of the time, you can just render a `div` yourself and `Downshift` will
 apply the props it needs to do its job (and you don't need to call this
@@ -1036,7 +1038,9 @@ You're more than welcome to make PRs to the examples repository to move these ex
 
 <details>
 
-<summary>How do I avoid the checksum error when server rendering (SSR)?</summary>
+<summary>
+  How do I avoid the checksum error when server rendering (SSR)?
+</summary>
 
 The checksum error you're seeing is most likely due to the automatically
 generated `id` and/or `htmlFor` prop you get from `getInputProps` and
