@@ -123,12 +123,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/paypal/downshift.git"
+    "url": "https://github.com/downshift-js/downshift.git"
   },
   "bugs": {
-    "url": "https://github.com/paypal/downshift/issues"
+    "url": "https://github.com/downshift-js/downshift/issues"
   },
-  "homepage": "https://github.com/paypal/downshift#readme",
+  "homepage": "https://github.com/downshift-js/downshift#readme",
   "flow-coverage-report": {
     "includeGlob": [
       "test/**/*.js"

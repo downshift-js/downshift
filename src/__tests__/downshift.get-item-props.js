@@ -12,7 +12,7 @@ beforeEach(() => {
 afterEach(() => console.error.mockRestore())
 
 test('clicking on a DOM node within an item selects that item', () => {
-  // inspiration: https://github.com/paypal/downshift/issues/113
+  // inspiration: https://github.com/downshift-js/downshift/issues/113
   const items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}]
   const {queryByTestId, childrenSpy} = renderDownshift({items})
   const firstButton = queryByTestId('item-0-button')
