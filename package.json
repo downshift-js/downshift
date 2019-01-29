@@ -28,6 +28,7 @@
     "cy:open": "cypress open",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "docs:build": "docz build",
+    "postdocs:build": "cpy \"**/*\" ../../.docz/dist --cwd=\"other/public\" --parents",
     "docs:dev": "docz dev",
     "docs:serve": "serve ./.docz/dist --listen 6006 --single",
     "setup": "npm install && npm run validate",
@@ -76,6 +77,7 @@
     "babel-plugin-macros": "^2.4.2",
     "babel-preset-react-native": "^5.0.0",
     "buble": "^0.19.6",
+    "cpy-cli": "^2.0.0",
     "cross-env": "^5.1.4",
     "cypress": "^3.1.4",
     "cypress-testing-library": "^2.3.5",
@@ -123,12 +125,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/paypal/downshift.git"
+    "url": "https://github.com/downshift-js/downshift.git"
   },
   "bugs": {
-    "url": "https://github.com/paypal/downshift/issues"
+    "url": "https://github.com/downshift-js/downshift/issues"
   },
-  "homepage": "https://github.com/paypal/downshift#readme",
+  "homepage": "https://github.com/downshift-js/downshift#readme",
   "flow-coverage-report": {
     "includeGlob": [
       "test/**/*.js"

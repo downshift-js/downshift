@@ -341,7 +341,7 @@ test('itemCount can be set and unset asynchronously', () => {
 })
 
 test('Enter when there is no item at index 0 still selects the highlighted item', () => {
-  // test inspired by https://github.com/paypal/downshift/issues/119
+  // test inspired by https://github.com/downshift-js/downshift/issues/119
   // use case is virtualized lists
   const items = [
     {value: 'cat', index: 1},

@@ -368,7 +368,7 @@ class Downshift extends Component {
     // so someone controlling the `inputValue` state gets notified of
     // the input change as soon as possible. This avoids issues with
     // preserving the cursor position.
-    // See https://github.com/paypal/downshift/issues/217 for more info.
+    // See https://github.com/downshift-js/downshift/issues/217 for more info.
     if (!isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
       this.props.onInputValueChange(stateToSet.inputValue, {
         ...this.getStateAndHelpers(),
@@ -1224,7 +1224,7 @@ function validateGetRootPropsCalledCorrectly(element, {refKey}) {
 }
 
 function validateControlledUnchanged(prevProps, nextProps) {
-  const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/paypal/downshift#control-props`
+  const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`
   ;['selectedItem', 'isOpen', 'inputValue', 'highlightedIndex'].forEach(
     propKey => {
       if (
