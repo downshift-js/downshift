@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:6006",
-  "video": false
+  "video": false,
+  "blacklistHosts": "sidecar.hoperator.com"
 }
