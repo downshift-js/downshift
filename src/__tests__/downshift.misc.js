@@ -55,6 +55,24 @@ test('selectItemAtIndex can select item that is an empty string', () => {
   )
 })
 
+test('selectItemAtIndex can select item that is a null', () => {
+  const items = ['Chess', null]
+  const children = ({getItemProps}) => (
+    <div>
+      {items.map((item, index) => (
+        <div key={index} {...getItemProps({item})}>
+          {item}
+        </div>
+      ))}
+    </div>
+  )
+  const {selectItemAtIndex, childrenSpy} = setup({children})
+  selectItemAtIndex(1)
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({selectedItem: null}),
+  )
+})
+
 test('toggleMenu can take no arguments at all', () => {
   const {toggleMenu, childrenSpy} = setup()
   toggleMenu()
