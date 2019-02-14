@@ -952,9 +952,10 @@ class Downshift extends Component {
       },
       () => {
         const {isOpen} = this.getState()
-        if (isOpen) {
-          // highlight default index
-          this.setHighlightedIndex(undefined, otherStateToSet)
+        const {defaultHighlightedIndex} = this.props
+
+        if (isOpen && typeof defaultHighlightedIndex === 'number') {
+          this.setHighlightedIndex(defaultHighlightedIndex, otherStateToSet)
         }
         cbToCb(cb)()
       },

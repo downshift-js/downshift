@@ -65,6 +65,27 @@ test('toggleMenu can take no arguments at all', () => {
   )
 })
 
+test('toggleMenu highlights default index if given', () => {
+  const initialState = {defaultHighlightedIndex: 1}
+  const {toggleMenu, childrenSpy} = setup(initialState)
+  toggleMenu()
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      highlightedIndex: 1,
+    }),
+  )
+})
+
+test('toggleMenu does not highlight default index if not given', () => {
+  const {toggleMenu, childrenSpy} = setup()
+  toggleMenu()
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.not.objectContaining({
+      highlightedIndex: expect.any(Number),
+    }),
+  )
+})
+
 test('clearItems clears the all items', () => {
   const item = 'Chess'
   const children = ({getItemProps}) => (
