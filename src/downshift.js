@@ -785,12 +785,13 @@ class Downshift extends Component {
   }
 
   inputHandleKeyDown = event => {
-    if (event.which === 229 || event.isComposing) {
-      return
-    }
-
     const key = normalizeArrowKey(event)
-    if (key && this.inputKeyDownHandlers[key]) {
+    if (
+      key &&
+      this.inputKeyDownHandlers[key] &&
+      event.which !== 229 &&
+      !event.isComposing
+    ) {
       this.inputKeyDownHandlers[key].call(this, event)
     }
   }

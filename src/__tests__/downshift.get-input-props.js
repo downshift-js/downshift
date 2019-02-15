@@ -370,6 +370,26 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
   )
 })
 
+test('Cancel default event handler while composing', () => {
+  const utils = renderDownshift({
+    props: {highlightedIndex: 0, isOpen: true},
+  })
+  const {arrowDownInput, changeInputValue, enterOnInput, childrenSpy} = utils
+  const extraEventProps = {which: 229, isComposing: true}
+
+  changeInputValue('konnichiwa', extraEventProps)
+  // ↓ but for IME
+  arrowDownInput(extraEventProps)
+  // Enter but for IME
+  enterOnInput(extraEventProps)
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      isOpen: true,
+      highlightedIndex: 0,
+    }),
+  )
+})
+
 // normally this test would be like the others where we render and then simulate a click on the
 // button to ensure that a disabled input cannot be interacted with, however this is only a problem in IE11
 // so we have to get into the implementation details a little bit (unless we want to run these tests
