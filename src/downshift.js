@@ -816,6 +816,7 @@ class Downshift extends Component {
       inputValue: isReactNative
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
+      highlightedIndex: this.props.defaultHighlightedIndex,
     })
   }
 
@@ -824,6 +825,7 @@ class Downshift extends Component {
       type: stateChangeTypes.changeInput,
       isOpen: true,
       inputValue: text,
+      highlightedIndex: this.props.defaultHighlightedIndex,
     })
   }
 
