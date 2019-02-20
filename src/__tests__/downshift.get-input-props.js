@@ -269,6 +269,7 @@ test('navigation key down events do nothing when no items are rendered', () => {
     arrowUpInput,
     endOnInput,
     homeOnInput,
+    escapeOnInput,
     childrenSpy,
   } = renderDownshift({items: []})
   const keysOnInput = [arrowDownInput, arrowUpInput, endOnInput, homeOnInput]
@@ -278,6 +279,15 @@ test('navigation key down events do nothing when no items are rendered', () => {
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({highlightedIndex: null}),
     )
+    escapeOnInput() // close dropdown after each opening.
+  })
+  // ↓ ↑ end home
+  keysOnInput.forEach(keyOnInput => {
+    keyOnInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({highlightedIndex: null}),
+    )
+    // do not close dropdown, but still there should be no update.
   })
 })
 
