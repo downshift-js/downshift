@@ -23,7 +23,7 @@ import {
   requiredProp,
   scrollIntoView,
   unwrapArray,
-  getNewIndex,
+  getNextWrappingIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -260,42 +260,14 @@ class Downshift extends Component {
   }
 
   moveHighlightedIndex(amount, otherStateToSet) {
-    if (this.getState().isOpen && this.getItemCount() > 0) {
-      this.setHighlightedIndex(
-        getNewIndex(
-          amount,
-          this.getState().highlightedIndex,
-          this.getItemCount(),
-        ),
-        otherStateToSet,
+    const itemCount = this.getItemCount()
+    if (itemCount > 0) {
+      const nextHighlightedIndex = getNextWrappingIndex(
+        amount,
+        this.getState().highlightedIndex,
+        itemCount,
       )
-    } else {
-      this.openMenu(() => {
-        if (this.getItemCount() === 0) {
-          return
-        }
-        const {type} = otherStateToSet
-        if (type === stateChangeTypes.keyDownArrowDown) {
-          this.setHighlightedIndex(
-            getNewIndex(
-              1,
-              this.props.defaultHighlightedIndex,
-              this.getItemCount(),
-            ),
-            otherStateToSet,
-          )
-        }
-        if (type === stateChangeTypes.keyDownArrowUp) {
-          this.setHighlightedIndex(
-            getNewIndex(
-              -1,
-              this.props.defaultHighlightedIndex,
-              this.getItemCount(),
-            ),
-            otherStateToSet,
-          )
-        }
-      })
+      this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
     }
   }
 
@@ -561,18 +533,50 @@ class Downshift extends Component {
   keyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
-      const amount = event.shiftKey ? 5 : 1
-      this.moveHighlightedIndex(amount, {
-        type: stateChangeTypes.keyDownArrowDown,
-      })
+
+      if (this.getState().isOpen) {
+        const amount = event.shiftKey ? 5 : 1
+        this.moveHighlightedIndex(amount, {
+          type: stateChangeTypes.keyDownArrowDown,
+        })
+      } else {
+        const self = this
+        this.toggleMenu({type: stateChangeTypes.keyDownArrowDown}, () => {
+          const itemCount = self.getItemCount()
+          if (itemCount > 0) {
+            const {highlightedIndex} = self.getState()
+            const newIndex =
+              typeof highlightedIndex === 'number'
+                ? getNextWrappingIndex(1, highlightedIndex, itemCount)
+                : 0
+            self.setHighlightedIndex(newIndex)
+          }
+        })
+      }
     },
 
     ArrowUp(event) {
       event.preventDefault()
-      const amount = event.shiftKey ? -5 : -1
-      this.moveHighlightedIndex(amount, {
-        type: stateChangeTypes.keyDownArrowUp,
-      })
+
+      if (this.getState().isOpen) {
+        const amount = event.shiftKey ? -5 : -1
+        this.moveHighlightedIndex(amount, {
+          type: stateChangeTypes.keyDownArrowUp,
+        })
+      } else {
+        const self = this
+        this.toggleMenu({type: stateChangeTypes.keyDownArrowUp}, () => {
+          const itemCount = self.getItemCount()
+          if (itemCount > 0) {
+            const {highlightedIndex} = self.getState()
+            const newIndex =
+              typeof highlightedIndex === 'number'
+                ? getNextWrappingIndex(-1, highlightedIndex, itemCount)
+                : itemCount - 1
+            self.setHighlightedIndex(newIndex)
+          }
+        })
+      }
     },
 
     Enter(event) {
@@ -951,10 +955,13 @@ class Downshift extends Component {
         return {isOpen: !isOpen, ...otherStateToSet}
       },
       () => {
-        const {isOpen} = this.getState()
+        const {isOpen, highlightedIndex} = this.getState()
         if (isOpen) {
-          // highlight default index
-          this.setHighlightedIndex(undefined, otherStateToSet)
+          if (this.getItemCount() > 0 && typeof highlightedIndex === 'number') {
+            this.setHighlightedIndex(highlightedIndex, otherStateToSet)
+          }
+        } else {
+          this.reset()
         }
         cbToCb(cb)()
       },
