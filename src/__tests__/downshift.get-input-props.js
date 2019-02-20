@@ -157,6 +157,22 @@ describe('arrow down opens menu and highlights item at index', () => {
       }),
     )
   })
+
+  test('highlightedIndex if controlled', () => {
+    const highlightedIndex = 2
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // control highlightedIndex
+      props: {highlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex,
+      }),
+    )
+  })
 })
 
 describe('arrow up opens menu and highlights item at index', () => {
@@ -226,6 +242,22 @@ describe('arrow up opens menu and highlights item at index', () => {
       expect.objectContaining({
         isOpen: true,
         highlightedIndex: defaultHighlightedIndex - 1,
+      }),
+    )
+  })
+
+  test('highlightedIndex if controlled', () => {
+    const highlightedIndex = 2
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // control highlightedIndex
+      props: {highlightedIndex},
+    })
+    // ↓
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex,
       }),
     )
   })
