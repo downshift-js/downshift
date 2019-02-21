@@ -265,16 +265,22 @@ function isPlainObject(obj) {
 }
 
 /**
- * Returns the new index in the list, in a circular way.
+ * Returns the new index in the list, in a circular way. If next value is out of bonds from the total,
+ * it will wrap to either 0 or itemCount - 1.
+ *
  * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
  * @param {number} baseIndex The initial position to move from.
  * @param {number} itemCount The total number of items.
  * @returns {number} The new index after the move.
  */
-function getNewIndex(moveAmount, baseIndex, itemCount) {
+function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
   const itemsLastIndex = itemCount - 1
 
-  if (baseIndex === null) {
+  if (
+    typeof baseIndex !== 'number' ||
+    baseIndex < 0 ||
+    baseIndex >= itemCount
+  ) {
     baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
   }
   let newIndex = baseIndex + moveAmount
@@ -305,5 +311,5 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-  getNewIndex,
+  getNextWrappingIndex,
 }

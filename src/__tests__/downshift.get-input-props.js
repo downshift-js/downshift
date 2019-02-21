@@ -90,55 +90,239 @@ test('manages arrow up and down behavior', () => {
   )
 })
 
-test('arrow down opens menu and highlights first item by default', () => {
-  const {arrowDownInput, childrenSpy} = renderDownshift()
-  // ↓
-  arrowDownInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({isOpen: true, highlightedIndex: 0}),
-  )
-})
-
-test('arrow up opens menu and highlights last item by default', () => {
-  const {arrowUpInput, childrenSpy} = renderDownshift()
-  // ↑
-  arrowUpInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      isOpen: true,
-      highlightedIndex: colors.length - 1,
-    }),
-  )
-})
-
-test('arrow down opens menu and highlights defaultHighlightedIndex + 1 if provided', () => {
-  const defaultHighlightedIndex = 2
-  const {arrowDownInput, childrenSpy} = renderDownshift({
-    props: {defaultHighlightedIndex},
+describe('arrow down opens menu and highlights item at index', () => {
+  test('0 by default', () => {
+    const {arrowDownInput, childrenSpy} = renderDownshift()
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({isOpen: true, highlightedIndex: 0}),
+    )
   })
-  // ↓
-  arrowDownInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      isOpen: true,
-      highlightedIndex: defaultHighlightedIndex + 1,
-    }),
-  )
+
+  test('initialHighlightedIndex + 1', () => {
+    const initialHighlightedIndex = 3
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide only highlightedIndex
+      props: {initialHighlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: initialHighlightedIndex + 1,
+      }),
+    )
+  })
+
+  test('defaultHighlightedIndex + 1', () => {
+    const defaultHighlightedIndex = 2
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: defaultHighlightedIndex + 1,
+      }),
+    )
+  })
+
+  test('initialHighlightedIndex + 1 then defaultHighlightedIndex + 1', () => {
+    const initialHighlightedIndex = 3
+    const defaultHighlightedIndex = 2
+    const {arrowDownInput, escapeOnInput, childrenSpy} = renderDownshift({
+      // provide both initialHighlightedIndex and defaultHighlightedIndex
+      props: {defaultHighlightedIndex, initialHighlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: initialHighlightedIndex + 1,
+      }),
+    )
+    escapeOnInput()
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: defaultHighlightedIndex + 1,
+      }),
+    )
+  })
+
+  test('0 if defaultHighlightedIndex is length - 1', () => {
+    const defaultHighlightedIndex = colors.length - 1
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide defaultHighlightedIndex as last in the list.
+      props: {defaultHighlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: 0,
+      }),
+    )
+  })
+
+  test('0 if defaultHighlightedIndex is out of bounds', () => {
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide defaultHighlightedIndex as invalid
+      props: {defaultHighlightedIndex: colors.length + 5},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: 0,
+      }),
+    )
+  })
+
+  test('highlightedIndex if controlled', () => {
+    const highlightedIndex = 2
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // control highlightedIndex
+      props: {highlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex,
+      }),
+    )
+  })
 })
 
-test('arrow up opens menu and highlights defaultHighlightedIndex - 1 if provided', () => {
-  const defaultHighlightedIndex = 2
-  const {arrowUpInput, childrenSpy} = renderDownshift({
-    props: {defaultHighlightedIndex},
+describe('arrow up opens menu and highlights item at index', () => {
+  test('length - 1 by default', () => {
+    const {arrowUpInput, childrenSpy} = renderDownshift()
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: colors.length - 1,
+      }),
+    )
   })
-  // ↑
-  arrowUpInput()
-  expect(childrenSpy).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      isOpen: true,
-      highlightedIndex: defaultHighlightedIndex - 1,
-    }),
-  )
+
+  test('initialHighlightedIndex - 1', () => {
+    const initialHighlightedIndex = 3
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide only initialHighlightedIndex
+      props: {initialHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: initialHighlightedIndex - 1,
+      }),
+    )
+  })
+
+  test('defaultHighlightedIndex - 1', () => {
+    const defaultHighlightedIndex = 2
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: defaultHighlightedIndex - 1,
+      }),
+    )
+  })
+
+  test('initialHighlightedIndex - 1 then defaultHighlightedIndex - 1', () => {
+    const initialHighlightedIndex = 3
+    const defaultHighlightedIndex = 2
+    const {arrowUpInput, escapeOnInput, childrenSpy} = renderDownshift({
+      // provide both initialHighlightedIndex and defaultHighlightedIndex
+      props: {defaultHighlightedIndex, initialHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: initialHighlightedIndex - 1,
+      }),
+    )
+    escapeOnInput()
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: defaultHighlightedIndex - 1,
+      }),
+    )
+  })
+
+  test('length - 1 if defaultHighlightedIndex is 0', () => {
+    const defaultHighlightedIndex = 0
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide defaultHighlightedIndex as first in the list
+      props: {defaultHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: colors.length - 1,
+      }),
+    )
+  })
+
+  test('length - 1 if defaultHighlightedIndex is out of bounds', () => {
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide defaultHighlightedIndex as invalid
+      props: {defaultHighlightedIndex: colors.length + 5},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: colors.length - 1,
+      }),
+    )
+  })
+
+  test('highlightedIndex if controlled', () => {
+    const highlightedIndex = 2
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // control highlightedIndex
+      props: {highlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex,
+      }),
+    )
+  })
 })
 
 test('navigation key down events do nothing when no items are rendered', () => {
@@ -147,6 +331,7 @@ test('navigation key down events do nothing when no items are rendered', () => {
     arrowUpInput,
     endOnInput,
     homeOnInput,
+    escapeOnInput,
     childrenSpy,
   } = renderDownshift({items: []})
   const keysOnInput = [arrowDownInput, arrowUpInput, endOnInput, homeOnInput]
@@ -156,6 +341,15 @@ test('navigation key down events do nothing when no items are rendered', () => {
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({highlightedIndex: null}),
     )
+    escapeOnInput() // close dropdown after each opening.
+  })
+  // ↓ ↑ end home
+  keysOnInput.forEach(keyOnInput => {
+    keyOnInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({highlightedIndex: null}),
+    )
+    // do not close dropdown, but still there should be no update.
   })
 })
 
