@@ -545,11 +545,9 @@ class Downshift extends Component {
           const itemCount = self.getItemCount()
           if (itemCount > 0) {
             const {highlightedIndex} = self.getState()
-            const newIndex =
-              typeof highlightedIndex === 'number'
-                ? getNextWrappingIndex(1, highlightedIndex, itemCount)
-                : 0
-            self.setHighlightedIndex(newIndex)
+            self.setHighlightedIndex(
+              getNextWrappingIndex(1, highlightedIndex, itemCount),
+            )
           }
         })
       }
@@ -569,11 +567,9 @@ class Downshift extends Component {
           const itemCount = self.getItemCount()
           if (itemCount > 0) {
             const {highlightedIndex} = self.getState()
-            const newIndex =
-              typeof highlightedIndex === 'number'
-                ? getNextWrappingIndex(-1, highlightedIndex, itemCount)
-                : itemCount - 1
-            self.setHighlightedIndex(newIndex)
+            self.setHighlightedIndex(
+              getNextWrappingIndex(-1, highlightedIndex, itemCount),
+            )
           }
         })
       }

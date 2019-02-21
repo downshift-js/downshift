@@ -174,6 +174,21 @@ describe('arrow down opens menu and highlights item at index', () => {
     )
   })
 
+  test('0 if defaultHighlightedIndex is out of bounds', () => {
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex: colors.length + 5},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: 0,
+      }),
+    )
+  })
+
   test('highlightedIndex if controlled', () => {
     const highlightedIndex = 2
     const {arrowDownInput, childrenSpy} = renderDownshift({
@@ -267,6 +282,21 @@ describe('arrow up opens menu and highlights item at index', () => {
     const {arrowUpInput, childrenSpy} = renderDownshift({
       // provide only defaultHighlightedIndex
       props: {defaultHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: colors.length - 1,
+      }),
+    )
+  })
+
+  test('length - 1 if defaultHighlightedIndex is out of bounds', () => {
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex: colors.length + 5},
     })
     // ↑
     arrowUpInput()
