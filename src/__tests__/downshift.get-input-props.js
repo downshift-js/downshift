@@ -194,7 +194,7 @@ describe('arrow up opens menu and highlights item at index', () => {
       // provide only highlightedIndex
       props: {initialHighlightedIndex},
     })
-    // ↓
+    // ↑
     arrowUpInput()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -210,7 +210,7 @@ describe('arrow up opens menu and highlights item at index', () => {
       // provide only defaultHighlightedIndex
       props: {defaultHighlightedIndex},
     })
-    // ↓
+    // ↑
     arrowUpInput()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -227,7 +227,7 @@ describe('arrow up opens menu and highlights item at index', () => {
       // provide both initialHighlightedIndex defaultHighlightedIndex
       props: {defaultHighlightedIndex, initialHighlightedIndex},
     })
-    // ↓
+    // ↑
     arrowUpInput()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -236,7 +236,7 @@ describe('arrow up opens menu and highlights item at index', () => {
       }),
     )
     escapeOnInput()
-    // ↓
+    // ↑
     arrowUpInput()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -252,7 +252,7 @@ describe('arrow up opens menu and highlights item at index', () => {
       // control highlightedIndex
       props: {highlightedIndex},
     })
-    // ↓
+    // ↑
     arrowUpInput()
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({
