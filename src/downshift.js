@@ -948,7 +948,13 @@ class Downshift extends Component {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState(
       ({isOpen}) => {
-        return {isOpen: !isOpen, ...otherStateToSet}
+        return {
+          isOpen: !isOpen,
+          ...(isOpen && {
+            highlightedIndex: this.props.defaultHighlightedIndex,
+          }),
+          ...otherStateToSet,
+        }
       },
       () => {
         const {isOpen, highlightedIndex} = this.getState()
@@ -956,8 +962,6 @@ class Downshift extends Component {
           if (this.getItemCount() > 0 && typeof highlightedIndex === 'number') {
             this.setHighlightedIndex(highlightedIndex, otherStateToSet)
           }
-        } else {
-          this.reset()
         }
         cbToCb(cb)()
       },
