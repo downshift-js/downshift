@@ -158,6 +158,22 @@ describe('arrow down opens menu and highlights item at index', () => {
     )
   })
 
+  test('0 if defaultHighlightedIndex is length - 1', () => {
+    const defaultHighlightedIndex = colors.length - 1
+    const {arrowDownInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex},
+    })
+    // ↓
+    arrowDownInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: 0,
+      }),
+    )
+  })
+
   test('highlightedIndex if controlled', () => {
     const highlightedIndex = 2
     const {arrowDownInput, childrenSpy} = renderDownshift({
@@ -242,6 +258,22 @@ describe('arrow up opens menu and highlights item at index', () => {
       expect.objectContaining({
         isOpen: true,
         highlightedIndex: defaultHighlightedIndex - 1,
+      }),
+    )
+  })
+
+  test('length - 1 if defaultHighlightedIndex is 0', () => {
+    const defaultHighlightedIndex = 0
+    const {arrowUpInput, childrenSpy} = renderDownshift({
+      // provide only defaultHighlightedIndex
+      props: {defaultHighlightedIndex},
+    })
+    // ↑
+    arrowUpInput()
+    expect(childrenSpy).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        isOpen: true,
+        highlightedIndex: colors.length - 1,
       }),
     )
   })
