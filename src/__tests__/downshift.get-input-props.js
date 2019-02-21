@@ -136,7 +136,7 @@ describe('arrow down opens menu and highlights item at index', () => {
     const initialHighlightedIndex = 3
     const defaultHighlightedIndex = 2
     const {arrowDownInput, escapeOnInput, childrenSpy} = renderDownshift({
-      // provide both initialHighlightedIndex defaultHighlightedIndex
+      // provide both initialHighlightedIndex and defaultHighlightedIndex
       props: {defaultHighlightedIndex, initialHighlightedIndex},
     })
     // ↓
@@ -161,7 +161,7 @@ describe('arrow down opens menu and highlights item at index', () => {
   test('0 if defaultHighlightedIndex is length - 1', () => {
     const defaultHighlightedIndex = colors.length - 1
     const {arrowDownInput, childrenSpy} = renderDownshift({
-      // provide only defaultHighlightedIndex
+      // provide defaultHighlightedIndex as last in the list.
       props: {defaultHighlightedIndex},
     })
     // ↓
@@ -176,7 +176,7 @@ describe('arrow down opens menu and highlights item at index', () => {
 
   test('0 if defaultHighlightedIndex is out of bounds', () => {
     const {arrowDownInput, childrenSpy} = renderDownshift({
-      // provide only defaultHighlightedIndex
+      // provide defaultHighlightedIndex as invalid
       props: {defaultHighlightedIndex: colors.length + 5},
     })
     // ↓
@@ -222,7 +222,7 @@ describe('arrow up opens menu and highlights item at index', () => {
   test('initialHighlightedIndex - 1', () => {
     const initialHighlightedIndex = 3
     const {arrowUpInput, childrenSpy} = renderDownshift({
-      // provide only highlightedIndex
+      // provide only initialHighlightedIndex
       props: {initialHighlightedIndex},
     })
     // ↑
@@ -255,7 +255,7 @@ describe('arrow up opens menu and highlights item at index', () => {
     const initialHighlightedIndex = 3
     const defaultHighlightedIndex = 2
     const {arrowUpInput, escapeOnInput, childrenSpy} = renderDownshift({
-      // provide both initialHighlightedIndex defaultHighlightedIndex
+      // provide both initialHighlightedIndex and defaultHighlightedIndex
       props: {defaultHighlightedIndex, initialHighlightedIndex},
     })
     // ↑
@@ -280,7 +280,7 @@ describe('arrow up opens menu and highlights item at index', () => {
   test('length - 1 if defaultHighlightedIndex is 0', () => {
     const defaultHighlightedIndex = 0
     const {arrowUpInput, childrenSpy} = renderDownshift({
-      // provide only defaultHighlightedIndex
+      // provide defaultHighlightedIndex as first in the list
       props: {defaultHighlightedIndex},
     })
     // ↑
@@ -295,7 +295,7 @@ describe('arrow up opens menu and highlights item at index', () => {
 
   test('length - 1 if defaultHighlightedIndex is out of bounds', () => {
     const {arrowUpInput, childrenSpy} = renderDownshift({
-      // provide only defaultHighlightedIndex
+      // provide defaultHighlightedIndex as invalid
       props: {defaultHighlightedIndex: colors.length + 5},
     })
     // ↑
