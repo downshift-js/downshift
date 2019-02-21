@@ -1021,6 +1021,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GonchuB",
+      "name": "Gonzalo Beviglia",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/857221?v=4",
+      "profile": "https://medium.com/@gonchub",
+      "contributions": [
+        "bug",
+        "code",
+        "review"
+      ]
     }
   ]
 }
