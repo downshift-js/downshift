@@ -370,7 +370,7 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
   )
 })
 
-test('Cancel default event handler while composing', () => {
+test('default input keyDown event handler is prevented while composing', () => {
   const utils = renderDownshift({
     props: {highlightedIndex: 0, isOpen: true},
   })
