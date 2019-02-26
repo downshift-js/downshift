@@ -59,6 +59,15 @@ test('on button blur does not reset the state when the mouse is down', () => {
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
+test('on open it will highlight item if state has highlightedIndex', () => {
+  const highlightedIndex = 4
+  const {button, childrenSpy} = setup({props: {highlightedIndex}})
+  fireEvent.click(button)
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({highlightedIndex}),
+  )
+})
+
 test('getToggleButtonProps returns all given props', () => {
   const buttonProps = {'data-foo': 'bar'}
   const Button = jest.fn(props => <button {...props} />)
@@ -113,17 +122,24 @@ describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () =>
   })
 })
 
-function setup({buttonProps, Button = props => <button {...props} />} = {}) {
+function setup({
+  buttonProps,
+  props,
+  Button = propsArg => <button {...propsArg} />,
+} = {}) {
   let renderArg
   const childrenSpy = jest.fn(controllerArg => {
     renderArg = controllerArg
     return (
       <div>
+        {/* Added items to test toggleMenu with highlight. */}
+        <div {...controllerArg.getItemProps({item: 'test item', index: 0})} />
+        <div {...controllerArg.getItemProps({item: 'test item2', index: 1})} />
         <Button {...controllerArg.getToggleButtonProps(buttonProps)} />
       </div>
     )
   })
-  const utils = render(<Downshift>{childrenSpy}</Downshift>)
+  const utils = render(<Downshift {...props}>{childrenSpy}</Downshift>)
   const button = utils.container.querySelector('button')
   return {...utils, button, childrenSpy, ...renderArg}
 }

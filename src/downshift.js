@@ -540,16 +540,25 @@ class Downshift extends Component {
           type: stateChangeTypes.keyDownArrowDown,
         })
       } else {
-        const self = this
-        this.toggleMenu({type: stateChangeTypes.keyDownArrowDown}, () => {
-          const itemCount = self.getItemCount()
-          if (itemCount > 0) {
-            const {highlightedIndex} = self.getState()
-            self.setHighlightedIndex(
-              getNextWrappingIndex(1, highlightedIndex, itemCount),
-            )
-          }
-        })
+        this.internalSetState(
+          {
+            isOpen: true,
+            type: stateChangeTypes.keyDownArrowDown,
+          },
+          () => {
+            const itemCount = this.getItemCount()
+            if (itemCount > 0) {
+              this.setHighlightedIndex(
+                getNextWrappingIndex(
+                  1,
+                  this.getState().highlightedIndex,
+                  itemCount,
+                ),
+                {type: stateChangeTypes.keyDownArrowDown},
+              )
+            }
+          },
+        )
       }
     },
 
@@ -562,16 +571,25 @@ class Downshift extends Component {
           type: stateChangeTypes.keyDownArrowUp,
         })
       } else {
-        const self = this
-        this.toggleMenu({type: stateChangeTypes.keyDownArrowUp}, () => {
-          const itemCount = self.getItemCount()
-          if (itemCount > 0) {
-            const {highlightedIndex} = self.getState()
-            self.setHighlightedIndex(
-              getNextWrappingIndex(-1, highlightedIndex, itemCount),
-            )
-          }
-        })
+        this.internalSetState(
+          {
+            isOpen: true,
+            type: stateChangeTypes.keyDownArrowUp,
+          },
+          () => {
+            const itemCount = this.getItemCount()
+            if (itemCount > 0) {
+              this.setHighlightedIndex(
+                getNextWrappingIndex(
+                  -1,
+                  this.getState().highlightedIndex,
+                  itemCount,
+                ),
+                {type: stateChangeTypes.keyDownArrowDown},
+              )
+            }
+          },
+        )
       }
     },
 
