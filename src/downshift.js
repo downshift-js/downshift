@@ -1106,11 +1106,11 @@ class Downshift extends Component {
 
   shouldScroll(prevState, prevProps) {
     const {highlightedIndex: currentHighlightedIndex} =
-      this.props.highlightedIndex === undefined ? this.state : this.props
+      this.props.highlightedIndex === undefined ? this.getState() : this.props
     const {highlightedIndex: prevHighlightedIndex} =
       prevProps.highlightedIndex === undefined ? prevState : prevProps
     const scrollWhenOpen =
-      currentHighlightedIndex && this.state.isOpen && !prevState.isOpen
+      currentHighlightedIndex && this.getState().isOpen && !prevState.isOpen
     const scrollWhenNavigating =
       currentHighlightedIndex !== prevHighlightedIndex
 
