@@ -44,5 +44,5 @@ test('does not scroll from an onMouseMove event', () => {
   // now let's make sure that we can still scroll items into view
   // ↓
   fireEvent.keyDown(input, {key: 'ArrowDown'})
-  expect(scrollIntoView).toHaveBeenCalled()
+  expect(scrollIntoView).toHaveBeenCalledWith(item, undefined)
 })
