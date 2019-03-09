@@ -583,6 +583,26 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   }
 })
 
+test('highlightedIndex is reset to defaultHighlightedIndex when inputValue changes', () => {
+  const DEFAULT_HIGHLIGHTED_INDEX = 0
+  const props = {defaultHighlightedIndex: DEFAULT_HIGHLIGHTED_INDEX}
+  const {childrenSpy, arrowDownInput, changeInputValue} = renderDownshift({
+    props,
+  })
+
+  childrenSpy.mockClear()
+
+  arrowDownInput() // highlightedIndex = 1
+
+  changeInputValue('r')
+
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      highlightedIndex: DEFAULT_HIGHLIGHTED_INDEX,
+    }),
+  )
+})
+
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})

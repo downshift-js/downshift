@@ -1032,6 +1032,18 @@
         "code",
         "review"
       ]
+    },
+    {
+      "login": "kilrain",
+      "name": "Brian Kilrain",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/47700687?v=4",
+      "profile": "https://github.com/kilrain",
+      "contributions": [
+        "bug",
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ]
 }
