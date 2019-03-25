@@ -1044,6 +1044,17 @@
         "test",
         "doc"
       ]
+    },
+    {
+      "login": "Nic128",
+      "name": "Nicolas Martel",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/7115401?v=4",
+      "profile": "https://nicolasmartel.com/",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
     }
   ]
 }

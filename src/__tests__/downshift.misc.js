@@ -29,6 +29,42 @@ test('clearSelection clears an existing selection', () => {
   )
 })
 
+test('setLoading sets the loading internal state', () => {
+  const {setLoading, childrenSpy} = setup()
+  setLoading(true)
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      loading: true,
+    }),
+  )
+})
+
+test('setLoading can take no arguments at all', () => {
+  const {setLoading, childrenSpy} = setup({loading: false})
+  setLoading()
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      loading: false,
+    }),
+  )
+})
+
+test('getA11yStatusMessage is never called if loading is true', done => {
+  jest.useRealTimers()
+
+  const handleGetA11yStatus = jest.fn()
+  const {openMenu} = setup({
+    loading: true,
+    getA11yStatusMessage: handleGetA11yStatus,
+  })
+  openMenu()
+
+  setTimeout(() => {
+    expect(handleGetA11yStatus).toHaveBeenCalledTimes(0)
+    done()
+  }, 500)
+})
+
 test('selectItemAtIndex does nothing if there is no item at that index', () => {
   const {openMenu, selectItemAtIndex, childrenSpy} = setup()
   openMenu()

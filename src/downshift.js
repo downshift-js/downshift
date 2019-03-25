@@ -43,6 +43,7 @@ class Downshift extends Component {
     onInputValueChange: PropTypes.func,
     onUserAction: PropTypes.func,
     onOuterClick: PropTypes.func,
+    loading: PropTypes.bool,
     selectedItemChanged: PropTypes.func,
     stateReducer: PropTypes.func,
     itemCount: PropTypes.number,
@@ -124,12 +125,14 @@ class Downshift extends Component {
       initialIsOpen: isOpen = defaultIsOpen,
       initialInputValue: inputValue = '',
       initialSelectedItem: selectedItem = null,
+      loading,
     } = this.props
     const state = this.getState({
       highlightedIndex,
       isOpen,
       inputValue,
       selectedItem,
+      loading,
     })
     if (
       state.selectedItem != null &&
@@ -249,6 +252,11 @@ class Downshift extends Component {
   ) => {
     otherStateToSet = pickState(otherStateToSet)
     this.internalSetState({highlightedIndex, ...otherStateToSet})
+  }
+
+  setLoading = (loading = this.props.loading, otherStateToSet = {}) => {
+    otherStateToSet = pickState(otherStateToSet)
+    this.internalSetState({loading, ...otherStateToSet})
   }
 
   scrollHighlightedItemIntoView() {
@@ -441,7 +449,13 @@ class Downshift extends Component {
   }
 
   getStateAndHelpers() {
-    const {highlightedIndex, inputValue, selectedItem, isOpen} = this.getState()
+    const {
+      highlightedIndex,
+      inputValue,
+      selectedItem,
+      isOpen,
+      loading,
+    } = this.getState()
     const {itemToString} = this.props
     const {id} = this
     const {
@@ -462,6 +476,7 @@ class Downshift extends Component {
       clearItems,
       reset,
       setItemCount,
+      setLoading,
       unsetItemCount,
       internalSetState: setState,
     } = this
@@ -486,6 +501,7 @@ class Downshift extends Component {
       clearSelection,
       clearItems,
       setItemCount,
+      setLoading,
       unsetItemCount,
       setState,
 
@@ -500,6 +516,7 @@ class Downshift extends Component {
       inputValue,
       isOpen,
       selectedItem,
+      loading,
     }
   }
 
@@ -996,7 +1013,7 @@ class Downshift extends Component {
     this.internalSetState({isOpen: false}, cb)
   }
 
-  updateStatus = debounce(() => {
+  updateA11yStatus = debounce(() => {
     const state = this.getState()
     const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
@@ -1096,7 +1113,7 @@ class Downshift extends Component {
 
       this.cleanup = () => {
         this.internalClearTimeouts()
-        this.updateStatus.cancel()
+        this.updateA11yStatus.cancel()
         this.props.environment.removeEventListener('mousedown', onMouseDown)
         this.props.environment.removeEventListener('mouseup', onMouseUp)
         this.props.environment.removeEventListener('touchstart', onTouchStart)
@@ -1150,8 +1167,8 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore else (react-native) */
-    if (!isReactNative) {
-      this.updateStatus()
+    if (!this.state.loading && !isReactNative) {
+      this.updateA11yStatus()
     }
   }
 
