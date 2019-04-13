@@ -36,6 +36,7 @@ class Downshift extends Component {
     initialInputValue: PropTypes.string,
     initialIsOpen: PropTypes.bool,
     getA11yStatusMessage: PropTypes.func,
+    preventA11yStatusMessage: PropTypes.bool,
     itemToString: PropTypes.func,
     onChange: PropTypes.func,
     onSelect: PropTypes.func,
@@ -996,7 +997,7 @@ class Downshift extends Component {
     this.internalSetState({isOpen: false}, cb)
   }
 
-  updateStatus = debounce(() => {
+  updateA11yStatus = debounce(() => {
     const state = this.getState()
     const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
@@ -1096,7 +1097,7 @@ class Downshift extends Component {
 
       this.cleanup = () => {
         this.internalClearTimeouts()
-        this.updateStatus.cancel()
+        this.updateA11yStatus.cancel()
         this.props.environment.removeEventListener('mousedown', onMouseDown)
         this.props.environment.removeEventListener('mouseup', onMouseUp)
         this.props.environment.removeEventListener('touchstart', onTouchStart)
@@ -1150,8 +1151,8 @@ class Downshift extends Component {
     }
 
     /* istanbul ignore else (react-native) */
-    if (!isReactNative) {
-      this.updateStatus()
+    if (!this.props.preventA11yStatusMessage && !isReactNative) {
+      this.updateA11yStatus()
     }
   }
 

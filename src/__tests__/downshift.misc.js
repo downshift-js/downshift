@@ -6,6 +6,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {render} from 'react-testing-library'
 import Downshift from '../'
+import setA11yStatus from '../set-a11y-status'
+
+jest.mock('../set-a11y-status')
+jest.useFakeTimers()
 
 beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
 afterEach(() => console.error.mockRestore())
@@ -201,6 +205,34 @@ test('initializes with the initial* props', () => {
       selectedItem: initialState.initialSelectedItem,
     }),
   )
+})
+
+describe('updateA11yStatus', () => {
+  test('is called with getA11yStatusMessage function at open', () => {
+    const getA11yStatusMessageMock = jest.fn(() => 'test message')
+    const {openMenu} = setup({
+      getA11yStatusMessage: getA11yStatusMessageMock,
+    })
+
+    openMenu()
+    jest.runAllTimers()
+
+    expect(setA11yStatus).toHaveBeenCalledTimes(1)
+    expect(setA11yStatus).toHaveBeenCalledWith('test message')
+    expect(getA11yStatusMessageMock).toHaveBeenCalledTimes(1)
+    setA11yStatus.mockReset()
+  })
+
+  test('is not called if preventA11yStatusMessage prop is passed', () => {
+    const {openMenu} = setup({
+      preventA11yStatusMessage: true,
+    })
+
+    openMenu()
+    jest.runAllTimers()
+
+    expect(setA11yStatus).not.toHaveBeenCalled()
+  })
 })
 
 function setup({children = () => <div />, ...props} = {}) {
