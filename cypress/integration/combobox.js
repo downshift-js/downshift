@@ -37,7 +37,6 @@ describe('combobox', () => {
       .should('have.value', 'Red')
   })
 
-  /* should be enabled if https://github.com/cypress-io/cypress/pull/3071 gets released.
   it('can use home arrow to select first item', () => {
     cy.getByTestId('combobox-input')
       .type('{downarrow}{downarrow}{home}{enter}') // open to first, go down to second, return to first by home.
@@ -49,7 +48,6 @@ describe('combobox', () => {
       .type('{downarrow}{end}{enter}') // open to first, go to last by end.
       .should('have.value', 'Purple')
   })
-  */
 
   it('resets the item on blur', () => {
     cy.getByTestId('combobox-input')
