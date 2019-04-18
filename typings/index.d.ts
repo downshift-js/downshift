@@ -116,7 +116,7 @@ export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
 
 export interface GetToggleButtonPropsOptions
-  extends React.HTMLProps<HTMLButtonElement> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean
 }
 
