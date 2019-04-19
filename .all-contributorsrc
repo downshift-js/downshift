@@ -1044,6 +1044,16 @@
         "test",
         "doc"
       ]
+    },
+    {
+      "login": "rincedd",
+      "name": "Gerd Zschaler",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/321265?v=4",
+      "profile": "http://www.gzschaler.de",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ]
 }
