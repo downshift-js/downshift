@@ -1,3 +1,5 @@
+jest.useFakeTimers()
+
 beforeEach(() => {
   document.body.innerHTML = ''
 })
@@ -8,18 +10,8 @@ test('sets the status', () => {
   expect(document.body.firstChild).toMatchSnapshot()
 })
 
-test('repeat statuses get appended as children', () => {
+test('replaces the status with a different one', () => {
   const setA11yStatus = setup()
-  setA11yStatus('hello')
-  setA11yStatus('hello')
-  setA11yStatus('hello')
-  expect(document.body.firstChild).toMatchSnapshot()
-})
-
-test('clears statuses when a change appears', () => {
-  const setA11yStatus = setup()
-  setA11yStatus('hello')
-  setA11yStatus('hello')
   setA11yStatus('hello')
   setA11yStatus('goodbye')
   expect(document.body.firstChild).toMatchSnapshot()
@@ -34,6 +26,13 @@ test('does add anything for an empty string', () => {
 test('escapes HTML', () => {
   const setA11yStatus = setup()
   setA11yStatus('<script>alert("!!!")</script>')
+  expect(document.body.firstChild).toMatchSnapshot()
+})
+
+test('performs cleanup after a timeout', () => {
+  const setA11yStatus = setup()
+  setA11yStatus('hello')
+  jest.runAllTimers()
   expect(document.body.firstChild).toMatchSnapshot()
 })
 

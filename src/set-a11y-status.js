@@ -4,43 +4,27 @@ let statusDiv =
     ? null
     : document.getElementById('a11y-status-message')
 
-let statuses = []
+let cleanupTimerID
 
 /**
  * @param {String} status the status message
  */
 function setStatus(status) {
-  const isSameAsLast = statuses[statuses.length - 1] === status
-  if (isSameAsLast) {
-    statuses = [...statuses, status]
-  } else {
-    statuses = [status]
-  }
   const div = getStatusDiv()
-
-  // Remove previous children
-  while (div.lastChild) {
-    div.removeChild(div.firstChild)
+  if (!status) {
+    return
+  }
+  if (cleanupTimerID) {
+    clearTimeout(cleanupTimerID)
+    cleanupTimerID = null
   }
 
-  statuses.filter(Boolean).forEach((statusItem, index) => {
-    div.appendChild(getStatusChildDiv(statusItem, index))
-  })
-}
+  div.textContent = status
 
-/**
- * @param {String} status the status message
- * @param {Number} index the index
- * @return {HTMLElement} the child node
- */
-function getStatusChildDiv(status, index) {
-  const display = index === statuses.length - 1 ? 'block' : 'none'
-
-  const childDiv = document.createElement('div')
-  childDiv.style.display = display
-  childDiv.textContent = status
-
-  return childDiv
+  cleanupTimerID = setTimeout(() => {
+    div.textContent = ''
+    cleanupTimerID = null
+  }, 500)
 }
 
 /**
