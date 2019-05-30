@@ -543,7 +543,7 @@ class Downshift extends Component {
         this.internalSetState(
           {
             isOpen: true,
-            type: stateChangeTypes.keyDownArrowDown,
+            type: stateChangeTypes.open,
           },
           () => {
             const itemCount = this.getItemCount()
@@ -574,7 +574,7 @@ class Downshift extends Component {
         this.internalSetState(
           {
             isOpen: true,
-            type: stateChangeTypes.keyDownArrowUp,
+            type: stateChangeTypes.open,
           },
           () => {
             const itemCount = this.getItemCount()
@@ -585,7 +585,7 @@ class Downshift extends Component {
                   this.getState().highlightedIndex,
                   itemCount,
                 ),
-                {type: stateChangeTypes.keyDownArrowDown},
+                {type: stateChangeTypes.keyDownArrowUp},
               )
             }
           },

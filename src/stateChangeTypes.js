@@ -25,3 +25,4 @@ export const controlledPropUpdatedSelectedItem = productionEnum(
   '__autocomplete_controlled_prop_updated_selected_item__',
 )
 export const touchEnd = productionEnum('__autocomplete_touchend__')
+export const open = productionEnum('__autocomplete_open__')
