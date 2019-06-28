@@ -147,7 +147,9 @@ const items = [
 
 render(
   <Downshift
-    onChange={selection => alert(`You selected ${selection.value}`)}
+    onChange={selection => alert(
+      selection ? `You selected ${selection.value}` : 'Selection Cleared'
+    )}
     itemToString={item => (item ? item.value : '')}
   >
     {({
@@ -221,11 +223,9 @@ compute the `inputValue`).
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful
 > default
 
-Called when the user selects an item and the selected item has changed. Called
-with the item that was selected and the new state of `downshift`. (see
-`onStateChange` for more info on `stateAndHelpers`).
+Called when the selected item changes, either by the user selecting an item or the user clearing the selection. Called with the item that was selected or `null` and the new state of `downshift`. (see `onStateChange` for more info on `stateAndHelpers`).
 
-- `selectedItem`: The item that was just selected
+- `selectedItem`: The item that was just selected. `null` if the selection was cleared.
 - `stateAndHelpers`: This is the same thing your `children` function is
   called with (see [Children Function](#children-function))
 
