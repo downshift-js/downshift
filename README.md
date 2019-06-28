@@ -130,7 +130,7 @@ npm install --save downshift
 
 ## Usage
 
-> [Try it out in the browser](https://codesandbox.io/s/6z67jvklw3)
+> [Try it out in the browser](https://codesandbox.io/s/n9095)
 
 ```jsx
 import React from 'react'
