@@ -1,5 +1,5 @@
 sudo: false
-language: node_js\
+language: node_js
 addons:
   apt:
     packages:
@@ -17,7 +17,6 @@ before_script:
   - npx cypress verify &
 script:
   - kcd-scripts validate lint,build-and-test,test:cover
-  #  Cypress passes locally, but fails on CI. Fix that...
   - kcd-scripts validate test:ssr,test:cypress
   - kcd-scripts validate test:ssr
   - kcd-scripts validate test:flow:coverage,test:ts
