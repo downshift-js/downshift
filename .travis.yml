@@ -1,5 +1,10 @@
 sudo: false
-language: node_js
+language: node_js\
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
+      - libgconf-2-4
 cache:
   directories:
     - ~/.npm
