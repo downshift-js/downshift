@@ -1,10 +1,9 @@
 // this is stuff that I couldn't think fit anywhere else
 // but we still want to have tested.
 
-import 'react-testing-library/cleanup-after-each'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {render} from 'react-testing-library'
+import {render} from '@testing-library/react'
 import Downshift from '../'
 
 beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))

@@ -1,4 +1,4 @@
-const jestConfig = require('kcd-scripts/config').jest
+const jestConfig = require('kcd-scripts/jest')
 
 module.exports = Object.assign(jestConfig, {
   coveragePathIgnorePatterns: [
@@ -6,4 +6,5 @@ module.exports = Object.assign(jestConfig, {
     '.macro.js$',
     '<rootDir>/src/stateChangeTypes.js',
   ],
+  setupFilesAfterEnv: ['@testing-library/react/cleanup-after-each'],
 })

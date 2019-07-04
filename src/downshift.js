@@ -782,6 +782,7 @@ class Downshift extends Component {
         onChangeText: callAllEventHandlers(
           onChangeText,
           onInput,
+          text => this.inputHandleChange({nativeEvent: {text}}),
           this.inputHandleTextChange,
         ),
         onBlur: callAllEventHandlers(onBlur, this.inputHandleBlur),
@@ -820,15 +821,6 @@ class Downshift extends Component {
       inputValue: isReactNative
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
-      highlightedIndex: this.props.defaultHighlightedIndex,
-    })
-  }
-
-  inputHandleTextChange /* istanbul ignore next (react-native) */ = text => {
-    this.internalSetState({
-      type: stateChangeTypes.changeInput,
-      isOpen: true,
-      inputValue: text,
       highlightedIndex: this.props.defaultHighlightedIndex,
     })
   }

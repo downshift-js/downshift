@@ -1,5 +1,5 @@
 import React from 'react'
-import {render} from 'react-testing-library'
+import {render} from '@testing-library/react'
 import Downshift from '../'
 
 beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
