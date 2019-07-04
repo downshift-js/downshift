@@ -1,6 +1,5 @@
 import React from 'react'
-import {fireEvent, render} from 'react-testing-library'
-import 'react-testing-library/cleanup-after-each'
+import {fireEvent, render} from '@testing-library/react'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
 import * as utils from '../utils'

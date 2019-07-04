@@ -1,6 +1,5 @@
-import 'react-testing-library/cleanup-after-each'
 import React from 'react'
-import {render} from 'react-testing-library'
+import {render} from '@testing-library/react'
 import Downshift from '../'
 import {resetIdCounter} from '../utils'
 

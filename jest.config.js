@@ -6,4 +6,5 @@ module.exports = Object.assign(jestConfig, {
     '.macro.js$',
     '<rootDir>/src/stateChangeTypes.js',
   ],
+  setupFilesAfterEnv: ['@testing-library/react/cleanup-after-each'],
 })
