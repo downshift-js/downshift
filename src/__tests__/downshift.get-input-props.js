@@ -419,19 +419,20 @@ test('escape on an input without a selection should reset downshift and close th
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
+      selectedItem: null,
       inputValue: '',
     }),
   )
 })
 
-test('escape on an input with a selection should reset downshift and close the menu', () => {
-  const {escapeOnInput, childrenSpy, items} = setupDownshiftWithState()
+test('escape on an input with a selection should reset downshift, clear input and close the menu', () => {
+  const {escapeOnInput, childrenSpy} = setupDownshiftWithState()
   escapeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
-      inputValue: items[0],
-      selectedItem: items[0],
+      inputValue: '',
+      selectedItem: null,
     }),
   )
 })

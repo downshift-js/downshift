@@ -19,7 +19,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-106-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-108-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
@@ -130,7 +130,7 @@ npm install --save downshift
 
 ## Usage
 
-> [Try it out in the browser](https://codesandbox.io/s/6z67jvklw3)
+> [Try it out in the browser](https://codesandbox.io/s/n9095)
 
 ```jsx
 import React from 'react'
@@ -147,7 +147,9 @@ const items = [
 
 render(
   <Downshift
-    onChange={selection => alert(`You selected ${selection.value}`)}
+    onChange={selection => alert(
+      selection ? `You selected ${selection.value}` : 'Selection Cleared'
+    )}
     itemToString={item => (item ? item.value : '')}
   >
     {({
@@ -221,11 +223,9 @@ compute the `inputValue`).
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful
 > default
 
-Called when the user selects an item and the selected item has changed. Called
-with the item that was selected and the new state of `downshift`. (see
-`onStateChange` for more info on `stateAndHelpers`).
+Called when the selected item changes, either by the user selecting an item or the user clearing the selection. Called with the item that was selected or `null` and the new state of `downshift`. (see `onStateChange` for more info on `stateAndHelpers`).
 
-- `selectedItem`: The item that was just selected
+- `selectedItem`: The item that was just selected. `null` if the selection was cleared.
 - `stateAndHelpers`: This is the same thing your `children` function is
   called with (see [Children Function](#children-function))
 
@@ -878,9 +878,9 @@ described below.
   (though if the menu is closed the form submission will work normally). See below
   for customizing the handlers.
 
-- `Escape`: will reset downshift's state. This means that `highlightedIndex` will be
-  set to the `defaultHighlightedIndex`, the `inputValue` will be set to the `itemToString`
-  value of the `selectedItem`, and the `isOpen` state will be set to the `defaultIsOpen`.
+- `Escape`: will clear downshift's state. This means that `highlightedIndex` will be
+  set to the `defaultHighlightedIndex`, the `inputValue` will be set to empty string,
+  `selectedItem` will be set to `null`, and the `isOpen` state will be set to the `defaultIsOpen`.
 
 ### customizing handlers
 
@@ -1125,7 +1125,7 @@ Thanks goes to these people ([emoji key][emojis]):
 | [<img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub>](http://michaeldeboey.be)<br />[💻](https://github.com/paypal/downshift/commits?author=MichaelDeBoey "Code") | [<img src="https://avatars3.githubusercontent.com/u/4412771?v=4" width="100px;" alt="Henry"/><br /><sub><b>Henry</b></sub>](https://github.com/EricHenry)<br />[💻](https://github.com/paypal/downshift/commits?author=EricHenry "Code") | [<img src="https://avatars3.githubusercontent.com/u/2180127?v=4" width="100px;" alt="Andrew Walton"/><br /><sub><b>Andrew Walton</b></sub>](http://www.greenarrow.me)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Agreen-arrow "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=green-arrow "Code") [⚠️](https://github.com/paypal/downshift/commits?author=green-arrow "Tests") | [<img src="https://avatars0.githubusercontent.com/u/13774309?v=4" width="100px;" alt="Arthur Denner"/><br /><sub><b>Arthur Denner</b></sub>](https://github.com/arthurdenner)<br />[💻](https://github.com/paypal/downshift/commits?author=arthurdenner "Code") | [<img src="https://avatars2.githubusercontent.com/u/81981?v=4" width="100px;" alt="Cody Olsen"/><br /><sub><b>Cody Olsen</b></sub>](http://twitter.com/stipsan)<br />[💻](https://github.com/paypal/downshift/commits?author=stipsan "Code") | [<img src="https://avatars0.githubusercontent.com/u/5084492?v=4" width="100px;" alt="Thomas Ladd"/><br /><sub><b>Thomas Ladd</b></sub>](https://github.com/TLadd)<br />[💻](https://github.com/paypal/downshift/commits?author=TLadd "Code") | [<img src="https://avatars3.githubusercontent.com/u/34634369?v=4" width="100px;" alt="lixualinta"/><br /><sub><b>lixualinta</b></sub>](https://github.com/lixualinta)<br />[💻](https://github.com/paypal/downshift/commits?author=lixualinta "Code") |
 | [<img src="https://avatars2.githubusercontent.com/u/2118956?v=4" width="100px;" alt="Jacob Cofman"/><br /><sub><b>Jacob Cofman</b></sub>](https://twitter.com/JCofman)<br />[💻](https://github.com/paypal/downshift/commits?author=JCofman "Code") | [<img src="https://avatars3.githubusercontent.com/u/19275184?v=4" width="100px;" alt="Joshua Freedman"/><br /><sub><b>Joshua Freedman</b></sub>](https://github.com/jf248)<br />[💻](https://github.com/paypal/downshift/commits?author=jf248 "Code") | [<img src="https://avatars1.githubusercontent.com/u/24494020?v=4" width="100px;" alt="Amy"/><br /><sub><b>Amy</b></sub>](https://github.com/AmyScript)<br />[💡](#example-AmyScript "Examples") | [<img src="https://avatars1.githubusercontent.com/u/9063669?v=4" width="100px;" alt="Rogin Farrer"/><br /><sub><b>Rogin Farrer</b></sub>](http://twitter.com/roginfarrer)<br />[💻](https://github.com/paypal/downshift/commits?author=roginfarrer "Code") | [<img src="https://avatars3.githubusercontent.com/u/871583" width="100px;" alt="Dmitrii Kanatnikov"/><br /><sub><b>Dmitrii Kanatnikov</b></sub>](https://github.com/rifler)<br />[💻](https://github.com/paypal/downshift/commits?author=rifler "Code") | [<img src="https://avatars2.githubusercontent.com/u/346300?v=4" width="100px;" alt="Dallon Feldner"/><br /><sub><b>Dallon Feldner</b></sub>](https://github.com/dallonf)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Adallonf "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=dallonf "Code") | [<img src="https://avatars2.githubusercontent.com/u/10165959?v=4" width="100px;" alt="Samuel Fuller Thomas"/><br /><sub><b>Samuel Fuller Thomas</b></sub>](https://samuelfullerthomas.com)<br />[💻](https://github.com/paypal/downshift/commits?author=samuelfullerthomas "Code") |
 | [<img src="https://avatars1.githubusercontent.com/u/2430381?v=4" width="100px;" alt="Ryan Castner"/><br /><sub><b>Ryan Castner</b></sub>](http://audiolion.github.io)<br />[💻](https://github.com/paypal/downshift/commits?author=audiolion "Code") | [<img src="https://avatars2.githubusercontent.com/u/11275392?v=4" width="100px;" alt="Silviu Alexandru Avram"/><br /><sub><b>Silviu Alexandru Avram</b></sub>](https://github.com/silviuavram)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Asilviuavram "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=silviuavram "Code") [⚠️](https://github.com/paypal/downshift/commits?author=silviuavram "Tests") | [<img src="https://avatars1.githubusercontent.com/u/15676655?v=4" width="100px;" alt="Anton Volkov"/><br /><sub><b>Anton Volkov</b></sub>](https://github.com/akronb)<br />[💻](https://github.com/paypal/downshift/commits?author=akronb "Code") [⚠️](https://github.com/paypal/downshift/commits?author=akronb "Tests") | [<img src="https://avatars3.githubusercontent.com/u/513363?v=4" width="100px;" alt="Keegan Street"/><br /><sub><b>Keegan Street</b></sub>](http://keegan.st)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Akeeganstreet "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=keeganstreet "Code") | [<img src="https://avatars1.githubusercontent.com/u/894149?v=4" width="100px;" alt="Manuel Dugué"/><br /><sub><b>Manuel Dugué</b></sub>](http://manueldugue.de)<br />[💻](https://github.com/paypal/downshift/commits?author=mdugue "Code") | [<img src="https://avatars2.githubusercontent.com/u/12477983?v=4" width="100px;" alt="Max Karadeniz"/><br /><sub><b>Max Karadeniz</b></sub>](https://github.com/mkaradeniz)<br />[💻](https://github.com/paypal/downshift/commits?author=mkaradeniz "Code") | [<img src="https://avatars3.githubusercontent.com/u/857221?v=4" width="100px;" alt="Gonzalo Beviglia"/><br /><sub><b>Gonzalo Beviglia</b></sub>](https://medium.com/@gonchub)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3AGonchuB "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=GonchuB "Code") [👀](#review-GonchuB "Reviewed Pull Requests") |
-| [<img src="https://avatars2.githubusercontent.com/u/47700687?v=4" width="100px;" alt="Brian Kilrain"/><br /><sub><b>Brian Kilrain</b></sub>](https://github.com/kilrain)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Akilrain "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=kilrain "Code") [⚠️](https://github.com/paypal/downshift/commits?author=kilrain "Tests") [📖](https://github.com/paypal/downshift/commits?author=kilrain "Documentation") |
+| [<img src="https://avatars2.githubusercontent.com/u/47700687?v=4" width="100px;" alt="Brian Kilrain"/><br /><sub><b>Brian Kilrain</b></sub>](https://github.com/kilrain)<br />[🐛](https://github.com/paypal/downshift/issues?q=author%3Akilrain "Bug reports") [💻](https://github.com/paypal/downshift/commits?author=kilrain "Code") [⚠️](https://github.com/paypal/downshift/commits?author=kilrain "Tests") [📖](https://github.com/paypal/downshift/commits?author=kilrain "Documentation") | [<img src="https://avatars0.githubusercontent.com/u/321265?v=4" width="100px;" alt="Gerd Zschaler"/><br /><sub><b>Gerd Zschaler</b></sub>](http://www.gzschaler.de)<br />[💻](https://github.com/paypal/downshift/commits?author=rincedd "Code") [🐛](https://github.com/paypal/downshift/issues?q=author%3Arincedd "Bug reports") | [<img src="https://avatars1.githubusercontent.com/u/491166?v=4" width="100px;" alt="Karen Gasparyan"/><br /><sub><b>Karen Gasparyan</b></sub>](https://github.com/gaskar)<br />[💻](https://github.com/paypal/downshift/commits?author=gaskar "Code") |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 

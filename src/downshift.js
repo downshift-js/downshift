@@ -610,7 +610,11 @@ class Downshift extends Component {
 
     Escape(event) {
       event.preventDefault()
-      this.reset({type: stateChangeTypes.keyDownEscape})
+      this.reset({
+        type: stateChangeTypes.keyDownEscape,
+        selectedItem: null,
+        inputValue: '',
+      })
     },
   }
 
