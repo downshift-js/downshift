@@ -50,6 +50,23 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
+## The experiment
+
+Downshift has proven to be a versatile React component which can be used not only
+for single selection autocomplete, but also for single selection dropdown and
+the multiple selection variations of each. In order to customise the behavior, the
+developer needs to add more stateful logic to it, however, as each of the variations
+differ in terms of design patterns.
+
+We are now experimenting with adding a custom React hook for each use, so that there will
+be no need of adding other stateful logic besides the hook. The experimentation repo is
+[downshift-hooks][downshift-hooks]. The plan is to create each hook in that repo,
+test it against Downshift principles and ARIA design patterns, and then finally add
+each hook to this repo, so that importing them will be easy.
+
+If you like the idea, are passionate about React hooks or just want to be the cool kid from
+the future that shapes Downshift, try out the new repo and share your feedback!
+
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -1176,3 +1193,4 @@ MIT
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
 [use-a-render-prop]: https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
 [semver]: http://semver.org/
+[downshift-hooks]: https://github.com/silviuavram/downshift-hooks
