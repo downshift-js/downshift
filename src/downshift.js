@@ -1083,21 +1083,22 @@ class Downshift extends Component {
           )
         }
       }
+      const {environment} = this.props
 
-      this.props.environment.addEventListener('mousedown', onMouseDown)
-      this.props.environment.addEventListener('mouseup', onMouseUp)
-      this.props.environment.addEventListener('touchstart', onTouchStart)
-      this.props.environment.addEventListener('touchmove', onTouchMove)
-      this.props.environment.addEventListener('touchend', onTouchEnd)
+      environment.addEventListener('mousedown', onMouseDown)
+      environment.addEventListener('mouseup', onMouseUp)
+      environment.addEventListener('touchstart', onTouchStart)
+      environment.addEventListener('touchmove', onTouchMove)
+      environment.addEventListener('touchend', onTouchEnd)
 
       this.cleanup = () => {
         this.internalClearTimeouts()
         this.updateStatus.cancel()
-        this.props.environment.removeEventListener('mousedown', onMouseDown)
-        this.props.environment.removeEventListener('mouseup', onMouseUp)
-        this.props.environment.removeEventListener('touchstart', onTouchStart)
-        this.props.environment.removeEventListener('touchmove', onTouchMove)
-        this.props.environment.removeEventListener('touchend', onTouchEnd)
+        environment.removeEventListener('mousedown', onMouseDown)
+        environment.removeEventListener('mouseup', onMouseUp)
+        environment.removeEventListener('touchstart', onTouchStart)
+        environment.removeEventListener('touchmove', onTouchMove)
+        environment.removeEventListener('touchend', onTouchEnd)
       }
     }
   }
