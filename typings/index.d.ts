@@ -70,6 +70,7 @@ export interface DownshiftProps<Item> {
   getItemId?: (index?: number) => string
   environment?: Environment
   onOuterClick?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => void
+  scrollIntoView?: (node: HTMLElement, menuNode: HTMLElement) => void
   onUserAction?: (
     options: StateChangeOptions<Item>,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
