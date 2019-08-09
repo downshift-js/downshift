@@ -110,6 +110,7 @@
       "no-eq-null": "off",
       "eqeqeq": "off",
       "react/jsx-indent": "off",
+      "jsx-a11y/label-has-for": "off",
       "complexity": [
         "error",
         12
