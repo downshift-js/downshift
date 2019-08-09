@@ -30,16 +30,16 @@
     "gzipped": 11302
   },
   "dist/downshift.esm.js": {
-    "bundled": 54249,
-    "minified": 23823,
-    "gzipped": 6564,
+    "bundled": 54285,
+    "minified": 23856,
+    "gzipped": 6573,
     "treeshaked": {
       "rollup": {
         "code": 373,
         "import_statements": 296
       },
       "webpack": {
-        "code": 17987
+        "code": 18020
       }
     }
   },
