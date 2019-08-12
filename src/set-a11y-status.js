@@ -1,10 +1,14 @@
+import {debounce} from './utils'
+
 // istanbul ignore next
 let statusDiv =
   typeof document === 'undefined'
     ? null
     : document.getElementById('a11y-status-message')
 
-let cleanupTimerID
+const cleanupStatus = debounce(() => {
+  getStatusDiv().textContent = ''
+}, 500)
 
 /**
  * @param {String} status the status message
@@ -14,17 +18,9 @@ function setStatus(status) {
   if (!status) {
     return
   }
-  if (cleanupTimerID) {
-    clearTimeout(cleanupTimerID)
-    cleanupTimerID = null
-  }
 
   div.textContent = status
-
-  cleanupTimerID = setTimeout(() => {
-    div.textContent = ''
-    cleanupTimerID = null
-  }, 500)
+  cleanupStatus()
 }
 
 /**
