@@ -508,7 +508,7 @@ class Downshift extends Component {
   rootRef = node => (this._rootNode = node)
 
   getRootProps = (
-    {refKey = 'ref', ...rest} = {},
+    {refKey = 'ref', ref, ...rest} = {},
     {suppressRefError = false} = {},
   ) => {
     // this is used in the render to know whether the user has called getRootProps.
@@ -518,7 +518,7 @@ class Downshift extends Component {
     this.getRootProps.suppressRefError = suppressRefError
     const {isOpen} = this.getState()
     return {
-      [refKey]: this.rootRef,
+      [refKey]: callAll(ref, this.rootRef),
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
