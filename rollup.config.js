@@ -8,6 +8,17 @@ config.plugins[cjsPluginIndex] = commonjs({
   include: 'node_modules/**',
   namedExports: {
     'react-is': ['isForwardRef'],
+    react: ['useReducer', 'useEffect', 'useRef', 'useState'],
+    'node_modules/keyboard-key/src/keyboardKey.js': ['getKey'],
+    'prop-types': [
+      'func',
+      'string',
+      'any',
+      'bool',
+      'number',
+      'array',
+      'checkPropTypes',
+    ],
   },
 })
 

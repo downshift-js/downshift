@@ -68,13 +68,20 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "compute-scroll-into-view": "^1.0.9",
+    "keyboard-key": "1.0.4",
     "prop-types": "^15.7.2",
+    "@reach/auto-id": "^0.2.0",
     "react-is": "^16.9.0"
   },
   "devDependencies": {
     "@babel/helpers": "^7.4.4",
+    "@material-ui/core": "^4.2.1",
+    "@material-ui/icons": "^4.2.1",
+    "@stardust-ui/react": "^0.34.2",
+    "@testing-library/react-hooks": "^2.0.1",
     "@testing-library/cypress": "^4.1.1",
     "@testing-library/react": "^8.0.9",
+    "@types/jest": "^24.0.15",
     "@types/react": "^16.9.2",
     "babel-plugin-macros": "^2.6.1",
     "babel-preset-react-native": "^4.0.1",
@@ -85,6 +92,7 @@
     "docz": "^1.2.0",
     "docz-theme-default": "^1.2.0",
     "eslint-plugin-cypress": "^2.6.1",
+    "eslint-plugin-react": "7.12.4",
     "flow-bin": "^0.102.0",
     "flow-coverage-report": "^0.6.0",
     "jest-dom": "^3.0.0",
@@ -104,12 +112,14 @@
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
+      "eqeqeq": "off",
       "import/no-useless-path-segments": "off",
       "import/no-unassigned-import": "off",
       "max-lines": "off",
+      "max-lines-per-function": "off",
       "no-eq-null": "off",
-      "eqeqeq": "off",
       "react/jsx-indent": "off",
+      "react/prop-types": "off",
       "jsx-a11y/label-has-for": "off",
       "jsx-a11y/label-has-associated-control": "off",
       "complexity": [
