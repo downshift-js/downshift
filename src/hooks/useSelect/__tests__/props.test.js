@@ -150,7 +150,7 @@ describe('props', () => {
       ).toEqual('custom message')
     })
 
-    test('is called with the correct props', () => {
+    test('is called with isOpen and items props when isOpen changes', () => {
       const getA11yStatusMessage = jest.fn()
       const wrapper = setup({getA11yStatusMessage})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -159,8 +159,24 @@ describe('props', () => {
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           items: expect.any(Array),
-          itemToString: expect.any(Function),
           isOpen: expect.any(Boolean),
+        }),
+      )
+    })
+
+    test('is called with itemToString and selectedItem props when selectedItem changes', () => {
+      const getA11yStatusMessage = jest.fn()
+      const wrapper = setup({
+        getA11yStatusMessage,
+        isOpen: true,
+        items: [{str: 'ala'}],
+      })
+      const item = wrapper.getByTestId(dataTestIds.item(0))
+
+      fireEvent.click(item)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          itemToString: expect.any(Function),
           selectedItem: expect.any(Object),
         }),
       )

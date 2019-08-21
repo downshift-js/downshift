@@ -15,6 +15,7 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -547,7 +548,7 @@ These are values that represent the current state of the downshift component.
 
 ### props
 
-As a convenience, the `items` prop which you pass to `useSelect` is available here as well.
+As a convenience, the `items` and `itemToString` props which you pass to `useSelect` is available here as well.
 
 ## Event Handlers
 

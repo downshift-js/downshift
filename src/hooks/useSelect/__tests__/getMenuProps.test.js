@@ -3,7 +3,7 @@ import * as keyboardKey from 'keyboard-key'
 import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {noop} from '../../utils'
+import {noop} from '../../../utils'
 import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
 
 describe('getMenuProps', () => {

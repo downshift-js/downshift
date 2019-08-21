@@ -2,7 +2,7 @@
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
-import {noop} from '../../utils'
+import {noop} from '../../../utils'
 import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
 
 describe('getToggleButtonProps', () => {

@@ -4,16 +4,18 @@ import * as keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
 import {
   getElementIds,
-  callAllEventHandlers,
-  callAll,
   getState,
   getItemIndex,
   getPropTypesValidator,
-  scrollIntoView as defaultScrollIntoView,
-  debounce,
   itemToString as defaultItemToString,
 } from '../utils'
-import setAriaLiveMessage from '../utils/ariaLiveMessage'
+import setStatus from '../../set-a11y-status'
+import {
+  callAllEventHandlers,
+  callAll,
+  debounce,
+  scrollIntoView as defaultScrollIntoView,
+} from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
@@ -70,32 +72,28 @@ function useSelect(userProps = {}) {
   const shouldScroll = useRef(true)
 
   /* Effects */
-  /* Sets a11y status message on menu open. */
+  /* Sets a11y status message on changes in isOpen. */
   useEffect(() => {
-    if (!isOpen) {
+    if (isInitialMount.current) {
       return
     }
-    setAriaLiveMessage(
+    setStatus(
       getA11yStatusMessage({
-        selectedItem,
-        itemToString,
         isOpen,
         items,
       }),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
-  /* Sets a11y status message on item selection. */
+  /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (!selectedItem) {
+    if (isInitialMount.current) {
       return
     }
-    setAriaLiveMessage(
+    setStatus(
       getA11yStatusMessage({
         selectedItem,
         itemToString,
-        isOpen,
-        items,
       }),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -395,6 +393,7 @@ function useSelect(userProps = {}) {
     selectedItem,
     // props.
     items,
+    itemToString,
   }
 }
 

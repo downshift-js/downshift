@@ -1,6 +1,6 @@
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
-import {noop} from '../../utils'
+import {noop} from '../../../utils'
 import {options, setupHook} from '../testUtils'
 import {defaultStateValues} from '../utils'
 
@@ -190,6 +190,13 @@ describe('returnProps', () => {
       const {result} = setupHook({items: ['1', '2']})
 
       expect(result.current.items).toEqual(['1', '2'])
+    })
+
+    test('itemToString is returned', () => {
+      const itemToString = noop
+      const {result} = setupHook({itemToString})
+
+      expect(result.current.itemToString).toEqual(itemToString)
     })
   })
 })

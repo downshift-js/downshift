@@ -62,6 +62,7 @@ const DropdownSelect = props => {
     highlightedIndex,
     getItemProps,
     items,
+    itemToString,
   } = useSelect({items: options, ...props})
   return (
     <div>
@@ -71,14 +72,14 @@ const DropdownSelect = props => {
         {...getToggleButtonProps()}
       >
         {(selectedItem && selectedItem instanceof Object
-          ? props.itemToString(selectedItem)
+          ? itemToString(selectedItem)
           : selectedItem) || 'Elements'}
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           items.map((item, index) => {
             const stringItem =
-              item instanceof Object ? props.itemToString(item) : item
+              item instanceof Object ? itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}
