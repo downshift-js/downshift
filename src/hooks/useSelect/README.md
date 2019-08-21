@@ -15,7 +15,6 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -243,6 +242,8 @@ Pass a number that sets the index of the highlighted item when downshift is rese
 This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
 
 A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." If an item is highlighted it will run `itemToString(highlightedItem)` and display the value of the `highlightedItem`.
+
+A default `getA11yStatusMessage` function is provided. It is called with the parameters `items` and `isOpen` when `isOpen` changes or with `selectedItem` and `itemToString` whem `selectedItem` changes. When `isOpen` changes the message is a status related one. When menu is opened it announces "No results" if there aren't items or "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." depending on the number of items in the menu. When `selectedItem` changes the message is a selection related one, narrating "`itemToString(selectedItem)` has been selected".
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
