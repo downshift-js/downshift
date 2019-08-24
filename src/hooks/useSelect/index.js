@@ -261,7 +261,7 @@ function useSelect(userProps = {}) {
     }
     shouldScroll.current = false
     dispatch({
-      type: stateChangeTypes.ItemHover,
+      type: stateChangeTypes.ItemMouseMove,
       props,
       index,
     })

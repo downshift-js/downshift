@@ -10,7 +10,7 @@ const stateChangeTypes = {
   MenuKeyDownEnter: 'MenuKeyDownEnter',
   MenuKeyDownCharacter: 'MenuKeyDownCharacter',
   MenuBlur: 'MenuBlur',
-  ItemHover: 'ItemHover',
+  ItemMouseMove: 'ItemMOuseMove',
   ItemClick: 'ItemClick',
   ToggleButtonKeyDownArrowDown: 'ToggleButtonKeyDownArrowDown',
   ToggleButtonKeyDownArrowUp: 'ToggleButtonKeyDownArrowUp',
@@ -77,10 +77,12 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   return offset < 0 ? items.length - 1 : 0
 }
 
+function capitalizeString(string) {
+  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
+}
+
 function getDefaultValue(props, propKey) {
-  const defaultPropKey = `default${propKey
-    .slice(0, 1)
-    .toUpperCase()}${propKey.slice(1)}`
+  const defaultPropKey = `default${capitalizeString(propKey)}`
   if (props[defaultPropKey] !== undefined) {
     return props[defaultPropKey]
   }
@@ -91,9 +93,7 @@ function getInitialValue(props, propKey) {
   if (props[propKey] !== undefined) {
     return props[propKey]
   }
-  const initialPropKey = `initial${propKey
-    .slice(0, 1)
-    .toUpperCase()}${propKey.slice(1)}`
+  const initialPropKey = `initial${capitalizeString(propKey)}`
   if (props[initialPropKey] !== undefined) {
     return props[initialPropKey]
   }
@@ -109,37 +109,26 @@ function getInitialState(props) {
   }
 }
 
-/* eslint-disable complexity */
+function invokeOnChangeHandler(propKey, props, state, changes) {
+  const handler = `on${capitalizeString(propKey)}Change`
+  if (
+    props[handler] &&
+    changes[propKey] !== undefined &&
+    changes[propKey] !== state[propKey]
+  ) {
+    props[handler](changes)
+  }
+}
+
 function callOnChangeProps(props, state, changes) {
-  if (!props) {
-    return
-  }
-  if (
-    props.onIsOpenChange &&
-    changes.isOpen !== undefined &&
-    changes.isOpen !== state.isOpen
-  ) {
-    props.onIsOpenChange(changes)
-  }
-  if (
-    props.onHighlightedIndexChange &&
-    changes.highlightedIndex !== undefined &&
-    changes.highlightedIndex !== state.highlightedIndex
-  ) {
-    props.onHighlightedIndexChange(changes)
-  }
-  if (
-    props.onSelectedItemChange &&
-    changes.selectedItem !== undefined &&
-    changes.selectedItem !== state.selectedItem
-  ) {
-    props.onSelectedItemChange(changes)
-  }
+  ;['isOpen', 'highlightedIndex', 'selectedItem'].forEach(propKey => {
+    invokeOnChangeHandler(propKey, props, state, changes)
+  })
+
   if (props.onStateChange && changes !== undefined) {
     props.onStateChange(changes)
   }
 }
-/* eslint-enable complexity */
 
 const propTypes = {
   items: PropTypes.array.isRequired,

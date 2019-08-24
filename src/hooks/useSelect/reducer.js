@@ -11,7 +11,7 @@ export default function downshiftSelectReducer(state, action) {
   let changes
 
   switch (type) {
-    case stateChangeTypes.ItemHover:
+    case stateChangeTypes.ItemMouseMove:
       changes = {
         highlightedIndex: action.index,
       }
