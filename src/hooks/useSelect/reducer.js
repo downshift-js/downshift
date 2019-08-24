@@ -152,33 +152,6 @@ export default function downshiftSelectReducer(state, action) {
       throw new Error('Reducer called without proper action type.')
   }
 
-  if (props) {
-    if (
-      props.onIsOpenChange &&
-      changes.isOpen !== undefined &&
-      changes.isOpen !== state.isOpen
-    ) {
-      props.onIsOpenChange(changes)
-    }
-    if (
-      props.onHighlightedIndexChange &&
-      changes.highlightedIndex !== undefined &&
-      changes.highlightedIndex !== state.highlightedIndex
-    ) {
-      props.onHighlightedIndexChange(changes)
-    }
-    if (
-      props.onSelectedItemChange &&
-      changes.selectedItem !== undefined &&
-      changes.selectedItem !== state.selectedItem
-    ) {
-      props.onSelectedItemChange(changes)
-    }
-    if (props.onStateChange && changes !== undefined) {
-      props.onStateChange(changes)
-    }
-  }
-
   return {
     ...state,
     ...changes,

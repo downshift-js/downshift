@@ -22,6 +22,7 @@ import {
   stateChangeTypes,
   getInitialState,
   propTypes,
+  callOnChangeProps,
 } from './utils'
 
 const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
@@ -54,14 +55,14 @@ function useSelect(userProps = {}) {
     dispatch,
   ] = useReducer((state, action) => {
     const changes = downshiftSelectReducer(state, action)
+
+    callOnChangeProps(props, state, changes)
+
     return getState(stateReducer(state, {...action, changes}), props)
   }, initialState)
 
   // IDs generation.
-  const {labelId, itemId, menuId, toggleButtonId} = getElementIds(
-    useId(),
-    props,
-  )
+  const {labelId, itemId, menuId, toggleButtonId} = getElementIds(useId, props)
 
   /* Refs */
   const toggleButtonRef = useRef(null)

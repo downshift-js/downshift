@@ -1,10 +1,10 @@
 import * as PropTypes from 'prop-types'
 
 function getElementIds(
-  downshiftId,
+  generateDefaultId,
   {id, labelId, menuId, itemId, toggleButtonId} = {},
 ) {
-  const uniqueId = id === undefined ? `downshift-${downshiftId}` : id
+  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
 
   return {
     labelId: labelId || `${uniqueId}-label`,

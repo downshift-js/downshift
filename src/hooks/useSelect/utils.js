@@ -109,6 +109,38 @@ function getInitialState(props) {
   }
 }
 
+/* eslint-disable complexity */
+function callOnChangeProps(props, state, changes) {
+  if (!props) {
+    return
+  }
+  if (
+    props.onIsOpenChange &&
+    changes.isOpen !== undefined &&
+    changes.isOpen !== state.isOpen
+  ) {
+    props.onIsOpenChange(changes)
+  }
+  if (
+    props.onHighlightedIndexChange &&
+    changes.highlightedIndex !== undefined &&
+    changes.highlightedIndex !== state.highlightedIndex
+  ) {
+    props.onHighlightedIndexChange(changes)
+  }
+  if (
+    props.onSelectedItemChange &&
+    changes.selectedItem !== undefined &&
+    changes.selectedItem !== state.selectedItem
+  ) {
+    props.onSelectedItemChange(changes)
+  }
+  if (props.onStateChange && changes !== undefined) {
+    props.onStateChange(changes)
+  }
+}
+/* eslint-enable complexity */
+
 const propTypes = {
   items: PropTypes.array.isRequired,
   itemToString: PropTypes.func,
@@ -142,4 +174,5 @@ export {
   defaultStateValues,
   propTypes,
   getDefaultValue,
+  callOnChangeProps,
 }

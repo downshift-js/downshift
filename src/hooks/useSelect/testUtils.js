@@ -40,7 +40,7 @@ jest.mock('@reach/auto-id', () => {
   }
 })
 
-const defaultIds = getElementIds(useId())
+const defaultIds = getElementIds(useId)
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
