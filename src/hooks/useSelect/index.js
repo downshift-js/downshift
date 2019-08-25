@@ -19,15 +19,16 @@ import {
 import downshiftSelectReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
-  stateChangeTypes,
   getInitialState,
   propTypes,
   callOnChangeProps,
 } from './utils'
+import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
 
 function useSelect(userProps = {}) {
+  useSelect.prototype.stateChangeTypes = stateChangeTypes
   validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {

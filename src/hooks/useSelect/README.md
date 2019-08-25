@@ -15,6 +15,7 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -61,7 +62,7 @@ These props results are destructured as a set of ARIA attributes and event liste
 ```jsx
 import React from 'react'
 import {render} from 'react-dom'
-import {useSelect} from 'downshift-hooks'
+import {useSelect} from 'downshift'
 
 function DropdownSelect() {
   const {
@@ -158,7 +159,7 @@ Used to determine the string value for the selected item. It is used to compute 
 
 Called each time the selected item was changed. Selection can be performed by item click, Enter Key while item is highlighted or by blurring the menu while an item is highlighted (Tab, Shift-Tab or clicking away).
 
-- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `selectedItem` property with the newly selected value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `selectedItem` change, for example `stateChangeTypes.select.ItemClick`.
+- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `selectedItem` property with the newly selected value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `selectedItem` change, for example `useSelect.stateChangeTypes.ItemClick`.
 
 ### stateReducer
 
@@ -172,7 +173,7 @@ This function will be called each time `useSelect` sets its internal state (or c
 - `changes`: These are the properties that are about to change. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section.
 
 ```javascript
-import {useSelect, stateChangeTypes} from 'downshift-hooks'
+import {useSelect} from 'downshift'
 
 const {getMenuProps, getItemProps, ...rest} = useSelect({
   items: options,
@@ -182,8 +183,8 @@ const {getMenuProps, getItemProps, ...rest} = useSelect({
 function stateReducer(state, changes) {
   // this prevents the menu from being closed when the user selects an item with a keyboard or mouse
   switch (changes.type) {
-    case stateChangeTypes.select.MenuKeyDownEnter:
-    case stateChangeTypes.select.ItemClick:
+    case useSelect.stateChangeTypes.MenuKeyDownEnter:
+    case useSelect.stateChangeTypes.ItemClick:
       return {
         ...changes,
         isOpen: state.isOpen,
@@ -264,7 +265,7 @@ The object you are passed to generate your status message has the following prop
 
 Called each time the highlighted item was changed. Items can be highlighted while hovering the mouse over them or by keyboard keys such as Up Arrow, Down Arrow, Home and End. Arrow keys can be combined with Shift to move by a step of 5 positions instead of 1. Items can also be highlighted by hitting character keys that are part of their starting string equivalent.
 
-- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `highlightedIndex` property with the new value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `highlightedIndex` change, for example `stateChangeTypes.select.MenuKeyDownArrowUp`.
+- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `highlightedIndex` property with the new value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `highlightedIndex` change, for example `useSelect.stateChangeTypes.MenuKeyDownArrowUp`.
 
 ### onIsOpenChange
 
@@ -272,7 +273,7 @@ Called each time the highlighted item was changed. Items can be highlighted whil
 
 Called each time the menu is open or closed. Menu open state can be open by toggle button click, Enter or Space key, Up Arrow or Down Arrow key. Can be closed by selecting an item, blur (Tab, Shift-Tab or clicking outside), clicking the toggle button or hitting Escape.
 
-- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `isOpen` property with the new value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `isOpen` change, for example `stateChangeTypes.select.ToggleButtonClick`.
+- `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `isOpen` property with the new value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `isOpen` change, for example `useSelect.stateChangeTypes.ToggleButtonClick`.
 
 ### onStateChange
 
@@ -345,28 +346,28 @@ Controls the circular keyboard navigation between items. If set to `true`, when 
 There are a few props that expose changes to state ([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)).
 For you to make the most of these APIs, it's important for you to understand why state is being changed. To accomplish this, there's a `type` property on the `changes` object you get. This `type` corresponds to a `stateChangeTypes` property.
 
-The list of all possible values this `type` property can take is defined in [this file][state-change-utils-file] and is as follows:
+The list of all possible values this `type` property can take is defined in [this file][state-change-file] and is as follows:
 
-- `stateChangeTypes.select.MenuKeyDownArrowDown`
-- `stateChangeTypes.select.MenuKeyDownArrowUp`
-- `stateChangeTypes.select.MenuKeyDownEscape`
-- `stateChangeTypes.select.MenuKeyDownHome`
-- `stateChangeTypes.select.MenuKeyDownEnd`
-- `stateChangeTypes.select.MenuKeyDownEnter`
-- `stateChangeTypes.select.MenuKeyDownCharacter`
-- `stateChangeTypes.select.MenuBlur`
-- `stateChangeTypes.select.ItemHover`
-- `stateChangeTypes.select.ItemClick`
-- `stateChangeTypes.select.ToggleButtonKeyDownArrowDown`
-- `stateChangeTypes.select.ToggleButtonKeyDownArrowUp`
-- `stateChangeTypes.select.ToggleButtonClick`
-- `stateChangeTypes.select.FunctionToggleMenu`
-- `stateChangeTypes.select.FunctionOpenMenu`
-- `stateChangeTypes.select.FunctionCloseMenu`
-- `stateChangeTypes.select.FunctionSetHighlightedIndex`
-- `stateChangeTypes.select.FunctionSetSelectedItem`
-- `stateChangeTypes.select.FunctionClearKeysSoFar`
-- `stateChangeTypes.select.FunctionReset`
+- `useSelect.stateChangeTypes.MenuKeyDownArrowDown`
+- `useSelect.stateChangeTypes.MenuKeyDownArrowUp`
+- `useSelect.stateChangeTypes.MenuKeyDownEscape`
+- `useSelect.stateChangeTypes.MenuKeyDownHome`
+- `useSelect.stateChangeTypes.MenuKeyDownEnd`
+- `useSelect.stateChangeTypes.MenuKeyDownEnter`
+- `useSelect.stateChangeTypes.MenuKeyDownCharacter`
+- `useSelect.stateChangeTypes.MenuBlur`
+- `useSelect.stateChangeTypes.ItemHover`
+- `useSelect.stateChangeTypes.ItemClick`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`
+- `useSelect.stateChangeTypes.ToggleButtonClick`
+- `useSelect.stateChangeTypes.FunctionToggleMenu`
+- `useSelect.stateChangeTypes.FunctionOpenMenu`
+- `useSelect.stateChangeTypes.FunctionCloseMenu`
+- `useSelect.stateChangeTypes.FunctionSetHighlightedIndex`
+- `useSelect.stateChangeTypes.FunctionSetSelectedItem`
+- `useSelect.stateChangeTypes.FunctionClearKeysSoFar`
+- `useSelect.stateChangeTypes.FunctionReset`
 
 See [`stateReducer`](#statereducer) for a concrete example on how to use the `type` property.
 
@@ -641,5 +642,5 @@ const ui = (
 [select-aria]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
 [reach-auto-id]: https://github.com/reach/reach-ui/blob/master/packages/auto-id/src/index.js
 [sandbox-example]: https://codesandbox.io/s/downshift-hooks-example-ew0em
-[state-change-utils-file]: https://github.com/downshift-js/downshift/blob/master/src/hooks/select/utils.js
+[state-change-file]: https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
 [blog-post-prop-getters]: https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf

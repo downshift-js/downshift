@@ -1,29 +1,6 @@
 import * as PropTypes from 'prop-types'
 import {getNextWrappingIndex} from '../utils'
 
-const stateChangeTypes = {
-  MenuKeyDownArrowDown: 'MenuKeyDownArrowDown',
-  MenuKeyDownArrowUp: 'MenuKeyDownArrowUp',
-  MenuKeyDownEscape: 'MenuKeyDownEscape',
-  MenuKeyDownHome: 'MenuKeyDownHome',
-  MenuKeyDownEnd: 'MenuKeyDownEnd',
-  MenuKeyDownEnter: 'MenuKeyDownEnter',
-  MenuKeyDownCharacter: 'MenuKeyDownCharacter',
-  MenuBlur: 'MenuBlur',
-  ItemMouseMove: 'ItemMOuseMove',
-  ItemClick: 'ItemClick',
-  ToggleButtonKeyDownArrowDown: 'ToggleButtonKeyDownArrowDown',
-  ToggleButtonKeyDownArrowUp: 'ToggleButtonKeyDownArrowUp',
-  ToggleButtonClick: 'ToggleButtonClick',
-  FunctionToggleMenu: 'FunctionToggleMenu',
-  FunctionOpenMenu: 'FunctionOpenMenu',
-  FunctionCloseMenu: 'FunctionCloseMenu',
-  FunctionSetHighlightedIndex: 'FunctionSetHighlightedIndex',
-  FunctionSetSelectedItem: 'FunctionSetSelectedItem',
-  FunctionClearKeysSoFar: 'FunctionClearKeysSoFar',
-  FunctionReset: 'FunctionReset',
-}
-
 const defaultStateValues = {
   highlightedIndex: -1,
   isOpen: false,
@@ -159,7 +136,6 @@ export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
   getInitialState,
-  stateChangeTypes,
   defaultStateValues,
   propTypes,
   getDefaultValue,
