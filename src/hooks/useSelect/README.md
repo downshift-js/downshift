@@ -2,19 +2,18 @@
 
 ## The problem
 
-You have a select dropdown in your application and you want it to follow the [ARIA pattern][select-aria] in terms of accessibility and functionality. You also want this solution to be simple to use and flexible so you can tailor it further to your specific needs.
+You have a custom select dropdown in your application and you want it to perform exactly the same as the native HTML `<select>` in terms of accessibility and functionality. For consistency reasons you want it to follow the the [ARIA design pattern][select-aria] for a dropdown select. You also want this solution to be simple to use and flexible so you can tailor it further to your specific needs.
 
 ## This solution
 
-This is a React hook that manages all the stateful logic needed to make the dropdown functional and accessible. It returns a set of props that are meant to be called and their results destructured on the dropdown's elements: its label, toggle button, list and list items. It follows the same pattern as the render props provided by vanilla `<Downshift>`.
+`useSelect` is a React hook that manages all the stateful logic needed to make the dropdown functional and accessible. It returns a set of props that are meant to be called and their results destructured on the dropdown's elements: its label, toggle button, list and list items. It follows the same pattern as the render props provided by vanilla `<Downshift>`.
 
-These props results are destructured as a set of ARIA attributes and event listeners. Together, they create all the stateful logic needed for the dropdown to implement the corresponding ARIA pattern. Every functionality needed should be provided out-of-the-box: menu toggle, item selection and up/down movement between them, screen reader support, highlight by typing character keys etc.
+These props results are destructured as a set of ARIA attributes and event listeners. Together, they create all the stateful logic needed for the dropdown to implement the corresponding ARIA pattern. Every functionality needed should be provided out-of-the-box: menu toggle, item selection and up/down movement between them, screen reader support, highlight by character keys etc.
 
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Usage](#usage)
 - [Basic Props](#basic-props)
@@ -242,9 +241,7 @@ Pass a number that sets the index of the highlighted item when downshift is rese
 
 This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided that will check `resultCount` and return "No results." or if there are results but no item is highlighted, "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." If an item is highlighted it will run `itemToString(highlightedItem)` and display the value of the `highlightedItem`.
-
-A default `getA11yStatusMessage` function is provided. It is called with the parameters `items` and `isOpen` when `isOpen` changes or with `selectedItem` and `itemToString` whem `selectedItem` changes. When `isOpen` changes the message is a status related one. When menu is opened it announces "No results" if there aren't items or "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." depending on the number of items in the menu. When `selectedItem` changes the message is a selection related one, narrating "`itemToString(selectedItem)` has been selected".
+A default `getA11yStatusMessage` function is provided. It is called with the parameters `items`, `isOpen`, `selectedItem` and `itemToString` when either `isOpen` or `selectedItem` change. When menu is opened, the announcement message is "No results" if there aren't any items or "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." depending on the number of items in the menu. When `selectedItem` changes the message is a selection related one, narrating "`itemToString(selectedItem)` has been selected".
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -271,7 +268,7 @@ Called each time the highlighted item was changed. Items can be highlighted whil
 
 > `function(changes: object)` | optional, no useful default
 
-Called each time the menu is open or closed. Menu open state can be open by toggle button click, Enter or Space key, Up Arrow or Down Arrow key. Can be closed by selecting an item, blur (Tab, Shift-Tab or clicking outside), clicking the toggle button or hitting Escape.
+Called each time the menu is open or closed. Menu can be open by toggle button click, Enter, Space, Up Arrow or Down Arrow keys. Can be closed by selecting an item, blur (Tab, Shift-Tab or clicking outside), clicking the toggle button again or hitting Escape key.
 
 - `changes`: These are the properties that actually have changed since the last state change. This object is guaranteed to contain the `isOpen` property with the new value. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section. This property will be part of the actions that can trigger a `isOpen` change, for example `useSelect.stateChangeTypes.ToggleButtonClick`.
 
@@ -411,9 +408,9 @@ return (
 
 > See [the blog post about prop getters][blog-post-prop-getters]
 
-> NOTE: These prop-getters provide important `aria-` attributes which are very important to your component being accessible. It's recommended that you utilize these functions and apply the props they give you to your components.
+> NOTE: These prop-getters provide `aria-` attributes which are very important to your component being accessible. It's recommended that you utilize these functions and apply the props they give you to your components.
 
-These functions are used to apply props to the elements that you render. This gives you maximum flexibility to render what, when, and wherever you like. You call these on the element in question (for example: `<button {...getToggleButtonProps()}`)). It's advisable to pass all your props to that function rather than applying them on the element yourself to avoid your props being
+These functions are used to apply props to the elements that you render. This gives you maximum flexibility to render what, when, and wherever you like. You call these on the element in question, for example on the toggle button: `<button {...getToggleButtonProps()}`. It's advisable to pass all your props to that function rather than applying them on the element yourself to avoid your props being
 overridden (or overriding the props returned). For example: `getToggleButtonProps({onKeyDown(event) {console.log(event)}})`.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
@@ -550,7 +547,7 @@ These are values that represent the current state of the downshift component.
 
 ### props
 
-As a convenience, the `items` and `itemToString` props which you pass to `useSelect` is available here as well.
+As a convenience, the `items` and `itemToString` props which you pass to `useSelect` are available here as well.
 
 ## Event Handlers
 
