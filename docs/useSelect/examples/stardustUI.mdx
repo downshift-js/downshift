@@ -1,0 +1,149 @@
+---
+name: StardustUI
+menu: useSelect
+route: /hooks/useselect/stardustui
+---
+
+import {Playground} from 'docz'
+import {useSelect} from '../../../src'
+import {
+  Provider,
+  themes,
+  Button,
+  Text,
+  List,
+  Ref,
+  Image,
+} from '@stardust-ui/react'
+
+# StardustUI
+
+A dropdown created with StardustUI components such as `<Label>`, `<List>`, `<ListItem>` and `<Button>` for the elements. Since
+these are components and not HTML elements, Downshift asks for refs to their actual DOM elements, in order to perform focusing
+and scrolling. Stardust uses the `<Ref>` component to get access to the ref of the child component. The ref property is extracted
+from the Downshift returned method and then passed to the `<Ref>` as shown in the example.
+
+### Playground
+
+<Playground style={{height: '50px'}}>
+  {() => {
+    const DropdownSelectStardustUI = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useSelect({items: options, itemToString: item => item.header})
+      const toggleButtonProps = getToggleButtonProps({
+        refKey: 'toggleButtonRef',
+      })
+      const menuProps = getMenuProps({
+        refKey: 'menuRef',
+      })
+      const {toggleButtonRef} = toggleButtonProps
+      const {menuRef} = menuProps
+      delete toggleButtonProps.toggleButtonRef
+      delete menuProps.menuRef
+
+      return (
+        <Provider theme={themes.teams}>
+          <Text {...getLabelProps()} content={'Fictional characters:'} />
+          <Ref innerRef={toggleButtonRef}>
+            <Button
+              content={selectedItem && selectedItem.header || 'Choose your favorite'}
+              icon="arrow-down"
+              iconPosition="after"
+              {...toggleButtonProps}
+            />
+          </Ref>
+          <Ref innerRef={menuRef}>
+            <List {...menuProps} style={menuStyles}>
+              {isOpen &&
+                options.map((option, index) => {
+                  const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
+                  const {itemRef} = itemProps
+                  delete itemProps.itemRef
+                  return (
+                    <Ref key={`${option.header}-${index}`} innerRef={itemRef}>
+                      <List.Item
+                        media={<Image src={option.image} avatar />}
+                        header={option.header}
+                        content={option.content}
+                        style={
+                          highlightedIndex === index
+                            ? {backgroundColor: '#bde4ff'}
+                            : {}
+                        }
+                        {...itemProps}
+                      />
+                    </Ref>
+                )
+                })}
+            </List>
+          </Ref>
+        </Provider>
+      )
+    }
+    const menuStyles = {
+      maxHeight: '250px',
+      overflowY: 'auto',
+      position: 'absolute',
+      margin: 0,
+      borderTop: 0,
+      background: 'white',
+    }
+    const options = [
+      {
+        header: 'Bruce Wayne',
+        image: 'public/images/avatar/small/matt.jpg',
+        content: 'Software Engineer',
+      },
+      {
+        header: 'Natasha Romanoff',
+        image: 'public/images/avatar/small/jenny.jpg',
+        content: 'UX Designer 2',
+      },
+      {
+        header: 'Steven Strange',
+        image: 'public/images/avatar/small/joe.jpg',
+        content: 'Principal Software Engineering Manager',
+      },
+      {
+        header: 'Alfred Pennyworth',
+        image: 'public/images/avatar/small/justen.jpg',
+        content: 'Technology Consultant',
+      },
+      {
+        header: `Scarlett O'Hara`,
+        image: 'public/images/avatar/small/laura.jpg',
+        content: 'Software Engineer 2',
+      },
+      {
+        header: 'Imperator Furiosa',
+        image: 'public/images/avatar/small/veronika.jpg',
+        content: 'Boss',
+      },
+      {
+        header: 'Bruce Banner',
+        image: 'public/images/avatar/small/chris.jpg',
+        content: 'Senior Computer Scientist',
+      },
+      {
+        header: 'Peter Parker',
+        image: 'public/images/avatar/small/daniel.jpg',
+        content: 'Partner Software Engineer',
+      },
+      {
+        header: 'Selina Kyle',
+        image: 'public/images/avatar/small/ade.jpg',
+        content: 'Graphic Designer',
+      },
+    ]
+    return <DropdownSelectStardustUI />
+
+}}
+
+</Playground>
