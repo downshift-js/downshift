@@ -3,9 +3,8 @@
 
 - [Downshift Hooks](#downshift-hooks)
   - [Hooks](#hooks)
-    - [useSelect()](#useselect)
+    - [useSelect](#useselect)
   - [Roadmap and contributions](#roadmap-and-contributions)
-  - [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -15,7 +14,7 @@ A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown comp
 
 ## Hooks
 
-### useSelect()
+### useSelect
 
 For a `<select>` custom dropdown [click here][select-readme].
 
@@ -23,14 +22,10 @@ For a `<select>` custom dropdown [click here][select-readme].
 
 Next steps:
 
-- complete testing for the `useSelect()` hook and polishing API.
+- complete testing for the `useSelect` hook and polishing API.
 - create types (TS and Flow) for it or re-write it directly in Typescript.
-- create `useAutocomplete()` hook (the old Downshift default component) for the combobox design pattern.
-- create `multiple` versions for `useSelect()` and `useAutocomplete()`.
-
-## LICENSE
-
-MIT
+- create `useAutocomplete` hook (the old Downshift default component) for the combobox design pattern.
+- create `multiple` versions for `useSelect` and `useAutocomplete`.
 
 [hooks-issue]: https://github.com/downshift-js/downshift/issues/683
-[select-readme]: https://github.com/silviuavram/downshift-hooks/blob/master/src/hooks/useSelect/README.md
+[select-readme]: https://github.com/silviuavram/downshift/blob/master/src/hooks/useSelect
