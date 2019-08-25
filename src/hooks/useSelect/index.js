@@ -83,6 +83,8 @@ function useSelect(userProps = {}) {
       getA11yStatusMessage({
         isOpen,
         items,
+        selectedItem,
+        itemToString,
       }),
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,6 +96,8 @@ function useSelect(userProps = {}) {
     }
     setStatus(
       getA11yStatusMessage({
+        isOpen,
+        items,
         selectedItem,
         itemToString,
       }),
