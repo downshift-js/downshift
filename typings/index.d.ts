@@ -225,6 +225,79 @@ export type DownshiftInterface<Item> = React.ComponentClass<
   }
 }
 
+export enum UseSelectStateChangeTypes {
+  MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
+  MenuKeyDownArrowUp = '__menu_keydown_arrow_up__',
+  MenuKeyDownEscape = '__menu_keydown_escape__',
+  MenuKeyDownHome = '__menu_keydown_home__',
+  MenuKeyDownEnd = '__menu_keydown_end__',
+  MenuKeyDownEnter = '__menu_keydown_enter__',
+  MenuKeyDownCharacter = '__menu_keydown_character__',
+  MenuBlur = '__menu_blur__',
+  ItemMouseMove = '__item_mouse_move__',
+  ItemClick = '__item_click__',
+  ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
+  ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
+  ToggleButtonClick = '__togglebutton_click__',
+  FunctionToggleMenu = '__function_toggle_menu__',
+  FunctionOpenMenu = '__function_open_menu__',
+  FunctionCloseMenu = '__function_close_menu__',
+  FunctionSetHighlightedIndex = '__function_set_highlighted_index__',
+  FunctionSetSelectedItem = '__function_set_selected_item__',
+  FunctionClearKeysSoFar = '__function_clear_keys_so_far__',
+  FunctionReset = '__function_reset__',
+}
+
+export interface UseSelectA11yStatusMessageOptions<Item> {
+  isOpen: boolean
+  selectedItem: Item
+  items: Item[]
+  itemToString: (item: Item) => string
+}
+
+export interface UseSelectState<Item> {
+  highlightedIndex: number
+  selectedItem: Item
+  isOpen: boolean
+  keySoFar: string
+}
+
+export interface UseSelectStateChangeOptions<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
+}
+
+export interface UseSelectProps<Item> {
+  items: Item[]
+  itemToString?: (item: Item) => string
+  getA11yStatusMessage: (
+    options: UseSelectA11yStatusMessageOptions<Item>,
+  ) => string
+  circularNavigation: boolean
+  highlightedIndex: number
+  initialHighlightedIndex: number
+  defaultHighlightedIndex: number
+  isOpen: boolean
+  initialIsOpen: boolean
+  defaultIsOpen: boolean
+  selectedItem: Item
+  initialSelectedItem: Item
+  defaultSelectedItem: Item
+  id: string
+  labelId: string
+  menuId: string
+  toggleButtonId: string
+  getItemId: (index: number) => string
+  stateReducer?: (
+    state: UseSelectState<Item>,
+    changes: UseSelectStateChangeOptions<Item>,
+  ) => Partial<UseSelectStateChangeOptions<Item>>
+  onSelectedItemChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
+}
+
 declare const Downshift: DownshiftInterface<any>
 export default Downshift
 export function resetIdCounter(): void
