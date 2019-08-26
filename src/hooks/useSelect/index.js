@@ -63,7 +63,10 @@ function useSelect(userProps = {}) {
   }, initialState)
 
   // IDs generation.
-  const {labelId, itemId, menuId, toggleButtonId} = getElementIds(useId, props)
+  const {labelId, getItemId, menuId, toggleButtonId} = getElementIds(
+    useId,
+    props,
+  )
 
   /* Refs */
   const toggleButtonRef = useRef(null)
@@ -327,7 +330,7 @@ function useSelect(userProps = {}) {
     'aria-labelledby': labelId,
     tabIndex: -1,
     ...(highlightedIndex > -1 && {
-      'aria-activedescendant': itemId(highlightedIndex),
+      'aria-activedescendant': getItemId(highlightedIndex),
     }),
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
@@ -371,7 +374,7 @@ function useSelect(userProps = {}) {
       }),
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
-      id: itemId(itemIndex),
+      id: getItemId(itemIndex),
       onMouseMove: callAllEventHandlers(onMouseMove, () =>
         itemHandleMouseMove(itemIndex),
       ),

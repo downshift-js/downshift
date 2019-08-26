@@ -2,14 +2,14 @@ import * as PropTypes from 'prop-types'
 
 function getElementIds(
   generateDefaultId,
-  {id, labelId, menuId, itemId, toggleButtonId} = {},
+  {id, labelId, menuId, getItemId, toggleButtonId} = {},
 ) {
   const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
 
   return {
     labelId: labelId || `${uniqueId}-label`,
     menuId: menuId || `${uniqueId}-menu`,
-    itemId: itemId || (index => `${uniqueId}-item-${index}`),
+    getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
     toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
   }
 }

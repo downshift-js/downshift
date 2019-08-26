@@ -62,7 +62,9 @@ describe('getMenuProps', () => {
       const {result} = setupHook({highlightedIndex: 2})
       const menuProps = result.current.getMenuProps()
 
-      expect(menuProps['aria-activedescendant']).toEqual(defaultIds.itemId(2))
+      expect(menuProps['aria-activedescendant']).toEqual(
+        defaultIds.getItemId(2),
+      )
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {
@@ -236,7 +238,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {key: 'c'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(
+            defaultIds.getItemId(
               options.findIndex(option => startsWithCharacter(option, 'c')),
             ),
           )
@@ -254,7 +256,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {key: 'c'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(
+            defaultIds.getItemId(
               firstIndex +
                 1 +
                 options
@@ -275,7 +277,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {key: 'b'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(
+            defaultIds.getItemId(
               options.findIndex(option => startsWithCharacter(option, 'b')),
             ),
           )
@@ -298,7 +300,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {key: 'a'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(
+            defaultIds.getItemId(
               options.findIndex(option => startsWithCharacter(option, 'ca')),
             ),
           )
@@ -314,7 +316,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {key: 'l'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(
+            defaultIds.getItemId(
               options.findIndex(option => startsWithCharacter(option, 'l')),
             ),
           )
@@ -329,7 +331,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(options.length - 1),
+            defaultIds.getItemId(options.length - 1),
           )
         })
 
@@ -341,7 +343,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(initialHighlightedIndex - 1),
+            defaultIds.getItemId(initialHighlightedIndex - 1),
           )
         })
 
@@ -356,7 +358,7 @@ describe('getMenuProps', () => {
           })
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(initialHighlightedIndex - 5),
+            defaultIds.getItemId(initialHighlightedIndex - 5),
           )
         })
 
@@ -371,7 +373,7 @@ describe('getMenuProps', () => {
           })
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(0),
+            defaultIds.getItemId(0),
           )
         })
 
@@ -382,7 +384,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(0),
+            defaultIds.getItemId(0),
           )
         })
 
@@ -397,7 +399,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(options.length - 1),
+            defaultIds.getItemId(options.length - 1),
           )
         })
       })
@@ -410,7 +412,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(0),
+            defaultIds.getItemId(0),
           )
         })
         test('it highlights the next item', () => {
@@ -421,7 +423,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(initialHighlightedIndex + 1),
+            defaultIds.getItemId(initialHighlightedIndex + 1),
           )
         })
 
@@ -436,7 +438,7 @@ describe('getMenuProps', () => {
           })
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(initialHighlightedIndex + 5),
+            defaultIds.getItemId(initialHighlightedIndex + 5),
           )
         })
 
@@ -451,7 +453,7 @@ describe('getMenuProps', () => {
           })
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(options.length - 1),
+            defaultIds.getItemId(options.length - 1),
           )
         })
 
@@ -465,7 +467,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(options.length - 1),
+            defaultIds.getItemId(options.length - 1),
           )
         })
 
@@ -480,7 +482,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.itemId(0),
+            defaultIds.getItemId(0),
           )
         })
       })
@@ -492,7 +494,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(options.length - 1),
+          defaultIds.getItemId(options.length - 1),
         )
       })
 
@@ -503,7 +505,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Home})
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(0),
+          defaultIds.getItemId(0),
         )
       })
 
@@ -560,7 +562,7 @@ describe('getMenuProps', () => {
         )
         expect(menu.childNodes).toHaveLength(options.length)
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(defaultHighlightedIndex),
+          defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
 
@@ -635,7 +637,7 @@ describe('getMenuProps', () => {
         expect(document.activeElement).toBe(menu)
         expect(toggleButton.textContent).toEqual(options[2])
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(2),
+          defaultIds.getItemId(2),
         )
         expect(menu.childNodes).toHaveLength(options.length)
       })

@@ -64,15 +64,8 @@ describe('utils', () => {
   })
 
   test('reducer throws error if called without proper action type', () => {
-    let called = false
-    try {
+    expect(() => {
       reducer({}, {type: 'super-bogus'})
-    } catch (error) {
-      called = true
-      expect(error.message).toEqual(
-        'Reducer called without proper action type.',
-      )
-    }
-    expect(called).toBe(true)
+    }).toThrowError('Reducer called without proper action type.')
   })
 })

@@ -9,17 +9,10 @@ describe('getItemProps', () => {
 
   test('throws error if no index or item has been passed', () => {
     const {result} = setupHook()
-    let called = false
-    try {
-      result.current.getItemProps()
-    } catch (error) {
-      expect(error.message).toEqual(
-        'Pass either item or item index in getItemProps!',
-      )
-      called = true
-    }
 
-    expect(called).toBe(true)
+    expect(result.current.getItemProps).toThrowError(
+      'Pass either item or item index in getItemProps!',
+    )
   })
 
   describe('hook props', () => {
@@ -34,15 +27,15 @@ describe('getItemProps', () => {
       const {result} = setupHook()
       const itemProps = result.current.getItemProps({index: 0})
 
-      expect(itemProps.id).toEqual(`${defaultIds.itemId(0)}`)
+      expect(itemProps.id).toEqual(`${defaultIds.getItemId(0)}`)
     })
 
     test('assign custom value passed by user to id', () => {
-      const itemId = index => `my-custom-item-id-${index}`
-      const {result} = setupHook({itemId})
+      const getItemId = index => `my-custom-item-id-${index}`
+      const {result} = setupHook({getItemId})
       const itemProps = result.current.getItemProps({index: 0})
 
-      expect(itemProps.id).toEqual(itemId(0))
+      expect(itemProps.id).toEqual(getItemId(0))
     })
 
     test("assign 'true' to aria-selected if item is highlighted", () => {
@@ -171,7 +164,7 @@ describe('getItemProps', () => {
         fireEvent.mouseMove(item)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(index),
+          defaultIds.getItemId(index),
         )
         expect(item.getAttribute('aria-selected')).toBe('true')
       })
@@ -192,7 +185,7 @@ describe('getItemProps', () => {
         fireEvent.mouseMove(item)
 
         expect(menu.getAttribute('aria-activedescendant')).not.toBe(
-          defaultIds.itemId(previousIndex),
+          defaultIds.getItemId(previousIndex),
         )
         expect(previousItem.getAttribute('aria-selected')).toBeNull()
       })
@@ -208,7 +201,7 @@ describe('getItemProps', () => {
         fireEvent.mouseMove(item)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(index),
+          defaultIds.getItemId(index),
         )
         expect(item.getAttribute('aria-selected')).toBe('true')
       })
@@ -240,7 +233,7 @@ describe('getItemProps', () => {
         expect(toggleButton.textContent).toEqual(options[index])
         expect(menu.childNodes).toHaveLength(options.length)
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.itemId(2),
+          defaultIds.getItemId(2),
         )
       })
     })

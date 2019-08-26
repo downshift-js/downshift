@@ -194,27 +194,27 @@ describe('props', () => {
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
 
       fireEvent.keyDown(menu, {key: 'c'})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
     })
   })
@@ -293,7 +293,7 @@ describe('props', () => {
 
       fireEvent.click(toggleButton)
       expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.itemId(highlightedIndex),
+        defaultIds.getItemId(highlightedIndex),
       )
     })
 
