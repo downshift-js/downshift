@@ -158,6 +158,12 @@ class Downshift extends Component {
 
   timeoutIds = []
 
+  isItemDisabledAtIndex(index) {
+    const item = this.items[index]
+    const itemNode = this.getItemNodeFromIndex(index)
+    return item == null || (itemNode && itemNode.hasAttribute('disabled'))
+  }
+
   /**
    * @param {Function} fn the function to call after the time
    * @param {Number} time the time to wait
@@ -231,6 +237,15 @@ class Downshift extends Component {
     return itemCount
   }
 
+  getDisabledItemCount() {
+    return this.items.reduce((count, item, index) => {
+      if (this.isItemDisabledAtIndex(index)) {
+        count++
+      }
+      return count
+    }, 0)
+  }
+
   setItemCount = count => {
     this.itemCount = count
   }
@@ -261,23 +276,37 @@ class Downshift extends Component {
 
   moveHighlightedIndex(amount, otherStateToSet) {
     const itemCount = this.getItemCount()
-    if (itemCount > 0) {
+    const disabledItemCount = this.getDisabledItemCount()
+    if (itemCount > 0 && itemCount !== disabledItemCount) {
       const nextHighlightedIndex = getNextWrappingIndex(
         amount,
         this.getState().highlightedIndex,
         itemCount,
+        this.isItemDisabledAtIndex.bind(this),
       )
       this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
     }
   }
 
   highlightFirstOrLastIndex(event, first, otherStateToSet) {
-    const itemsLastIndex = this.getItemCount() - 1
-    if (itemsLastIndex < 0 || !this.getState().isOpen) {
+    const itemCount = this.getItemCount()
+    const disabledItemCount = this.getDisabledItemCount()
+    const itemsLastIndex = itemCount - 1
+    if (
+      itemsLastIndex < 0 ||
+      !this.getState().isOpen ||
+      itemCount === disabledItemCount
+    ) {
       return
     }
     event.preventDefault()
-    this.setHighlightedIndex(first ? 0 : itemsLastIndex, otherStateToSet)
+    const nextHighlightedIndex = getNextWrappingIndex(
+      0,
+      first ? 0 : itemsLastIndex,
+      itemCount,
+      this.isItemDisabledAtIndex.bind(this),
+    )
+    this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
   }
 
   clearSelection = cb => {
@@ -547,12 +576,14 @@ class Downshift extends Component {
           },
           () => {
             const itemCount = this.getItemCount()
-            if (itemCount > 0) {
+            const disabledItemCount = this.getDisabledItemCount()
+            if (itemCount > 0 && itemCount !== disabledItemCount) {
               this.setHighlightedIndex(
                 getNextWrappingIndex(
                   1,
                   this.getState().highlightedIndex,
                   itemCount,
+                  this.isItemDisabledAtIndex.bind(this),
                 ),
                 {type: stateChangeTypes.keyDownArrowDown},
               )
@@ -578,12 +609,14 @@ class Downshift extends Component {
           },
           () => {
             const itemCount = this.getItemCount()
-            if (itemCount > 0) {
+            const disabledItemCount = this.getDisabledItemCount()
+            if (itemCount > 0 && itemCount !== disabledItemCount) {
               this.setHighlightedIndex(
                 getNextWrappingIndex(
                   -1,
                   this.getState().highlightedIndex,
                   itemCount,
+                  this.isItemDisabledAtIndex.bind(this),
                 ),
                 {type: stateChangeTypes.keyDownArrowDown},
               )
@@ -597,9 +630,7 @@ class Downshift extends Component {
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
         event.preventDefault()
-        const item = this.items[highlightedIndex]
-        const itemNode = this.getItemNodeFromIndex(highlightedIndex)
-        if (item == null || (itemNode && itemNode.hasAttribute('disabled'))) {
+        if (this.isItemDisabledAtIndex(highlightedIndex)) {
           return
         }
         this.selectHighlightedItem({
@@ -975,7 +1006,13 @@ class Downshift extends Component {
       () => {
         const {isOpen, highlightedIndex} = this.getState()
         if (isOpen) {
-          if (this.getItemCount() > 0 && typeof highlightedIndex === 'number') {
+          const itemCount = this.getItemCount()
+          const disabledItemCount = this.getDisabledItemCount()
+          if (
+            itemCount > 0 &&
+            itemCount !== disabledItemCount &&
+            typeof highlightedIndex === 'number'
+          ) {
             this.setHighlightedIndex(highlightedIndex, otherStateToSet)
           }
         }

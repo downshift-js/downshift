@@ -26,8 +26,8 @@
   },
   "dist/downshift.umd.js": {
     "bundled": 108577,
-    "minified": 36895,
-    "gzipped": 11395
+    "minified": 36883,
+    "gzipped": 11392
   },
   "dist/downshift.esm.js": {
     "bundled": 54113,

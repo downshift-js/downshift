@@ -271,9 +271,15 @@ function isPlainObject(obj) {
  * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
  * @param {number} baseIndex The initial position to move from.
  * @param {number} itemCount The total number of items.
+ * @param {Function} isItemDisabledAtIndex Method to check to see if the item is disabled
  * @returns {number} The new index after the move.
  */
-function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
+function getNextWrappingIndex(
+  moveAmount,
+  baseIndex,
+  itemCount,
+  isItemDisabledAtIndex,
+) {
   const itemsLastIndex = itemCount - 1
 
   if (
@@ -289,6 +295,16 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
   } else if (newIndex > itemsLastIndex) {
     newIndex = 0
   }
+
+  if (isItemDisabledAtIndex(newIndex)) {
+    return getNextWrappingIndex(
+      moveAmount,
+      baseIndex + (moveAmount < 0 ? -1 : 1),
+      itemCount,
+      isItemDisabledAtIndex,
+    )
+  }
+
   return newIndex
 }
 

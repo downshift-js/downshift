@@ -79,10 +79,12 @@ class Combobox extends Component {
                       {...getItemProps({
                         'data-testid': `downshift-item-${index}`,
                         item,
+                        disabled: item === 'Black',
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? 'lightgray' : null,
                           fontWeight: selectedItem === item ? 'bold' : null,
+                          color: item === 'Black' ? 'lightgray' : null,
                         },
                       })}
                     >

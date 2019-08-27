@@ -177,6 +177,51 @@ test(`disabled item can't be selected by pressing enter`, () => {
   expect(input.value).toBe('c')
 })
 
+test(`disabled item can't be highlighted when navigating via keyDown`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion', disabled: true},
+    {item: 'Checkers'},
+  ]
+  const utils = renderDownshift({items})
+  const {input, arrowDownInput, enterOnInput} = utils
+
+  const firstItem = utils.queryByTestId('item-0')
+  expect(firstItem.hasAttribute('disabled')).toBe(true)
+  const secondItem = utils.queryByTestId('item-1')
+  expect(secondItem.hasAttribute('disabled')).toBe(true)
+
+  // ↓
+  arrowDownInput()
+  // ↓ (should skip the first and second option)
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Checkers')
+})
+
+test(`disabled item can't be highlighted when navigating via keyUp`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion'},
+    {item: 'Checkers', disabled: true},
+  ]
+  const utils = renderDownshift({items})
+  const {input, arrowUpInput, enterOnInput} = utils
+
+  const firstItem = utils.queryByTestId('item-0')
+  expect(firstItem.hasAttribute('disabled')).toBe(true)
+  const thirdItem = utils.queryByTestId('item-2')
+  expect(thirdItem.hasAttribute('disabled')).toBe(true)
+
+  // ↑
+  arrowUpInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Dominion')
+})
+
 function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,
