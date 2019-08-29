@@ -225,6 +225,19 @@ export type DownshiftInterface<Item> = React.ComponentClass<
   }
 }
 
+declare const Downshift: DownshiftInterface<any>
+export default Downshift
+export function resetIdCounter(): void
+
+/* useSelect Types */
+
+export interface UseSelectState<Item> {
+  highlightedIndex: number
+  selectedItem: Item
+  isOpen: boolean
+  keySoFar: string
+}
+
 export enum UseSelectStateChangeTypes {
   MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
   MenuKeyDownArrowUp = '__menu_keydown_arrow_up__',
@@ -246,25 +259,6 @@ export enum UseSelectStateChangeTypes {
   FunctionSetSelectedItem = '__function_set_selected_item__',
   FunctionClearKeysSoFar = '__function_clear_keys_so_far__',
   FunctionReset = '__function_reset__',
-}
-
-export interface UseSelectA11yStatusMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
-}
-
-export interface UseSelectState<Item> {
-  highlightedIndex: number
-  selectedItem: Item
-  isOpen: boolean
-  keySoFar: string
-}
-
-export interface UseSelectStateChangeOptions<Item>
-  extends Partial<UseSelectState<Item>> {
-  type: UseSelectStateChangeTypes
 }
 
 export interface UseSelectProps<Item> {
@@ -298,6 +292,60 @@ export interface UseSelectProps<Item> {
   onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
 }
 
-declare const Downshift: DownshiftInterface<any>
-export default Downshift
-export function resetIdCounter(): void
+export interface UseSelectA11yStatusMessageOptions<Item> {
+  isOpen: boolean
+  selectedItem: Item
+  items: Item[]
+  itemToString: (item: Item) => string
+}
+
+export interface UseSelectStateChangeOptions<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
+}
+
+export interface UseSelectPropGetters<Item> {
+  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
+  getLabelProps: (options?: GetLabelPropsOptions) => any
+  getMenuProps: (
+    options?: GetMenuPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
+  getItemProps: (options: GetItemPropsOptions<Item>) => any
+}
+
+export interface UseSelectActions<Item> {
+  reset: (
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
+    cb?: Callback,
+  ) => void
+  openMenu: (cb?: Callback) => void
+  closeMenu: (cb?: Callback) => void
+  toggleMenu: (
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
+    cb?: Callback,
+  ) => void
+  selectItem: (
+    item: Item,
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
+    cb?: Callback,
+  ) => void
+  setHighlightedIndex: (
+    index: number,
+    otherStateToSet?: Partial<StateChangeOptions<Item>>,
+    cb?: Callback,
+  ) => void
+  // props
+  itemToString: (item: Item) => string
+  items: Item[]
+}
+
+export type UseSelectReturnValue<Item> = UseSelectState<Item> &
+  UseSelectPropGetters<Item> &
+  UseSelectActions<Item>
+
+export type UseSelectInterface<Item> = (
+  props: UseSelectProps<Item>,
+) => UseSelectReturnValue<Item> & {
+  stateChangeTypes: {}
+}
