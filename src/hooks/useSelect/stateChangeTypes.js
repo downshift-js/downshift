@@ -25,9 +25,7 @@ export const FunctionCloseMenu = productionEnum('__function_close_menu__')
 export const FunctionSetHighlightedIndex = productionEnum(
   '__function_set_highlighted_index__',
 )
-export const FunctionSetSelectedItem = productionEnum(
-  '__function_set_selected_item__',
-)
+export const FunctionSelectItem = productionEnum('__function_select_item__')
 export const FunctionClearKeysSoFar = productionEnum(
   '__function_clear_keys_so_far__',
 )

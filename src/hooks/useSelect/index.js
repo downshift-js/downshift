@@ -306,9 +306,9 @@ function useSelect(userProps = {}) {
       highlightedIndex: newHighlightedIndex,
     })
   }
-  const setSelectedItem = newSelectedItem => {
+  const selectItem = newSelectedItem => {
     dispatch({
-      type: stateChangeTypes.FunctionSetSelectedItem,
+      type: stateChangeTypes.FunctionSelectItem,
       selectedItem: newSelectedItem,
     })
   }
@@ -394,7 +394,7 @@ function useSelect(userProps = {}) {
     openMenu,
     closeMenu,
     setHighlightedIndex,
-    setSelectedItem,
+    selectItem,
     reset,
     // state.
     highlightedIndex,

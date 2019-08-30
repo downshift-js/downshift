@@ -110,14 +110,14 @@ describe('returnProps', () => {
       expect(result.current.highlightedIndex).toBe(2)
     })
 
-    test('setSelectedItem sets selectedItem', () => {
+    test('selectItem sets selectedItem', () => {
       const {result} = setupHook({})
 
       act(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.setSelectedItem(options[2])
+        result.current.selectItem(options[2])
       })
 
       expect(result.current.selectedItem).toBe(options[2])
@@ -130,7 +130,7 @@ describe('returnProps', () => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.setSelectedItem(options[2])
+        result.current.selectItem(options[2])
         result.current.setHighlightedIndex(3)
         result.current.reset()
       })
@@ -154,7 +154,7 @@ describe('returnProps', () => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.setSelectedItem(options[4])
+        result.current.selectItem(options[4])
         result.current.setHighlightedIndex(1)
         result.current.reset()
       })

@@ -256,7 +256,7 @@ export enum UseSelectStateChangeTypes {
   FunctionOpenMenu = '__function_open_menu__',
   FunctionCloseMenu = '__function_close_menu__',
   FunctionSetHighlightedIndex = '__function_set_highlighted_index__',
-  FunctionSetSelectedItem = '__function_set_selected_item__',
+  FunctionSelectItem = '__function_select_item__',
   FunctionClearKeysSoFar = '__function_clear_keys_so_far__',
   FunctionReset = '__function_reset__',
 }
@@ -347,5 +347,26 @@ export type UseSelectReturnValue<Item> = UseSelectState<Item> &
 export type UseSelectInterface<Item> = (
   props: UseSelectProps<Item>,
 ) => UseSelectReturnValue<Item> & {
-  stateChangeTypes: {}
+  stateChangeTypes: {
+    MenuKeyDownArrowDown: UseSelectStateChangeTypes.MenuKeyDownArrowDown
+    MenuKeyDownArrowUp: UseSelectStateChangeTypes.MenuKeyDownArrowUp
+    MenuKeyDownEscape: UseSelectStateChangeTypes.MenuKeyDownEscape
+    MenuKeyDownHome: UseSelectStateChangeTypes.MenuKeyDownHome
+    MenuKeyDownEnd: UseSelectStateChangeTypes.MenuKeyDownEnd
+    MenuKeyDownEnter: UseSelectStateChangeTypes.MenuKeyDownEnter
+    MenuKeyDownCharacter: UseSelectStateChangeTypes.MenuKeyDownCharacter
+    MenuBlur: UseSelectStateChangeTypes.MenuBlur
+    ItemMouseMove: UseSelectStateChangeTypes.ItemMouseMove
+    ItemClick: UseSelectStateChangeTypes.ItemClick
+    ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
+    ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
+    ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
+    FunctionToggleMenu: UseSelectStateChangeTypes.FunctionToggleMenu
+    FunctionOpenMenu: UseSelectStateChangeTypes.FunctionOpenMenu
+    FunctionCloseMenu: UseSelectStateChangeTypes.FunctionCloseMenu
+    FunctionSetHighlightedIndex: UseSelectStateChangeTypes.FunctionSetHighlightedIndex
+    FunctionSelectItem: UseSelectStateChangeTypes.FunctionSelectItem
+    FunctionClearKeysSoFar: UseSelectStateChangeTypes.FunctionClearKeysSoFar
+    FunctionReset: UseSelectStateChangeTypes.FunctionReset
+  }
 }

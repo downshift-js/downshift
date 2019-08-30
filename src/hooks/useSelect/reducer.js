@@ -128,7 +128,7 @@ export default function downshiftSelectReducer(state, action) {
         highlightedIndex: action.highlightedIndex,
       }
       break
-    case stateChangeTypes.FunctionSetSelectedItem:
+    case stateChangeTypes.FunctionSelectItem:
       changes = {
         selectedItem: action.selectedItem,
       }

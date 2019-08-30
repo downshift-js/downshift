@@ -15,6 +15,7 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -362,7 +363,7 @@ The list of all possible values this `type` property can take is defined in [thi
 - `useSelect.stateChangeTypes.FunctionOpenMenu`
 - `useSelect.stateChangeTypes.FunctionCloseMenu`
 - `useSelect.stateChangeTypes.FunctionSetHighlightedIndex`
-- `useSelect.stateChangeTypes.FunctionSetSelectedItem`
+- `useSelect.stateChangeTypes.FunctionSelectItem`
 - `useSelect.stateChangeTypes.FunctionClearKeysSoFar`
 - `useSelect.stateChangeTypes.FunctionReset`
 
@@ -527,7 +528,7 @@ These are functions you can call to change the state of the downshift `useSelect
 | --------------------- | ------------------------- | ----------------------------------------------------- |
 | `closeMenu`           | `function()`              | closes the menu                                       |
 | `openMenu`            | `function()`              | opens the menu                                        |
-| `setSelectedItem`     | `function(item: any)`     | selects the given item                                |
+| `selectItem`          | `function(item: any)`     | selects the given item                                |
 | `setHighlightedIndex` | `function(index: number)` | call to set a new highlighted index                   |
 | `toggleMenu`          | `function()`              | toggle the menu open state                            |
 | `reset`               | `function()`              | this resets downshift's state to a reasonable default |
