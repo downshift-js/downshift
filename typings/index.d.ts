@@ -370,3 +370,7 @@ export type UseSelectInterface<Item> = (
     FunctionReset: UseSelectStateChangeTypes.FunctionReset
   }
 }
+
+export function useSelect<Item>(
+  props: UseSelectInterface<Item>,
+): UseSelectReturnValue<Item>
