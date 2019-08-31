@@ -315,26 +315,12 @@ export interface UseSelectPropGetters<Item> {
 }
 
 export interface UseSelectActions<Item> {
-  reset: (
-    otherStateToSet?: Partial<StateChangeOptions<Item>>,
-    cb?: Callback,
-  ) => void
-  openMenu: (cb?: Callback) => void
-  closeMenu: (cb?: Callback) => void
-  toggleMenu: (
-    otherStateToSet?: Partial<StateChangeOptions<Item>>,
-    cb?: Callback,
-  ) => void
-  selectItem: (
-    item: Item,
-    otherStateToSet?: Partial<StateChangeOptions<Item>>,
-    cb?: Callback,
-  ) => void
-  setHighlightedIndex: (
-    index: number,
-    otherStateToSet?: Partial<StateChangeOptions<Item>>,
-    cb?: Callback,
-  ) => void
+  reset: () => void
+  openMenu: () => void
+  closeMenu: () => void
+  toggleMenu: () => void
+  selectItem: (item: Item) => void
+  setHighlightedIndex: (index: number) => void
   // props
   itemToString: (item: Item) => string
   items: Item[]
