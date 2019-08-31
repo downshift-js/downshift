@@ -20,4 +20,12 @@ describe('getLabelProps', () => {
 
     expect(labelProps.id).toEqual(props.labelId)
   })
+
+  test('passes props downwards', () => {
+    const {result} = setupHook()
+    const props = {foo: 'bar'}
+    const labelProps = result.current.getLabelProps(props)
+
+    expect(labelProps).toEqual(expect.objectContaining({foo: 'bar'}))
+  })
 })

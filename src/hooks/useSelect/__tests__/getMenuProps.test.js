@@ -79,7 +79,7 @@ describe('getMenuProps', () => {
     test('are passed down', () => {
       const {result} = setupHook()
 
-      expect(result.current.getToggleButtonProps({foo: 'bar'})).toHaveProperty(
+      expect(result.current.getMenuProps({foo: 'bar'})).toHaveProperty(
         'foo',
         'bar',
       )

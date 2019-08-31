@@ -318,10 +318,17 @@ function useSelect(userProps = {}) {
       props,
     })
   }
-  const getLabelProps = () => ({
+  const getLabelProps = labelProps => ({
     id: labelId,
+    ...labelProps,
   })
-  const getMenuProps = ({onKeyDown, onBlur, refKey = 'ref', ref} = {}) => ({
+  const getMenuProps = ({
+    onKeyDown,
+    onBlur,
+    refKey = 'ref',
+    ref,
+    ...rest
+  } = {}) => ({
     [refKey]: callAll(ref, menuNode => {
       menuRef.current = menuNode
     }),
@@ -334,6 +341,7 @@ function useSelect(userProps = {}) {
     }),
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+    ...rest,
   })
   const getToggleButtonProps = ({
     onClick,
