@@ -249,6 +249,7 @@ export enum UseSelectStateChangeTypes {
   MenuBlur = '__menu_blur__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
+  ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
   ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
   ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
   ToggleButtonClick = '__togglebutton_click__',
@@ -344,6 +345,7 @@ export type UseSelectInterface<Item> = (
     MenuBlur: UseSelectStateChangeTypes.MenuBlur
     ItemMouseMove: UseSelectStateChangeTypes.ItemMouseMove
     ItemClick: UseSelectStateChangeTypes.ItemClick
+    ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
     ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
     ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
     ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick

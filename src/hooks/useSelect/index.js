@@ -8,6 +8,7 @@ import {
   getItemIndex,
   getPropTypesValidator,
   itemToString as defaultItemToString,
+  isAcceptedCharacterKey,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
@@ -232,7 +233,7 @@ function useSelect(userProps = {}) {
     const key = keyboardKey.getKey(event)
     if (key && menuKeyDownHandlers[key]) {
       menuKeyDownHandlers[key](event)
-    } else if (/^\S{1}$/.test(key)) {
+    } else if (isAcceptedCharacterKey(key)) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownCharacter,
         key,
@@ -261,6 +262,12 @@ function useSelect(userProps = {}) {
     const key = keyboardKey.getKey(event)
     if (key && toggleButtonKeyDownHandlers[key]) {
       toggleButtonKeyDownHandlers[key](event)
+    } else if (isAcceptedCharacterKey(key)) {
+      dispatch({
+        type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+        key,
+        props,
+      })
     }
   }
   const itemHandleMouseMove = index => {

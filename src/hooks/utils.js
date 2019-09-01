@@ -83,6 +83,10 @@ function getPropTypesValidator(caller, propTypes) {
   }
 }
 
+function isAcceptedCharacterKey(key) {
+  return /^\S{1}$/.test(key)
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -91,4 +95,5 @@ export {
   getItemIndex,
   getPropTypesValidator,
   itemToString,
+  isAcceptedCharacterKey,
 }

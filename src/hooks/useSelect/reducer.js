@@ -90,6 +90,24 @@ export default function downshiftSelectReducer(state, action) {
         }
       }
       break
+    case stateChangeTypes.ToggleButtonKeyDownCharacter:
+      {
+        const lowercasedKey = action.key
+        const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
+        const itemIndex = getItemIndexByCharacterKey(
+          keysSoFar,
+          state.selectedItem ? props.items.indexOf(state.selectedItem) : -1,
+          props.items,
+          props.itemToString,
+        )
+        changes = {
+          keysSoFar,
+          ...(itemIndex >= 0 && {
+            selectedItem: props.items[itemIndex],
+          }),
+        }
+      }
+      break
     case stateChangeTypes.ToggleButtonKeyDownArrowDown: {
       changes = {
         isOpen: true,

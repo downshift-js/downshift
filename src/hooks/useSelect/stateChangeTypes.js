@@ -12,6 +12,9 @@ export const MenuKeyDownCharacter = productionEnum('__menu_keydown_character__')
 export const MenuBlur = productionEnum('__menu_blur__')
 export const ItemMouseMove = productionEnum('__item_mouse_move__')
 export const ItemClick = productionEnum('__item_click__')
+export const ToggleButtonKeyDownCharacter = productionEnum(
+  '__togglebutton_keydown_character__',
+)
 export const ToggleButtonKeyDownArrowDown = productionEnum(
   '__togglebutton_keydown_arrow_down__',
 )
