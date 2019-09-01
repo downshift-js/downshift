@@ -15,7 +15,6 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -356,6 +355,7 @@ The list of all possible values this `type` property can take is defined in [thi
 - `useSelect.stateChangeTypes.MenuBlur`
 - `useSelect.stateChangeTypes.ItemHover`
 - `useSelect.stateChangeTypes.ItemClick`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownCharacter`
 - `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown`
 - `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`
 - `useSelect.stateChangeTypes.ToggleButtonClick`
@@ -561,6 +561,7 @@ Downshift has a few events for which it provides implicit handlers. Several of t
 - `Click`: If the menu is not displayed, it will open it. Otherwise it will close it. It will additionally move focus on the menu in order for screen readers to correctly narrate which item is currently highlighted. If there is already an item selected, the menu will be opened with that item already highlighted.
 - `Enter`: Has the same effect as `Click`.
 - `Space`: Has the same effect as `Click`.
+- `CharacterKey`: Selects the option that starts with that key without opening the dropdown list. For instance, typing `C` will select the option that starts with `C`. Typing keys into rapid succession (in less than 500ms each) will select the option starting with that key combination, for instance typing `CAL` will select `californium` if this option exists.
 - `ArrowDown`: If the menu is closed, it will open it. If there is already an item selected, it will open the menu with the next item (index-wise) highlighted. Otherwise, it will open the menu with the first option highlighted.
 - `ArrowUp`: If the menu is closed, it will open it. If there is already an item selected, it will open the menu with the previous item (index-wise) highlighted. Otherwise, it will open the menu with the last option highlighted.
 
@@ -568,6 +569,7 @@ Downshift has a few events for which it provides implicit handlers. Several of t
 
 - `ArrowDown`: Moves `highlightedIndex` one position down. If `circularNavigation` is true, when reaching the last option, `ArrowDown` will move `highlightedIndex` to first position. Otherwise it won't change anything.
 - `ArrowUp`: Moves `highlightedIndex` one position up. If `circularNavigation` is true, when reaching the first option, `ArrowUp` will move `highlightedIndex` to last position. Otherwise it won't change anything.
+- `CharacterKey`: Moves `highlightedIndex` to the option that starts with that key. For instance, typing `C` will move highlight to the option that starts with `C`. Typing keys into rapid succession (in less than 500ms each) will move `highlightedIndex` to the option starting with that key combination, for instance typing `CAL` will move the highlight to `californium` if this option exists.
 - `End`: Moves `highlightedIndex` to last position.
 - `Home`: Moves `highlightedIndex` to first position.
 - `Enter`: If there is a highlighted option, it will select it, close the menu and move focus to the toggle button (unless `defaultIsOpen` is true).
