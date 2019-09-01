@@ -1,7 +1,8 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {act} from '@testing-library/react-hooks'
+import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from 'react-dom/test-utils'
 import {noop} from '../../../utils'
 import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
 
@@ -65,7 +66,7 @@ describe('getToggleButtonProps', () => {
     test("assign 'true' value to aria-expanded when menu is open", () => {
       const {result} = setupHook()
 
-      act(() => {
+      rtlAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
 
         menuRef({focus: noop})
@@ -92,7 +93,7 @@ describe('getToggleButtonProps', () => {
       const userOnClick = jest.fn()
       const {result} = setupHook()
 
-      act(() => {
+      rtlAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -112,7 +113,7 @@ describe('getToggleButtonProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
 
-      act(() => {
+      rtlAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -134,7 +135,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = setupHook()
 
-      act(() => {
+      rtlAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -156,7 +157,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = setupHook()
 
-      act(() => {
+      rtlAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -300,6 +301,130 @@ describe('getToggleButtonProps', () => {
     })
 
     describe('on keydown', () => {
+      describe('character key', () => {
+        jest.useFakeTimers()
+
+        afterEach(() => {
+          act(() => jest.runAllTimers())
+        })
+
+        const startsWithCharacter = (option, character) => {
+          return option.toLowerCase().startsWith(character.toLowerCase())
+        }
+
+        test('should select the first item that starts with that key', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'c'})
+
+          expect(toggleButton.textContent).toEqual(
+            options[
+              options.findIndex(option => startsWithCharacter(option, 'c'))
+            ],
+          )
+        })
+
+        test('should select the second item that starts with that key after typing it twice', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+          const firstIndex = options.findIndex(option =>
+            startsWithCharacter(option, 'c'),
+          )
+
+          fireEvent.keyDown(toggleButton, {key: 'c'})
+          act(() => jest.runAllTimers())
+          fireEvent.keyDown(toggleButton, {key: 'c'})
+
+          expect(toggleButton.textContent).toEqual(
+            options[
+              firstIndex +
+                1 +
+                options
+                  .slice(firstIndex + 1)
+                  .findIndex(option => startsWithCharacter(option, 'c'))
+            ],
+          )
+        })
+
+        test('should select the first item again if the options are depleated', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'b'})
+          act(() => jest.runAllTimers())
+          fireEvent.keyDown(toggleButton, {key: 'b'})
+          act(() => jest.runAllTimers())
+          fireEvent.keyDown(toggleButton, {key: 'b'})
+
+          expect(toggleButton.textContent).toEqual(
+            options[
+              options.findIndex(option => startsWithCharacter(option, 'b'))
+            ],
+          )
+        })
+
+        test('should not select anything if no item starts with that key', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'x'})
+
+          expect(toggleButton.textContent).toEqual('Elements')
+        })
+
+        test('should select the first item that starts with the keys typed in rapid succession', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'c'})
+          fireEvent.keyDown(toggleButton, {key: 'a'})
+
+          expect(toggleButton.textContent).toEqual(
+            options[
+              options.findIndex(option => startsWithCharacter(option, 'ca'))
+            ],
+          )
+        })
+
+        test('should become first character after timeout passes', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'c'})
+          fireEvent.keyDown(toggleButton, {key: 'a'})
+          act(() => jest.runAllTimers())
+          fireEvent.keyDown(toggleButton, {key: 'l'})
+
+          expect(toggleButton.textContent).toEqual(
+            options[
+              options.findIndex(option => startsWithCharacter(option, 'l'))
+            ],
+          )
+        })
+
+        /* Here we just want to make sure the keys cleanup works. */
+        test('should not go to the second option starting with the key if timeout did not pass', () => {
+          const wrapper = setup()
+          const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+          fireEvent.keyDown(toggleButton, {key: 'l'})
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          fireEvent.keyDown(toggleButton, {key: 'l'})
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          fireEvent.keyDown(toggleButton, {key: 'l'})
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          fireEvent.keyDown(toggleButton, {key: 'l'})
+
+          // highlight should stay on the first item starting with 'L'
+          expect(toggleButton.textContent).toEqual(
+            options[
+              options.findIndex(option => startsWithCharacter(option, 'l'))
+            ],
+          )
+        })
+      })
+
       describe('arrow up', () => {
         test('opens the closed menu with last option highlighted', () => {
           const wrapper = setup()

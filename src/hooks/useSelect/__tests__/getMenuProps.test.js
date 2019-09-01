@@ -321,6 +321,23 @@ describe('getMenuProps', () => {
             ),
           )
         })
+
+        /* Here we just want to make sure the keys cleanup works. */
+        test('should not go to the second option starting with the key if timeout did not pass', () => {
+          const wrapper = setup({isOpen: true})
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(menu, {key: 'c'})
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          fireEvent.keyDown(menu, {key: 'c'})
+
+          // highlight should stay on the first item starting with 'C'
+          expect(menu.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.getItemId(
+              options.findIndex(option => startsWithCharacter(option, 'c')),
+            ),
+          )
+        })
       })
 
       describe('arrow up', () => {

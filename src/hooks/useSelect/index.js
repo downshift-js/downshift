@@ -28,6 +28,8 @@ import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
 
+let clearTimeout
+
 function useSelect(userProps = {}) {
   useSelect.prototype.stateChangeTypes = stateChangeTypes
   validatePropTypes(userProps)
@@ -110,16 +112,19 @@ function useSelect(userProps = {}) {
   }, [selectedItem])
   /* Sets cleanup for the keysSoFar after 500ms. */
   useEffect(() => {
+    // init the clean function here as we need access to dispatch.
+    if (isInitialMount.current) {
+      clearTimeout = debounce(() => {
+        dispatch({
+          type: stateChangeTypes.FunctionClearKeysSoFar,
+          props,
+        })
+      }, 500)
+    }
     if (!keysSoFar) {
       return
     }
-    // call the returned debounced cleanup function.
-    debounce(() => {
-      dispatch({
-        type: stateChangeTypes.FunctionClearKeysSoFar,
-        props,
-      })
-    }, 500)()
+    clearTimeout()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keysSoFar])
   /* Controls the focus on the menu or the toggle button. */
