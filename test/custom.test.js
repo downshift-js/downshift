@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Downshift, {
   type ControllerStateAndHelpers,
   type DownshiftType,
-} from 'downshift' // eslint-disable-line import/no-unresolved
+} from 'downshift'
 
 type Item = string
 const DownshiftTyped: DownshiftType<Item> = Downshift
