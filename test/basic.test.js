@@ -5,7 +5,7 @@ import Downshift, {
   type StateChangeOptions,
   type ControllerStateAndHelpers,
   type DownshiftType,
-} from 'downshift'
+} from 'downshift' // eslint-disable-line import/no-unresolved
 
 type Item = string
 const DownshiftTyped: DownshiftType<Item> = Downshift
