@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Downshift, {
   type ControllerStateAndHelpers,
   type DownshiftType,
