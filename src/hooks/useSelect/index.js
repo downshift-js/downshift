@@ -139,7 +139,6 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     // Don't focus menu on first render.
     if (isInitialMount.current) {
-      isInitialMount.current = false
       // Unless it was initialised as open.
       if (initialIsOpen || defaultIsOpen || isOpen) {
         menuRef.current.focus()
@@ -168,6 +167,10 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
+  /* Make initial ref false. */
+  useEffect(() => {
+    isInitialMount.current = false
+  }, [])
 
   /* Event handler functions */
   const menuKeyDownHandlers = {
