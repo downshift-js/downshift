@@ -1,10 +1,6 @@
 import {debounce} from './utils'
 
-// istanbul ignore next
-let statusDiv =
-  typeof document === 'undefined'
-    ? null
-    : document.getElementById('a11y-status-message')
+let statusDiv
 
 const cleanupStatus = debounce(() => {
   getStatusDiv().textContent = ''
@@ -12,9 +8,10 @@ const cleanupStatus = debounce(() => {
 
 /**
  * @param {String} status the status message
+ * @param {Object} documentProp document passed by the user.
  */
-function setStatus(status) {
-  const div = getStatusDiv()
+function setStatus(status, documentProp) {
+  const div = getStatusDiv(documentProp)
   if (!status) {
     return
   }
@@ -24,14 +21,16 @@ function setStatus(status) {
 }
 
 /**
- * Get the status node or create it if it does not already exist
- * @return {HTMLElement} the status node
+ * Get the status node or create it if it does not already exist.
+ * @param {Object} documentProp document passed by the user.
+ * @return {HTMLElement} the status node.
  */
-function getStatusDiv() {
+function getStatusDiv(documentProp = document) {
   if (statusDiv) {
     return statusDiv
   }
-  statusDiv = document.createElement('div')
+
+  statusDiv = documentProp.createElement('div')
   statusDiv.setAttribute('id', 'a11y-status-message')
   statusDiv.setAttribute('role', 'status')
   statusDiv.setAttribute('aria-live', 'polite')
@@ -46,7 +45,7 @@ function getStatusDiv() {
     position: 'absolute',
     width: '1px',
   })
-  document.body.appendChild(statusDiv)
+  documentProp.body.appendChild(statusDiv)
   return statusDiv
 }
 
