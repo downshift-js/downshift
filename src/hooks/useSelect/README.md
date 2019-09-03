@@ -15,6 +15,7 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -40,6 +41,7 @@ These props results are destructured as a set of ARIA attributes and event liste
   - [menuId](#menuid)
   - [toggleButtonId](#togglebuttonid)
   - [getItemId](#getitemid)
+  - [environment](#environment)
   - [circularNavigation](#circularnavigation)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
@@ -331,6 +333,12 @@ Used for `aria` attributes and the `id` prop of the element (`button`) you use [
 > `function(index)` | defaults to a function that generates an ID based on the index
 
 Used for `aria` attributes and the `id` prop of the element (`li`) you use [`getItemProps`](#getitemprops) with.
+
+### environment
+
+> `window` | defaults to `window`
+
+This prop is only useful if you're rendering downshift within a different `window` context from where your JavaScript is running; for example, an iframe or a shadow-root. If the given context is lacking `document` and/or `add|removeEventListener` on its prototype (as is the case for a shadow-root) then you will need to pass in a custom object that is able to provide [access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177) for downshift.
 
 ### circularNavigation
 

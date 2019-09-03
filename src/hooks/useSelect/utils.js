@@ -131,6 +131,15 @@ const propTypes = {
   onHighlightedIndexChange: PropTypes.func,
   onStateChange: PropTypes.func,
   onIsOpenChange: PropTypes.func,
+  environment: PropTypes.shape({
+    addEventListener: PropTypes.func,
+    removeEventListener: PropTypes.func,
+    document: PropTypes.shape({
+      getElementById: PropTypes.func,
+      activeElement: PropTypes.any,
+      body: PropTypes.any,
+    }),
+  }),
 }
 
 export {

@@ -291,6 +291,7 @@ export interface UseSelectProps<Item> {
   onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
   onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
   onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
+  environment?: Environment
 }
 
 export interface UseSelectA11yStatusMessageOptions<Item> {

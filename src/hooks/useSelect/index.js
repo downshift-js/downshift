@@ -27,6 +27,16 @@ import {
 import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
+const defaultProps = {
+  itemToString: defaultItemToString,
+  stateReducer: (s, a) => a.changes,
+  getA11yStatusMessage: defaultGetA11yStatusMessage,
+  scrollIntoView: defaultScrollIntoView,
+  environment:
+    typeof window === 'undefined' /* istanbul ignore next (ssr) */
+      ? {}
+      : window,
+}
 
 let clearTimeout
 
@@ -35,10 +45,7 @@ function useSelect(userProps = {}) {
   validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {
-    itemToString: defaultItemToString,
-    stateReducer: (s, a) => a.changes,
-    getA11yStatusMessage: defaultGetA11yStatusMessage,
-    scrollIntoView: defaultScrollIntoView,
+    ...defaultProps,
     ...userProps,
   }
   const {
@@ -49,6 +56,7 @@ function useSelect(userProps = {}) {
     defaultIsOpen,
     stateReducer,
     scrollIntoView,
+    environment,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
@@ -143,7 +151,7 @@ function useSelect(userProps = {}) {
     if (isOpen) {
       menuRef.current.focus()
       // Focus toggleButton on close.
-    } else if (document.activeElement === menuRef.current) {
+    } else if (environment.document.activeElement === menuRef.current) {
       toggleButtonRef.current.focus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
