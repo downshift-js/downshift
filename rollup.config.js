@@ -18,6 +18,7 @@ config.plugins[cjsPluginIndex] = commonjs({
       'number',
       'array',
       'checkPropTypes',
+      'shape',
     ],
   },
 })
