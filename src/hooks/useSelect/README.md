@@ -15,7 +15,6 @@ These props results are destructured as a set of ARIA attributes and event liste
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -30,6 +29,7 @@ These props results are destructured as a set of ARIA attributes and event liste
   - [defaultIsOpen](#defaultisopen)
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [getA11yStatusMessage](#geta11ystatusmessage)
+  - [getA11ySelectionMessage](#geta11yselectionmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
   - [onIsOpenChange](#onisopenchange)
   - [onStateChange](#onstatechange)
@@ -243,11 +243,19 @@ Pass a number that sets the index of the highlighted item when downshift is rese
 
 This function is passed as props to a `Status` component nested within and allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided. It is called with the parameters `items`, `isOpen`, `selectedItem` and `itemToString` when either `isOpen` or `selectedItem` change. When menu is opened, the announcement message is "No results" if there aren't any items or "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." depending on the number of items in the menu. When `selectedItem` changes the message is a selection related one, narrating "`itemToString(selectedItem)` has been selected".
+A default `getA11yStatusMessage` function is provided. It is called with the parameters `items`, `isOpen`, `selectedItem` and `itemToString` when either `isOpen` changes. When menu is opened, the announcement message is "No results" if there aren't any items or "`resultCount` results are available, use up and down arrow keys to navigate. Press Enter key to select." depending on the number of items in the menu.
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
-The object you are passed to generate your status message has the following properties:
+### getA11ySelectionMessage
+
+> `function({/* see below */})` | default messages provided in English
+
+This function is similar to the `getA11yStatusMessage` but it is generating a message when an item is selected.
+
+A default `getA11ySelectionMessage` function is provided. It is called with the parameters `items`, `isOpen`, `selectedItem` and `itemToString` when `selectedItem` changes. When an item is selected, the message is a selection related one, narrating "`itemToString(selectedItem)` has been selected".
+
+The object you are passed to generate your status message, for both `getA11yStatusMessage` and `getA11ySelectionMessage` has the following properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 

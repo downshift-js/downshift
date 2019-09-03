@@ -69,6 +69,45 @@ describe('props', () => {
     })
   })
 
+  describe('getA11ySelectionMessage', () => {
+    afterEach(() => {
+      act(() => jest.runAllTimers())
+    })
+
+    test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
+      const getA11ySelectionMessage = jest.fn()
+      const wrapper = setup({
+        getA11ySelectionMessage,
+        isOpen: true,
+        items: [{str: 'ala'}],
+      })
+      const item = wrapper.getByTestId(dataTestIds.item(0))
+
+      fireEvent.click(item)
+      expect(getA11ySelectionMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          itemToString: expect.any(Function),
+          selectedItem: expect.any(Object),
+          items: expect.any(Array),
+          isOpen: expect.any(Boolean),
+        }),
+      )
+    })
+
+    test('is replaced with the user provided one', () => {
+      const wrapper = setup({getA11ySelectionMessage: () => 'custom message'})
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+      fireEvent.click(toggleButton)
+      const item = wrapper.getByTestId(dataTestIds.item(3))
+      act(() => jest.runAllTimers())
+      fireEvent.click(item)
+      expect(
+        document.getElementById('a11y-status-message').textContent,
+      ).toEqual('custom message')
+    })
+  })
+
   describe('getA11yStatusMessage', () => {
     jest.useFakeTimers()
 
@@ -141,13 +180,6 @@ describe('props', () => {
       expect(
         document.getElementById('a11y-status-message').textContent,
       ).toEqual('custom message')
-
-      const item = wrapper.getByTestId(dataTestIds.item(3))
-      act(() => jest.runAllTimers())
-      fireEvent.click(item)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual('custom message')
     })
 
     test('is called with isOpen, items, itemToString and selectedItem at toggle', () => {
@@ -162,26 +194,6 @@ describe('props', () => {
           isOpen: expect.any(Boolean),
           itemToString: expect.any(Function),
           selectedItem: expect.any(Object),
-        }),
-      )
-    })
-
-    test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
-      const getA11yStatusMessage = jest.fn()
-      const wrapper = setup({
-        getA11yStatusMessage,
-        isOpen: true,
-        items: [{str: 'ala'}],
-      })
-      const item = wrapper.getByTestId(dataTestIds.item(0))
-
-      fireEvent.click(item)
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          itemToString: expect.any(Function),
-          selectedItem: expect.any(Object),
-          items: expect.any(Array),
-          isOpen: expect.any(Boolean),
         }),
       )
     })

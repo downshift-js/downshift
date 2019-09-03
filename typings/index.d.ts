@@ -265,8 +265,9 @@ export enum UseSelectStateChangeTypes {
 export interface UseSelectProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage: (
-    options: UseSelectA11yStatusMessageOptions<Item>,
+  getA11yStatusMessage: (options: UseSelectA11yMessageOptions<Item>) => string
+  getA11ySelectionMessage: (
+    options: UseSelectA11yMessageOptions<Item>,
   ) => string
   circularNavigation: boolean
   highlightedIndex: number
@@ -294,7 +295,7 @@ export interface UseSelectProps<Item> {
   environment?: Environment
 }
 
-export interface UseSelectA11yStatusMessageOptions<Item> {
+export interface UseSelectA11yMessageOptions<Item> {
   isOpen: boolean
   selectedItem: Item
   items: Item[]

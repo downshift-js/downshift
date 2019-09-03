@@ -7,10 +7,7 @@ const defaultStateValues = {
   selectedItem: null,
 }
 
-function getA11yStatusMessage({isOpen, selectedItem, items, itemToString}) {
-  if (selectedItem) {
-    return `${itemToString(selectedItem)} has been selected.`
-  }
+function getA11yStatusMessage({isOpen, items}) {
   if (!items) {
     return ''
   }
@@ -24,6 +21,10 @@ function getA11yStatusMessage({isOpen, selectedItem, items, itemToString}) {
     } available, use up and down arrow keys to navigate. Press Enter key to select.`
   }
   return ''
+}
+
+function getA11ySelectionMessage({selectedItem, itemToString}) {
+  return `${itemToString(selectedItem)} has been selected.`
 }
 
 function getHighlightedIndexOnOpen(props, state, offset) {
@@ -111,6 +112,7 @@ const propTypes = {
   items: PropTypes.array.isRequired,
   itemToString: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
+  getA11ySelectionMessage: PropTypes.func,
   circularNavigation: PropTypes.bool,
   highlightedIndex: PropTypes.number,
   defaultHighlightedIndex: PropTypes.number,
@@ -145,6 +147,7 @@ const propTypes = {
 export {
   getHighlightedIndexOnOpen,
   getA11yStatusMessage,
+  getA11ySelectionMessage,
   getInitialState,
   defaultStateValues,
   propTypes,

@@ -20,6 +20,7 @@ import {
 import downshiftSelectReducer from './reducer'
 import {
   getA11yStatusMessage as defaultGetA11yStatusMessage,
+  getA11ySelectionMessage as defaultGetA11ySelectionMessage,
   getInitialState,
   propTypes,
   callOnChangeProps,
@@ -31,6 +32,7 @@ const defaultProps = {
   itemToString: defaultItemToString,
   stateReducer: (s, a) => a.changes,
   getA11yStatusMessage: defaultGetA11yStatusMessage,
+  getA11ySelectionMessage: defaultGetA11ySelectionMessage,
   scrollIntoView: defaultScrollIntoView,
   environment:
     typeof window === 'undefined' /* istanbul ignore next (ssr) */
@@ -52,6 +54,7 @@ function useSelect(userProps = {}) {
     items,
     itemToString,
     getA11yStatusMessage,
+    getA11ySelectionMessage,
     initialIsOpen,
     defaultIsOpen,
     stateReducer,
@@ -109,7 +112,7 @@ function useSelect(userProps = {}) {
       return
     }
     setStatus(
-      getA11yStatusMessage({
+      getA11ySelectionMessage({
         isOpen,
         items,
         selectedItem,
