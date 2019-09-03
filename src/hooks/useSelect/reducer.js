@@ -69,7 +69,9 @@ export default function downshiftSelectReducer(state, action) {
       changes = {
         isOpen: getDefaultValue(props, 'isOpen'),
         highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-        selectedItem: props.items[state.highlightedIndex],
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+        }),
       }
       break
     case stateChangeTypes.MenuKeyDownCharacter:
