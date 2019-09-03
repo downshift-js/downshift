@@ -31,7 +31,7 @@ const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
 let clearTimeout
 
 function useSelect(userProps = {}) {
-  useSelect.prototype.stateChangeTypes = stateChangeTypes
+  useSelect.stateChangeTypes = stateChangeTypes
   validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {
