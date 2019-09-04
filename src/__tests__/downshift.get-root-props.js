@@ -149,3 +149,25 @@ test('renders fine when rendering a composite component that uses refs forwardin
   render(<MyComponent />)
   expect(console.error.mock.calls).toHaveLength(0)
 })
+
+test('has access to element when a ref is passed to getRootProps', () => {
+  const ref = {current: null}
+
+  const MyComponent = () => (
+    <Downshift
+      children={({getRootProps}) => (
+        <MyDivWithForwardedRef
+          {...getRootProps({
+            ref: e => {
+              ref.current = e
+            },
+          })}
+        />
+      )}
+    />
+  )
+
+  render(<MyComponent />)
+  expect(ref.current).not.toBeNull()
+  expect(ref.current).toBeInstanceOf(HTMLDivElement)
+})

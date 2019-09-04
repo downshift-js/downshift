@@ -574,6 +574,7 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   const entry = Object.entries(props).find(
     ([_key, value]) => typeof value === 'function',
   )
+  // eslint-disable-next-line jest/no-if
   if (entry) {
     throw new Error(
       `getInputProps should not have any props that are callbacks. It has ${
