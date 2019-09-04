@@ -147,6 +147,7 @@ test(`getItemProps doesn't include event handlers when disabled is passed (for I
   const entry = Object.entries(props).find(
     ([key, value]) => key !== 'onMouseDown' && typeof value === 'function',
   )
+  // eslint-disable-next-line jest/no-if
   if (entry) {
     throw new Error(
       `getItemProps should not have any props that are callbacks. It has ${
