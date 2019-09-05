@@ -1005,7 +1005,7 @@ class Downshift extends Component {
     })
     this.previousResultCount = resultCount
 
-    setA11yStatus(status)
+    setA11yStatus(status, this.props.environment.document)
   }, 200)
 
   componentDidMount() {
