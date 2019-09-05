@@ -4,7 +4,7 @@ import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
+import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)
@@ -239,7 +239,7 @@ describe('getMenuProps', () => {
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(
-              options.findIndex(option => startsWithCharacter(option, 'c')),
+              items.findIndex(option => startsWithCharacter(option, 'c')),
             ),
           )
         })
@@ -247,7 +247,7 @@ describe('getMenuProps', () => {
         test('should highlight the second item that starts with that key after typing it twice', () => {
           const wrapper = setup({isOpen: true})
           const menu = wrapper.getByTestId(dataTestIds.menu)
-          const firstIndex = options.findIndex(option =>
+          const firstIndex = items.findIndex(option =>
             startsWithCharacter(option, 'c'),
           )
 
@@ -259,14 +259,14 @@ describe('getMenuProps', () => {
             defaultIds.getItemId(
               firstIndex +
                 1 +
-                options
+                items
                   .slice(firstIndex + 1)
                   .findIndex(option => startsWithCharacter(option, 'c')),
             ),
           )
         })
 
-        test('should highlight the first item again if the options are depleated', () => {
+        test('should highlight the first item again if the items are depleated', () => {
           const wrapper = setup({isOpen: true})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -278,7 +278,7 @@ describe('getMenuProps', () => {
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(
-              options.findIndex(option => startsWithCharacter(option, 'b')),
+              items.findIndex(option => startsWithCharacter(option, 'b')),
             ),
           )
         })
@@ -301,7 +301,7 @@ describe('getMenuProps', () => {
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(
-              options.findIndex(option => startsWithCharacter(option, 'ca')),
+              items.findIndex(option => startsWithCharacter(option, 'ca')),
             ),
           )
         })
@@ -317,7 +317,7 @@ describe('getMenuProps', () => {
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(
-              options.findIndex(option => startsWithCharacter(option, 'l')),
+              items.findIndex(option => startsWithCharacter(option, 'l')),
             ),
           )
         })
@@ -334,7 +334,7 @@ describe('getMenuProps', () => {
           // highlight should stay on the first item starting with 'C'
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(
-              options.findIndex(option => startsWithCharacter(option, 'c')),
+              items.findIndex(option => startsWithCharacter(option, 'c')),
             ),
           )
         })
@@ -348,7 +348,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
@@ -416,7 +416,7 @@ describe('getMenuProps', () => {
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
       })
@@ -460,7 +460,7 @@ describe('getMenuProps', () => {
         })
 
         test('with shift it highlights last item if not enough next items remaining', () => {
-          const initialHighlightedIndex = options.length - 2
+          const initialHighlightedIndex = items.length - 2
           const wrapper = setup({isOpen: true, initialHighlightedIndex})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -470,28 +470,28 @@ describe('getMenuProps', () => {
           })
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('will stop at last item if circularNavigatios is falsy', () => {
           const wrapper = setup({
             isOpen: true,
-            initialHighlightedIndex: options.length - 1,
+            initialHighlightedIndex: items.length - 1,
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('will continue from last item to 0 if circularNavigatios is truthy', () => {
           const wrapper = setup({
             isOpen: true,
-            initialHighlightedIndex: options.length - 1,
+            initialHighlightedIndex: items.length - 1,
             circularNavigation: true,
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
@@ -511,7 +511,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.getItemId(options.length - 1),
+          defaultIds.getItemId(items.length - 1),
         )
       })
 
@@ -558,9 +558,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(
-          options[initialHighlightedIndex],
-        )
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
       })
 
       test('enter selects highlighted item and resets to user defaults', () => {
@@ -574,10 +572,8 @@ describe('getMenuProps', () => {
 
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
-        expect(toggleButton.textContent).toEqual(
-          options[defaultHighlightedIndex],
-        )
-        expect(menu.childNodes).toHaveLength(options.length)
+        expect(toggleButton.textContent).toEqual(items[defaultHighlightedIndex])
+        expect(menu.childNodes).toHaveLength(items.length)
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(defaultHighlightedIndex),
         )
@@ -606,9 +602,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(
-          options[initialHighlightedIndex],
-        )
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
       })
 
       // Special case test.
@@ -624,9 +618,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab, shiftKey: true})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(
-          options[initialHighlightedIndex],
-        )
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
       })
 
       test('shift+tab it has the focus moved to toggleButton', () => {
@@ -643,7 +635,7 @@ describe('getMenuProps', () => {
         const wrapper = setup({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
-          initialSelectedItem: options[2],
+          initialSelectedItem: items[2],
         })
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -652,11 +644,11 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {keyCode: keyboardKey.Control})
 
         expect(document.activeElement).toBe(menu)
-        expect(toggleButton.textContent).toEqual(options[2])
+        expect(toggleButton.textContent).toEqual(items[2])
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(2),
         )
-        expect(menu.childNodes).toHaveLength(options.length)
+        expect(menu.childNodes).toHaveLength(items.length)
       })
     })
 
@@ -673,9 +665,7 @@ describe('getMenuProps', () => {
         fireEvent.blur(menu)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(
-          options[initialHighlightedIndex],
-        )
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
       })
 
       test.skip('by clicking outside it should behave normnally but the toggleButton should not be focused', () => {
@@ -691,9 +681,7 @@ describe('getMenuProps', () => {
         fireEvent.focus(outsideElement)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(
-          options[initialHighlightedIndex],
-        )
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
         expect(document.activeElement).not.toBe(toggleButton)
       })
     })

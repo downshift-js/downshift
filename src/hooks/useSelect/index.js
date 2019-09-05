@@ -434,9 +434,6 @@ function useSelect(userProps = {}) {
     highlightedIndex,
     isOpen,
     selectedItem,
-    // props.
-    items,
-    itemToString,
   }
 }
 

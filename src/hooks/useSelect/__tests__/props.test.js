@@ -2,7 +2,7 @@ import {act} from 'react-dom/test-utils'
 import {renderHook} from '@testing-library/react-hooks'
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
-import {setup, dataTestIds, options, defaultIds} from '../testUtils'
+import {setup, dataTestIds, items, defaultIds} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
 
@@ -237,36 +237,36 @@ describe('props', () => {
       const menu = wrapper.getByTestId(dataTestIds.menu)
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      expect(menu.childNodes).toHaveLength(options.length)
+      expect(menu.childNodes).toHaveLength(items.length)
 
       fireEvent.click(toggleButton)
-      expect(menu.childNodes).toHaveLength(options.length)
+      expect(menu.childNodes).toHaveLength(items.length)
 
-      expect(menu.childNodes).toHaveLength(options.length)
+      expect(menu.childNodes).toHaveLength(items.length)
 
       fireEvent.blur(menu)
-      expect(menu.childNodes).toHaveLength(options.length)
+      expect(menu.childNodes).toHaveLength(items.length)
     })
   })
 
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
-      const selectedItem = options[2]
+      const selectedItem = items[2]
       const wrapper = setup({selectedItem, initialIsOpen: true})
       const menu = wrapper.getByTestId(dataTestIds.menu)
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const item = wrapper.getByTestId(dataTestIds.item(3))
 
-      expect(toggleButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(items[2])
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
       fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
 
-      expect(toggleButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(items[2])
 
       fireEvent.click(toggleButton)
       fireEvent.click(item)
-      expect(toggleButton.textContent).toEqual(options[2])
+      expect(toggleButton.textContent).toEqual(items[2])
     })
   })
 
@@ -349,7 +349,7 @@ describe('props', () => {
       fireEvent.click(item)
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          selectedItem: options[0],
+          selectedItem: items[0],
         }),
       )
     })
@@ -358,7 +358,7 @@ describe('props', () => {
       const onSelectedItemChange = jest.fn()
       const wrapper = setup({
         initialIsOpen: true,
-        initialSelectedItem: options[0],
+        initialSelectedItem: items[0],
         onSelectedItemChange,
       })
       const item = wrapper.getByTestId(dataTestIds.item(0))
@@ -448,7 +448,7 @@ describe('props', () => {
       fireEvent.click(item)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          selectedItem: options[0],
+          selectedItem: items[0],
         }),
       )
     })

@@ -2,7 +2,7 @@ import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
+import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
 describe('getItemProps', () => {
   afterEach(cleanup)
@@ -218,7 +218,7 @@ describe('getItemProps', () => {
         fireEvent.click(item)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(options[index])
+        expect(toggleButton.textContent).toEqual(items[index])
       })
 
       test('it selects the item and resets to user defined defaults', () => {
@@ -230,8 +230,8 @@ describe('getItemProps', () => {
 
         fireEvent.click(item)
 
-        expect(toggleButton.textContent).toEqual(options[index])
-        expect(menu.childNodes).toHaveLength(options.length)
+        expect(toggleButton.textContent).toEqual(items[index])
+        expect(menu.childNodes).toHaveLength(items.length)
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(2),
         )

@@ -2,10 +2,10 @@ import React from 'react'
 import {useId} from '@reach/auto-id'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds} from '../utils'
+import {getElementIds, itemToString} from '../utils'
 import useSelect from '.'
 
-const options = [
+const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -49,7 +49,7 @@ const dataTestIds = {
 }
 
 const setupHook = props => {
-  return renderHook(() => useSelect({items: options, ...props}))
+  return renderHook(() => useSelect({items, ...props}))
 }
 
 const DropdownSelect = props => {
@@ -61,9 +61,7 @@ const DropdownSelect = props => {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-    items,
-    itemToString,
-  } = useSelect({items: options, ...props})
+  } = useSelect({items, ...props})
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -77,7 +75,7 @@ const DropdownSelect = props => {
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
-          items.map((item, index) => {
+          (props.items || items).map((item, index) => {
             const stringItem =
               item instanceof Object ? itemToString(item) : item
             return (
@@ -100,4 +98,4 @@ const DropdownSelect = props => {
 
 const setup = props => render(<DropdownSelect {...props} />)
 
-export {dataTestIds, setup, options, setupHook, defaultIds}
+export {dataTestIds, setup, items, setupHook, defaultIds}

@@ -1,7 +1,7 @@
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {options, setupHook} from '../testUtils'
+import {items, setupHook} from '../testUtils'
 import {defaultStateValues} from '../utils'
 
 describe('returnProps', () => {
@@ -117,10 +117,10 @@ describe('returnProps', () => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.selectItem(options[2])
+        result.current.selectItem(items[2])
       })
 
-      expect(result.current.selectedItem).toBe(options[2])
+      expect(result.current.selectedItem).toBe(items[2])
     })
 
     test('reset sets the state to default values', () => {
@@ -130,7 +130,7 @@ describe('returnProps', () => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.selectItem(options[2])
+        result.current.selectItem(items[2])
         result.current.setHighlightedIndex(3)
         result.current.reset()
       })
@@ -146,7 +146,7 @@ describe('returnProps', () => {
       const props = {
         defaultIsOpen: false,
         defaultHighlightedIndex: 3,
-        defaultSelectedItem: options[2],
+        defaultSelectedItem: items[2],
       }
       const {result} = setupHook(props)
 
@@ -154,7 +154,7 @@ describe('returnProps', () => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus: noop})
         result.current.openMenu()
-        result.current.selectItem(options[4])
+        result.current.selectItem(items[4])
         result.current.setHighlightedIndex(1)
         result.current.reset()
       })
@@ -181,22 +181,9 @@ describe('returnProps', () => {
     })
 
     test('selectedItem is returned', () => {
-      const {result} = setupHook({selectedItem: options[1]})
+      const {result} = setupHook({selectedItem: items[1]})
 
-      expect(result.current.selectedItem).toBe(options[1])
-    })
-
-    test('items is returned', () => {
-      const {result} = setupHook({items: ['1', '2']})
-
-      expect(result.current.items).toEqual(['1', '2'])
-    })
-
-    test('itemToString is returned', () => {
-      const itemToString = noop
-      const {result} = setupHook({itemToString})
-
-      expect(result.current.itemToString).toEqual(itemToString)
+      expect(result.current.selectedItem).toBe(items[1])
     })
   })
 })

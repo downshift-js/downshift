@@ -4,7 +4,7 @@ import {fireEvent, cleanup} from '@testing-library/react'
 import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
 import {noop} from '../../../utils'
-import {setup, dataTestIds, options, setupHook, defaultIds} from '../testUtils'
+import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
 describe('getToggleButtonProps', () => {
   afterEach(cleanup)
@@ -186,7 +186,7 @@ describe('getToggleButtonProps', () => {
 
         fireEvent.click(toggleButton)
 
-        expect(menu.childNodes).toHaveLength(options.length)
+        expect(menu.childNodes).toHaveLength(items.length)
       })
 
       test('closes the open menu', () => {
@@ -211,7 +211,7 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu with selected option highlighted', () => {
         const selectedIndex = 3
-        const wrapper = setup({initialSelectedItem: options[selectedIndex]})
+        const wrapper = setup({initialSelectedItem: items[selectedIndex]})
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -319,16 +319,14 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {key: 'c'})
 
           expect(toggleButton.textContent).toEqual(
-            options[
-              options.findIndex(option => startsWithCharacter(option, 'c'))
-            ],
+            items[items.findIndex(option => startsWithCharacter(option, 'c'))],
           )
         })
 
         test('should select the second item that starts with that key after typing it twice', () => {
           const wrapper = setup()
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-          const firstIndex = options.findIndex(option =>
+          const firstIndex = items.findIndex(option =>
             startsWithCharacter(option, 'c'),
           )
 
@@ -337,17 +335,17 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {key: 'c'})
 
           expect(toggleButton.textContent).toEqual(
-            options[
+            items[
               firstIndex +
                 1 +
-                options
+                items
                   .slice(firstIndex + 1)
                   .findIndex(option => startsWithCharacter(option, 'c'))
             ],
           )
         })
 
-        test('should select the first item again if the options are depleated', () => {
+        test('should select the first item again if the items are depleated', () => {
           const wrapper = setup()
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
@@ -358,9 +356,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {key: 'b'})
 
           expect(toggleButton.textContent).toEqual(
-            options[
-              options.findIndex(option => startsWithCharacter(option, 'b'))
-            ],
+            items[items.findIndex(option => startsWithCharacter(option, 'b'))],
           )
         })
 
@@ -381,9 +377,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {key: 'a'})
 
           expect(toggleButton.textContent).toEqual(
-            options[
-              options.findIndex(option => startsWithCharacter(option, 'ca'))
-            ],
+            items[items.findIndex(option => startsWithCharacter(option, 'ca'))],
           )
         })
 
@@ -397,9 +391,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {key: 'l'})
 
           expect(toggleButton.textContent).toEqual(
-            options[
-              options.findIndex(option => startsWithCharacter(option, 'l'))
-            ],
+            items[items.findIndex(option => startsWithCharacter(option, 'l'))],
           )
         })
 
@@ -418,9 +410,7 @@ describe('getToggleButtonProps', () => {
 
           // highlight should stay on the first item starting with 'L'
           expect(toggleButton.textContent).toEqual(
-            options[
-              options.findIndex(option => startsWithCharacter(option, 'l'))
-            ],
+            items[items.findIndex(option => startsWithCharacter(option, 'l'))],
           )
         })
       })
@@ -434,13 +424,13 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('opens the closed menu with selected option - 1 highlighted', () => {
           const selectedIndex = 3
-          const wrapper = setup({initialSelectedItem: options[selectedIndex]})
+          const wrapper = setup({initialSelectedItem: items[selectedIndex]})
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -467,7 +457,7 @@ describe('getToggleButtonProps', () => {
           fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(options.length - 1),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
@@ -530,7 +520,7 @@ describe('getToggleButtonProps', () => {
 
         test('opens the closed menu with selected option + 1 highlighted', () => {
           const selectedIndex = 3
-          const wrapper = setup({initialSelectedItem: options[selectedIndex]})
+          const wrapper = setup({initialSelectedItem: items[selectedIndex]})
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
