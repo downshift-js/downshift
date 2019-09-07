@@ -6,6 +6,7 @@ route: /hooks/useselect/html
 
 import {Playground} from 'docz'
 import {useSelect} from '../../../src'
+import {items, menuStyles} from './html'
 
 # HTML select
 
@@ -26,7 +27,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
         getMenuProps,
         highlightedIndex,
         getItemProps,
-      } = useSelect({items: options})
+      } = useSelect({items})
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
@@ -35,60 +36,22 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
           </button>
           <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
-              options.map((option, index) => (
+              items.map((item, index) => (
                 <li
                   style={
                     highlightedIndex === index
                       ? {backgroundColor: '#bde4ff'}
                       : {}
                   }
-                  key={`${option}${index}`}
-                  {...getItemProps({item: option, index})}
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
                 >
-                  {option}
+                  {item}
                 </li>
               ))}
           </ul>
         </div>
       )
-    }
-    const options = [
-      'Neptunium',
-      'Plutonium',
-      'Americium',
-      'Curium',
-      'Berkelium',
-      'Californium',
-      'Einsteinium',
-      'Fermium',
-      'Mendelevium',
-      'Nobelium',
-      'Lawrencium',
-      'Rutherfordium',
-      'Dubnium',
-      'Seaborgium',
-      'Bohrium',
-      'Hassium',
-      'Meitnerium',
-      'Darmstadtium',
-      'Roentgenium',
-      'Copernicium',
-      'Nihonium',
-      'Flerovium',
-      'Moscovium',
-      'Livermorium',
-      'Tennessine',
-      'Oganesson',
-    ]
-    const menuStyles = {
-      maxHeight: '200px',
-      overflowY: 'auto',
-      width: '200px',
-      position: 'absolute',
-      margin: 0,
-      borderTop: 0,
-      background: 'white',
-      zIndex: 1000,
     }
     return <DropdownSelect />
   }}
