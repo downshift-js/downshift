@@ -69,11 +69,12 @@ function useSelect(userProps = {}) {
     {isOpen, highlightedIndex, selectedItem, keysSoFar},
     dispatch,
   ] = useReducer((state, action) => {
-    const changes = downshiftSelectReducer(state, action)
+    const changes = downshiftSelectReducer(state, action) // state after original reducer.
+    const reducedState = stateReducer(state, {...action, changes}) // state after user reducer.
 
-    callOnChangeProps(props, state, changes)
+    callOnChangeProps(props, state, reducedState) // call onChange with state resulted.
 
-    return getState(stateReducer(state, {...action, changes}), props)
+    return getState(reducedState, props) // state is merged with controlled props.
   }, initialState)
 
   // IDs generation.

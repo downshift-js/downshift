@@ -338,6 +338,53 @@ describe('props', () => {
 
       fireEvent.click(toggleButton)
     })
+
+    test('changes are visible in onChange handlers', () => {
+      const highlightedIndex = 2
+      const selectedItem = {foo: 'bar'}
+      const isOpen = true
+      const stateReducer = jest.fn(() => ({
+        highlightedIndex,
+        isOpen,
+        selectedItem,
+      }))
+      const onSelectedItemChange = jest.fn()
+      const onHighlightedIndexChange = jest.fn()
+      const onIsOpenChange = jest.fn()
+      const onStateChange = jest.fn()
+      const wrapper = setup({
+        stateReducer,
+        onStateChange,
+        onSelectedItemChange,
+        onHighlightedIndexChange,
+        onIsOpenChange,
+      })
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+      fireEvent.click(toggleButton)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex,
+        }),
+      )
+      expect(onSelectedItemChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          selectedItem,
+        }),
+      )
+      expect(onIsOpenChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isOpen,
+        }),
+      )
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isOpen,
+          highlightedIndex,
+          selectedItem,
+        }),
+      )
+    })
   })
 
   describe('onSelectedItemChange', () => {
