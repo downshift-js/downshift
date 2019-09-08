@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     maxWidth: 300,
     backgroundColor: theme.palette.background.paper,
-    maxHeight: 250,
+    maxHeight: 150,
     overflowY: 'auto',
     position: 'absolute',
     margin: 0,

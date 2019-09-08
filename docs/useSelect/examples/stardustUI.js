@@ -38,7 +38,7 @@ const items = [
 ]
 
 const menuStyles = {
-  maxHeight: '250px',
+  maxHeight: '175px',
   overflowY: 'auto',
   position: 'absolute',
   margin: 0,

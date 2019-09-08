@@ -17,16 +17,27 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 
-# MaterialUI
+# useSelect
+
+## Readme
+
+The `useSelect` hook provides functionality and accessibility to a dropdown that should act as a HTML `<select>`, as described
+by the corresponding [ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html).
+
+User should be allowed to perform a selection after opening the dropdown's menu. Only one item may be selected at a time.
+The widget should be built using a text label (optional but recommended), a button that toggles the menu, the menu itself
+and the collection of items that belong in the menu.
+
+## MaterialUI
 
 A dropdown created with MaterialUI components such as `<FormLabel>`, `<List>`, `<ListItem>` and `<Button>`. Also child components
 that are needed to display the `<ListItem>`.
 
 https://material-ui.com/
 
-### Playground
+## Playground
 
-<Playground style={{height: '50px'}}>
+<Playground style={{height: '150px'}}>
   {() => {
     const classes = useStyles()
     const DropdownSelectMaterialUI = () => {
@@ -42,16 +53,6 @@ https://material-ui.com/
         items,
         itemToString: item => item.primary,
       })
-      const toggleButtonProps = getToggleButtonProps({
-        refKey: 'toggleButtonRef',
-      })
-      const menuProps = getMenuProps({
-        refKey: 'menuRef',
-      })
-      const {toggleButtonRef} = toggleButtonProps
-      const {menuRef} = menuProps
-      delete toggleButtonProps.toggleButtonRef
-      delete menuProps.menuRef
       return (
         <>
           <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
@@ -59,13 +60,12 @@ https://material-ui.com/
             variant="contained"
             color="secondary"
             className={classes.button}
-            ref={toggleButtonRef}
-            {...toggleButtonProps}
+            {...getToggleButtonProps()}
           >
             {selectedItem ? selectedItem.primary : 'Folders'}
             <ExpandMoreIcon className={classes.rightIcon} />
           </Button>
-          <List className={classes.root} ref={menuRef} {...menuProps}>
+          <List className={classes.root} {...getMenuProps()}>
             {isOpen && items.map((option, index) => {
               const itemProps = getItemProps({item: option, index, refKey: 'itemRef'})
               const {itemRef} = itemProps

@@ -27,7 +27,7 @@ const items = [
   'Oganesson',
 ]
 const menuStyles = {
-  maxHeight: '200px',
+  maxHeight: '180px',
   overflowY: 'auto',
   width: '200px',
   position: 'absolute',

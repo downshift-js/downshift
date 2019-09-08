@@ -3,7 +3,6 @@ export default {
   menu: [
     {
       name: 'useSelect',
-      menu: ['Readme'],
     },
   ],
 }
