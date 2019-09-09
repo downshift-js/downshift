@@ -1,7 +1,7 @@
 ---
-name: HTML select
+name: Usage
 menu: useSelect
-route: /hooks/useselect/html
+route: /hooks/use-select/usage
 ---
 
 import {Playground} from 'docz'
@@ -21,13 +21,26 @@ and the collection of items that belong in the menu.
 
 ## HTML elements
 
-A custom `<select>` element that is created with HTML elements such as: `<label>`, `<ul>`, `<li>` and `<button>`.
+A custom `<select>` element can be created with HTML elements such as: `<label>`, `<ul>`, `<li>` and `<button>`.
+Using other HTML elements to create a custom `<select>` is useful for the custom styling of the widget, since the `<select>`
+is notoriously difficult to be styled: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+In the example below, we use the `useSelect` hook and destructure from its result the getter props and state variables. These
+are used in the following way:
+
+| Returned prop          | Element                | Comments                                                                  |
+| ---------------------- | ---------------------- | ------------------------------------------------------------------------- |
+| `getLabelProps`        | `<label>`              | Adds an `id` attribute to be used for `menu` and `triggerButton`          |
+| `getToggleButtonProps` | `<button>`             | Controls the open state of the list.                                      |
+| `getMenuProps`         | `<ul>`                 | Makes list focusable, adds ARIA attributes and event handlers.            |
+| `getItemProps`         | `<li>`                 | Called with `index` and `item`, adds ARIA attributes and event listeners. |
+| `isOpen`               | before `<li>` elements | Only when it's true we render the `<li>` elements.                        |
+| `highlightedIndex`     | highlighted `<li>`     | Used to style the highlighted item.                                       |
+| `selectedItem`         | `<button>`             | Used to render text equivalent of selected item on the button.            |
 
 ## Playground
 
-<Playground style={{height: '150px'}}>
+<Playground style={{height: '160px'}}>
   {() => {
     const DropdownSelect = () => {
       const {
@@ -67,3 +80,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
     return <DropdownSelect />
   }}
 </Playground>
+
+## CodeSandbox
+
+Until a direct link from Playground will work, codesandbox equivalent is at https://codesandbox.io/s/useselect-usage-53qfj

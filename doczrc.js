@@ -3,6 +3,7 @@ export default {
   menu: [
     {
       name: 'useSelect',
+      menu: ['Usage', 'UI Libraries'],
     },
   ],
 }

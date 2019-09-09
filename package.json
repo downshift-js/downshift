@@ -1,6 +1,6 @@
 {
   "name": "downshift",
-  "version": "3.3.0-beta.0",
+  "version": "0.0.0-semantically-released",
   "description": "A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete components",
   "main": "dist/downshift.cjs.js",
   "react-native": "dist/downshift.native.cjs.js",
@@ -75,9 +75,6 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.4.4",
-    "@material-ui/core": "^4.2.1",
-    "@material-ui/icons": "^4.2.1",
-    "@stardust-ui/react": "^0.34.2",
     "@testing-library/react-hooks": "^2.0.1",
     "@testing-library/cypress": "^4.1.1",
     "@testing-library/react": "^8.0.9",
