@@ -1,7 +1,6 @@
 node_modules/
 coverage/
 dist/
-storybook-static/
 preact/
 package-lock.json
 package.json

@@ -1,0 +1,177 @@
+---
+name: UI Libraries
+menu: useSelect
+route: /hooks/use-select/ui-libraries
+---
+
+import {Playground} from 'docz'
+import {useSelect} from '../../../src'
+import {items, menuStyles} from './html'
+
+# useSelect
+
+## Readme
+
+The `useSelect` hook provides functionality and accessibility to a dropdown that should act as a HTML `<select>`, as described
+by the corresponding [ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html).
+
+User should be allowed to perform a selection after opening the dropdown's menu. Only one item may be selected at a time.
+The widget should be built using a text label (optional but recommended), a button that toggles the menu, the menu itself
+and the collection of items that belong in the menu.
+
+## UI Libraries
+
+A custom `<select>` element can be created using UI Library components as well. Many libraries will provide basic elements such
+as buttons, texts/labels and lists, which can be styles according to each library guidelines. `useSelect` is providing the additional
+stateful logic that will transform this selection of basic components into a fully working dropdown element.
+
+As `useSelect` needs to perform some `focus()` and `scroll()` logic on the DOM elements, it will require the refs to the `React`
+components used. I will illustrate how to use `useSelect` with `MaterialUI` and `StardustUI` libraries and how to correctly pass
+refs to the hook.
+
+Another point worth mentioning is that in this case items are objects and not strings. As a result, the `itemToString` prop is passed
+to `useSelect`. It will return the string equivalent of the item which will be used for selection/highlight by character keys and
+for the a11y message that will occur on every item selection: `$ItemString has been selected`.
+
+## MaterialUI
+
+Since `MaterialUI` components already accept a `ref` prop that will be filled with the resulting DOM element, we don't need to do
+anything specific rather than just spreading the getter props. `item.primary` is chosen to be the string equialent of each item
+object.
+
+```jsx
+function DropdownSelect() {
+  const items = [/*{ primary, secondary, icon} */}]
+  const classes = useStyles();
+  const {
+    isOpen,
+    selectedItem,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps
+  } = useSelect({
+    items,
+    itemToString: item => item.primary
+  });
+  return (
+    <div>
+      <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        {...getToggleButtonProps()}
+      >
+        {selectedItem ? selectedItem.primary : "Folders"}
+        <ExpandMoreIcon className={classes.rightIcon} />
+      </Button>
+      <List className={classes.root} {...getMenuProps()}>
+        {isOpen &&
+          items.map((option, index) => {
+            return (
+              <ListItem
+                key={`${option.primary}-${index}`}
+                className={
+                  index === highlightedIndex ? classes.highlighted : undefined
+                }
+                {...getItemProps({
+                  item: option,
+                  index
+                })}
+              >
+                <ListItemAvatar>
+                  <Avatar>{React.createElement(option.icon)}</Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={option.primary}
+                  secondary={option.secondary}
+                />
+              </ListItem>
+            );
+          })}
+      </List>
+    </div>
+  );
+}
+```
+
+Codesandbox equivalent is at https://codesandbox.io/s/fls5o
+
+## StardustUI
+
+`StardustUI` has a separate `<Ref>` component that handles refs to its components. It accepts a ref reference as the
+`innerRef` prop and will use that to place the resulting DOM element. In order to link that and `useSelect` with the
+same ref, we extract the ref reference from the getter props and provide them to the `<Ref>` components, as seen in
+the example below.
+
+This is useful also for cases when you need the ref inside your component and need to match the one `useSelect` has.
+`itemToString` points to `item.header` in this case to get the string equivalent.
+
+```jsx
+function DropdownSelect() {
+  const items = [/*{ header, content} */}]
+    const {
+    isOpen,
+    selectedItem,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps
+  } = useSelect({ items, itemToString: item => item.header });
+  const { toggleButtonRef, ...toggleButtonProps } = getToggleButtonProps({
+    refKey: "toggleButtonRef"
+  });
+  const { menuRef, ...menuProps } = getMenuProps({
+    refKey: "menuRef"
+  });
+
+  return (
+    <Provider theme={themes.teams}>
+      <Text {...getLabelProps()} content={"Fictional characters:"} />
+      <Ref innerRef={toggleButtonRef}>
+        <Button
+          content={
+            (selectedItem && selectedItem.header) || "Choose your favorite"
+          }
+          icon="arrow-down"
+          iconPosition="after"
+          {...toggleButtonProps}
+        />
+      </Ref>
+      <Ref innerRef={menuRef}>
+        <List {...menuProps} style={menuStyles}>
+          {isOpen &&
+            items.map((option, index) => {
+              const itemProps = getItemProps({
+                item: option,
+                index,
+                refKey: "itemRef"
+              });
+              const { itemRef } = itemProps;
+              delete itemProps.itemRef;
+              return (
+                <Ref key={`${option.header}-${index}`} innerRef={itemRef}>
+                  <List.Item
+                    header={option.header}
+                    content={option.content}
+                    style={
+                      highlightedIndex === index
+                        ? { backgroundColor: "#bde4ff" }
+                        : {}
+                    }
+                    {...itemProps}
+                  />
+                </Ref>
+              );
+            })}
+        </List>
+      </Ref>
+    </Provider>
+  );
+}
+```
+
+Codesandbox equivalent is at https://codesandbox.io/s/30qw6

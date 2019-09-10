@@ -37,7 +37,7 @@ for your use cases.
 ## This solution
 
 This is a component that controls user interactions and state for you so you can
-create autocomplete/dropdown/select/etc. components. It uses a [render
+create autocomplete, dropdown, select, etc. components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
 because you are responsible for the rendering of everything and you simply apply
 props to what you're rendering.
@@ -50,7 +50,7 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
-## The experiment
+## The new React Hooks API
 
 Downshift has proven to be a versatile React component which can be used not only
 for single selection autocomplete, but also for single selection dropdown and
@@ -58,14 +58,13 @@ the multiple selection variations of each. In order to customise the behavior, t
 developer needs to add more stateful logic to it, however, as each of the variations
 differ in terms of design patterns.
 
-We are now experimenting with adding a custom React hook for each use, so that there will
-be no need of adding other stateful logic besides the hook. The experimentation repo is
-[downshift-hooks][downshift-hooks]. The plan is to create each hook in that repo,
-test it against Downshift principles and ARIA design patterns, and then finally add
-each hook to this repo, so that importing them will be easy.
+In the effort to provide out of the box solutions for each variation, a set of React
+Hooks are about to be available as part of Downshift. Each hook will handle a specific
+dropdown variation and be named accordingly: `useSelect`, `useAutocomplete`, etc.
 
-If you like the idea, are passionate about React hooks or just want to be the cool kid from
-the future that shapes Downshift, try out the new repo and share your feedback!
+You can check the progress in the [hooks page][hooks-readme] and contribute! If you
+have a custom `<select>` dropdown and want it to be functional and accessible, jump
+directly to the already implemented [useSelect][useselect-readme].
 
 ## Table of Contents
 
@@ -1324,4 +1323,5 @@ MIT
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
 [use-a-render-prop]: https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
 [semver]: http://semver.org/
-[downshift-hooks]: https://github.com/silviuavram/downshift-hooks
+[hooks-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks
+[useselect-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
