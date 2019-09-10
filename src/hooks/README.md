@@ -1,7 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Downshift Hooks](#downshift-hooks)
   - [Hooks](#hooks)
     - [useSelect](#useselect)
@@ -30,4 +29,4 @@ Next steps:
 - create `multiple` versions for `useSelect` and `useAutocomplete`.
 
 [hooks-issue]: https://github.com/downshift-js/downshift/issues/683
-[select-readme]: https://github.com/silviuavram/downshift/blob/master/src/hooks/useSelect
+[select-readme]: https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect
