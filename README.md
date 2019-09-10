@@ -37,7 +37,7 @@ for your use cases.
 ## This solution
 
 This is a component that controls user interactions and state for you so you can
-create autocomplete/dropdown/select/etc. components. It uses a [render
+create autocomplete, dropdown, select, etc. components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
 because you are responsible for the rendering of everything and you simply apply
 props to what you're rendering.
@@ -50,7 +50,7 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
-## The React Hooks API
+## The new React Hooks API
 
 Downshift has proven to be a versatile React component which can be used not only
 for single selection autocomplete, but also for single selection dropdown and
@@ -58,15 +58,19 @@ the multiple selection variations of each. In order to customise the behavior, t
 developer needs to add more stateful logic to it, however, as each of the variations
 differ in terms of design patterns.
 
-A set of React Hooks are about to be available as part of Downshift. You can check
-the progress in the [hooks page][hooks-readme] and contribute! If you have a custom
-`<select>` dropdown and want it to be functional and accessible, jump directly to
-[useSelect][useselect-readme].
+In the effort to provide out of the box solutions for each variation, a set of React
+Hooks are about to be available as part of Downshift. Each hook will handle a specific
+dropdown variation and be named accordingly: `useSelect`, `useAutocomplete`, etc.
+
+You can check the progress in the [hooks page][hooks-readme] and contribute! If you
+have a custom `<select>` dropdown and want it to be functional and accessible, jump
+directly to the already implemented [useSelect][useselect-readme].
 
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Installation](#installation)
 - [Usage](#usage)

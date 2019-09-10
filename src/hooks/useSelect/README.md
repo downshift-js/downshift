@@ -6,15 +6,14 @@ You have a custom select dropdown in your application and you want it to perform
 
 ## This solution
 
-`useSelect` is a React hook that manages all the stateful logic needed to make the dropdown functional and accessible. It returns a set of props that are meant to be called and their results destructured on the dropdown's elements: its label, toggle button, list and list items. It follows the same pattern as the render props provided by vanilla `<Downshift>`.
+`useSelect` is a React hook that manages all the stateful logic needed to make the dropdown functional and accessible. It returns a set of props that are meant to be called and their results destructured on the dropdown's elements: its label, toggle button, list and list items. These are similar to the ones provided by vanilla `<Downshift>` to the children render prop.
 
-These props results are destructured as a set of ARIA attributes and event listeners. Together, they create all the stateful logic needed for the dropdown to implement the corresponding ARIA pattern. Every functionality needed should be provided out-of-the-box: menu toggle, item selection and up/down movement between them, screen reader support, highlight by character keys etc.
+These props are called getter props and their return values are destructured as a set of ARIA attributes and event listeners. Together with the action props and state props, they create all the stateful logic needed for the dropdown to implement the corresponding ARIA pattern. Every functionality needed should be provided out-of-the-box: menu toggle, item selection and up/down movement between them, screen reader support, highlight by character keys etc.
 
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Usage](#usage)
 - [Basic Props](#basic-props)
@@ -432,12 +431,12 @@ overridden (or overriding the props returned). For example: `getToggleButtonProp
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property               | type              | description                                                                                    |
-| ---------------------- | ----------------- | ---------------------------------------------------------------------------------------------- |
-| `getToggleButtonProps` | `function({})`    | returns the props you should apply to any menu toggle button element you render.               |
-| `getItemProps`         | `function({})`    | returns the props you should apply to any menu item elements you render.                       |
-| `getLabelProps`        | `function({})`    | returns the props you should apply to the `label` element that you render.                     |
-| `getMenuProps`         | `function({},{})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
+| property               | type           | description                                                                                    |
+| ---------------------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.               |
+| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                       |
+| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                     |
+| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
 
 #### `getLabelProps`
 
@@ -458,9 +457,6 @@ Optional properties:
 Please keep in mind that menus, for accessiblity purposes, should always be rendered, regardless of whether you hide it or not. Otherwise, `getMenuProps` may throw error if you unmount and remount the menu.
 
 - `aria-label`: By default the menu will add an `aria-labelledby` that refers to the `<label>` rendered with `getLabelProps`. However, if you provide `aria-label` to give a more specific label that describes the options available, then `aria-labelledby` will not be provided and screen readers can use your `aria-label` instead.
-
-In some cases, you might want to completely bypass the `refKey` check. Then you can provide the object `{suppressRefError : true}` as the second argument to `getMenuProps`.
-**Please use it with extreme care and only if you are absolutely sure that the ref is correctly forwarded otherwise `Downshift` will unexpectedly fail.**
 
 ```jsx
 const {getMenuProps} = useSelect({items})

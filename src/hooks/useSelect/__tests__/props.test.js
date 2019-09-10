@@ -3,7 +3,6 @@ import {renderHook} from '@testing-library/react-hooks'
 import * as keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
-import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
 
 describe('props', () => {
@@ -311,7 +310,7 @@ describe('props', () => {
 
     test('receives a downshift action type', () => {
       const stateReducer = jest.fn((s, a) => {
-        expect(a.type).toBe(stateChangeTypes.ToggleButtonClick)
+        expect(a.type).toBe(useSelect.stateChangeTypes.ToggleButtonClick)
         return a.changes
       })
       const wrapper = setup({stateReducer})

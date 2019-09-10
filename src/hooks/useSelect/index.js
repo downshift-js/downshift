@@ -42,8 +42,9 @@ const defaultProps = {
 
 let clearTimeout
 
+useSelect.stateChangeTypes = stateChangeTypes
+
 function useSelect(userProps = {}) {
-  useSelect.stateChangeTypes = stateChangeTypes
   validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {

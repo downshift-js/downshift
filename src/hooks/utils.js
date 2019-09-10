@@ -76,7 +76,8 @@ function itemToString(item) {
 }
 
 function getPropTypesValidator(caller, propTypes) {
-  return function validate(options) {
+  // istanbul ignore next
+  return function validate(options = {}) {
     Object.entries(propTypes).forEach(([key]) => {
       PropTypes.checkPropTypes(propTypes, options, key, caller.name)
     })

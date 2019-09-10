@@ -1,6 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Downshift Hooks](#downshift-hooks)
   - [Hooks](#hooks)
     - [useSelect](#useselect)
@@ -10,7 +11,8 @@
 
 # Downshift Hooks
 
-A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components. Developed as a follow up on [this issue][hooks-issue] about using hooks in our API.
+A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.
+Developed as a follow up on [this issue][hooks-issue] about using hooks in our API.
 
 ## Hooks
 
