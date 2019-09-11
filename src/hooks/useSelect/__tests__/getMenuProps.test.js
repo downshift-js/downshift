@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-disabled-tests */
-import * as keyboardKey from 'keyboard-key'
+import keyboardKey from 'keyboard-key'
 import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
 import {fireEvent, cleanup} from '@testing-library/react'

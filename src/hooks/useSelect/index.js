@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import {useReducer, useRef, useEffect} from 'react'
-import * as keyboardKey from 'keyboard-key'
+import keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
 import {
   getElementIds,
