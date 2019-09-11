@@ -1,13 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Downshift Hooks](#downshift-hooks)
-  - [Hooks](#hooks)
-    - [useSelect](#useselect)
-  - [Roadmap and contributions](#roadmap-and-contributions)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Downshift Hooks
 
 A set of hooks to build simple, flexible, WAI-ARIA compliant React dropdown components.
@@ -30,3 +20,7 @@ Next steps:
 
 [hooks-issue]: https://github.com/downshift-js/downshift/issues/683
 [select-readme]: https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
