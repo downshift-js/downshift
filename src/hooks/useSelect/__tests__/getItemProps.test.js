@@ -1,4 +1,4 @@
-import * as keyboardKey from 'keyboard-key'
+import keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'

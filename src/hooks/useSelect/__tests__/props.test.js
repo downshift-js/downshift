@@ -1,6 +1,6 @@
 import {act} from 'react-dom/test-utils'
 import {renderHook} from '@testing-library/react-hooks'
-import * as keyboardKey from 'keyboard-key'
+import keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
 import useSelect from '..'
