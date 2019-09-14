@@ -265,25 +265,25 @@ export enum UseSelectStateChangeTypes {
 export interface UseSelectProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage: (options: UseSelectA11yMessageOptions<Item>) => string
-  getA11ySelectionMessage: (
+  getA11yStatusMessage?: (options: UseSelectA11yMessageOptions<Item>) => string
+  getA11ySelectionMessage?: (
     options: UseSelectA11yMessageOptions<Item>,
   ) => string
-  circularNavigation: boolean
-  highlightedIndex: number
-  initialHighlightedIndex: number
-  defaultHighlightedIndex: number
-  isOpen: boolean
-  initialIsOpen: boolean
-  defaultIsOpen: boolean
-  selectedItem: Item
-  initialSelectedItem: Item
-  defaultSelectedItem: Item
-  id: string
-  labelId: string
-  menuId: string
-  toggleButtonId: string
-  getItemId: (index: number) => string
+  circularNavigation?: boolean
+  highlightedIndex?: number
+  initialHighlightedIndex?: number
+  defaultHighlightedIndex?: number
+  isOpen?: boolean
+  initialIsOpen?: boolean
+  defaultIsOpen?: boolean
+  selectedItem?: Item
+  initialSelectedItem?: Item
+  defaultSelectedItem?: Item
+  id?: string
+  labelId?: string
+  menuId?: string
+  toggleButtonId?: string
+  getItemId?: (index: number) => string
   stateReducer?: (
     state: UseSelectState<Item>,
     changes: UseSelectStateChangeOptions<Item>,
@@ -359,5 +359,5 @@ export type UseSelectInterface<Item> = (
 }
 
 export function useSelect<Item>(
-  props: UseSelectInterface<Item>,
+  props: UseSelectProps<Item>,
 ): UseSelectReturnValue<Item>
