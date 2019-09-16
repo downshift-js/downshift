@@ -15,6 +15,7 @@ These props are called getter props and their return values are destructured as 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -649,6 +650,6 @@ const ui = (
 
 [select-aria]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
 [reach-auto-id]: https://github.com/reach/reach-ui/blob/master/packages/auto-id/src/index.js
-[sandbox-example]: https://codesandbox.io/s/downshift-hooks-example-ew0em
+[sandbox-example]: https://codesandbox.io/s/53qfj
 [state-change-file]: https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
 [blog-post-prop-getters]: https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
