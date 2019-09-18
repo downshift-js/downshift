@@ -1,0 +1,73 @@
+---
+name: Variations
+menu: useSelect
+route: /hooks/use-select/variations
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useSelect} from '../../src'
+import {items, menuStyles} from './utils.json'
+
+# useSelect
+
+## Playground
+
+<Playground style={{height: '160px'}}>
+  {() => {
+    function Wrapper() {
+      const [selectedItem, onSelectedItemChange] = useState()
+      return (
+        <DropdownSelect
+          selectedItem={selectedItem}
+          onSelectedItemChange={props => {
+            onSelectedItemChange(props)
+          }}
+        />
+      )
+    }
+    function DropdownSelect(props) {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useSelect({
+        items,
+        selectedItem: props.selectedItem,
+        onSelectedItemChange: item => {
+          console.log('onSelectedItemChange: ', item)
+          props.onSelectedItemChange(item.selectedItem)
+        },
+      })
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )
+    }
+    return <Wrapper />
+  }}
+</Playground>
