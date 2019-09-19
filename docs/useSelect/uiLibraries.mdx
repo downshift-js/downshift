@@ -34,6 +34,7 @@ object.
 function DropdownSelect() {
   const items = [/*{ primary, secondary, icon} */}]
   const classes = useStyles();
+  const itemToString = item => item.primary;
   const {
     isOpen,
     selectedItem,
@@ -44,7 +45,7 @@ function DropdownSelect() {
     getItemProps
   } = useSelect({
     items,
-    itemToString: item => item.primary
+    itemToString
   });
   return (
     <div>
@@ -55,7 +56,7 @@ function DropdownSelect() {
         className={classes.button}
         {...getToggleButtonProps()}
       >
-        {selectedItem ? selectedItem.primary : "Folders"}
+        {selectedItem ? itemToString(selectedItem) : "Folders"}
         <ExpandMoreIcon className={classes.rightIcon} />
       </Button>
       <List className={classes.root} {...getMenuProps()}>
@@ -103,7 +104,8 @@ This is useful also for cases when you need the ref inside your component and ne
 ```jsx
 function DropdownSelect() {
   const items = [/*{ header, content} */}]
-    const {
+  const itemToString = item => item.header;
+  const {
     isOpen,
     selectedItem,
     getToggleButtonProps,
@@ -111,7 +113,7 @@ function DropdownSelect() {
     getMenuProps,
     highlightedIndex,
     getItemProps
-  } = useSelect({ items, itemToString: item => item.header });
+  } = useSelect({ items, itemToString });
   const { toggleButtonRef, ...toggleButtonProps } = getToggleButtonProps({
     refKey: "toggleButtonRef"
   });
@@ -125,7 +127,7 @@ function DropdownSelect() {
       <Ref innerRef={toggleButtonRef}>
         <Button
           content={
-            (selectedItem && selectedItem.header) || "Choose your favorite"
+            selectedItem ? itemToString(selectedItem) : "Choose your favorite"
           }
           icon="arrow-down"
           iconPosition="after"
