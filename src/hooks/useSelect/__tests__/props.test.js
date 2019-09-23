@@ -279,16 +279,16 @@ describe('props', () => {
       expect(stateReducer).not.toHaveBeenCalled()
 
       fireEvent.click(toggleButton)
-      expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenCalledTimes(1)
 
       fireEvent.keyDown(menu, {key: 'c'})
-      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenCalledTimes(2)
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
-      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenCalledTimes(3)
 
       fireEvent.click(toggleButton)
-      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenCalledTimes(4)
     })
 
     test('replaces prop values with user defined', () => {

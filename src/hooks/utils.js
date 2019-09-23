@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import React from 'react'
 
 function getElementIds(
   generateDefaultId,
@@ -88,6 +89,62 @@ function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
 }
 
+function capitalizeString(string) {
+  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
+}
+
+function invokeOnChangeHandler(propKey, props, state, changes) {
+  const handler = `on${capitalizeString(propKey)}Change`
+  if (
+    props[handler] &&
+    changes[propKey] !== undefined &&
+    changes[propKey] !== state[propKey]
+  ) {
+    props[handler](changes)
+  }
+}
+
+function callOnChangeProps(props, state, changes) {
+  Object.keys(state).forEach(stateKey => {
+    invokeOnChangeHandler(stateKey, props, state, changes)
+  })
+
+  if (props.onStateChange && changes !== undefined) {
+    props.onStateChange(changes)
+  }
+}
+
+function useEnhancedReducer(reducer, initialState, initializer) {
+  const enhancedReducer = React.useCallback(
+    (state, action) => {
+      const {props} = action
+      const {stateReducer} = props
+      const changes = reducer(state, action)
+      const newState = stateReducer(state, {...action, changes})
+
+      callOnChangeProps(props, state, newState)
+
+      return newState
+    },
+    [reducer],
+  )
+
+  const [state, dispatch] = React.useReducer(
+    enhancedReducer,
+    initialState,
+    initializer,
+  )
+
+  const enhancedDispatch = React.useCallback(
+    action => {
+      dispatch(action)
+    },
+    [dispatch],
+  )
+
+  return [state, enhancedDispatch]
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -97,4 +154,6 @@ export {
   getPropTypesValidator,
   itemToString,
   isAcceptedCharacterKey,
+  useEnhancedReducer,
+  capitalizeString,
 }
