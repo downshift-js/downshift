@@ -13,7 +13,7 @@ import {
 import setStatus from '../../set-a11y-status'
 import {
   callAllEventHandlers,
-  callAll,
+  callAllRefs,
   debounce,
   scrollIntoView as defaultScrollIntoView,
 } from '../../utils'
@@ -357,9 +357,7 @@ function useSelect(userProps = {}) {
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, menuNode => {
-      menuRef.current = menuNode
-    }),
+    [refKey]: callAllRefs(ref, menuRef),
     id: menuId,
     role: 'listbox',
     'aria-labelledby': labelId,
@@ -378,9 +376,7 @@ function useSelect(userProps = {}) {
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, toggleButtonNode => {
-      toggleButtonRef.current = toggleButtonNode
-    }),
+    [refKey]: callAllRefs(ref, toggleButtonRef),
     id: toggleButtonId,
     'aria-haspopup': 'listbox',
     'aria-expanded': isOpen,
@@ -403,7 +399,7 @@ function useSelect(userProps = {}) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
     return {
-      [refKey]: callAll(ref, itemNode => {
+      [refKey]: callAllRefs(ref, itemNode => {
         if (itemNode) {
           itemRefs.current.push(itemNode)
         }
