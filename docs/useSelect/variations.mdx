@@ -16,14 +16,28 @@ import {items, menuStyles} from './utils.json'
 <Playground style={{height: '160px'}}>
   {() => {
     function Wrapper() {
-      const [selectedItem, onSelectedItemChange] = useState()
+      const [selectedItem, setSelectedItem] = useState()
+      const onSelectedItemChange = item => {
+        if (item.startsWith('C')) {
+          setSelectedItem(item)
+        } else {
+          setSelectedItem(null)
+        }
+      }
       return (
-        <DropdownSelect
-          selectedItem={selectedItem}
-          onSelectedItemChange={props => {
-            onSelectedItemChange(props)
-          }}
-        />
+        <>
+          <div>
+            {selectedItem === undefined
+              ? 'Select item starting with the letter C.'
+              : selectedItem === null
+              ? 'Wrong selection :(, select item starting with letter C.'
+              : selectedItem}
+          </div>
+          <DropdownSelect
+            selectedItem={selectedItem}
+            onSelectedItemChange={onSelectedItemChange}
+          />
+        </>
       )
     }
     function DropdownSelect(props) {
@@ -39,7 +53,6 @@ import {items, menuStyles} from './utils.json'
         items,
         selectedItem: props.selectedItem,
         onSelectedItemChange: item => {
-          console.log('onSelectedItemChange: ', item)
           props.onSelectedItemChange(item.selectedItem)
         },
       })
