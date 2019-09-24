@@ -206,7 +206,8 @@ function useSelect(userProps = {}) {
         type: stateChangeTypes.MenuKeyDownEscape,
       })
     },
-    Enter() {
+    Enter(event) {
+      event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownEnter,
       })
