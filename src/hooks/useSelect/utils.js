@@ -57,28 +57,35 @@ function getHighlightedIndexOnOpen(props, state, offset) {
 
 function getDefaultValue(props, propKey) {
   const defaultPropKey = `default${capitalizeString(propKey)}`
-  if (props[defaultPropKey] !== undefined) {
+  if (defaultPropKey in props) {
     return props[defaultPropKey]
   }
   return defaultStateValues[propKey]
 }
 
 function getInitialValue(props, propKey) {
-  if (props[propKey] !== undefined) {
+  if (propKey in props) {
     return props[propKey]
   }
   const initialPropKey = `initial${capitalizeString(propKey)}`
-  if (props[initialPropKey] !== undefined) {
+  if (initialPropKey in props) {
     return props[initialPropKey]
   }
   return getDefaultValue(props, propKey)
 }
 
 function getInitialState(props) {
+  const selectedItem = getInitialValue(props, 'selectedItem')
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const isOpen = getInitialValue(props, 'isOpen')
+
   return {
-    highlightedIndex: getInitialValue(props, 'highlightedIndex'),
-    isOpen: getInitialValue(props, 'isOpen'),
-    selectedItem: getInitialValue(props, 'selectedItem'),
+    highlightedIndex:
+      highlightedIndex < 0 && selectedItem
+        ? props.items.indexOf(selectedItem)
+        : highlightedIndex,
+    isOpen,
+    selectedItem,
     keysSoFar: '',
   }
 }

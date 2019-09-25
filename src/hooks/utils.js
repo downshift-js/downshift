@@ -57,7 +57,7 @@ function getItemIndexByCharacterKey(
 function getState(state, props) {
   return Object.keys(state).reduce((prevState, key) => {
     // eslint-disable-next-line no-param-reassign
-    prevState[key] = props[key] === undefined ? state[key] : props[key]
+    prevState[key] = key in props ? props[key] : state[key]
     return prevState
   }, {})
 }
@@ -114,35 +114,25 @@ function callOnChangeProps(props, state, changes) {
   }
 }
 
-function useEnhancedReducer(reducer, initialState, initializer) {
+function useEnhancedReducer(reducer, initialState, props) {
   const enhancedReducer = React.useCallback(
     (state, action) => {
-      const {props} = action
-      const {stateReducer} = props
+      state = getState(state, action.props)
+
+      const {stateReducer} = action.props
       const changes = reducer(state, action)
       const newState = stateReducer(state, {...action, changes})
 
-      callOnChangeProps(props, state, newState)
+      callOnChangeProps(action.props, state, newState)
 
       return newState
     },
     [reducer],
   )
 
-  const [state, dispatch] = React.useReducer(
-    enhancedReducer,
-    initialState,
-    initializer,
-  )
+  const [state, dispatch] = React.useReducer(enhancedReducer, initialState)
 
-  const enhancedDispatch = React.useCallback(
-    action => {
-      dispatch(action)
-    },
-    [dispatch],
-  )
-
-  return [state, enhancedDispatch]
+  return [getState(state, props), dispatch]
 }
 
 export {

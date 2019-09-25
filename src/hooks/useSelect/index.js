@@ -4,7 +4,6 @@ import keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
 import {
   getElementIds,
-  getState,
   getItemIndex,
   getPropTypesValidator,
   itemToString as defaultItemToString,
@@ -65,15 +64,11 @@ function useSelect(userProps = {}) {
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [state, dispatchWithoutProps] = useEnhancedReducer(
-    downshiftSelectReducer,
-    initialState,
-  )
+  const [
+    {isOpen, highlightedIndex, selectedItem, keysSoFar},
+    dispatchWithoutProps,
+  ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
   const dispatch = action => dispatchWithoutProps({props, ...action})
-  const {isOpen, highlightedIndex, selectedItem, keysSoFar} = getState(
-    state,
-    props,
-  )
 
   // IDs generation.
   const {labelId, getItemId, menuId, toggleButtonId} = getElementIds(
@@ -102,6 +97,7 @@ function useSelect(userProps = {}) {
         selectedItem,
         itemToString,
       }),
+      environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
@@ -117,6 +113,7 @@ function useSelect(userProps = {}) {
         selectedItem,
         itemToString,
       }),
+      environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
