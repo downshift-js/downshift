@@ -69,7 +69,6 @@
     "@babel/runtime": "^7.4.5",
     "@reach/auto-id": "^0.2.0",
     "compute-scroll-into-view": "^1.0.9",
-    "keyboard-key": "1.0.4",
     "prop-types": "^15.7.2",
     "react-is": "^16.9.0"
   },
