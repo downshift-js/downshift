@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import React from 'react'
 
 function getElementIds(
   generateDefaultId,
@@ -56,7 +57,7 @@ function getItemIndexByCharacterKey(
 function getState(state, props) {
   return Object.keys(state).reduce((prevState, key) => {
     // eslint-disable-next-line no-param-reassign
-    prevState[key] = props[key] === undefined ? state[key] : props[key]
+    prevState[key] = key in props ? props[key] : state[key]
     return prevState
   }, {})
 }
@@ -88,6 +89,52 @@ function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
 }
 
+function capitalizeString(string) {
+  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
+}
+
+function invokeOnChangeHandler(propKey, props, state, changes) {
+  const handler = `on${capitalizeString(propKey)}Change`
+  if (
+    props[handler] &&
+    changes[propKey] !== undefined &&
+    changes[propKey] !== state[propKey]
+  ) {
+    props[handler](changes)
+  }
+}
+
+function callOnChangeProps(props, state, changes) {
+  Object.keys(state).forEach(stateKey => {
+    invokeOnChangeHandler(stateKey, props, state, changes)
+  })
+
+  if (props.onStateChange && changes !== undefined) {
+    props.onStateChange(changes)
+  }
+}
+
+function useEnhancedReducer(reducer, initialState, props) {
+  const enhancedReducer = React.useCallback(
+    (state, action) => {
+      state = getState(state, action.props)
+
+      const {stateReducer} = action.props
+      const changes = reducer(state, action)
+      const newState = stateReducer(state, {...action, changes})
+
+      callOnChangeProps(action.props, state, newState)
+
+      return newState
+    },
+    [reducer],
+  )
+
+  const [state, dispatch] = React.useReducer(enhancedReducer, initialState)
+
+  return [getState(state, props), dispatch]
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -97,4 +144,6 @@ export {
   getPropTypesValidator,
   itemToString,
   isAcceptedCharacterKey,
+  useEnhancedReducer,
+  capitalizeString,
 }

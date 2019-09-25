@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {getNextWrappingIndex} from '../utils'
+import {getNextWrappingIndex, capitalizeString} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
@@ -55,56 +55,38 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   return offset < 0 ? items.length - 1 : 0
 }
 
-function capitalizeString(string) {
-  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
-}
-
 function getDefaultValue(props, propKey) {
   const defaultPropKey = `default${capitalizeString(propKey)}`
-  if (props[defaultPropKey] !== undefined) {
+  if (defaultPropKey in props) {
     return props[defaultPropKey]
   }
   return defaultStateValues[propKey]
 }
 
 function getInitialValue(props, propKey) {
-  if (props[propKey] !== undefined) {
+  if (propKey in props) {
     return props[propKey]
   }
   const initialPropKey = `initial${capitalizeString(propKey)}`
-  if (props[initialPropKey] !== undefined) {
+  if (initialPropKey in props) {
     return props[initialPropKey]
   }
   return getDefaultValue(props, propKey)
 }
 
 function getInitialState(props) {
+  const selectedItem = getInitialValue(props, 'selectedItem')
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const isOpen = getInitialValue(props, 'isOpen')
+
   return {
-    highlightedIndex: getInitialValue(props, 'highlightedIndex'),
-    isOpen: getInitialValue(props, 'isOpen'),
-    selectedItem: getInitialValue(props, 'selectedItem'),
+    highlightedIndex:
+      highlightedIndex < 0 && selectedItem
+        ? props.items.indexOf(selectedItem)
+        : highlightedIndex,
+    isOpen,
+    selectedItem,
     keysSoFar: '',
-  }
-}
-
-function invokeOnChangeHandler(propKey, props, state, changes) {
-  const handler = `on${capitalizeString(propKey)}Change`
-  if (
-    props[handler] &&
-    changes[propKey] !== undefined &&
-    changes[propKey] !== state[propKey]
-  ) {
-    props[handler](changes)
-  }
-}
-
-function callOnChangeProps(props, state, changes) {
-  ;['isOpen', 'highlightedIndex', 'selectedItem'].forEach(propKey => {
-    invokeOnChangeHandler(propKey, props, state, changes)
-  })
-
-  if (props.onStateChange && changes !== undefined) {
-    props.onStateChange(changes)
   }
 }
 
@@ -152,5 +134,4 @@ export {
   defaultStateValues,
   propTypes,
   getDefaultValue,
-  callOnChangeProps,
 }

@@ -1,0 +1,94 @@
+---
+name: Variations
+menu: useSelect
+route: /hooks/use-select/variations
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useSelect} from '../../src'
+import {items, menuStyles} from './utils.json'
+
+# useSelect
+
+## Controlling state
+
+Controlling state is possible by receiving the state changes done by Downshift via onChange props (`onHighlightedIndexChange`,
+`onSelectedItemChange` etc.), changing them based on your requirements and passing them back to Downshift via props.
+
+The example below shows how to control `selectedItem`. The value computed by Downshift is received in `onSelectedItemChange`
+callback. The user checks it and passes back a controlled value via `selectedChangeProp`. Here, for example, it checks if
+`selectedItem` starts with the letter `C` and only then updates the `selectedItem` in the widget. If not updated via prop,
+then the dropdown behaves as if no item was selected.
+
+## Playground
+
+<Playground style={{height: '160px'}}>
+  {() => {
+    function Wrapper() {
+      const [selectedItem, setSelectedItem] = useState()
+      const onSelectedItemChange = item => {
+        if (item.startsWith('C')) {
+          setSelectedItem(item)
+        }
+      }
+      return (
+        <div>
+          <div>{`${
+            selectedItem ? 'Selection is ' + selectedItem + '! ' : ''
+          }Select item starting with the letter C.`}</div>
+          <DropdownSelect
+            selectedItem={selectedItem}
+            onSelectedItemChange={onSelectedItemChange}
+          />
+        </div>
+      )
+    }
+    function DropdownSelect(props) {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useSelect({
+        items,
+        selectedItem: props.selectedItem,
+        onSelectedItemChange: item => {
+          props.onSelectedItemChange(item.selectedItem)
+        },
+      })
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )
+    }
+    return <Wrapper />
+  }}
+</Playground>
+
+## CodeSandbox
+
+Codesandbox equivalent is at [here](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj).

@@ -1,7 +1,5 @@
 import {debounce} from './utils'
 
-let statusDiv
-
 const cleanupStatus = debounce(() => {
   getStatusDiv().textContent = ''
 }, 500)
@@ -26,6 +24,7 @@ function setStatus(status, documentProp) {
  * @return {HTMLElement} the status node.
  */
 function getStatusDiv(documentProp = document) {
+  let statusDiv = documentProp.getElementById('a11y-status-message')
   if (statusDiv) {
     return statusDiv
   }

@@ -196,6 +196,19 @@ describe('props', () => {
         }),
       )
     })
+
+    test('is added to the document provided by the user as prop', () => {
+      const environment = {
+        document: {
+          getElementById: jest.fn(() => ({setAttribute: jest.fn(), style: {}})),
+        },
+      }
+      const wrapper = setup({items: [], environment})
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+      fireEvent.click(toggleButton)
+      expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('highlightedIndex', () => {
@@ -241,6 +254,7 @@ describe('props', () => {
       fireEvent.click(toggleButton)
       expect(menu.childNodes).toHaveLength(items.length)
 
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
       expect(menu.childNodes).toHaveLength(items.length)
 
       fireEvent.blur(menu)
@@ -267,6 +281,53 @@ describe('props', () => {
       fireEvent.click(item)
       expect(toggleButton.textContent).toEqual(items[2])
     })
+
+    test('highlightedIndex on open gets computed based on the selectedItem prop value', () => {
+      const expectedHighlightedIndex = 2
+      const selectedItem = items[expectedHighlightedIndex]
+      const wrapper = setup({selectedItem})
+      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+      fireEvent.click(toggleButton)
+      const item = wrapper.getByTestId(dataTestIds.item(3))
+
+      expect(menu.getAttribute('aria-activedescendant')).toBe(
+        defaultIds.getItemId(expectedHighlightedIndex),
+      )
+
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+
+      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+
+      fireEvent.click(toggleButton)
+      fireEvent.click(item)
+      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+    })
+
+    test('highlightedIndex computed based on the selectedItem prop value in initial state as well', () => {
+      const expectedHighlightedIndex = 2
+      const selectedItem = items[expectedHighlightedIndex]
+      // open dropdown in the initial state to check highlighted index.
+      const wrapper = setup({selectedItem, initialIsOpen: true})
+      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const item = wrapper.getByTestId(dataTestIds.item(3))
+
+      expect(menu.getAttribute('aria-activedescendant')).toBe(
+        defaultIds.getItemId(expectedHighlightedIndex),
+      )
+
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+      fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+
+      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+
+      fireEvent.click(toggleButton)
+      fireEvent.click(item)
+      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+    })
   })
 
   describe('stateReducer', () => {
@@ -279,16 +340,16 @@ describe('props', () => {
       expect(stateReducer).not.toHaveBeenCalled()
 
       fireEvent.click(toggleButton)
-      expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenCalledTimes(1)
 
       fireEvent.keyDown(menu, {key: 'c'})
-      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenCalledTimes(2)
 
       fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
-      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenCalledTimes(3)
 
       fireEvent.click(toggleButton)
-      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenCalledTimes(4)
     })
 
     test('replaces prop values with user defined', () => {

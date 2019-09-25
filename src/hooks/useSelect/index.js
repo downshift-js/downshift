@@ -1,14 +1,14 @@
 /* eslint-disable max-statements */
-import {useReducer, useRef, useEffect} from 'react'
+import {useRef, useEffect} from 'react'
 import keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
 import {
   getElementIds,
-  getState,
   getItemIndex,
   getPropTypesValidator,
   itemToString as defaultItemToString,
   isAcceptedCharacterKey,
+  useEnhancedReducer,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
@@ -23,7 +23,6 @@ import {
   getA11ySelectionMessage as defaultGetA11ySelectionMessage,
   getInitialState,
   propTypes,
-  callOnChangeProps,
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -58,7 +57,6 @@ function useSelect(userProps = {}) {
     getA11ySelectionMessage,
     initialIsOpen,
     defaultIsOpen,
-    stateReducer,
     scrollIntoView,
     environment,
   } = props
@@ -68,15 +66,9 @@ function useSelect(userProps = {}) {
   // Reducer init.
   const [
     {isOpen, highlightedIndex, selectedItem, keysSoFar},
-    dispatch,
-  ] = useReducer((state, action) => {
-    const changes = downshiftSelectReducer(state, action) // state after original reducer.
-    const reducedState = stateReducer(state, {...action, changes}) // state after user reducer.
-
-    callOnChangeProps(props, state, reducedState) // call onChange with state resulted.
-
-    return getState(reducedState, props) // state is merged with controlled props.
-  }, initialState)
+    dispatchWithoutProps,
+  ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
+  const dispatch = action => dispatchWithoutProps({props, ...action})
 
   // IDs generation.
   const {labelId, getItemId, menuId, toggleButtonId} = getElementIds(
@@ -105,6 +97,7 @@ function useSelect(userProps = {}) {
         selectedItem,
         itemToString,
       }),
+      environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
@@ -120,6 +113,7 @@ function useSelect(userProps = {}) {
         selectedItem,
         itemToString,
       }),
+      environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
@@ -130,7 +124,6 @@ function useSelect(userProps = {}) {
       clearTimeout = debounce(() => {
         dispatch({
           type: stateChangeTypes.FunctionClearKeysSoFar,
-          props,
         })
       }, 500)
     }
@@ -183,7 +176,6 @@ function useSelect(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownArrowDown,
-        props,
         shiftKey: event.shiftKey,
       })
     },
@@ -191,7 +183,6 @@ function useSelect(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownArrowUp,
-        props,
         shiftKey: event.shiftKey,
       })
     },
@@ -199,26 +190,23 @@ function useSelect(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownHome,
-        props,
       })
     },
     End(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownEnd,
-        props,
       })
     },
     Escape() {
       dispatch({
         type: stateChangeTypes.MenuKeyDownEscape,
-        props,
       })
     },
-    Enter() {
+    Enter(event) {
+      event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownEnter,
-        props,
       })
     },
     Tab(event) {
@@ -227,7 +215,6 @@ function useSelect(userProps = {}) {
       if (event.shiftKey) {
         dispatch({
           type: stateChangeTypes.MenuBlur,
-          props,
         })
       }
     },
@@ -237,14 +224,12 @@ function useSelect(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        props,
       })
     },
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-        props,
       })
     },
   }
@@ -258,7 +243,6 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownCharacter,
         key,
-        props,
       })
     }
   }
@@ -269,14 +253,12 @@ function useSelect(userProps = {}) {
     if (event.relatedTarget !== toggleButtonRef.current) {
       dispatch({
         type: stateChangeTypes.MenuBlur,
-        props,
       })
     }
   }
   const toggleButtonHandleClick = () => {
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
-      props,
     })
   }
   const toggleButtonHandleKeyDown = event => {
@@ -287,7 +269,6 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownCharacter,
         key,
-        props,
       })
     }
   }
@@ -298,14 +279,12 @@ function useSelect(userProps = {}) {
     shouldScroll.current = false
     dispatch({
       type: stateChangeTypes.ItemMouseMove,
-      props,
       index,
     })
   }
   const itemHandleClick = index => {
     dispatch({
       type: stateChangeTypes.ItemClick,
-      props,
       index,
     })
   }
@@ -314,7 +293,6 @@ function useSelect(userProps = {}) {
   const toggleMenu = () => {
     dispatch({
       type: stateChangeTypes.FunctionToggleMenu,
-      props,
     })
   }
   const closeMenu = () => {
@@ -325,7 +303,6 @@ function useSelect(userProps = {}) {
   const openMenu = () => {
     dispatch({
       type: stateChangeTypes.FunctionOpenMenu,
-      props,
     })
   }
   const setHighlightedIndex = newHighlightedIndex => {
@@ -343,7 +320,6 @@ function useSelect(userProps = {}) {
   const reset = () => {
     dispatch({
       type: stateChangeTypes.FunctionReset,
-      props,
     })
   }
   const getLabelProps = labelProps => ({
