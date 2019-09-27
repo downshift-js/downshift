@@ -1,5 +1,4 @@
 /* eslint-disable jest/no-disabled-tests */
-import keyboardKey from 'keyboard-key'
 import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
 import {fireEvent, cleanup} from '@testing-library/react'
@@ -122,7 +121,7 @@ describe('getMenuProps', () => {
 
         menuRef({focus: noop})
         result.current.toggleMenu()
-        onKeyDown({keyCode: keyboardKey.Escape, preventDefault: noop})
+        onKeyDown({key: 'Escape', preventDefault: noop})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -160,7 +159,7 @@ describe('getMenuProps', () => {
 
         menuRef({focus: noop})
         result.current.toggleMenu()
-        onKeyDown({keyCode: keyboardKey.Escape, preventDefault: noop})
+        onKeyDown({key: 'Escape', preventDefault: noop})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -180,7 +179,7 @@ describe('getMenuProps', () => {
 
         menuRef({focus: noop})
         result.current.toggleMenu()
-        onBlur({keyCode: keyboardKey.Escape, preventDefault: noop})
+        onBlur({key: 'Escape', preventDefault: noop})
       })
 
       expect(userOnBlur).toHaveBeenCalledTimes(1)
@@ -345,7 +344,7 @@ describe('getMenuProps', () => {
           const wrapper = setup({isOpen: true})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(items.length - 1),
@@ -357,7 +356,7 @@ describe('getMenuProps', () => {
           const wrapper = setup({isOpen: true, initialHighlightedIndex})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(initialHighlightedIndex - 1),
@@ -370,7 +369,7 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {
-            keyCode: keyboardKey.ArrowUp,
+            key: 'ArrowUp',
             shiftKey: true,
           })
 
@@ -385,7 +384,7 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {
-            keyCode: keyboardKey.ArrowUp,
+            key: 'ArrowUp',
             shiftKey: true,
           })
 
@@ -398,7 +397,7 @@ describe('getMenuProps', () => {
           const wrapper = setup({isOpen: true, initialHighlightedIndex: 0})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(0),
@@ -413,7 +412,7 @@ describe('getMenuProps', () => {
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(items.length - 1),
@@ -426,7 +425,7 @@ describe('getMenuProps', () => {
           const wrapper = setup({isOpen: true})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(0),
@@ -437,7 +436,7 @@ describe('getMenuProps', () => {
           const wrapper = setup({isOpen: true, initialHighlightedIndex})
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(initialHighlightedIndex + 1),
@@ -450,7 +449,7 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {
-            keyCode: keyboardKey.ArrowDown,
+            key: 'ArrowDown',
             shiftKey: true,
           })
 
@@ -465,7 +464,7 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {
-            keyCode: keyboardKey.ArrowDown,
+            key: 'ArrowDown',
             shiftKey: true,
           })
 
@@ -481,7 +480,7 @@ describe('getMenuProps', () => {
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(items.length - 1),
@@ -496,7 +495,7 @@ describe('getMenuProps', () => {
           })
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(0),
@@ -508,7 +507,7 @@ describe('getMenuProps', () => {
         const wrapper = setup({isOpen: true, initialHighlightedIndex: 2})
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
+        fireEvent.keyDown(menu, {key: 'End'})
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(items.length - 1),
@@ -519,7 +518,7 @@ describe('getMenuProps', () => {
         const wrapper = setup({isOpen: true, initialHighlightedIndex: 2})
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Home})
+        fireEvent.keyDown(menu, {key: 'Home'})
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(0),
@@ -530,7 +529,7 @@ describe('getMenuProps', () => {
         const wrapper = setup({initialIsOpen: true, initialHighlightedIndex: 2})
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
+        fireEvent.keyDown(menu, {key: 'Escape'})
 
         expect(menu.childNodes).toHaveLength(0)
       })
@@ -541,7 +540,7 @@ describe('getMenuProps', () => {
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         menu.focus()
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
+        fireEvent.keyDown(menu, {key: 'Escape'})
 
         expect(document.activeElement).toBe(toggleButton)
       })
@@ -555,7 +554,7 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+        fireEvent.keyDown(menu, {key: 'Enter'})
 
         expect(menu.childNodes).toHaveLength(0)
         expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
@@ -570,7 +569,7 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+        fireEvent.keyDown(menu, {key: 'Enter'})
 
         expect(toggleButton.textContent).toEqual(items[defaultHighlightedIndex])
         expect(menu.childNodes).toHaveLength(items.length)
@@ -585,7 +584,7 @@ describe('getMenuProps', () => {
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
         menu.focus()
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+        fireEvent.keyDown(menu, {key: 'Enter'})
 
         expect(document.activeElement).toBe(toggleButton)
       })
@@ -599,7 +598,7 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab})
+        fireEvent.keyDown(menu, {key: 'Tab'})
 
         expect(menu.childNodes).toHaveLength(0)
         expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
@@ -615,7 +614,7 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab, shiftKey: true})
+        fireEvent.keyDown(menu, {key: 'Tab', shiftKey: true})
 
         expect(menu.childNodes).toHaveLength(0)
         expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
@@ -626,7 +625,7 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Tab, shiftKey: true})
+        fireEvent.keyDown(menu, {key: 'Tab', shiftKey: true})
 
         expect(document.activeElement).toBe(toggleButton)
       })
@@ -640,8 +639,8 @@ describe('getMenuProps', () => {
         const menu = wrapper.getByTestId(dataTestIds.menu)
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Alt})
-        fireEvent.keyDown(menu, {keyCode: keyboardKey.Control})
+        fireEvent.keyDown(menu, {key: 'Alt'})
+        fireEvent.keyDown(menu, {key: 'Control'})
 
         expect(document.activeElement).toBe(menu)
         expect(toggleButton.textContent).toEqual(items[2])

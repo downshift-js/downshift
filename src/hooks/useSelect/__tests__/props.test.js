@@ -1,6 +1,5 @@
 import {act} from 'react-dom/test-utils'
 import {renderHook} from '@testing-library/react-hooks'
-import keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
 import useSelect from '..'
@@ -221,17 +220,17 @@ describe('props', () => {
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
+      fireEvent.keyDown(menu, {key: 'End'})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+      fireEvent.keyDown(menu, {key: 'ArrowUp'})
       expect(menu.getAttribute('aria-activedescendant')).toBe(
         defaultIds.getItemId(highlightedIndex),
       )
@@ -254,7 +253,7 @@ describe('props', () => {
       fireEvent.click(toggleButton)
       expect(menu.childNodes).toHaveLength(items.length)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
+      fireEvent.keyDown(menu, {key: 'Escape'})
       expect(menu.childNodes).toHaveLength(items.length)
 
       fireEvent.blur(menu)
@@ -272,8 +271,8 @@ describe('props', () => {
 
       expect(toggleButton.textContent).toEqual(items[2])
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      fireEvent.keyDown(menu, {key: 'Enter'})
 
       expect(toggleButton.textContent).toEqual(items[2])
 
@@ -296,8 +295,8 @@ describe('props', () => {
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      fireEvent.keyDown(menu, {key: 'Enter'})
 
       expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
 
@@ -319,8 +318,8 @@ describe('props', () => {
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Enter})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      fireEvent.keyDown(menu, {key: 'Enter'})
 
       expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
 
@@ -345,7 +344,7 @@ describe('props', () => {
       fireEvent.keyDown(menu, {key: 'c'})
       expect(stateReducer).toHaveBeenCalledTimes(2)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+      fireEvent.keyDown(menu, {key: 'ArrowUp'})
       expect(stateReducer).toHaveBeenCalledTimes(3)
 
       fireEvent.click(toggleButton)
@@ -481,7 +480,7 @@ describe('props', () => {
       const wrapper = setup({initialIsOpen: true, onHighlightedIndexChange})
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,
@@ -498,10 +497,10 @@ describe('props', () => {
       })
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowUp})
+      fireEvent.keyDown(menu, {key: 'ArrowUp'})
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Home})
+      fireEvent.keyDown(menu, {key: 'Home'})
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
   })
@@ -512,7 +511,7 @@ describe('props', () => {
       const wrapper = setup({initialIsOpen: true, onIsOpenChange})
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
+      fireEvent.keyDown(menu, {key: 'Escape'})
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen: false,
@@ -544,7 +543,7 @@ describe('props', () => {
         }),
       )
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.ArrowDown})
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,

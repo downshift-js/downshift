@@ -1,5 +1,4 @@
 /* eslint-disable jest/no-disabled-tests */
-import keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act as rtlAct} from '@testing-library/react-hooks'
 import {act} from 'react-dom/test-utils'
@@ -122,7 +121,7 @@ describe('getToggleButtonProps', () => {
 
         menuRef({focus: noop})
         toggleButtonRef({})
-        onKeyDown({keyCode: keyboardKey.ArrowDown, preventDefault: noop})
+        onKeyDown({key: 'ArrowDown', preventDefault: noop})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -167,7 +166,7 @@ describe('getToggleButtonProps', () => {
         toggleButtonRef({focus: noop})
         menuRef({focus: noop})
         onKeyDown({
-          keyCode: keyboardKey.ArrowDown,
+          key: 'ArrowDown',
           preventDefault: noop,
         })
       })
@@ -421,7 +420,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(items.length - 1),
@@ -434,7 +433,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(selectedIndex - 1),
@@ -447,14 +446,14 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(initialHighlightedIndex),
           )
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'Escape'})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(items.length - 1),
@@ -467,14 +466,14 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(defaultHighlightedIndex),
           )
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(menu, {key: 'Escape'})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(defaultHighlightedIndex),
@@ -487,7 +486,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
           fireEvent.keyDown(toggleButton, {
-            keyCode: keyboardKey.ArrowUp,
+            key: 'ArrowUp',
             preventDefault,
           })
 
@@ -499,7 +498,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowUp})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
 
           expect(document.activeElement).toBe(menu)
         })
@@ -511,7 +510,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(0),
@@ -524,7 +523,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(selectedIndex + 1),
@@ -537,14 +536,14 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(initialHighlightedIndex),
           )
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'Escape'})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(0),
@@ -557,14 +556,14 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(defaultHighlightedIndex),
           )
 
-          fireEvent.keyDown(menu, {keyCode: keyboardKey.Escape})
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(menu, {key: 'Escape'})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
             defaultIds.getItemId(defaultHighlightedIndex),
@@ -578,7 +577,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
           fireEvent.keyDown(toggleButton, {
-            keyCode: keyboardKey.ArrowDown,
+            key: 'ArrowDown',
             preventDefault,
           })
 
@@ -590,7 +589,7 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.ArrowDown})
+          fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
 
           expect(document.activeElement).toBe(menu)
         })
@@ -601,8 +600,8 @@ describe('getToggleButtonProps', () => {
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
         const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.Alt})
-        fireEvent.keyDown(toggleButton, {keyCode: keyboardKey.Control})
+        fireEvent.keyDown(toggleButton, {key: 'Alt'})
+        fireEvent.keyDown(toggleButton, {key: 'Control'})
 
         expect(toggleButton.textContent).toEqual('Elements')
         expect(menu.getAttribute('aria-activedescendant')).toBeNull()

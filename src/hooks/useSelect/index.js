@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
-import keyboardKey from 'keyboard-key'
 import {useId} from '@reach/auto-id'
 import {
   getElementIds,
@@ -16,6 +15,7 @@ import {
   callAll,
   debounce,
   scrollIntoView as defaultScrollIntoView,
+  normalizeArrowKey,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {
@@ -236,7 +236,7 @@ function useSelect(userProps = {}) {
 
   // Event handlers.
   const menuHandleKeyDown = event => {
-    const key = keyboardKey.getKey(event)
+    const key = normalizeArrowKey(event)
     if (key && menuKeyDownHandlers[key]) {
       menuKeyDownHandlers[key](event)
     } else if (isAcceptedCharacterKey(key)) {
@@ -262,7 +262,7 @@ function useSelect(userProps = {}) {
     })
   }
   const toggleButtonHandleKeyDown = event => {
-    const key = keyboardKey.getKey(event)
+    const key = normalizeArrowKey(event)
     if (key && toggleButtonKeyDownHandlers[key]) {
       toggleButtonKeyDownHandlers[key](event)
     } else if (isAcceptedCharacterKey(key)) {

@@ -1,4 +1,3 @@
-import keyboardKey from 'keyboard-key'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
@@ -245,7 +244,7 @@ describe('getItemProps', () => {
       const wrapper = setup({initialIsOpen: true, scrollIntoView})
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.keyDown(menu, {keyCode: keyboardKey.End})
+      fireEvent.keyDown(menu, {key: 'End'})
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
   })
