@@ -64,6 +64,7 @@ These props are called getter props and their return values are destructured as 
 import React from 'react'
 import {render} from 'react-dom'
 import {useSelect} from 'downshift'
+import {items} from './utils'
 
 function DropdownSelect() {
   const {
@@ -74,14 +75,14 @@ function DropdownSelect() {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({items: options})
+  } = useSelect({items})
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <button {...getToggleButtonProps()}>{selectedItem || 'Elements'}</button>
       <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
-          options.map((option, index) => (
+          items.map((option, index) => (
             <li
               style={
                 highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
@@ -171,28 +172,29 @@ Called each time the selected item was changed. Selection can be performed by it
 This function will be called each time `useSelect` sets its internal state (or calls your `onStateChange` handler for control props). It allows you to modify the state change that will take place which can give you fine grain control over how the component interacts with user updates. It gives you the current state and the state that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
-- `changes`: These are the properties that are about to change. This also has a `type` property which you can learn more about in the [`stateChangeTypes`](#statechangetypes) section.
+- `actionAndChanges`: Object that contains the action `type`, props needed to return a new state based on that type and the changes suggested by the Downshift default reducer. About the `type` property you can learn more about in the [`stateChangeTypes`](#statechangetypes) section.
 
 ```javascript
 import {useSelect} from 'downshift'
+import {items} from './utils'
 
 const {getMenuProps, getItemProps, ...rest} = useSelect({
-  items: options,
+  items,
   stateReducer,
 })
 
-function stateReducer(state, changes) {
-  // this prevents the menu from being closed when the user selects an item with a keyboard or mouse
-  switch (changes.type) {
+function stateReducer(state, actionAndChanges) {
+  // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+  switch (actionAndChanges.type) {
     case useSelect.stateChangeTypes.MenuKeyDownEnter:
     case useSelect.stateChangeTypes.ItemClick:
       return {
-        ...changes,
-        isOpen: state.isOpen,
-        highlightedIndex: state.highlightedIndex,
+        ...actionAndChanges.changes, // default Downshift new state changes on item selection.
+        isOpen: state.isOpen, // but keep menu open.
+        highlightedIndex: state.highlightedIndex, // with the item highlighted.
       }
     default:
-      return changes
+      return actionAndChanges.changes // otherwise business as usual.
   }
 }
 ```
@@ -398,8 +400,11 @@ However, if more control is needed, you can pass any of these pieces of state as
 You use the hook like so:
 
 ```javascript
+import {useSelect} from 'downshift'
+import {items} from './utils'
+
 const {getToggleButtonProps, reset, ...rest} = useSelect({
-  items: options,
+  items,
   ...otherProps,
 })
 
@@ -612,7 +617,6 @@ const ui = (
 If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
-const items = [...] // items here.
 const {getMenuProps} = useSelect({items})
 const ui = (
   /* button, label, ... */
