@@ -21,7 +21,7 @@ callback. The user checks it and passes back a controlled value via `selectedCha
 `selectedItem` starts with the letter `C` and only then updates the `selectedItem` in the widget. If not updated via prop,
 then the dropdown behaves as if no item was selected.
 
-## Playground
+### Playground
 
 <Playground style={{height: '160px'}}>
   {() => {
@@ -89,6 +89,72 @@ then the dropdown behaves as if no item was selected.
   }}
 </Playground>
 
-## CodeSandbox
+### CodeSandbox
 
-Codesandbox equivalent is at [here](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj).
+Codesandbox equivalent is [here](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj).
+
+## State Reducer
+
+### Playground
+
+<Playground style={{height: '160px'}}>
+  {() => {
+    function stateReducer(state, actionAndChanges) {
+      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      switch (actionAndChanges.type) {
+        case useSelect.stateChangeTypes.MenuKeyDownEnter:
+        case useSelect.stateChangeTypes.ItemClick:
+          return {
+            ...actionAndChanges.changes, // default Downshift new state changes on item selection.
+            isOpen: state.isOpen, // but keep menu open.
+            highlightedIndex: state.highlightedIndex, // with the item highlighted.
+          }
+        default:
+          return actionAndChanges.changes // otherwise business as usual.
+      }
+    }
+
+    const DropdownSelect = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useSelect({items, stateReducer})
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )
+    }
+    return <DropdownSelect />
+
+}}
+
+</Playground>
+
+### Codesandbox
+
+Codesandbox equivalent is [here](https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r).
