@@ -716,7 +716,7 @@ Optional properties:
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property.
 
-  Please keep in mind that menus, for accessiblity purposes, should always be
+  Please keep in mind that menus, for accessibility purposes, should always be
   rendered, regardless of whether you hide it or not. Otherwise, `getMenuProps`
   may throw error if you unmount and remount the menu.
 
