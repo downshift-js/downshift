@@ -64,7 +64,8 @@ dropdown variation and be named accordingly: `useSelect`, `useAutocomplete`, etc
 
 You can check the progress in the [hooks page][hooks-readme] and contribute! If you
 have a custom `<select>` dropdown and want it to be functional and accessible, jump
-directly to the already implemented [useSelect][useselect-readme].
+directly to the already implemented [useSelect][useselect-readme]. If you are interested
+in seeing examples of `useSelect`, visit the [docsite](https://downshift.netlify.com/)!
 
 ## Table of Contents
 
