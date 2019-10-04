@@ -1,11 +1,15 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import Downshift from '../'
-import setA11yStatus from '../set-a11y-status'
+import setA11yStatus, {cleanupStatus} from '../set-a11y-status'
 import * as utils from '../utils'
 
 jest.useFakeTimers()
-jest.mock('../set-a11y-status')
+jest.mock('../set-a11y-status', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  cleanupStatus: jest.fn(),
+}))
 jest.mock('../utils', () => {
   const realUtils = require.requireActual('../utils')
   return {
@@ -40,6 +44,30 @@ test('do not set state after unmount', () => {
   // unmount
   unmount()
   expect(handleStateChange).toHaveBeenCalledTimes(0)
+})
+
+test('clean up status div after unmount', () => {
+  setA11yStatus.mockReset()
+  cleanupStatus.mockReset()
+  const MyComponent = () => (
+    <Downshift isOpen={false}>
+      {({getInputProps, getItemProps, isOpen}) => (
+        <div>
+          <input {...getInputProps()} />
+          {isOpen ? <div {...getItemProps({item: 'foo', index: 0})} /> : null}
+        </div>
+      )}
+    </Downshift>
+  )
+  const {container, unmount} = render(<MyComponent />)
+  render(<MyComponent isOpen={true} />, {container})
+  jest.runAllTimers()
+  expect(setA11yStatus).toHaveBeenCalledTimes(1)
+  render(<MyComponent isOpen={false} />, {container})
+  unmount()
+  jest.runAllTimers()
+  expect(setA11yStatus).toHaveBeenCalledTimes(1)
+  expect(cleanupStatus).toHaveBeenCalledTimes(1)
 })
 
 test('handles mouse events properly to reset state', () => {
