@@ -16,6 +16,9 @@ function setStatus(status, documentProp) {
   }, 500)()
 }
 
+/**
+ * Cleans up the status node text
+ */
 export function cleanupA11yStatus() {
   getStatusDiv().textContent = ''
 }
