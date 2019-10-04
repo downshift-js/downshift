@@ -1,4 +1,4 @@
-import {cleanupStatus} from '../set-a11y-status'
+import {cleanupA11yStatus} from '../set-a11y-status'
 
 jest.useFakeTimers()
 
@@ -34,7 +34,7 @@ test('escapes HTML', () => {
 test('can cleanup status', () => {
   const setA11yStatus = setup()
   setA11yStatus('hello')
-  cleanupStatus()
+  cleanupA11yStatus()
   expect(document.body.firstChild.textContent).toBe('')
 })
 

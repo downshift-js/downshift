@@ -9,7 +9,7 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
 } from '../utils'
-import setStatus, {cleanupStatus} from '../../set-a11y-status'
+import setA11yStatus, {cleanupA11yStatus} from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   callAll,
@@ -88,7 +88,7 @@ function useSelect(userProps = {}) {
   /* Cleanup status message on unmount */
   useEffect(
     () => () => {
-      cleanupStatus()
+      cleanupA11yStatus()
     },
     [],
   )
@@ -97,7 +97,7 @@ function useSelect(userProps = {}) {
     if (isInitialMount.current) {
       return
     }
-    setStatus(
+    setA11yStatus(
       getA11yStatusMessage({
         isOpen,
         items,
@@ -113,7 +113,7 @@ function useSelect(userProps = {}) {
     if (isInitialMount.current) {
       return
     }
-    setStatus(
+    setA11yStatus(
       getA11ySelectionMessage({
         isOpen,
         items,

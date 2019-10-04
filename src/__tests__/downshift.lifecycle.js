@@ -1,14 +1,14 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import Downshift from '../'
-import setA11yStatus, {cleanupStatus} from '../set-a11y-status'
+import setA11yStatus, {cleanupA11yStatus} from '../set-a11y-status'
 import * as utils from '../utils'
 
 jest.useFakeTimers()
 jest.mock('../set-a11y-status', () => ({
   __esModule: true,
   default: jest.fn(),
-  cleanupStatus: jest.fn(),
+  cleanupA11yStatus: jest.fn(),
 }))
 jest.mock('../utils', () => {
   const realUtils = require.requireActual('../utils')
@@ -48,7 +48,7 @@ test('do not set state after unmount', () => {
 
 test('clean up status div after unmount', () => {
   setA11yStatus.mockReset()
-  cleanupStatus.mockReset()
+  cleanupA11yStatus.mockReset()
   const MyComponent = () => (
     <Downshift isOpen={false}>
       {({getInputProps, getItemProps, isOpen}) => (
@@ -67,7 +67,7 @@ test('clean up status div after unmount', () => {
   unmount()
   jest.runAllTimers()
   expect(setA11yStatus).toHaveBeenCalledTimes(1)
-  expect(cleanupStatus).toHaveBeenCalledTimes(1)
+  expect(cleanupA11yStatus).toHaveBeenCalledTimes(1)
 })
 
 test('handles mouse events properly to reset state', () => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative} from './is.macro'
-import setA11yStatus, {cleanupStatus} from './set-a11y-status'
+import setA11yStatus, {cleanupA11yStatus} from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   callAll,
@@ -1094,7 +1094,7 @@ class Downshift extends Component {
       this.cleanup = () => {
         this.internalClearTimeouts()
         this.updateStatus.cancel()
-        cleanupStatus()
+        cleanupA11yStatus()
         environment.removeEventListener('mousedown', onMouseDown)
         environment.removeEventListener('mouseup', onMouseUp)
         environment.removeEventListener('touchstart', onTouchStart)

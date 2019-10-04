@@ -1,11 +1,11 @@
 import {cleanup} from '@testing-library/react'
-import {cleanupStatus} from '../../../set-a11y-status'
+import {cleanupA11yStatus} from '../../../set-a11y-status'
 import {setup} from '../testUtils'
 
 jest.mock('../../../set-a11y-status', () => ({
   __esModule: true,
   default: jest.fn(),
-  cleanupStatus: jest.fn(),
+  cleanupA11yStatus: jest.fn(),
 }))
 
 describe('lifecycle', () => {
@@ -14,8 +14,8 @@ describe('lifecycle', () => {
   test('cleanup status message on unmount', () => {
     const {unmount} = setup()
 
-    expect(cleanupStatus).toHaveBeenCalledTimes(0)
+    expect(cleanupA11yStatus).toHaveBeenCalledTimes(0)
     unmount()
-    expect(cleanupStatus).toHaveBeenCalledTimes(1)
+    expect(cleanupA11yStatus).toHaveBeenCalledTimes(1)
   })
 })

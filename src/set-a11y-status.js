@@ -12,11 +12,11 @@ function setStatus(status, documentProp) {
 
   div.textContent = status
   debounce(() => {
-    cleanupStatus()
+    cleanupA11yStatus()
   }, 500)()
 }
 
-export function cleanupStatus() {
+export function cleanupA11yStatus() {
   getStatusDiv().textContent = ''
 }
 
