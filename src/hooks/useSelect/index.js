@@ -9,7 +9,7 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
 } from '../utils'
-import setStatus from '../../set-a11y-status'
+import setStatus, {cleanupStatus} from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   callAll,
@@ -85,6 +85,13 @@ function useSelect(userProps = {}) {
   const shouldScroll = useRef(true)
 
   /* Effects */
+  /* Cleanup status message on unmount */
+  useEffect(
+    () => () => {
+      cleanupStatus()
+    },
+    [],
+  )
   /* Sets a11y status message on changes in isOpen. */
   useEffect(() => {
     if (isInitialMount.current) {
