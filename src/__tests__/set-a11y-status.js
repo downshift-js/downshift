@@ -1,3 +1,5 @@
+import {cleanupStatus} from '../set-a11y-status'
+
 jest.useFakeTimers()
 
 beforeEach(() => {
@@ -27,6 +29,13 @@ test('escapes HTML', () => {
   const setA11yStatus = setup()
   setA11yStatus('<script>alert("!!!")</script>')
   expect(document.body.firstChild).toMatchSnapshot()
+})
+
+test('can cleanup status', () => {
+  const setA11yStatus = setup()
+  setA11yStatus('hello')
+  cleanupStatus()
+  expect(document.body.firstChild.textContent).toBe('')
 })
 
 test('performs cleanup after a timeout', () => {
