@@ -1074,6 +1074,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "epeicher",
+      "name": "Roberto Aranda",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3519124?s=460&v=4",
+      "profile": "https://github.com/epeicher",
+      "contributions": [
+        "bug"
+      ]
     }
   ]
 }
