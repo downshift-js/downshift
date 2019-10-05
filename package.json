@@ -88,7 +88,7 @@
     "docz": "^1.2.0",
     "docz-theme-default": "^1.2.0",
     "eslint-plugin-cypress": "^2.6.1",
-    "eslint-plugin-react": "7.12.4",
+    "eslint-plugin-react": "7.16.0",
     "flow-bin": "^0.102.0",
     "flow-coverage-report": "^0.6.0",
     "jest-dom": "^3.0.0",
