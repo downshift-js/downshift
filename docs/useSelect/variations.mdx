@@ -13,13 +13,17 @@ import {items, menuStyles} from './utils.json'
 
 ## Controlling state
 
-Controlling state is possible by receiving the state changes done by Downshift via onChange props (`onHighlightedIndexChange`,
-`onSelectedItemChange` etc.), changing them based on your requirements and passing them back to Downshift via props.
+Controlling state is possible by receiving the state changes done by Downshift
+via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
+changing them based on your requirements and passing them back to Downshift via
+props.
 
-The example below shows how to control `selectedItem`. The value computed by Downshift is received in `onSelectedItemChange`
-callback. The user checks it and passes back a controlled value via `selectedChangeProp`. Here, for example, it checks if
-`selectedItem` starts with the letter `C` and only then updates the `selectedItem` in the widget. If not updated via prop,
-then the dropdown behaves as if no item was selected.
+The example below shows how to control `selectedItem`. The value computed by
+Downshift is received in `onSelectedItemChange` callback. The user checks it
+and passes back a controlled value via`selectedChangeProp`. Here, for example,
+it checks if `selectedItem` starts with the letter `C` and only then updates
+the `selectedItem` in the widget. If not updated via prop, then the dropdown
+behaves as if no item was selected.
 
 ### Playground
 
@@ -94,6 +98,24 @@ then the dropdown behaves as if no item was selected.
 Codesandbox equivalent is [here](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj).
 
 ## State Reducer
+
+For an even more granular control of the state changing process, you can add
+your own reducer on top of the default one. When it's called it will receive
+the previous `state` and the `actionAndChanges` object. This contains the
+change `type`, which explains why the state is changed. It also contains the
+`changes` proposed by `Downshift` that should occur as a consequence of that
+change type. You are supposed to return the new state according to your needs.
+
+In the example below, we are catching the selection event types,
+`MenuKeyDownEnter` and `ItemClick` (we are disregarding `MenuBlur`). To keep
+menu open, we are overriding `isOpen` with `state.isOpen` and
+`highlightedIndex` with `state.highlightedIndex` to keep the same appearance
+to the user (menu open with same item highlighted) after selection. But
+selection is still performed, since we are also returning the destructured
+`actionAndChanges.changes` which contains the `selectedItem` given to us by
+the `Downshift` default reducer.
+
+In all other state change types, we return `Downshift` default changes.
 
 ### Playground
 
