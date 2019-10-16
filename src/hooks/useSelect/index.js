@@ -39,8 +39,6 @@ const defaultProps = {
       : window,
 }
 
-let clearTimeout
-
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
@@ -83,6 +81,7 @@ function useSelect(userProps = {}) {
   itemRefs.current = []
   const isInitialMount = useRef(true)
   const shouldScroll = useRef(true)
+  const clearTimeout = useRef(null)
 
   /* Effects */
   /* Sets a11y status message on changes in isOpen. */
@@ -121,7 +120,7 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
     if (isInitialMount.current) {
-      clearTimeout = debounce(() => {
+      clearTimeout.current = debounce(() => {
         dispatch({
           type: stateChangeTypes.FunctionClearKeysSoFar,
         })
@@ -130,7 +129,7 @@ function useSelect(userProps = {}) {
     if (!keysSoFar) {
       return
     }
-    clearTimeout()
+    clearTimeout.current()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keysSoFar])
   /* Controls the focus on the menu or the toggle button. */
