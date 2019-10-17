@@ -92,6 +92,11 @@ export default function downshiftSelectReducer(state, action) {
         }
       }
       break
+    case stateChangeTypes.MenuMouseLeave:
+      changes = {
+        highlightedIndex: -1,
+      }
+      break
     case stateChangeTypes.ToggleButtonKeyDownCharacter:
       {
         const lowercasedKey = action.key

@@ -667,6 +667,22 @@ describe('getMenuProps', () => {
         expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
       })
 
+      test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.mouseLeave(menu)
+        fireEvent.blur(menu)
+
+        expect(menu.childNodes).toHaveLength(0)
+        expect(toggleButton.textContent).toEqual('Elements')
+      })
+
       test.skip('by clicking outside it should behave normnally but the toggleButton should not be focused', () => {
         const initialHighlightedIndex = 2
         const wrapper = setup({
