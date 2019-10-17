@@ -1074,6 +1074,16 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "edygar",
+      "name": "Edygar Oliveira"
+      "avatar_url": "https://avatars.githubusercontent.com/u/566280?v=3",
+      "profile": "https://github.com/edygar",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ]
 }
