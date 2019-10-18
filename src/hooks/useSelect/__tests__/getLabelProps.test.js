@@ -21,6 +21,16 @@ describe('getLabelProps', () => {
     expect(labelProps.id).toEqual(props.labelId)
   })
 
+  test('should assign htmlFor with the value of the toggleButton id', () => {
+    const props = {
+      toggleButtonId: 'my-custom-toggle-button-id',
+    }
+    const {result} = setupHook(props)
+    const labelProps = result.current.getLabelProps()
+
+    expect(labelProps.htmlFor).toEqual(props.toggleButtonId)
+  })
+
   test('passes props downwards', () => {
     const {result} = setupHook()
     const props = {foo: 'bar'}
