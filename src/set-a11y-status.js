@@ -48,4 +48,11 @@ function getStatusDiv(documentProp = document) {
   return statusDiv
 }
 
+export function removeStatusDiv(documentProp = document) {
+  const statusDiv = documentProp.getElementById('a11y-status-message')
+  if (statusDiv) {
+    statusDiv.parentNode.removeChild(statusDiv)
+  }
+}
+
 export default setStatus

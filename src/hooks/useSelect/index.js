@@ -9,7 +9,7 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
 } from '../utils'
-import setStatus from '../../set-a11y-status'
+import setStatus, {removeStatusDiv} from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   callAll,
@@ -84,6 +84,13 @@ function useSelect(userProps = {}) {
   const clearTimeout = useRef(null)
 
   /* Effects */
+  /* Remove status message container on unmount */
+  useEffect(
+    () => () => {
+      removeStatusDiv()
+    },
+    [],
+  )
   /* Sets a11y status message on changes in isOpen. */
   useEffect(() => {
     if (isInitialMount.current) {

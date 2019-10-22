@@ -1,11 +1,15 @@
 import React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import Downshift from '../'
-import setA11yStatus from '../set-a11y-status'
+import setA11yStatus, {removeStatusDiv} from '../set-a11y-status'
 import * as utils from '../utils'
 
 jest.useFakeTimers()
-jest.mock('../set-a11y-status')
+jest.mock('../set-a11y-status', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  removeStatusDiv: jest.fn(),
+}))
 jest.mock('../utils', () => {
   const realUtils = require.requireActual('../utils')
   return {
@@ -40,6 +44,16 @@ test('do not set state after unmount', () => {
   // unmount
   unmount()
   expect(handleStateChange).toHaveBeenCalledTimes(0)
+})
+
+test('removes status div after unmount', () => {
+  setA11yStatus.mockReset()
+  removeStatusDiv.mockReset()
+  const {unmount} = render(<Downshift />)
+  jest.runAllTimers()
+  expect(removeStatusDiv).toHaveBeenCalledTimes(0)
+  unmount()
+  expect(removeStatusDiv).toHaveBeenCalledTimes(1)
 })
 
 test('handles mouse events properly to reset state', () => {
