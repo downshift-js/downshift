@@ -178,6 +178,109 @@ test(`disabled item can't be selected by pressing enter`, () => {
   expect(input.value).toBe('c')
 })
 
+test(`disabled item can't be highlighted when navigating via keyDown`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion', disabled: true},
+    {item: 'Checkers'},
+  ]
+  const utils = renderDownshift({items})
+  const {input, arrowDownInput, enterOnInput} = utils
+
+  // ↓
+  arrowDownInput()
+  // ↓ (should skip the first and second option)
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Checkers')
+})
+
+test(`disabled item can't be highlighted when navigating via keyUp`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion'},
+    {item: 'Checkers', disabled: true},
+  ]
+  const utils = renderDownshift({items})
+  const {input, arrowUpInput, enterOnInput} = utils
+
+  // ↑
+  arrowUpInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Dominion')
+})
+
+test(`disabled item can't be highlighted when navigating via end`, () => {
+  const items = [
+    {item: 'Chess'},
+    {item: 'Dominion'},
+    {item: 'Checkers', disabled: true},
+  ]
+  const utils = renderDownshift({items})
+  const {input, endOnInput, enterOnInput} = utils
+
+  // end
+  endOnInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Dominion')
+})
+
+test(`disabled item can't be highlighted when navigating via home`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion'},
+    {item: 'Checkers'},
+  ]
+  const utils = renderDownshift({items})
+  const {input, homeOnInput, enterOnInput} = utils
+
+  // home
+  homeOnInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Dominion')
+})
+
+test(`highlight wrapping works with disabled items upwards`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion'},
+    {item: 'Checkers'},
+  ]
+  const utils = renderDownshift({items, initialHighlightedIndex: 1})
+  const {input, arrowUpInput, enterOnInput} = utils
+
+  // ↑
+  arrowUpInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Checkers')
+})
+
+test(`highlight wrapping works with disabled items downwards`, () => {
+  const items = [
+    {item: 'Chess'},
+    {item: 'Dominion'},
+    {item: 'Checkers', disabled: true},
+  ]
+  const utils = renderDownshift({items, initialHighlightedIndex: 1})
+  const {input, arrowDownInput, enterOnInput} = utils
+
+  // ↓
+  arrowDownInput()
+  // ENTER to select
+  enterOnInput()
+  // item was not selected -> input value should still be 'c'
+  expect(input.value).toBe('Chess')
+})
+
 function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,
@@ -212,6 +315,10 @@ function renderDownshift({
     ...utils,
     childrenSpy,
     input,
+    homeOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'Home', ...extraEventProps}),
+    endOnInput: extraEventProps =>
+      fireEvent.keyDown(input, {key: 'End', ...extraEventProps}),
     arrowDownInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>
