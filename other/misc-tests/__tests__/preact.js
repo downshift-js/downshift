@@ -18,7 +18,7 @@ for preact before running this test.
  */
 
 import preact from 'preact'
-import render from 'preact-render-to-string'
+import {render} from '@testing-library/preact'
 import Downshift from '../../../preact'
 
 test('works with preact', () => {

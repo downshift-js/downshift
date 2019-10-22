@@ -318,7 +318,7 @@ The item that should be selected.
 
 > `string` | defaults to a generated ID
 
-Used to generate the first part of the `Downshift` id on the elements. Uses [@reach/auto-id][reach-auto-id] by default. You can override this `id` with one of your own, provided as a prop, or you can override the `id` for each element altogether using the props below.
+Used to generate the first part of the `Downshift` id on the elements. Uses the [@reach/auto-id][reach-auto-id] implementation by default. You can override this `id` with one of your own, provided as a prop, or you can override the `id` for each element altogether using the props below.
 
 ### labelId
 

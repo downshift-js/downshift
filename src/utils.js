@@ -186,8 +186,10 @@ function unwrapArray(arg, defaultValue) {
 function isDOMElement(element) {
   /* istanbul ignore if */
   if (isPreact) {
-    // then this is preact
-    return typeof element.nodeName === 'string'
+    // then this is preact or preact X
+    return (
+      typeof element.nodeName === 'string' || typeof element.type === 'string'
+    )
   }
 
   // then we assume this is react
@@ -203,7 +205,7 @@ function getElementProps(element) {
 
   /* istanbul ignore if */
   if (isPreact) {
-    return element.attributes
+    return element.attributes || element.props
   }
 
   return element.props

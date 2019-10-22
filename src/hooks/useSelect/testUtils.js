@@ -1,8 +1,7 @@
 import React from 'react'
-import {useId} from '@reach/auto-id'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds, itemToString} from '../utils'
+import {getElementIds, itemToString, useId} from '../utils'
 import useSelect from '.'
 
 const items = [
@@ -34,10 +33,12 @@ const items = [
   'Oganesson',
 ]
 
-jest.mock('@reach/auto-id', () => {
-  return {
-    useId: () => 'test-id',
-  }
+jest.mock('../utils', () => {
+  const module = require.requireActual('../utils')
+
+  module.useId = () => 'test-id'
+
+  return module
 })
 
 const defaultIds = getElementIds(useId)

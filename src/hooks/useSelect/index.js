@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
-import {useId} from '@reach/auto-id'
 import {
   getElementIds,
   getItemIndex,
@@ -8,6 +7,7 @@ import {
   itemToString as defaultItemToString,
   isAcceptedCharacterKey,
   useEnhancedReducer,
+  useId,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
