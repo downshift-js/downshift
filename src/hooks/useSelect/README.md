@@ -588,7 +588,7 @@ Downshift has a few events for which it provides implicit handlers. Several of t
 - `Home`: Moves `highlightedIndex` to first position.
 - `Enter`: If there is a highlighted option, it will select it, close the menu and move focus to the toggle button (unless `defaultIsOpen` is true).
 - `Escape`: It will close the menu without selecting anything and move focus to the toggle button.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: If there is a highlighted option, it will select it, close the menu and move focus either to the toggle button (if `Shift+Tab`), next tabbable element (if `Tab`) or whatever was clicked.
+- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu and move focus either to the toggle button (if `Shift+Tab`), next tabbable element (if `Tab`) or whatever was clicked. It will not select the highlighted item anymore, if any.
 
 #### Item
 
