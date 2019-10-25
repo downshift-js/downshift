@@ -7,7 +7,6 @@
   "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
   "scripts": {
-    "add-contributor": "kcd-scripts contributors add",
     "build": "npm run build:web --silent && npm run build:native --silent",
     "build:web": "kcd-scripts build --bundle --p-react --no-clean --size-snapshot",
     "build:native": "cross-env BUILD_REACT_NATIVE=true BUILD_FILENAME_SUFFIX=.native kcd-scripts build --bundle cjs --no-clean",
