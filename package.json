@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.4.4",
+    "@testing-library/jest-dom": "^4.1.2",
     "@testing-library/react-hooks": "^3.1.0",
     "@testing-library/cypress": "^5.0.2",
     "@testing-library/react": "^9.3.0",
@@ -91,7 +92,6 @@
     "eslint-plugin-react": "7.16.0",
     "flow-bin": "^0.110.1",
     "flow-coverage-report": "^0.6.0",
-    "jest-dom": "^4.0.0",
     "kcd-scripts": "^1.9.0",
     "npm-run-all": "^4.1.2",
     "preact": "^8.5.2",
