@@ -1093,6 +1093,17 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "francoischalifour",
+      "name": "François Chalifour",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6137112?v=4",
+      "profile": "https://francoischalifour.com",
+      "contributions": [
+        "code",
+        "test",
+        "platform"
+      ]
     }
   ],
   "repoHost": "https://github.com",
