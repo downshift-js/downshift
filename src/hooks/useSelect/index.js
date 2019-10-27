@@ -323,6 +323,7 @@ function useSelect(userProps = {}) {
   }
   const getLabelProps = labelProps => ({
     id: labelId,
+    htmlFor: toggleButtonId,
     ...labelProps,
   })
   const getMenuProps = ({
