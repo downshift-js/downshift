@@ -255,6 +255,11 @@ function useSelect(userProps = {}) {
       })
     }
   }
+  const menuHandleMouseLeave = () => {
+    dispatch({
+      type: stateChangeTypes.MenuMouseLeave,
+    })
+  }
   const toggleButtonHandleClick = () => {
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
@@ -323,11 +328,13 @@ function useSelect(userProps = {}) {
   }
   const getLabelProps = labelProps => ({
     id: labelId,
+    htmlFor: toggleButtonId,
     ...labelProps,
   })
   const getMenuProps = ({
     onKeyDown,
     onBlur,
+    onMouseLeave,
     refKey = 'ref',
     ref,
     ...rest
@@ -344,6 +351,7 @@ function useSelect(userProps = {}) {
     }),
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
     ...rest,
   })
   const getToggleButtonProps = ({

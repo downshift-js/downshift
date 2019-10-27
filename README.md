@@ -8,9 +8,9 @@
 autocomplete/dropdown/select/combobox components</p>
 
 > See
-> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817) and
-> [Episode
-> 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
+> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817)
+> and
+> [Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
 
 <hr />
 
@@ -19,7 +19,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-109-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-111-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
@@ -52,26 +52,27 @@ harder to contribute to.
 
 ## The new React Hooks API
 
-Downshift has proven to be a versatile React component which can be used not only
-for single selection autocomplete, but also for single selection dropdown and
-the multiple selection variations of each. In order to customise the behavior, the
-developer needs to add more stateful logic to it, however, as each of the variations
-differ in terms of design patterns.
+Downshift has proven to be a versatile React component which can be used not
+only for single selection autocomplete, but also for single selection dropdown
+and the multiple selection variations of each. In order to customise the
+behavior, the developer needs to add more stateful logic to it, however, as each
+of the variations differ in terms of design patterns.
 
-In the effort to provide out of the box solutions for each variation, a set of React
-Hooks are about to be available as part of Downshift. Each hook will handle a specific
-dropdown variation and be named accordingly: `useSelect`, `useAutocomplete`, etc.
+In the effort to provide out of the box solutions for each variation, a set of
+React Hooks are about to be available as part of Downshift. Each hook will
+handle a specific dropdown variation and be named accordingly: `useSelect`,
+`useAutocomplete`, etc.
 
-You can check the progress in the [hooks page][hooks-readme] and contribute! If you
-have a custom `<select>` dropdown and want it to be functional and accessible, jump
-directly to the already implemented [useSelect][useselect-readme]. For more examples of
-`useSelect`, check out our [docsite](https://downshift.netlify.com/)!
+You can check the progress in the [hooks page][hooks-readme] and contribute! If
+you have a custom `<select>` dropdown and want it to be functional and
+accessible, jump directly to the already implemented
+[useSelect][useselect-readme]. For more examples of `useSelect`, check out our
+[docsite](https://downshift.netlify.com/)!
 
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -213,8 +214,8 @@ render(
 ```
 
 `<Downshift />` is the only component exposed by this package. It doesn't render
-anything itself, it just calls the render function and renders that.
-["Use a render prop!"][use-a-render-prop]!
+anything itself, it just calls the render function and renders that. ["Use a
+render prop!"][use-a-render-prop]!
 `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Basic Props
@@ -241,11 +242,15 @@ compute the `inputValue`).
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful
 > default
 
-Called when the selected item changes, either by the user selecting an item or the user clearing the selection. Called with the item that was selected or `null` and the new state of `downshift`. (see `onStateChange` for more info on `stateAndHelpers`).
+Called when the selected item changes, either by the user selecting an item or
+the user clearing the selection. Called with the item that was selected or
+`null` and the new state of `downshift`. (see `onStateChange` for more info on
+`stateAndHelpers`).
 
-- `selectedItem`: The item that was just selected. `null` if the selection was cleared.
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `selectedItem`: The item that was just selected. `null` if the selection was
+  cleared.
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### stateReducer
 
@@ -253,12 +258,12 @@ Called when the selected item changes, either by the user selecting an item or t
 
 **🚨 This is a really handy power feature 🚨**
 
-This function will be called each time `downshift` sets its internal state
-(or calls your `onStateChange` handler for control props). It allows you to
-modify the state change that will take place which can give you fine grain
-control over how the component interacts with user updates without having to
-use [Control Props](#control-props). It gives you the current state and the
-state that will be set, and you return the state that you want to set.
+This function will be called each time `downshift` sets its internal state (or
+calls your `onStateChange` handler for control props). It allows you to modify
+the state change that will take place which can give you fine grain control over
+how the component interacts with user updates without having to use
+[Control Props](#control-props). It gives you the current state and the state
+that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
 - `changes`: These are the properties that are about to change. This also has a
@@ -301,7 +306,8 @@ function stateReducer(state, changes) {
 
 > `any` | defaults to `null`
 
-Pass an item or an array of items that should be selected when downshift is initialized.
+Pass an item or an array of items that should be selected when downshift is
+initialized.
 
 ### initialInputValue
 
@@ -313,7 +319,8 @@ This is the initial input value when downshift is initialized.
 
 > `number`/`null` | defaults to `defaultHighlightedIndex`
 
-This is the initial value to set the highlighted index to when downshift is initialized.
+This is the initial value to set the highlighted index to when downshift is
+initialized.
 
 ### initialIsOpen
 
@@ -326,7 +333,8 @@ This is the initial `isOpen` value when downshift is initialized.
 > `number`/`null` | defaults to `null`
 
 This is the value to set the `highlightedIndex` to anytime downshift is reset,
-when the the selection is cleared, when an item is selected or when the inputValue is changed.
+when the the selection is cleared, when an item is selected or when the
+inputValue is changed.
 
 ### defaultIsOpen
 
@@ -337,7 +345,8 @@ the selection is cleared, or when an item is selected.
 
 ### selectedItemChanged
 
-> `function(prevItem: any, item: any)` | defaults to: `(prevItem, item) => (prevItem !== item)`
+> `function(prevItem: any, item: any)` | defaults to:
+> `(prevItem, item) => (prevItem !== item)`
 
 Used to determine if the new `selectedItem` has changed compared to the previous
 `selectedItem` and properly update Downshift's internal state.
@@ -381,8 +390,8 @@ Called with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### onStateChange
 
@@ -393,8 +402,9 @@ This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
-The parameters both take the shape of internal state (`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`) but differ
-slightly.
+The parameters both take the shape of internal state
+(`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`)
+but differ slightly.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This also has a `type` property which you can learn more about
@@ -422,8 +432,8 @@ of `onStateChange` when `inputValue` is a controlled prop to
 [avoid issues with cursor positions](https://github.com/downshift-js/downshift/issues/217).
 
 - `inputValue`: The current value of the input
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### itemCount
 
@@ -495,7 +505,8 @@ Used for `aria` attributes and the `id` prop of the element (`ul`) you use
 
 ### getItemId
 
-> `function(index)` | defaults to a function that generates an ID based on the index
+> `function(index)` | defaults to a function that generates an ID based on the
+> index
 
 Used for `aria` attributes and the `id` prop of the element (`li`) you use
 [`getInputProps`](#getinputprops) with.
@@ -504,17 +515,23 @@ Used for `aria` attributes and the `id` prop of the element (`li`) you use
 
 > `window` | defaults to `window`
 
-This prop is only useful if you're rendering downshift within a different `window` context from where your JavaScript is running; for example, an iframe or a shadow-root. If the given context is lacking `document` and/or `add|removeEventListener` on its prototype (as is the case for a shadow-root) then you will need to pass in a custom object that is able to provide [access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177) for downshift.
+This prop is only useful if you're rendering downshift within a different
+`window` context from where your JavaScript is running; for example, an iframe
+or a shadow-root. If the given context is lacking `document` and/or
+`add|removeEventListener` on its prototype (as is the case for a shadow-root)
+then you will need to pass in a custom object that is able to provide
+[access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177)
+for downshift.
 
 ### onOuterClick
 
 > `function(stateAndHelpers: object)` | optional
 
 A helper callback to help control internal state of downshift like `isOpen` as
-mentioned in [this issue](https://github.com/downshift-js/downshift/issues/206). The
-same behavior can be achieved using `onStateChange`, but this prop is provided
-as a helper because it's a fairly common use-case if you're controlling the
-`isOpen` state:
+mentioned in [this issue](https://github.com/downshift-js/downshift/issues/206).
+The same behavior can be achieved using `onStateChange`, but this prop is
+provided as a helper because it's a fairly common use-case if you're controlling
+the `isOpen` state:
 
 ```jsx
 const ui = (
@@ -535,8 +552,8 @@ This callback will only be called if `isOpen` is `true`.
 > implementation
 
 This allows you to customize how the scrolling works when the highlighted index
-changes. It receives the node to be scrolled to and the root node (the root
-node you render in downshift). Internally we use
+changes. It receives the node to be scrolled to and the root node (the root node
+you render in downshift). Internally we use
 [`compute-scroll-into-view`](https://www.npmjs.com/package/compute-scroll-into-view)
 so if you use that package then you wont be adding any additional bytes to your
 bundle :)
@@ -544,11 +561,11 @@ bundle :)
 ## stateChangeTypes
 
 There are a few props that expose changes to state
-([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)).
-For you to make the most of these APIs, it's important for you to understand
-why state is being changed. To accomplish this, there's a `type` property on the
-`changes` object you get. This `type` corresponds to a
-`Downshift.stateChangeTypes` property.
+([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)). For you
+to make the most of these APIs, it's important for you to understand why state
+is being changed. To accomplish this, there's a `type` property on the `changes`
+object you get. This `type` corresponds to a `Downshift.stateChangeTypes`
+property.
 
 The list of all possible values this `type` property can take is defined in
 [this file](https://github.com/downshift-js/downshift/blob/master/src/stateChangeTypes.js)
@@ -625,9 +642,10 @@ indicated below:
 
 These functions are used to apply props to the elements that you render. This
 gives you maximum flexibility to render what, when, and wherever you like. You
-call these on the element in question (for example: `<input {...getInputProps()}`)). It's advisable to pass all your props to that function
-rather than applying them on the element yourself to avoid your props being
-overridden (or overriding the props returned). For example:
+call these on the element in question (for example:
+`<input {...getInputProps()}`)). It's advisable to pass all your props to that
+function rather than applying them on the element yourself to avoid your props
+being overridden (or overriding the props returned). For example:
 `getInputProps({onKeyUp(event) {console.log(event)}})`.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
@@ -668,10 +686,13 @@ If you're rendering a composite component, `Downshift` checks that
 `getRootProps` is called and that `refKey` is a prop of the returned composite
 component. This is done to catch common causes of errors but, in some cases, the
 check could fail even if the ref is correctly forwarded to the root DOM
-component. In these cases, you can provide the object `{suppressRefError : true}` as the second argument to `getRootProps` to completely bypass the check.\
+component. In these cases, you can provide the object
+`{suppressRefError : true}` as the second argument to `getRootProps` to
+completely bypass the check.\
 **Please use it with extreme care and only if you are absolutely sure that the ref
 is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
-See [#235](https://github.com/downshift-js/downshift/issues/235) for the discussion that lead to this.
+See [#235](https://github.com/downshift-js/downshift/issues/235) for the
+discussion that lead to this.
 
 </details>
 
@@ -721,17 +742,17 @@ Optional properties:
   rendered, regardless of whether you hide it or not. Otherwise, `getMenuProps`
   may throw error if you unmount and remount the menu.
 
-- `aria-label`: By default the menu will add an `aria-labelledby` that refers
-  to the `<label>` rendered with `getLabelProps`. However, if you provide
+- `aria-label`: By default the menu will add an `aria-labelledby` that refers to
+  the `<label>` rendered with `getLabelProps`. However, if you provide
   `aria-label` to give a more specific label that describes the options
-  available, then `aria-labelledby` will not be provided and screen readers
-  can use your `aria-label` instead.
+  available, then `aria-labelledby` will not be provided and screen readers can
+  use your `aria-label` instead.
 
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
-`getMenuProps`.
-**Please use it with extreme care and only if you are absolutely sure that the ref
-is correctly forwarded otherwise `Downshift` will unexpectedly fail.**
+`getMenuProps`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `Downshift` will unexpectedly
+fail.**
 
 ```jsx
 <ul {...getMenuProps()}>
@@ -792,8 +813,8 @@ Optional properties:
   explicitly. It's probably best to be explicit about `index` when using a
   windowing library like `react-virtualized`.
 - `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be omitted. Items will not be highlighted when hovered,
-  and items will not be selected when clicked.
+  handlers will be omitted. Items will not be highlighted when hovered, and
+  items will not be selected when clicked.
 
 #### `getToggleButtonProps`
 
@@ -806,8 +827,8 @@ Optional properties:
 
 - `disabled`: If this is set to `true`, then all of the downshift button event
   handlers will be omitted (it wont toggle the menu when clicked).
-- `aria-label`: The `aria-label` prop is in English. You should probably override
-  this yourself so you can provide translations:
+- `aria-label`: The `aria-label` prop is in English. You should probably
+  override this yourself so you can provide translations:
 
 ```jsx
 const myButton = (
@@ -871,38 +892,40 @@ described below.
 ### default handlers
 
 - `ArrowDown`: if menu is closed, opens it and moves the highlighted index to
-  `defaultHighlightedIndex + 1`, if `defaultHighlightedIndex` is provided, or
-  to the top-most item, if not. If menu is open, it moves the highlighted index
+  `defaultHighlightedIndex + 1`, if `defaultHighlightedIndex` is provided, or to
+  the top-most item, if not. If menu is open, it moves the highlighted index
   down by 1. If the shift key is held when this event fires, the highlighted
   index will jump down 5 indices instead of 1. NOTE: if the current highlighted
   index is within the bottom 5 indices, the top-most index will be highlighted.)
 
 - `ArrowUp`: if menu is closed, opens it and moves the highlighted index to
-  `defaultHighlightedIndex - 1`, if `defaultHighlightedIndex` is provided, or
-  to the bottom-most item, if not. If menu is open, moves the highlighted index
-  up by 1. If the shift key is held when this event fires, the highlighted
-  index will jump up 5 indices instead of 1. NOTE: if the current highlighted
-  index is within the top 5 indices, the bottom-most index will be highlighted.)
+  `defaultHighlightedIndex - 1`, if `defaultHighlightedIndex` is provided, or to
+  the bottom-most item, if not. If menu is open, moves the highlighted index up
+  by 1. If the shift key is held when this event fires, the highlighted index
+  will jump up 5 indices instead of 1. NOTE: if the current highlighted index is
+  within the top 5 indices, the bottom-most index will be highlighted.)
 
-- `Home`: if menu is closed, it will not add any other behavior. If menu is open,
-  the top-most index will get highlighted.
+- `Home`: if menu is closed, it will not add any other behavior. If menu is
+  open, the top-most index will get highlighted.
 
 - `End`: if menu is closed, it will not add any other behavior. If menu is open,
   the bottom-most index will get highlighted.
 
-- `Enter`: if the menu is open, selects the currently highlighted item. If the menu
-  is open, the usual 'Enter' event is prevented by Downshift's default implicit enter
-  handler; so, for example, a form submission event will not work as one might expect
-  (though if the menu is closed the form submission will work normally). See below
-  for customizing the handlers.
+- `Enter`: if the menu is open, selects the currently highlighted item. If the
+  menu is open, the usual 'Enter' event is prevented by Downshift's default
+  implicit enter handler; so, for example, a form submission event will not work
+  as one might expect (though if the menu is closed the form submission will
+  work normally). See below for customizing the handlers.
 
-- `Escape`: will clear downshift's state. This means that `highlightedIndex` will be
-  set to the `defaultHighlightedIndex`, the `inputValue` will be set to empty string,
-  `selectedItem` will be set to `null`, and the `isOpen` state will be set to the `defaultIsOpen`.
+- `Escape`: will clear downshift's state. This means that `highlightedIndex`
+  will be set to the `defaultHighlightedIndex`, the `inputValue` will be set to
+  empty string, `selectedItem` will be set to `null`, and the `isOpen` state
+  will be set to the `defaultIsOpen`.
 
 ### customizing handlers
 
-You can provide your own event handlers to Downshift which will be called before the default handlers:
+You can provide your own event handlers to Downshift which will be called before
+the default handlers:
 
 ```javascript
 const ui = (
@@ -920,7 +943,8 @@ const ui = (
 )
 ```
 
-If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `true`:
+If you would like to prevent the default handler behavior in some cases, you can
+set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
 const ui = (
@@ -943,7 +967,8 @@ const ui = (
 )
 ```
 
-If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
+If you would like to completely override Downshift's behavior for a handler, in
+favor of your own, you can bypass prop getters:
 
 ```javascript
 const ui = (
@@ -964,9 +989,13 @@ const ui = (
 
 ### resetIdCounter
 
-Allows reseting the internal id counter which is used to generate unique ids for Downshift component.
+Allows reseting the internal id counter which is used to generate unique ids for
+Downshift component.
 
-You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
+You should never need to use this in the browser. Only if you are running an
+universal React app that is rendered on the server you should call
+[resetIdCounter](#resetidcounter) before every render so that the ids that get
+generated on the server match the ids generated in the browser.
 
 ```javascript
 import {resetIdCounter} from 'downshift';
@@ -977,12 +1006,21 @@ ReactDOMServer.renderToString(...);
 
 ## React Native
 
-Since Downshift renders it's UI using render props, Downshift supports rendering on React Native with ease. Use components like `<View>`, `<Text>`, `<TouchableOpacity>` and others inside of your render method to generate awesome autocomplete, dropdown, or selection components.
+Since Downshift renders it's UI using render props, Downshift supports rendering
+on React Native with ease. Use components like `<View>`, `<Text>`,
+`<TouchableOpacity>` and others inside of your render method to generate awesome
+autocomplete, dropdown, or selection components.
 
 ### Gotchas
 
-- Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
-- When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
+- Your root view will need to either pass a ref to `getRootProps` or call
+  `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a
+  common set of errors around composite components.
+  [Learn more in `getRootProps`](#getrootprops).
+- When using a `<FlatList>` or `<ScrollView>`, be sure to supply the
+  [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps)
+  prop to ensure that your text input stays focus, while allowing for taps on
+  the touchables rendered for your items.
 
 ## Advanced React Component Patterns course
 
@@ -992,7 +1030,10 @@ platforms:
 
 1.  [egghead.io](https://egghead.io/courses/advanced-react-component-patterns)
 2.  [Frontend Masters](https://frontendmasters.com/courses/advanced-react-patterns/)
-3.  YouTube (for free!): [Part 1](https://www.youtube.com/watch?v=SuzutbwjUp8&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf) and [Part 2](https://www.youtube.com/watch?v=ubXtOROjILU&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
+3.  YouTube (for free!):
+    [Part 1](https://www.youtube.com/watch?v=SuzutbwjUp8&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
+    and
+    [Part 2](https://www.youtube.com/watch?v=ubXtOROjILU&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
 
 ## Examples
 
@@ -1005,25 +1046,45 @@ platforms:
 
 If you're just learning downshift, review these in order:
 
-1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) - very bare bones, not styled at all. Good place to start.
-2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) - more complete autocomplete solution using emotion for styling and match-sorter for filtering the items.
-3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) - Shows how to control the `selectedItem` so the selected item can be one of your items or whatever the user types.
-4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) - Shows how to create a MultiDownshift component that allows for an array of selectedItems for multiple selection using a state reducer
+1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
+    very bare bones, not styled at all. Good place to start.
+2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
+    more complete autocomplete solution using emotion for styling and
+    match-sorter for filtering the items.
+3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) -
+    Shows how to control the `selectedItem` so the selected item can be one of
+    your items or whatever the user types.
+4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
+    Shows how to create a MultiDownshift component that allows for an array of
+    selectedItems for multiple selection using a state reducer
 
 **Other Examples:**
 
 Check out these examples of more advanced use/edge cases:
 
-- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) - An example of using the render prop pattern to utilize a reusable component to provide the downshift dropdown component with the functionality of being able to highlight a selection item that starts with the key pressed.
-- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) - An example of using one of downshift's actions as an event handler.
-- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) - An example of a highly complex autocomplete component featuring asynchronously loading items, multiple selection, and windowing (with react-virtualized)
-- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) - An example of how to implementat compound components with `React.createContext` and a downshift higher order component. This is generally not recommended because the render prop API exported by downshift is generally good enough for everyone, but there's nothing technically wrong with doing something like this.
+- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) -
+  An example of using the render prop pattern to utilize a reusable component to
+  provide the downshift dropdown component with the functionality of being able
+  to highlight a selection item that starts with the key pressed.
+- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) -
+  An example of using one of downshift's actions as an event handler.
+- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) -
+  An example of a highly complex autocomplete component featuring asynchronously
+  loading items, multiple selection, and windowing (with react-virtualized)
+- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) -
+  An example of how to implementat compound components with
+  `React.createContext` and a downshift higher order component. This is
+  generally not recommended because the render prop API exported by downshift is
+  generally good enough for everyone, but there's nothing technically wrong with
+  doing something like this.
 
 **Old Examples exist on [codesandbox.io][examples]:**
 
-_🚨 This is a great contribution opportunity!_ These are examples that have not yet been migrated to
+_🚨 This is a great contribution opportunity!_ These are examples that have not
+yet been migrated to
 [downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
-You're more than welcome to make PRs to the examples repository to move these examples over there.
+You're more than welcome to make PRs to the examples repository to move these
+examples over there.
 [Watch this to learn how to contribute completely in the browser](https://www.youtube.com/watch?v=3PAQbhdkTtI&index=2&t=21s&list=PLV5CVI1eNcJgCrPH_e6d57KRUTiDZgs0u)
 
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
@@ -1047,7 +1108,8 @@ You're more than welcome to make PRs to the examples repository to move these ex
 - [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 - [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
 - [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
-- [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
+- [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid
+  prop-drilling if you like to break up your render method into more components
 - [React Native example](https://snack.expo.io/SkE0LxXqM)
 - [React VR example](https://github.com/infiniteluke/bassdrop)
 - [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
@@ -1119,162 +1181,162 @@ to use these out of the box solutions, then that's fine too:
 
 ## Bindings for ReasonML
 
-If you're developing some React in ReasonML, check out the [`Downshift` bindings](https://github.com/reasonml-community/bs-downshift) for that.
+If you're developing some React in ReasonML, check out the
+[`Downshift` bindings](https://github.com/reasonml-community/bs-downshift) for
+that.
 
 ## Contributors
 
 Thanks goes to these people ([emoji key][emojis]):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
+<!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/paypal/downshift/commits?author=kentcdodds" title="Tests">⚠️</a> <a href="#review-kentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#blog-kentcdodds" title="Blogposts">📝</a> <a href="https://github.com/paypal/downshift/issues?q=author%3Akentcdodds" title="Bug reports">🐛</a> <a href="#example-kentcdodds" title="Examples">💡</a> <a href="#ideas-kentcdodds" title="Ideas, Planning, & Feedback">🤔</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=kentcdodds" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=kentcdodds" title="Documentation">📖</a> <a href="#infra-kentcdodds" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/downshift-js/downshift/commits?author=kentcdodds" title="Tests">⚠️</a> <a href="#review-kentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#blog-kentcdodds" title="Blogposts">📝</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Akentcdodds" title="Bug reports">🐛</a> <a href="#example-kentcdodds" title="Examples">💡</a> <a href="#ideas-kentcdodds" title="Ideas, Planning, & Feedback">🤔</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
     <td align="center"><a href="http://twitter.com/ryanflorence"><img src="https://avatars0.githubusercontent.com/u/100200?v=4" width="100px;" alt="Ryan Florence"/><br /><sub><b>Ryan Florence</b></sub></a><br /><a href="#ideas-ryanflorence" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://jaredforsyth.com"><img src="https://avatars3.githubusercontent.com/u/112170?v=4" width="100px;" alt="Jared Forsyth"/><br /><sub><b>Jared Forsyth</b></sub></a><br /><a href="#ideas-jaredly" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/paypal/downshift/commits?author=jaredly" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://jaredforsyth.com"><img src="https://avatars3.githubusercontent.com/u/112170?v=4" width="100px;" alt="Jared Forsyth"/><br /><sub><b>Jared Forsyth</b></sub></a><br /><a href="#ideas-jaredly" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/downshift-js/downshift/commits?author=jaredly" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/jtmthf"><img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;" alt="Jack Moore"/><br /><sub><b>Jack Moore</b></sub></a><br /><a href="#example-jtmthf" title="Examples">💡</a></td>
-    <td align="center"><a href="http://travisrayarnold.com"><img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;" alt="Travis Arnold"/><br /><sub><b>Travis Arnold</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=souporserious" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=souporserious" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://marcysutton.com"><img src="https://avatars0.githubusercontent.com/u/1045233?v=4" width="100px;" alt="Marcy Sutton"/><br /><sub><b>Marcy Sutton</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Amarcysutton" title="Bug reports">🐛</a> <a href="#ideas-marcysutton" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://travisrayarnold.com"><img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;" alt="Travis Arnold"/><br /><sub><b>Travis Arnold</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://marcysutton.com"><img src="https://avatars0.githubusercontent.com/u/1045233?v=4" width="100px;" alt="Marcy Sutton"/><br /><sub><b>Marcy Sutton</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Amarcysutton" title="Bug reports">🐛</a> <a href="#ideas-marcysutton" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.jeremygayed.com"><img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;" alt="Jeremy Gayed"/><br /><sub><b>Jeremy Gayed</b></sub></a><br /><a href="#example-tizmagik" title="Examples">💡</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://haroen.me"><img src="https://avatars3.githubusercontent.com/u/6270048?v=4" width="100px;" alt="Haroen Viaene"/><br /><sub><b>Haroen Viaene</b></sub></a><br /><a href="#example-Haroenv" title="Examples">💡</a></td>
     <td align="center"><a href="https://github.com/rezof"><img src="https://avatars2.githubusercontent.com/u/15073300?v=4" width="100px;" alt="monssef"/><br /><sub><b>monssef</b></sub></a><br /><a href="#example-rezof" title="Examples">💡</a></td>
-    <td align="center"><a href="https://fezvrasta.github.io"><img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;" alt="Federico Zivolo"/><br /><sub><b>Federico Zivolo</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=FezVrasta" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://divyendusingh.com"><img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;" alt="Divyendu Singh"/><br /><sub><b>Divyendu Singh</b></sub></a><br /><a href="#example-divyenduz" title="Examples">💡</a> <a href="https://github.com/paypal/downshift/commits?author=divyenduz" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=divyenduz" title="Documentation">📖</a> <a href="https://github.com/paypal/downshift/commits?author=divyenduz" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/salmanmanekia"><img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;" alt="Muhammad Salman"/><br /><sub><b>Muhammad Salman</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=salmanmanekia" title="Code">💻</a></td>
-    <td align="center"><a href="https://twitter.com/psicotropidev"><img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;" alt="João Alberto"/><br /><sub><b>João Alberto</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=psicotropicos" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/bernard-lin"><img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;" alt="Bernard Lin"/><br /><sub><b>Bernard Lin</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=bernard-lin" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=bernard-lin" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://fezvrasta.github.io"><img src="https://avatars2.githubusercontent.com/u/5382443?v=4" width="100px;" alt="Federico Zivolo"/><br /><sub><b>Federico Zivolo</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=FezVrasta" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://divyendusingh.com"><img src="https://avatars3.githubusercontent.com/u/746482?v=4" width="100px;" alt="Divyendu Singh"/><br /><sub><b>Divyendu Singh</b></sub></a><br /><a href="#example-divyenduz" title="Examples">💡</a> <a href="https://github.com/downshift-js/downshift/commits?author=divyenduz" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=divyenduz" title="Documentation">📖</a> <a href="https://github.com/downshift-js/downshift/commits?author=divyenduz" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/salmanmanekia"><img src="https://avatars1.githubusercontent.com/u/841955?v=4" width="100px;" alt="Muhammad Salman"/><br /><sub><b>Muhammad Salman</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=salmanmanekia" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/psicotropidev"><img src="https://avatars3.githubusercontent.com/u/10820159?v=4" width="100px;" alt="João Alberto"/><br /><sub><b>João Alberto</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=psicotropicos" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/bernard-lin"><img src="https://avatars0.githubusercontent.com/u/16327281?v=4" width="100px;" alt="Bernard Lin"/><br /><sub><b>Bernard Lin</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=bernard-lin" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=bernard-lin" title="Documentation">📖</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://geoffdavis.info"><img src="https://avatars1.githubusercontent.com/u/7330124?v=4" width="100px;" alt="Geoff Davis"/><br /><sub><b>Geoff Davis</b></sub></a><br /><a href="#example-geoffdavis92" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/reznord"><img src="https://avatars0.githubusercontent.com/u/3415488?v=4" width="100px;" alt="Anup"/><br /><sub><b>Anup</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=reznord" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://ferdinandsalis.com"><img src="https://avatars0.githubusercontent.com/u/340520?v=4" width="100px;" alt="Ferdinand Salis"/><br /><sub><b>Ferdinand Salis</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Aferdinandsalis" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=ferdinandsalis" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/tkh44"><img src="https://avatars2.githubusercontent.com/u/662750?v=4" width="100px;" alt="Kye Hohenberger"/><br /><sub><b>Kye Hohenberger</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Atkh44" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/jgoux"><img src="https://avatars0.githubusercontent.com/u/1443499?v=4" width="100px;" alt="Julien Goux"/><br /><sub><b>Julien Goux</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ajgoux" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=jgoux" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=jgoux" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/jseminck"><img src="https://avatars2.githubusercontent.com/u/9586897?v=4" width="100px;" alt="Joachim Seminck"/><br /><sub><b>Joachim Seminck</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=jseminck" title="Code">💻</a></td>
-    <td align="center"><a href="http://jesseharlin.net/"><img src="https://avatars3.githubusercontent.com/u/954596?v=4" width="100px;" alt="Jesse Harlin"/><br /><sub><b>Jesse Harlin</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Athe-simian" title="Bug reports">🐛</a> <a href="#example-the-simian" title="Examples">💡</a></td>
+    <td align="center"><a href="https://github.com/reznord"><img src="https://avatars0.githubusercontent.com/u/3415488?v=4" width="100px;" alt="Anup"/><br /><sub><b>Anup</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=reznord" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://ferdinandsalis.com"><img src="https://avatars0.githubusercontent.com/u/340520?v=4" width="100px;" alt="Ferdinand Salis"/><br /><sub><b>Ferdinand Salis</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Aferdinandsalis" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=ferdinandsalis" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tkh44"><img src="https://avatars2.githubusercontent.com/u/662750?v=4" width="100px;" alt="Kye Hohenberger"/><br /><sub><b>Kye Hohenberger</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Atkh44" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/jgoux"><img src="https://avatars0.githubusercontent.com/u/1443499?v=4" width="100px;" alt="Julien Goux"/><br /><sub><b>Julien Goux</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ajgoux" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=jgoux" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=jgoux" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/jseminck"><img src="https://avatars2.githubusercontent.com/u/9586897?v=4" width="100px;" alt="Joachim Seminck"/><br /><sub><b>Joachim Seminck</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jseminck" title="Code">💻</a></td>
+    <td align="center"><a href="http://jesseharlin.net/"><img src="https://avatars3.githubusercontent.com/u/954596?v=4" width="100px;" alt="Jesse Harlin"/><br /><sub><b>Jesse Harlin</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Athe-simian" title="Bug reports">🐛</a> <a href="#example-the-simian" title="Examples">💡</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/pbomb"><img src="https://avatars0.githubusercontent.com/u/1402095?v=4" width="100px;" alt="Matt Parrish"/><br /><sub><b>Matt Parrish</b></sub></a><br /><a href="#tool-pbomb" title="Tools">🔧</a> <a href="#review-pbomb" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://thom.kr"><img src="https://avatars1.githubusercontent.com/u/11661846?v=4" width="100px;" alt="thom"/><br /><sub><b>thom</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=thomhos" title="Code">💻</a></td>
-    <td align="center"><a href="http://twitter.com/tranvu"><img src="https://avatars2.githubusercontent.com/u/1088312?v=4" width="100px;" alt="Vu Tran"/><br /><sub><b>Vu Tran</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=vutran" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/codiemullins"><img src="https://avatars1.githubusercontent.com/u/74193?v=4" width="100px;" alt="Codie Mullins"/><br /><sub><b>Codie Mullins</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=codiemullins" title="Code">💻</a> <a href="#example-codiemullins" title="Examples">💡</a></td>
-    <td align="center"><a href="https://morajabi.me"><img src="https://avatars3.githubusercontent.com/u/12202757?v=4" width="100px;" alt="Mohammad Rajabifard"/><br /><sub><b>Mohammad Rajabifard</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=morajabi" title="Documentation">📖</a> <a href="#ideas-morajabi" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/tansongyang"><img src="https://avatars3.githubusercontent.com/u/9488719?v=4" width="100px;" alt="Frank Tan"/><br /><sub><b>Frank Tan</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=tansongyang" title="Code">💻</a></td>
+    <td align="center"><a href="http://thom.kr"><img src="https://avatars1.githubusercontent.com/u/11661846?v=4" width="100px;" alt="thom"/><br /><sub><b>thom</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=thomhos" title="Code">💻</a></td>
+    <td align="center"><a href="http://twitter.com/tranvu"><img src="https://avatars2.githubusercontent.com/u/1088312?v=4" width="100px;" alt="Vu Tran"/><br /><sub><b>Vu Tran</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=vutran" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/codiemullins"><img src="https://avatars1.githubusercontent.com/u/74193?v=4" width="100px;" alt="Codie Mullins"/><br /><sub><b>Codie Mullins</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=codiemullins" title="Code">💻</a> <a href="#example-codiemullins" title="Examples">💡</a></td>
+    <td align="center"><a href="https://morajabi.me"><img src="https://avatars3.githubusercontent.com/u/12202757?v=4" width="100px;" alt="Mohammad Rajabifard"/><br /><sub><b>Mohammad Rajabifard</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=morajabi" title="Documentation">📖</a> <a href="#ideas-morajabi" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/tansongyang"><img src="https://avatars3.githubusercontent.com/u/9488719?v=4" width="100px;" alt="Frank Tan"/><br /><sub><b>Frank Tan</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=tansongyang" title="Code">💻</a></td>
     <td align="center"><a href="https://kierb.com"><img src="https://avatars3.githubusercontent.com/u/5093058?v=4" width="100px;" alt="Kier Borromeo"/><br /><sub><b>Kier Borromeo</b></sub></a><br /><a href="#example-srph" title="Examples">💡</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/paul-veevers"><img src="https://avatars1.githubusercontent.com/u/8969456?v=4" width="100px;" alt="Paul Veevers"/><br /><sub><b>Paul Veevers</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=paul-veevers" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Ronolibert"><img src="https://avatars2.githubusercontent.com/u/13622298?v=4" width="100px;" alt="Ron Cruz"/><br /><sub><b>Ron Cruz</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=Ronolibert" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://rickmcgavin.github.io"><img src="https://avatars1.githubusercontent.com/u/13605633?v=4" width="100px;" alt="Rick McGavin"/><br /><sub><b>Rick McGavin</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=rickMcGavin" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/paul-veevers"><img src="https://avatars1.githubusercontent.com/u/8969456?v=4" width="100px;" alt="Paul Veevers"/><br /><sub><b>Paul Veevers</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=paul-veevers" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Ronolibert"><img src="https://avatars2.githubusercontent.com/u/13622298?v=4" width="100px;" alt="Ron Cruz"/><br /><sub><b>Ron Cruz</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=Ronolibert" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://rickmcgavin.github.io"><img src="https://avatars1.githubusercontent.com/u/13605633?v=4" width="100px;" alt="Rick McGavin"/><br /><sub><b>Rick McGavin</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=rickMcGavin" title="Documentation">📖</a></td>
     <td align="center"><a href="http://twitter.com/vejersele"><img src="https://avatars0.githubusercontent.com/u/869669?v=4" width="100px;" alt="Jelle Versele"/><br /><sub><b>Jelle Versele</b></sub></a><br /><a href="#example-vejersele" title="Examples">💡</a></td>
     <td align="center"><a href="https://github.com/brentertz"><img src="https://avatars1.githubusercontent.com/u/202773?v=4" width="100px;" alt="Brent Ertz"/><br /><sub><b>Brent Ertz</b></sub></a><br /><a href="#ideas-brentertz" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://github.com/Dajust"><img src="https://avatars3.githubusercontent.com/u/8015514?v=4" width="100px;" alt="Justice Mba "/><br /><sub><b>Justice Mba </b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=Dajust" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=Dajust" title="Documentation">📖</a> <a href="#ideas-Dajust" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Dajust"><img src="https://avatars3.githubusercontent.com/u/8015514?v=4" width="100px;" alt="Justice Mba "/><br /><sub><b>Justice Mba </b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=Dajust" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=Dajust" title="Documentation">📖</a> <a href="#ideas-Dajust" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://mfellis.com"><img src="https://avatars2.githubusercontent.com/u/3925281?v=4" width="100px;" alt="Mark Ellis"/><br /><sub><b>Mark Ellis</b></sub></a><br /><a href="#ideas-ellismarkf" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://ronak.io/"><img src="https://avatars1.githubusercontent.com/u/3241922?v=4" width="100px;" alt="us͡an̸df͘rien͜ds͠"/><br /><sub><b>us͡an̸df͘rien͜ds͠</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ausandfriends" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=usandfriends" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=usandfriends" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://www.robin-drexler.com/"><img src="https://avatars0.githubusercontent.com/u/474248?v=4" width="100px;" alt="Robin Drexler"/><br /><sub><b>Robin Drexler</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Arobin-drexler" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=robin-drexler" title="Code">💻</a></td>
+    <td align="center"><a href="http://ronak.io/"><img src="https://avatars1.githubusercontent.com/u/3241922?v=4" width="100px;" alt="us͡an̸df͘rien͜ds͠"/><br /><sub><b>us͡an̸df͘rien͜ds͠</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ausandfriends" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=usandfriends" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=usandfriends" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://www.robin-drexler.com/"><img src="https://avatars0.githubusercontent.com/u/474248?v=4" width="100px;" alt="Robin Drexler"/><br /><sub><b>Robin Drexler</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Arobin-drexler" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=robin-drexler" title="Code">💻</a></td>
     <td align="center"><a href="http://arturoromero.info/"><img src="https://avatars0.githubusercontent.com/u/7406639?v=4" width="100px;" alt="Arturo Romero"/><br /><sub><b>Arturo Romero</b></sub></a><br /><a href="#example-arturoromeroslc" title="Examples">💡</a></td>
-    <td align="center"><a href="http://algolab.eu/pirola"><img src="https://avatars1.githubusercontent.com/u/275483?v=4" width="100px;" alt="yp"/><br /><sub><b>yp</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ayp" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=yp" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=yp" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://www.warbyparker.com"><img src="https://avatars0.githubusercontent.com/u/3998604?v=4" width="100px;" alt="Dave Garwacke"/><br /><sub><b>Dave Garwacke</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=ifyoumakeit" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://linkedin.com/in/drapegnik"><img src="https://avatars3.githubusercontent.com/u/11758660?v=4" width="100px;" alt="Ivan Pazhitnykh"/><br /><sub><b>Ivan Pazhitnykh</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=Drapegnik" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=Drapegnik" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/Rendez"><img src="https://avatars0.githubusercontent.com/u/61776?v=4" width="100px;" alt="Luis Merino"/><br /><sub><b>Luis Merino</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=Rendez" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://algolab.eu/pirola"><img src="https://avatars1.githubusercontent.com/u/275483?v=4" width="100px;" alt="yp"/><br /><sub><b>yp</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ayp" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=yp" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=yp" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://www.warbyparker.com"><img src="https://avatars0.githubusercontent.com/u/3998604?v=4" width="100px;" alt="Dave Garwacke"/><br /><sub><b>Dave Garwacke</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=ifyoumakeit" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://linkedin.com/in/drapegnik"><img src="https://avatars3.githubusercontent.com/u/11758660?v=4" width="100px;" alt="Ivan Pazhitnykh"/><br /><sub><b>Ivan Pazhitnykh</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=Drapegnik" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=Drapegnik" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/Rendez"><img src="https://avatars0.githubusercontent.com/u/61776?v=4" width="100px;" alt="Luis Merino"/><br /><sub><b>Luis Merino</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=Rendez" title="Documentation">📖</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://twitter.com/arahansen"><img src="https://avatars0.githubusercontent.com/u/8746094?v=4" width="100px;" alt="Andrew Hansen"/><br /><sub><b>Andrew Hansen</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=arahansen" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=arahansen" title="Tests">⚠️</a> <a href="#ideas-arahansen" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="http://www.johnwhiles.com"><img src="https://avatars3.githubusercontent.com/u/20307225?v=4" width="100px;" alt="John Whiles"/><br /><sub><b>John Whiles</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=Jwhiles" title="Code">💻</a></td>
+    <td align="center"><a href="http://twitter.com/arahansen"><img src="https://avatars0.githubusercontent.com/u/8746094?v=4" width="100px;" alt="Andrew Hansen"/><br /><sub><b>Andrew Hansen</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=arahansen" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=arahansen" title="Tests">⚠️</a> <a href="#ideas-arahansen" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://www.johnwhiles.com"><img src="https://avatars3.githubusercontent.com/u/20307225?v=4" width="100px;" alt="John Whiles"/><br /><sub><b>John Whiles</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=Jwhiles" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/wKovacs64"><img src="https://avatars1.githubusercontent.com/u/1288694?v=4" width="100px;" alt="Justin Hall"/><br /><sub><b>Justin Hall</b></sub></a><br /><a href="#infra-wKovacs64" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://twitter.com/pete_tnt"><img src="https://avatars2.githubusercontent.com/u/7641760?v=4" width="100px;" alt="Pete Nykänen"/><br /><sub><b>Pete Nykänen</b></sub></a><br /><a href="#review-petetnt" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://jaredpalmer.com"><img src="https://avatars2.githubusercontent.com/u/4060187?v=4" width="100px;" alt="Jared Palmer"/><br /><sub><b>Jared Palmer</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=jaredpalmer" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.philipyoungg.com"><img src="https://avatars3.githubusercontent.com/u/11477718?v=4" width="100px;" alt="Philip Young"/><br /><sub><b>Philip Young</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=philipyoungg" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=philipyoungg" title="Tests">⚠️</a> <a href="#ideas-philipyoungg" title="Ideas, Planning, & Feedback">🤔</a></td>
-    <td align="center"><a href="https://alexandernanberg.com"><img src="https://avatars3.githubusercontent.com/u/8997319?v=4" width="100px;" alt="Alexander Nanberg"/><br /><sub><b>Alexander Nanberg</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=alexandernanberg" title="Documentation">📖</a> <a href="https://github.com/paypal/downshift/commits?author=alexandernanberg" title="Code">💻</a></td>
+    <td align="center"><a href="http://jaredpalmer.com"><img src="https://avatars2.githubusercontent.com/u/4060187?v=4" width="100px;" alt="Jared Palmer"/><br /><sub><b>Jared Palmer</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jaredpalmer" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.philipyoungg.com"><img src="https://avatars3.githubusercontent.com/u/11477718?v=4" width="100px;" alt="Philip Young"/><br /><sub><b>Philip Young</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=philipyoungg" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=philipyoungg" title="Tests">⚠️</a> <a href="#ideas-philipyoungg" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://alexandernanberg.com"><img src="https://avatars3.githubusercontent.com/u/8997319?v=4" width="100px;" alt="Alexander Nanberg"/><br /><sub><b>Alexander Nanberg</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=alexandernanberg" title="Documentation">📖</a> <a href="https://github.com/downshift-js/downshift/commits?author=alexandernanberg" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://httpete.com"><img src="https://avatars2.githubusercontent.com/u/1556430?v=4" width="100px;" alt="Pete Redmond"/><br /><sub><b>Pete Redmond</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ahttpete-ire" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/Zashy"><img src="https://avatars2.githubusercontent.com/u/1706342?v=4" width="100px;" alt="Nick Lavin"/><br /><sub><b>Nick Lavin</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3AZashy" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=Zashy" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=Zashy" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://jlongster.com"><img src="https://avatars2.githubusercontent.com/u/17031?v=4" width="100px;" alt="James Long"/><br /><sub><b>James Long</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ajlongster" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=jlongster" title="Code">💻</a></td>
-    <td align="center"><a href="http://michaelball.co"><img src="https://avatars0.githubusercontent.com/u/1505907?v=4" width="100px;" alt="Michael Ball"/><br /><sub><b>Michael Ball</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Acycomachead" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=cycomachead" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=cycomachead" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://httpete.com"><img src="https://avatars2.githubusercontent.com/u/1556430?v=4" width="100px;" alt="Pete Redmond"/><br /><sub><b>Pete Redmond</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ahttpete-ire" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/Zashy"><img src="https://avatars2.githubusercontent.com/u/1706342?v=4" width="100px;" alt="Nick Lavin"/><br /><sub><b>Nick Lavin</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3AZashy" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=Zashy" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=Zashy" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://jlongster.com"><img src="https://avatars2.githubusercontent.com/u/17031?v=4" width="100px;" alt="James Long"/><br /><sub><b>James Long</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ajlongster" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=jlongster" title="Code">💻</a></td>
+    <td align="center"><a href="http://michaelball.co"><img src="https://avatars0.githubusercontent.com/u/1505907?v=4" width="100px;" alt="Michael Ball"/><br /><sub><b>Michael Ball</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Acycomachead" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=cycomachead" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=cycomachead" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/Julienng"><img src="https://avatars0.githubusercontent.com/u/8990614?v=4" width="100px;" alt="CAVALEIRO Julien"/><br /><sub><b>CAVALEIRO Julien</b></sub></a><br /><a href="#example-Julienng" title="Examples">💡</a></td>
-    <td align="center"><a href="http://www.kimgronqvist.se"><img src="https://avatars1.githubusercontent.com/u/3421067?v=4" width="100px;" alt="Kim Grönqvist"/><br /><sub><b>Kim Grönqvist</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=kimgronqvist" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=kimgronqvist" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://sijietian.com"><img src="https://avatars2.githubusercontent.com/u/3675602?v=4" width="100px;" alt="Sijie"/><br /><sub><b>Sijie</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Atiansijie" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=tiansijie" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.kimgronqvist.se"><img src="https://avatars1.githubusercontent.com/u/3421067?v=4" width="100px;" alt="Kim Grönqvist"/><br /><sub><b>Kim Grönqvist</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=kimgronqvist" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=kimgronqvist" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://sijietian.com"><img src="https://avatars2.githubusercontent.com/u/3675602?v=4" width="100px;" alt="Sijie"/><br /><sub><b>Sijie</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Atiansijie" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=tiansijie" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://dsds.io"><img src="https://avatars0.githubusercontent.com/u/410792?v=4" width="100px;" alt="Dony Sukardi"/><br /><sub><b>Dony Sukardi</b></sub></a><br /><a href="#example-donysukardi" title="Examples">💡</a> <a href="#question-donysukardi" title="Answering Questions">💬</a> <a href="https://github.com/paypal/downshift/commits?author=donysukardi" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=donysukardi" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://dillonmulroy.com"><img src="https://avatars1.githubusercontent.com/u/2755722?v=4" width="100px;" alt="Dillon Mulroy"/><br /><sub><b>Dillon Mulroy</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=dmmulroy" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://twitter.com/curtytate"><img src="https://avatars3.githubusercontent.com/u/12440573?v=4" width="100px;" alt="Curtis Tate Wilkinson"/><br /><sub><b>Curtis Tate Wilkinson</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=curtiswilkinson" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/brikou"><img src="https://avatars3.githubusercontent.com/u/383212?v=4" width="100px;" alt="Brice BERNARD"/><br /><sub><b>Brice BERNARD</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Abrikou" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=brikou" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/xutopia"><img src="https://avatars3.githubusercontent.com/u/14304503?v=4" width="100px;" alt="Tony Xu"/><br /><sub><b>Tony Xu</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=xutopia" title="Code">💻</a></td>
-    <td align="center"><a href="http://anthonyng.me"><img src="https://avatars1.githubusercontent.com/u/14035529?v=4" width="100px;" alt="Anthony Ng"/><br /><sub><b>Anthony Ng</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=newyork-anthonyng" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/notruth"><img src="https://avatars2.githubusercontent.com/u/11996139?v=4" width="100px;" alt="S S"/><br /><sub><b>S S</b></sub></a><br /><a href="#question-notruth" title="Answering Questions">💬</a> <a href="https://github.com/paypal/downshift/commits?author=notruth" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=notruth" title="Documentation">📖</a> <a href="#ideas-notruth" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/paypal/downshift/commits?author=notruth" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://dsds.io"><img src="https://avatars0.githubusercontent.com/u/410792?v=4" width="100px;" alt="Dony Sukardi"/><br /><sub><b>Dony Sukardi</b></sub></a><br /><a href="#example-donysukardi" title="Examples">💡</a> <a href="#question-donysukardi" title="Answering Questions">💬</a> <a href="https://github.com/downshift-js/downshift/commits?author=donysukardi" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=donysukardi" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://dillonmulroy.com"><img src="https://avatars1.githubusercontent.com/u/2755722?v=4" width="100px;" alt="Dillon Mulroy"/><br /><sub><b>Dillon Mulroy</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=dmmulroy" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://twitter.com/curtytate"><img src="https://avatars3.githubusercontent.com/u/12440573?v=4" width="100px;" alt="Curtis Tate Wilkinson"/><br /><sub><b>Curtis Tate Wilkinson</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=curtiswilkinson" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/brikou"><img src="https://avatars3.githubusercontent.com/u/383212?v=4" width="100px;" alt="Brice BERNARD"/><br /><sub><b>Brice BERNARD</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Abrikou" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=brikou" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/xutopia"><img src="https://avatars3.githubusercontent.com/u/14304503?v=4" width="100px;" alt="Tony Xu"/><br /><sub><b>Tony Xu</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=xutopia" title="Code">💻</a></td>
+    <td align="center"><a href="http://anthonyng.me"><img src="https://avatars1.githubusercontent.com/u/14035529?v=4" width="100px;" alt="Anthony Ng"/><br /><sub><b>Anthony Ng</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=newyork-anthonyng" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/notruth"><img src="https://avatars2.githubusercontent.com/u/11996139?v=4" width="100px;" alt="S S"/><br /><sub><b>S S</b></sub></a><br /><a href="#question-notruth" title="Answering Questions">💬</a> <a href="https://github.com/downshift-js/downshift/commits?author=notruth" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=notruth" title="Documentation">📖</a> <a href="#ideas-notruth" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/downshift-js/downshift/commits?author=notruth" title="Tests">⚠️</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://austintackaberry.co"><img src="https://avatars0.githubusercontent.com/u/29493001?v=4" width="100px;" alt="Austin Tackaberry"/><br /><sub><b>Austin Tackaberry</b></sub></a><br /><a href="#question-austintackaberry" title="Answering Questions">💬</a> <a href="https://github.com/paypal/downshift/commits?author=austintackaberry" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=austintackaberry" title="Documentation">📖</a> <a href="https://github.com/paypal/downshift/issues?q=author%3Aaustintackaberry" title="Bug reports">🐛</a> <a href="#example-austintackaberry" title="Examples">💡</a> <a href="#ideas-austintackaberry" title="Ideas, Planning, & Feedback">🤔</a> <a href="#review-austintackaberry" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/paypal/downshift/commits?author=austintackaberry" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/jduthon"><img src="https://avatars3.githubusercontent.com/u/4168055?v=4" width="100px;" alt="Jean Duthon"/><br /><sub><b>Jean Duthon</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ajduthon" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=jduthon" title="Code">💻</a></td>
-    <td align="center"><a href="http://antontelesh.github.io"><img src="https://avatars3.githubusercontent.com/u/3889580?v=4" width="100px;" alt="Anton Telesh"/><br /><sub><b>Anton Telesh</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3AAntontelesh" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=Antontelesh" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/ericedem"><img src="https://avatars3.githubusercontent.com/u/1060669?v=4" width="100px;" alt="Eric Edem"/><br /><sub><b>Eric Edem</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=ericedem" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=ericedem" title="Documentation">📖</a> <a href="#ideas-ericedem" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/paypal/downshift/commits?author=ericedem" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/indiesquidge"><img src="https://avatars3.githubusercontent.com/u/3409645?v=4" width="100px;" alt="Austin Wood"/><br /><sub><b>Austin Wood</b></sub></a><br /><a href="#question-indiesquidge" title="Answering Questions">💬</a> <a href="https://github.com/paypal/downshift/commits?author=indiesquidge" title="Documentation">📖</a> <a href="#review-indiesquidge" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://austintackaberry.co"><img src="https://avatars0.githubusercontent.com/u/29493001?v=4" width="100px;" alt="Austin Tackaberry"/><br /><sub><b>Austin Tackaberry</b></sub></a><br /><a href="#question-austintackaberry" title="Answering Questions">💬</a> <a href="https://github.com/downshift-js/downshift/commits?author=austintackaberry" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=austintackaberry" title="Documentation">📖</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Aaustintackaberry" title="Bug reports">🐛</a> <a href="#example-austintackaberry" title="Examples">💡</a> <a href="#ideas-austintackaberry" title="Ideas, Planning, & Feedback">🤔</a> <a href="#review-austintackaberry" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/downshift-js/downshift/commits?author=austintackaberry" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/jduthon"><img src="https://avatars3.githubusercontent.com/u/4168055?v=4" width="100px;" alt="Jean Duthon"/><br /><sub><b>Jean Duthon</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ajduthon" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=jduthon" title="Code">💻</a></td>
+    <td align="center"><a href="http://antontelesh.github.io"><img src="https://avatars3.githubusercontent.com/u/3889580?v=4" width="100px;" alt="Anton Telesh"/><br /><sub><b>Anton Telesh</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3AAntontelesh" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=Antontelesh" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ericedem"><img src="https://avatars3.githubusercontent.com/u/1060669?v=4" width="100px;" alt="Eric Edem"/><br /><sub><b>Eric Edem</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=ericedem" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=ericedem" title="Documentation">📖</a> <a href="#ideas-ericedem" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/downshift-js/downshift/commits?author=ericedem" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/indiesquidge"><img src="https://avatars3.githubusercontent.com/u/3409645?v=4" width="100px;" alt="Austin Wood"/><br /><sub><b>Austin Wood</b></sub></a><br /><a href="#question-indiesquidge" title="Answering Questions">💬</a> <a href="https://github.com/downshift-js/downshift/commits?author=indiesquidge" title="Documentation">📖</a> <a href="#review-indiesquidge" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/mmmurray"><img src="https://avatars3.githubusercontent.com/u/14275790?v=4" width="100px;" alt="Mark Murray"/><br /><sub><b>Mark Murray</b></sub></a><br /><a href="#infra-mmmurray" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
-    <td align="center"><a href="https://github.com/gsimone"><img src="https://avatars0.githubusercontent.com/u/1862172?v=4" width="100px;" alt="Gianmarco"/><br /><sub><b>Gianmarco</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Agsimone" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=gsimone" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/gsimone"><img src="https://avatars0.githubusercontent.com/u/1862172?v=4" width="100px;" alt="Gianmarco"/><br /><sub><b>Gianmarco</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Agsimone" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=gsimone" title="Code">💻</a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/pastr"><img src="https://avatars2.githubusercontent.com/u/6838136?v=4" width="100px;" alt="Emmanuel Pastor"/><br /><sub><b>Emmanuel Pastor</b></sub></a><br /><a href="#example-pastr" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/dalehurwitz"><img src="https://avatars2.githubusercontent.com/u/10345034?v=4" width="100px;" alt="dalehurwitz"/><br /><sub><b>dalehurwitz</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=dalehurwitz" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/blobor"><img src="https://avatars1.githubusercontent.com/u/4813007?v=4" width="100px;" alt="Bogdan Lobor"/><br /><sub><b>Bogdan Lobor</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Ablobor" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=blobor" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/dalehurwitz"><img src="https://avatars2.githubusercontent.com/u/10345034?v=4" width="100px;" alt="dalehurwitz"/><br /><sub><b>dalehurwitz</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=dalehurwitz" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/blobor"><img src="https://avatars1.githubusercontent.com/u/4813007?v=4" width="100px;" alt="Bogdan Lobor"/><br /><sub><b>Bogdan Lobor</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Ablobor" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=blobor" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/infiniteluke"><img src="https://avatars0.githubusercontent.com/u/1127238?v=4" width="100px;" alt="Luke Herrington"/><br /><sub><b>Luke Herrington</b></sub></a><br /><a href="#example-infiniteluke" title="Examples">💡</a></td>
-    <td align="center"><a href="https://github.com/drobannx"><img src="https://avatars2.githubusercontent.com/u/6361167?v=4" width="100px;" alt="Brandon Clemons"/><br /><sub><b>Brandon Clemons</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=drobannx" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/aMollusk"><img src="https://avatars0.githubusercontent.com/u/10591587?v=4" width="100px;" alt="Kieran"/><br /><sub><b>Kieran</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=aMollusk" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Brushedoctopus"><img src="https://avatars3.githubusercontent.com/u/11570627?v=4" width="100px;" alt="Brushedoctopus"/><br /><sub><b>Brushedoctopus</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3ABrushedoctopus" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=Brushedoctopus" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/drobannx"><img src="https://avatars2.githubusercontent.com/u/6361167?v=4" width="100px;" alt="Brandon Clemons"/><br /><sub><b>Brandon Clemons</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=drobannx" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/aMollusk"><img src="https://avatars0.githubusercontent.com/u/10591587?v=4" width="100px;" alt="Kieran"/><br /><sub><b>Kieran</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=aMollusk" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Brushedoctopus"><img src="https://avatars3.githubusercontent.com/u/11570627?v=4" width="100px;" alt="Brushedoctopus"/><br /><sub><b>Brushedoctopus</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3ABrushedoctopus" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=Brushedoctopus" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://cameronpedwards.com"><img src="https://avatars3.githubusercontent.com/u/5456216?v=4" width="100px;" alt="Cameron Edwards"/><br /><sub><b>Cameron Edwards</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=cameronprattedwards" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=cameronprattedwards" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/stereobooster"><img src="https://avatars2.githubusercontent.com/u/179534?v=4" width="100px;" alt="stereobooster"/><br /><sub><b>stereobooster</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=stereobooster" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=stereobooster" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://cameronpedwards.com"><img src="https://avatars3.githubusercontent.com/u/5456216?v=4" width="100px;" alt="Cameron Edwards"/><br /><sub><b>Cameron Edwards</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=cameronprattedwards" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=cameronprattedwards" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/stereobooster"><img src="https://avatars2.githubusercontent.com/u/179534?v=4" width="100px;" alt="stereobooster"/><br /><sub><b>stereobooster</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=stereobooster" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=stereobooster" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/1Copenut"><img src="https://avatars0.githubusercontent.com/u/934879?v=4" width="100px;" alt="Trevor Pierce"/><br /><sub><b>Trevor Pierce</b></sub></a><br /><a href="#review-1Copenut" title="Reviewed Pull Requests">👀</a></td>
-    <td align="center"><a href="http://xuefei-frank.com"><img src="https://avatars1.githubusercontent.com/u/1334982?v=4" width="100px;" alt="Xuefei Li"/><br /><sub><b>Xuefei Li</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=franklixuefei" title="Code">💻</a></td>
-    <td align="center"><a href="https://hyperlab.se"><img src="https://avatars0.githubusercontent.com/u/7252803?v=4" width="100px;" alt="Alfred Ringstad"/><br /><sub><b>Alfred Ringstad</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=alfredringstad" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/dovidweisz"><img src="https://avatars0.githubusercontent.com/u/6895497?v=4" width="100px;" alt="D[oa]vid Weisz"/><br /><sub><b>D[oa]vid Weisz</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=dovidweisz" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/RoystonS"><img src="https://avatars0.githubusercontent.com/u/19773?v=4" width="100px;" alt="Royston Shufflebotham"/><br /><sub><b>Royston Shufflebotham</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3ARoystonS" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=RoystonS" title="Code">💻</a></td>
+    <td align="center"><a href="http://xuefei-frank.com"><img src="https://avatars1.githubusercontent.com/u/1334982?v=4" width="100px;" alt="Xuefei Li"/><br /><sub><b>Xuefei Li</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=franklixuefei" title="Code">💻</a></td>
+    <td align="center"><a href="https://hyperlab.se"><img src="https://avatars0.githubusercontent.com/u/7252803?v=4" width="100px;" alt="Alfred Ringstad"/><br /><sub><b>Alfred Ringstad</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=alfredringstad" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/dovidweisz"><img src="https://avatars0.githubusercontent.com/u/6895497?v=4" width="100px;" alt="D[oa]vid Weisz"/><br /><sub><b>D[oa]vid Weisz</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=dovidweisz" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/RoystonS"><img src="https://avatars0.githubusercontent.com/u/19773?v=4" width="100px;" alt="Royston Shufflebotham"/><br /><sub><b>Royston Shufflebotham</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3ARoystonS" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=RoystonS" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=MichaelDeBoey" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/EricHenry"><img src="https://avatars3.githubusercontent.com/u/4412771?v=4" width="100px;" alt="Henry"/><br /><sub><b>Henry</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=EricHenry" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.greenarrow.me"><img src="https://avatars3.githubusercontent.com/u/2180127?v=4" width="100px;" alt="Andrew Walton"/><br /><sub><b>Andrew Walton</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Agreen-arrow" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=green-arrow" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=green-arrow" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/arthurdenner"><img src="https://avatars0.githubusercontent.com/u/13774309?v=4" width="100px;" alt="Arthur Denner"/><br /><sub><b>Arthur Denner</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=arthurdenner" title="Code">💻</a></td>
-    <td align="center"><a href="http://twitter.com/stipsan"><img src="https://avatars2.githubusercontent.com/u/81981?v=4" width="100px;" alt="Cody Olsen"/><br /><sub><b>Cody Olsen</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=stipsan" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/TLadd"><img src="https://avatars0.githubusercontent.com/u/5084492?v=4" width="100px;" alt="Thomas Ladd"/><br /><sub><b>Thomas Ladd</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=TLadd" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/lixualinta"><img src="https://avatars3.githubusercontent.com/u/34634369?v=4" width="100px;" alt="lixualinta"/><br /><sub><b>lixualinta</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=lixualinta" title="Code">💻</a></td>
+    <td align="center"><a href="http://michaeldeboey.be"><img src="https://avatars3.githubusercontent.com/u/6643991?v=4" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=MichaelDeBoey" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/EricHenry"><img src="https://avatars3.githubusercontent.com/u/4412771?v=4" width="100px;" alt="Henry"/><br /><sub><b>Henry</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=EricHenry" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.greenarrow.me"><img src="https://avatars3.githubusercontent.com/u/2180127?v=4" width="100px;" alt="Andrew Walton"/><br /><sub><b>Andrew Walton</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Agreen-arrow" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=green-arrow" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=green-arrow" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/arthurdenner"><img src="https://avatars0.githubusercontent.com/u/13774309?v=4" width="100px;" alt="Arthur Denner"/><br /><sub><b>Arthur Denner</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=arthurdenner" title="Code">💻</a></td>
+    <td align="center"><a href="http://twitter.com/stipsan"><img src="https://avatars2.githubusercontent.com/u/81981?v=4" width="100px;" alt="Cody Olsen"/><br /><sub><b>Cody Olsen</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=stipsan" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/TLadd"><img src="https://avatars0.githubusercontent.com/u/5084492?v=4" width="100px;" alt="Thomas Ladd"/><br /><sub><b>Thomas Ladd</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=TLadd" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/lixualinta"><img src="https://avatars3.githubusercontent.com/u/34634369?v=4" width="100px;" alt="lixualinta"/><br /><sub><b>lixualinta</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=lixualinta" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://twitter.com/JCofman"><img src="https://avatars2.githubusercontent.com/u/2118956?v=4" width="100px;" alt="Jacob Cofman"/><br /><sub><b>Jacob Cofman</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=JCofman" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/jf248"><img src="https://avatars3.githubusercontent.com/u/19275184?v=4" width="100px;" alt="Joshua Freedman"/><br /><sub><b>Joshua Freedman</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=jf248" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/JCofman"><img src="https://avatars2.githubusercontent.com/u/2118956?v=4" width="100px;" alt="Jacob Cofman"/><br /><sub><b>Jacob Cofman</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=JCofman" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/jf248"><img src="https://avatars3.githubusercontent.com/u/19275184?v=4" width="100px;" alt="Joshua Freedman"/><br /><sub><b>Joshua Freedman</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jf248" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/AmyScript"><img src="https://avatars1.githubusercontent.com/u/24494020?v=4" width="100px;" alt="Amy"/><br /><sub><b>Amy</b></sub></a><br /><a href="#example-AmyScript" title="Examples">💡</a></td>
-    <td align="center"><a href="http://twitter.com/roginfarrer"><img src="https://avatars1.githubusercontent.com/u/9063669?v=4" width="100px;" alt="Rogin Farrer"/><br /><sub><b>Rogin Farrer</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=roginfarrer" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/rifler"><img src="https://avatars3.githubusercontent.com/u/871583" width="100px;" alt="Dmitrii Kanatnikov"/><br /><sub><b>Dmitrii Kanatnikov</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=rifler" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/dallonf"><img src="https://avatars2.githubusercontent.com/u/346300?v=4" width="100px;" alt="Dallon Feldner"/><br /><sub><b>Dallon Feldner</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Adallonf" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=dallonf" title="Code">💻</a></td>
-    <td align="center"><a href="https://samuelfullerthomas.com"><img src="https://avatars2.githubusercontent.com/u/10165959?v=4" width="100px;" alt="Samuel Fuller Thomas"/><br /><sub><b>Samuel Fuller Thomas</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=samuelfullerthomas" title="Code">💻</a></td>
+    <td align="center"><a href="http://twitter.com/roginfarrer"><img src="https://avatars1.githubusercontent.com/u/9063669?v=4" width="100px;" alt="Rogin Farrer"/><br /><sub><b>Rogin Farrer</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=roginfarrer" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/rifler"><img src="https://avatars3.githubusercontent.com/u/871583" width="100px;" alt="Dmitrii Kanatnikov"/><br /><sub><b>Dmitrii Kanatnikov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=rifler" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/dallonf"><img src="https://avatars2.githubusercontent.com/u/346300?v=4" width="100px;" alt="Dallon Feldner"/><br /><sub><b>Dallon Feldner</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Adallonf" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=dallonf" title="Code">💻</a></td>
+    <td align="center"><a href="https://samuelfullerthomas.com"><img src="https://avatars2.githubusercontent.com/u/10165959?v=4" width="100px;" alt="Samuel Fuller Thomas"/><br /><sub><b>Samuel Fuller Thomas</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=samuelfullerthomas" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://audiolion.github.io"><img src="https://avatars1.githubusercontent.com/u/2430381?v=4" width="100px;" alt="Ryan Castner"/><br /><sub><b>Ryan Castner</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=audiolion" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/silviuavram"><img src="https://avatars2.githubusercontent.com/u/11275392?v=4" width="100px;" alt="Silviu Alexandru Avram"/><br /><sub><b>Silviu Alexandru Avram</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Asilviuavram" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=silviuavram" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=silviuavram" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/akronb"><img src="https://avatars1.githubusercontent.com/u/15676655?v=4" width="100px;" alt="Anton Volkov"/><br /><sub><b>Anton Volkov</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=akronb" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=akronb" title="Tests">⚠️</a></td>
-    <td align="center"><a href="http://keegan.st"><img src="https://avatars3.githubusercontent.com/u/513363?v=4" width="100px;" alt="Keegan Street"/><br /><sub><b>Keegan Street</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Akeeganstreet" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=keeganstreet" title="Code">💻</a></td>
-    <td align="center"><a href="http://manueldugue.de"><img src="https://avatars1.githubusercontent.com/u/894149?v=4" width="100px;" alt="Manuel Dugué"/><br /><sub><b>Manuel Dugué</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=mdugue" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/mkaradeniz"><img src="https://avatars2.githubusercontent.com/u/12477983?v=4" width="100px;" alt="Max Karadeniz"/><br /><sub><b>Max Karadeniz</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=mkaradeniz" title="Code">💻</a></td>
-    <td align="center"><a href="https://medium.com/@gonchub"><img src="https://avatars3.githubusercontent.com/u/857221?v=4" width="100px;" alt="Gonzalo Beviglia"/><br /><sub><b>Gonzalo Beviglia</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3AGonchuB" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=GonchuB" title="Code">💻</a> <a href="#review-GonchuB" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://audiolion.github.io"><img src="https://avatars1.githubusercontent.com/u/2430381?v=4" width="100px;" alt="Ryan Castner"/><br /><sub><b>Ryan Castner</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=audiolion" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/silviuavram"><img src="https://avatars2.githubusercontent.com/u/11275392?v=4" width="100px;" alt="Silviu Alexandru Avram"/><br /><sub><b>Silviu Alexandru Avram</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Asilviuavram" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=silviuavram" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=silviuavram" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/akronb"><img src="https://avatars1.githubusercontent.com/u/15676655?v=4" width="100px;" alt="Anton Volkov"/><br /><sub><b>Anton Volkov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=akronb" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=akronb" title="Tests">⚠️</a></td>
+    <td align="center"><a href="http://keegan.st"><img src="https://avatars3.githubusercontent.com/u/513363?v=4" width="100px;" alt="Keegan Street"/><br /><sub><b>Keegan Street</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Akeeganstreet" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=keeganstreet" title="Code">💻</a></td>
+    <td align="center"><a href="http://manueldugue.de"><img src="https://avatars1.githubusercontent.com/u/894149?v=4" width="100px;" alt="Manuel Dugué"/><br /><sub><b>Manuel Dugué</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=mdugue" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mkaradeniz"><img src="https://avatars2.githubusercontent.com/u/12477983?v=4" width="100px;" alt="Max Karadeniz"/><br /><sub><b>Max Karadeniz</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=mkaradeniz" title="Code">💻</a></td>
+    <td align="center"><a href="https://medium.com/@gonchub"><img src="https://avatars3.githubusercontent.com/u/857221?v=4" width="100px;" alt="Gonzalo Beviglia"/><br /><sub><b>Gonzalo Beviglia</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3AGonchuB" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=GonchuB" title="Code">💻</a> <a href="#review-GonchuB" title="Reviewed Pull Requests">👀</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/kilrain"><img src="https://avatars2.githubusercontent.com/u/47700687?v=4" width="100px;" alt="Brian Kilrain"/><br /><sub><b>Brian Kilrain</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Akilrain" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=kilrain" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=kilrain" title="Tests">⚠️</a> <a href="https://github.com/paypal/downshift/commits?author=kilrain" title="Documentation">📖</a></td>
-    <td align="center"><a href="http://www.gzschaler.de"><img src="https://avatars0.githubusercontent.com/u/321265?v=4" width="100px;" alt="Gerd Zschaler"/><br /><sub><b>Gerd Zschaler</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=rincedd" title="Code">💻</a> <a href="https://github.com/paypal/downshift/issues?q=author%3Arincedd" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/gaskar"><img src="https://avatars1.githubusercontent.com/u/491166?v=4" width="100px;" alt="Karen Gasparyan"/><br /><sub><b>Karen Gasparyan</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=gaskar" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/kserjey"><img src="https://avatars1.githubusercontent.com/u/19753880?v=4" width="100px;" alt="Sergey Korchinskiy"/><br /><sub><b>Sergey Korchinskiy</b></sub></a><br /><a href="https://github.com/paypal/downshift/issues?q=author%3Akserjey" title="Bug reports">🐛</a> <a href="https://github.com/paypal/downshift/commits?author=kserjey" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=kserjey" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/kilrain"><img src="https://avatars2.githubusercontent.com/u/47700687?v=4" width="100px;" alt="Brian Kilrain"/><br /><sub><b>Brian Kilrain</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Akilrain" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=kilrain" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=kilrain" title="Tests">⚠️</a> <a href="https://github.com/downshift-js/downshift/commits?author=kilrain" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://www.gzschaler.de"><img src="https://avatars0.githubusercontent.com/u/321265?v=4" width="100px;" alt="Gerd Zschaler"/><br /><sub><b>Gerd Zschaler</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=rincedd" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Arincedd" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/gaskar"><img src="https://avatars1.githubusercontent.com/u/491166?v=4" width="100px;" alt="Karen Gasparyan"/><br /><sub><b>Karen Gasparyan</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=gaskar" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/kserjey"><img src="https://avatars1.githubusercontent.com/u/19753880?v=4" width="100px;" alt="Sergey Korchinskiy"/><br /><sub><b>Sergey Korchinskiy</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Akserjey" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=kserjey" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=kserjey" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/edygar"><img src="https://avatars.githubusercontent.com/u/566280?v=3" width="100px;" alt="Edygar Oliveira"/><br /><sub><b>Edygar Oliveira</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=edygar" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Aedygar" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/epeicher"><img src="https://avatars1.githubusercontent.com/u/3519124?v=4" width="100px;" alt="epeicher"/><br /><sub><b>epeicher</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Aepeicher" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/francoischalifour"><img src="https://avatars3.githubusercontent.com/u/6137112?v=4" width="100px;" alt="François Chalifour"/><br /><sub><b>François Chalifour</b></sub></a><br /><a href="https://github.com/paypal/downshift/commits?author=francoischalifour" title="Code">💻</a> <a href="https://github.com/paypal/downshift/commits?author=francoischalifour" title="Tests">⚠️</a> <a href="https://github.com/paypal/downshift/commits?author=francoischalifour" title="Platform">📦</a></td>
   </tr>
 </table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
@@ -1287,9 +1349,11 @@ MIT
 
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
+[build-badge]:
+  https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
 [build]: https://travis-ci.org/downshift-js/downshift
-[coverage-badge]: https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
+[coverage-badge]:
+  https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
 [coverage]: https://codecov.io/github/downshift-js/downshift
 [version-badge]: https://img.shields.io/npm/v/downshift.svg?style=flat-square
 [package]: https://www.npmjs.com/package/downshift
@@ -1297,33 +1361,46 @@ MIT
 [npmcharts]: http://npmcharts.com/compare/downshift
 [license-badge]: https://img.shields.io/npm/l/downshift.svg?style=flat-square
 [license]: https://github.com/downshift-js/downshift/blob/master/LICENSE
-[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[prs-badge]:
+  https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [chat]: https://gitter.im/downshift-js/downshift
-[chat-badge]: https://img.shields.io/gitter/room/downshift-js/downshift.svg?style=flat-square
-[coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
+[chat-badge]:
+  https://img.shields.io/gitter/room/downshift-js/downshift.svg?style=flat-square
+[coc-badge]:
+  https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/downshift-js/downshift/blob/master/CODE_OF_CONDUCT.md
-[react-badge]: https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
+[react-badge]:
+  https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
 [react]: https://facebook.github.io/react/
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
-[size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
+[gzip-badge]:
+  http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]:
+  http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/downshift/dist/
-[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
+[module-formats-badge]:
+  https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
 [spectrum-badge]: https://withspectrum.github.io/badge/badge.svg
 [spectrum]: https://spectrum.chat/downshift
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence
-[compound-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3060560
+[compound-components-lecture]:
+  https://courses.reacttraining.com/courses/advanced-react/lectures/3060560
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
-[examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
-[yt-playlist]: https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
+[examples]:
+  https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
+[yt-playlist]:
+  https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
 [jared]: https://github.com/jaredly
-[controlled-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
+[controlled-components-lecture]:
+  https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
 [react-training]: https://reacttraining.com/
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
-[use-a-render-prop]: https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
+[use-a-render-prop]:
+  https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
 [semver]: http://semver.org/
 [hooks-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks
-[useselect-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
+[useselect-readme]:
+  https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect

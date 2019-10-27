@@ -1,6 +1,6 @@
 {
   "projectName": "downshift",
-  "projectOwner": "paypal",
+  "projectOwner": "downshift-js",
   "repoType": "github",
   "files": [
     "README.md"
@@ -1077,11 +1077,20 @@
     },
     {
       "login": "edygar",
-      "name": "Edygar Oliveira"
+      "name": "Edygar Oliveira",
       "avatar_url": "https://avatars.githubusercontent.com/u/566280?v=3",
       "profile": "https://github.com/edygar",
       "contributions": [
         "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "epeicher",
+      "name": "epeicher",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3519124?v=4",
+      "profile": "https://github.com/epeicher",
+      "contributions": [
         "bug"
       ]
     },
@@ -1096,5 +1105,7 @@
         "platform"
       ]
     }
-  ]
+  ],
+  "repoHost": "https://github.com",
+  "contributorsPerLine": 7
 }
