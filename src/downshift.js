@@ -517,8 +517,14 @@ class Downshift extends Component {
     this.getRootProps.refKey = refKey
     this.getRootProps.suppressRefError = suppressRefError
     const {isOpen} = this.getState()
+    const fnRef =
+      typeof ref === 'function'
+        ? ref
+        : current => {
+            if (ref) ref.current = current
+          }
     return {
-      [refKey]: callAll(ref, this.rootRef),
+      [refKey]: callAll(fnRef, this.rootRef),
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
@@ -858,9 +864,14 @@ class Downshift extends Component {
     this.getMenuProps.called = true
     this.getMenuProps.refKey = refKey
     this.getMenuProps.suppressRefError = suppressRefError
-
+    const fnRef =
+      typeof ref === 'function'
+        ? ref
+        : current => {
+            if (ref) ref.current = current
+          }
     return {
-      [refKey]: callAll(ref, this.menuRef),
+      [refKey]: callAll(fnRef, this.menuRef),
       role: 'listbox',
       'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
