@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import {useState, useEffect, useCallback, useReducer} from 'react'
 
 function getElementIds(
   generateDefaultId,
@@ -115,7 +115,7 @@ function callOnChangeProps(props, state, changes) {
 }
 
 function useEnhancedReducer(reducer, initialState, props) {
-  const enhancedReducer = React.useCallback(
+  const enhancedReducer = useCallback(
     (state, action) => {
       state = getState(state, action.props)
 
@@ -130,9 +130,27 @@ function useEnhancedReducer(reducer, initialState, props) {
     [reducer],
   )
 
-  const [state, dispatch] = React.useReducer(enhancedReducer, initialState)
+  const [state, dispatch] = useReducer(enhancedReducer, initialState)
 
   return [getState(state, props), dispatch]
+}
+
+let lastId = 0
+// istanbul ignore next
+const genId = () => ++lastId
+
+/**
+ * Autogenerate IDs to facilitate WAI-ARIA and server rendering.
+ * Taken from @reach/auto-id
+ * @see https://github.com/reach/reach-ui/blob/6e9dbcf716d5c9a3420e062e5bac1ac4671d01cb/packages/auto-id/src/index.js
+ */
+// istanbul ignore next
+function useId() {
+  const [id, setId] = useState(null)
+
+  useEffect(() => setId(genId()), [])
+
+  return id
 }
 
 export {
@@ -146,4 +164,5 @@ export {
   isAcceptedCharacterKey,
   useEnhancedReducer,
   capitalizeString,
+  useId,
 }

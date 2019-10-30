@@ -1,7 +1,7 @@
 /* eslint camelcase:0 */
 
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus, {removeStatusDiv} from './set-a11y-status'
@@ -1195,10 +1195,7 @@ class Downshift extends Component {
     } else if (isDOMElement(element)) {
       // they didn't apply the root props, but we can clone
       // this and apply the props ourselves
-      return React.cloneElement(
-        element,
-        this.getRootProps(getElementProps(element)),
-      )
+      return cloneElement(element, this.getRootProps(getElementProps(element)))
     }
 
     /* istanbul ignore else */

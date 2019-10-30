@@ -1,6 +1,5 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
-import {useId} from '@reach/auto-id'
 import {
   getElementIds,
   getItemIndex,
@@ -8,6 +7,7 @@ import {
   itemToString as defaultItemToString,
   isAcceptedCharacterKey,
   useEnhancedReducer,
+  useId,
 } from '../utils'
 import setStatus, {removeStatusDiv} from '../../set-a11y-status'
 import {
@@ -262,6 +262,11 @@ function useSelect(userProps = {}) {
       })
     }
   }
+  const menuHandleMouseLeave = () => {
+    dispatch({
+      type: stateChangeTypes.MenuMouseLeave,
+    })
+  }
   const toggleButtonHandleClick = () => {
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
@@ -330,11 +335,13 @@ function useSelect(userProps = {}) {
   }
   const getLabelProps = labelProps => ({
     id: labelId,
+    htmlFor: toggleButtonId,
     ...labelProps,
   })
   const getMenuProps = ({
     onKeyDown,
     onBlur,
+    onMouseLeave,
     refKey = 'ref',
     ref,
     ...rest
@@ -351,6 +358,7 @@ function useSelect(userProps = {}) {
     }),
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
     ...rest,
   })
   const getToggleButtonProps = ({

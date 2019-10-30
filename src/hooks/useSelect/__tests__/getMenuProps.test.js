@@ -601,11 +601,11 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {key: 'Tab'})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+        expect(toggleButton.textContent).toEqual('Elements')
       })
 
       // Special case test.
-      test('shift+tab it closes the menu and selects highlighted item', () => {
+      test('shift+tab it closes the menu', () => {
         const initialHighlightedIndex = 2
         const wrapper = setup({
           initialIsOpen: true,
@@ -617,7 +617,7 @@ describe('getMenuProps', () => {
         fireEvent.keyDown(menu, {key: 'Tab', shiftKey: true})
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+        expect(toggleButton.textContent).toEqual('Elements')
       })
 
       test('shift+tab it has the focus moved to toggleButton', () => {
@@ -651,8 +651,22 @@ describe('getMenuProps', () => {
       })
     })
 
+    describe('on mouse leave', () => {
+      test('the highlightedIndex should be reset', () => {
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex: 2,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.mouseLeave(menu)
+
+        expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+      })
+    })
+
     describe('on blur', () => {
-      test('the open menu will be closed and highlighted item will be selected', () => {
+      test('the open menu will be closed and highlighted item will not be selected', () => {
         const initialHighlightedIndex = 2
         const wrapper = setup({
           initialIsOpen: true,
@@ -664,7 +678,23 @@ describe('getMenuProps', () => {
         fireEvent.blur(menu)
 
         expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+        expect(toggleButton.textContent).toEqual('Elements')
+      })
+
+      test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.mouseLeave(menu)
+        fireEvent.blur(menu)
+
+        expect(menu.childNodes).toHaveLength(0)
+        expect(toggleButton.textContent).toEqual('Elements')
       })
 
       test.skip('by clicking outside it should behave normnally but the toggleButton should not be focused', () => {
