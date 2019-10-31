@@ -6,4 +6,4 @@ exports[`returning a DOM element and calling getRootProps with a refKey results 
 
 exports[`returning a composite component and calling getRootProps without a refKey results in an error 1`] = `"downshift: You returned a non-DOM element. You must specify a refKey in getRootProps"`;
 
-exports[`returning a composite component without calling getRootProps results in an error 1`] = `"downshift: If you return a non-DOM element, you must use apply the getRootProps function"`;
+exports[`returning a composite component without calling getRootProps results in an error 1`] = `"downshift: If you return a non-DOM element, you must apply the getRootProps function"`;
