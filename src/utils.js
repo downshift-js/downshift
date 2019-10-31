@@ -98,18 +98,13 @@ function callAllEventHandlers(...fns) {
     })
 }
 
-/**
- * This return a function that will call all the given functions with
- * the arguments with which it's called. It does a null-check before
- * attempting to call the functions and can take any number of functions.
- * @param {...Function} fns the functions to call
- * @return {Function} the function that calls all the functions
- */
-function callAll(...fns) {
-  return (...args) => {
-    fns.forEach(fn => {
-      if (fn) {
-        fn(...args)
+function handleRefs(...refs) {
+  return node => {
+    refs.forEach(ref => {
+      if (typeof ref === 'function') {
+        ref(node)
+      } else if (ref) {
+        ref.current = node
       }
     })
   }
@@ -297,7 +292,7 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
 export {
   cbToCb,
   callAllEventHandlers,
-  callAll,
+  handleRefs,
   debounce,
   scrollIntoView,
   generateId,

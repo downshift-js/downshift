@@ -12,7 +12,7 @@ import {
 import setStatus from '../../set-a11y-status'
 import {
   callAllEventHandlers,
-  callAll,
+  handleRefs,
   debounce,
   scrollIntoView as defaultScrollIntoView,
   normalizeArrowKey,
@@ -339,7 +339,7 @@ function useSelect(userProps = {}) {
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, menuNode => {
+    [refKey]: handleRefs(ref, menuNode => {
       menuRef.current = menuNode
     }),
     id: menuId,
@@ -361,7 +361,7 @@ function useSelect(userProps = {}) {
     ref,
     ...rest
   } = {}) => ({
-    [refKey]: callAll(ref, toggleButtonNode => {
+    [refKey]: handleRefs(ref, toggleButtonNode => {
       toggleButtonRef.current = toggleButtonNode
     }),
     id: toggleButtonId,
@@ -386,7 +386,7 @@ function useSelect(userProps = {}) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
     return {
-      [refKey]: callAll(ref, itemNode => {
+      [refKey]: handleRefs(ref, itemNode => {
         if (itemNode) {
           itemRefs.current.push(itemNode)
         }
