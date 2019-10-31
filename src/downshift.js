@@ -7,7 +7,7 @@ import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
-  callAll,
+  handleRefs,
   callAllEventHandlers,
   cbToCb,
   debounce,
@@ -518,7 +518,7 @@ class Downshift extends Component {
     this.getRootProps.suppressRefError = suppressRefError
     const {isOpen} = this.getState()
     return {
-      [refKey]: callAll(ref, this.rootRef),
+      [refKey]: handleRefs(ref, this.rootRef),
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
@@ -860,7 +860,7 @@ class Downshift extends Component {
     this.getMenuProps.suppressRefError = suppressRefError
 
     return {
-      [refKey]: callAll(ref, this.menuRef),
+      [refKey]: handleRefs(ref, this.menuRef),
       role: 'listbox',
       'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
       id: this.menuId,
