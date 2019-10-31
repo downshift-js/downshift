@@ -1,7 +1,7 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds, itemToString, useId} from '../utils'
+import {getElementIds, defaultProps, useId} from '../utils'
 import useSelect from '.'
 
 const items = [
@@ -71,14 +71,14 @@ const DropdownSelect = props => {
         {...getToggleButtonProps()}
       >
         {(selectedItem && selectedItem instanceof Object
-          ? itemToString(selectedItem)
+          ? defaultProps.itemToString(selectedItem)
           : selectedItem) || 'Elements'}
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
-              item instanceof Object ? itemToString(item) : item
+              item instanceof Object ? defaultProps.itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}

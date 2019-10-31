@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import {useState, useEffect, useCallback, useReducer} from 'react'
+import {scrollIntoView} from '../utils'
 
 function getElementIds(
   generateDefaultId,
@@ -119,9 +120,9 @@ function useEnhancedReducer(reducer, initialState, props) {
     (state, action) => {
       state = getState(state, action.props)
 
-      const {stateReducer} = action.props
+      const {stateReducer: stateReduceLocal} = action.props
       const changes = reducer(state, action)
-      const newState = stateReducer(state, {...action, changes})
+      const newState = stateReduceLocal(state, {...action, changes})
 
       callOnChangeProps(action.props, state, newState)
 
@@ -169,6 +170,66 @@ function focusLandsOnElement(event, nextElement) {
         nextElement.contains(event.nativeEvent.explicitOriginalTarget)))
   )
 }
+/**
+ * Default state reducer that returns the changes.
+ *
+ * @param {Object} s state.
+ * @param {Object} a action with changes.
+ * @returns {Object} changes.
+ */
+function stateReducer(s, a) {
+  return a.changes
+}
+
+/**
+ * Returns a message to be added to aria-live region when dropdown is open.
+ *
+ * @param {*} selectionParameters Parameters required to build the message.
+ * @returns {string} The a11y message.
+ */
+function getA11yStatusMessage(selectionParameters) {
+  const {isOpen, items} = selectionParameters
+
+  if (!items) {
+    return ''
+  }
+
+  const resultCount = items.length
+  if (isOpen) {
+    if (resultCount === 0) {
+      return 'No results are available'
+    }
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
+
+  return ''
+}
+
+/**
+ * Returns a message to be added to aria-live region when item is selected.
+ *
+ * @param {Object} selectionParameters Parameters required to build the message.
+ * @returns {string} The a11y message.
+ */
+function getA11ySelectionMessage(selectionParameters) {
+  const {selectedItem, itemToString: itemToStringLocal} = selectionParameters
+
+  return `${itemToStringLocal(selectedItem)} has been selected.`
+}
+
+const defaultProps = {
+  itemToString,
+  stateReducer,
+  getA11yStatusMessage,
+  getA11ySelectionMessage,
+  scrollIntoView,
+  environment:
+    typeof window === 'undefined' /* istanbul ignore next (ssr) */
+      ? {}
+      : window,
+}
 
 export {
   getElementIds,
@@ -177,10 +238,10 @@ export {
   getState,
   getItemIndex,
   getPropTypesValidator,
-  itemToString,
   isAcceptedCharacterKey,
   useEnhancedReducer,
   capitalizeString,
   useId,
   focusLandsOnElement,
+  defaultProps,
 }

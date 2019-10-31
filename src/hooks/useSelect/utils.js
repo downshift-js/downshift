@@ -7,26 +7,6 @@ const defaultStateValues = {
   selectedItem: null,
 }
 
-function getA11yStatusMessage({isOpen, items}) {
-  if (!items) {
-    return ''
-  }
-  const resultCount = items.length
-  if (isOpen) {
-    if (resultCount === 0) {
-      return 'No results are available'
-    }
-    return `${resultCount} result${
-      resultCount === 1 ? ' is' : 's are'
-    } available, use up and down arrow keys to navigate. Press Enter key to select.`
-  }
-  return ''
-}
-
-function getA11ySelectionMessage({selectedItem, itemToString}) {
-  return `${itemToString(selectedItem)} has been selected.`
-}
-
 function getHighlightedIndexOnOpen(props, state, offset) {
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
@@ -128,8 +108,6 @@ const propTypes = {
 
 export {
   getHighlightedIndexOnOpen,
-  getA11yStatusMessage,
-  getA11ySelectionMessage,
   getInitialState,
   defaultStateValues,
   propTypes,

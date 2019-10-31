@@ -1,15 +1,14 @@
 import {
   getItemIndex,
   getItemIndexByCharacterKey,
-  itemToString,
+  defaultProps,
 } from '../../utils'
-import {getA11yStatusMessage} from '../utils'
 import reducer from '../reducer'
 
 describe('utils', () => {
   describe('itemToString', () => {
     test('returns empty string if item is falsy', () => {
-      const emptyString = itemToString(null)
+      const emptyString = defaultProps.itemToString(null)
       expect(emptyString).toBe('')
     })
   })
@@ -53,12 +52,15 @@ describe('utils', () => {
 
   describe('getA11yStatusMessage', () => {
     test('returns empty if no items', () => {
-      const message = getA11yStatusMessage({})
+      const message = defaultProps.getA11yStatusMessage({})
       expect(message).toBe('')
     })
 
     test('returns empty if no message can be created', () => {
-      const message = getA11yStatusMessage({items: [], isOpen: false})
+      const message = defaultProps.getA11yStatusMessage({
+        items: [],
+        isOpen: false,
+      })
       expect(message).toBe('')
     })
   })
