@@ -15,9 +15,9 @@
     "gzipped": 9935
   },
   "preact/dist/downshift.umd.js": {
-    "bundled": 109019,
-    "minified": 38372,
-    "gzipped": 11471
+    "bundled": 108855,
+    "minified": 38364,
+    "gzipped": 11469
   },
   "dist/downshift.umd.min.js": {
     "bundled": 99442,
@@ -30,30 +30,30 @@
     "gzipped": 14078
   },
   "dist/downshift.esm.js": {
-    "bundled": 82789,
-    "minified": 38106,
-    "gzipped": 9633,
+    "bundled": 82625,
+    "minified": 38098,
+    "gzipped": 9628,
     "treeshaked": {
       "rollup": {
-        "code": 629,
+        "code": 636,
         "import_statements": 303
       },
       "webpack": {
-        "code": 27848
+        "code": 27842
       }
     }
   },
   "preact/dist/downshift.esm.js": {
-    "bundled": 81479,
-    "minified": 37039,
-    "gzipped": 9530,
+    "bundled": 81315,
+    "minified": 37031,
+    "gzipped": 9525,
     "treeshaked": {
       "rollup": {
-        "code": 630,
+        "code": 637,
         "import_statements": 304
       },
       "webpack": {
-        "code": 27891
+        "code": 27885
       }
     }
   }
