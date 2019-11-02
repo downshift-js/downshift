@@ -25,6 +25,7 @@ import {
   propTypes,
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
+import useSelectCallbacks from './propCallbacks'
 
 const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
 const defaultProps = {
@@ -65,7 +66,12 @@ function useSelect(userProps = {}) {
   const [
     {isOpen, highlightedIndex, selectedItem, keysSoFar},
     dispatchWithoutProps,
-  ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
+  ] = useEnhancedReducer(
+    downshiftSelectReducer,
+    initialState,
+    props,
+    useSelectCallbacks,
+  )
   const dispatch = action => dispatchWithoutProps({props, ...action})
 
   // IDs generation.

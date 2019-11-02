@@ -115,6 +115,7 @@ const propTypes = {
   onHighlightedIndexChange: PropTypes.func,
   onStateChange: PropTypes.func,
   onIsOpenChange: PropTypes.func,
+  onItemSelected: PropTypes.func,
   environment: PropTypes.shape({
     addEventListener: PropTypes.func,
     removeEventListener: PropTypes.func,

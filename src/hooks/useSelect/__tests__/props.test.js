@@ -559,4 +559,22 @@ describe('props', () => {
       )
     })
   })
+
+  describe('onItemSelected', () => {
+    it('is called every time item is clicked (even if same item)', () => {
+      const onItemSelected = jest.fn()
+      const wrapper = setup({isOpen: true, onItemSelected})
+      const item = wrapper.getByTestId(dataTestIds.item(0))
+
+      fireEvent.click(item)
+      fireEvent.click(item)
+
+      expect(onItemSelected).toBeCalledTimes(2)
+      expect(onItemSelected).toHaveBeenCalledWith(
+        expect.objectContaining({
+          selectedItem: items[0],
+        }),
+      )
+    })
+  })
 })
