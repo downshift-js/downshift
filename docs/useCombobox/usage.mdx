@@ -1,0 +1,54 @@
+---
+name: Usage
+menu: useCombobox
+route: /hooks/use-combobox/usage
+---
+
+import {Playground} from 'docz'
+import {useCombobox} from '../../src'
+import {items, menuStyles} from './utils.json'
+
+## Playground
+
+<Playground style={{height: '160px'}}>
+  {() => {
+    const DropdownCombobox = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        highlightedIndex,
+        getItemProps,
+      } = useCombobox({items})
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div>
+            <input {...getInputProps} />
+            <button {...getToggleButtonProps()}>Toggle</button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )
+    }
+    return <DropdownCombobox />
+  }}
+</Playground>
