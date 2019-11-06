@@ -231,6 +231,25 @@ const defaultProps = {
       : window,
 }
 
+function getDefaultValue(props, propKey, defaultStateValues) {
+  const defaultPropKey = `default${capitalizeString(propKey)}`
+  if (defaultPropKey in props) {
+    return props[defaultPropKey]
+  }
+  return defaultStateValues[propKey]
+}
+
+function getInitialValue(props, propKey, defaultStateValues) {
+  if (propKey in props) {
+    return props[propKey]
+  }
+  const initialPropKey = `initial${capitalizeString(propKey)}`
+  if (initialPropKey in props) {
+    return props[initialPropKey]
+  }
+  return getDefaultValue(props, propKey, defaultStateValues)
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -244,4 +263,6 @@ export {
   useId,
   focusLandsOnElement,
   defaultProps,
+  getDefaultValue,
+  getInitialValue,
 }

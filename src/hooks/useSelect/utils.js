@@ -1,5 +1,9 @@
 import PropTypes from 'prop-types'
-import {getNextWrappingIndex, capitalizeString} from '../utils'
+import {
+  getNextWrappingIndex,
+  getInitialValue as getInitialValueAbstract,
+  getDefaultValue as getDefaultValueAbstract,
+} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
@@ -36,22 +40,11 @@ function getHighlightedIndexOnOpen(props, state, offset) {
 }
 
 function getDefaultValue(props, propKey) {
-  const defaultPropKey = `default${capitalizeString(propKey)}`
-  if (defaultPropKey in props) {
-    return props[defaultPropKey]
-  }
-  return defaultStateValues[propKey]
+  return getDefaultValueAbstract(props, propKey, defaultStateValues)
 }
 
 function getInitialValue(props, propKey) {
-  if (propKey in props) {
-    return props[propKey]
-  }
-  const initialPropKey = `initial${capitalizeString(propKey)}`
-  if (initialPropKey in props) {
-    return props[initialPropKey]
-  }
-  return getDefaultValue(props, propKey)
+  return getInitialValueAbstract(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
