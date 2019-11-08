@@ -2,7 +2,6 @@ import {
   getElementIds as getElementIdsAbstract,
   getInitialValue as getInitialValueAbstract,
   getDefaultValue as getDefaultValueAbstract,
-  useId,
 } from '../utils'
 
 const defaultStateValues = {
@@ -12,12 +11,12 @@ const defaultStateValues = {
   inputValue: '',
 }
 
-function getElementIds({id, inputId, ...rest} = {}, generateDefaultId = useId) {
+function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
   const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
 
   return {
     inputId: inputId || `${uniqueId}-input`,
-    ...getElementIdsAbstract({id, ...rest}),
+    ...getElementIdsAbstract(generateDefaultId, {id, ...rest}),
   }
 }
 

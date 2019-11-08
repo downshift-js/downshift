@@ -1,6 +1,6 @@
 import {useRef} from 'react'
-import {handleRefs} from '../../utils'
-import {defaultProps, getItemIndex, useEnhancedReducer} from '../utils'
+import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {defaultProps, getItemIndex, useId, useEnhancedReducer} from '../utils'
 import {getElementIds, getInitialState} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -26,6 +26,7 @@ function useCombobox(userProps = {}) {
 
   // IDs generation.
   const {labelId, getItemId, menuId, toggleButtonId, inputId} = getElementIds(
+    useId,
     props,
   )
 
@@ -34,6 +35,33 @@ function useCombobox(userProps = {}) {
   const itemRefs = useRef()
   itemRefs.current = []
 
+  /* Event handler functions */
+  const inputKeyDownHandlers = {
+    ArrowDown(event) {
+      event.preventDefault()
+      dispatch({
+        type: stateChangeTypes.InputKeyDownArrowDown,
+        shiftKey: event.shiftKey,
+      })
+    },
+    ArrowUp(event) {
+      event.preventDefault()
+      dispatch({
+        type: stateChangeTypes.InputKeyDownArrowUp,
+        shiftKey: event.shiftKey,
+      })
+    },
+  }
+
+  // Event handlers.
+  const inputHandleKeyDown = event => {
+    const key = normalizeArrowKey(event)
+    if (key && inputKeyDownHandlers[key]) {
+      inputKeyDownHandlers[key](event)
+    }
+  }
+
+  // returns
   const getLabelProps = labelProps => ({
     id: labelId,
     htmlFor: inputId,
@@ -84,6 +112,19 @@ function useCombobox(userProps = {}) {
     id: toggleButtonId,
     ...rest,
   })
+  const getInputProps = ({onKeyDown, ...rest} = {}) => ({
+    id: inputId,
+    'aria-controls': menuId,
+    onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
+    ...rest,
+  })
+  const getRootProps = ({...rest} = {}) => ({
+    role: 'combobox',
+    'aria-haspopup': 'listbox',
+    'aria-owns': menuId,
+    'aria-expanded': isOpen,
+    ...rest,
+  })
 
   // returns
   const toggleMenu = () => {
@@ -124,6 +165,8 @@ function useCombobox(userProps = {}) {
     getItemProps,
     getLabelProps,
     getMenuProps,
+    getInputProps,
+    getRootProps,
     getToggleButtonProps,
     // actions.
     toggleMenu,

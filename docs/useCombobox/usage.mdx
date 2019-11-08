@@ -20,14 +20,15 @@ import {items, menuStyles} from './utils.json'
         getLabelProps,
         getMenuProps,
         getInputProps,
+        getRootProps,
         highlightedIndex,
         getItemProps,
       } = useCombobox({items})
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
-          <div>
-            <input {...getInputProps} />
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
             <button {...getToggleButtonProps()}>Toggle</button>
           </div>
           <ul {...getMenuProps()} style={menuStyles}>

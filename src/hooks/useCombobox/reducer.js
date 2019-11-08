@@ -29,6 +29,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           props.items.length,
           props.circularNavigation,
         ),
+        ...(!state.isOpen && {isOpen: true}),
       }
       break
     case stateChangeTypes.InputKeyDownArrowUp:
@@ -39,6 +40,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           props.items.length,
           props.circularNavigation,
         ),
+        ...(!state.isOpen && {isOpen: true}),
       }
       break
 
