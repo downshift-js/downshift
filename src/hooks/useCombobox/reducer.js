@@ -1,4 +1,4 @@
-import {getNextWrappingIndex} from '../utils'
+import {getNextWrappingIndex, getHighlightedIndexOnOpen} from '../utils'
 import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -91,6 +91,36 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.MenuMouseLeave:
       changes = {
         highlightedIndex: -1,
+      }
+      break
+    case stateChangeTypes.ToggleButtonClick:
+    case stateChangeTypes.FunctionToggleMenu:
+      changes = {
+        isOpen: !state.isOpen,
+        highlightedIndex: state.isOpen
+          ? -1
+          : getHighlightedIndexOnOpen(props, state, 0),
+      }
+      break
+    case stateChangeTypes.FunctionOpenMenu:
+      changes = {
+        isOpen: true,
+        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
+      }
+      break
+    case stateChangeTypes.FunctionCloseMenu:
+      changes = {
+        isOpen: false,
+      }
+      break
+    case stateChangeTypes.FunctionSetHighlightedIndex:
+      changes = {
+        highlightedIndex: action.highlightedIndex,
+      }
+      break
+    case stateChangeTypes.FunctionSelectItem:
+      changes = {
+        selectedItem: action.selectedItem,
       }
       break
     default:

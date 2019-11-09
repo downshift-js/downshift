@@ -250,6 +250,34 @@ function getInitialValue(props, propKey, defaultStateValues) {
   return getDefaultValue(props, propKey, defaultStateValues)
 }
 
+function getHighlightedIndexOnOpen(props, state, offset) {
+  const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
+  const {selectedItem, highlightedIndex} = state
+
+  // initialHighlightedIndex will give value to highlightedIndex on initial state only.
+  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
+    return initialHighlightedIndex
+  }
+  if (defaultHighlightedIndex !== undefined) {
+    return defaultHighlightedIndex
+  }
+  if (selectedItem) {
+    if (offset === 0) {
+      return items.indexOf(selectedItem)
+    }
+    return getNextWrappingIndex(
+      offset,
+      items.indexOf(selectedItem),
+      items.length,
+      false,
+    )
+  }
+  if (offset === 0) {
+    return -1
+  }
+  return offset < 0 ? items.length - 1 : 0
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -265,4 +293,5 @@ export {
   defaultProps,
   getDefaultValue,
   getInitialValue,
+  getHighlightedIndexOnOpen,
 }

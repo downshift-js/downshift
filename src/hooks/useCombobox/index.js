@@ -14,7 +14,7 @@ function useCombobox(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {items, scrollIntoView} = props
+  const {items, scrollIntoView, environment} = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
@@ -34,6 +34,8 @@ function useCombobox(userProps = {}) {
   /* Refs */
   const menuRef = useRef(null)
   const itemRefs = useRef()
+  const inputRef = useRef(null)
+  const toggleButtonRef = useRef(null)
   itemRefs.current = []
   const shouldScroll = useRef(true)
 
@@ -50,6 +52,12 @@ function useCombobox(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
+  /* Focus input at toggle button click. */
+  useEffect(() => {
+    if (environment.document.activeElement === toggleButtonRef.current) {
+      inputRef.current.focus()
+    }
+  })
 
   /* Event handler functions */
   const inputKeyDownHandlers = {
@@ -112,6 +120,32 @@ function useCombobox(userProps = {}) {
       type: stateChangeTypes.InputBlur,
     })
   }
+  const menuHandleMouseLeave = () => {
+    dispatch({
+      type: stateChangeTypes.MenuMouseLeave,
+    })
+  }
+  const itemHandleMouseMove = index => {
+    if (index === highlightedIndex) {
+      return
+    }
+    shouldScroll.current = false
+    dispatch({
+      type: stateChangeTypes.ItemMouseMove,
+      index,
+    })
+  }
+  const itemHandleClick = index => {
+    dispatch({
+      type: stateChangeTypes.ItemClick,
+      index,
+    })
+  }
+  const toggleButtonHandleClick = () => {
+    dispatch({
+      type: stateChangeTypes.ToggleButtonClick,
+    })
+  }
 
   // returns
   const getLabelProps = labelProps => ({
@@ -133,6 +167,7 @@ function useCombobox(userProps = {}) {
     id: menuId,
     role: 'listbox',
     'aria-labelledby': labelId,
+    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
     ...rest,
   })
   const getItemProps = ({
@@ -157,11 +192,26 @@ function useCombobox(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
+      onMouseMove: callAllEventHandlers(onMouseMove, () =>
+        itemHandleMouseMove(itemIndex),
+      ),
+      onClick: callAllEventHandlers(onClick, () => itemHandleClick(itemIndex)),
       ...rest,
     }
   }
-  const getToggleButtonProps = ({onClick, onKeyDown, ...rest} = {}) => ({
+  const getToggleButtonProps = ({
+    onClick,
+    onKeyDown,
+    refKey = 'ref',
+    ref,
+    ...rest
+  } = {}) => ({
+    [refKey]: handleRefs(ref, toggleButtonNode => {
+      toggleButtonRef.current = toggleButtonNode
+    }),
     id: toggleButtonId,
+    tabIndex: -1,
+    onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
     ...rest,
   })
   const getInputProps = ({
@@ -170,6 +220,8 @@ function useCombobox(userProps = {}) {
     onInput,
     onBlur,
     onChangeText,
+    refKey = 'ref',
+    ref,
     ...rest
   } = {}) => {
     /* istanbul ignore next (preact) */
@@ -202,6 +254,9 @@ function useCombobox(userProps = {}) {
     }
 
     return {
+      [refKey]: handleRefs(ref, inputNode => {
+        inputRef.current = inputNode
+      }),
       id: inputId,
       'aria-autocomplete': 'list',
       'aria-controls': menuId,
