@@ -43,7 +43,56 @@ export default function downshiftUseComboboxReducer(state, action) {
         ...(!state.isOpen && {isOpen: true}),
       }
       break
-
+    case stateChangeTypes.InputKeyDownEnter:
+      changes = {
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+          isOpen: getDefaultValue(props, 'isOpen'),
+          highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+          inputValue: props.itemToString(props.items[state.highlightedIndex]),
+        }),
+      }
+      break
+    case stateChangeTypes.InputKeyDownEscape:
+      changes = {
+        isOpen: false,
+        selectedItem: null,
+        highlightedIndex: -1,
+        inputValue: '',
+      }
+      break
+    case stateChangeTypes.InputKeyDownHome:
+      changes = {
+        highlightedIndex: 0,
+      }
+      break
+    case stateChangeTypes.InputKeyDownEnd:
+      changes = {
+        highlightedIndex: props.items.length - 1,
+      }
+      break
+    case stateChangeTypes.InputBlur:
+      changes = {
+        isOpen: false,
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+          inputValue: props.itemToString(props.items[state.highlightedIndex]),
+          highlightedIndex: -1,
+        }),
+      }
+      break
+    case stateChangeTypes.InputChange:
+      changes = {
+        isOpen: true,
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        inputValue: action.inputValue,
+      }
+      break
+    case stateChangeTypes.MenuMouseLeave:
+      changes = {
+        highlightedIndex: -1,
+      }
+      break
     default:
       throw new Error('Reducer called without proper action type.')
   }
