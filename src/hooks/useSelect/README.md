@@ -519,6 +519,7 @@ The main difference from vanilla `Downshift` is that we require the items as pro
 Optional properties:
 
 - `disabled`: If this is set to `true`, then all of the downshift item event handlers will be omitted. Items will not be highlighted when hovered, and items will not be selected when clicked.
+`refKey`: if you're rendering a composite component, that component will need to accept a prop which it forwards to the root DOM element. Commonly, folks call this `innerRef`. So you'd call: `getItemProps({item, index, refKey: 'innerRef'})` and your composite component would forward like: `<li ref={props.innerRef} />`. However, if you are just rendering a primitive component like `<div>`, there is no need to specify this property.
 
 #### `getToggleButtonProps`
 
