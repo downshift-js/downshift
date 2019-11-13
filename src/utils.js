@@ -183,7 +183,7 @@ function isDOMElement(element) {
   if (isPreact) {
     // then this is preact or preact X
     return (
-      typeof element.nodeName === 'string' || typeof element.type === 'string'
+      typeof element.type === 'string' || typeof element.nodeName === 'string'
     )
   }
 
@@ -200,7 +200,7 @@ function getElementProps(element) {
 
   /* istanbul ignore if */
   if (isPreact) {
-    return element.attributes || element.props
+    return element.props || element.attributes
   }
 
   return element.props
