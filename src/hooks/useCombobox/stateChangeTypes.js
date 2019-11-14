@@ -21,6 +21,9 @@ export const FunctionSetHighlightedIndex = productionEnum(
   '__function_set_highlighted_index__',
 )
 export const FunctionSelectItem = productionEnum('__function_select_item__')
+export const FunctionSetInputValue = productionEnum(
+  '__function_set_input_value__',
+)
 export const FunctionClearKeysSoFar = productionEnum(
   '__function_clear_keys_so_far__',
 )

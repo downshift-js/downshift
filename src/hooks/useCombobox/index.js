@@ -320,6 +320,12 @@ function useCombobox(userProps = {}) {
       selectedItem: newSelectedItem,
     })
   }
+  const setInputValue = newInputValue => {
+    dispatch({
+      type: stateChangeTypes.FunctionSetInputValue,
+      inputValue: newInputValue,
+    })
+  }
   const reset = () => {
     dispatch({
       type: stateChangeTypes.FunctionReset,
@@ -339,6 +345,7 @@ function useCombobox(userProps = {}) {
     openMenu,
     closeMenu,
     setHighlightedIndex,
+    setInputValue,
     selectItem,
     reset,
     // state.
