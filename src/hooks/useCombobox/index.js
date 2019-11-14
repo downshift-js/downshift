@@ -115,10 +115,12 @@ function useCombobox(userProps = {}) {
         : event.target.value,
     })
   }
-  const inputHandleBlur = () => {
-    dispatch({
-      type: stateChangeTypes.InputBlur,
-    })
+  const inputHandleBlur = event => {
+    if (event.relatedTarget !== toggleButtonRef.current) {
+      dispatch({
+        type: stateChangeTypes.InputBlur,
+      })
+    }
   }
   const menuHandleMouseLeave = () => {
     dispatch({
