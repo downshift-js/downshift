@@ -4,15 +4,17 @@ menu: useCombobox
 route: /hooks/use-combobox/usage
 ---
 
+import {useState} from 'react'
 import {Playground} from 'docz'
 import {useCombobox} from '../../src'
-import {items, menuStyles} from './utils.json'
+import {items, menuStyles} from '../utils.json'
 
 ## Playground
 
 <Playground style={{height: '160px'}}>
   {() => {
     const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
       const {
         isOpen,
         selectedItem,
@@ -23,7 +25,16 @@ import {items, menuStyles} from './utils.json'
         getRootProps,
         highlightedIndex,
         getItemProps,
-      } = useCombobox({items})
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
@@ -33,7 +44,7 @@ import {items, menuStyles} from './utils.json'
           </div>
           <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
-              items.map((item, index) => (
+              inputItems.map((item, index) => (
                 <li
                   style={
                     highlightedIndex === index

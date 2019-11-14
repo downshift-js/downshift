@@ -35,6 +35,8 @@
     "margin": 0,
     "borderTop": 0,
     "background": "white",
-    "zIndex": 1000
+    "zIndex": 1000,
+    "listStyleType": "none",
+    "padding": "0"
   }
 }
