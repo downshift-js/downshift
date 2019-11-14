@@ -14,7 +14,7 @@ function useCombobox(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {items, scrollIntoView, environment} = props
+  const {items, scrollIntoView} = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
@@ -52,12 +52,6 @@ function useCombobox(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
-  /* Focus input at toggle button click. */
-  useEffect(() => {
-    if (environment.document.activeElement === toggleButtonRef.current) {
-      inputRef.current.focus()
-    }
-  })
 
   /* Event handler functions */
   const inputKeyDownHandlers = {
@@ -147,6 +141,7 @@ function useCombobox(userProps = {}) {
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
     })
+    inputRef.current.focus()
   }
 
   // returns
@@ -179,6 +174,7 @@ function useCombobox(userProps = {}) {
     ref,
     onMouseMove,
     onClick,
+    onPress,
     ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
@@ -197,25 +193,39 @@ function useCombobox(userProps = {}) {
       onMouseMove: callAllEventHandlers(onMouseMove, () =>
         itemHandleMouseMove(itemIndex),
       ),
-      onClick: callAllEventHandlers(onClick, () => itemHandleClick(itemIndex)),
+      ...(isReactNative
+        ? {
+            onPress: callAllEventHandlers(onPress, () =>
+              itemHandleClick(itemIndex),
+            ),
+          }
+        : {
+            onClick: callAllEventHandlers(onClick, () =>
+              itemHandleClick(itemIndex),
+            ),
+          }),
       ...rest,
     }
   }
   const getToggleButtonProps = ({
     onClick,
-    onKeyDown,
+    onPress,
     refKey = 'ref',
     ref,
     ...rest
-  } = {}) => ({
-    [refKey]: handleRefs(ref, toggleButtonNode => {
-      toggleButtonRef.current = toggleButtonNode
-    }),
-    id: toggleButtonId,
-    tabIndex: -1,
-    onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
-    ...rest,
-  })
+  } = {}) => {
+    return {
+      [refKey]: handleRefs(ref, toggleButtonNode => {
+        toggleButtonRef.current = toggleButtonNode
+      }),
+      id: toggleButtonId,
+      tabIndex: -1,
+      ...(isReactNative
+        ? {onPress: callAllEventHandlers(onPress, toggleButtonHandleClick)}
+        : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
+      ...rest,
+    }
+  }
   const getInputProps = ({
     onKeyDown,
     onChange,
