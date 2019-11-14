@@ -13,15 +13,6 @@ export const InputBlur = productionEnum('__input_blur__')
 export const MenuMouseLeave = productionEnum('__menu_mouse_leave__')
 export const ItemMouseMove = productionEnum('__item_mouse_move__')
 export const ItemClick = productionEnum('__item_click__')
-export const ToggleButtonKeyDownCharacter = productionEnum(
-  '__togglebutton_keydown_character__',
-)
-export const ToggleButtonKeyDownArrowDown = productionEnum(
-  '__togglebutton_keydown_arrow_down__',
-)
-export const ToggleButtonKeyDownArrowUp = productionEnum(
-  '__togglebutton_keydown_arrow_up__',
-)
 export const ToggleButtonClick = productionEnum('__togglebutton_click__')
 export const FunctionToggleMenu = productionEnum('__function_toggle_menu__')
 export const FunctionOpenMenu = productionEnum('__function_open_menu__')
