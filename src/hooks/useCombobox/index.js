@@ -14,7 +14,7 @@ function useCombobox(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {items, scrollIntoView} = props
+  const {initialIsOpen, defaultIsOpen, items, scrollIntoView} = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
@@ -38,6 +38,7 @@ function useCombobox(userProps = {}) {
   const toggleButtonRef = useRef(null)
   itemRefs.current = []
   const shouldScroll = useRef(true)
+  const isInitialMount = useRef(true)
 
   /* Effects */
   /* Scroll on highlighted item if change comes from keyboard. */
@@ -52,6 +53,27 @@ function useCombobox(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
+  /* Controls the focus on the menu or the toggle button. */
+  useEffect(() => {
+    // Don't focus menu on first render.
+    if (isInitialMount.current) {
+      // Unless it was initialised as open.
+      if (initialIsOpen || defaultIsOpen || isOpen) {
+        inputRef.current.focus()
+      }
+      return
+    }
+    // Focus menu on open.
+    // istanbul ignore next
+    if (isOpen) {
+      inputRef.current.focus()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+  /* Make initial ref false. */
+  useEffect(() => {
+    isInitialMount.current = false
+  }, [])
 
   /* Event handler functions */
   const inputKeyDownHandlers = {
@@ -141,7 +163,6 @@ function useCombobox(userProps = {}) {
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
     })
-    inputRef.current.focus()
   }
 
   // returns
@@ -150,14 +171,7 @@ function useCombobox(userProps = {}) {
     htmlFor: inputId,
     ...labelProps,
   })
-  const getMenuProps = ({
-    onKeyDown,
-    onBlur,
-    onMouseLeave,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => ({
+  const getMenuProps = ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
     [refKey]: handleRefs(ref, menuNode => {
       menuRef.current = menuNode
     }),
@@ -284,7 +298,7 @@ function useCombobox(userProps = {}) {
       ...rest,
     }
   }
-  const getRootProps = ({...rest} = {}) => ({
+  const getComboboxProps = ({...rest} = {}) => ({
     role: 'combobox',
     'aria-haspopup': 'listbox',
     'aria-owns': menuId,
@@ -338,7 +352,7 @@ function useCombobox(userProps = {}) {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getRootProps,
+    getComboboxProps,
     getToggleButtonProps,
     // actions.
     toggleMenu,

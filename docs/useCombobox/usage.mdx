@@ -22,7 +22,7 @@ import {items, menuStyles} from '../utils.json'
         getLabelProps,
         getMenuProps,
         getInputProps,
-        getRootProps,
+        getComboboxProps,
         highlightedIndex,
         getItemProps,
       } = useCombobox({
@@ -38,7 +38,7 @@ import {items, menuStyles} from '../utils.json'
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
-          <div {...getRootProps()}>
+          <div {...getComboboxProps()}>
             <input {...getInputProps()} />
             <button {...getToggleButtonProps()}>Toggle</button>
           </div>
