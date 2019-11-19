@@ -40,7 +40,9 @@ import {items, menuStyles} from '../utils.json'
           <label {...getLabelProps()}>Choose an element:</label>
           <div {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()}>Toggle</button>
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
           </div>
           <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
