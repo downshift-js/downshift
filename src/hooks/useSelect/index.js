@@ -360,18 +360,31 @@ function useSelect(userProps = {}) {
     refKey = 'ref',
     ref,
     ...rest
-  } = {}) => ({
-    [refKey]: handleRefs(ref, toggleButtonNode => {
-      toggleButtonRef.current = toggleButtonNode
-    }),
-    id: toggleButtonId,
-    'aria-haspopup': 'listbox',
-    'aria-expanded': isOpen,
-    'aria-labelledby': `${labelId} ${toggleButtonId}`,
-    onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
-    onKeyDown: callAllEventHandlers(onKeyDown, toggleButtonHandleKeyDown),
-    ...rest,
-  })
+  } = {}) => {
+    const toggleProps = {
+      [refKey]: handleRefs(ref, toggleButtonNode => {
+        toggleButtonRef.current = toggleButtonNode
+      }),
+      id: toggleButtonId,
+      'aria-haspopup': 'listbox',
+      'aria-expanded': isOpen,
+      'aria-labelledby': `${labelId} ${toggleButtonId}`,
+      ...rest,
+    }
+
+    if (!rest.disabled) {
+      toggleProps.onClick = callAllEventHandlers(
+        onClick,
+        toggleButtonHandleClick,
+      )
+      toggleProps.onKeyDown = callAllEventHandlers(
+        onKeyDown,
+        toggleButtonHandleKeyDown,
+      )
+    }
+
+    return toggleProps
+  }
   const getItemProps = ({
     item,
     index,

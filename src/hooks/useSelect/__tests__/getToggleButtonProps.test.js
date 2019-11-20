@@ -76,6 +76,16 @@ describe('getToggleButtonProps', () => {
 
       expect(toggleButtonProps['aria-expanded']).toEqual(true)
     })
+
+    test('omit event handlers when disabled', () => {
+      const {result} = setupHook()
+      const toggleButtonProps = result.current.getToggleButtonProps({
+        disabled: true,
+      })
+
+      expect(toggleButtonProps.onClick).toBeUndefined()
+      expect(toggleButtonProps.onKeyDown).toBeUndefined()
+    })
   })
 
   describe('user props', () => {
