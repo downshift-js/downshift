@@ -30,9 +30,25 @@ function getInitialValue(props, propKey) {
 
 function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
   const isOpen = getInitialValue(props, 'isOpen')
-  const inputValue = getInitialValue(props, 'inputValue')
+  let inputValue = getInitialValue(props, 'inputValue')
+  let highlightedIndex
+
+  if (isOpen) {
+    highlightedIndex = getInitialValue(props, 'highlightedIndex')
+    if (highlightedIndex < 0 && selectedItem) {
+      highlightedIndex = props.items.indexOf(selectedItem)
+    }
+  }
+  if (
+    inputValue === '' &&
+    selectedItem &&
+    props.defaultInputValue === undefined &&
+    props.initialInputValue === undefined &&
+    props.inputValue === undefined
+  ) {
+    inputValue = props.itemToString(selectedItem)
+  }
 
   return {
     highlightedIndex,

@@ -1,7 +1,8 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds, useId, defaultProps} from '../utils'
+import {useId, defaultProps} from '../utils'
+import {getElementIds} from './utils'
 import useCombobox from '.'
 
 jest.mock('../utils', () => {

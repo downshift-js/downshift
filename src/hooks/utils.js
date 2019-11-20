@@ -255,7 +255,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   const {selectedItem, highlightedIndex} = state
 
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
-  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
+  if (initialHighlightedIndex !== undefined && highlightedIndex === undefined) {
     return initialHighlightedIndex
   }
   if (defaultHighlightedIndex !== undefined) {
