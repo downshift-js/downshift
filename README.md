@@ -19,7 +19,7 @@ autocomplete/dropdown/select/combobox components</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-111-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-113-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
@@ -1270,7 +1270,10 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/kserjey"><img src="https://avatars1.githubusercontent.com/u/19753880?v=4" width="100px;" alt="Sergey Korchinskiy"/><br /><sub><b>Sergey Korchinskiy</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Akserjey" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=kserjey" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=kserjey" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/edygar"><img src="https://avatars.githubusercontent.com/u/566280?v=3" width="100px;" alt="Edygar Oliveira"/><br /><sub><b>Edygar Oliveira</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=edygar" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Aedygar" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/epeicher"><img src="https://avatars1.githubusercontent.com/u/3519124?v=4" width="100px;" alt="epeicher"/><br /><sub><b>epeicher</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Aepeicher" title="Bug reports">🐛</a></td>
-    <td align="center"><a href="https://github.com/francoischalifour"><img src="https://avatars3.githubusercontent.com/u/6137112?v=4" width="100px;" alt="François Chalifour"/><br /><sub><b>François Chalifour</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=francoischalifour" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=francoischalifour" title="Tests">⚠️</a> <a href="https://github.com/downshift-js/downshift/commits?author=francoischalifour" title="Platform">📦</a></td>
+    <td align="center"><a href="https://francoischalifour.com"><img src="https://avatars3.githubusercontent.com/u/6137112?v=4" width="100px;" alt="François Chalifour"/><br /><sub><b>François Chalifour</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=francoischalifour" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=francoischalifour" title="Tests">⚠️</a> <a href="#platform-francoischalifour" title="Packaging/porting to new platform">📦</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/maxmalov"><img src="https://avatars2.githubusercontent.com/u/284129?v=4" width="100px;" alt="Maxim Malov"/><br /><sub><b>Maxim Malov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Amaxmalov" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=maxmalov" title="Code">💻</a></td>
   </tr>
 </table>
 
