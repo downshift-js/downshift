@@ -97,6 +97,44 @@ describe('getMenuProps', () => {
       expect(focus).toHaveBeenCalledTimes(1)
     })
 
+    test('event handler onMouseLeave is called along with downshift handler', () => {
+      const userOnMouseLeave = jest.fn()
+      const {result} = setupHook({initialHighlightedIndex: 2})
+
+      rtlAct(() => {
+        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+          onMouseLeave: userOnMouseLeave,
+        })
+
+        menuRef({focus: noop})
+        result.current.toggleMenu()
+        onMouseLeave({preventDefault: noop})
+      })
+
+      expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
+      expect(result.current.highlightedIndex).toBe(-1)
+    })
+
+    test("event handler onMouseLeave is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+      const userOnMouseLeave = jest.fn(event => {
+        event.preventDownshiftDefault = true
+      })
+      const {result} = setupHook({initialHighlightedIndex: 2})
+
+      rtlAct(() => {
+        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+          onMouseLeave: userOnMouseLeave,
+        })
+
+        menuRef({focus: noop})
+        result.current.toggleMenu()
+        onMouseLeave({preventDefault: noop})
+      })
+
+      expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
+      expect(result.current.highlightedIndex).toBe(2)
+    })
+
     test('custom ref with custom name passed by the user is used', () => {
       const {result} = setupHook()
       const focus = jest.fn()

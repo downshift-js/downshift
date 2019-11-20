@@ -1,7 +1,7 @@
 import {act as rtlAct} from '@testing-library/react-hooks'
-import {cleanup} from '@testing-library/react'
+import {fireEvent, cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {setupHook, defaultIds} from '../testUtils'
+import {setup, setupHook, defaultIds, dataTestIds} from '../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)
@@ -97,6 +97,24 @@ describe('getMenuProps', () => {
 
       expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
       expect(result.current.highlightedIndex).toBe(2)
+    })
+  })
+
+  describe('event handlers', () => {
+    describe('on key down', () => {
+      describe('on mouse leave', () => {
+        test('the highlightedIndex should be reset', () => {
+          const wrapper = setup({
+            initialIsOpen: true,
+            initialHighlightedIndex: 2,
+          })
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.mouseLeave(menu)
+
+          expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+        })
+      })
     })
   })
 })
