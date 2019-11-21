@@ -1104,6 +1104,16 @@
         "test",
         "platform"
       ]
+    },
+    {
+      "login": "maxmalov",
+      "name": "Maxim Malov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/284129?v=4",
+      "profile": "https://github.com/maxmalov",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
