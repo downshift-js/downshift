@@ -123,6 +123,19 @@ export default function downshiftUseComboboxReducer(state, action) {
         selectedItem: action.selectedItem,
       }
       break
+    case stateChangeTypes.FunctionSetInputValue:
+      changes = {
+        inputValue: action.inputValue,
+      }
+      break
+    case stateChangeTypes.FunctionReset:
+      changes = {
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        isOpen: getDefaultValue(props, 'isOpen'),
+        selectedItem: getDefaultValue(props, 'selectedItem'),
+        inputValue: getDefaultValue(props, 'inputValue'),
+      }
+      break
     default:
       throw new Error('Reducer called without proper action type.')
   }

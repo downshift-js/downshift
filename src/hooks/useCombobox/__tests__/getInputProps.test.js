@@ -87,6 +87,17 @@ describe('getInputProps', () => {
 
       expect(inputProps['aria-labelledby']).toEqual(`${props.labelId}`)
     })
+
+    test("handlers are not called if it's disabled", () => {
+      const {result} = setupHook()
+      const inputProps = result.current.getInputProps({
+        disabled: true,
+      })
+
+      expect(inputProps.onChange).toBeUndefined()
+      expect(inputProps.onKeyDown).toBeUndefined()
+      expect(inputProps.onBlur).toBeUndefined()
+    })
   })
 
   describe('user props', () => {
@@ -324,6 +335,19 @@ describe('getInputProps', () => {
       })
 
       describe('arrow up', () => {
+        test('it opens the menu and highlights the last option', () => {
+          const wrapper = setup()
+          const input = wrapper.getByTestId(dataTestIds.input)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(input, {key: 'ArrowUp'})
+
+          expect(input.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.getItemId(items.length - 1),
+          )
+          expect(menu.childNodes).toHaveLength(items.length)
+        })
+
         test('it highlights the last option number if none is highlighted', () => {
           const wrapper = setup({isOpen: true})
           const input = wrapper.getByTestId(dataTestIds.input)
@@ -405,6 +429,19 @@ describe('getInputProps', () => {
       })
 
       describe('arrow down', () => {
+        test("it opens the menu and highlights option number '0'", () => {
+          const wrapper = setup()
+          const input = wrapper.getByTestId(dataTestIds.input)
+          const menu = wrapper.getByTestId(dataTestIds.menu)
+
+          fireEvent.keyDown(input, {key: 'ArrowDown'})
+
+          expect(input.getAttribute('aria-activedescendant')).toBe(
+            defaultIds.getItemId(0),
+          )
+          expect(menu.childNodes).toHaveLength(items.length)
+        })
+
         test("it highlights option number '0' if none is highlighted", () => {
           const wrapper = setup({isOpen: true})
           const input = wrapper.getByTestId(dataTestIds.input)
@@ -415,6 +452,7 @@ describe('getInputProps', () => {
             defaultIds.getItemId(0),
           )
         })
+
         test('it highlights the next item', () => {
           const initialHighlightedIndex = 2
           const wrapper = setup({isOpen: true, initialHighlightedIndex})

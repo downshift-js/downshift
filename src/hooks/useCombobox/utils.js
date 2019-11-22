@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import {
   getElementIds as getElementIdsAbstract,
   getInitialValue as getInitialValueAbstract,
@@ -31,15 +32,9 @@ function getInitialValue(props, propKey) {
 function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
   let inputValue = getInitialValue(props, 'inputValue')
-  let highlightedIndex
 
-  if (isOpen) {
-    highlightedIndex = getInitialValue(props, 'highlightedIndex')
-    if (highlightedIndex < 0 && selectedItem) {
-      highlightedIndex = props.items.indexOf(selectedItem)
-    }
-  }
   if (
     inputValue === '' &&
     selectedItem &&
@@ -51,11 +46,61 @@ function getInitialState(props) {
   }
 
   return {
-    highlightedIndex,
+    highlightedIndex:
+      highlightedIndex < 0 && selectedItem
+        ? props.items.indexOf(selectedItem)
+        : highlightedIndex,
     isOpen,
     selectedItem,
     inputValue,
   }
 }
 
-export {getElementIds, getInitialState, getDefaultValue}
+const propTypes = {
+  items: PropTypes.array.isRequired,
+  itemToString: PropTypes.func,
+  getA11yStatusMessage: PropTypes.func,
+  getA11ySelectionMessage: PropTypes.func,
+  circularNavigation: PropTypes.bool,
+  highlightedIndex: PropTypes.number,
+  defaultHighlightedIndex: PropTypes.number,
+  initialHighlightedIndex: PropTypes.number,
+  isOpen: PropTypes.bool,
+  defaultIsOpen: PropTypes.bool,
+  initialIsOpen: PropTypes.bool,
+  selectedItem: PropTypes.any,
+  initialSelectedItem: PropTypes.any,
+  defaultSelectedItem: PropTypes.any,
+  inputValue: PropTypes.string,
+  defaultInputValue: PropTypes.string,
+  initialInputValue: PropTypes.string,
+  id: PropTypes.string,
+  labelId: PropTypes.string,
+  menuId: PropTypes.string,
+  getItemId: PropTypes.func,
+  inputId: PropTypes.string,
+  toggleButtonId: PropTypes.string,
+  stateReducer: PropTypes.func,
+  onSelectedItemChange: PropTypes.func,
+  onHighlightedIndexChange: PropTypes.func,
+  onStateChange: PropTypes.func,
+  onIsOpenChange: PropTypes.func,
+  onInputValueChange: PropTypes.func,
+  environment: PropTypes.shape({
+    addEventListener: PropTypes.func,
+    removeEventListener: PropTypes.func,
+    document: PropTypes.shape({
+      getElementById: PropTypes.func,
+      activeElement: PropTypes.any,
+      body: PropTypes.any,
+    }),
+  }),
+}
+
+export {
+  getElementIds,
+  getInitialState,
+  defaultStateValues,
+  propTypes,
+  getDefaultValue,
+}

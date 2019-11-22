@@ -21,20 +21,39 @@ function getInitialValue(props, propKey) {
 function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
-  let highlightedIndex
-
-  if (isOpen) {
-    highlightedIndex = getInitialValue(props, 'highlightedIndex')
-    if (highlightedIndex < 0 && selectedItem) {
-      highlightedIndex = props.items.indexOf(selectedItem)
-    }
-  }
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
 
   return {
-    highlightedIndex,
+    highlightedIndex:
+      highlightedIndex < 0 && selectedItem
+        ? props.items.indexOf(selectedItem)
+        : highlightedIndex,
     isOpen,
     selectedItem,
     keysSoFar: '',
+  }
+}
+
+function getItemIndexByCharacterKey(
+  keysSoFar,
+  highlightedIndex,
+  items,
+  itemToStringParam,
+) {
+  let newHighlightedIndex = -1
+  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
+  const startPosition = highlightedIndex + 1
+
+  newHighlightedIndex = itemStrings
+    .slice(startPosition)
+    .findIndex(itemString => itemString.startsWith(keysSoFar))
+
+  if (newHighlightedIndex > -1) {
+    return newHighlightedIndex + startPosition
+  } else {
+    return itemStrings
+      .slice(0, startPosition)
+      .findIndex(itemString => itemString.startsWith(keysSoFar))
   }
 }
 
@@ -74,4 +93,10 @@ const propTypes = {
   }),
 }
 
-export {getInitialState, defaultStateValues, propTypes, getDefaultValue}
+export {
+  getInitialState,
+  defaultStateValues,
+  propTypes,
+  getDefaultValue,
+  getItemIndexByCharacterKey,
+}

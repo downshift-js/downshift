@@ -101,17 +101,19 @@ describe('getToggleButtonProps', () => {
         expect(menu.childNodes).toHaveLength(0)
       })
 
-      // ToDo: Fix this
-      test.skip('opens and closes menu at consecutive clicks', () => {
+      test('opens and closes menu at consecutive clicks', () => {
         const wrapper = setup()
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
         const menu = wrapper.getByTestId(dataTestIds.menu)
+        const input = wrapper.getByTestId(dataTestIds.input)
 
         fireEvent.click(toggleButton)
         expect(menu.childNodes).toHaveLength(items.length)
 
         fireEvent.click(toggleButton)
         expect(menu.childNodes).toHaveLength(0)
+        // fireEvent.blur(input)
+        input.blur() // the code above does not blur.
 
         fireEvent.click(toggleButton)
         expect(menu.childNodes).toHaveLength(items.length)
@@ -161,8 +163,7 @@ describe('getToggleButtonProps', () => {
         expect(input.getAttribute('aria-activedescendant')).toBeNull()
       })
 
-      // ToDo: Fix this
-      test.skip('opens the closed menu at defaultHighlightedIndex, on every click', () => {
+      test('opens the closed menu at defaultHighlightedIndex, on every click', () => {
         const defaultHighlightedIndex = 3
         const wrapper = setup({defaultHighlightedIndex})
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -175,6 +176,8 @@ describe('getToggleButtonProps', () => {
         )
 
         fireEvent.click(toggleButton)
+        // fireEvent.blur(input)
+        input.blur() // the code above does not blur.
         fireEvent.click(toggleButton)
 
         expect(input.getAttribute('aria-activedescendant')).toBe(

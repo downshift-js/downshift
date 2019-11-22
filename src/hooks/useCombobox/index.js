@@ -1,20 +1,40 @@
+/* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
+import setStatus from '../../set-a11y-status'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
-import {defaultProps, getItemIndex, useId, useEnhancedReducer} from '../utils'
-import {getElementIds, getInitialState} from './utils'
+import {
+  defaultProps,
+  getItemIndex,
+  useId,
+  getPropTypesValidator,
+  useEnhancedReducer,
+} from '../utils'
+import {getElementIds, getInitialState, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
+
+const validatePropTypes = getPropTypesValidator(useCombobox, propTypes)
 
 useCombobox.stateChangeTypes = stateChangeTypes
 
 function useCombobox(userProps = {}) {
+  validatePropTypes(userProps)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
     ...userProps,
   }
-  const {initialIsOpen, defaultIsOpen, items, scrollIntoView} = props
+  const {
+    initialIsOpen,
+    defaultIsOpen,
+    items,
+    scrollIntoView,
+    getA11ySelectionMessage,
+    getA11yStatusMessage,
+    itemToString,
+    environment,
+  } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
@@ -41,6 +61,38 @@ function useCombobox(userProps = {}) {
   const isInitialMount = useRef(true)
 
   /* Effects */
+  /* Sets a11y status message on changes in isOpen. */
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+    setStatus(
+      getA11yStatusMessage({
+        isOpen,
+        items,
+        selectedItem,
+        itemToString,
+      }),
+      environment.document,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+  /* Sets a11y status message on changes in selectedItem. */
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+    setStatus(
+      getA11ySelectionMessage({
+        isOpen,
+        items,
+        selectedItem,
+        itemToString,
+      }),
+      environment.document,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItem])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
     if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
@@ -132,6 +184,7 @@ function useCombobox(userProps = {}) {
     })
   }
   const inputHandleBlur = event => {
+    /* istanbul ignore else (react-native) */
     if (event.relatedTarget !== toggleButtonRef.current) {
       dispatch({
         type: stateChangeTypes.InputBlur,
@@ -195,6 +248,14 @@ function useCombobox(userProps = {}) {
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
+
+    const onSelectKey = isReactNative
+      ? /* istanbul ignore next (react-native) */ 'onPress'
+      : 'onClick'
+    const customClickHandler = isReactNative
+      ? /* istanbul ignore next (react-native) */ onPress
+      : onClick
+
     return {
       [refKey]: handleRefs(ref, itemNode => {
         if (itemNode) {
@@ -204,20 +265,12 @@ function useCombobox(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
-      onMouseMove: callAllEventHandlers(onMouseMove, () =>
-        itemHandleMouseMove(itemIndex),
-      ),
-      ...(isReactNative
-        ? {
-            onPress: callAllEventHandlers(onPress, () =>
-              itemHandleClick(itemIndex),
-            ),
-          }
-        : {
-            onClick: callAllEventHandlers(onClick, () =>
-              itemHandleClick(itemIndex),
-            ),
-          }),
+      onMouseMove: callAllEventHandlers(onMouseMove, () => {
+        itemHandleMouseMove(itemIndex)
+      }),
+      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
+        itemHandleClick(itemIndex)
+      }),
       ...rest,
     }
   }
@@ -235,7 +288,9 @@ function useCombobox(userProps = {}) {
       id: toggleButtonId,
       tabIndex: -1,
       ...(isReactNative
-        ? {onPress: callAllEventHandlers(onPress, toggleButtonHandleClick)}
+        ? /* istanbul ignore next (react-native) */ {
+            onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+          }
         : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
       ...rest,
     }
@@ -266,6 +321,7 @@ function useCombobox(userProps = {}) {
       }
     }
 
+    /* istanbul ignore if (react-native) */
     if (isReactNative) {
       eventHandlers.onChange = callAllEventHandlers(
         onChange,
@@ -275,7 +331,9 @@ function useCombobox(userProps = {}) {
       eventHandlers.onChangeText = callAllEventHandlers(
         onChangeText,
         onInput,
-        text => inputHandleChange({nativeEvent: {text}}),
+        text => {
+          inputHandleChange({nativeEvent: {text}})
+        },
       )
     }
 
