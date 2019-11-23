@@ -398,7 +398,7 @@ function useSelect(userProps = {}) {
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
-    return {
+    const itemProps = {
       [refKey]: handleRefs(ref, itemNode => {
         if (itemNode) {
           itemRefs.current.push(itemNode)
@@ -407,12 +407,15 @@ function useSelect(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
-      onMouseMove: callAllEventHandlers(onMouseMove, () =>
-        itemHandleMouseMove(itemIndex),
-      ),
-      onClick: callAllEventHandlers(onClick, () => itemHandleClick(itemIndex)),
       ...rest,
+    };
+
+    if (!rest.disabled) {
+      itemProps.onMouseMove = callAllEventHandlers(onMouseMove, () =>itemHandleMouseMove(itemIndex))
+      itemProps.onClick = callAllEventHandlers(onClick, () => itemHandleClick(itemIndex))
     }
+
+    return itemProps;
   }
 
   return {
