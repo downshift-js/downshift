@@ -331,9 +331,8 @@ export type UseSelectReturnValue<Item> = UseSelectState<Item> &
   UseSelectPropGetters<Item> &
   UseSelectActions<Item>
 
-export type UseSelectInterface<Item> = (
-  props: UseSelectProps<Item>,
-) => UseSelectReturnValue<Item> & {
+export interface UseSelectInterface {
+  <Item>(props: UseSelectProps<Item>): UseSelectReturnValue<Item>,
   stateChangeTypes: {
     MenuKeyDownArrowDown: UseSelectStateChangeTypes.MenuKeyDownArrowDown
     MenuKeyDownArrowUp: UseSelectStateChangeTypes.MenuKeyDownArrowUp
@@ -360,6 +359,4 @@ export type UseSelectInterface<Item> = (
   }
 }
 
-export function useSelect<Item>(
-  props: UseSelectProps<Item>,
-): UseSelectReturnValue<Item>
+export const useSelect: UseSelectInterface
