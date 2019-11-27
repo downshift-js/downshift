@@ -50,6 +50,17 @@ describe('getItemProps', () => {
 
       expect(itemProps['aria-selected']).toBeUndefined()
     })
+
+    test('omit event handlers when disabled', () => {
+      const {result} = setupHook()
+      const itemProps = result.current.getItemProps({
+        index: 0,
+        disabled: true,
+      })
+
+      expect(itemProps.onMouseMove).toBeUndefined()
+      expect(itemProps.onClick).toBeUndefined()
+    })
   })
 
   describe('user props', () => {
