@@ -917,7 +917,7 @@ class Downshift extends Component {
 
   getItemPropsEventHandlersMemoized = memoize(
     this.getItemPropsEventHandlers,
-    ({item, index}) => `${this.props.itemToString(item)}-${index}`,
+    ({index}) => this.getItemId(index),
   )
 
   /////////////////////////////// ITEM
@@ -945,7 +945,6 @@ class Downshift extends Component {
       onMouseMove,
       onPress,
       index,
-      item,
     })
 
     // Passing down the onMouseDown handler to prevent redirect
