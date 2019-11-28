@@ -67,6 +67,7 @@
   "dependencies": {
     "@babel/runtime": "^7.4.5",
     "compute-scroll-into-view": "^1.0.9",
+    "lodash.memoize": "^4.1.2",
     "prop-types": "^15.7.2",
     "react-is": "^16.9.0"
   },

@@ -3,6 +3,7 @@
 import PropTypes from 'prop-types'
 import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
+import memoize from 'lodash.memoize'
 import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -833,10 +834,8 @@ class Downshift extends Component {
         !!this.props.environment.document.activeElement &&
         !!this.props.environment.document.activeElement.dataset &&
         this.props.environment.document.activeElement.dataset.toggle &&
-        (this._rootNode &&
-          this._rootNode.contains(
-            this.props.environment.document.activeElement,
-          ))
+        this._rootNode &&
+        this._rootNode.contains(this.props.environment.document.activeElement)
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: stateChangeTypes.blurInput})
       }
@@ -869,25 +868,13 @@ class Downshift extends Component {
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
 
-  /////////////////////////////// ITEM
-  getItemProps = ({
-    onMouseMove,
-    onMouseDown,
+  getItemPropsEventHandlers = ({
     onClick,
     onPress,
+    onMouseMove,
+    onMouseDown,
     index,
-    item = process.env.NODE_ENV === 'production'
-      ? /* istanbul ignore next */ undefined
-      : requiredProp('getItemProps', 'item'),
-    ...rest
-  } = {}) => {
-    if (index === undefined) {
-      this.items.push(item)
-      index = this.items.indexOf(item)
-    } else {
-      this.items[index] = item
-    }
-
+  }) => {
     const onSelectKey = isReactNative
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
@@ -895,7 +882,7 @@ class Downshift extends Component {
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick
 
-    const enabledEventHandlers = {
+    return {
       // onMouseMove is used over onMouseEnter here. onMouseMove
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
@@ -926,6 +913,40 @@ class Downshift extends Component {
         })
       }),
     }
+  }
+
+  getItemPropsEventHandlersMemoized = memoize(
+    this.getItemPropsEventHandlers,
+    ({item, index}) => `${this.props.itemToString(item)}-${index}`,
+  )
+
+  /////////////////////////////// ITEM
+  getItemProps = ({
+    onMouseMove,
+    onMouseDown,
+    onClick,
+    onPress,
+    index,
+    item = process.env.NODE_ENV === 'production'
+      ? /* istanbul ignore next */ undefined
+      : requiredProp('getItemProps', 'item'),
+    ...rest
+  } = {}) => {
+    if (index === undefined) {
+      this.items.push(item)
+      index = this.items.indexOf(item)
+    } else {
+      this.items[index] = item
+    }
+
+    const enabledEventHandlers = this.getItemPropsEventHandlersMemoized({
+      onClick,
+      onMouseDown,
+      onMouseMove,
+      onPress,
+      index,
+      item,
+    })
 
     // Passing down the onMouseDown handler to prevent redirect
     // of the activeElement if clicking on disabled items
