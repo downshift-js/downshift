@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types'
 import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
-import memoize from 'lodash.memoize'
+import memoize from 'fast-memoize'
 import {isPreact, isReactNative} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -868,56 +868,47 @@ class Downshift extends Component {
   }
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
 
-  getItemPropsEventHandlers = ({
-    onClick,
-    onPress,
-    onMouseMove,
-    onMouseDown,
-    index,
-  }) => {
-    const onSelectKey = isReactNative
-      ? /* istanbul ignore next (react-native) */ 'onPress'
-      : 'onClick'
-    const customClickHandler = isReactNative
-      ? /* istanbul ignore next (react-native) */ onPress
-      : onClick
+  getItemPropsEventHandlers = memoize(
+    (index, item, onClick, onPress, onMouseMove, onMouseDown) => {
+      const onSelectKey = isReactNative
+        ? /* istanbul ignore next (react-native) */ 'onPress'
+        : 'onClick'
+      const customClickHandler = isReactNative
+        ? /* istanbul ignore next (react-native) */ onPress
+        : onClick
 
-    return {
-      // onMouseMove is used over onMouseEnter here. onMouseMove
-      // is only triggered on actual mouse movement while onMouseEnter
-      // can fire on DOM changes, interrupting keyboard navigation
-      onMouseMove: callAllEventHandlers(onMouseMove, () => {
-        if (index === this.getState().highlightedIndex) {
-          return
-        }
-        this.setHighlightedIndex(index, {
-          type: stateChangeTypes.itemMouseEnter,
-        })
+      return {
+        // onMouseMove is used over onMouseEnter here. onMouseMove
+        // is only triggered on actual mouse movement while onMouseEnter
+        // can fire on DOM changes, interrupting keyboard navigation
+        onMouseMove: callAllEventHandlers(onMouseMove, () => {
+          if (index === this.getState().highlightedIndex) {
+            return
+          }
+          this.setHighlightedIndex(index, {
+            type: stateChangeTypes.itemMouseEnter,
+          })
 
-        // We never want to manually scroll when changing state based
-        // on `onMouseMove` because we will be moving the element out
-        // from under the user which is currently scrolling/moving the
-        // cursor
-        this.avoidScrolling = true
-        this.internalSetTimeout(() => (this.avoidScrolling = false), 250)
-      }),
-      onMouseDown: callAllEventHandlers(onMouseDown, event => {
-        // This prevents the activeElement from being changed
-        // to the item so it can remain with the current activeElement
-        // which is a more common use case.
-        event.preventDefault()
-      }),
-      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
-        this.selectItemAtIndex(index, {
-          type: stateChangeTypes.clickItem,
-        })
-      }),
-    }
-  }
-
-  getItemPropsEventHandlersMemoized = memoize(
-    this.getItemPropsEventHandlers,
-    ({index}) => this.getItemId(index),
+          // We never want to manually scroll when changing state based
+          // on `onMouseMove` because we will be moving the element out
+          // from under the user which is currently scrolling/moving the
+          // cursor
+          this.avoidScrolling = true
+          this.internalSetTimeout(() => (this.avoidScrolling = false), 250)
+        }),
+        onMouseDown: callAllEventHandlers(onMouseDown, event => {
+          // This prevents the activeElement from being changed
+          // to the item so it can remain with the current activeElement
+          // which is a more common use case.
+          event.preventDefault()
+        }),
+        [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
+          this.selectItemAtIndex(index, {
+            type: stateChangeTypes.clickItem,
+          })
+        }),
+      }
+    },
   )
 
   /////////////////////////////// ITEM
@@ -939,13 +930,14 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const enabledEventHandlers = this.getItemPropsEventHandlersMemoized({
+    const enabledEventHandlers = this.getItemPropsEventHandlers(
+      index,
+      item,
       onClick,
       onMouseDown,
       onMouseMove,
       onPress,
-      index,
-    })
+    )
 
     // Passing down the onMouseDown handler to prevent redirect
     // of the activeElement if clicking on disabled items
