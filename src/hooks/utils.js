@@ -153,6 +153,23 @@ function useId() {
   return id
 }
 
+/**
+ * Checks if nextElement receives focus after the blur event.
+ *
+ * @param {FocusEvent} event The blur event.
+ * @param {Element} nextElement The element to check that receive focus next.
+ * @returns {boolean} If the focus lands on nextElement.
+ */
+function focusLandsOnElement(event, nextElement) {
+  return (
+    event.relatedTarget === nextElement ||
+    // https://github.com/downshift-js/downshift/issues/832 - workaround for Firefox.
+    (event.nativeEvent &&
+      (nextElement === event.nativeEvent.explicitOriginalTarget ||
+        nextElement.contains(event.nativeEvent.explicitOriginalTarget)))
+  )
+}
+
 export {
   getElementIds,
   getNextWrappingIndex,
@@ -165,4 +182,5 @@ export {
   useEnhancedReducer,
   capitalizeString,
   useId,
+  focusLandsOnElement,
 }

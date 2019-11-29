@@ -8,6 +8,7 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
   useId,
+  focusLandsOnElement,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
@@ -249,7 +250,7 @@ function useSelect(userProps = {}) {
   // We are toggleing special actions for these cases in reducer, not MenuBlur.
   // Since Shift-Tab also lands focus on toggleButton, we will handle it as exception and call MenuBlur.
   const menuHandleBlur = event => {
-    if (event.relatedTarget !== toggleButtonRef.current) {
+    if (!focusLandsOnElement(event, toggleButtonRef.current)) {
       dispatch({
         type: stateChangeTypes.MenuBlur,
       })
@@ -408,14 +409,18 @@ function useSelect(userProps = {}) {
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
       ...rest,
-    };
-
-    if (!rest.disabled) {
-      itemProps.onMouseMove = callAllEventHandlers(onMouseMove, () =>itemHandleMouseMove(itemIndex))
-      itemProps.onClick = callAllEventHandlers(onClick, () => itemHandleClick(itemIndex))
     }
 
-    return itemProps;
+    if (!rest.disabled) {
+      itemProps.onMouseMove = callAllEventHandlers(onMouseMove, () =>
+        itemHandleMouseMove(itemIndex),
+      )
+      itemProps.onClick = callAllEventHandlers(onClick, () =>
+        itemHandleClick(itemIndex),
+      )
+    }
+
+    return itemProps
   }
 
   return {
