@@ -9,6 +9,7 @@ import {
   useId,
   getPropTypesValidator,
   useEnhancedReducer,
+  focusLandsOnElement,
 } from '../utils'
 import {getElementIds, getInitialState, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
@@ -185,7 +186,12 @@ function useCombobox(userProps = {}) {
   }
   const inputHandleBlur = event => {
     /* istanbul ignore else (react-native) */
-    if (event.relatedTarget !== toggleButtonRef.current) {
+    if (
+      !(
+        toggleButtonRef.current &&
+        focusLandsOnElement(event, toggleButtonRef.current)
+      )
+    ) {
       dispatch({
         type: stateChangeTypes.InputBlur,
       })
