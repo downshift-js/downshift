@@ -50,6 +50,16 @@ describe('getItemProps', () => {
 
       expect(itemProps['aria-selected']).toBeUndefined()
     })
+
+    test("handlers are not called if it's disabled", () => {
+      const {result} = setupHook()
+      const inputProps = result.current.getInputProps({
+        disabled: true,
+      })
+
+      expect(inputProps.onClick).toBeUndefined()
+      expect(inputProps.onMouseMove).toBeUndefined()
+    })
   })
 
   describe('user props', () => {

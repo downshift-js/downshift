@@ -24,6 +24,15 @@ describe('getToggleButtonProps', () => {
 
       expect(toggleButtonProps.id).toEqual(props.toggleButtonId)
     })
+
+    test('omit event handlers when disabled', () => {
+      const {result} = setupHook()
+      const toggleButtonProps = result.current.getToggleButtonProps({
+        disabled: true,
+      })
+
+      expect(toggleButtonProps.onClick).toBeUndefined()
+    })
   })
 
   describe('user props', () => {
