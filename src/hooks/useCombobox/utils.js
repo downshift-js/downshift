@@ -6,9 +6,6 @@ import {
 } from '../utils'
 
 const defaultStateValues = {
-  highlightedIndex: -1,
-  isOpen: false,
-  selectedItem: null,
   inputValue: '',
 }
 

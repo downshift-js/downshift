@@ -3,6 +3,7 @@ import {cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {items, setupHook} from '../testUtils'
 import {defaultStateValues} from '../utils'
+import {defaultStateValues as defaultStateValuesCommon} from '../../utils'
 
 describe('returnProps', () => {
   afterEach(cleanup)
@@ -145,12 +146,14 @@ describe('returnProps', () => {
         result.current.reset()
       })
 
-      expect(result.current.selectedItem).toBe(defaultStateValues.selectedItem)
+      expect(result.current.selectedItem).toBe(
+        defaultStateValuesCommon.selectedItem,
+      )
       expect(result.current.highlightedIndex).toBe(
-        defaultStateValues.highlightedIndex,
+        defaultStateValuesCommon.highlightedIndex,
       )
       expect(result.current.inputValue).toBe(defaultStateValues.inputValue)
-      expect(result.current.isOpen).toBe(defaultStateValues.isOpen)
+      expect(result.current.isOpen).toBe(defaultStateValuesCommon.isOpen)
     })
 
     test('reset sets the state to default prop values passed by user', () => {

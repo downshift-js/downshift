@@ -2,6 +2,12 @@ import PropTypes from 'prop-types'
 import {useState, useEffect, useCallback, useReducer} from 'react'
 import {scrollIntoView} from '../utils'
 
+const defaultStateValues = {
+  highlightedIndex: -1,
+  isOpen: false,
+  selectedItem: null,
+}
+
 function getElementIds(
   generateDefaultId,
   {id, labelId, menuId, getItemId, toggleButtonId} = {},
@@ -208,15 +214,15 @@ const defaultProps = {
       : window,
 }
 
-function getDefaultValue(props, propKey, defaultStateValues) {
+function getDefaultValue(props, propKey, defaultStateValuesLocal) {
   const defaultPropKey = `default${capitalizeString(propKey)}`
   if (defaultPropKey in props) {
     return props[defaultPropKey]
   }
-  return defaultStateValues[propKey]
+  return {...defaultStateValues, ...defaultStateValuesLocal}[propKey]
 }
 
-function getInitialValue(props, propKey, defaultStateValues) {
+function getInitialValue(props, propKey, defaultStateValuesLocal) {
   if (propKey in props) {
     return props[propKey]
   }
@@ -224,7 +230,7 @@ function getInitialValue(props, propKey, defaultStateValues) {
   if (initialPropKey in props) {
     return props[initialPropKey]
   }
-  return getDefaultValue(props, propKey, defaultStateValues)
+  return getDefaultValue(props, propKey, defaultStateValuesLocal)
 }
 
 function getHighlightedIndexOnOpen(props, state, offset) {
@@ -270,4 +276,5 @@ export {
   getDefaultValue,
   getInitialValue,
   getHighlightedIndexOnOpen,
+  defaultStateValues,
 }

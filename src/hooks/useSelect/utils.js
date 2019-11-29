@@ -5,9 +5,7 @@ import {
 } from '../utils'
 
 const defaultStateValues = {
-  highlightedIndex: -1,
-  isOpen: false,
-  selectedItem: null,
+  keysSoFar: '',
 }
 
 function getDefaultValue(props, propKey) {
