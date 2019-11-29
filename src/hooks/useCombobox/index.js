@@ -242,6 +242,7 @@ function useCombobox(userProps = {}) {
     onMouseMove,
     onClick,
     onPress,
+    disabled,
     ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
@@ -265,11 +266,13 @@ function useCombobox(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
-      onMouseMove: callAllEventHandlers(onMouseMove, () => {
-        itemHandleMouseMove(itemIndex)
-      }),
-      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
-        itemHandleClick(itemIndex)
+      ...(!disabled && {
+        onMouseMove: callAllEventHandlers(onMouseMove, () => {
+          itemHandleMouseMove(itemIndex)
+        }),
+        [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
+          itemHandleClick(itemIndex)
+        }),
       }),
       ...rest,
     }
@@ -279,6 +282,7 @@ function useCombobox(userProps = {}) {
     onPress,
     refKey = 'ref',
     ref,
+    disabled,
     ...rest
   } = {}) => {
     return {
@@ -287,11 +291,13 @@ function useCombobox(userProps = {}) {
       }),
       id: toggleButtonId,
       tabIndex: -1,
-      ...(isReactNative
-        ? /* istanbul ignore next (react-native) */ {
-            onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
-          }
-        : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
+      ...(!disabled && {
+        ...(isReactNative
+          ? /* istanbul ignore next (react-native) */ {
+              onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+            }
+          : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
+      }),
       ...rest,
     }
   }
