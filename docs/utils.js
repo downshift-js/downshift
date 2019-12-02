@@ -20,6 +20,8 @@ const menuStyles = {
   left: '175px',
 }
 
+const comboboxStyles = {display: 'inline-block'}
+
 const playgroundStyles = {height: '160px'}
 
 const useStyles = makeStyles(theme => ({
@@ -107,4 +109,11 @@ const itemsAsObjects = [
   },
 ]
 
-export {menuStyles, useStyles, items, itemsAsObjects, playgroundStyles}
+export {
+  menuStyles,
+  useStyles,
+  items,
+  itemsAsObjects,
+  playgroundStyles,
+  comboboxStyles,
+}

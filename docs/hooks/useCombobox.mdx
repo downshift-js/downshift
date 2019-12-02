@@ -7,7 +7,7 @@ route: /hooks/use-combobox
 import {useState} from 'react'
 import {Playground} from 'docz'
 import {useCombobox} from '../../src'
-import {items, menuStyles, playgroundStyles} from '../utils'
+import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
 
 # useCombobox
 
@@ -85,7 +85,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
       return (
         <>
           <label {...getLabelProps()}>Choose an element:</label>
-          <div style={{display: 'inline-block'}} {...getComboboxProps()}>
+          <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
             <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
               &#8595;

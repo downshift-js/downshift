@@ -8,9 +8,9 @@
 autocomplete/dropdown/select/combobox components</p>
 
 > See
-> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817) and
-> [Episode
-> 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
+> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817)
+> and
+> [Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
 
 <hr />
 
@@ -52,20 +52,22 @@ harder to contribute to.
 
 ## The new React Hooks API
 
-Downshift has proven to be a versatile React component which can be used not only
-for single selection autocomplete, but also for single selection dropdown and
-the multiple selection variations of each. In order to customise the behavior, the
-developer needs to add more stateful logic to it, however, as each of the variations
-differ in terms of design patterns.
+Downshift has proven to be a versatile React component which can be used not
+only for single selection autocomplete, but also for single selection dropdown
+and the multiple selection variations of each. In order to customise the
+behavior, the developer needs to add more stateful logic to it, however, as each
+of the variations differ in terms of design patterns.
 
-In the effort to provide out of the box solutions for each variation, a set of React
-Hooks are about to be available as part of Downshift. Each hook will handle a specific
-dropdown variation and be named accordingly: `useSelect`, `useAutocomplete`, etc.
+In the effort to provide out of the box solutions for each variation, a set of
+React Hooks are about to be available as part of Downshift. Each hook will
+handle a specific dropdown variation and be named accordingly: `useSelect`,
+`useAutocomplete`, etc.
 
-You can check the progress in the [hooks page][hooks-readme] and contribute! If you
-have a custom `<select>` dropdown and want it to be functional and accessible, jump
-directly to the already implemented [useSelect][useselect-readme]. For more examples of
-`useSelect`, check out our [docsite](https://downshift.netlify.com/)!
+You can check the progress in the [hooks page][hooks-readme] and contribute! If
+you have a custom `<select>` dropdown and want it to be functional and
+accessible, jump directly to the already implemented
+[useSelect][useselect-readme]. For more examples of `useSelect`, check out our
+[docsite](https://downshift.netlify.com/)!
 
 ## Table of Contents
 
@@ -213,8 +215,8 @@ render(
 ```
 
 `<Downshift />` is the only component exposed by this package. It doesn't render
-anything itself, it just calls the render function and renders that.
-["Use a render prop!"][use-a-render-prop]!
+anything itself, it just calls the render function and renders that. ["Use a
+render prop!"][use-a-render-prop]!
 `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Basic Props
@@ -241,11 +243,15 @@ compute the `inputValue`).
 > `function(selectedItem: any, stateAndHelpers: object)` | optional, no useful
 > default
 
-Called when the selected item changes, either by the user selecting an item or the user clearing the selection. Called with the item that was selected or `null` and the new state of `downshift`. (see `onStateChange` for more info on `stateAndHelpers`).
+Called when the selected item changes, either by the user selecting an item or
+the user clearing the selection. Called with the item that was selected or
+`null` and the new state of `downshift`. (see `onStateChange` for more info on
+`stateAndHelpers`).
 
-- `selectedItem`: The item that was just selected. `null` if the selection was cleared.
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `selectedItem`: The item that was just selected. `null` if the selection was
+  cleared.
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### stateReducer
 
@@ -253,12 +259,12 @@ Called when the selected item changes, either by the user selecting an item or t
 
 **🚨 This is a really handy power feature 🚨**
 
-This function will be called each time `downshift` sets its internal state
-(or calls your `onStateChange` handler for control props). It allows you to
-modify the state change that will take place which can give you fine grain
-control over how the component interacts with user updates without having to
-use [Control Props](#control-props). It gives you the current state and the
-state that will be set, and you return the state that you want to set.
+This function will be called each time `downshift` sets its internal state (or
+calls your `onStateChange` handler for control props). It allows you to modify
+the state change that will take place which can give you fine grain control over
+how the component interacts with user updates without having to use
+[Control Props](#control-props). It gives you the current state and the state
+that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
 - `changes`: These are the properties that are about to change. This also has a
@@ -301,7 +307,8 @@ function stateReducer(state, changes) {
 
 > `any` | defaults to `null`
 
-Pass an item or an array of items that should be selected when downshift is initialized.
+Pass an item or an array of items that should be selected when downshift is
+initialized.
 
 ### initialInputValue
 
@@ -313,7 +320,8 @@ This is the initial input value when downshift is initialized.
 
 > `number`/`null` | defaults to `defaultHighlightedIndex`
 
-This is the initial value to set the highlighted index to when downshift is initialized.
+This is the initial value to set the highlighted index to when downshift is
+initialized.
 
 ### initialIsOpen
 
@@ -326,7 +334,8 @@ This is the initial `isOpen` value when downshift is initialized.
 > `number`/`null` | defaults to `null`
 
 This is the value to set the `highlightedIndex` to anytime downshift is reset,
-when the the selection is cleared, when an item is selected or when the inputValue is changed.
+when the the selection is cleared, when an item is selected or when the
+inputValue is changed.
 
 ### defaultIsOpen
 
@@ -337,7 +346,8 @@ the selection is cleared, or when an item is selected.
 
 ### selectedItemChanged
 
-> `function(prevItem: any, item: any)` | defaults to: `(prevItem, item) => (prevItem !== item)`
+> `function(prevItem: any, item: any)` | defaults to:
+> `(prevItem, item) => (prevItem !== item)`
 
 Used to determine if the new `selectedItem` has changed compared to the previous
 `selectedItem` and properly update Downshift's internal state.
@@ -381,8 +391,8 @@ Called with the item that was selected and the new state of `downshift`. (see
 `onStateChange` for more info on `stateAndHelpers`).
 
 - `selectedItem`: The item that was just selected
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### onStateChange
 
@@ -393,8 +403,9 @@ This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
 all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
-The parameters both take the shape of internal state (`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`) but differ
-slightly.
+The parameters both take the shape of internal state
+(`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`)
+but differ slightly.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This also has a `type` property which you can learn more about
@@ -422,8 +433,8 @@ of `onStateChange` when `inputValue` is a controlled prop to
 [avoid issues with cursor positions](https://github.com/downshift-js/downshift/issues/217).
 
 - `inputValue`: The current value of the input
-- `stateAndHelpers`: This is the same thing your `children` function is
-  called with (see [Children Function](#children-function))
+- `stateAndHelpers`: This is the same thing your `children` function is called
+  with (see [Children Function](#children-function))
 
 ### itemCount
 
@@ -495,7 +506,8 @@ Used for `aria` attributes and the `id` prop of the element (`ul`) you use
 
 ### getItemId
 
-> `function(index)` | defaults to a function that generates an ID based on the index
+> `function(index)` | defaults to a function that generates an ID based on the
+> index
 
 Used for `aria` attributes and the `id` prop of the element (`li`) you use
 [`getInputProps`](#getinputprops) with.
@@ -504,17 +516,23 @@ Used for `aria` attributes and the `id` prop of the element (`li`) you use
 
 > `window` | defaults to `window`
 
-This prop is only useful if you're rendering downshift within a different `window` context from where your JavaScript is running; for example, an iframe or a shadow-root. If the given context is lacking `document` and/or `add|removeEventListener` on its prototype (as is the case for a shadow-root) then you will need to pass in a custom object that is able to provide [access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177) for downshift.
+This prop is only useful if you're rendering downshift within a different
+`window` context from where your JavaScript is running; for example, an iframe
+or a shadow-root. If the given context is lacking `document` and/or
+`add|removeEventListener` on its prototype (as is the case for a shadow-root)
+then you will need to pass in a custom object that is able to provide
+[access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177)
+for downshift.
 
 ### onOuterClick
 
 > `function(stateAndHelpers: object)` | optional
 
 A helper callback to help control internal state of downshift like `isOpen` as
-mentioned in [this issue](https://github.com/downshift-js/downshift/issues/206). The
-same behavior can be achieved using `onStateChange`, but this prop is provided
-as a helper because it's a fairly common use-case if you're controlling the
-`isOpen` state:
+mentioned in [this issue](https://github.com/downshift-js/downshift/issues/206).
+The same behavior can be achieved using `onStateChange`, but this prop is
+provided as a helper because it's a fairly common use-case if you're controlling
+the `isOpen` state:
 
 ```jsx
 const ui = (
@@ -535,8 +553,8 @@ This callback will only be called if `isOpen` is `true`.
 > implementation
 
 This allows you to customize how the scrolling works when the highlighted index
-changes. It receives the node to be scrolled to and the root node (the root
-node you render in downshift). Internally we use
+changes. It receives the node to be scrolled to and the root node (the root node
+you render in downshift). Internally we use
 [`compute-scroll-into-view`](https://www.npmjs.com/package/compute-scroll-into-view)
 so if you use that package then you wont be adding any additional bytes to your
 bundle :)
@@ -544,11 +562,11 @@ bundle :)
 ## stateChangeTypes
 
 There are a few props that expose changes to state
-([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)).
-For you to make the most of these APIs, it's important for you to understand
-why state is being changed. To accomplish this, there's a `type` property on the
-`changes` object you get. This `type` corresponds to a
-`Downshift.stateChangeTypes` property.
+([`onStateChange`](#onstatechange) and [`stateReducer`](#statereducer)). For you
+to make the most of these APIs, it's important for you to understand why state
+is being changed. To accomplish this, there's a `type` property on the `changes`
+object you get. This `type` corresponds to a `Downshift.stateChangeTypes`
+property.
 
 The list of all possible values this `type` property can take is defined in
 [this file](https://github.com/downshift-js/downshift/blob/master/src/stateChangeTypes.js)
@@ -625,9 +643,10 @@ indicated below:
 
 These functions are used to apply props to the elements that you render. This
 gives you maximum flexibility to render what, when, and wherever you like. You
-call these on the element in question (for example: `<input {...getInputProps()}`)). It's advisable to pass all your props to that function
-rather than applying them on the element yourself to avoid your props being
-overridden (or overriding the props returned). For example:
+call these on the element in question (for example:
+`<input {...getInputProps()}`)). It's advisable to pass all your props to that
+function rather than applying them on the element yourself to avoid your props
+being overridden (or overriding the props returned). For example:
 `getInputProps({onKeyUp(event) {console.log(event)}})`.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
@@ -662,16 +681,20 @@ Optional properties:
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getRootProps({refKey: 'innerRef'})` and
-  your composite component would forward like: `<div ref={props.innerRef} />`
+  your composite component would forward like: `<div ref={props.innerRef} />`.
+  It defaults to `ref`.
 
 If you're rendering a composite component, `Downshift` checks that
 `getRootProps` is called and that `refKey` is a prop of the returned composite
 component. This is done to catch common causes of errors but, in some cases, the
 check could fail even if the ref is correctly forwarded to the root DOM
-component. In these cases, you can provide the object `{suppressRefError : true}` as the second argument to `getRootProps` to completely bypass the check.\
+component. In these cases, you can provide the object
+`{suppressRefError : true}` as the second argument to `getRootProps` to
+completely bypass the check.\
 **Please use it with extreme care and only if you are absolutely sure that the ref
 is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
-See [#235](https://github.com/downshift-js/downshift/issues/235) for the discussion that lead to this.
+See [#235](https://github.com/downshift-js/downshift/issues/235) for the
+discussion that lead to this.
 
 </details>
 
@@ -715,23 +738,23 @@ Optional properties:
   call this `innerRef`. So you'd call: `getMenuProps({refKey: 'innerRef'})` and
   your composite component would forward like: `<ul ref={props.innerRef} />`.
   However, if you are just rendering a primitive component like `<div>`, there
-  is no need to specify this property.
+  is no need to specify this property. It defaults to `ref`.
 
   Please keep in mind that menus, for accessibility purposes, should always be
   rendered, regardless of whether you hide it or not. Otherwise, `getMenuProps`
   may throw error if you unmount and remount the menu.
 
-- `aria-label`: By default the menu will add an `aria-labelledby` that refers
-  to the `<label>` rendered with `getLabelProps`. However, if you provide
+- `aria-label`: By default the menu will add an `aria-labelledby` that refers to
+  the `<label>` rendered with `getLabelProps`. However, if you provide
   `aria-label` to give a more specific label that describes the options
-  available, then `aria-labelledby` will not be provided and screen readers
-  can use your `aria-label` instead.
+  available, then `aria-labelledby` will not be provided and screen readers can
+  use your `aria-label` instead.
 
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
-`getMenuProps`.
-**Please use it with extreme care and only if you are absolutely sure that the ref
-is correctly forwarded otherwise `Downshift` will unexpectedly fail.**
+`getMenuProps`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `Downshift` will unexpectedly
+fail.**
 
 ```jsx
 <ul {...getMenuProps()}>
@@ -792,8 +815,8 @@ Optional properties:
   explicitly. It's probably best to be explicit about `index` when using a
   windowing library like `react-virtualized`.
 - `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be omitted. Items will not be highlighted when hovered,
-  and items will not be selected when clicked.
+  handlers will be omitted. Items will not be highlighted when hovered, and
+  items will not be selected when clicked.
 
 #### `getToggleButtonProps`
 
@@ -806,8 +829,8 @@ Optional properties:
 
 - `disabled`: If this is set to `true`, then all of the downshift button event
   handlers will be omitted (it wont toggle the menu when clicked).
-- `aria-label`: The `aria-label` prop is in English. You should probably override
-  this yourself so you can provide translations:
+- `aria-label`: The `aria-label` prop is in English. You should probably
+  override this yourself so you can provide translations:
 
 ```jsx
 const myButton = (
@@ -871,38 +894,40 @@ described below.
 ### default handlers
 
 - `ArrowDown`: if menu is closed, opens it and moves the highlighted index to
-  `defaultHighlightedIndex + 1`, if `defaultHighlightedIndex` is provided, or
-  to the top-most item, if not. If menu is open, it moves the highlighted index
+  `defaultHighlightedIndex + 1`, if `defaultHighlightedIndex` is provided, or to
+  the top-most item, if not. If menu is open, it moves the highlighted index
   down by 1. If the shift key is held when this event fires, the highlighted
   index will jump down 5 indices instead of 1. NOTE: if the current highlighted
   index is within the bottom 5 indices, the top-most index will be highlighted.)
 
 - `ArrowUp`: if menu is closed, opens it and moves the highlighted index to
-  `defaultHighlightedIndex - 1`, if `defaultHighlightedIndex` is provided, or
-  to the bottom-most item, if not. If menu is open, moves the highlighted index
-  up by 1. If the shift key is held when this event fires, the highlighted
-  index will jump up 5 indices instead of 1. NOTE: if the current highlighted
-  index is within the top 5 indices, the bottom-most index will be highlighted.)
+  `defaultHighlightedIndex - 1`, if `defaultHighlightedIndex` is provided, or to
+  the bottom-most item, if not. If menu is open, moves the highlighted index up
+  by 1. If the shift key is held when this event fires, the highlighted index
+  will jump up 5 indices instead of 1. NOTE: if the current highlighted index is
+  within the top 5 indices, the bottom-most index will be highlighted.)
 
-- `Home`: if menu is closed, it will not add any other behavior. If menu is open,
-  the top-most index will get highlighted.
+- `Home`: if menu is closed, it will not add any other behavior. If menu is
+  open, the top-most index will get highlighted.
 
 - `End`: if menu is closed, it will not add any other behavior. If menu is open,
   the bottom-most index will get highlighted.
 
-- `Enter`: if the menu is open, selects the currently highlighted item. If the menu
-  is open, the usual 'Enter' event is prevented by Downshift's default implicit enter
-  handler; so, for example, a form submission event will not work as one might expect
-  (though if the menu is closed the form submission will work normally). See below
-  for customizing the handlers.
+- `Enter`: if the menu is open, selects the currently highlighted item. If the
+  menu is open, the usual 'Enter' event is prevented by Downshift's default
+  implicit enter handler; so, for example, a form submission event will not work
+  as one might expect (though if the menu is closed the form submission will
+  work normally). See below for customizing the handlers.
 
-- `Escape`: will clear downshift's state. This means that `highlightedIndex` will be
-  set to the `defaultHighlightedIndex`, the `inputValue` will be set to empty string,
-  `selectedItem` will be set to `null`, and the `isOpen` state will be set to the `defaultIsOpen`.
+- `Escape`: will clear downshift's state. This means that `highlightedIndex`
+  will be set to the `defaultHighlightedIndex`, the `inputValue` will be set to
+  empty string, `selectedItem` will be set to `null`, and the `isOpen` state
+  will be set to the `defaultIsOpen`.
 
 ### customizing handlers
 
-You can provide your own event handlers to Downshift which will be called before the default handlers:
+You can provide your own event handlers to Downshift which will be called before
+the default handlers:
 
 ```javascript
 const ui = (
@@ -920,7 +945,8 @@ const ui = (
 )
 ```
 
-If you would like to prevent the default handler behavior in some cases, you can set the event's `preventDownshiftDefault` property to `true`:
+If you would like to prevent the default handler behavior in some cases, you can
+set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
 const ui = (
@@ -943,7 +969,8 @@ const ui = (
 )
 ```
 
-If you would like to completely override Downshift's behavior for a handler, in favor of your own, you can bypass prop getters:
+If you would like to completely override Downshift's behavior for a handler, in
+favor of your own, you can bypass prop getters:
 
 ```javascript
 const ui = (
@@ -964,9 +991,13 @@ const ui = (
 
 ### resetIdCounter
 
-Allows reseting the internal id counter which is used to generate unique ids for Downshift component.
+Allows reseting the internal id counter which is used to generate unique ids for
+Downshift component.
 
-You should never need to use this in the browser. Only if you are running an universal React app that is rendered on the server you should call [resetIdCounter](#resetidcounter) before every render so that the ids that get generated on the server match the ids generated in the browser.
+You should never need to use this in the browser. Only if you are running an
+universal React app that is rendered on the server you should call
+[resetIdCounter](#resetidcounter) before every render so that the ids that get
+generated on the server match the ids generated in the browser.
 
 ```javascript
 import {resetIdCounter} from 'downshift';
@@ -977,12 +1008,21 @@ ReactDOMServer.renderToString(...);
 
 ## React Native
 
-Since Downshift renders it's UI using render props, Downshift supports rendering on React Native with ease. Use components like `<View>`, `<Text>`, `<TouchableOpacity>` and others inside of your render method to generate awesome autocomplete, dropdown, or selection components.
+Since Downshift renders it's UI using render props, Downshift supports rendering
+on React Native with ease. Use components like `<View>`, `<Text>`,
+`<TouchableOpacity>` and others inside of your render method to generate awesome
+autocomplete, dropdown, or selection components.
 
 ### Gotchas
 
-- Your root view will need to either pass a ref to `getRootProps` or call `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a common set of errors around composite components. [Learn more in `getRootProps`](#getrootprops).
-- When using a `<FlatList>` or `<ScrollView>`, be sure to supply the [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps) prop to ensure that your text input stays focus, while allowing for taps on the touchables rendered for your items.
+- Your root view will need to either pass a ref to `getRootProps` or call
+  `getRootProps` with `{ suppressRefError: true }`. This ref is used to catch a
+  common set of errors around composite components.
+  [Learn more in `getRootProps`](#getrootprops).
+- When using a `<FlatList>` or `<ScrollView>`, be sure to supply the
+  [`keyboardShouldPersistTaps`](https://facebook.github.io/react-native/docs/scrollview.html#keyboardshouldpersisttaps)
+  prop to ensure that your text input stays focus, while allowing for taps on
+  the touchables rendered for your items.
 
 ## Advanced React Component Patterns course
 
@@ -992,7 +1032,10 @@ platforms:
 
 1.  [egghead.io](https://egghead.io/courses/advanced-react-component-patterns)
 2.  [Frontend Masters](https://frontendmasters.com/courses/advanced-react-patterns/)
-3.  YouTube (for free!): [Part 1](https://www.youtube.com/watch?v=SuzutbwjUp8&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf) and [Part 2](https://www.youtube.com/watch?v=ubXtOROjILU&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
+3.  YouTube (for free!):
+    [Part 1](https://www.youtube.com/watch?v=SuzutbwjUp8&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
+    and
+    [Part 2](https://www.youtube.com/watch?v=ubXtOROjILU&list=PLV5CVI1eNcJgNqzNwcs4UKrlJdhfDjshf)
 
 ## Examples
 
@@ -1005,25 +1048,45 @@ platforms:
 
 If you're just learning downshift, review these in order:
 
-1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) - very bare bones, not styled at all. Good place to start.
-2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) - more complete autocomplete solution using emotion for styling and match-sorter for filtering the items.
-3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) - Shows how to control the `selectedItem` so the selected item can be one of your items or whatever the user types.
-4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) - Shows how to create a MultiDownshift component that allows for an array of selectedItems for multiple selection using a state reducer
+1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
+    very bare bones, not styled at all. Good place to start.
+2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
+    more complete autocomplete solution using emotion for styling and
+    match-sorter for filtering the items.
+3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) -
+    Shows how to control the `selectedItem` so the selected item can be one of
+    your items or whatever the user types.
+4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
+    Shows how to create a MultiDownshift component that allows for an array of
+    selectedItems for multiple selection using a state reducer
 
 **Other Examples:**
 
 Check out these examples of more advanced use/edge cases:
 
-- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) - An example of using the render prop pattern to utilize a reusable component to provide the downshift dropdown component with the functionality of being able to highlight a selection item that starts with the key pressed.
-- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) - An example of using one of downshift's actions as an event handler.
-- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) - An example of a highly complex autocomplete component featuring asynchronously loading items, multiple selection, and windowing (with react-virtualized)
-- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) - An example of how to implementat compound components with `React.createContext` and a downshift higher order component. This is generally not recommended because the render prop API exported by downshift is generally good enough for everyone, but there's nothing technically wrong with doing something like this.
+- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) -
+  An example of using the render prop pattern to utilize a reusable component to
+  provide the downshift dropdown component with the functionality of being able
+  to highlight a selection item that starts with the key pressed.
+- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) -
+  An example of using one of downshift's actions as an event handler.
+- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) -
+  An example of a highly complex autocomplete component featuring asynchronously
+  loading items, multiple selection, and windowing (with react-virtualized)
+- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) -
+  An example of how to implementat compound components with
+  `React.createContext` and a downshift higher order component. This is
+  generally not recommended because the render prop API exported by downshift is
+  generally good enough for everyone, but there's nothing technically wrong with
+  doing something like this.
 
 **Old Examples exist on [codesandbox.io][examples]:**
 
-_🚨 This is a great contribution opportunity!_ These are examples that have not yet been migrated to
+_🚨 This is a great contribution opportunity!_ These are examples that have not
+yet been migrated to
 [downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
-You're more than welcome to make PRs to the examples repository to move these examples over there.
+You're more than welcome to make PRs to the examples repository to move these
+examples over there.
 [Watch this to learn how to contribute completely in the browser](https://www.youtube.com/watch?v=3PAQbhdkTtI&index=2&t=21s&list=PLV5CVI1eNcJgCrPH_e6d57KRUTiDZgs0u)
 
 - [Integration with Apollo](https://codesandbox.io/s/m5zrvqj85p)
@@ -1047,7 +1110,8 @@ You're more than welcome to make PRs to the examples repository to move these ex
 - [Downshift Spectre.css example](https://codesandbox.io/s/M89KQOBRB)
 - [Integration with `redux-form`](https://codesandbox.io/s/k594964z13)
 - [Integration with `react-final-form`](https://codesandbox.io/s/qzm43nn2mj)
-- [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid prop-drilling if you like to break up your render method into more components
+- [Provider Pattern](https://codesandbox.io/s/mywzk3133p) - how to avoid
+  prop-drilling if you like to break up your render method into more components
 - [React Native example](https://snack.expo.io/SkE0LxXqM)
 - [React VR example](https://github.com/infiniteluke/bassdrop)
 - [Multiple checkbox selection](https://codesandbox.io/s/5z711pmr3l)
@@ -1119,7 +1183,9 @@ to use these out of the box solutions, then that's fine too:
 
 ## Bindings for ReasonML
 
-If you're developing some React in ReasonML, check out the [`Downshift` bindings](https://github.com/reasonml-community/bs-downshift) for that.
+If you're developing some React in ReasonML, check out the
+[`Downshift` bindings](https://github.com/reasonml-community/bs-downshift) for
+that.
 
 ## Contributors
 
@@ -1288,9 +1354,11 @@ MIT
 
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
-[build-badge]: https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
+[build-badge]:
+  https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
 [build]: https://travis-ci.org/downshift-js/downshift
-[coverage-badge]: https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
+[coverage-badge]:
+  https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
 [coverage]: https://codecov.io/github/downshift-js/downshift
 [version-badge]: https://img.shields.io/npm/v/downshift.svg?style=flat-square
 [package]: https://www.npmjs.com/package/downshift
@@ -1298,33 +1366,46 @@ MIT
 [npmcharts]: http://npmcharts.com/compare/downshift
 [license-badge]: https://img.shields.io/npm/l/downshift.svg?style=flat-square
 [license]: https://github.com/downshift-js/downshift/blob/master/LICENSE
-[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
+[prs-badge]:
+  https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
 [chat]: https://gitter.im/downshift-js/downshift
-[chat-badge]: https://img.shields.io/gitter/room/downshift-js/downshift.svg?style=flat-square
-[coc-badge]: https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
+[chat-badge]:
+  https://img.shields.io/gitter/room/downshift-js/downshift.svg?style=flat-square
+[coc-badge]:
+  https://img.shields.io/badge/code%20of-conduct-ff69b4.svg?style=flat-square
 [coc]: https://github.com/downshift-js/downshift/blob/master/CODE_OF_CONDUCT.md
-[react-badge]: https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
+[react-badge]:
+  https://img.shields.io/badge/%E2%9A%9B%EF%B8%8F-(p)react-00d8ff.svg?style=flat-square
 [react]: https://facebook.github.io/react/
-[gzip-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
-[size-badge]: http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
+[gzip-badge]:
+  http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?compression=gzip&label=gzip%20size&style=flat-square
+[size-badge]:
+  http://img.badgesize.io/https://unpkg.com/downshift/dist/downshift.umd.min.js?label=size&style=flat-square
 [unpkg-dist]: https://unpkg.com/downshift/dist/
-[module-formats-badge]: https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
+[module-formats-badge]:
+  https://img.shields.io/badge/module%20formats-umd%2C%20cjs%2C%20es-green.svg?style=flat-square
 [spectrum-badge]: https://withspectrum.github.io/badge/badge.svg
 [spectrum]: https://spectrum.chat/downshift
 [emojis]: https://github.com/kentcdodds/all-contributors#emoji-key
 [all-contributors]: https://github.com/kentcdodds/all-contributors
 [ryan]: https://github.com/ryanflorence
-[compound-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3060560
+[compound-components-lecture]:
+  https://courses.reacttraining.com/courses/advanced-react/lectures/3060560
 [react-autocomplete]: https://www.npmjs.com/package/react-autocomplete
 [jquery-complete]: https://jqueryui.com/autocomplete/
-[examples]: https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
-[yt-playlist]: https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
+[examples]:
+  https://codesandbox.io/search?refinementList%5Btags%5D%5B0%5D=downshift%3Aexample&page=1
+[yt-playlist]:
+  https://www.youtube.com/playlist?list=PLV5CVI1eNcJh5CTgArGVwANebCrAh2OUE
 [jared]: https://github.com/jaredly
-[controlled-components-lecture]: https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
+[controlled-components-lecture]:
+  https://courses.reacttraining.com/courses/advanced-react/lectures/3172720
 [react-training]: https://reacttraining.com/
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
-[use-a-render-prop]: https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
+[use-a-render-prop]:
+  https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
 [semver]: http://semver.org/
 [hooks-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks
-[useselect-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
+[useselect-readme]:
+  https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect

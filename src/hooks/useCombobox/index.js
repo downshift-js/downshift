@@ -73,6 +73,7 @@ function useCombobox(userProps = {}) {
         items,
         selectedItem,
         itemToString,
+        inputValue,
       }),
       environment.document,
     )
@@ -89,6 +90,7 @@ function useCombobox(userProps = {}) {
         items,
         selectedItem,
         itemToString,
+        inputValue,
       }),
       environment.document,
     )
