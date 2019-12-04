@@ -61,13 +61,23 @@ of the variations differ in terms of design patterns.
 In the effort to provide out of the box solutions for each variation, a set of
 React Hooks are about to be available as part of Downshift. Each hook will
 handle a specific dropdown variation and be named accordingly: `useSelect`,
-`useAutocomplete`, etc.
+`useCombobox`, `useMultipleSelection` etc.
 
 You can check the progress in the [hooks page][hooks-readme] and contribute! If
-you have a custom `<select>` dropdown and want it to be functional and
-accessible, jump directly to the already implemented
-[useSelect][useselect-readme]. For more examples of `useSelect`, check out our
+you want to create a custom `<select>` or `combobox autocomplete` dropdown and
+want it to be functional and accessible, jump directly to the already
+implemented [useSelect][useselect-readme] and [useCombobox][combobox-readme].
+For more examples of how to use the hooks check out our
 [docsite](https://downshift.netlify.com/)!
+
+## Bundle size concerns
+
+Adding the hooks into this repo increased the bundle size considerably
+throughout its existence. However, since we create the bundle with `Rollup` and
+export both `<Downshift>` and the hooks as modules, you should be able to have
+the library treeshaked (pruned) and given only the code you need. If there are
+issues with this that require changes in `Downshift` configuration or code,
+please let us know by submitting an issue. Thank you!
 
 ## Table of Contents
 
@@ -1409,3 +1419,5 @@ MIT
 [hooks-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks
 [useselect-readme]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
+[combobox-readme]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
