@@ -1114,8 +1114,19 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "saitonakamura",
+      "name": "Mikhail Bashurov",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1552189?v=4",
+      "profile": "https://saitonakamura.github.io/saitonakamura.ru/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
