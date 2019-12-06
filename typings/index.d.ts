@@ -287,8 +287,8 @@ export interface UseSelectProps<Item> {
   getItemId?: (index: number) => string
   stateReducer?: (
     state: UseSelectState<Item>,
-    changes: UseSelectStateChangeOptions<Item>,
-  ) => Partial<UseSelectStateChangeOptions<Item>>
+    actionAndChanges: UseSelectStateChangeOptions<Item>,
+  ) => UseSelectState<Item>
   onSelectedItemChange?: (changes: Partial<UseSelectState<Item>>) => void
   onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
   onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
@@ -303,9 +303,10 @@ export interface UseSelectA11yMessageOptions<Item> {
   itemToString: (item: Item) => string
 }
 
-export interface UseSelectStateChangeOptions<Item>
-  extends Partial<UseSelectState<Item>> {
+export interface UseSelectStateChangeOptions<Item> {
   type: UseSelectStateChangeTypes
+  changes: UseSelectState<Item>
+  props: UseSelectProps<Item>
 }
 
 export interface UseSelectPropGetters<Item> {
@@ -331,9 +332,8 @@ export type UseSelectReturnValue<Item> = UseSelectState<Item> &
   UseSelectPropGetters<Item> &
   UseSelectActions<Item>
 
-export type UseSelectInterface<Item> = (
-  props: UseSelectProps<Item>,
-) => UseSelectReturnValue<Item> & {
+export interface UseSelectInterface {
+  <Item>(props: UseSelectProps<Item>): UseSelectReturnValue<Item>
   stateChangeTypes: {
     MenuKeyDownArrowDown: UseSelectStateChangeTypes.MenuKeyDownArrowDown
     MenuKeyDownArrowUp: UseSelectStateChangeTypes.MenuKeyDownArrowUp
@@ -360,6 +360,4 @@ export type UseSelectInterface<Item> = (
   }
 }
 
-export function useSelect<Item>(
-  props: UseSelectProps<Item>,
-): UseSelectReturnValue<Item>
+export const useSelect: UseSelectInterface
