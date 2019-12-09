@@ -17,6 +17,7 @@ import {
   debounce,
   scrollIntoView as defaultScrollIntoView,
   normalizeArrowKey,
+  noop,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {
@@ -27,7 +28,10 @@ import {
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
-const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
+const validatePropTypes =
+  process.env.NODE_ENV === 'production'
+    ? noop
+    : getPropTypesValidator(useSelect, propTypes)
 const defaultProps = {
   itemToString: defaultItemToString,
   stateReducer: (s, a) => a.changes,
