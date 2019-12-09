@@ -1114,8 +1114,18 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "epiqueras",
+      "name": "Enrique Piqueras",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/19157096?v=4",
+      "profile": "https://epiqueras.github.io",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "repoHost": "https://github.com",
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
