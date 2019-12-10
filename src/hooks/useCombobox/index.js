@@ -15,12 +15,18 @@ import {getElementIds, getInitialState, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
-const validatePropTypes = getPropTypesValidator(useCombobox, propTypes)
+const validatePropTypes =
+  process.env.NODE_ENV === 'production'
+    ? /* istanbul ignore next */ null
+    : getPropTypesValidator(useCombobox, propTypes)
 
 useCombobox.stateChangeTypes = stateChangeTypes
 
 function useCombobox(userProps = {}) {
-  validatePropTypes(userProps)
+  /* istanbul ignore else */
+  if (process.env.NODE_ENV !== 'production') {
+    validatePropTypes(userProps)
+  }
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
