@@ -1276,6 +1276,7 @@ Thanks goes to these people ([emoji key][emojis]):
   <tr>
     <td align="center"><a href="https://github.com/maxmalov"><img src="https://avatars2.githubusercontent.com/u/284129?v=4" width="100px;" alt=""/><br /><sub><b>Maxim Malov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Amaxmalov" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=maxmalov" title="Code">💻</a></td>
     <td align="center"><a href="https://epiqueras.github.io"><img src="https://avatars2.githubusercontent.com/u/19157096?v=4" width="100px;" alt=""/><br /><sub><b>Enrique Piqueras</b></sub></a><br /><a href="#ideas-epiqueras" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://twitter.com/layershifter"><img src="https://avatars0.githubusercontent.com/u/14183168?v=4" width="100px;" alt=""/><br /><sub><b>Oleksandr Fediashov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=layershifter" title="Code">💻</a> <a href="#infra-layershifter" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-layershifter" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
