@@ -27,7 +27,10 @@ import {
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
-const validatePropTypes = getPropTypesValidator(useSelect, propTypes)
+const validatePropTypes =
+  process.env.NODE_ENV === 'production'
+    ? /* istanbul ignore next */ null
+    : getPropTypesValidator(useSelect, propTypes)
 const defaultProps = {
   itemToString: defaultItemToString,
   stateReducer: (s, a) => a.changes,
@@ -43,7 +46,10 @@ const defaultProps = {
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
-  validatePropTypes(userProps)
+  /* istanbul ignore else */
+  if (process.env.NODE_ENV !== 'production') {
+    validatePropTypes(userProps)
+  }
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
