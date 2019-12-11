@@ -1,59 +1,59 @@
 {
   "dist/downshift.cjs.js": {
-    "bundled": 105619,
-    "minified": 50015,
-    "gzipped": 11225
+    "bundled": 107604,
+    "minified": 50106,
+    "gzipped": 11240
   },
   "preact/dist/downshift.cjs.js": {
-    "bundled": 104338,
-    "minified": 48977,
-    "gzipped": 11114
+    "bundled": 106322,
+    "minified": 49068,
+    "gzipped": 11125
   },
   "preact/dist/downshift.umd.min.js": {
-    "bundled": 117035,
-    "minified": 39410,
-    "gzipped": 11258
+    "bundled": 118383,
+    "minified": 38903,
+    "gzipped": 11087
   },
   "preact/dist/downshift.umd.js": {
-    "bundled": 131464,
-    "minified": 46317,
-    "gzipped": 12811
+    "bundled": 134506,
+    "minified": 46407,
+    "gzipped": 12880
   },
   "dist/downshift.umd.min.js": {
-    "bundled": 121664,
-    "minified": 40732,
-    "gzipped": 11788
+    "bundled": 122618,
+    "minified": 40223,
+    "gzipped": 11625
   },
   "dist/downshift.umd.js": {
-    "bundled": 160614,
-    "minified": 55214,
-    "gzipped": 15393
+    "bundled": 164131,
+    "minified": 55319,
+    "gzipped": 15457
   },
   "dist/downshift.esm.js": {
-    "bundled": 105150,
-    "minified": 49620,
-    "gzipped": 11156,
+    "bundled": 107135,
+    "minified": 49711,
+    "gzipped": 11172,
     "treeshaked": {
       "rollup": {
         "code": 998,
         "import_statements": 303
       },
       "webpack": {
-        "code": 28330
+        "code": 3280
       }
     }
   },
   "preact/dist/downshift.esm.js": {
-    "bundled": 103839,
-    "minified": 48552,
-    "gzipped": 11044,
+    "bundled": 105823,
+    "minified": 48643,
+    "gzipped": 11057,
     "treeshaked": {
       "rollup": {
         "code": 999,
         "import_statements": 304
       },
       "webpack": {
-        "code": 28373
+        "code": 3279
       }
     }
   }

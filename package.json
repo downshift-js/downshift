@@ -6,6 +6,7 @@
   "react-native": "dist/downshift.native.cjs.js",
   "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "npm run build:web --silent && npm run build:native --silent",
     "build:web": "kcd-scripts build --bundle --p-react --no-clean --size-snapshot",
@@ -82,6 +83,7 @@
     "@types/jest": "^24.0.15",
     "@types/react": "^16.9.2",
     "babel-plugin-macros": "^2.6.1",
+    "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
     "buble": "^0.19.6",
     "cpy-cli": "^2.0.0",
@@ -100,6 +102,7 @@
     "react-dom": "^16.9.0",
     "react-native": "^0.60.5",
     "react-test-renderer": "^16.9.0",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.2",
     "serve": "^11.0.2",
     "start-server-and-test": "^1.10.0",
