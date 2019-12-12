@@ -4,10 +4,9 @@
 
 You have a custom select dropdown in your application and you want it to perform
 exactly the same as the native HTML `<select>` in terms of accessibility and
-functionality. For consistency reasons you want it to follow the the [ARIA
-design pattern][select-aria] for a dropdown select. You also want this solution
-to be simple to use and flexible so you can tailor it further to your specific
-needs.
+functionality. For consistency reasons you want it to follow the [ARIA design
+pattern][select-aria] for a dropdown select. You also want this solution to be
+simple to use and flexible so you can tailor it further to your specific needs.
 
 ## This solution
 
