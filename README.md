@@ -344,8 +344,8 @@ This is the initial `isOpen` value when downshift is initialized.
 > `number`/`null` | defaults to `null`
 
 This is the value to set the `highlightedIndex` to anytime downshift is reset,
-when the the selection is cleared, when an item is selected or when the
-inputValue is changed.
+when the selection is cleared, when an item is selected or when the inputValue
+is changed.
 
 ### defaultIsOpen
 
