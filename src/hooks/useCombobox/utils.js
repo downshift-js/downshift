@@ -1,11 +1,21 @@
 import PropTypes from 'prop-types'
 import {
+  getElementIds as getElementIdsAbstract,
   getInitialValue as getInitialValueAbstract,
   getDefaultValue as getDefaultValueAbstract,
 } from '../utils'
 
 const defaultStateValues = {
-  keysSoFar: '',
+  inputValue: '',
+}
+
+function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
+  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
+
+  return {
+    inputId: inputId || `${uniqueId}-input`,
+    ...getElementIdsAbstract(generateDefaultId, {id, ...rest}),
+  }
 }
 
 function getDefaultValue(props, propKey) {
@@ -20,6 +30,17 @@ function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
   const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  let inputValue = getInitialValue(props, 'inputValue')
+
+  if (
+    inputValue === '' &&
+    selectedItem &&
+    props.defaultInputValue === undefined &&
+    props.initialInputValue === undefined &&
+    props.inputValue === undefined
+  ) {
+    inputValue = props.itemToString(selectedItem)
+  }
 
   return {
     highlightedIndex:
@@ -28,30 +49,7 @@ function getInitialState(props) {
         : highlightedIndex,
     isOpen,
     selectedItem,
-    keysSoFar: '',
-  }
-}
-
-function getItemIndexByCharacterKey(
-  keysSoFar,
-  highlightedIndex,
-  items,
-  itemToStringParam,
-) {
-  let newHighlightedIndex = -1
-  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
-  const startPosition = highlightedIndex + 1
-
-  newHighlightedIndex = itemStrings
-    .slice(startPosition)
-    .findIndex(itemString => itemString.startsWith(keysSoFar))
-
-  if (newHighlightedIndex > -1) {
-    return newHighlightedIndex + startPosition
-  } else {
-    return itemStrings
-      .slice(0, startPosition)
-      .findIndex(itemString => itemString.startsWith(keysSoFar))
+    inputValue,
   }
 }
 
@@ -70,16 +68,21 @@ const propTypes = {
   selectedItem: PropTypes.any,
   initialSelectedItem: PropTypes.any,
   defaultSelectedItem: PropTypes.any,
+  inputValue: PropTypes.string,
+  defaultInputValue: PropTypes.string,
+  initialInputValue: PropTypes.string,
   id: PropTypes.string,
   labelId: PropTypes.string,
   menuId: PropTypes.string,
   getItemId: PropTypes.func,
+  inputId: PropTypes.string,
   toggleButtonId: PropTypes.string,
   stateReducer: PropTypes.func,
   onSelectedItemChange: PropTypes.func,
   onHighlightedIndexChange: PropTypes.func,
   onStateChange: PropTypes.func,
   onIsOpenChange: PropTypes.func,
+  onInputValueChange: PropTypes.func,
   environment: PropTypes.shape({
     addEventListener: PropTypes.func,
     removeEventListener: PropTypes.func,
@@ -92,9 +95,9 @@ const propTypes = {
 }
 
 export {
+  getElementIds,
   getInitialState,
   defaultStateValues,
   propTypes,
   getDefaultValue,
-  getItemIndexByCharacterKey,
 }

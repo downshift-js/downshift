@@ -208,6 +208,24 @@ describe('getToggleButtonProps', () => {
         expect(menu.childNodes).toHaveLength(0)
       })
 
+      test('opens and closes menu at consecutive clicks', () => {
+        const wrapper = setup({})
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.click(toggleButton)
+        expect(menu.childNodes).toHaveLength(items.length)
+
+        fireEvent.click(toggleButton)
+        expect(menu.childNodes).toHaveLength(0)
+
+        fireEvent.click(toggleButton)
+        expect(menu.childNodes).toHaveLength(items.length)
+
+        fireEvent.click(toggleButton)
+        expect(menu.childNodes).toHaveLength(0)
+      })
+
       test('opens the closed menu without any option highlighted', () => {
         const wrapper = setup()
         const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)

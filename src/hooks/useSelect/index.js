@@ -4,44 +4,27 @@ import {
   getElementIds,
   getItemIndex,
   getPropTypesValidator,
-  itemToString as defaultItemToString,
   isAcceptedCharacterKey,
   useEnhancedReducer,
   useId,
   focusLandsOnElement,
+  defaultProps,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   handleRefs,
   debounce,
-  scrollIntoView as defaultScrollIntoView,
   normalizeArrowKey,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
-import {
-  getA11yStatusMessage as defaultGetA11yStatusMessage,
-  getA11ySelectionMessage as defaultGetA11ySelectionMessage,
-  getInitialState,
-  propTypes,
-} from './utils'
+import {getInitialState, propTypes} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes =
   process.env.NODE_ENV === 'production'
     ? /* istanbul ignore next */ null
     : getPropTypesValidator(useSelect, propTypes)
-const defaultProps = {
-  itemToString: defaultItemToString,
-  stateReducer: (s, a) => a.changes,
-  getA11yStatusMessage: defaultGetA11yStatusMessage,
-  getA11ySelectionMessage: defaultGetA11ySelectionMessage,
-  scrollIntoView: defaultScrollIntoView,
-  environment:
-    typeof window === 'undefined' /* istanbul ignore next (ssr) */
-      ? {}
-      : window,
-}
 
 useSelect.stateChangeTypes = stateChangeTypes
 
