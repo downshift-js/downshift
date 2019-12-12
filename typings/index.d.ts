@@ -208,10 +208,10 @@ export type ChildrenFunction<Item> = (
   options: ControllerStateAndHelpers<Item>,
 ) => React.ReactNode
 
-export type DownshiftInterface<Item> = React.ComponentClass<
+export default class Downshift<Item = any> extends React.Component<
   DownshiftProps<Item>
-> & {
-  stateChangeTypes: {
+> {
+  static stateChangeTypes: {
     unknown: StateChangeTypes.unknown
     mouseUp: StateChangeTypes.mouseUp
     itemMouseEnter: StateChangeTypes.itemMouseEnter
@@ -230,8 +230,6 @@ export type DownshiftInterface<Item> = React.ComponentClass<
   }
 }
 
-declare const Downshift: DownshiftInterface<any>
-export default Downshift
 export function resetIdCounter(): void
 
 /* useSelect Types */
