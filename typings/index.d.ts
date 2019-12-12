@@ -532,4 +532,4 @@ export interface UseComboboxInterface {
   }
 }
 
-export const useCombobox: UseSelectInterface
+export const useCombobox: UseComboboxInterface
