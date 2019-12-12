@@ -1,0 +1,118 @@
+---
+name: useCombobox
+menu: Hooks
+route: /hooks/use-combobox
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useCombobox} from '../../src'
+import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+
+# useCombobox
+
+## Introduction
+
+The `useCombobox` hook provides functionality and accessibility to a dropdown
+that should act as an autocomplete `combobox` input with listbox, as described
+by the corresponding
+[ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html).
+
+User should be allowed to perform a selection after opening the dropdown's menu.
+Only one item may be selected at a time. The widget should be built using a text
+label (optional but recommended), a button that toggles the menu, the combobox
+container, an input of type text inside the combobox container, the menu itself
+and the collection of items that belong in the menu.
+
+In the examples below, we use the `useCombobox` hook and destructure from its
+result the getter props and state variables. The hooks also has the
+`onInputValueChange` prop passed in order to filter the items in the list
+according to the input value. The getter props are used as follows:
+
+| Returned prop          | Element    | Comments                                                                  |
+| ---------------------- | ---------- | ------------------------------------------------------------------------- |
+| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `toggleButton`           |
+| `getToggleButtonProps` | `<button>` | Controls the open state of the list.                                      |
+| `getComboboxProps`     | `<div>`    | Container for `input` and `toggleButton`.                                 |
+| `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
+| `getMenuProps`         | `<ul>`     | Makes list focusable, adds ARIA attributes and event handlers.            |
+| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
+| `isOpen`               |            | Only when it's true we render the `<li>` elements.                        |
+| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
+| `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
+
+For a complete documentation on all the returned props, hook props and more
+information check out the
+[Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect).
+
+## Usage
+
+A `combobox` element can be created with HTML elements such as: `<label>`,
+`<ul>`, `<li>`, `<button>`, `<input>` and a `<div>` or something similar to
+contain the input and the toggle button. It is absolutely important to follow
+the HTML structure below, as it will allow all screen readers to properly work
+with the widget. Most importantly, the `<input>` needs to be contained by the
+combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
+`<div>`.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
+
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownCombobox />
+
+}}
+
+</Playground>

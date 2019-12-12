@@ -779,11 +779,8 @@ class Downshift extends Component {
           onInput,
           this.inputHandleChange,
         ),
-        onChangeText: callAllEventHandlers(
-          onChangeText,
-          onInput,
-          text => this.inputHandleChange({nativeEvent: {text}}),
-          this.inputHandleTextChange,
+        onChangeText: callAllEventHandlers(onChangeText, onInput, text =>
+          this.inputHandleChange({nativeEvent: {text}}),
         ),
         onBlur: callAllEventHandlers(onBlur, this.inputHandleBlur),
       }

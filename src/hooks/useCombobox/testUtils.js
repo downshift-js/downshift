@@ -1,8 +1,17 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds, defaultProps, useId} from '../utils'
-import useSelect from '.'
+import {useId, defaultProps} from '../utils'
+import {getElementIds} from './utils'
+import useCombobox from '.'
+
+jest.mock('../utils', () => {
+  const module = require.requireActual('../utils')
+
+  module.useId = () => 'test-id'
+
+  return module
+})
 
 const items = [
   'Neptunium',
@@ -33,47 +42,37 @@ const items = [
   'Oganesson',
 ]
 
-jest.mock('../utils', () => {
-  const module = require.requireActual('../utils')
-
-  module.useId = () => 'test-id'
-
-  return module
-})
-
-const defaultIds = getElementIds(useId)
-
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
   menu: 'menu-id',
   item: index => `item-id-${index}`,
+  input: 'input-id',
+  combobox: 'combobox-id',
 }
 
-const setupHook = props => {
-  return renderHook(() => useSelect({items, ...props}))
-}
-
-const DropdownSelect = props => {
+const DropdownCombobox = props => {
   const {
     isOpen,
-    selectedItem,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
+    getInputProps,
+    getComboboxProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({items, ...props})
+  } = useCombobox({items, ...props})
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button
-        data-testid={dataTestIds.toggleButton}
-        {...getToggleButtonProps()}
-      >
-        {(selectedItem && selectedItem instanceof Object
-          ? defaultProps.itemToString(selectedItem)
-          : selectedItem) || 'Elements'}
-      </button>
+      <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+        <input data-testid={dataTestIds.input} {...getInputProps()} />
+        <button
+          data-testid={dataTestIds.toggleButton}
+          {...getToggleButtonProps()}
+        >
+          Toggle
+        </button>
+      </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
@@ -97,6 +96,12 @@ const DropdownSelect = props => {
   )
 }
 
-const setup = props => render(<DropdownSelect {...props} />)
+const setup = props => render(<DropdownCombobox {...props} />)
 
-export {dataTestIds, setup, items, setupHook, defaultIds}
+const defaultIds = getElementIds(useId)
+
+const setupHook = props => {
+  return renderHook(() => useCombobox({items, ...props}))
+}
+
+export {setupHook, dataTestIds, defaultIds, items, setup}
