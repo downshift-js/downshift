@@ -36,6 +36,25 @@ for your use cases.
 
 ## This solution
 
+This library provides its users two main sets of solutions: the `Downshift`
+component and a set of hooks. The component is still the main part of the
+library, providing autocomplete/combobox logic as a render prop. The hooks are
+newer and are going to be the way forward to provide accessibility logic to
+widgets. Right now we support `useSelect` for `<select>` components and
+`useCombobox` for combobox/autocomplete.
+
+Since `useCombobox` and `<Downshift />` aim to provide accessibility to the same
+kind of widget, we suggest trying the new `useCombobox` and if you feel that
+`<Downshift />` still covers your use case better then use that instead. Both of
+them are actively maintained but we are cool kids from the future and prefer to
+share `React` logic via hooks.
+
+The `README` on this page is only for the component while each hook has its own
+`README` file, check below. But they are similar in many concepts so you can
+always switch between them in order to find information.
+
+## Downshift component
+
 This is a component that controls user interactions and state for you so you can
 create autocomplete, dropdown, select, etc. components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
@@ -75,9 +94,9 @@ For more examples of how to use the hooks check out our
 Adding the hooks into this repo increased the bundle size considerably
 throughout its existence. However, since we create the bundle with `Rollup` and
 export both `<Downshift>` and the hooks as modules, you should be able to have
-the library treeshaked (pruned) and given only the code you need. If there are
-issues with this that require changes in `Downshift` configuration or code,
-please let us know by submitting an issue. Thank you!
+the library treeshaked (pruned) and given only the code you need. Since version
+`3.4.8` BundlePhobia marked `Downshift` as both `tree-shakeable` and
+`side-effect free` [here][bundle-phobia-link].
 
 ## Table of Contents
 
@@ -1428,3 +1447,4 @@ MIT
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
 [combobox-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
+[bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8

@@ -29,6 +29,7 @@ between them, screen reader support, highlight by character keys etc.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -918,7 +919,7 @@ const ui = (
 )
 ```
 
-[select-aria]:
+[combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
 [reach-auto-id]:
   https://github.com/reach/reach-ui/blob/master/packages/auto-id/src/index.js
