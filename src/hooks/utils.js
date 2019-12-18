@@ -1,12 +1,5 @@
 import PropTypes from 'prop-types'
 import {useState, useEffect, useCallback, useReducer} from 'react'
-import {scrollIntoView} from '../utils'
-
-const defaultStateValues = {
-  highlightedIndex: -1,
-  isOpen: false,
-  selectedItem: null,
-}
 
 function getElementIds(
   generateDefaultId,
@@ -36,6 +29,29 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
   }
 
   return nextIndex
+}
+
+function getItemIndexByCharacterKey(
+  keysSoFar,
+  highlightedIndex,
+  items,
+  itemToStringParam,
+) {
+  let newHighlightedIndex = -1
+  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
+  const startPosition = highlightedIndex + 1
+
+  newHighlightedIndex = itemStrings
+    .slice(startPosition)
+    .findIndex(itemString => itemString.startsWith(keysSoFar))
+
+  if (newHighlightedIndex > -1) {
+    return newHighlightedIndex + startPosition
+  } else {
+    return itemStrings
+      .slice(0, startPosition)
+      .findIndex(itemString => itemString.startsWith(keysSoFar))
+  }
 }
 
 function getState(state, props) {
@@ -103,9 +119,9 @@ function useEnhancedReducer(reducer, initialState, props) {
     (state, action) => {
       state = getState(state, action.props)
 
-      const {stateReducer: stateReduceLocal} = action.props
+      const {stateReducer} = action.props
       const changes = reducer(state, action)
-      const newState = stateReduceLocal(state, {...action, changes})
+      const newState = stateReducer(state, {...action, changes})
 
       callOnChangeProps(action.props, state, newState)
 
@@ -153,128 +169,18 @@ function focusLandsOnElement(event, nextElement) {
         nextElement.contains(event.nativeEvent.explicitOriginalTarget)))
   )
 }
-/**
- * Default state reducer that returns the changes.
- *
- * @param {Object} s state.
- * @param {Object} a action with changes.
- * @returns {Object} changes.
- */
-function stateReducer(s, a) {
-  return a.changes
-}
-
-/**
- * Returns a message to be added to aria-live region when dropdown is open.
- *
- * @param {*} selectionParameters Parameters required to build the message.
- * @returns {string} The a11y message.
- */
-function getA11yStatusMessage(selectionParameters) {
-  const {isOpen, items} = selectionParameters
-
-  if (!items) {
-    return ''
-  }
-
-  const resultCount = items.length
-  if (isOpen) {
-    if (resultCount === 0) {
-      return 'No results are available'
-    }
-    return `${resultCount} result${
-      resultCount === 1 ? ' is' : 's are'
-    } available, use up and down arrow keys to navigate. Press Enter key to select.`
-  }
-
-  return ''
-}
-
-/**
- * Returns a message to be added to aria-live region when item is selected.
- *
- * @param {Object} selectionParameters Parameters required to build the message.
- * @returns {string} The a11y message.
- */
-function getA11ySelectionMessage(selectionParameters) {
-  const {selectedItem, itemToString: itemToStringLocal} = selectionParameters
-
-  return `${itemToStringLocal(selectedItem)} has been selected.`
-}
-
-const defaultProps = {
-  itemToString,
-  stateReducer,
-  getA11yStatusMessage,
-  getA11ySelectionMessage,
-  scrollIntoView,
-  environment:
-    typeof window === 'undefined' /* istanbul ignore next (ssr) */
-      ? {}
-      : window,
-}
-
-function getDefaultValue(props, propKey, defaultStateValuesLocal) {
-  const defaultPropKey = `default${capitalizeString(propKey)}`
-  if (defaultPropKey in props) {
-    return props[defaultPropKey]
-  }
-  return {...defaultStateValues, ...defaultStateValuesLocal}[propKey]
-}
-
-function getInitialValue(props, propKey, defaultStateValuesLocal) {
-  if (propKey in props) {
-    return props[propKey]
-  }
-  const initialPropKey = `initial${capitalizeString(propKey)}`
-  if (initialPropKey in props) {
-    return props[initialPropKey]
-  }
-  return getDefaultValue(props, propKey, defaultStateValuesLocal)
-}
-
-function getHighlightedIndexOnOpen(props, state, offset) {
-  const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
-  const {selectedItem, highlightedIndex} = state
-
-  // initialHighlightedIndex will give value to highlightedIndex on initial state only.
-  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
-    return initialHighlightedIndex
-  }
-  if (defaultHighlightedIndex !== undefined) {
-    return defaultHighlightedIndex
-  }
-  if (selectedItem) {
-    if (offset === 0) {
-      return items.indexOf(selectedItem)
-    }
-    return getNextWrappingIndex(
-      offset,
-      items.indexOf(selectedItem),
-      items.length,
-      false,
-    )
-  }
-  if (offset === 0) {
-    return -1
-  }
-  return offset < 0 ? items.length - 1 : 0
-}
 
 export {
   getElementIds,
   getNextWrappingIndex,
+  getItemIndexByCharacterKey,
   getState,
   getItemIndex,
   getPropTypesValidator,
+  itemToString,
   isAcceptedCharacterKey,
   useEnhancedReducer,
   capitalizeString,
   useId,
   focusLandsOnElement,
-  defaultProps,
-  getDefaultValue,
-  getInitialValue,
-  getHighlightedIndexOnOpen,
-  defaultStateValues,
 }

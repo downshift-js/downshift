@@ -2,7 +2,7 @@ import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {items, setupHook} from '../testUtils'
-import {defaultStateValues} from '../../utils'
+import {defaultStateValues} from '../utils'
 
 describe('returnProps', () => {
   afterEach(cleanup)
