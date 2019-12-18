@@ -53,7 +53,7 @@ The `README` on this page is only for the component while each hook has its own
 `README` file, check below. But they are similar in many concepts so you can
 always switch between them in order to find information.
 
-## Downshift component
+### Downshift component
 
 This is a component that controls user interactions and state for you so you can
 create autocomplete, dropdown, select, etc. components. It uses a [render
@@ -69,17 +69,11 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
-## The new React Hooks API
+### The Hooks API
 
-Downshift has proven to be a versatile React component which can be used not
-only for single selection autocomplete, but also for single selection dropdown
-and the multiple selection variations of each. In order to customise the
-behavior, the developer needs to add more stateful logic to it, however, as each
-of the variations differ in terms of design patterns.
-
-In the effort to provide out of the box solutions for each variation, a set of
-React Hooks are about to be available as part of Downshift. Each hook will
-handle a specific dropdown variation and be named accordingly: `useSelect`,
+In the effort to provide out of the box solutions for each dropdown variation, a
+set of React Hooks are being added as part of Downshift. Each hook will handle a
+specific dropdown variation and be named accordingly: `useSelect`,
 `useCombobox`, `useMultipleSelection` etc.
 
 You can check the progress in the [hooks page][hooks-readme] and contribute! If
@@ -89,7 +83,7 @@ implemented [useSelect][useselect-readme] and [useCombobox][combobox-readme].
 For more examples of how to use the hooks check out our
 [docsite](https://downshift.netlify.com/)!
 
-## Bundle size concerns
+### Bundle size concerns
 
 Adding the hooks into this repo increased the bundle size considerably
 throughout its existence. However, since we create the bundle with `Rollup` and
