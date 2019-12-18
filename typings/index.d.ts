@@ -121,18 +121,13 @@ export interface GetToggleButtonPropsOptions
   disabled?: boolean
 }
 
-export interface GetMenuPropsOptions
-  extends React.HTMLProps<HTMLElement>,
-    GetPropsWithRefKey {
+export interface GetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
+  refKey?: string
   ['aria-label']?: string
 }
 
 export interface GetPropsCommonOptions {
   suppressRefError?: boolean
-}
-
-export interface GetPropsWithRefKey {
-  refKey?: string
 }
 
 export interface GetItemPropsOptions<Item>
@@ -208,10 +203,10 @@ export type ChildrenFunction<Item> = (
   options: ControllerStateAndHelpers<Item>,
 ) => React.ReactNode
 
-export default class Downshift<Item = any> extends React.Component<
+export type DownshiftInterface<Item> = React.ComponentClass<
   DownshiftProps<Item>
-> {
-  static stateChangeTypes: {
+> & {
+  stateChangeTypes: {
     unknown: StateChangeTypes.unknown
     mouseUp: StateChangeTypes.mouseUp
     itemMouseEnter: StateChangeTypes.itemMouseEnter
@@ -230,6 +225,8 @@ export default class Downshift<Item = any> extends React.Component<
   }
 }
 
+declare const Downshift: DownshiftInterface<any>
+export default Downshift
 export function resetIdCounter(): void
 
 /* useSelect Types */
@@ -312,25 +309,14 @@ export interface UseSelectStateChangeOptions<Item> {
   props: UseSelectProps<Item>
 }
 
-export interface UseSelectGetMenuPropsOptions
-  extends GetPropsWithRefKey,
-    GetMenuPropsOptions {}
-
-export interface UseSelectGetToggleButtonPropsOptions
-  extends GetPropsWithRefKey,
-    GetToggleButtonPropsOptions {}
-
-export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
-
-export interface UseSelectGetItemPropsOptions<Item>
-  extends GetItemPropsOptions<Item>,
-    GetPropsWithRefKey {}
-
 export interface UseSelectPropGetters<Item> {
-  getToggleButtonProps: (options?: UseSelectGetMenuPropsOptions) => any
-  getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
-  getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
+  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
+  getLabelProps: (options?: GetLabelPropsOptions) => any
+  getMenuProps: (
+    options?: GetMenuPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
+  getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
 
 export interface UseSelectActions<Item> {
@@ -375,161 +361,3 @@ export interface UseSelectInterface {
 }
 
 export const useSelect: UseSelectInterface
-
-/* useCombobox Types */
-
-export interface UseComboboxState<Item> {
-  highlightedIndex: number
-  selectedItem: Item
-  isOpen: boolean
-  inputValue: string
-}
-
-export enum UseComboboxStateChangeTypes {
-  InputKeyDownArrowDown = '__input_keydown_arrow_down__',
-  InputKeyDownArrowUp = '__input_keydown_arrow_up__',
-  InputKeyDownEscape = '__input_keydown_escape__',
-  InputKeyDownHome = '__input_keydown_home__',
-  InputKeyDownEnd = '__input_keydown_end__',
-  InputKeyDownEnter = '__input_keydown_enter__',
-  InputChange = '__input_change__',
-  InputBlur = '__input_blur__',
-  MenuMouseLeave = '__menu_mouse_leave__',
-  ItemMouseMove = '__item_mouse_move__',
-  ItemClick = '__item_click__',
-  ToggleButtonClick = '__togglebutton_click__',
-  FunctionToggleMenu = '__function_toggle_menu__',
-  FunctionOpenMenu = '__function_open_menu__',
-  FunctionCloseMenu = '__function_close_menu__',
-  FunctionSetHighlightedIndex = '__function_set_highlighted_index__',
-  FunctionSelectItem = '__function_select_item__',
-  FunctionSetInputValue = '__function_set_input_value__',
-  FunctionReset = '__function_reset__',
-}
-
-export interface UseComboboxProps<Item> {
-  items: Item[]
-  itemToString?: (item: Item) => string
-  getA11yStatusMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
-  getA11ySelectionMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
-  circularNavigation?: boolean
-  highlightedIndex?: number
-  initialHighlightedIndex?: number
-  defaultHighlightedIndex?: number
-  isOpen?: boolean
-  initialIsOpen?: boolean
-  defaultIsOpen?: boolean
-  selectedItem?: Item
-  initialSelectedItem?: Item
-  defaultSelectedItem?: Item
-  inputValue?: string
-  initialInputValue?: string
-  defaultInputValue?: string
-  id?: string
-  labelId?: string
-  menuId?: string
-  toggleButtonId?: string
-  inputId?: string
-  getItemId?: (index: number) => string
-  stateReducer?: (
-    state: UseComboboxState<Item>,
-    actionAndChanges: UseComboboxStateChangeOptions<Item>,
-  ) => UseComboboxState<Item>
-  onSelectedItemChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  environment?: Environment
-}
-
-export interface UseComboboxA11yMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
-  inputValue: string
-}
-
-export interface UseComboboxStateChangeOptions<Item> {
-  type: UseComboboxStateChangeTypes
-  changes: UseComboboxState<Item>
-  props: UseComboboxProps<Item>
-}
-
-export interface UseComboboxGetMenuPropsOptions
-  extends GetPropsWithRefKey,
-    GetMenuPropsOptions {}
-
-export interface UseComboboxGetToggleButtonPropsOptions
-  extends GetPropsWithRefKey,
-    GetToggleButtonPropsOptions {}
-
-export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
-
-export interface UseComboboxGetItemPropsOptions<Item>
-  extends GetItemPropsOptions<Item>,
-    GetPropsWithRefKey {}
-
-export interface UseComboboxGetInputPropsOptions
-  extends GetInputPropsOptions,
-    GetPropsWithRefKey {}
-
-export interface UseComboboxGetComboboxPropsOptions
-  extends React.HTMLProps<HTMLLabelElement> {}
-
-export interface UseComboboxPropGetters<Item> {
-  getToggleButtonProps: (
-    options?: UseComboboxGetToggleButtonPropsOptions,
-  ) => any
-  getLabelProps: (options?: UseComboboxGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseComboboxGetMenuPropsOptions) => any
-  getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any
-  getInputProps: (options: UseComboboxGetInputPropsOptions) => any
-  getComboboxProps: (options: UseComboboxGetComboboxPropsOptions) => any
-}
-
-export interface UseComboboxActions<Item> {
-  reset: () => void
-  openMenu: () => void
-  closeMenu: () => void
-  toggleMenu: () => void
-  selectItem: (item: Item) => void
-  setHighlightedIndex: (index: number) => void
-  setInputValue: (inputValue: string) => void
-}
-
-export type UseComboboxReturnValue<Item> = UseComboboxState<Item> &
-  UseComboboxPropGetters<Item> &
-  UseComboboxActions<Item>
-
-export interface UseComboboxInterface {
-  <Item>(props: UseComboboxProps<Item>): UseComboboxReturnValue<Item>
-  stateChangeTypes: {
-    InputKeyDownArrowDown: UseComboboxStateChangeTypes.InputKeyDownArrowDown
-    InputKeyDownArrowUp: UseComboboxStateChangeTypes.InputKeyDownArrowUp
-    InputKeyDownEscape: UseComboboxStateChangeTypes.InputKeyDownEscape
-    InputKeyDownHome: UseComboboxStateChangeTypes.InputKeyDownHome
-    InputKeyDownEnd: UseComboboxStateChangeTypes.InputKeyDownEnd
-    InputKeyDownEnter: UseComboboxStateChangeTypes.InputKeyDownEnter
-    InputChange: UseComboboxStateChangeTypes.InputChange
-    InputBlur: UseComboboxStateChangeTypes.InputBlur
-    MenuMouseLeave: UseComboboxStateChangeTypes.MenuMouseLeave
-    ItemMouseMove: UseComboboxStateChangeTypes.ItemMouseMove
-    ItemClick: UseComboboxStateChangeTypes.ItemClick
-    ToggleButtonClick: UseComboboxStateChangeTypes.ToggleButtonClick
-    FunctionToggleMenu: UseComboboxStateChangeTypes.FunctionToggleMenu
-    FunctionOpenMenu: UseComboboxStateChangeTypes.FunctionOpenMenu
-    FunctionCloseMenu: UseComboboxStateChangeTypes.FunctionCloseMenu
-    FunctionSetHighlightedIndex: UseComboboxStateChangeTypes.FunctionSetHighlightedIndex
-    FunctionSelectItem: UseComboboxStateChangeTypes.FunctionSelectItem
-    FunctionSetInputValue: UseComboboxStateChangeTypes.FunctionSetInputValue
-    FunctionReset: UseComboboxStateChangeTypes.FunctionReset
-  }
-}
-
-export const useCombobox: UseComboboxInterface

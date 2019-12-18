@@ -1,25 +1,83 @@
 import PropTypes from 'prop-types'
-import {
-  getInitialValue as getInitialValueAbstract,
-  getDefaultValue as getDefaultValueAbstract,
-} from '../utils'
+import {getNextWrappingIndex, capitalizeString} from '../utils'
 
 const defaultStateValues = {
-  keysSoFar: '',
+  highlightedIndex: -1,
+  isOpen: false,
+  selectedItem: null,
+}
+
+function getA11yStatusMessage({isOpen, items}) {
+  if (!items) {
+    return ''
+  }
+  const resultCount = items.length
+  if (isOpen) {
+    if (resultCount === 0) {
+      return 'No results are available'
+    }
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
+  return ''
+}
+
+function getA11ySelectionMessage({selectedItem, itemToString}) {
+  return `${itemToString(selectedItem)} has been selected.`
+}
+
+function getHighlightedIndexOnOpen(props, state, offset) {
+  const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
+  const {selectedItem, highlightedIndex} = state
+
+  // initialHighlightedIndex will give value to highlightedIndex on initial state only.
+  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
+    return initialHighlightedIndex
+  }
+  if (defaultHighlightedIndex !== undefined) {
+    return defaultHighlightedIndex
+  }
+  if (selectedItem) {
+    if (offset === 0) {
+      return items.indexOf(selectedItem)
+    }
+    return getNextWrappingIndex(
+      offset,
+      items.indexOf(selectedItem),
+      items.length,
+      false,
+    )
+  }
+  if (offset === 0) {
+    return -1
+  }
+  return offset < 0 ? items.length - 1 : 0
 }
 
 function getDefaultValue(props, propKey) {
-  return getDefaultValueAbstract(props, propKey, defaultStateValues)
+  const defaultPropKey = `default${capitalizeString(propKey)}`
+  if (defaultPropKey in props) {
+    return props[defaultPropKey]
+  }
+  return defaultStateValues[propKey]
 }
 
 function getInitialValue(props, propKey) {
-  return getInitialValueAbstract(props, propKey, defaultStateValues)
+  if (propKey in props) {
+    return props[propKey]
+  }
+  const initialPropKey = `initial${capitalizeString(propKey)}`
+  if (initialPropKey in props) {
+    return props[initialPropKey]
+  }
+  return getDefaultValue(props, propKey)
 }
 
 function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
-  const isOpen = getInitialValue(props, 'isOpen')
   const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const isOpen = getInitialValue(props, 'isOpen')
 
   return {
     highlightedIndex:
@@ -29,29 +87,6 @@ function getInitialState(props) {
     isOpen,
     selectedItem,
     keysSoFar: '',
-  }
-}
-
-function getItemIndexByCharacterKey(
-  keysSoFar,
-  highlightedIndex,
-  items,
-  itemToStringParam,
-) {
-  let newHighlightedIndex = -1
-  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
-  const startPosition = highlightedIndex + 1
-
-  newHighlightedIndex = itemStrings
-    .slice(startPosition)
-    .findIndex(itemString => itemString.startsWith(keysSoFar))
-
-  if (newHighlightedIndex > -1) {
-    return newHighlightedIndex + startPosition
-  } else {
-    return itemStrings
-      .slice(0, startPosition)
-      .findIndex(itemString => itemString.startsWith(keysSoFar))
   }
 }
 
@@ -92,9 +127,11 @@ const propTypes = {
 }
 
 export {
+  getHighlightedIndexOnOpen,
+  getA11yStatusMessage,
+  getA11ySelectionMessage,
   getInitialState,
   defaultStateValues,
   propTypes,
   getDefaultValue,
-  getItemIndexByCharacterKey,
 }

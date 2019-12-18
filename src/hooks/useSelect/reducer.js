@@ -1,5 +1,5 @@
-import {getNextWrappingIndex, getHighlightedIndexOnOpen} from '../utils'
-import {getDefaultValue, getItemIndexByCharacterKey} from './utils'
+import {getNextWrappingIndex, getItemIndexByCharacterKey} from '../utils'
+import {getHighlightedIndexOnOpen, getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
