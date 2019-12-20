@@ -36,6 +36,8 @@ merge of your pull request!
 
 - [ ] Documentation
 - [ ] Tests
+- [ ] TypeScript Types
+- [ ] Flow Types
 - [ ] Ready to be merged
       <!-- In your opinion, is this ready to be merged as soon as it's reviewed? -->
 
