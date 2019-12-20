@@ -1,9 +1,9 @@
 import {getNextWrappingIndex, getHighlightedIndexOnOpen} from '../utils'
-import {getDefaultValue, getItemIndexByCharacterKey} from './utils'
+import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftSelectReducer(state, action) {
+export default function downshiftUseComboboxReducer(state, action) {
   const {type, props, shiftKey} = action
   let changes
 
@@ -18,15 +18,10 @@ export default function downshiftSelectReducer(state, action) {
         isOpen: getDefaultValue(props, 'isOpen'),
         highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         selectedItem: props.items[action.index],
+        inputValue: props.itemToString(props.items[action.index]),
       }
       break
-    case stateChangeTypes.MenuBlur:
-      changes = {
-        isOpen: false,
-        highlightedIndex: -1,
-      }
-      break
-    case stateChangeTypes.MenuKeyDownArrowDown:
+    case stateChangeTypes.InputKeyDownArrowDown:
       changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? 5 : 1,
@@ -34,9 +29,10 @@ export default function downshiftSelectReducer(state, action) {
           props.items.length,
           props.circularNavigation,
         ),
+        ...(!state.isOpen && {isOpen: true}),
       }
       break
-    case stateChangeTypes.MenuKeyDownArrowUp:
+    case stateChangeTypes.InputKeyDownArrowUp:
       changes = {
         highlightedIndex: getNextWrappingIndex(
           shiftKey ? -5 : -1,
@@ -44,85 +40,57 @@ export default function downshiftSelectReducer(state, action) {
           props.items.length,
           props.circularNavigation,
         ),
+        ...(!state.isOpen && {isOpen: true}),
       }
       break
-    case stateChangeTypes.MenuKeyDownHome:
+    case stateChangeTypes.InputKeyDownEnter:
+      changes = {
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+          isOpen: getDefaultValue(props, 'isOpen'),
+          highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+          inputValue: props.itemToString(props.items[state.highlightedIndex]),
+        }),
+      }
+      break
+    case stateChangeTypes.InputKeyDownEscape:
+      changes = {
+        isOpen: false,
+        selectedItem: null,
+        highlightedIndex: -1,
+        inputValue: '',
+      }
+      break
+    case stateChangeTypes.InputKeyDownHome:
       changes = {
         highlightedIndex: 0,
       }
       break
-    case stateChangeTypes.MenuKeyDownEnd:
+    case stateChangeTypes.InputKeyDownEnd:
       changes = {
         highlightedIndex: props.items.length - 1,
       }
       break
-    case stateChangeTypes.MenuKeyDownEscape:
+    case stateChangeTypes.InputBlur:
       changes = {
         isOpen: false,
-        highlightedIndex: -1,
-      }
-      break
-    case stateChangeTypes.MenuKeyDownEnter:
-      changes = {
-        isOpen: getDefaultValue(props, 'isOpen'),
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         ...(state.highlightedIndex >= 0 && {
           selectedItem: props.items[state.highlightedIndex],
+          inputValue: props.itemToString(props.items[state.highlightedIndex]),
+          highlightedIndex: -1,
         }),
       }
       break
-    case stateChangeTypes.MenuKeyDownCharacter:
-      {
-        const lowercasedKey = action.key
-        const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
-        const highlightedIndex = getItemIndexByCharacterKey(
-          keysSoFar,
-          state.highlightedIndex,
-          props.items,
-          props.itemToString,
-        )
-        changes = {
-          keysSoFar,
-          ...(highlightedIndex >= 0 && {
-            highlightedIndex,
-          }),
-        }
+    case stateChangeTypes.InputChange:
+      changes = {
+        isOpen: true,
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        inputValue: action.inputValue,
       }
       break
     case stateChangeTypes.MenuMouseLeave:
       changes = {
         highlightedIndex: -1,
-      }
-      break
-    case stateChangeTypes.ToggleButtonKeyDownCharacter:
-      {
-        const lowercasedKey = action.key
-        const keysSoFar = `${state.keysSoFar}${lowercasedKey}`
-        const itemIndex = getItemIndexByCharacterKey(
-          keysSoFar,
-          state.selectedItem ? props.items.indexOf(state.selectedItem) : -1,
-          props.items,
-          props.itemToString,
-        )
-        changes = {
-          keysSoFar,
-          ...(itemIndex >= 0 && {
-            selectedItem: props.items[itemIndex],
-          }),
-        }
-      }
-      break
-    case stateChangeTypes.ToggleButtonKeyDownArrowDown: {
-      changes = {
-        isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
-      }
-      break
-    }
-    case stateChangeTypes.ToggleButtonKeyDownArrowUp:
-      changes = {
-        isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
       }
       break
     case stateChangeTypes.ToggleButtonClick:
@@ -155,9 +123,9 @@ export default function downshiftSelectReducer(state, action) {
         selectedItem: action.selectedItem,
       }
       break
-    case stateChangeTypes.FunctionClearKeysSoFar:
+    case stateChangeTypes.FunctionSetInputValue:
       changes = {
-        keysSoFar: '',
+        inputValue: action.inputValue,
       }
       break
     case stateChangeTypes.FunctionReset:
@@ -165,6 +133,7 @@ export default function downshiftSelectReducer(state, action) {
         highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         isOpen: getDefaultValue(props, 'isOpen'),
         selectedItem: getDefaultValue(props, 'selectedItem'),
+        inputValue: getDefaultValue(props, 'inputValue'),
       }
       break
     default:

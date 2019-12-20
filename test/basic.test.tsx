@@ -1,8 +1,7 @@
 import * as React from 'react'
-import Downshift, {StateChangeOptions, DownshiftInterface} from '../'
+import Downshift, {StateChangeOptions} from '../'
 
 type Item = string
-const TypedDownShift: DownshiftInterface<Item> = Downshift
 
 interface Props {}
 
@@ -27,7 +26,7 @@ export default class App extends React.Component<Props, State> {
     const items = this.state.items
 
     return (
-      <TypedDownShift onChange={this.onChange}>
+      <Downshift onChange={this.onChange}>
         {({
           getToggleButtonProps,
           getInputProps,
@@ -69,7 +68,7 @@ export default class App extends React.Component<Props, State> {
             ) : null}
           </div>
         )}
-      </TypedDownShift>
+      </Downshift>
     )
   }
 }

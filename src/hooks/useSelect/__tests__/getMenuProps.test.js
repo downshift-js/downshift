@@ -110,6 +110,44 @@ describe('getMenuProps', () => {
       expect(focus).toHaveBeenCalledTimes(1)
     })
 
+    test('event handler onMouseLeave is called along with downshift handler', () => {
+      const userOnMouseLeave = jest.fn()
+      const {result} = setupHook({initialHighlightedIndex: 2})
+
+      rtlAct(() => {
+        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+          onMouseLeave: userOnMouseLeave,
+        })
+
+        menuRef({focus: noop})
+        result.current.toggleMenu()
+        onMouseLeave({preventDefault: noop})
+      })
+
+      expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
+      expect(result.current.highlightedIndex).toBe(-1)
+    })
+
+    test("event handler onMouseLeave is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+      const userOnMouseLeave = jest.fn(event => {
+        event.preventDownshiftDefault = true
+      })
+      const {result} = setupHook({initialHighlightedIndex: 2})
+
+      rtlAct(() => {
+        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+          onMouseLeave: userOnMouseLeave,
+        })
+
+        menuRef({focus: noop})
+        result.current.toggleMenu()
+        onMouseLeave({preventDefault: noop})
+      })
+
+      expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
+      expect(result.current.highlightedIndex).toBe(2)
+    })
+
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
@@ -125,24 +163,6 @@ describe('getMenuProps', () => {
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
-      expect(result.current.isOpen).toBe(false)
-    })
-
-    test('event handler onBlur is called along with downshift handler', () => {
-      const userOnBlur = jest.fn()
-      const {result} = setupHook()
-
-      rtlAct(() => {
-        const {ref: menuRef, onBlur} = result.current.getMenuProps({
-          onBlur: userOnBlur,
-        })
-
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onBlur({})
-      })
-
-      expect(userOnBlur).toHaveBeenCalledTimes(1)
       expect(result.current.isOpen).toBe(false)
     })
 
@@ -164,6 +184,24 @@ describe('getMenuProps', () => {
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
       expect(result.current.isOpen).toBe(true)
+    })
+
+    test('event handler onBlur is called along with downshift handler', () => {
+      const userOnBlur = jest.fn()
+      const {result} = setupHook()
+
+      rtlAct(() => {
+        const {ref: menuRef, onBlur} = result.current.getMenuProps({
+          onBlur: userOnBlur,
+        })
+
+        menuRef({focus: noop})
+        result.current.toggleMenu()
+        onBlur({})
+      })
+
+      expect(userOnBlur).toHaveBeenCalledTimes(1)
+      expect(result.current.isOpen).toBe(false)
     })
 
     test("event handler onBlur is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
@@ -630,7 +668,7 @@ describe('getMenuProps', () => {
         expect(document.activeElement).toBe(toggleButton)
       })
 
-      test("other than te ones supported don't affect anything", () => {
+      test("other than the ones supported don't affect anything", () => {
         const wrapper = setup({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
@@ -697,7 +735,7 @@ describe('getMenuProps', () => {
         expect(toggleButton.textContent).toEqual('Elements')
       })
 
-      test.skip('by clicking outside it should behave normnally but the toggleButton should not be focused', () => {
+      test.skip('by clicking outside it should behave normally but the toggleButton should not be focused', () => {
         const initialHighlightedIndex = 2
         const wrapper = setup({
           initialIsOpen: true,

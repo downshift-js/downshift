@@ -1,24 +1,25 @@
-# useSelect
+# useCombobox
 
 ## The problem
 
-You have a custom select dropdown in your application and you want it to perform
-exactly the same as the native HTML `<select>` in terms of accessibility and
-functionality. For consistency reasons you want it to follow the [ARIA design
-pattern][select-aria] for a dropdown select. You also want this solution to be
-simple to use and flexible so you can tailor it further to your specific needs.
+You have a combobox/autocomplete dropdown in your application and you want it to
+be accessible and functional. For consistency reasons you want it to follow the
+[ARIA design pattern][combobox-aria] for a combobox. You also want this solution
+to be simple to use and flexible so you can tailor it further to your specific
+needs.
 
 ## This solution
 
-`useSelect` is a React hook that manages all the stateful logic needed to make
-the dropdown functional and accessible. It returns a set of props that are meant
-to be called and their results destructured on the dropdown's elements: its
-label, toggle button, list and list items. These are similar to the ones
-provided by vanilla `<Downshift>` to the children render prop.
+`useCombobox` is a React hook that manages all the stateful logic needed to make
+the combobox functional and accessible. It returns a set of props that are meant
+to be called and their results destructured on the combobox's elements: its
+label, toggle button, input, combobox container, list and list items. These are
+similar to the ones provided by vanilla `<Downshift>` to the children render
+prop.
 
 These props are called getter props and their return values are destructured as
 a set of ARIA attributes and event listeners. Together with the action props and
-state props, they create all the stateful logic needed for the dropdown to
+state props, they create all the stateful logic needed for the combobox to
 implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
 between them, screen reader support, highlight by character keys etc.
@@ -27,6 +28,7 @@ between them, screen reader support, highlight by character keys etc.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Usage](#usage)
 - [Basic Props](#basic-props)
@@ -38,21 +40,26 @@ between them, screen reader support, highlight by character keys etc.
   - [initialSelectedItem](#initialselecteditem)
   - [initialIsOpen](#initialisopen)
   - [initialHighlightedIndex](#initialhighlightedindex)
+  - [initialInputValue](#initialinputvalue)
   - [defaultSelectedItem](#defaultselecteditem)
   - [defaultIsOpen](#defaultisopen)
   - [defaultHighlightedIndex](#defaulthighlightedindex)
+  - [defaultInputValue](#defaultinputvalue)
   - [getA11yStatusMessage](#geta11ystatusmessage)
   - [getA11ySelectionMessage](#geta11yselectionmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
   - [onIsOpenChange](#onisopenchange)
+  - [onInputValueChange](#oninputvaluechange)
   - [onStateChange](#onstatechange)
   - [highlightedIndex](#highlightedindex)
   - [isOpen](#isopen)
   - [selectedItem](#selecteditem)
+  - [inputValue](#inputvalue)
   - [id](#id)
   - [labelId](#labelid)
   - [menuId](#menuid)
   - [toggleButtonId](#togglebuttonid)
+  - [inputId](#inputid)
   - [getItemId](#getitemid)
   - [environment](#environment)
   - [circularNavigation](#circularnavigation)
@@ -75,27 +82,45 @@ between them, screen reader support, highlight by character keys etc.
 ```jsx
 import React from 'react'
 import {render} from 'react-dom'
-import {useSelect} from 'downshift'
+import {useCombobox} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]
-import {items, menuStyles} from './utils'
+import {items, menuStyles, comboboxStyles} from './utils'
 
-function DropdownSelect() {
+function DropdownCombobox() {
+  const [inputItems, setInputItems] = useState(items)
   const {
     isOpen,
     selectedItem,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
+    getInputProps,
+    getComboboxProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({items})
+  } = useCombobox({
+    items: inputItems,
+    onInputValueChange: ({inputValue}) => {
+      setInputItems(
+        items.filter(item =>
+          item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        ),
+      )
+    },
+  })
+
   return (
-    <div>
+    <>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button {...getToggleButtonProps()}>{selectedItem || 'Elements'}</button>
+      <div style={comboboxStyles} {...getComboboxProps()}>
+        <input {...getInputProps()} />
+        <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+          &#8595;
+        </button>
+      </div>
       <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
-          items.map((item, index) => (
+          inputItems.map((item, index) => (
             <li
               style={
                 highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
@@ -107,11 +132,11 @@ function DropdownSelect() {
             </li>
           ))}
       </ul>
-    </div>
+    </>
   )
 }
 
-render(<DropdownSelect />, document.getElementById('root'))
+render(<DropdownCombobox />, document.getElementById('root'))
 ```
 
 ## Basic Props
@@ -152,7 +177,7 @@ item is highlighted (Tab, Shift-Tab or clicking away).
   with the newly selected value. This also has a `type` property which you can
   learn more about in the [`stateChangeTypes`](#statechangetypes) section. This
   property will be part of the actions that can trigger a `selectedItem` change,
-  for example `useSelect.stateChangeTypes.ItemClick`.
+  for example `useCombobox.stateChangeTypes.ItemClick`.
 
 ### stateReducer
 
@@ -160,7 +185,7 @@ item is highlighted (Tab, Shift-Tab or clicking away).
 
 **🚨 This is a really handy power feature 🚨**
 
-This function will be called each time `useSelect` sets its internal state (or
+This function will be called each time `useCombobox` sets its internal state (or
 calls your `onStateChange` handler for control props). It allows you to modify
 the state change that will take place which can give you fine grain control over
 how the component interacts with user updates. It gives you the current state
@@ -173,10 +198,10 @@ and the state that will be set, and you return the state that you want to set.
   in the [`stateChangeTypes`](#statechangetypes) section.
 
 ```javascript
-import {useSelect} from 'downshift'
+import {useCombobox} from 'downshift'
 import {items} from './utils'
 
-const {getMenuProps, getItemProps, ...rest} = useSelect({
+const {getMenuProps, getItemProps, ...rest} = useCombobox({
   items,
   stateReducer,
 })
@@ -184,8 +209,8 @@ const {getMenuProps, getItemProps, ...rest} = useSelect({
 function stateReducer(state, actionAndChanges) {
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
   switch (actionAndChanges.type) {
-    case useSelect.stateChangeTypes.MenuKeyDownEnter:
-    case useSelect.stateChangeTypes.ItemClick:
+    case useCombobox.stateChangeTypes.MenuKeyDownEnter:
+    case useCombobox.stateChangeTypes.ItemClick:
       return {
         ...actionAndChanges.changes, // default Downshift new state changes on item selection.
         isOpen: state.isOpen, // but keep menu open.
@@ -227,6 +252,12 @@ initialized.
 Pass a number that sets the index of the highlighted item when downshift is
 initialized.
 
+### initialInputValue
+
+> `string` | defaults to `''`
+
+Pass a string that sets the content of the input when downshift is initialized.
+
 ### defaultSelectedItem
 
 > `any` | defaults to `null`
@@ -247,6 +278,13 @@ when an item is selected.
 Pass a number that sets the index of the highlighted item when downshift is
 reset or when an item is selected.
 
+### defaultInputValue
+
+> `string` | defaults to `''`
+
+Pass a string that sets the content of the input when downshift is is reset or
+when an item is selected.
+
 ### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
@@ -255,11 +293,11 @@ This function is passed as props to a `Status` component nested within and
 allows you to create your own assertive ARIA statuses.
 
 A default `getA11yStatusMessage` function is provided. It is called with the
-parameters `items`, `isOpen`, `selectedItem` and `itemToString` when either
-`isOpen` changes. When menu is opened, the announcement message is "No results"
-if there aren't any items or "`resultCount` results are available, use up and
-down arrow keys to navigate. Press Enter key to select." depending on the number
-of items in the menu.
+parameters `items`, `isOpen`, `selectedItem`, `inputValue` and `itemToString`
+when either `isOpen` changes. When menu is opened, the announcement message is
+"No results" if there aren't any items or "`resultCount` results are available,
+use up and down arrow keys to navigate. Press Enter key to select." depending on
+the number of items in the menu.
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -271,9 +309,10 @@ This function is similar to the `getA11yStatusMessage` but it is generating a
 message when an item is selected.
 
 A default `getA11ySelectionMessage` function is provided. It is called with the
-parameters `items`, `isOpen`, `selectedItem` and `itemToString` when
-`selectedItem` changes. When an item is selected, the message is a selection
-related one, narrating "`itemToString(selectedItem)` has been selected".
+parameters `items`, `isOpen`, `selectedItem`, `inputValue` and `itemToString`
+when `selectedItem` changes. When an item is selected, the message is a
+selection related one, narrating "`itemToString(selectedItem)` has been
+selected".
 
 The object you are passed to generate your status message, for both
 `getA11yStatusMessage` and `getA11ySelectionMessage` has the following
@@ -284,7 +323,8 @@ properties:
 | property       | type            | description                                                                                  |
 | -------------- | --------------- | -------------------------------------------------------------------------------------------- |
 | `items`        | `any[]`         | The items in the list.                                                                       |
-| `isOpen`       | `boolean`       | The `isOpen` state                                                                           |
+| `isOpen`       | `boolean`       | The `isOpen` state.                                                                          |
+| `inputValue`   | `string`        | The value in the text input.                                                                 |
 | `itemToString` | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
 | `selectedItem` | `any`           | The value of the currently selected item                                                     |
 
@@ -303,7 +343,7 @@ keys that are part of their starting string equivalent.
   property with the new value. This also has a `type` property which you can
   learn more about in the [`stateChangeTypes`](#statechangetypes) section. This
   property will be part of the actions that can trigger a `highlightedIndex`
-  change, for example `useSelect.stateChangeTypes.MenuKeyDownArrowUp`.
+  change, for example `useCombobox.stateChangeTypes.MenuKeyDownArrowUp`.
 
 ### onIsOpenChange
 
@@ -319,7 +359,22 @@ again or hitting Escape key.
   the new value. This also has a `type` property which you can learn more about
   in the [`stateChangeTypes`](#statechangetypes) section. This property will be
   part of the actions that can trigger a `isOpen` change, for example
-  `useSelect.stateChangeTypes.ToggleButtonClick`.
+  `useCombobox.stateChangeTypes.ToggleButtonClick`.
+
+### onInputValueChange
+
+> `function(changes: object)` | optional, no useful default
+
+Called each time the value in the input text changes. The input value should
+change like any input of type test, at any character key press, `Space`,
+`Backspace`, `Escape` etc.
+
+- `changes`: These are the properties that actually have changed since the last
+  state change. This object is guaranteed to contain the `inputValue` property
+  with the new value. This also has a `type` property which you can learn more
+  about in the [`stateChangeTypes`](#statechangetypes) section. This property
+  will be part of the actions that can trigger a `inputValue` change, for
+  example `useCombobox.stateChangeTypes.InputChange`.
 
 ### onStateChange
 
@@ -366,6 +421,13 @@ The open state of the menu.
 
 The item that should be selected.
 
+### inputValue
+
+> `string` | **control prop** (read more about this in
+> [the Control Props section](#control-props))
+
+The value to be displayed in the text input.
+
 ### id
 
 > `string` | defaults to a generated ID
@@ -395,6 +457,13 @@ Used for `aria` attributes and the `id` prop of the element (`ul`) you use
 
 Used for `aria` attributes and the `id` prop of the element (`button`) you use
 [`getToggleButtonProps`](#gettogglebuttonprops) with.
+
+### inputId
+
+> `string` | defaults to a generated ID
+
+Used for `aria` attributes and the `id` prop of the element (`input`) you use
+[`getInputProps`](#getmenuprops) with.
 
 ### getItemId
 
@@ -435,28 +504,25 @@ object you get. This `type` corresponds to a `stateChangeTypes` property.
 The list of all possible values this `type` property can take is defined in
 [this file][state-change-file] and is as follows:
 
-- `useSelect.stateChangeTypes.MenuKeyDownArrowDown`
-- `useSelect.stateChangeTypes.MenuKeyDownArrowUp`
-- `useSelect.stateChangeTypes.MenuKeyDownEscape`
-- `useSelect.stateChangeTypes.MenuKeyDownHome`
-- `useSelect.stateChangeTypes.MenuKeyDownEnd`
-- `useSelect.stateChangeTypes.MenuKeyDownEnter`
-- `useSelect.stateChangeTypes.MenuKeyDownCharacter`
-- `useSelect.stateChangeTypes.MenuBlur`
-- `useSelect.stateChangeTypes.MenuMouseLeave`
-- `useSelect.stateChangeTypes.ItemMouseMove`
-- `useSelect.stateChangeTypes.ItemClick`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownCharacter`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`
-- `useSelect.stateChangeTypes.ToggleButtonClick`
-- `useSelect.stateChangeTypes.FunctionToggleMenu`
-- `useSelect.stateChangeTypes.FunctionOpenMenu`
-- `useSelect.stateChangeTypes.FunctionCloseMenu`
-- `useSelect.stateChangeTypes.FunctionSetHighlightedIndex`
-- `useSelect.stateChangeTypes.FunctionSelectItem`
-- `useSelect.stateChangeTypes.FunctionClearKeysSoFar`
-- `useSelect.stateChangeTypes.FunctionReset`
+- `useCombobox.stateChangeTypes.InputKeyDownArrowDown`
+- `useCombobox.stateChangeTypes.InputKeyDownArrowUp`
+- `useCombobox.stateChangeTypes.InputKeyDownEscape`
+- `useCombobox.stateChangeTypes.InputKeyDownHome`
+- `useCombobox.stateChangeTypes.InputKeyDownEnd`
+- `useCombobox.stateChangeTypes.InputKeyDownEnter`
+- `useCombobox.stateChangeTypes.InputChange`
+- `useCombobox.stateChangeTypes.InputBlur`
+- `useCombobox.stateChangeTypes.MenuMouseLeave`
+- `useCombobox.stateChangeTypes.ItemMouseMove`
+- `useCombobox.stateChangeTypes.ItemClick`
+- `useCombobox.stateChangeTypes.ToggleButtonClick`
+- `useCombobox.stateChangeTypes.FunctionToggleMenu`
+- `useCombobox.stateChangeTypes.FunctionOpenMenu`
+- `useCombobox.stateChangeTypes.FunctionCloseMenu`
+- `useCombobox.stateChangeTypes.FunctionSetHighlightedIndex`
+- `useCombobox.stateChangeTypes.FunctionSelectItem`
+- `useCombobox.stateChangeTypes.FunctionSetInputValue`
+- `useCombobox.stateChangeTypes.FunctionReset`
 
 See [`stateReducer`](#statereducer) for a concrete example on how to use the
 `type` property.
@@ -465,11 +531,9 @@ See [`stateReducer`](#statereducer) for a concrete example on how to use the
 
 Downshift manages its own state internally and calls your `onChange` and
 `onStateChange` handlers with any relevant changes. The state that downshift
-manages includes: `isOpen`, `selectedItem` and `highlightedIndex`. Returned
-action function (read more below) can be used to manipulate this state and can
-likely support many of your use cases. `keysSoFar` is a special case that is
-used for keeping all the character keys typed at an interval smaller than 500ms.
-It's not something you need to bother with.
+manages includes: `isOpen`, `selectedItem`, `inputValue` and `highlightedIndex`.
+Returned action function (read more below) can be used to manipulate this state
+and can likely support many of your use cases.
 
 However, if more control is needed, you can pass any of these pieces of state as
 a prop (as indicated above) and that state becomes controlled. As soon as
@@ -489,17 +553,17 @@ that state from other components, `redux`, `react-router`, or anywhere else.
 You use the hook like so:
 
 ```javascript
-import {useSelect} from 'downshift'
+import {useCombobox} from 'downshift'
 import {items} from './utils'
 
-const {getToggleButtonProps, reset, ...rest} = useSelect({
+const {getInputProps, reset, ...rest} = useCombobox({
   items,
   ...otherProps,
 })
 
 return (
   <div>
-    <button {...getToggleButtonProps()}>Options</button>
+    <input {...getInputProps()} />
     {/* render the menu and items */}
     {/* render a button that resets the select to defaults */}
     <button
@@ -513,8 +577,8 @@ return (
 )
 ```
 
-> NOTE: In this example we used both a getter prop `getToggleButtonProps` and an
-> action prop `reset`. The properties of `useSelect` can be split into three
+> NOTE: In this example we used both a getter prop `getInputProps` and an action
+> prop `reset`. The properties of `useCombobox` can be split into three
 > categories as indicated below:
 
 ### prop getters
@@ -535,12 +599,14 @@ props being overridden (or overriding the props returned). For example:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property               | type           | description                                                                                    |
-| ---------------------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.               |
-| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                       |
-| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                     |
-| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
+| property               | type           | description                                                                                      |
+| ---------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.                 |
+| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                         |
+| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                       |
+| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render.   |
+| `getInputProps`        | `function({})` | returns the props you should apply to the `input` element that you render.                       |
+| `getComboboxProps`     | `function({})` | returns the props you should apply to an element that wraps the `input` element that you render. |
 
 #### `getLabelProps`
 
@@ -577,7 +643,7 @@ Optional properties:
   use your `aria-label` instead.
 
 ```jsx
-const {getMenuProps} = useSelect({items})
+const {getMenuProps} = useCombobox({items})
 const ui = (
   <ul {...getMenuProps()}>
     {!isOpen
@@ -642,10 +708,6 @@ required to pass either `item` or `index` to `getItemProps`.
 
 Optional properties:
 
-- `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be omitted. Items will not be highlighted when hovered, and
-  items will not be selected when clicked.
-
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getItemProps({refKey: 'innerRef'})` and
@@ -653,15 +715,16 @@ Optional properties:
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property. It defaults to `ref`.
 
+- `disabled`: If this is set to `true`, then all of the downshift item event
+  handlers will be omitted. Items will not be highlighted when hovered, and
+  items will not be selected when clicked.
+
 #### `getToggleButtonProps`
 
 Call this and apply the returned props to a `button`. It allows you to toggle
 the `Menu` component.
 
 Optional properties:
-
-- `disabled`: If this is set to `true`, then all of the downshift button event
-  handlers will be omitted (it won't toggle the menu when clicked).
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
@@ -671,18 +734,55 @@ Optional properties:
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
 
+- `disabled`: If this is set to `true`, then all of the downshift button event
+  handlers will be omitted (it won't toggle the menu when clicked).
+
 ```jsx
-const {getToggleButtonProps} = useSelect({items})
+const {getToggleButtonProps} = useCombobox({items})
 const myButton = (
   <button {...getToggleButtonProps()}>Click me</button>
   {/* menu and items */}
 )
 ```
 
+#### `getInputProps`
+
+This method should be applied to the `input` you render. It is recommended that
+you pass all props as an object to this method which will compose together any
+of the event handlers you need to apply to the `input` while preserving the ones
+that `downshift` needs to apply to make the `input` behave.
+
+There are no required properties for this method.
+
+Optional properties:
+
+- `disabled`: If this is set to true, then no event handlers will be returned
+  from `getInputProps` and a `disabled` prop will be returned (effectively
+  disabling the input).
+
+- `refKey`: if you're rendering a composite component, that component will need
+  to accept a prop which it forwards to the root DOM element. Commonly, folks
+  call this `innerRef`. So you'd call: `getInputProps({refKey: 'innerRef'})` and
+  your composite component would forward like: `<input ref={props.innerRef} />`.
+  However, if you are just rendering a primitive component like `<div>`, there
+  is no need to specify this property. It defaults to `ref`.
+
+#### `getComboboxProps`
+
+This method should be applied to the `input` wrapper element. It has similar
+return values to the `getRootProps` from vanilla `Downshift`, but renaming it as
+it's not a root element anymore. We are encouraging the correct `combobox` HTML
+structure as having the combobox wrapper as a root for the rest of the elements
+broke navigation and readings with assistive technologies. The wrapper should
+contain the `input` and the `toggleButton` and it should be on the same level
+with the `menu`.
+
+There are no required properties for this method.
+
 ### actions
 
 These are functions you can call to change the state of the downshift
-`useSelect` hook.
+`useCombobox` hook.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
@@ -692,6 +792,7 @@ These are functions you can call to change the state of the downshift
 | `openMenu`            | `function()`              | opens the menu                                        |
 | `selectItem`          | `function(item: any)`     | selects the given item                                |
 | `setHighlightedIndex` | `function(index: number)` | call to set a new highlighted index                   |
+| `setInputvalue`       | `function(value: string)` | call to set a new value in the input                  |
 | `toggleMenu`          | `function()`              | toggle the menu open state                            |
 | `reset`               | `function()`              | this resets downshift's state to a reasonable default |
 
@@ -706,7 +807,7 @@ These are values that represent the current state of the downshift component.
 | `highlightedIndex` | `number`  | the currently highlighted item    |
 | `isOpen`           | `boolean` | the menu open state               |
 | `selectedItem`     | `any`     | the currently selected item input |
-| `keysSoFar`        | `string`  | the character keys typed so far   |
+| `inputValue`       | `string`  | the value in the input            |
 
 ## Event Handlers
 
@@ -719,27 +820,16 @@ described below.
 #### Toggle Button
 
 - `Click`: If the menu is not displayed, it will open it. Otherwise it will
-  close it. It will additionally move focus on the menu in order for screen
+  close it. It will additionally move focus on the input in order for screen
   readers to correctly narrate which item is currently highlighted. If there is
   already an item selected, the menu will be opened with that item already
   highlighted.
-- `Enter`: Has the same effect as `Click`.
-- `Space`: Has the same effect as `Click`.
-- `CharacterKey`: Selects the option that starts with that key without opening
-  the dropdown list. For instance, typing `C` will select the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  select the option starting with that key combination, for instance typing
-  `CAL` will select `californium` if this option exists.
-- `ArrowDown`: If the menu is closed, it will open it. If there is already an
-  item selected, it will open the menu with the next item (index-wise)
-  highlighted. Otherwise, it will open the menu with the first option
-  highlighted.
-- `ArrowUp`: If the menu is closed, it will open it. If there is already an item
-  selected, it will open the menu with the previous item (index-wise)
-  highlighted. Otherwise, it will open the menu with the last option
-  highlighted.
+- `Enter`: Has the same effect as `Click`. Button not in the tab order by
+  default.
+- `Space`: Has the same effect as `Click`. Button not in the tab order by
+  default.
 
-#### Menu
+#### Input
 
 - `ArrowDown`: Moves `highlightedIndex` one position down. If
   `circularNavigation` is true, when reaching the last option, `ArrowDown` will
@@ -747,22 +837,20 @@ described below.
 - `ArrowUp`: Moves `highlightedIndex` one position up. If `circularNavigation`
   is true, when reaching the first option, `ArrowUp` will move
   `highlightedIndex` to last position. Otherwise it won't change anything.
-- `CharacterKey`: Moves `highlightedIndex` to the option that starts with that
-  key. For instance, typing `C` will move highlight to the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  move `highlightedIndex` to the option starting with that key combination, for
-  instance typing `CAL` will move the highlight to `californium` if this option
-  exists.
+- `CharacterKey`: Will change the `inputValue` according to the value visible in
+  the `<input>`. `Backspace` or `Space` triggere the same event.
 - `End`: Moves `highlightedIndex` to last position.
 - `Home`: Moves `highlightedIndex` to first position.
-- `Enter`: If there is a highlighted option, it will select it, close the menu
-  and move focus to the toggle button (unless `defaultIsOpen` is true).
-- `Escape`: It will close the menu without selecting anything and move focus to
-  the toggle button.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu and move
-  focus either to the toggle button (if `Shift+Tab`), next tabbable element (if
-  `Tab`) or whatever was clicked. It will not select the highlighted item
-  anymore, if any.
+- `Enter`: If there is a highlighted option, it will select it and close the
+  menu.
+- `Escape`: It will close the menu if open and will clear selection: the value
+  in the `input` and the item stored as `selectedItem`.
+- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu select the
+  highlighted item if any. In the case of `(Shift+)Tab` the focus will move
+  naturally.
+
+  #### Menu
+
 - `MouseLeave`: Will clear the value of the `highlightedIndex` if it was set.
 
 #### Item
@@ -773,12 +861,12 @@ described below.
 
 ### Customizing Handlers
 
-You can provide your own event handlers to `useSelect` which will be called
+You can provide your own event handlers to `useCombobox` which will be called
 before the default handlers:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getMenuProps} = useCombobox({items})
 const ui = (
   /* button, label, ... */
   <ul
@@ -795,7 +883,7 @@ If you would like to prevent the default handler behavior in some cases, you can
 set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
-const {getMenuProps} = useSelect({items})
+const {getMenuProps} = useCombobox({items})
 const ui = (
   /* button, label, ... */
   <ul
@@ -819,7 +907,7 @@ favor of your own, you can bypass prop getters:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getMenuProps} = useCombobox({items})
 const ui = (
   /* button, label, ... */
   <ul
@@ -831,12 +919,12 @@ const ui = (
 )
 ```
 
-[select-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
 [reach-auto-id]:
   https://github.com/reach/reach-ui/blob/master/packages/auto-id/src/index.js
-[sandbox-example]: https://codesandbox.io/s/53qfj
+[sandbox-example]: https://codesandbox.io/s/usecombobox-usage-evufg
 [state-change-file]:
-  https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
+  https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
