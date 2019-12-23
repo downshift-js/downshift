@@ -173,7 +173,11 @@ npm install --save downshift
 
 ## Usage
 
-> [Try it out in the browser](https://codesandbox.io/s/n9095)
+Usage examples are on the [docsite](https://downshift.netlify.com/) or in the
+[examples section](#examples). This example has been changed to encourage the
+use of a correct HTML structure for the autocomplete.
+
+> [Try it out in the browser](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
 
 ```jsx
 import React from 'react'
@@ -204,10 +208,16 @@ render(
       inputValue,
       highlightedIndex,
       selectedItem,
+      getRootProps,
     }) => (
       <div>
         <label {...getLabelProps()}>Enter a fruit</label>
-        <input {...getInputProps()} />
+        <div
+          style={{display: 'inline-block'}}
+          {...getRootProps({}, {suppressRefError: true})}
+        >
+          <input {...getInputProps()} />
+        </div>
         <ul {...getMenuProps()}>
           {isOpen
             ? items
@@ -236,6 +246,11 @@ render(
   document.getElementById('root'),
 )
 ```
+
+The old example without `getRootProps` is
+[here](https://codesandbox.io/s/n9095).
+
+> Warning: It is not fully accessible using screen readers.
 
 `<Downshift />` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
