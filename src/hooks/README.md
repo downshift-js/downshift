@@ -12,7 +12,7 @@ For a `<select>` custom dropdown [click here][select-readme].
 
 ### useCombobox
 
-For a `combobox autocomplete` dropdown [click here][select-readme].
+For a `combobox autocomplete` dropdown [click here][combobox-readme].
 
 ## Roadmap and contributions
 
