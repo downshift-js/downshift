@@ -173,12 +173,6 @@ npm install --save downshift
 
 ## Usage
 
-Usage examples are on the [docsite](https://downshift.netlify.com/) or in the
-[examples section](#examples). This example has been changed to encourage the
-use of a correct HTML structure for the autocomplete. It uses `getRootProps` on
-an element that wraps the `<input>` and optionally the `trigger button`. Check
-also the `getRootProps` in the getter props [section](#prop-getters).
-
 > [Try it out in the browser](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
 
 ```jsx
@@ -252,7 +246,10 @@ render(
 The previous example without `getRootProps` is
 [here](https://codesandbox.io/s/n9095).
 
-> Warning: The previous example is not fully accessible using screen readers.
+> Warning: The example without `getRootProps` is not fully accessible with
+> screen readers as it's not possible to achieve a correct HTML structure for
+> the combobox. Examples on how to use `Downshift` component with and without
+> `getRootProps` are on the [docsite](https://downshift.netlify.com/).
 
 `<Downshift />` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
