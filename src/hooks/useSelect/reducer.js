@@ -63,6 +63,7 @@ export default function downshiftSelectReducer(state, action) {
       }
       break
     case stateChangeTypes.MenuKeyDownEnter:
+    case stateChangeTypes.MenuKeyDownSpaceButton:
       changes = {
         isOpen: getDefaultValue(props, 'isOpen'),
         highlightedIndex: getDefaultValue(props, 'highlightedIndex'),

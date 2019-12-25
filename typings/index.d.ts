@@ -248,6 +248,7 @@ export enum UseSelectStateChangeTypes {
   MenuKeyDownHome = '__menu_keydown_home__',
   MenuKeyDownEnd = '__menu_keydown_end__',
   MenuKeyDownEnter = '__menu_keydown_enter__',
+  MenuKeyDownSpaceButton = '__menu_keydown_space_button__',
   MenuKeyDownCharacter = '__menu_keydown_character__',
   MenuBlur = '__menu_blur__',
   MenuMouseLeave = '__menu_mouse_leave__',
@@ -355,6 +356,7 @@ export interface UseSelectInterface {
     MenuKeyDownHome: UseSelectStateChangeTypes.MenuKeyDownHome
     MenuKeyDownEnd: UseSelectStateChangeTypes.MenuKeyDownEnd
     MenuKeyDownEnter: UseSelectStateChangeTypes.MenuKeyDownEnter
+    MenuKeyDownSpaceButton: UseSelectStateChangeTypes.MenuKeyDownSpaceButton
     MenuKeyDownCharacter: UseSelectStateChangeTypes.MenuKeyDownCharacter
     MenuBlur: UseSelectStateChangeTypes.MenuBlur
     MenuMouseLeave: UseSelectStateChangeTypes.MenuMouseLeave

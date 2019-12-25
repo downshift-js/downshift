@@ -8,6 +8,9 @@ export const MenuKeyDownEscape = productionEnum('__menu_keydown_escape__')
 export const MenuKeyDownHome = productionEnum('__menu_keydown_home__')
 export const MenuKeyDownEnd = productionEnum('__menu_keydown_end__')
 export const MenuKeyDownEnter = productionEnum('__menu_keydown_enter__')
+export const MenuKeyDownSpaceButton = productionEnum(
+  '__menu_keydown_space_button__',
+)
 export const MenuKeyDownCharacter = productionEnum('__menu_keydown_character__')
 export const MenuBlur = productionEnum('__menu_blur__')
 export const MenuMouseLeave = productionEnum('__menu_mouse_leave__')

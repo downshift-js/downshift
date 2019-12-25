@@ -198,6 +198,12 @@ function useSelect(userProps = {}) {
         type: stateChangeTypes.MenuKeyDownEnter,
       })
     },
+    ' '(event) {
+      event.preventDefault()
+      dispatch({
+        type: stateChangeTypes.MenuKeyDownSpaceButton,
+      })
+    },
     Tab(event) {
       // The exception that calls MenuBlur.
       // istanbul ignore next
