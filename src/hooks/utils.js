@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import {useState, useEffect, useCallback, useReducer} from 'react'
-import {scrollIntoView} from '../utils'
+import {scrollIntoView, getNextWrappingIndex} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
@@ -20,22 +20,6 @@ function getElementIds(
     getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
     toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
   }
-}
-
-function getNextWrappingIndex(moveAmount, baseIndex, itemsLength, circular) {
-  if (baseIndex === -1) {
-    return moveAmount > 0 ? 0 : itemsLength - 1
-  }
-  const nextIndex = baseIndex + moveAmount
-
-  if (nextIndex < 0) {
-    return circular ? itemsLength - 1 : 0
-  }
-  if (nextIndex >= itemsLength) {
-    return circular ? 0 : itemsLength - 1
-  }
-
-  return nextIndex
 }
 
 function getState(state, props) {
@@ -208,6 +192,7 @@ const defaultProps = {
   getA11yStatusMessage,
   getA11ySelectionMessage,
   scrollIntoView,
+  circularNavigation: false,
   environment:
     typeof window === 'undefined' /* istanbul ignore next (ssr) */
       ? {}
@@ -233,12 +218,15 @@ function getInitialValue(props, propKey, defaultStateValuesLocal) {
   return getDefaultValue(props, propKey, defaultStateValuesLocal)
 }
 
-function getHighlightedIndexOnOpen(props, state, offset) {
+function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
 
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
-  if (initialHighlightedIndex !== undefined && highlightedIndex > -1) {
+  if (
+    initialHighlightedIndex !== undefined &&
+    highlightedIndex === initialHighlightedIndex
+  ) {
     return initialHighlightedIndex
   }
   if (defaultHighlightedIndex !== undefined) {
@@ -252,6 +240,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
       offset,
       items.indexOf(selectedItem),
       items.length,
+      getItemNodeFromIndex,
       false,
     )
   }
@@ -263,7 +252,6 @@ function getHighlightedIndexOnOpen(props, state, offset) {
 
 export {
   getElementIds,
-  getNextWrappingIndex,
   getState,
   getItemIndex,
   getPropTypesValidator,

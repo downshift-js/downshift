@@ -331,13 +331,13 @@ function getNextNonDisabledIndex(
   }
 
   if (moveAmount > 0) {
-    for (let index = baseIndex; index < itemCount; index++) {
+    for (let index = baseIndex + 1; index < itemCount; index++) {
       if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
         return index
       }
     }
   } else {
-    for (let index = baseIndex; index >= 0; index--) {
+    for (let index = baseIndex - 1; index >= 0; index--) {
       if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
         return index
       }
@@ -345,7 +345,15 @@ function getNextNonDisabledIndex(
   }
 
   if (circular) {
-    return moveAmount > 0 ? 0 : itemCount - 1
+    return moveAmount > 0
+      ? getNextNonDisabledIndex(1, 0, itemCount, getItemNodeFromIndex, false)
+      : getNextNonDisabledIndex(
+          -1,
+          itemCount - 1,
+          itemCount,
+          getItemNodeFromIndex,
+          false,
+        )
   }
 
   return -1

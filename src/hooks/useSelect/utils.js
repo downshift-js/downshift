@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import {
-  getInitialValue as getInitialValueAbstract,
-  getDefaultValue as getDefaultValueAbstract,
+  getInitialValue as getInitialValueCommon,
+  getDefaultValue as getDefaultValueCommon,
+  defaultProps as defaultPropsCommon,
 } from '../utils'
 
 const defaultStateValues = {
@@ -9,11 +10,11 @@ const defaultStateValues = {
 }
 
 function getDefaultValue(props, propKey) {
-  return getDefaultValueAbstract(props, propKey, defaultStateValues)
+  return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialValue(props, propKey) {
-  return getInitialValueAbstract(props, propKey, defaultStateValues)
+  return getInitialValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
@@ -97,4 +98,5 @@ export {
   propTypes,
   getDefaultValue,
   getItemIndexByCharacterKey,
+  defaultPropsCommon as defaultProps,
 }

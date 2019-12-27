@@ -180,11 +180,12 @@ test(`disabled item can't be selected by pressing enter`, () => {
 
 test(`disabled item can't be highlighted when navigating via keyDown`, () => {
   const items = [
-    {item: 'Chess', disabled: true},
+    {item: 'Chess'},
     {item: 'Dominion', disabled: true},
     {item: 'Checkers'},
+    {item: 'Backgammon'},
   ]
-  const utils = renderDownshift({items})
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 0}})
   const {input, arrowDownInput, enterOnInput} = utils
 
   // ↓
@@ -192,31 +193,70 @@ test(`disabled item can't be highlighted when navigating via keyDown`, () => {
   // ↓ (should skip the first and second option)
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
+
   expect(input.value).toBe('Checkers')
+})
+
+test(`disabled item can't be highlighted and may wrap when navigating via keyDown`, () => {
+  const items = [
+    {item: 'Chess'},
+    {item: 'Dominion'},
+    {item: 'Checkers', disabled: true},
+    {item: 'Backgammon', disabled: true},
+  ]
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 1}})
+  const {input, arrowDownInput, enterOnInput} = utils
+
+  // ↓
+  arrowDownInput()
+  // ↓ (should skip the first and second option)
+  // ENTER to select
+  enterOnInput()
+
+  expect(input.value).toBe('Chess')
 })
 
 test(`disabled item can't be highlighted when navigating via keyUp`, () => {
   const items = [
-    {item: 'Chess', disabled: true},
-    {item: 'Dominion'},
-    {item: 'Checkers', disabled: true},
+    {item: 'Chess'},
+    {item: 'Dominion', disabled: true},
+    {item: 'Checkers'},
+    {item: 'Backgammon'},
   ]
-  const utils = renderDownshift({items})
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 2}})
   const {input, arrowUpInput, enterOnInput} = utils
 
   // ↑
   arrowUpInput()
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
-  expect(input.value).toBe('Dominion')
+
+  expect(input.value).toBe('Chess')
+})
+
+test(`disabled item can't be highlighted and it may wrap when navigating via keyUp`, () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+    {item: 'Dominion', disabled: true},
+    {item: 'Checkers'},
+    {item: 'Backgammon'},
+  ]
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 2}})
+  const {input, arrowUpInput, enterOnInput} = utils
+
+  // ↑
+  arrowUpInput()
+  // ENTER to select
+  enterOnInput()
+
+  expect(input.value).toBe('Backgammon')
 })
 
 test(`disabled item can't be highlighted when navigating via end`, () => {
   const items = [
+    {item: 'Backgammon'},
     {item: 'Chess'},
-    {item: 'Dominion'},
+    {item: 'Dominion', disabled: true},
     {item: 'Checkers', disabled: true},
   ]
   const utils = renderDownshift({items})
@@ -226,15 +266,16 @@ test(`disabled item can't be highlighted when navigating via end`, () => {
   endOnInput()
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
-  expect(input.value).toBe('Dominion')
+
+  expect(input.value).toBe('Chess')
 })
 
 test(`disabled item can't be highlighted when navigating via home`, () => {
   const items = [
     {item: 'Chess', disabled: true},
-    {item: 'Dominion'},
+    {item: 'Dominion', disabled: true},
     {item: 'Checkers'},
+    {item: 'Backgammon'},
   ]
   const utils = renderDownshift({items})
   const {input, homeOnInput, enterOnInput} = utils
@@ -243,8 +284,8 @@ test(`disabled item can't be highlighted when navigating via home`, () => {
   homeOnInput()
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
-  expect(input.value).toBe('Dominion')
+
+  expect(input.value).toBe('Checkers')
 })
 
 test(`highlight wrapping works with disabled items upwards`, () => {
@@ -253,14 +294,14 @@ test(`highlight wrapping works with disabled items upwards`, () => {
     {item: 'Dominion'},
     {item: 'Checkers'},
   ]
-  const utils = renderDownshift({items, initialHighlightedIndex: 1})
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 1}})
   const {input, arrowUpInput, enterOnInput} = utils
 
   // ↑
   arrowUpInput()
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
+
   expect(input.value).toBe('Checkers')
 })
 
@@ -270,14 +311,14 @@ test(`highlight wrapping works with disabled items downwards`, () => {
     {item: 'Dominion'},
     {item: 'Checkers', disabled: true},
   ]
-  const utils = renderDownshift({items, initialHighlightedIndex: 1})
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 1}})
   const {input, arrowDownInput, enterOnInput} = utils
 
   // ↓
   arrowDownInput()
   // ENTER to select
   enterOnInput()
-  // item was not selected -> input value should still be 'c'
+
   expect(input.value).toBe('Chess')
 })
 

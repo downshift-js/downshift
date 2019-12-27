@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import {
-  getElementIds as getElementIdsAbstract,
-  getInitialValue as getInitialValueAbstract,
-  getDefaultValue as getDefaultValueAbstract,
+  getElementIds as getElementIdsCommon,
+  getInitialValue as getInitialValueCommon,
+  getDefaultValue as getDefaultValueCommon,
+  defaultProps as defaultPropsCommon,
 } from '../utils'
 
 const defaultStateValues = {
@@ -14,16 +15,16 @@ function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
 
   return {
     inputId: inputId || `${uniqueId}-input`,
-    ...getElementIdsAbstract(generateDefaultId, {id, ...rest}),
+    ...getElementIdsCommon(generateDefaultId, {id, ...rest}),
   }
 }
 
 function getDefaultValue(props, propKey) {
-  return getDefaultValueAbstract(props, propKey, defaultStateValues)
+  return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialValue(props, propKey) {
-  return getInitialValueAbstract(props, propKey, defaultStateValues)
+  return getInitialValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
@@ -94,10 +95,16 @@ const propTypes = {
   }),
 }
 
+const defaultProps = {
+  ...defaultPropsCommon,
+  circularNavigation: true,
+}
+
 export {
   getElementIds,
   getInitialState,
   defaultStateValues,
   propTypes,
   getDefaultValue,
+  defaultProps,
 }

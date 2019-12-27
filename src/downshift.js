@@ -651,6 +651,7 @@ class Downshift extends Component {
           newHighlightedIndex,
           itemCount,
           index => this.getItemNodeFromIndex(index),
+          false,
         )
       }
 
@@ -679,6 +680,7 @@ class Downshift extends Component {
           newHighlightedIndex,
           itemCount,
           index => this.getItemNodeFromIndex(index),
+          false,
         )
       }
 

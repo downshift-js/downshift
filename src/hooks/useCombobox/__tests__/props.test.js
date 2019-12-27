@@ -575,6 +575,7 @@ describe('props', () => {
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
+        circularNavigation: false,
       })
       const input = wrapper.getByTestId(dataTestIds.input)
 

@@ -1,4 +1,5 @@
-import {getNextWrappingIndex, getHighlightedIndexOnOpen} from '../utils'
+import {getHighlightedIndexOnOpen} from '../utils'
+import {getNextWrappingIndex, getNextNonDisabledIndex} from '../../utils'
 import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -22,25 +23,49 @@ export default function downshiftUseComboboxReducer(state, action) {
       }
       break
     case stateChangeTypes.InputKeyDownArrowDown:
-      changes = {
-        highlightedIndex: getNextWrappingIndex(
-          shiftKey ? 5 : 1,
-          state.highlightedIndex,
-          props.items.length,
-          props.circularNavigation,
-        ),
-        ...(!state.isOpen && {isOpen: true}),
+      if (state.isOpen) {
+        changes = {
+          highlightedIndex: getNextWrappingIndex(
+            shiftKey ? 5 : 1,
+            state.highlightedIndex,
+            props.items.length,
+            action.getItemNodeFromIndex,
+            props.circularNavigation,
+          ),
+        }
+      } else {
+        changes = {
+          highlightedIndex: getHighlightedIndexOnOpen(
+            props,
+            state,
+            1,
+            action.getItemNodeFromIndex,
+          ),
+          isOpen: true,
+        }
       }
       break
     case stateChangeTypes.InputKeyDownArrowUp:
-      changes = {
-        highlightedIndex: getNextWrappingIndex(
-          shiftKey ? -5 : -1,
-          state.highlightedIndex,
-          props.items.length,
-          props.circularNavigation,
-        ),
-        ...(!state.isOpen && {isOpen: true}),
+      if (state.isOpen) {
+        changes = {
+          highlightedIndex: getNextWrappingIndex(
+            shiftKey ? -5 : -1,
+            state.highlightedIndex,
+            props.items.length,
+            action.getItemNodeFromIndex,
+            props.circularNavigation,
+          ),
+        }
+      } else {
+        changes = {
+          highlightedIndex: getHighlightedIndexOnOpen(
+            props,
+            state,
+            -1,
+            action.getItemNodeFromIndex,
+          ),
+          isOpen: true,
+        }
       }
       break
     case stateChangeTypes.InputKeyDownEnter:
@@ -63,12 +88,24 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownHome:
       changes = {
-        highlightedIndex: 0,
+        highlightedIndex: getNextNonDisabledIndex(
+          1,
+          0,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.InputKeyDownEnd:
       changes = {
-        highlightedIndex: props.items.length - 1,
+        highlightedIndex: getNextNonDisabledIndex(
+          -1,
+          props.items.length - 1,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.InputBlur:
