@@ -95,6 +95,7 @@ export default function downshiftSelectReducer(state, action) {
           state.highlightedIndex,
           props.items,
           props.itemToString,
+          action.getItemNodeFromIndex,
         )
         changes = {
           keysSoFar,
@@ -118,6 +119,7 @@ export default function downshiftSelectReducer(state, action) {
           state.selectedItem ? props.items.indexOf(state.selectedItem) : -1,
           props.items,
           props.itemToString,
+          action.getItemNodeFromIndex,
         )
         changes = {
           keysSoFar,

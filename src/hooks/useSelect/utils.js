@@ -38,21 +38,29 @@ function getItemIndexByCharacterKey(
   highlightedIndex,
   items,
   itemToStringParam,
+  getItemNodeFromIndex,
 ) {
   let newHighlightedIndex = -1
   const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
   const startPosition = highlightedIndex + 1
+  const isValid = (itemString, index) => {
+    const element = getItemNodeFromIndex(index)
+    return (
+      itemString.startsWith(keysSoFar) &&
+      !(element && element.hasAttribute('disabled'))
+    )
+  }
 
   newHighlightedIndex = itemStrings
     .slice(startPosition)
-    .findIndex(itemString => itemString.startsWith(keysSoFar))
+    .findIndex((itemString, index) => isValid(itemString, index))
 
   if (newHighlightedIndex > -1) {
     return newHighlightedIndex + startPosition
   } else {
     return itemStrings
       .slice(0, startPosition)
-      .findIndex(itemString => itemString.startsWith(keysSoFar))
+      .findIndex((itemString, index) => isValid(itemString, index))
   }
 }
 

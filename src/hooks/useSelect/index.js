@@ -239,6 +239,7 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownCharacter,
         key,
+        getItemNodeFromIndex,
       })
     }
   }
@@ -270,6 +271,7 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownCharacter,
         key,
+        getItemNodeFromIndex,
       })
     }
   }
