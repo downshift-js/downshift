@@ -40,28 +40,40 @@ function getItemIndexByCharacterKey(
   itemToStringParam,
   getItemNodeFromIndex,
 ) {
-  let newHighlightedIndex = -1
-  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
-  const startPosition = highlightedIndex + 1
+  const lowerCasedItemStrings = items.map(item =>
+    itemToStringParam(item).toLowerCase(),
+  )
+  const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
   const isValid = (itemString, index) => {
     const element = getItemNodeFromIndex(index)
+
     return (
-      itemString.startsWith(keysSoFar) &&
+      itemString.startsWith(lowerCasedKeysSoFar) &&
       !(element && element.hasAttribute('disabled'))
     )
   }
 
-  newHighlightedIndex = itemStrings
-    .slice(startPosition)
-    .findIndex((itemString, index) => isValid(itemString, index))
+  for (
+    let index = highlightedIndex + 1;
+    index < lowerCasedItemStrings.length;
+    index++
+  ) {
+    const itemString = lowerCasedItemStrings[index]
 
-  if (newHighlightedIndex > -1) {
-    return newHighlightedIndex + startPosition
-  } else {
-    return itemStrings
-      .slice(0, startPosition)
-      .findIndex((itemString, index) => isValid(itemString, index))
+    if (isValid(itemString, index)) {
+      return index
+    }
   }
+
+  for (let index = 0; index < highlightedIndex; index++) {
+    const itemString = lowerCasedItemStrings[index]
+
+    if (isValid(itemString, index)) {
+      return index
+    }
+  }
+
+  return highlightedIndex
 }
 
 const propTypes = {

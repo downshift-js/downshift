@@ -37,6 +37,23 @@ describe('utils', () => {
       )
       expect(index).toBe(3)
     })
+
+    test('skips disabled item and moves to next', () => {
+      const keysSoFar = 'b'
+      const highlightedIndex = 0
+      const itemToString = item => item
+      const getItemNodeFromIndex = index => ({hasAttribute: () => index === 1})
+
+      expect(
+        getItemIndexByCharacterKey(
+          keysSoFar,
+          highlightedIndex,
+          items,
+          itemToString,
+          getItemNodeFromIndex,
+        ),
+      ).toEqual(4)
+    })
   })
 
   test('reducer throws error if called without proper action type', () => {
