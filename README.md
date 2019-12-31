@@ -1381,12 +1381,12 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://epiqueras.github.io"><img src="https://avatars2.githubusercontent.com/u/19157096?v=4" width="100px;" alt=""/><br /><sub><b>Enrique Piqueras</b></sub></a><br /><a href="#ideas-epiqueras" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://twitter.com/layershifter"><img src="https://avatars0.githubusercontent.com/u/14183168?v=4" width="100px;" alt=""/><br /><sub><b>Oleksandr Fediashov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=layershifter" title="Code">💻</a> <a href="#infra-layershifter" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-layershifter" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/saitonakamura"><img src="https://avatars1.githubusercontent.com/u/1552189?v=4" width="100px;" alt=""/><br /><sub><b>Mikhail Bashurov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=saitonakamura" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Asaitonakamura" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="http://www.joshuagodi.com"><img src="https://avatars1.githubusercontent.com/u/870799?v=4" width="100px;" alt=""/><br /><sub><b>Joshua Godi</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jgodi" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
