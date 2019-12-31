@@ -636,24 +636,19 @@ class Downshift extends Component {
 
       const itemCount = this.getItemCount()
       const {isOpen} = this.getState()
-      let newHighlightedIndex = 0
 
       if (itemCount <= 0 || !isOpen) {
         return
       }
 
-      if (
-        this.getItemNodeFromIndex(newHighlightedIndex).hasAttribute('disabled')
-      ) {
-        // get next non-disabled starting downwards from 0.
-        newHighlightedIndex = getNextNonDisabledIndex(
-          1,
-          newHighlightedIndex,
-          itemCount,
-          index => this.getItemNodeFromIndex(index),
-          false,
-        )
-      }
+      // get next non-disabled starting downwards from 0 if that's disabled.
+      const newHighlightedIndex = getNextNonDisabledIndex(
+        1,
+        0,
+        itemCount,
+        index => this.getItemNodeFromIndex(index),
+        false,
+      )
 
       this.setHighlightedIndex(newHighlightedIndex, {
         type: stateChangeTypes.keyDownHome,
@@ -665,24 +660,19 @@ class Downshift extends Component {
 
       const itemCount = this.getItemCount()
       const {isOpen} = this.getState()
-      let newHighlightedIndex = itemCount - 1
 
       if (itemCount <= 0 || !isOpen) {
         return
       }
 
-      if (
-        this.getItemNodeFromIndex(newHighlightedIndex).hasAttribute('disabled')
-      ) {
-        // get next non-disabled starting upwards from last index.
-        newHighlightedIndex = getNextNonDisabledIndex(
-          -1,
-          newHighlightedIndex,
-          itemCount,
-          index => this.getItemNodeFromIndex(index),
-          false,
-        )
-      }
+      // get next non-disabled starting upwards from last index if that's disabled.
+      const newHighlightedIndex = getNextNonDisabledIndex(
+        -1,
+        itemCount - 1,
+        itemCount,
+        index => this.getItemNodeFromIndex(index),
+        false,
+      )
 
       this.setHighlightedIndex(newHighlightedIndex, {
         type: stateChangeTypes.keyDownEnd,
@@ -876,10 +866,8 @@ class Downshift extends Component {
         !!this.props.environment.document.activeElement &&
         !!this.props.environment.document.activeElement.dataset &&
         this.props.environment.document.activeElement.dataset.toggle &&
-        (this._rootNode &&
-          this._rootNode.contains(
-            this.props.environment.document.activeElement,
-          ))
+        this._rootNode &&
+        this._rootNode.contains(this.props.environment.document.activeElement)
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: stateChangeTypes.blurInput})
       }
