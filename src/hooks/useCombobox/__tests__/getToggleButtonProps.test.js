@@ -122,7 +122,7 @@ describe('getToggleButtonProps', () => {
         fireEvent.click(toggleButton)
         expect(menu.childNodes).toHaveLength(0)
         // fireEvent.blur(input)
-        input.blur() // the code above does not blur.
+        input.blur() // the code above does not blur. ToDo: figure out the blur/focus.
 
         fireEvent.click(toggleButton)
         expect(menu.childNodes).toHaveLength(items.length)

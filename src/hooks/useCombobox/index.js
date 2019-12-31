@@ -4,14 +4,13 @@ import {isPreact, isReactNative} from '../../is.macro'
 import setStatus from '../../set-a11y-status'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
-  defaultProps,
   getItemIndex,
   useId,
   getPropTypesValidator,
   useEnhancedReducer,
   focusLandsOnElement,
 } from '../utils'
-import {getElementIds, getInitialState, propTypes} from './utils'
+import {getElementIds, getInitialState, propTypes, defaultProps} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -136,6 +135,8 @@ function useCombobox(userProps = {}) {
     isInitialMount.current = false
   }, [])
 
+  const getItemNodeFromIndex = index => itemRefs.current[index]
+
   /* Event handler functions */
   const inputKeyDownHandlers = {
     ArrowDown(event) {
@@ -143,6 +144,7 @@ function useCombobox(userProps = {}) {
       dispatch({
         type: stateChangeTypes.InputKeyDownArrowDown,
         shiftKey: event.shiftKey,
+        getItemNodeFromIndex,
       })
     },
     ArrowUp(event) {
@@ -150,18 +152,21 @@ function useCombobox(userProps = {}) {
       dispatch({
         type: stateChangeTypes.InputKeyDownArrowUp,
         shiftKey: event.shiftKey,
+        getItemNodeFromIndex,
       })
     },
     Home(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.InputKeyDownHome,
+        getItemNodeFromIndex,
       })
     },
     End(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.InputKeyDownEnd,
+        getItemNodeFromIndex,
       })
     },
     Escape() {
@@ -173,6 +178,7 @@ function useCombobox(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.InputKeyDownEnter,
+        getItemNodeFromIndex,
       })
     },
   }

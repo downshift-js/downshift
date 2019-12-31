@@ -1,4 +1,5 @@
-import {getNextWrappingIndex, getHighlightedIndexOnOpen} from '../utils'
+import {getHighlightedIndexOnOpen} from '../utils'
+import {getNextWrappingIndex, getNextNonDisabledIndex} from '../../utils'
 import {getDefaultValue, getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -32,6 +33,7 @@ export default function downshiftSelectReducer(state, action) {
           shiftKey ? 5 : 1,
           state.highlightedIndex,
           props.items.length,
+          action.getItemNodeFromIndex,
           props.circularNavigation,
         ),
       }
@@ -42,18 +44,31 @@ export default function downshiftSelectReducer(state, action) {
           shiftKey ? -5 : -1,
           state.highlightedIndex,
           props.items.length,
+          action.getItemNodeFromIndex,
           props.circularNavigation,
         ),
       }
       break
     case stateChangeTypes.MenuKeyDownHome:
       changes = {
-        highlightedIndex: 0,
+        highlightedIndex: getNextNonDisabledIndex(
+          1,
+          0,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.MenuKeyDownEnd:
       changes = {
-        highlightedIndex: props.items.length - 1,
+        highlightedIndex: getNextNonDisabledIndex(
+          -1,
+          props.items.length - 1,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.MenuKeyDownEscape:
@@ -80,6 +95,7 @@ export default function downshiftSelectReducer(state, action) {
           state.highlightedIndex,
           props.items,
           props.itemToString,
+          action.getItemNodeFromIndex,
         )
         changes = {
           keysSoFar,
@@ -103,6 +119,7 @@ export default function downshiftSelectReducer(state, action) {
           state.selectedItem ? props.items.indexOf(state.selectedItem) : -1,
           props.items,
           props.itemToString,
+          action.getItemNodeFromIndex,
         )
         changes = {
           keysSoFar,
@@ -115,14 +132,24 @@ export default function downshiftSelectReducer(state, action) {
     case stateChangeTypes.ToggleButtonKeyDownArrowDown: {
       changes = {
         isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, 1),
+        highlightedIndex: getHighlightedIndexOnOpen(
+          props,
+          state,
+          1,
+          action.getItemNodeFromIndex,
+        ),
       }
       break
     }
     case stateChangeTypes.ToggleButtonKeyDownArrowUp:
       changes = {
         isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
+        highlightedIndex: getHighlightedIndexOnOpen(
+          props,
+          state,
+          -1,
+          action.getItemNodeFromIndex,
+        ),
       }
       break
     case stateChangeTypes.ToggleButtonClick:

@@ -8,7 +8,6 @@ import {
   useEnhancedReducer,
   useId,
   focusLandsOnElement,
-  defaultProps,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
@@ -18,7 +17,7 @@ import {
   normalizeArrowKey,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
-import {getInitialState, propTypes} from './utils'
+import {getInitialState, propTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes =
@@ -159,6 +158,8 @@ function useSelect(userProps = {}) {
     isInitialMount.current = false
   }, [])
 
+  const getItemNodeFromIndex = index => itemRefs.current[index]
+
   /* Event handler functions */
   const menuKeyDownHandlers = {
     ArrowDown(event) {
@@ -166,6 +167,7 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownArrowDown,
         shiftKey: event.shiftKey,
+        getItemNodeFromIndex,
       })
     },
     ArrowUp(event) {
@@ -173,18 +175,21 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownArrowUp,
         shiftKey: event.shiftKey,
+        getItemNodeFromIndex,
       })
     },
     Home(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownHome,
+        getItemNodeFromIndex,
       })
     },
     End(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.MenuKeyDownEnd,
+        getItemNodeFromIndex,
       })
     },
     Escape() {
@@ -213,12 +218,14 @@ function useSelect(userProps = {}) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+        getItemNodeFromIndex,
       })
     },
     ArrowUp(event) {
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+        getItemNodeFromIndex,
       })
     },
   }
@@ -232,6 +239,7 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.MenuKeyDownCharacter,
         key,
+        getItemNodeFromIndex,
       })
     }
   }
@@ -263,6 +271,7 @@ function useSelect(userProps = {}) {
       dispatch({
         type: stateChangeTypes.ToggleButtonKeyDownCharacter,
         key,
+        getItemNodeFromIndex,
       })
     }
   }

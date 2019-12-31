@@ -24,6 +24,7 @@ import {
   scrollIntoView,
   unwrapArray,
   getNextWrappingIndex,
+  getNextNonDisabledIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -261,23 +262,16 @@ class Downshift extends Component {
 
   moveHighlightedIndex(amount, otherStateToSet) {
     const itemCount = this.getItemCount()
+    const {highlightedIndex} = this.getState()
     if (itemCount > 0) {
       const nextHighlightedIndex = getNextWrappingIndex(
         amount,
-        this.getState().highlightedIndex,
+        highlightedIndex,
         itemCount,
+        index => this.getItemNodeFromIndex(index),
       )
       this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
     }
-  }
-
-  highlightFirstOrLastIndex(event, first, otherStateToSet) {
-    const itemsLastIndex = this.getItemCount() - 1
-    if (itemsLastIndex < 0 || !this.getState().isOpen) {
-      return
-    }
-    event.preventDefault()
-    this.setHighlightedIndex(first ? 0 : itemsLastIndex, otherStateToSet)
   }
 
   clearSelection = cb => {
@@ -548,14 +542,17 @@ class Downshift extends Component {
           () => {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
-              this.setHighlightedIndex(
-                getNextWrappingIndex(
-                  1,
-                  this.getState().highlightedIndex,
-                  itemCount,
-                ),
-                {type: stateChangeTypes.keyDownArrowDown},
+              const {highlightedIndex} = this.getState()
+              const nextHighlightedIndex = getNextWrappingIndex(
+                1,
+                highlightedIndex,
+                itemCount,
+                index => this.getItemNodeFromIndex(index),
               )
+
+              this.setHighlightedIndex(nextHighlightedIndex, {
+                type: stateChangeTypes.keyDownArrowDown,
+              })
             }
           },
         )
@@ -579,14 +576,17 @@ class Downshift extends Component {
           () => {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
-              this.setHighlightedIndex(
-                getNextWrappingIndex(
-                  -1,
-                  this.getState().highlightedIndex,
-                  itemCount,
-                ),
-                {type: stateChangeTypes.keyDownArrowDown},
+              const {highlightedIndex} = this.getState()
+              const nextHighlightedIndex = getNextWrappingIndex(
+                -1,
+                highlightedIndex,
+                itemCount,
+                index => this.getItemNodeFromIndex(index),
               )
+
+              this.setHighlightedIndex(nextHighlightedIndex, {
+                type: stateChangeTypes.keyDownArrowUp,
+              })
             }
           },
         )
@@ -632,13 +632,49 @@ class Downshift extends Component {
   inputKeyDownHandlers = {
     ...this.keyDownHandlers,
     Home(event) {
-      this.highlightFirstOrLastIndex(event, true, {
+      event.preventDefault()
+
+      const itemCount = this.getItemCount()
+      const {isOpen} = this.getState()
+
+      if (itemCount <= 0 || !isOpen) {
+        return
+      }
+
+      // get next non-disabled starting downwards from 0 if that's disabled.
+      const newHighlightedIndex = getNextNonDisabledIndex(
+        1,
+        0,
+        itemCount,
+        index => this.getItemNodeFromIndex(index),
+        false,
+      )
+
+      this.setHighlightedIndex(newHighlightedIndex, {
         type: stateChangeTypes.keyDownHome,
       })
     },
 
     End(event) {
-      this.highlightFirstOrLastIndex(event, false, {
+      event.preventDefault()
+
+      const itemCount = this.getItemCount()
+      const {isOpen} = this.getState()
+
+      if (itemCount <= 0 || !isOpen) {
+        return
+      }
+
+      // get next non-disabled starting upwards from last index if that's disabled.
+      const newHighlightedIndex = getNextNonDisabledIndex(
+        -1,
+        itemCount - 1,
+        itemCount,
+        index => this.getItemNodeFromIndex(index),
+        false,
+      )
+
+      this.setHighlightedIndex(newHighlightedIndex, {
         type: stateChangeTypes.keyDownEnd,
       })
     },
@@ -830,10 +866,8 @@ class Downshift extends Component {
         !!this.props.environment.document.activeElement &&
         !!this.props.environment.document.activeElement.dataset &&
         this.props.environment.document.activeElement.dataset.toggle &&
-        (this._rootNode &&
-          this._rootNode.contains(
-            this.props.environment.document.activeElement,
-          ))
+        this._rootNode &&
+        this._rootNode.contains(this.props.environment.document.activeElement)
       if (!this.isMouseDown && !downshiftButtonIsActive) {
         this.reset({type: stateChangeTypes.blurInput})
       }
