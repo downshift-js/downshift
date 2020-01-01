@@ -164,8 +164,8 @@ should be installed as one of your project's `dependencies`:
 npm install --save downshift
 ```
 
-> This package also depends on `react` and `prop-types`. Please make sure you
-> have those installed as well.
+> This package also depends on `react`. Please make sure you
+> have it installed as well.
 
 > Note also this library supports `preact` out of the box. If you are using
 > `preact` then use the corresponding module in the `preact/dist` folder. You
