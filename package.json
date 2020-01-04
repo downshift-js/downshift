@@ -93,6 +93,7 @@
     "docz-theme-default": "^1.2.0",
     "eslint-plugin-cypress": "^2.7.0",
     "eslint-plugin-react": "7.16.0",
+    "fast-memoize": "^2.5.1",
     "flow-bin": "^0.110.1",
     "flow-coverage-report": "^0.6.0",
     "kcd-scripts": "^1.9.0",

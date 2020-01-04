@@ -59,6 +59,7 @@ class Downshift extends Component {
     }),
     suppressRefError: PropTypes.bool,
     scrollIntoView: PropTypes.func,
+    getMemoizedItemHandlers: PropTypes.func,
     // things we keep in state for uncontrolled components
     // but can accept as props for controlled components
     /* eslint-disable react/no-unused-prop-types */
@@ -901,24 +902,13 @@ class Downshift extends Component {
   //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MENU
 
   /////////////////////////////// ITEM
-  getItemProps = ({
-    onMouseMove,
-    onMouseDown,
+  getItemPropsEventHandlers = (
+    index,
     onClick,
     onPress,
-    index,
-    item = process.env.NODE_ENV === 'production'
-      ? /* istanbul ignore next */ undefined
-      : requiredProp('getItemProps', 'item'),
-    ...rest
-  } = {}) => {
-    if (index === undefined) {
-      this.items.push(item)
-      index = this.items.indexOf(item)
-    } else {
-      this.items[index] = item
-    }
-
+    onMouseMove,
+    onMouseDown,
+  ) => {
     const onSelectKey = isReactNative
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
@@ -926,7 +916,7 @@ class Downshift extends Component {
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick
 
-    const enabledEventHandlers = {
+    return {
       // onMouseMove is used over onMouseEnter here. onMouseMove
       // is only triggered on actual mouse movement while onMouseEnter
       // can fire on DOM changes, interrupting keyboard navigation
@@ -957,6 +947,47 @@ class Downshift extends Component {
         })
       }),
     }
+  }
+
+  getItemProps = ({
+    onMouseMove,
+    onMouseDown,
+    onClick,
+    onPress,
+    index,
+    item = process.env.NODE_ENV === 'production'
+      ? /* istanbul ignore next */ undefined
+      : requiredProp('getItemProps', 'item'),
+    ...rest
+  } = {}) => {
+    if (index === undefined) {
+      this.items.push(item)
+      index = this.items.indexOf(item)
+    } else {
+      this.items[index] = item
+    }
+
+    const {getMemoizedItemHandlers} = this.props
+    const enabledEventHandlers = getMemoizedItemHandlers
+      ? getMemoizedItemHandlers(
+          () =>
+            this.getItemPropsEventHandlers(
+              index,
+              onClick,
+              onPress,
+              onMouseMove,
+              onMouseDown,
+            ),
+          item,
+          index,
+        )
+      : this.getItemPropsEventHandlers(
+          index,
+          onClick,
+          onPress,
+          onMouseMove,
+          onMouseDown,
+        )
 
     // Passing down the onMouseDown handler to prevent redirect
     // of the activeElement if clicking on disabled items

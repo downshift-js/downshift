@@ -58,7 +58,7 @@ test('onChange only called when the selection changes', () => {
   expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
-test('onSelect called whenever selection happens, even if the item is the same ', () => {
+test('onSelect called whenever selection happens, even if the item is the same', () => {
   const handleSelect = jest.fn()
   const {selectItem} = setup({
     onSelect: handleSelect,

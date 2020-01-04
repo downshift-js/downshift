@@ -322,6 +322,25 @@ test(`highlight wrapping works with disabled items downwards`, () => {
   expect(input.value).toBe('Chess')
 })
 
+test('getMemoizedItemHandlers used if provided', () => {
+  const getMemoizedItemHandlers = jest.fn().mockImplementation(getHandlers => {
+    return getHandlers()
+  })
+  const items = ['Chess', 'Dominion', 'Checkers']
+  const {arrowDownInput} = renderDownshift({
+    items,
+    props: {getMemoizedItemHandlers},
+  })
+
+  // rendered downshift is open, should be called.
+  expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length)
+
+  arrowDownInput()
+
+  // should be called each time it re-renders.
+  expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length * 2)
+})
+
 function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,
