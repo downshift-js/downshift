@@ -268,9 +268,17 @@ function isPlainObject(obj) {
  * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
  * @param {number} baseIndex The initial position to move from.
  * @param {number} itemCount The total number of items.
+ * @param {Function} getItemNodeFromIndex Used to check if item is disabled.
+ * @param {boolean} circular Specify if navigation is circular. Default is true.
  * @returns {number} The new index after the move.
  */
-function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
+function getNextWrappingIndex(
+  moveAmount,
+  baseIndex,
+  itemCount,
+  getItemNodeFromIndex,
+  circular = true,
+) {
   const itemsLastIndex = itemCount - 1
 
   if (
@@ -280,13 +288,75 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount) {
   ) {
     baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
   }
+
   let newIndex = baseIndex + moveAmount
+
   if (newIndex < 0) {
-    newIndex = itemsLastIndex
+    newIndex = circular ? itemsLastIndex : 0
   } else if (newIndex > itemsLastIndex) {
-    newIndex = 0
+    newIndex = circular ? 0 : itemsLastIndex
   }
-  return newIndex
+
+  const nonDisabledNewIndex = getNextNonDisabledIndex(
+    moveAmount,
+    newIndex,
+    itemCount,
+    getItemNodeFromIndex,
+    circular,
+  )
+
+  return nonDisabledNewIndex === -1 ? baseIndex : nonDisabledNewIndex
+}
+
+/**
+ * Returns the next index in the list of an item that is not disabled.
+ *
+ * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
+ * @param {number} baseIndex The initial position to move from.
+ * @param {number} itemCount The total number of items.
+ * @param {Function} getItemNodeFromIndex Used to check if item is disabled.
+ * @param {boolean} circular Specify if navigation is circular. Default is true.
+ * @returns {number} The new index. Returns baseIndex if item is not disabled. Returns next non-disabled item otherwise. If no non-disabled found it will return -1.
+ */
+function getNextNonDisabledIndex(
+  moveAmount,
+  baseIndex,
+  itemCount,
+  getItemNodeFromIndex,
+  circular,
+) {
+  const currentElementNode = getItemNodeFromIndex(baseIndex)
+  if (!currentElementNode || !currentElementNode.hasAttribute('disabled')) {
+    return baseIndex
+  }
+
+  if (moveAmount > 0) {
+    for (let index = baseIndex + 1; index < itemCount; index++) {
+      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+        return index
+      }
+    }
+  } else {
+    for (let index = baseIndex - 1; index >= 0; index--) {
+      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+        return index
+      }
+    }
+  }
+
+  if (circular) {
+    return moveAmount > 0
+      ? getNextNonDisabledIndex(1, 0, itemCount, getItemNodeFromIndex, false)
+      : getNextNonDisabledIndex(
+          -1,
+          itemCount - 1,
+          itemCount,
+          getItemNodeFromIndex,
+          false,
+        )
+  }
+
+  return -1
 }
 
 export {
@@ -309,4 +379,5 @@ export {
   isPlainObject,
   normalizeArrowKey,
   getNextWrappingIndex,
+  getNextNonDisabledIndex,
 }

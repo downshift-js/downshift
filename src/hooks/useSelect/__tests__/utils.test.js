@@ -6,18 +6,53 @@ describe('utils', () => {
     const items = ['a', 'b', 'aba', 'aab', 'bab']
 
     test('returns to check from start if from highlightedIndex does not find anything', () => {
-      const index = getItemIndexByCharacterKey('a', 3, items, item => item)
+      const index = getItemIndexByCharacterKey(
+        'a',
+        3,
+        items,
+        item => item,
+        () => {},
+      )
       expect(index).toBe(0)
     })
 
     test('checks from highlightedIndex position inclusively if there is more than one key', () => {
-      const index = getItemIndexByCharacterKey('aba', 2, items, item => item)
+      const index = getItemIndexByCharacterKey(
+        'aba',
+        2,
+        items,
+        item => item,
+        () => {},
+      )
       expect(index).toBe(2)
     })
 
     test('checks from highlightedIndex position exclusively if there is only one key', () => {
-      const index = getItemIndexByCharacterKey('a', 2, items, item => item)
+      const index = getItemIndexByCharacterKey(
+        'a',
+        2,
+        items,
+        item => item,
+        () => {},
+      )
       expect(index).toBe(3)
+    })
+
+    test('skips disabled item and moves to next', () => {
+      const keysSoFar = 'b'
+      const highlightedIndex = 0
+      const itemToString = item => item
+      const getItemNodeFromIndex = index => ({hasAttribute: () => index === 1})
+
+      expect(
+        getItemIndexByCharacterKey(
+          keysSoFar,
+          highlightedIndex,
+          items,
+          itemToString,
+          getItemNodeFromIndex,
+        ),
+      ).toEqual(4)
     })
   })
 

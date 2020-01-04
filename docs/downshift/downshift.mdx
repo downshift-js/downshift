@@ -1,0 +1,202 @@
+---
+name: Component
+menu: Downshift
+route: /downshift/component
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import Downshift from '../../src'
+import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+
+# Downshift
+
+## Introduction
+
+The `Downshift` component has been developed in order to provide accessibility
+and functionality to a `combobox` component, described by the corresponding
+[ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html).
+
+In the examples below, we use the `Downshift` hook and destructure from its
+result the getter props and state variables. The hooks also has the
+`onInputValueChange` prop passed in order to filter the items in the list
+according to the input value. The getter props are used as follows:
+
+| Returned prop          | Element    | Comments                                                                  |
+| ---------------------- | ---------- | ------------------------------------------------------------------------- |
+| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `toggleButton`           |
+| `getToggleButtonProps` | `<button>` | Controls the open state of the list.                                      |
+| `getRootProps`         | `<div>`    | Container for `input` and `toggleButton`.                                 |
+| `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
+| `getMenuProps`         | `<ul>`     | Makes list focusable, adds ARIA attributes and event handlers.            |
+| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
+| `isOpen`               |            | Only when it's true we render the `<li>` elements.                        |
+| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
+| `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
+
+For a complete documentation on all the returned props, component props and more
+information check out the
+[Github Page](https://github.com/downshift-js/downshift).
+
+## Important
+
+If you are new to `Downshift` then maybe you should fist check
+[useCombobox](/hooks/use-combobox) which should provide the same functionality
+but as a hook. If it's not suiting your use case then come back here. Also, if
+you need just a `select` dropdown without a text input, then check
+[useSelect](/hooks/use-select).
+
+As far as the component is concerned, you can use it in two ways, both of them
+illustrated below.
+
+There is an _straightforward_ way, which allows you to wrap your whole
+`combobox` HTML in `<Downshift>`. The drawback of this way is that the
+`combobox` HTML structure is not correct, and screen readers will not widely
+support it.
+
+There is also the _not-so-straightforward-way_ which allows you to respect the
+`combobox` HTML structure and you should aim for this one. Here you will use
+`getRootProps` on the element that wraps your `<input>` and then you will add
+the `<ul>` on the same level with the wrapper. More details on each of these
+examples below.
+
+A `combobox` element can be created with HTML elements such as: `<label>`,
+`<ul>`, `<li>`, `<button>`, `<input>` and a `<div>` or something similar to
+contain the input and the toggle button. It is absolutely important to follow
+the HTML structure below, as it will allow all screen readers to properly work
+with the widget. Most importantly, the `<input>` needs to be contained by the
+combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
+`<div>`.
+
+## Usage with `getRootProps`
+
+It is possible to achieve the correct HTML structure only if you use
+`getRootProps` getter prop from `Downshift`. You apply `getRootProps` on the
+wrapper element that contains the `<input>` and optionally the trigger button.
+
+[CodeSandbox](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+
+      return (
+        <Downshift onInputValueChange={inputValue => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            )
+          )
+        }}>
+          {({
+            getInputProps,
+            getItemProps,
+            getMenuProps,
+            getLabelProps,
+            getRootProps,
+            getToggleButtonProps,
+            highlightedIndex,
+            isOpen,
+          }) => (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getRootProps({}, {suppressRefError: true})}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
+      </Downshift>
+    )}
+
+    return <DropdownCombobox />
+
+}}
+
+</Playground>
+
+## Usage without `getRootProps`
+
+Using `Downshift` without the `getRootProps` will add the `combobox` role to the
+child element rendered. This way you are forced into having all elements (menu,
+input, button, label) as children of the `combobox` which is not compatible with
+the widget HTML structure. It will still work, and you can style it to look as a
+normal combobox, but this structure is not supported by screen readers.
+Accessibility will not be achieved in this case, so please migrate to either the
+example above or to `useCombobox` hook.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+
+      return (
+        <Downshift onInputValueChange={inputValue => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            )
+          )
+        }}>
+          {({
+            getInputProps,
+            getItemProps,
+            getMenuProps,
+            getLabelProps,
+            getToggleButtonProps,
+            highlightedIndex,
+            isOpen,
+          }) => (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <input {...getInputProps()} />
+          <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            &#8595;
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+      </Downshift>
+    )}
+
+    return <DropdownCombobox />
+
+}}
+
+</Playground>

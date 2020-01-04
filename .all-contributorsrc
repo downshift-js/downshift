@@ -1144,6 +1144,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "jgodi",
+      "name": "Joshua Godi",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/870799?v=4",
+      "profile": "http://www.joshuagodi.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",

@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import {
-  getInitialValue as getInitialValueAbstract,
-  getDefaultValue as getDefaultValueAbstract,
+  getInitialValue as getInitialValueCommon,
+  getDefaultValue as getDefaultValueCommon,
+  defaultProps as defaultPropsCommon,
 } from '../utils'
 
 const defaultStateValues = {
@@ -9,11 +10,11 @@ const defaultStateValues = {
 }
 
 function getDefaultValue(props, propKey) {
-  return getDefaultValueAbstract(props, propKey, defaultStateValues)
+  return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialValue(props, propKey) {
-  return getInitialValueAbstract(props, propKey, defaultStateValues)
+  return getInitialValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
@@ -37,22 +38,42 @@ function getItemIndexByCharacterKey(
   highlightedIndex,
   items,
   itemToStringParam,
+  getItemNodeFromIndex,
 ) {
-  let newHighlightedIndex = -1
-  const itemStrings = items.map(item => itemToStringParam(item).toLowerCase())
-  const startPosition = highlightedIndex + 1
+  const lowerCasedItemStrings = items.map(item =>
+    itemToStringParam(item).toLowerCase(),
+  )
+  const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
+  const isValid = (itemString, index) => {
+    const element = getItemNodeFromIndex(index)
 
-  newHighlightedIndex = itemStrings
-    .slice(startPosition)
-    .findIndex(itemString => itemString.startsWith(keysSoFar))
-
-  if (newHighlightedIndex > -1) {
-    return newHighlightedIndex + startPosition
-  } else {
-    return itemStrings
-      .slice(0, startPosition)
-      .findIndex(itemString => itemString.startsWith(keysSoFar))
+    return (
+      itemString.startsWith(lowerCasedKeysSoFar) &&
+      !(element && element.hasAttribute('disabled'))
+    )
   }
+
+  for (
+    let index = highlightedIndex + 1;
+    index < lowerCasedItemStrings.length;
+    index++
+  ) {
+    const itemString = lowerCasedItemStrings[index]
+
+    if (isValid(itemString, index)) {
+      return index
+    }
+  }
+
+  for (let index = 0; index < highlightedIndex; index++) {
+    const itemString = lowerCasedItemStrings[index]
+
+    if (isValid(itemString, index)) {
+      return index
+    }
+  }
+
+  return highlightedIndex
 }
 
 const propTypes = {
@@ -97,4 +118,5 @@ export {
   propTypes,
   getDefaultValue,
   getItemIndexByCharacterKey,
+  defaultPropsCommon as defaultProps,
 }

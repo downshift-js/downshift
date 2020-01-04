@@ -1,59 +1,59 @@
 {
   "dist/downshift.cjs.js": {
-    "bundled": 107924,
-    "minified": 50343,
-    "gzipped": 11289
+    "bundled": 113146,
+    "minified": 52111,
+    "gzipped": 11538
   },
   "preact/dist/downshift.cjs.js": {
-    "bundled": 106642,
-    "minified": 49305,
-    "gzipped": 11176
-  },
-  "preact/dist/downshift.umd.min.js": {
-    "bundled": 118734,
-    "minified": 39044,
-    "gzipped": 11127
+    "bundled": 111864,
+    "minified": 51073,
+    "gzipped": 11437
   },
   "preact/dist/downshift.umd.js": {
-    "bundled": 135096,
-    "minified": 46649,
-    "gzipped": 12928
+    "bundled": 140209,
+    "minified": 48040,
+    "gzipped": 13116
+  },
+  "preact/dist/downshift.umd.min.js": {
+    "bundled": 124057,
+    "minified": 40510,
+    "gzipped": 11333
   },
   "dist/downshift.umd.min.js": {
-    "bundled": 122969,
-    "minified": 40364,
-    "gzipped": 11664
+    "bundled": 128292,
+    "minified": 41826,
+    "gzipped": 11867
   },
   "dist/downshift.umd.js": {
-    "bundled": 164721,
-    "minified": 55561,
-    "gzipped": 15510
+    "bundled": 169834,
+    "minified": 56952,
+    "gzipped": 15717
   },
-  "dist/downshift.esm.js": {
-    "bundled": 107455,
-    "minified": 49948,
-    "gzipped": 11222,
+  "preact/dist/downshift.esm.js": {
+    "bundled": 111365,
+    "minified": 50648,
+    "gzipped": 11370,
     "treeshaked": {
       "rollup": {
-        "code": 998,
-        "import_statements": 303
+        "code": 1752,
+        "import_statements": 318
       },
       "webpack": {
-        "code": 3280
+        "code": 3837
       }
     }
   },
-  "preact/dist/downshift.esm.js": {
-    "bundled": 106143,
-    "minified": 48880,
-    "gzipped": 11107,
+  "dist/downshift.esm.js": {
+    "bundled": 112677,
+    "minified": 51716,
+    "gzipped": 11470,
     "treeshaked": {
       "rollup": {
-        "code": 999,
-        "import_statements": 304
+        "code": 1751,
+        "import_statements": 317
       },
       "webpack": {
-        "code": 3279
+        "code": 3838
       }
     }
   }
