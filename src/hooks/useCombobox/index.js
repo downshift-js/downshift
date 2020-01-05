@@ -40,6 +40,7 @@ function useCombobox(userProps = {}) {
     getA11yStatusMessage,
     itemToString,
     environment,
+    getMemoizedItemHandlers,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
@@ -254,6 +255,26 @@ function useCombobox(userProps = {}) {
     onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
     ...rest,
   })
+  const getItemPropsEventHandlers = (
+    onMouseMove,
+    onClick,
+    onPress,
+    itemIndex,
+  ) => {
+    /* istanbul ignore next (react-native) */
+    const [onSelectKey, customClickHandler] = isReactNative
+      ? ['onPress', onPress]
+      : ['onClick', onClick]
+
+    return {
+      onMouseMove: callAllEventHandlers(onMouseMove, () => {
+        itemHandleMouseMove(itemIndex)
+      }),
+      [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
+        itemHandleClick(itemIndex)
+      }),
+    }
+  }
   const getItemProps = ({
     item,
     index,
@@ -266,16 +287,10 @@ function useCombobox(userProps = {}) {
     ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
+
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!')
     }
-
-    const onSelectKey = isReactNative
-      ? /* istanbul ignore next (react-native) */ 'onPress'
-      : 'onClick'
-    const customClickHandler = isReactNative
-      ? /* istanbul ignore next (react-native) */ onPress
-      : onClick
 
     return {
       [refKey]: handleRefs(ref, itemNode => {
@@ -286,14 +301,25 @@ function useCombobox(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
-      ...(!disabled && {
-        onMouseMove: callAllEventHandlers(onMouseMove, () => {
-          itemHandleMouseMove(itemIndex)
-        }),
-        [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
-          itemHandleClick(itemIndex)
-        }),
-      }),
+      ...(!disabled &&
+        (getMemoizedItemHandlers
+          ? getMemoizedItemHandlers(
+              () =>
+                getItemPropsEventHandlers(
+                  itemIndex,
+                  onMouseMove,
+                  onClick,
+                  onPress,
+                ),
+              item,
+              itemIndex,
+            )
+          : getItemPropsEventHandlers(
+              onMouseMove,
+              onClick,
+              onPress,
+              itemIndex,
+            ))),
       ...rest,
     }
   }

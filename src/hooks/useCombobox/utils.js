@@ -93,6 +93,7 @@ const propTypes = {
       body: PropTypes.any,
     }),
   }),
+  getMemoizedItemHandlers: PropTypes.func,
 }
 
 const defaultProps = {

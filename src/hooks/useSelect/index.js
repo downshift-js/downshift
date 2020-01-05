@@ -1,5 +1,6 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
+import {isReactNative} from '../../is.macro'
 import {
   getElementIds,
   getItemIndex,
@@ -46,6 +47,7 @@ function useSelect(userProps = {}) {
     defaultIsOpen,
     scrollIntoView,
     environment,
+    getMemoizedItemHandlers,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
@@ -390,6 +392,26 @@ function useSelect(userProps = {}) {
 
     return toggleProps
   }
+  const getItemPropsEventHandlers = (
+    onMouseMove,
+    onClick,
+    onPress,
+    itemIndex,
+  ) => {
+    /* istanbul ignore next (react-native) */
+    const [onSelectKey, customClickHandler] = isReactNative
+      ? ['onPress', onPress]
+      : ['onClick', onClick]
+
+    return {
+      onMouseMove: callAllEventHandlers(onMouseMove, () =>
+        itemHandleMouseMove(itemIndex),
+      ),
+      [onSelectKey]: callAllEventHandlers(customClickHandler, () =>
+        itemHandleClick(itemIndex),
+      ),
+    }
+  }
   const getItemProps = ({
     item,
     index,
@@ -397,6 +419,7 @@ function useSelect(userProps = {}) {
     ref,
     onMouseMove,
     onClick,
+    onPress,
     ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
@@ -412,16 +435,26 @@ function useSelect(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
+      ...(!rest.disabled &&
+        (getMemoizedItemHandlers
+          ? getMemoizedItemHandlers(
+              () =>
+                getItemPropsEventHandlers(
+                  itemIndex,
+                  onMouseMove,
+                  onClick,
+                  onPress,
+                ),
+              item,
+              itemIndex,
+            )
+          : getItemPropsEventHandlers(
+              onMouseMove,
+              onClick,
+              onPress,
+              itemIndex,
+            ))),
       ...rest,
-    }
-
-    if (!rest.disabled) {
-      itemProps.onMouseMove = callAllEventHandlers(onMouseMove, () =>
-        itemHandleMouseMove(itemIndex),
-      )
-      itemProps.onClick = callAllEventHandlers(onClick, () =>
-        itemHandleClick(itemIndex),
-      )
     }
 
     return itemProps

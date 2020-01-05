@@ -322,7 +322,7 @@ test(`highlight wrapping works with disabled items downwards`, () => {
   expect(input.value).toBe('Chess')
 })
 
-test('getMemoizedItemHandlers used if provided', () => {
+test('getMemoizedItemHandlers is called if provided', () => {
   const getMemoizedItemHandlers = jest.fn().mockImplementation(getHandlers => {
     return getHandlers()
   })

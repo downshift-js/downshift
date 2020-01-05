@@ -53,12 +53,13 @@ describe('getItemProps', () => {
 
     test("handlers are not called if it's disabled", () => {
       const {result} = setupHook()
-      const inputProps = result.current.getInputProps({
+      const itemProps = result.current.getItemProps({
+        index: 0,
         disabled: true,
       })
 
-      expect(inputProps.onClick).toBeUndefined()
-      expect(inputProps.onMouseMove).toBeUndefined()
+      expect(itemProps.onMouseMove).toBeUndefined()
+      expect(itemProps.onClick).toBeUndefined()
     })
   })
 
@@ -257,5 +258,21 @@ describe('getItemProps', () => {
       fireEvent.keyDown(input, {key: 'End'})
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
+  })
+
+  test('getMemoizedItemHandlers is called at each render if provided', () => {
+    const getMemoizedItemHandlers = jest
+      .fn()
+      .mockImplementation(getHandlers => {
+        return getHandlers()
+      })
+    const wrapper = setup({isOpen: true, getMemoizedItemHandlers})
+    const input = wrapper.getByTestId(dataTestIds.input)
+
+    expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length)
+
+    fireEvent.keyDown(input, {key: 'ArrowDown'})
+
+    expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length * 2)
   })
 })

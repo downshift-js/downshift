@@ -110,6 +110,7 @@ const propTypes = {
       body: PropTypes.any,
     }),
   }),
+  getMemoizedItemHandlers: PropTypes.func,
 }
 
 export {

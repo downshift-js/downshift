@@ -259,4 +259,20 @@ describe('getItemProps', () => {
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
   })
+
+  test('getMemoizedItemHandlers is called at each render if provided', () => {
+    const getMemoizedItemHandlers = jest
+      .fn()
+      .mockImplementation(getHandlers => {
+        return getHandlers()
+      })
+    const wrapper = setup({isOpen: true, getMemoizedItemHandlers})
+    const menu = wrapper.getByTestId(dataTestIds.menu)
+
+    expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length)
+
+    fireEvent.keyDown(menu, {key: 'ArrowDown'})
+
+    expect(getMemoizedItemHandlers).toHaveBeenCalledTimes(items.length * 2)
+  })
 })
