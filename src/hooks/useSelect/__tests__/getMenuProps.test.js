@@ -627,6 +627,50 @@ describe('getMenuProps', () => {
         expect(document.activeElement).toBe(toggleButton)
       })
 
+      test('space it closes the menu and selects highlighted item', () => {
+        const initialHighlightedIndex = 2
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.keyDown(menu, {key: ' '})
+
+        expect(menu.childNodes).toHaveLength(0)
+        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+      })
+
+      test('space it selects highlighted item and resets to user defaults', () => {
+        const defaultHighlightedIndex = 2
+        const wrapper = setup({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+        })
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        fireEvent.keyDown(menu, {key: ' '})
+
+        expect(toggleButton.textContent).toEqual(items[defaultHighlightedIndex])
+        expect(menu.childNodes).toHaveLength(items.length)
+        expect(menu.getAttribute('aria-activedescendant')).toBe(
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+      })
+
+      test('space it has the focus moved to toggleButton', () => {
+        const wrapper = setup({initialIsOpen: true})
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+
+        menu.focus()
+        fireEvent.keyDown(menu, {key: ' '})
+
+        expect(document.activeElement).toBe(toggleButton)
+      })
+
       test.skip('tab it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const wrapper = setup({
