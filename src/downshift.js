@@ -788,7 +788,7 @@ class Downshift extends Component {
     let onChangeKey
     let eventHandlers = {}
 
-    /* istanbul ignore next (preact) */
+    /* istanbul ignore if (preact) */
     if (isPreact) {
       onChangeKey = 'onInput'
     } else {
