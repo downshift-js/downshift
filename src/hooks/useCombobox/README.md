@@ -29,7 +29,6 @@ between them, screen reader support, highlight by character keys etc.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -792,7 +791,7 @@ These are functions you can call to change the state of the downshift
 | `openMenu`            | `function()`              | opens the menu                                        |
 | `selectItem`          | `function(item: any)`     | selects the given item                                |
 | `setHighlightedIndex` | `function(index: number)` | call to set a new highlighted index                   |
-| `setInputvalue`       | `function(value: string)` | call to set a new value in the input                  |
+| `setInputValue`       | `function(value: string)` | call to set a new value in the input                  |
 | `toggleMenu`          | `function()`              | toggle the menu open state                            |
 | `reset`               | `function()`              | this resets downshift's state to a reasonable default |
 
