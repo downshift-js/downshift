@@ -363,6 +363,7 @@ function useSelect(userProps = {}) {
   })
   const getToggleButtonProps = ({
     onClick,
+    onPress,
     onKeyDown,
     refKey = 'ref',
     ref,
@@ -376,18 +377,19 @@ function useSelect(userProps = {}) {
       'aria-haspopup': 'listbox',
       'aria-expanded': isOpen,
       'aria-labelledby': `${labelId} ${toggleButtonId}`,
+      ...(!rest.disabled &&
+        (isReactNative
+          ? /* istanbul ignore next (react-native) */ {
+              onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+            }
+          : {
+              onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
+              onKeyDown: callAllEventHandlers(
+                onKeyDown,
+                toggleButtonHandleKeyDown,
+              ),
+            })),
       ...rest,
-    }
-
-    if (!rest.disabled) {
-      toggleProps.onClick = callAllEventHandlers(
-        onClick,
-        toggleButtonHandleClick,
-      )
-      toggleProps.onKeyDown = callAllEventHandlers(
-        onKeyDown,
-        toggleButtonHandleKeyDown,
-      )
     }
 
     return toggleProps
@@ -398,9 +400,8 @@ function useSelect(userProps = {}) {
     onPress,
     itemIndex,
   ) => {
-    /* istanbul ignore next (react-native) */
     const [onSelectKey, customClickHandler] = isReactNative
-      ? ['onPress', onPress]
+      ? /* istanbul ignore next (react-native) */ ['onPress', onPress]
       : ['onClick', onClick]
 
     return {
