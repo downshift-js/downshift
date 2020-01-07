@@ -85,6 +85,7 @@ describe('getToggleButtonProps', () => {
 
       expect(toggleButtonProps.onClick).toBeUndefined()
       expect(toggleButtonProps.onKeyDown).toBeUndefined()
+      expect(toggleButtonProps.disabled).toBe(true)
     })
   })
 

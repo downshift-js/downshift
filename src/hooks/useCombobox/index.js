@@ -262,7 +262,6 @@ function useCombobox(userProps = {}) {
     onMouseMove,
     onClick,
     onPress,
-    disabled,
     ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
@@ -286,7 +285,7 @@ function useCombobox(userProps = {}) {
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
-      ...(!disabled && {
+      ...(!rest.disabled && {
         onMouseMove: callAllEventHandlers(onMouseMove, () => {
           itemHandleMouseMove(itemIndex)
         }),
@@ -302,7 +301,6 @@ function useCombobox(userProps = {}) {
     onPress,
     refKey = 'ref',
     ref,
-    disabled,
     ...rest
   } = {}) => {
     return {
@@ -311,7 +309,7 @@ function useCombobox(userProps = {}) {
       }),
       id: toggleButtonId,
       tabIndex: -1,
-      ...(!disabled && {
+      ...(!rest.disabled && {
         ...(isReactNative
           ? /* istanbul ignore next (react-native) */ {
               onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
