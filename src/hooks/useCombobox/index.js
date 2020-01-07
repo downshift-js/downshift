@@ -283,6 +283,7 @@ function useCombobox(userProps = {}) {
           itemRefs.current.push(itemNode)
         }
       }),
+      disabled,
       role: 'option',
       ...(itemIndex === highlightedIndex && {'aria-selected': true}),
       id: getItemId(itemIndex),
