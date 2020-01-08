@@ -53,12 +53,14 @@ describe('getItemProps', () => {
 
     test("handlers are not called if it's disabled", () => {
       const {result} = setupHook()
-      const inputProps = result.current.getInputProps({
+      const itemProps = result.current.getItemProps({
         disabled: true,
+        index: 0,
       })
 
-      expect(inputProps.onClick).toBeUndefined()
-      expect(inputProps.onMouseMove).toBeUndefined()
+      expect(itemProps.onClick).toBeUndefined()
+      expect(itemProps.onMouseMove).toBeUndefined()
+      expect(itemProps.disabled).toBe(true)
     })
   })
 

@@ -60,6 +60,7 @@ describe('getItemProps', () => {
 
       expect(itemProps.onMouseMove).toBeUndefined()
       expect(itemProps.onClick).toBeUndefined()
+      expect(itemProps.disabled).toBe(true)
     })
   })
 

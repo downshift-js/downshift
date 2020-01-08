@@ -98,6 +98,7 @@ describe('getInputProps', () => {
       expect(inputProps.onChange).toBeUndefined()
       expect(inputProps.onKeyDown).toBeUndefined()
       expect(inputProps.onBlur).toBeUndefined()
+      expect(inputProps.disabled).toBe(true)
     })
   })
 
