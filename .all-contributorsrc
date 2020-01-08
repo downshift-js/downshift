@@ -1163,6 +1163,16 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "jorgemoya",
+      "name": "Jorge Moya",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/196129?v=4",
+      "profile": "https://github.com/jorgemoya",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
