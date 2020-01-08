@@ -491,8 +491,8 @@ export interface UseComboboxPropGetters<Item> {
   getLabelProps: (options?: UseComboboxGetLabelPropsOptions) => any
   getMenuProps: (options?: UseComboboxGetMenuPropsOptions) => any
   getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any
-  getInputProps: (options: UseComboboxGetInputPropsOptions) => any
-  getComboboxProps: (options: UseComboboxGetComboboxPropsOptions) => any
+  getInputProps: (options?: UseComboboxGetInputPropsOptions) => any
+  getComboboxProps: (options?: UseComboboxGetComboboxPropsOptions) => any
 }
 
 export interface UseComboboxActions<Item> {
