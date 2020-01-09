@@ -53,9 +53,8 @@ function useSelect(userProps = {}) {
   // Reducer init.
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatchWithoutProps,
+    dispatch,
   ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
-  const dispatch = action => dispatchWithoutProps({props, ...action})
 
   /* Refs */
   const toggleButtonRef = useRef(null)
