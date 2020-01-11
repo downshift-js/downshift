@@ -130,11 +130,12 @@ function useId() {
  */
 function focusLandsOnElement(event, nextElement) {
   return (
-    event.relatedTarget === nextElement ||
-    // https://github.com/downshift-js/downshift/issues/832 - workaround for Firefox.
-    (event.nativeEvent &&
-      (nextElement === event.nativeEvent.explicitOriginalTarget ||
-        nextElement.contains(event.nativeEvent.explicitOriginalTarget)))
+    !!nextElement &&
+    (event.relatedTarget === nextElement ||
+      // https://github.com/downshift-js/downshift/issues/832 - workaround for Firefox.
+      (event.nativeEvent &&
+        (nextElement === event.nativeEvent.explicitOriginalTarget ||
+          nextElement.contains(event.nativeEvent.explicitOriginalTarget))))
   )
 }
 /**

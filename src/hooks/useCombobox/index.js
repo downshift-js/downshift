@@ -200,12 +200,7 @@ function useCombobox(userProps = {}) {
   }
   const inputHandleBlur = event => {
     /* istanbul ignore else (react-native) */
-    if (
-      !(
-        toggleButtonRef.current &&
-        focusLandsOnElement(event, toggleButtonRef.current)
-      )
-    ) {
+    if (!focusLandsOnElement(event, toggleButtonRef.current)) {
       dispatch({
         type: stateChangeTypes.InputBlur,
       })
