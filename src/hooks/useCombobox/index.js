@@ -278,6 +278,7 @@ function useCombobox(userProps = {}) {
       mouseAndTouchTrackers.current.isMouseDown ||
       focusLandsOnElement(event, toggleButtonRef.current)
     )
+    /* istanbul ignore else */
     if (shouldBlur) {
       dispatch({
         type: stateChangeTypes.InputBlur,
