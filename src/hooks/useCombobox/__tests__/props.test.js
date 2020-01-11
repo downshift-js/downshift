@@ -493,25 +493,25 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.InputKeyDownEnter}),
       )
 
-      fireEvent.keyDown(input, {key: 'ArrowDown'})
-      expect(stateReducer).toHaveBeenCalledTimes(10)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.InputKeyDownArrowDown}),
-      )
-
       fireEvent.keyDown(input, {key: 'Escape'})
-      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenCalledTimes(10)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.InputKeyDownEscape}),
       )
 
       fireEvent.click(item)
-      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.ItemClick}),
+      )
+
+      fireEvent.blur(input)
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputBlur}),
       )
     })
 
