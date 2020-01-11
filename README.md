@@ -1385,6 +1385,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/lukyth"><img src="https://avatars3.githubusercontent.com/u/7040242?v=4" width="100px;" alt=""/><br /><sub><b>Kanitkorn Sujautra</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Alukyth" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=lukyth" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jorgemoya"><img src="https://avatars3.githubusercontent.com/u/196129?v=4" width="100px;" alt=""/><br /><sub><b>Jorge Moya</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jorgemoya" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Ajorgemoya" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://kubajastrz.com"><img src="https://avatars0.githubusercontent.com/u/6443113?v=4" width="100px;" alt=""/><br /><sub><b>Jakub Jastrzębski</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=KubaJastrz" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
