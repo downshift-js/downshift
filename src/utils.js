@@ -359,6 +359,33 @@ function getNextNonDisabledIndex(
   return -1
 }
 
+/**
+ * Checks if event target is withing the downshift elements.
+ *
+ * @param {EventTarget} target Target to check.
+ * @param {HTMLElement} rootNode The element with combobox role.
+ * @param {HTMLElement} menuNode The elements list with listbox role.
+ * @param {Document} document The document.
+ * @param {boolean} checkActiveElement Whether to also check activeElement.
+ *
+ * @returns {boolean} Whether or not the target is within downshift elements.
+ */
+function targetWithinDownshift(
+  target,
+  rootNode,
+  menuNode,
+  document,
+  checkActiveElement = true,
+) {
+  return [rootNode, menuNode].some(
+    contextNode =>
+      contextNode &&
+      (isOrContainsNode(contextNode, target) ||
+        (checkActiveElement &&
+          isOrContainsNode(contextNode, document.activeElement))),
+  )
+}
+
 export {
   cbToCb,
   callAllEventHandlers,
@@ -370,7 +397,6 @@ export {
   unwrapArray,
   isDOMElement,
   getElementProps,
-  isOrContainsNode,
   noop,
   requiredProp,
   setIdCounter,
@@ -380,4 +406,5 @@ export {
   normalizeArrowKey,
   getNextWrappingIndex,
   getNextNonDisabledIndex,
+  targetWithinDownshift,
 }

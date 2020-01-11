@@ -2,7 +2,12 @@
 import {useRef, useEffect} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
 import setStatus from '../../set-a11y-status'
-import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {
+  handleRefs,
+  normalizeArrowKey,
+  callAllEventHandlers,
+  targetWithinDownshift,
+} from '../../utils'
 import {
   getItemIndex,
   useId,
@@ -62,9 +67,14 @@ function useCombobox(userProps = {}) {
   const itemRefs = useRef()
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
+  const comboboxRef = useRef(null)
   itemRefs.current = []
   const shouldScroll = useRef(true)
   const isInitialMount = useRef(true)
+  const mouseAndTouchTrackers = useRef({
+    isMouseDown: false,
+    isTouchMove: false,
+  })
 
   /* Effects */
   /* Sets a11y status message on changes in isOpen. */
@@ -72,6 +82,7 @@ function useCombobox(userProps = {}) {
     if (isInitialMount.current) {
       return
     }
+
     setStatus(
       getA11yStatusMessage({
         isOpen,
@@ -89,6 +100,7 @@ function useCombobox(userProps = {}) {
     if (isInitialMount.current) {
       return
     }
+
     setStatus(
       getA11ySelectionMessage({
         isOpen,
@@ -106,6 +118,7 @@ function useCombobox(userProps = {}) {
     if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
       return
     }
+
     if (shouldScroll.current === false) {
       shouldScroll.current = true
     } else {
@@ -123,6 +136,7 @@ function useCombobox(userProps = {}) {
       }
       return
     }
+
     // Focus menu on open.
     // istanbul ignore next
     if (isOpen) {
@@ -134,6 +148,67 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     isInitialMount.current = false
   }, [])
+  /* Add mouse/touch events to document. */
+  useEffect(() => {
+    // The same strategy for checking if a click occurred inside or outside downsift
+    // as in downshift.js.
+    const onMouseDown = () => {
+      mouseAndTouchTrackers.current.isMouseDown = true
+    }
+    const onMouseUp = event => {
+      mouseAndTouchTrackers.current.isMouseDown = false
+      if (
+        isOpen &&
+        !targetWithinDownshift(
+          event.target,
+          comboboxRef.current,
+          menuRef.current,
+          environment.document,
+        )
+      ) {
+        dispatch({
+          type: stateChangeTypes.InputBlur,
+        })
+      }
+    }
+    const onTouchStart = () => {
+      mouseAndTouchTrackers.current.isTouchMove = false
+    }
+    const onTouchMove = () => {
+      mouseAndTouchTrackers.current.isTouchMove = true
+    }
+    const onTouchEnd = event => {
+      if (
+        isOpen &&
+        !mouseAndTouchTrackers.current.isTouchMove &&
+        !targetWithinDownshift(
+          event.target,
+          comboboxRef.current,
+          menuRef.current,
+          environment.document,
+          false,
+        )
+      ) {
+        dispatch({
+          type: stateChangeTypes.InputBlur,
+        })
+      }
+    }
+
+    environment.addEventListener('mousedown', onMouseDown)
+    environment.addEventListener('mouseup', onMouseUp)
+    environment.addEventListener('touchstart', onTouchStart)
+    environment.addEventListener('touchmove', onTouchMove)
+    environment.addEventListener('touchend', onTouchEnd)
+
+    return function cleanup() {
+      environment.removeEventListener('mousedown', onMouseDown)
+      environment.removeEventListener('mouseup', onMouseUp)
+      environment.removeEventListener('touchstart', onTouchStart)
+      environment.removeEventListener('touchmove', onTouchMove)
+      environment.removeEventListener('touchend', onTouchEnd)
+    }
+  })
 
   const getItemNodeFromIndex = index => itemRefs.current[index]
 
@@ -199,8 +274,11 @@ function useCombobox(userProps = {}) {
     })
   }
   const inputHandleBlur = event => {
-    /* istanbul ignore else (react-native) */
-    if (!focusLandsOnElement(event, toggleButtonRef.current)) {
+    const shouldBlur = !(
+      mouseAndTouchTrackers.current.isMouseDown ||
+      focusLandsOnElement(event, toggleButtonRef.current)
+    )
+    if (shouldBlur) {
       dispatch({
         type: stateChangeTypes.InputBlur,
       })
@@ -375,7 +453,10 @@ function useCombobox(userProps = {}) {
       ...rest,
     }
   }
-  const getComboboxProps = ({...rest} = {}) => ({
+  const getComboboxProps = ({refKey = 'ref', ref, ...rest} = {}) => ({
+    [refKey]: handleRefs(ref, comboboxNode => {
+      comboboxRef.current = comboboxNode
+    }),
     role: 'combobox',
     'aria-haspopup': 'listbox',
     'aria-owns': menuId,
