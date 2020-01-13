@@ -1,8 +1,10 @@
-import {getInitialValue as getInitialValueCommon} from '../utils'
+import {
+  getInitialValue as getInitialValueCommon,
+  defaultProps as defaultPropsCommon,
+} from '../utils'
 
 const defaultStateValues = {
-  selectedItems: [],
-  focusedIndex: -1,
+  activeIndex: -1,
 }
 
 function getInitialValue(props, propKey) {
@@ -10,13 +12,16 @@ function getInitialValue(props, propKey) {
 }
 
 function getInitialState(props) {
-  const selectedItems = getInitialValue(props, 'selectedItems')
-  const focusedIndex = getInitialValue(props, 'focusedIndex')
+  const activeIndex = getInitialValue(props, 'activeIndex')
 
   return {
-    selectedItems,
-    focusedIndex,
+    activeIndex,
   }
 }
 
-export {getInitialState}
+const defaultProps = {
+  itemToString: defaultPropsCommon.itemToString,
+  stateReducer: defaultPropsCommon.stateReducer,
+}
+
+export {getInitialState, defaultProps}
