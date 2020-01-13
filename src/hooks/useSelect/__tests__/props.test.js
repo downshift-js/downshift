@@ -2,6 +2,7 @@ import {act} from 'react-dom/test-utils'
 import {renderHook} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
 
 describe('props', () => {
@@ -351,20 +352,134 @@ describe('props', () => {
       expect(stateReducer).toHaveBeenCalledTimes(4)
     })
 
-    test('replaces prop values with user defined', () => {
-      const highlightedIndex = 2
-      const stateReducer = jest.fn((s, a) => {
-        const changes = a.changes
-        changes.highlightedIndex = highlightedIndex
-        return changes
-      })
-      const wrapper = setup({stateReducer})
+    // eslint-disable-next-line max-statements
+    test('is called at each state change with the appropriate change type', () => {
+      const stateReducer = jest.fn((s, a) => a.changes)
+      const wrapper = setup({stateReducer, isOpen: true})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
+      expect(stateReducer).not.toHaveBeenCalled()
+
       fireEvent.click(toggleButton)
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
-        defaultIds.getItemId(highlightedIndex),
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ToggleButtonClick}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'c'})
+      expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownCharacter}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowDown}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'ArrowUp'})
+      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowUp}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'End'})
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnd}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Home'})
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownHome}),
+      )
+
+      const item = wrapper.getByTestId(dataTestIds.item(1))
+      fireEvent.mouseMove(item)
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+      )
+
+      fireEvent.mouseLeave(menu)
+      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Enter'})
+      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnter}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Escape'})
+      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEscape}),
+      )
+
+      fireEvent.click(item)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemClick}),
+      )
+
+      fireEvent.keyDown(toggleButton, {key: 'c'})
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+        }),
+      )
+
+      fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
+      expect(stateReducer).toHaveBeenCalledTimes(13)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+        }),
+      )
+
+      fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
+      expect(stateReducer).toHaveBeenCalledTimes(14)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+        }),
+      )
+
+      fireEvent.blur(menu)
+      expect(stateReducer).toHaveBeenCalledTimes(15)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+      )
+
+      fireEvent.keyDown(menu, {key: ' '})
+      expect(stateReducer).toHaveBeenCalledTimes(16)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownSpaceButton,
+        }),
       )
     })
 

@@ -35,7 +35,7 @@ according to the input value. The getter props are used as follows:
 | `getToggleButtonProps` | `<button>` | Controls the open state of the list.                                      |
 | `getComboboxProps`     | `<div>`    | Container for `input` and `toggleButton`.                                 |
 | `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
-| `getMenuProps`         | `<ul>`     | Makes list focusable, adds ARIA attributes and event handlers.            |
+| `getMenuProps`         | `<ul>`     | Adds ARIA attributes and event handlers.                                  |
 | `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
 | `isOpen`               |            | Only when it's true we render the `<li>` elements.                        |
 | `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
@@ -80,6 +80,115 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
             ),
           )
         },
+      })
+
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownCombobox />
+
+}}
+
+</Playground>
+
+## State Reducer
+
+For an even more granular control of the state changing process, you can add
+your own reducer on top of the default one. When it's called it will receive the
+previous `state` and the `actionAndChanges` object. The latter contains the
+change `type`, which explains why the state is changed. It also contains the
+`changes` proposed by `Downshift` that should occur as a consequence of that
+change type. You are supposed to return the new state according to your needs.
+
+In the example below, let's say we want to show stuff uppercased all the time.
+We will catch the `InputChange` event, get the proposed `inputValue` from the
+default reducer, lowercase the value, and return that along with the rest of the
+changes. We will do the same thing for the cases when a selection is performed.
+We will check that `highlightedIndex` from state was greater than `-1`, since
+`InputBlur` can perform selection in combobox, but only if an item was selected.
+After that, we will return the uppercased input value.
+
+In all other state change types, we return `Downshift` default changes.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    function stateReducer(state, actionAndChanges) {
+      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      switch (actionAndChanges.type) {
+        case useCombobox.stateChangeTypes.InputChange:
+          return {
+            // return normal changes.
+            ...actionAndChanges.changes,
+            // but taking the change from default reducer and uppercasing it.
+            inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+          }
+        // also on selection.
+        case useCombobox.stateChangeTypes.ItemClick:
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.InputBlur:
+          return {
+            ...actionAndChanges.changes,
+            // if we had an item highlighted in the previous state.
+            ...(state.highlightedIndex > -1 && {
+              // we will show it uppercased.
+              inputValue: actionAndChanges.changes.inputValue.toUpperCase()
+            })
+          }
+        default:
+          return actionAndChanges.changes // otherwise business as usual.
+      }
+    }
+
+    const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+        stateReducer
       })
 
       return (
