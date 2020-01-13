@@ -44,9 +44,9 @@
     }
   },
   "dist/downshift.esm.js": {
-    "bundled": 112677,
-    "minified": 51716,
-    "gzipped": 11470,
+    "bundled": 112589,
+    "minified": 51686,
+    "gzipped": 11454,
     "treeshaked": {
       "rollup": {
         "code": 1751,

@@ -328,9 +328,9 @@ export interface UseSelectGetItemPropsOptions<Item>
     GetPropsWithRefKey {}
 
 export interface UseSelectPropGetters<Item> {
-  getToggleButtonProps: (options?: UseSelectGetMenuPropsOptions) => any
+  getToggleButtonProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
   getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
+  getMenuProps: (options?: UseSelectGetMenuPropsOptions) => any
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
 }
 
