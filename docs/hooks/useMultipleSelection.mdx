@@ -1,0 +1,86 @@
+---
+name: useMultipleSelection
+menu: Hooks
+route: /hooks/use-multiple-selection
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useCombobox, useMultipleSelection} from '../../src'
+import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+
+# useCombobox
+
+## Introduction
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownMultipleCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+      const [selectedItems, setSelectedItems] = useState([])
+
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+        onSelectedItemChange: ({selectedItem}) => {
+          setSelectedItems([...selectedItems, selectedItem])
+        },
+        selectedItem: null,
+      })
+      const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({items: selectedItems})
+
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={{display: 'flex', flexWrap: 'wrap'}}>
+            {selectedItems.map((selectedItem, index) => (
+              <span {...getSelectedItemProps({item: selectedItem, index})}>{selectedItem}</span>
+            ))}
+            <div style={comboboxStyles} {...getComboboxProps()}>
+              <input {...getInputProps({...getDropdownProps()})} />
+            </div>
+          </div>
+          <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            &#8595;
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownMultipleCombobox />
+
+}}
+
+</Playground>
