@@ -1,6 +1,5 @@
-import {act} from 'react-dom/test-utils'
 import {renderHook} from '@testing-library/react-hooks'
-import {fireEvent, cleanup} from '@testing-library/react'
+import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
@@ -50,7 +49,7 @@ describe('props', () => {
     jest.useFakeTimers()
 
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
     })
 
     test('should provide string version to a11y status message', () => {
@@ -70,7 +69,7 @@ describe('props', () => {
 
   describe('getA11ySelectionMessage', () => {
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
     })
 
     test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
@@ -99,7 +98,7 @@ describe('props', () => {
 
       fireEvent.click(toggleButton)
       const item = wrapper.getByTestId(dataTestIds.item(3))
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
       fireEvent.click(item)
       expect(
         document.getElementById('a11y-status-message').textContent,
@@ -111,7 +110,7 @@ describe('props', () => {
     jest.useFakeTimers()
 
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
     })
 
     test('reports that no results are available if items list is empty', () => {
@@ -151,7 +150,7 @@ describe('props', () => {
     test('is empty on menu close', () => {
       const wrapper = setup({items: ['bla', 'blabla'], initialIsOpen: true})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
 
       fireEvent.click(toggleButton)
       expect(
@@ -164,7 +163,7 @@ describe('props', () => {
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
       fireEvent.click(toggleButton)
-      act(() => jest.runAllTimers())
+      reactAct(() => jest.runAllTimers())
 
       expect(
         document.getElementById('a11y-status-message').textContent,

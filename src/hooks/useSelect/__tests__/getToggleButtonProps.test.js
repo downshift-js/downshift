@@ -1,7 +1,6 @@
 /* eslint-disable jest/no-disabled-tests */
-import {fireEvent, cleanup} from '@testing-library/react'
-import {act as rtlAct} from '@testing-library/react-hooks'
-import {act} from 'react-dom/test-utils'
+import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
+import {act as reactHooksAct} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
@@ -65,7 +64,7 @@ describe('getToggleButtonProps', () => {
     test("assign 'true' value to aria-expanded when menu is open", () => {
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
 
         menuRef({focus: noop})
@@ -103,7 +102,7 @@ describe('getToggleButtonProps', () => {
       const userOnClick = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -123,7 +122,7 @@ describe('getToggleButtonProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -145,7 +144,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -167,7 +166,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         const {
           ref: toggleButtonRef,
@@ -333,7 +332,7 @@ describe('getToggleButtonProps', () => {
         jest.useFakeTimers()
 
         afterEach(() => {
-          act(() => jest.runAllTimers())
+          reactAct(() => jest.runAllTimers())
         })
 
         const startsWithCharacter = (option, character) => {
@@ -359,7 +358,7 @@ describe('getToggleButtonProps', () => {
           )
 
           fireEvent.keyDown(toggleButton, {key: 'c'})
-          act(() => jest.runAllTimers())
+          reactAct(() => jest.runAllTimers())
           fireEvent.keyDown(toggleButton, {key: 'c'})
 
           expect(toggleButton.textContent).toEqual(
@@ -378,9 +377,9 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
           fireEvent.keyDown(toggleButton, {key: 'b'})
-          act(() => jest.runAllTimers())
+          reactAct(() => jest.runAllTimers())
           fireEvent.keyDown(toggleButton, {key: 'b'})
-          act(() => jest.runAllTimers())
+          reactAct(() => jest.runAllTimers())
           fireEvent.keyDown(toggleButton, {key: 'b'})
 
           expect(toggleButton.textContent).toEqual(
@@ -415,7 +414,7 @@ describe('getToggleButtonProps', () => {
 
           fireEvent.keyDown(toggleButton, {key: 'c'})
           fireEvent.keyDown(toggleButton, {key: 'a'})
-          act(() => jest.runAllTimers())
+          reactAct(() => jest.runAllTimers())
           fireEvent.keyDown(toggleButton, {key: 'l'})
 
           expect(toggleButton.textContent).toEqual(
@@ -429,11 +428,11 @@ describe('getToggleButtonProps', () => {
           const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
           fireEvent.keyDown(toggleButton, {key: 'l'})
-          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           fireEvent.keyDown(toggleButton, {key: 'l'})
-          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           fireEvent.keyDown(toggleButton, {key: 'l'})
-          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           fireEvent.keyDown(toggleButton, {key: 'l'})
 
           // highlight should stay on the first item starting with 'L'

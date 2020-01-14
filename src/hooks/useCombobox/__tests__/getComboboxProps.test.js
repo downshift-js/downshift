@@ -1,5 +1,5 @@
 import {cleanup} from '@testing-library/react'
-import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {setupHook, defaultIds} from '../testUtils'
 
@@ -48,7 +48,7 @@ describe('getComboboxProps', () => {
     test("assign 'true' value to aria-expanded when menu is open", () => {
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef} = result.current.getInputProps()
 
         inputRef({focus: noop})

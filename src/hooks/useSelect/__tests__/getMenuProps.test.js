@@ -1,7 +1,6 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as rtlAct} from '@testing-library/react-hooks'
-import {act} from 'react-dom/test-utils'
-import {fireEvent, cleanup} from '@testing-library/react'
+import {act as reactHooksAct} from '@testing-library/react-hooks'
+import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
@@ -88,7 +87,7 @@ describe('getMenuProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef} = result.current.getMenuProps()
         menuRef({focus})
         result.current.toggleMenu()
@@ -101,7 +100,7 @@ describe('getMenuProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {blablaRef} = result.current.getMenuProps({refKey: 'blablaRef'})
         blablaRef({focus})
         result.current.toggleMenu()
@@ -114,7 +113,7 @@ describe('getMenuProps', () => {
       const userOnMouseLeave = jest.fn()
       const {result} = setupHook({initialHighlightedIndex: 2})
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -134,7 +133,7 @@ describe('getMenuProps', () => {
       })
       const {result} = setupHook({initialHighlightedIndex: 2})
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -152,7 +151,7 @@ describe('getMenuProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef, onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
@@ -172,7 +171,7 @@ describe('getMenuProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef, onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
@@ -190,7 +189,7 @@ describe('getMenuProps', () => {
       const userOnBlur = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef, onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
@@ -210,7 +209,7 @@ describe('getMenuProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      reactHooksAct(() => {
         const {ref: menuRef, onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
@@ -258,10 +257,18 @@ describe('getMenuProps', () => {
   describe('event handlers', () => {
     describe('on key down', () => {
       describe('character key', () => {
-        jest.useFakeTimers()
+        beforeAll(() => {
+          jest.useFakeTimers()
+        })
+
+        afterAll(() => {
+          jest.useRealTimers()
+        })
 
         afterEach(() => {
-          act(() => jest.runAllTimers())
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
         })
 
         const startsWithCharacter = (option, character) => {
@@ -289,7 +296,9 @@ describe('getMenuProps', () => {
           )
 
           fireEvent.keyDown(menu, {key: 'c'})
-          act(() => jest.runAllTimers())
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
           fireEvent.keyDown(menu, {key: 'c'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
@@ -308,9 +317,13 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {key: 'b'})
-          act(() => jest.runAllTimers())
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
           fireEvent.keyDown(menu, {key: 'b'})
-          act(() => jest.runAllTimers())
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
           fireEvent.keyDown(menu, {key: 'b'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
@@ -349,7 +362,9 @@ describe('getMenuProps', () => {
 
           fireEvent.keyDown(menu, {key: 'c'})
           fireEvent.keyDown(menu, {key: 'a'})
-          act(() => jest.runAllTimers())
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
           fireEvent.keyDown(menu, {key: 'l'})
 
           expect(menu.getAttribute('aria-activedescendant')).toBe(
@@ -365,7 +380,7 @@ describe('getMenuProps', () => {
           const menu = wrapper.getByTestId(dataTestIds.menu)
 
           fireEvent.keyDown(menu, {key: 'c'})
-          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           fireEvent.keyDown(menu, {key: 'c'})
 
           // highlight should stay on the first item starting with 'C'
