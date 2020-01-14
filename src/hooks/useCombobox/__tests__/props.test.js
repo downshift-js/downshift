@@ -1,7 +1,6 @@
-import {act} from 'react-dom/test-utils'
 import React from 'react'
 import {renderHook} from '@testing-library/react-hooks'
-import {fireEvent, cleanup, render} from '@testing-library/react'
+import {fireEvent, cleanup, render, act} from '@testing-library/react'
 import {defaultProps} from '../../utils'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'

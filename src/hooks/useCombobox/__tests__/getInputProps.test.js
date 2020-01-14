@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
@@ -117,7 +117,7 @@ describe('getInputProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef} = result.current.getInputProps()
         inputRef({focus})
         result.current.toggleMenu()
@@ -130,7 +130,7 @@ describe('getInputProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      act(() => {
         const {blablaRef} = result.current.getInputProps({refKey: 'blablaRef'})
         blablaRef({focus})
         result.current.toggleMenu()
@@ -143,7 +143,7 @@ describe('getInputProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onKeyDown} = result.current.getInputProps({
           onKeyDown: userOnKeyDown,
         })
@@ -163,7 +163,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onKeyDown} = result.current.getInputProps({
           onKeyDown: userOnKeyDown,
         })
@@ -181,7 +181,7 @@ describe('getInputProps', () => {
       const userOnBlur = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onBlur} = result.current.getInputProps({
           onBlur: userOnBlur,
         })
@@ -201,7 +201,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onBlur} = result.current.getInputProps({
           onBlur: userOnBlur,
         })
@@ -219,7 +219,7 @@ describe('getInputProps', () => {
       const userOnChange = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnChange,
         })
@@ -239,7 +239,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnChange,
         })
@@ -257,7 +257,7 @@ describe('getInputProps', () => {
       const userOnInput = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnInput,
         })
@@ -277,7 +277,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnInput,
         })
