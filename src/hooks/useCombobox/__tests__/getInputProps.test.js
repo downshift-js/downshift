@@ -1,6 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
+import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
 import {setup, setupHook, defaultIds, dataTestIds, items} from '../testUtils'
 
@@ -116,7 +117,7 @@ describe('getInputProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef} = result.current.getInputProps()
         inputRef({focus})
         result.current.toggleMenu()
@@ -129,7 +130,7 @@ describe('getInputProps', () => {
       const {result} = setupHook()
       const focus = jest.fn()
 
-      rtlAct(() => {
+      act(() => {
         const {blablaRef} = result.current.getInputProps({refKey: 'blablaRef'})
         blablaRef({focus})
         result.current.toggleMenu()
@@ -142,7 +143,7 @@ describe('getInputProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onKeyDown} = result.current.getInputProps({
           onKeyDown: userOnKeyDown,
         })
@@ -162,7 +163,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onKeyDown} = result.current.getInputProps({
           onKeyDown: userOnKeyDown,
         })
@@ -180,7 +181,7 @@ describe('getInputProps', () => {
       const userOnBlur = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onBlur} = result.current.getInputProps({
           onBlur: userOnBlur,
         })
@@ -200,7 +201,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onBlur} = result.current.getInputProps({
           onBlur: userOnBlur,
         })
@@ -218,7 +219,7 @@ describe('getInputProps', () => {
       const userOnChange = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnChange,
         })
@@ -238,7 +239,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnChange,
         })
@@ -256,7 +257,7 @@ describe('getInputProps', () => {
       const userOnInput = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnInput,
         })
@@ -276,7 +277,7 @@ describe('getInputProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
           onChange: userOnInput,
         })
@@ -703,6 +704,49 @@ describe('getInputProps', () => {
           fireEvent.blur(input)
 
           expect(input.value).toBe('bla')
+        })
+
+        test('by mouse is not triggered if target is within downshift', () => {
+          const stateReducer = jest.fn().mockImplementation(s => s)
+          const wrapper = setup({isOpen: true, stateReducer})
+          document.body.appendChild(wrapper.container)
+          const input = wrapper.getByTestId(dataTestIds.input)
+
+          fireEvent.mouseDown(input)
+          fireEvent.mouseUp(input)
+
+          expect(stateReducer).not.toHaveBeenCalled()
+
+          fireEvent.mouseDown(document.body)
+          fireEvent.mouseUp(document.body)
+
+          expect(stateReducer).toHaveBeenCalledTimes(1)
+          expect(stateReducer).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          )
+        })
+
+        test('by touch is not triggered if target is within downshift', () => {
+          const stateReducer = jest.fn().mockImplementation(s => s)
+          const wrapper = setup({isOpen: true, stateReducer})
+          document.body.appendChild(wrapper.container)
+          const input = wrapper.getByTestId(dataTestIds.input)
+
+          fireEvent.touchStart(input)
+          fireEvent.touchMove(input)
+          fireEvent.touchEnd(input)
+
+          expect(stateReducer).not.toHaveBeenCalled()
+
+          fireEvent.touchStart(document.body)
+          fireEvent.touchEnd(document.body)
+
+          expect(stateReducer).toHaveBeenCalledTimes(1)
+          expect(stateReducer).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          )
         })
       })
     })

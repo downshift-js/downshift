@@ -1,6 +1,6 @@
 /* eslint-disable jest/no-disabled-tests */
 import {fireEvent, cleanup} from '@testing-library/react'
-import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
@@ -50,7 +50,7 @@ describe('getToggleButtonProps', () => {
       const userOnClick = jest.fn()
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef} = result.current.getInputProps()
         const {
           ref: toggleButtonRef,
@@ -72,7 +72,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = setupHook()
 
-      rtlAct(() => {
+      act(() => {
         const {ref: inputRef} = result.current.getInputProps()
         const {
           ref: toggleButtonRef,

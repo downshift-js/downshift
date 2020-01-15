@@ -1,9 +1,9 @@
-import {act} from 'react-dom/test-utils'
 import React from 'react'
 import {renderHook} from '@testing-library/react-hooks'
-import {fireEvent, cleanup, render} from '@testing-library/react'
+import {fireEvent, cleanup, render, act} from '@testing-library/react'
 import {defaultProps} from '../../utils'
 import {setup, dataTestIds, items, defaultIds} from '../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
 import useCombobox from '..'
 
 describe('props', () => {
@@ -201,8 +201,13 @@ describe('props', () => {
     test('is added to the document provided by the user as prop', () => {
       const environment = {
         document: {
-          getElementById: jest.fn(() => ({setAttribute: jest.fn(), style: {}})),
+          getElementById: jest.fn(() => ({
+            setAttribute: jest.fn(),
+            style: {},
+          })),
         },
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
       }
       const wrapper = setup({items: [], environment})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -413,25 +418,100 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    test('is called at each state change', () => {
+    // eslint-disable-next-line max-statements
+    test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const wrapper = setup({stateReducer})
+      const wrapper = setup({stateReducer, isOpen: true})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const input = wrapper.getByTestId(dataTestIds.input)
+      const menu = wrapper.getByTestId(dataTestIds.menu)
 
       expect(stateReducer).not.toHaveBeenCalled()
 
       fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ToggleButtonClick}),
+      )
 
       fireEvent.change(input, {target: {value: 'c'}})
       expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputChange}),
+      )
+
+      fireEvent.keyDown(input, {key: 'ArrowDown'})
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownArrowDown}),
+      )
 
       fireEvent.keyDown(input, {key: 'ArrowUp'})
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-
-      fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownArrowUp}),
+      )
+
+      fireEvent.keyDown(input, {key: 'End'})
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownEnd}),
+      )
+
+      fireEvent.keyDown(input, {key: 'Home'})
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownHome}),
+      )
+
+      const item = wrapper.getByTestId(dataTestIds.item(1))
+      fireEvent.mouseMove(item)
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+      )
+
+      fireEvent.mouseLeave(menu)
+      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
+      )
+
+      fireEvent.keyDown(input, {key: 'Enter'})
+      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownEnter}),
+      )
+
+      fireEvent.keyDown(input, {key: 'Escape'})
+      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownEscape}),
+      )
+
+      fireEvent.click(item)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemClick}),
+      )
+
+      fireEvent.blur(input)
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.InputBlur}),
+      )
     })
 
     test('replaces prop values with user defined', () => {

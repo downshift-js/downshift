@@ -15,7 +15,7 @@ import {
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
-  isOrContainsNode,
+  targetWithinDownshift,
   isPlainObject,
   noop,
   normalizeArrowKey,
@@ -1056,16 +1056,6 @@ class Downshift extends Component {
         this.internalClearTimeouts()
       }
     } else {
-      const targetWithinDownshift = (target, checkActiveElement = true) => {
-        const {document} = this.props.environment
-        return [this._rootNode, this._menuNode].some(
-          contextNode =>
-            contextNode &&
-            (isOrContainsNode(contextNode, target) ||
-              (checkActiveElement &&
-                isOrContainsNode(contextNode, document.activeElement))),
-        )
-      }
       // this.isMouseDown helps us track whether the mouse is currently held down.
       // This is useful when the user clicks on an item in the list, but holds the mouse
       // down long enough for the list to disappear (because the blur event fires on the input)
@@ -1078,7 +1068,12 @@ class Downshift extends Component {
         this.isMouseDown = false
         // if the target element or the activeElement is within a downshift node
         // then we don't want to reset downshift
-        const contextWithinDownshift = targetWithinDownshift(event.target)
+        const contextWithinDownshift = targetWithinDownshift(
+          event.target,
+          this._rootNode,
+          this._menuNode,
+          this.props.environment.document,
+        )
         if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: stateChangeTypes.mouseUp}, () =>
             this.props.onOuterClick(this.getStateAndHelpers()),
@@ -1102,6 +1097,9 @@ class Downshift extends Component {
       const onTouchEnd = event => {
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
+          this._rootNode,
+          this._menuNode,
+          this.props.environment.document,
           false,
         )
         if (

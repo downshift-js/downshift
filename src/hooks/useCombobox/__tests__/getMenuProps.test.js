@@ -1,4 +1,4 @@
-import {act as rtlAct} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {setup, setupHook, defaultIds, dataTestIds} from '../testUtils'
@@ -63,7 +63,7 @@ describe('getMenuProps', () => {
       const userOnMouseLeave = jest.fn()
       const {result} = setupHook({initialHighlightedIndex: 2})
 
-      rtlAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -84,7 +84,7 @@ describe('getMenuProps', () => {
       })
       const {result} = setupHook({initialHighlightedIndex: 2})
 
-      rtlAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
