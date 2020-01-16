@@ -239,6 +239,38 @@ function pickState(state = {}) {
 }
 
 /**
+ * This will perform a shallow merge of the given state object
+ * with the state coming from props
+ * (for the controlled component scenario)
+ * This is used in state updater functions so they're referencing
+ * the right state regardless of where it comes from.
+ *
+ * @param {Object} state The state of the component/hook.
+ * @param {Object} props The props that may contain controlled values.
+ * @returns {Object} The merged controlled state.
+ */
+function getState(state, props) {
+  return Object.keys(state).reduce((prevState, key) => {
+    prevState[key] = isControlledProp(props, key) ? props[key] : state[key]
+
+    return prevState
+  }, {})
+}
+
+/**
+ * This determines whether a prop is a "controlled prop" meaning it is
+ * state which is controlled by the outside of this component rather
+ * than within this component.
+ *
+ * @param {Object} props The props that may contain controlled values.
+ * @param {String} key the key to check
+ * @return {Boolean} whether it is a controlled controlled prop
+ */
+function isControlledProp(props, key) {
+  return props[key] !== undefined
+}
+
+/**
  * Normalizes the 'key' property of a KeyboardEvent in IE/Edge
  * @param {Object} event a keyboardEvent object
  * @return {String} keyboard key
@@ -407,4 +439,6 @@ export {
   getNextWrappingIndex,
   getNextNonDisabledIndex,
   targetWithinDownshift,
+  getState,
+  isControlledProp,
 }

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import {useState, useEffect, useCallback, useReducer} from 'react'
-import {scrollIntoView, getNextWrappingIndex} from '../utils'
+import {scrollIntoView, getNextWrappingIndex, getState} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
@@ -20,14 +20,6 @@ function getElementIds(
     getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
     toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
   }
-}
-
-function getState(state, props) {
-  return Object.keys(state).reduce((prevState, key) => {
-    // eslint-disable-next-line no-param-reassign
-    prevState[key] = key in props ? props[key] : state[key]
-    return prevState
-  }, {})
 }
 
 function getItemIndex(index, item, items) {
