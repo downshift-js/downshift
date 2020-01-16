@@ -1,0 +1,123 @@
+---
+name: useDropdown
+menu: Hooks
+route: /hooks/use-dropdown
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useDropdown} from '../../src'
+import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+
+# useDropdown
+
+## As combobox
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownCombobox = () => {
+      const [inputItems, setInputItems] = useState(items)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+      } = useDropdown({
+        items: inputItems,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
+
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownCombobox />
+
+}}
+
+</Playground>
+
+## As select
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownSelect = () => {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useDropdown({items, stateReducer: (state, {type, changes}) => {
+        console.log(type)
+        return changes
+      }})
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownSelect />
+
+}}
+
+</Playground>
