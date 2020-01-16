@@ -360,7 +360,7 @@ function getNextNonDisabledIndex(
 }
 
 /**
- * Checks if event target is withing the downshift elements.
+ * Checks if event target is within the downshift elements.
  *
  * @param {EventTarget} target Target to check.
  * @param {HTMLElement} rootNode The element with combobox role.
