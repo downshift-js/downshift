@@ -10,12 +10,12 @@ import {
   debounce,
 } from '../../utils'
 import {
-  getItemIndex,
   useId,
   getPropTypesValidator,
   useEnhancedReducer,
   focusLandsOnElement,
   isAcceptedCharacterKey,
+  getItemIndex,
 } from '../utils'
 import {getElementIds, getInitialState, propTypes, defaultProps} from './utils'
 import dropdownReducer from './reducer'
@@ -39,9 +39,9 @@ function useDropdown(userProps = {}) {
     ...userProps,
   }
   const {
+    items,
     initialIsOpen,
     defaultIsOpen,
-    items,
     scrollIntoView,
     getA11ySelectionMessage,
     getA11yStatusMessage,
@@ -66,11 +66,9 @@ function useDropdown(userProps = {}) {
 
   // Refs.
   const menuRef = useRef(null)
-  const itemRefs = useRef()
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
-  itemRefs.current = []
   const shouldScroll = useRef(true)
   const isInitialMount = useRef(true)
   const mouseAndTouchTrackers = useRef({
@@ -80,7 +78,8 @@ function useDropdown(userProps = {}) {
   const clearTimeout = useRef(null)
 
   // Some utils.
-  const getItemNodeFromIndex = index => itemRefs.current[index]
+  const getItemNodeFromIndex = index =>
+    environment.document.getElementById(getItemId(index))
   const isCombobox = comboboxRef.current && inputRef.current
 
   // Effects.
@@ -145,14 +144,14 @@ function useDropdown(userProps = {}) {
   }, [inputValue])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
-    if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
+    if (highlightedIndex < 0 || !isOpen || !items.length) {
       return
     }
 
     if (shouldScroll.current === false) {
       shouldScroll.current = true
     } else {
-      scrollIntoView(itemRefs.current[highlightedIndex], menuRef.current)
+      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -196,13 +195,15 @@ function useDropdown(userProps = {}) {
         isOpen &&
         !targetWithinDownshift(
           event.target,
-          comboboxRef.current || toggleButtonRef.current,
+          isCombobox ? comboboxRef.current : toggleButtonRef.current,
           menuRef.current,
           environment.document,
         )
       ) {
         dispatch({
-          type: stateChangeTypes.InputBlur,
+          type: isCombobox
+            ? stateChangeTypes.InputBlur
+            : stateChangeTypes.ToggleButtonBlur,
         })
       }
     }
@@ -218,14 +219,16 @@ function useDropdown(userProps = {}) {
         !mouseAndTouchTrackers.current.isTouchMove &&
         !targetWithinDownshift(
           event.target,
-          comboboxRef.current,
+          isCombobox ? comboboxRef.current : toggleButtonRef.current,
           menuRef.current,
           environment.document,
           false,
         )
       ) {
         dispatch({
-          type: stateChangeTypes.InputBlur,
+          type: isCombobox
+            ? stateChangeTypes.InputBlur
+            : stateChangeTypes.ToggleButtonBlur,
         })
       }
     }
@@ -379,8 +382,12 @@ function useDropdown(userProps = {}) {
       })
     }
   }
-  const handleToggleButtonBlur = () => {
-    dispatch({type: stateChangeTypes.ToggleButtonBlur})
+  const toggleButtonHandleBlur = () => {
+    const shouldBlur = mouseAndTouchTrackers.current.isMouseDown
+    /* istanbul ignore else */
+    if (!shouldBlur) {
+      dispatch({type: stateChangeTypes.ToggleButtonBlur})
+    }
   }
   const menuHandleMouseLeave = () => {
     dispatch({
@@ -431,8 +438,6 @@ function useDropdown(userProps = {}) {
   const getItemProps = ({
     item,
     index,
-    refKey = 'ref',
-    ref,
     onMouseMove,
     onClick,
     onPress,
@@ -451,20 +456,15 @@ function useDropdown(userProps = {}) {
       : onClick
 
     return {
-      [refKey]: handleRefs(ref, itemNode => {
-        if (itemNode) {
-          itemRefs.current.push(itemNode)
-        }
-      }),
       role: 'option',
-      ...(itemIndex === highlightedIndex && {'aria-selected': true}),
-      id: getItemId(itemIndex),
+      ...(index === highlightedIndex && {'aria-selected': true}),
+      id: getItemId(index),
       ...(!rest.disabled && {
         onMouseMove: callAllEventHandlers(onMouseMove, () => {
-          itemHandleMouseMove(itemIndex)
+          itemHandleMouseMove(index)
         }),
         [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
-          itemHandleClick(itemIndex)
+          itemHandleClick(index)
         }),
       }),
       ...rest,
@@ -496,7 +496,7 @@ function useDropdown(userProps = {}) {
             ...(highlightedIndex > -1 && {
               'aria-activedescendant': getItemId(highlightedIndex),
             }),
-            onBlur: callAllEventHandlers(onBlur, handleToggleButtonBlur),
+            onBlur: callAllEventHandlers(onBlur, toggleButtonHandleBlur),
           }),
       onKeyDown: callAllEventHandlers(onKeyDown, toggleButtonHandleKeyDown),
       ...(!rest.disabled && {

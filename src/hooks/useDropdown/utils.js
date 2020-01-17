@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
+import {generateId} from '../../utils'
 import {
-  getElementIds as getElementIdsCommon,
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
@@ -8,14 +8,27 @@ import {
 
 const defaultStateValues = {
   inputValue: '',
+  highlightedIndex: -1,
+  isOpen: false,
+  selectedItem: null,
 }
 
-function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
-  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
+function getElementIds({
+  id,
+  labelId,
+  menuId,
+  getItemId,
+  toggleButtonId,
+  inputId,
+} = {}) {
+  const uniqueId = id || `downshift-${generateId()}`
 
   return {
+    labelId: labelId || `${uniqueId}-label`,
+    menuId: menuId || `${uniqueId}-menu`,
+    getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
+    toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
     inputId: inputId || `${uniqueId}-input`,
-    ...getElementIdsCommon(generateDefaultId, {id, ...rest}),
   }
 }
 
@@ -31,17 +44,7 @@ function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
   const highlightedIndex = getInitialValue(props, 'highlightedIndex')
-  let inputValue = getInitialValue(props, 'inputValue')
-
-  if (
-    inputValue === '' &&
-    selectedItem &&
-    props.defaultInputValue === undefined &&
-    props.initialInputValue === undefined &&
-    props.inputValue === undefined
-  ) {
-    inputValue = props.itemToString(selectedItem)
-  }
+  const inputValue = getInitialValue(props, 'inputValue')
 
   return {
     highlightedIndex:

@@ -1,17 +1,36 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {useId, defaultProps} from '../utils'
-import {getElementIds} from './utils'
-import useCombobox from '.'
+import useDropdown from '.'
 
-jest.mock('../utils', () => {
-  const module = require.requireActual('../utils')
+jest.mock('./utils', () => {
+  const utils = require.requireActual('./utils')
 
-  module.useId = () => 'test-id'
-
-  return module
+  return {
+    ...utils,
+    getElementIds: ({
+      labelId,
+      menuId,
+      getItemId,
+      toggleButtonId,
+      inputId,
+    } = {}) => ({
+      labelId: labelId || 'downshift-label',
+      menuId: menuId || 'downshift-menu',
+      getItemId: getItemId || (index => `downshift-item-${index}`),
+      toggleButtonId: toggleButtonId || 'downshift-toggle-button',
+      inputId: inputId || 'downshift-input',
+    }),
+  }
 })
+
+const defaultIds = {
+  labelId: 'downshift-label',
+  menuId: 'downshift-menu',
+  getItemId: index => `downshift-item-${index}`,
+  toggleButtonId: 'downshift-toggle-button',
+  inputId: 'downshift-input',
+}
 
 const items = [
   'Neptunium',
@@ -43,11 +62,7 @@ const items = [
 ]
 
 const dataTestIds = {
-  toggleButton: 'toggle-button-id',
-  menu: 'menu-id',
-  item: index => `item-id-${index}`,
   input: 'input-id',
-  combobox: 'combobox-id',
 }
 
 const DropdownCombobox = props => {
@@ -60,7 +75,7 @@ const DropdownCombobox = props => {
     getComboboxProps,
     highlightedIndex,
     getItemProps,
-  } = useCombobox({items, ...props})
+  } = useDropdown({items, ...props})
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -76,8 +91,9 @@ const DropdownCombobox = props => {
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? defaultProps.itemToString(item) : item
+            const stringItem = props.itemToString
+              ? props.itemToString(item)
+              : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}
@@ -96,12 +112,22 @@ const DropdownCombobox = props => {
   )
 }
 
-const setup = props => render(<DropdownCombobox {...props} />)
+const renderCombobox = props => {
+  const wrapper = render(<DropdownCombobox {...props} />)
+  const combobox = wrapper.getByRole('combobox')
+  const label = wrapper.getByText(/choose an element/i)
+  const input = wrapper.getByTestId(dataTestIds.input)
+  const menu = wrapper.getByRole('listbox')
+  const getItemFromText = text => wrapper.getByText(text)
+  const getItems = () => wrapper.getAllByRole('option')
 
-const defaultIds = getElementIds(useId)
-
-const setupHook = props => {
-  return renderHook(() => useCombobox({items, ...props}))
+  return {wrapper, combobox, label, input, menu, getItemFromText, getItems}
 }
 
-export {setupHook, dataTestIds, defaultIds, items, setup}
+const renderUseDropdown = props => {
+  const wrapper = renderHook(() => useDropdown({items, ...props}))
+
+  return {wrapper, ...wrapper.result.current}
+}
+
+export {renderUseDropdown, defaultIds, items, renderCombobox}
