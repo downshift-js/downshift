@@ -25,6 +25,8 @@ import {
   unwrapArray,
   getNextWrappingIndex,
   getNextNonDisabledIndex,
+  getState,
+  isControlledProp,
 } from './utils'
 
 class Downshift extends Component {
@@ -189,33 +191,11 @@ class Downshift extends Component {
    * is the value given, otherwise it's retrieved from
    * stateToMerge
    *
-   * This will perform a shallow merge of the given state object
-   * with the state coming from props
-   * (for the controlled component scenario)
-   * This is used in state updater functions so they're referencing
-   * the right state regardless of where it comes from.
-   *
    * @param {Object} stateToMerge defaults to this.state
    * @return {Object} the state
    */
   getState(stateToMerge = this.state) {
-    return Object.keys(stateToMerge).reduce((state, key) => {
-      state[key] = this.isControlledProp(key)
-        ? this.props[key]
-        : stateToMerge[key]
-      return state
-    }, {})
-  }
-
-  /**
-   * This determines whether a prop is a "controlled prop" meaning it is
-   * state which is controlled by the outside of this component rather
-   * than within this component.
-   * @param {String} key the key to check
-   * @return {Boolean} whether it is a controlled controlled prop
-   */
-  isControlledProp(key) {
-    return this.props[key] !== undefined
+    return getState(stateToMerge, this.props)
   }
 
   getItemCount() {
@@ -387,7 +367,7 @@ class Downshift extends Component {
           }
           nextFullState[key] = newStateToSet[key]
           // if it's coming from props, then we don't care to set it internally
-          if (!this.isControlledProp(key)) {
+          if (!isControlledProp(this.props, key)) {
             nextState[key] = newStateToSet[key]
           }
         })
@@ -1159,7 +1139,7 @@ class Downshift extends Component {
     }
 
     if (
-      this.isControlledProp('selectedItem') &&
+      isControlledProp(this.props, 'selectedItem') &&
       this.props.selectedItemChanged(
         prevProps.selectedItem,
         this.props.selectedItem,
