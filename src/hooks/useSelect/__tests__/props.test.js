@@ -1,67 +1,72 @@
 import {renderHook} from '@testing-library/react-hooks'
-import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
-import {setup, dataTestIds, items, defaultIds} from '../testUtils'
+import {cleanup, act} from '@testing-library/react'
+import {renderSelect, items, defaultIds, renderUseSelect} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
+
+jest.useFakeTimers()
 
 describe('props', () => {
   afterEach(cleanup)
 
+  afterAll(jest.useRealTimers)
+
   test('if falsy then prop types error is thrown', () => {
     global.console.error = jest.fn()
     renderHook(() => useSelect())
+
     expect(global.console.error).toBeCalledWith(expect.any(String))
+
     global.console.error.mockRestore()
   })
 
   describe('id', () => {
     test('if passed will override downshift default', () => {
-      const wrapper = setup({items: [], id: 'my-custom-little-id'})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {toggleButton} = renderSelect({id: 'my-custom-little-id'})
 
-      expect(toggleButton.getAttribute('id')).toContain('my-custom-little-id')
+      expect(toggleButton).toHaveAttribute(
+        'id',
+        expect.stringContaining('my-custom-little-id'),
+      )
     })
   })
 
   describe('items', () => {
     test('if passed as empty then menu will not open', () => {
-      const wrapper = setup({items: [], isOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {getItems} = renderSelect({items: [], isOpen: true})
 
-      expect(menu.childNodes).toHaveLength(0)
+      expect(getItems()).toHaveLength(0)
     })
 
     test('passed as objects should work with custom itemToString', () => {
-      const wrapper = setup({
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
         items: [{str: 'aaa'}, {str: 'bbb'}],
         itemToString: item => item.str,
         initialIsOpen: true,
       })
 
-      fireEvent.click(wrapper.getByTestId(dataTestIds.item(0)))
-      expect(document.getElementById('a11y-status-message').textContent).toBe(
+      clickOnItemAtIndex(0)
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
       )
     })
   })
 
   describe('itemToString', () => {
-    jest.useFakeTimers()
-
     afterEach(() => {
-      reactAct(() => jest.runAllTimers())
+      act(() => jest.runAllTimers())
     })
 
     test('should provide string version to a11y status message', () => {
-      const wrapper = setup({
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
         itemToString: () => 'custom-item',
         initialIsOpen: true,
       })
-      const item = wrapper.getByTestId(dataTestIds.item(0))
 
-      fireEvent.click(item)
+      clickOnItemAtIndex(0)
 
-      expect(document.getElementById('a11y-status-message').textContent).toBe(
+      expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
       )
     })
@@ -69,19 +74,20 @@ describe('props', () => {
 
   describe('getA11ySelectionMessage', () => {
     afterEach(() => {
-      reactAct(() => jest.runAllTimers())
+      act(() => jest.runAllTimers())
     })
 
     test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
       const getA11ySelectionMessage = jest.fn()
-      const wrapper = setup({
+      const {clickOnItemAtIndex} = renderSelect({
         getA11ySelectionMessage,
         isOpen: true,
         items: [{str: 'ala'}],
       })
-      const item = wrapper.getByTestId(dataTestIds.item(0))
 
-      fireEvent.click(item)
+      clickOnItemAtIndex(0)
+
+      expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           itemToString: expect.any(Function),
@@ -93,99 +99,103 @@ describe('props', () => {
     })
 
     test('is replaced with the user provided one', () => {
-      const wrapper = setup({getA11ySelectionMessage: () => 'custom message'})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+        getA11ySelectionMessage: () => 'custom message',
+        initialIsOpen: true,
+      })
 
-      fireEvent.click(toggleButton)
-      const item = wrapper.getByTestId(dataTestIds.item(3))
-      reactAct(() => jest.runAllTimers())
-      fireEvent.click(item)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual('custom message')
+      clickOnItemAtIndex(3)
+
+      expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
   })
 
   describe('getA11yStatusMessage', () => {
-    jest.useFakeTimers()
-
     afterEach(() => {
-      reactAct(() => jest.runAllTimers())
+      act(() => jest.runAllTimers())
     })
 
     test('reports that no results are available if items list is empty', () => {
-      const wrapper = setup({items: []})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        items: [],
+      })
 
-      fireEvent.click(toggleButton)
-      expect(document.getElementById('a11y-status-message').textContent).toBe(
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(100))
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
         'No results are available',
       )
     })
 
     test('reports that one result is available if one item is shown', () => {
-      const wrapper = setup({items: ['bla']})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        items: ['item1'],
+      })
 
-      fireEvent.click(toggleButton)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual(
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(100))
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
         '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
       )
     })
 
     test('reports the number of results available if more than one item are shown', () => {
-      const wrapper = setup({items: ['bla', 'blabla']})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        items: ['item1', 'item2'],
+      })
 
-      fireEvent.click(toggleButton)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual(
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(100))
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
         '2 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
       )
     })
 
     test('is empty on menu close', () => {
-      const wrapper = setup({items: ['bla', 'blabla'], initialIsOpen: true})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      reactAct(() => jest.runAllTimers())
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        items: ['item1', 'item2'],
+        initialIsOpen: true,
+      })
 
-      fireEvent.click(toggleButton)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual('')
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(100))
+
+      expect(getA11yStatusContainer()).toHaveTextContent('')
     })
 
     test('is removed after 500ms as a cleanup', () => {
-      const wrapper = setup()
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        items: ['item1', 'item2'],
+      })
 
-      fireEvent.click(toggleButton)
-      reactAct(() => jest.runAllTimers())
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(500))
 
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual('')
+      expect(getA11yStatusContainer()).toHaveTextContent('')
     })
 
     test('is replaced with the user provided one', () => {
-      const wrapper = setup({getA11yStatusMessage: () => 'custom message'})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+        getA11yStatusMessage: () => 'custom message',
+      })
 
-      fireEvent.click(toggleButton)
-      expect(
-        document.getElementById('a11y-status-message').textContent,
-      ).toEqual('custom message')
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(200))
+
+      expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
     test('is called with isOpen, items, itemToString and selectedItem at toggle', () => {
       const getA11yStatusMessage = jest.fn()
-      const wrapper = setup({getA11yStatusMessage})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton} = renderSelect({getA11yStatusMessage})
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(200))
+
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           items: expect.any(Array),
@@ -201,11 +211,14 @@ describe('props', () => {
         document: {
           getElementById: jest.fn(() => ({setAttribute: jest.fn(), style: {}})),
         },
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
       }
-      const wrapper = setup({items: [], environment})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton} = renderSelect({items: [], environment})
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
+      act(() => jest.advanceTimersByTime(200))
+
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
   })
@@ -213,30 +226,37 @@ describe('props', () => {
   describe('highlightedIndex', () => {
     test('controls the state property if passed', () => {
       const highlightedIndex = 1
-      const wrapper = setup({isOpen: true, highlightedIndex})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {keyDownOnToggleButton, toggleButton} = renderSelect({
+        isOpen: true,
+        highlightedIndex,
+      })
 
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      keyDownOnToggleButton('ArrowDown')
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'End'})
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      keyDownOnToggleButton('End')
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'ArrowUp'})
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      keyDownOnToggleButton('ArrowUp')
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'c'})
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      keyDownOnToggleButton('c')
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
     })
@@ -244,202 +264,203 @@ describe('props', () => {
 
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
-      const wrapper = setup({isOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {
+        keyDownOnToggleButton,
+        clickOnToggleButton,
+        blurToggleButton,
+        getItems,
+      } = renderSelect({isOpen: true})
+      expect(getItems()).toHaveLength(items.length)
 
-      expect(menu.childNodes).toHaveLength(items.length)
+      clickOnToggleButton()
+      expect(getItems()).toHaveLength(items.length)
 
-      fireEvent.click(toggleButton)
-      expect(menu.childNodes).toHaveLength(items.length)
+      keyDownOnToggleButton('Escape')
+      expect(getItems()).toHaveLength(items.length)
 
-      fireEvent.keyDown(menu, {key: 'Escape'})
-      expect(menu.childNodes).toHaveLength(items.length)
-
-      fireEvent.blur(menu)
-      expect(menu.childNodes).toHaveLength(items.length)
+      blurToggleButton('Escape')
+      expect(getItems()).toHaveLength(items.length)
     })
   })
 
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
       const selectedItem = items[2]
-      const wrapper = setup({selectedItem, initialIsOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      const item = wrapper.getByTestId(dataTestIds.item(3))
+      const {
+        toggleButton,
+        keyDownOnToggleButton,
+        clickOnItemAtIndex,
+      } = renderSelect({selectedItem, isOpen: true})
 
-      expect(toggleButton.textContent).toEqual(items[2])
+      expect(toggleButton).toHaveTextContent(items[2])
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
-      fireEvent.keyDown(menu, {key: 'Enter'})
+      keyDownOnToggleButton('ArrowDown')
+      keyDownOnToggleButton('Enter')
 
-      expect(toggleButton.textContent).toEqual(items[2])
+      expect(toggleButton).toHaveTextContent(items[2])
 
-      fireEvent.click(toggleButton)
-      fireEvent.click(item)
+      clickOnItemAtIndex(4)
+
       expect(toggleButton.textContent).toEqual(items[2])
     })
 
     test('highlightedIndex on open gets computed based on the selectedItem prop value', () => {
       const expectedHighlightedIndex = 2
       const selectedItem = items[expectedHighlightedIndex]
-      const wrapper = setup({selectedItem})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {
+        clickOnToggleButton,
+        clickOnItemAtIndex,
+        keyDownOnToggleButton,
+        toggleButton,
+      } = renderSelect({selectedItem})
 
-      fireEvent.click(toggleButton)
-      const item = wrapper.getByTestId(dataTestIds.item(3))
+      clickOnToggleButton()
 
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
-      fireEvent.keyDown(menu, {key: 'Enter'})
+      keyDownOnToggleButton('ArrowDown')
+      keyDownOnToggleButton('Enter')
 
-      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+      expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
 
-      fireEvent.click(toggleButton)
-      fireEvent.click(item)
-      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+      clickOnToggleButton()
+      clickOnItemAtIndex(3)
+
+      expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
     })
 
     test('highlightedIndex computed based on the selectedItem prop value in initial state as well', () => {
       const expectedHighlightedIndex = 2
       const selectedItem = items[expectedHighlightedIndex]
       // open dropdown in the initial state to check highlighted index.
-      const wrapper = setup({selectedItem, initialIsOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      const item = wrapper.getByTestId(dataTestIds.item(3))
+      const {
+        clickOnItemAtIndex,
+        clickOnToggleButton,
+        keyDownOnToggleButton,
+        toggleButton,
+      } = renderSelect({selectedItem, initialIsOpen: true})
 
-      expect(menu.getAttribute('aria-activedescendant')).toBe(
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
-      fireEvent.keyDown(menu, {key: 'Enter'})
+      keyDownOnToggleButton('ArrowDown')
+      keyDownOnToggleButton('Enter')
 
-      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+      expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
+      clickOnToggleButton()
+      clickOnItemAtIndex(3)
 
-      fireEvent.click(toggleButton)
-      fireEvent.click(item)
-      expect(toggleButton.textContent).toEqual(items[expectedHighlightedIndex])
+      expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
     })
   })
 
   describe('stateReducer', () => {
     test('is called at each state change', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const wrapper = setup({stateReducer})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {keyDownOnToggleButton, clickOnToggleButton} = renderSelect({
+        stateReducer,
+      })
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
       expect(stateReducer).toHaveBeenCalledTimes(1)
 
-      fireEvent.keyDown(menu, {key: 'c'})
+      keyDownOnToggleButton('c')
       expect(stateReducer).toHaveBeenCalledTimes(2)
 
-      fireEvent.keyDown(menu, {key: 'ArrowUp'})
+      keyDownOnToggleButton('ArrowUp')
       expect(stateReducer).toHaveBeenCalledTimes(3)
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
       expect(stateReducer).toHaveBeenCalledTimes(4)
     })
 
+    test('is called at each state change with the function change type', () => {
+      const stateReducer = jest.fn((s, a) => a.changes)
+      const {result} = renderUseSelect({stateReducer})
+
+      result.current.toggleMenu()
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionToggleMenu}),
+      )
+
+      result.current.openMenu()
+      expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionOpenMenu}),
+      )
+
+      result.current.closeMenu()
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionCloseMenu}),
+      )
+
+      result.current.reset()
+      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionReset}),
+      )
+
+      result.current.selectItem({})
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionSelectItem}),
+      )
+
+      result.current.setHighlightedIndex(5)
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.FunctionSetHighlightedIndex,
+        }),
+      )
+
+      result.current.setInputValue({})
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.FunctionSetInputValue}),
+      )
+    })
     // eslint-disable-next-line max-statements
     test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const wrapper = setup({stateReducer, isOpen: true})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {
+        clickOnToggleButton,
+        blurToggleButton,
+        mouseLeaveMenu,
+        keyDownOnToggleButton,
+        mouseMoveItemAtIndex,
+        clickOnItemAtIndex,
+      } = renderSelect({stateReducer, isOpen: true})
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
+
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.ToggleButtonClick}),
       )
 
-      fireEvent.keyDown(menu, {key: 'c'})
+      keyDownOnToggleButton('c')
+
       expect(stateReducer).toHaveBeenCalledTimes(2)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownCharacter}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowDown}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'ArrowUp'})
-      expect(stateReducer).toHaveBeenCalledTimes(4)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowUp}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'End'})
-      expect(stateReducer).toHaveBeenCalledTimes(5)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnd}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'Home'})
-      expect(stateReducer).toHaveBeenCalledTimes(6)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownHome}),
-      )
-
-      const item = wrapper.getByTestId(dataTestIds.item(1))
-      fireEvent.mouseMove(item)
-      expect(stateReducer).toHaveBeenCalledTimes(7)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
-      )
-
-      fireEvent.mouseLeave(menu)
-      expect(stateReducer).toHaveBeenCalledTimes(8)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'Enter'})
-      expect(stateReducer).toHaveBeenCalledTimes(9)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnter}),
-      )
-
-      fireEvent.keyDown(menu, {key: 'Escape'})
-      expect(stateReducer).toHaveBeenCalledTimes(10)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEscape}),
-      )
-
-      fireEvent.click(item)
-      expect(stateReducer).toHaveBeenCalledTimes(11)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.ItemClick}),
-      )
-
-      fireEvent.keyDown(toggleButton, {key: 'c'})
-      expect(stateReducer).toHaveBeenCalledTimes(12)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -447,8 +468,9 @@ describe('props', () => {
         }),
       )
 
-      fireEvent.keyDown(toggleButton, {key: 'ArrowDown'})
-      expect(stateReducer).toHaveBeenCalledTimes(13)
+      keyDownOnToggleButton('ArrowDown')
+
+      expect(stateReducer).toHaveBeenCalledTimes(3)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -456,8 +478,9 @@ describe('props', () => {
         }),
       )
 
-      fireEvent.keyDown(toggleButton, {key: 'ArrowUp'})
-      expect(stateReducer).toHaveBeenCalledTimes(14)
+      keyDownOnToggleButton('ArrowUp')
+
+      expect(stateReducer).toHaveBeenCalledTimes(4)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -465,19 +488,87 @@ describe('props', () => {
         }),
       )
 
-      fireEvent.blur(menu)
-      expect(stateReducer).toHaveBeenCalledTimes(15)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuBlur}),
-      )
+      keyDownOnToggleButton('End')
 
-      fireEvent.keyDown(menu, {key: ' '})
-      expect(stateReducer).toHaveBeenCalledTimes(16)
+      expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
-          type: stateChangeTypes.MenuKeyDownSpaceButton,
+          type: stateChangeTypes.ToggleButtonKeyDownEnd,
+        }),
+      )
+
+      keyDownOnToggleButton('Home')
+
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownHome,
+        }),
+      )
+
+      mouseMoveItemAtIndex(1)
+
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+      )
+
+      mouseLeaveMenu()
+
+      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
+      )
+
+      keyDownOnToggleButton('Enter')
+
+      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownEnter,
+        }),
+      )
+
+      keyDownOnToggleButton('Escape')
+
+      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownEscape,
+        }),
+      )
+
+      blurToggleButton()
+
+      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
+      )
+
+      keyDownOnToggleButton(' ')
+
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
+        }),
+      )
+
+      clickOnItemAtIndex(5)
+
+      expect(stateReducer).toHaveBeenCalledTimes(13)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.ItemClick,
         }),
       )
     })
@@ -487,10 +578,9 @@ describe('props', () => {
         expect(a.type).toBe(useSelect.stateChangeTypes.ToggleButtonClick)
         return a.changes
       })
-      const wrapper = setup({stateReducer})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton} = renderSelect({stateReducer})
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
     })
 
     test('receives state, changes and type', () => {
@@ -506,10 +596,9 @@ describe('props', () => {
 
         return a.changes
       })
-      const wrapper = setup({stateReducer})
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {clickOnToggleButton} = renderSelect({stateReducer})
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
     })
 
     test('changes are visible in onChange handlers', () => {
@@ -525,16 +614,16 @@ describe('props', () => {
       const onHighlightedIndexChange = jest.fn()
       const onIsOpenChange = jest.fn()
       const onStateChange = jest.fn()
-      const wrapper = setup({
+      const {clickOnToggleButton} = renderSelect({
         stateReducer,
         onStateChange,
         onSelectedItemChange,
         onHighlightedIndexChange,
         onIsOpenChange,
       })
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
+
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex,
@@ -563,27 +652,32 @@ describe('props', () => {
   describe('onSelectedItemChange', () => {
     test('is called at selectedItem change', () => {
       const onSelectedItemChange = jest.fn()
-      const wrapper = setup({initialIsOpen: true, onSelectedItemChange})
-      const item = wrapper.getByTestId(dataTestIds.item(0))
+      const index = 2
+      const {clickOnItemAtIndex} = renderSelect({
+        initialIsOpen: true,
+        onSelectedItemChange,
+      })
 
-      fireEvent.click(item)
+      clickOnItemAtIndex(index)
+
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          selectedItem: items[0],
+          selectedItem: items[index],
         }),
       )
     })
 
     test('is not called at if selectedItem is the same', () => {
+      const index = 1
       const onSelectedItemChange = jest.fn()
-      const wrapper = setup({
+      const {clickOnItemAtIndex} = renderSelect({
         initialIsOpen: true,
-        initialSelectedItem: items[0],
+        initialSelectedItem: items[index],
         onSelectedItemChange,
       })
-      const item = wrapper.getByTestId(dataTestIds.item(0))
 
-      fireEvent.click(item)
+      clickOnItemAtIndex(index)
+
       expect(onSelectedItemChange).not.toHaveBeenCalled()
     })
   })
@@ -591,10 +685,13 @@ describe('props', () => {
   describe('onHighlightedIndexChange', () => {
     test('is called at each highlightedIndex change', () => {
       const onHighlightedIndexChange = jest.fn()
-      const wrapper = setup({initialIsOpen: true, onHighlightedIndexChange})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {keyDownOnToggleButton} = renderSelect({
+        initialIsOpen: true,
+        onHighlightedIndexChange,
+      })
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      keyDownOnToggleButton('ArrowDown')
+
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,
@@ -604,17 +701,18 @@ describe('props', () => {
 
     test('is not called if highlightedIndex is the same', () => {
       const onHighlightedIndexChange = jest.fn()
-      const wrapper = setup({
+      const {keyDownOnToggleButton} = renderSelect({
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
       })
-      const menu = wrapper.getByTestId(dataTestIds.menu)
 
-      fireEvent.keyDown(menu, {key: 'ArrowUp'})
+      keyDownOnToggleButton('ArrowUp')
+
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      fireEvent.keyDown(menu, {key: 'Home'})
+      keyDownOnToggleButton('Home')
+
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
   })
@@ -622,10 +720,13 @@ describe('props', () => {
   describe('onIsOpenChange', () => {
     test('is called at each isOpen change', () => {
       const onIsOpenChange = jest.fn()
-      const wrapper = setup({initialIsOpen: true, onIsOpenChange})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {keyDownOnToggleButton} = renderSelect({
+        initialIsOpen: true,
+        onIsOpenChange,
+      })
 
-      fireEvent.keyDown(menu, {key: 'Escape'})
+      keyDownOnToggleButton('Escape')
+
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen: false,
@@ -635,10 +736,13 @@ describe('props', () => {
 
     test('is not called at if isOpen is the same', () => {
       const onIsOpenChange = jest.fn()
-      const wrapper = setup({defaultIsOpen: true, onIsOpenChange})
-      const item = wrapper.getByTestId(dataTestIds.item(0))
+      const {clickOnItemAtIndex} = renderSelect({
+        defaultIsOpen: true,
+        onIsOpenChange,
+      })
 
-      fireEvent.click(item)
+      clickOnItemAtIndex(0)
+
       expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
   })
@@ -646,26 +750,27 @@ describe('props', () => {
   describe('onStateChange', () => {
     test('is called at each state property change', () => {
       const onStateChange = jest.fn()
-      const wrapper = setup({onStateChange})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
-      const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      const {
+        clickOnToggleButton,
+        keyDownOnToggleButton,
+        clickOnItemAtIndex,
+      } = renderSelect({onStateChange})
 
-      fireEvent.click(toggleButton)
+      clickOnToggleButton()
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen: true,
         }),
       )
 
-      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      keyDownOnToggleButton('ArrowDown')
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,
         }),
       )
 
-      const item = wrapper.getByTestId(dataTestIds.item(0))
-      fireEvent.click(item)
+      clickOnItemAtIndex(0)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           selectedItem: items[0],

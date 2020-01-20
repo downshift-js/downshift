@@ -5,17 +5,18 @@ import {
   getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
 } from '../utils'
+import {generateId} from '../../utils'
 
 const defaultStateValues = {
   inputValue: '',
 }
 
-function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
-  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
+function getElementIds({id, inputId, ...rest} = {}) {
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
   return {
     inputId: inputId || `${uniqueId}-input`,
-    ...getElementIdsCommon(generateDefaultId, {id, ...rest}),
+    ...getElementIdsCommon({id, ...rest}),
   }
 }
 

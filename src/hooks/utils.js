@@ -1,18 +1,16 @@
 import PropTypes from 'prop-types'
-import {useState, useEffect, useCallback, useReducer} from 'react'
-import {scrollIntoView, getNextWrappingIndex, getState} from '../utils'
+import {useCallback, useReducer} from 'react'
+import {scrollIntoView, getNextWrappingIndex, getState, generateId} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
   isOpen: false,
   selectedItem: null,
+  inputValue: '',
 }
 
-function getElementIds(
-  generateDefaultId,
-  {id, labelId, menuId, getItemId, toggleButtonId} = {},
-) {
-  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
+function getElementIds({id, labelId, menuId, getItemId, toggleButtonId} = {}) {
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
   return {
     labelId: labelId || `${uniqueId}-label`,
@@ -95,24 +93,6 @@ function useEnhancedReducer(reducer, initialState, props) {
   return [getState(state, props), dispatch]
 }
 
-let lastId = 0
-// istanbul ignore next
-const genId = () => ++lastId
-
-/**
- * Autogenerate IDs to facilitate WAI-ARIA and server rendering.
- * Taken from @reach/auto-id
- * @see https://github.com/reach/reach-ui/blob/6e9dbcf716d5c9a3420e062e5bac1ac4671d01cb/packages/auto-id/src/index.js
- */
-// istanbul ignore next
-function useId() {
-  const [id, setId] = useState(null)
-
-  useEffect(() => setId(genId()), [])
-
-  return id
-}
-
 /**
  * Checks if nextElement receives focus after the blur event.
  *
@@ -192,23 +172,44 @@ const defaultProps = {
       : window,
 }
 
-function getDefaultValue(props, propKey, defaultStateValuesLocal) {
+function getDefaultValue(props, propKey) {
   const defaultPropKey = `default${capitalizeString(propKey)}`
+
   if (defaultPropKey in props) {
     return props[defaultPropKey]
   }
-  return {...defaultStateValues, ...defaultStateValuesLocal}[propKey]
+
+  return defaultStateValues[propKey]
 }
 
-function getInitialValue(props, propKey, defaultStateValuesLocal) {
+function getInitialValue(props, propKey) {
   if (propKey in props) {
     return props[propKey]
   }
+
   const initialPropKey = `initial${capitalizeString(propKey)}`
+
   if (initialPropKey in props) {
     return props[initialPropKey]
   }
-  return getDefaultValue(props, propKey, defaultStateValuesLocal)
+  return getDefaultValue(props, propKey)
+}
+
+function getInitialState(props) {
+  const selectedItem = getInitialValue(props, 'selectedItem')
+  const isOpen = getInitialValue(props, 'isOpen')
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const inputValue = getInitialValue(props, 'inputValue')
+
+  return {
+    highlightedIndex:
+      highlightedIndex < 0 && selectedItem
+        ? props.items.indexOf(selectedItem)
+        : highlightedIndex,
+    isOpen,
+    selectedItem,
+    inputValue,
+  }
 }
 
 function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
@@ -245,17 +246,16 @@ function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
 
 export {
   getElementIds,
-  getState,
   getItemIndex,
   getPropTypesValidator,
   isAcceptedCharacterKey,
   useEnhancedReducer,
   capitalizeString,
-  useId,
   focusLandsOnElement,
   defaultProps,
   getDefaultValue,
   getInitialValue,
   getHighlightedIndexOnOpen,
   defaultStateValues,
+  getInitialState,
 }

@@ -10,7 +10,6 @@ import {
 } from '../../utils'
 import {
   getItemIndex,
-  useId,
   getPropTypesValidator,
   useEnhancedReducer,
   focusLandsOnElement,
@@ -58,7 +57,6 @@ function useCombobox(userProps = {}) {
 
   // IDs generation.
   const {labelId, getItemId, menuId, toggleButtonId, inputId} = getElementIds(
-    useId,
     props,
   )
 

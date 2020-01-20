@@ -1,16 +1,33 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {useId, defaultProps} from '../utils'
-import {getElementIds} from './utils'
+import {defaultProps} from '../utils'
 import useCombobox from '.'
 
-jest.mock('../utils', () => {
-  const module = require.requireActual('../utils')
+jest.mock('./utils', () => {
+  const utils = require.requireActual('./utils')
 
-  module.useId = () => 'test-id'
+  return {
+    ...utils,
+    getElementIds: ({
+      id,
+      labelId,
+      menuId,
+      getItemId,
+      toggleButtonId,
+      inputId,
+    } = {}) => {
+      const prefix = id || 'downshift'
 
-  return module
+      return {
+        labelId: labelId || `${prefix}-label`,
+        menuId: menuId || `${prefix}-menu`,
+        getItemId: getItemId || (index => `${prefix}-item-${index}`),
+        toggleButtonId: toggleButtonId || `${prefix}-toggle-button`,
+        inputId: inputId || `${prefix}-input`,
+      }
+    },
+  }
 })
 
 const items = [
@@ -41,6 +58,14 @@ const items = [
   'Tennessine',
   'Oganesson',
 ]
+
+const defaultIds = {
+  labelId: 'downshift-label',
+  menuId: 'downshift-menu',
+  getItemId: index => `downshift-item-${index}`,
+  toggleButtonId: 'downshift-toggle-button',
+  inputId: 'downshift-input',
+}
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
@@ -97,8 +122,6 @@ const DropdownCombobox = props => {
 }
 
 const setup = props => render(<DropdownCombobox {...props} />)
-
-const defaultIds = getElementIds(useId)
 
 const setupHook = props => {
   return renderHook(() => useCombobox({items, ...props}))

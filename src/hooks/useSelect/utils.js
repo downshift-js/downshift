@@ -1,37 +1,4 @@
 import PropTypes from 'prop-types'
-import {
-  getInitialValue as getInitialValueCommon,
-  getDefaultValue as getDefaultValueCommon,
-  defaultProps as defaultPropsCommon,
-} from '../utils'
-
-const defaultStateValues = {
-  keysSoFar: '',
-}
-
-function getDefaultValue(props, propKey) {
-  return getDefaultValueCommon(props, propKey, defaultStateValues)
-}
-
-function getInitialValue(props, propKey) {
-  return getInitialValueCommon(props, propKey, defaultStateValues)
-}
-
-function getInitialState(props) {
-  const selectedItem = getInitialValue(props, 'selectedItem')
-  const isOpen = getInitialValue(props, 'isOpen')
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
-
-  return {
-    highlightedIndex:
-      highlightedIndex < 0 && selectedItem
-        ? props.items.indexOf(selectedItem)
-        : highlightedIndex,
-    isOpen,
-    selectedItem,
-    keysSoFar: '',
-  }
-}
 
 function getItemIndexByCharacterKey(
   keysSoFar,
@@ -112,11 +79,4 @@ const propTypes = {
   }),
 }
 
-export {
-  getInitialState,
-  defaultStateValues,
-  propTypes,
-  getDefaultValue,
-  getItemIndexByCharacterKey,
-  defaultPropsCommon as defaultProps,
-}
+export {propTypes, getItemIndexByCharacterKey}
