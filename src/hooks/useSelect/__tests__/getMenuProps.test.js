@@ -1,6 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
 import {act as reactHooksAct} from '@testing-library/react-hooks'
 import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
+import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
 import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
 
@@ -809,6 +810,59 @@ describe('getMenuProps', () => {
         expect(menu.childNodes).toHaveLength(0)
         expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
         expect(document.activeElement).not.toBe(toggleButton)
+      })
+
+      test('by mouse is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const initialHighlightedIndex = 2
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          stateReducer,
+        })
+        document.body.appendChild(wrapper.container)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.mouseDown(menu)
+        fireEvent.mouseUp(menu)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.mouseDown(document.body)
+        fireEvent.mouseUp(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+        )
+      })
+
+      test('by touch is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const initialHighlightedIndex = 2
+        const wrapper = setup({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          stateReducer,
+        })
+        document.body.appendChild(wrapper.container)
+        const menu = wrapper.getByTestId(dataTestIds.menu)
+
+        fireEvent.touchStart(menu)
+        fireEvent.touchMove(menu)
+        fireEvent.touchEnd(menu)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.touchStart(document.body)
+        fireEvent.touchEnd(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+        )
       })
     })
   })
