@@ -201,6 +201,8 @@ describe('props', () => {
         document: {
           getElementById: jest.fn(() => ({setAttribute: jest.fn(), style: {}})),
         },
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
       }
       const wrapper = setup({items: [], environment})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -330,9 +332,10 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
+    // eslint-disable-next-line max-statements
     test('is called at each state change', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const wrapper = setup({stateReducer})
+      const wrapper = setup({stateReducer, isOpen: true})
       const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
       const menu = wrapper.getByTestId(dataTestIds.menu)
 
@@ -340,15 +343,88 @@ describe('props', () => {
 
       fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ToggleButtonClick}),
+      )
 
       fireEvent.keyDown(menu, {key: 'c'})
       expect(stateReducer).toHaveBeenCalledTimes(2)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownCharacter}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'ArrowDown'})
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowDown}),
+      )
 
       fireEvent.keyDown(menu, {key: 'ArrowUp'})
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-
-      fireEvent.click(toggleButton)
       expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownArrowUp}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'End'})
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnd}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Home'})
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownHome}),
+      )
+
+      const item = wrapper.getByTestId(dataTestIds.item(1))
+      fireEvent.mouseMove(item)
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+      )
+
+      fireEvent.mouseLeave(menu)
+      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Enter'})
+      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEnter}),
+      )
+
+      fireEvent.keyDown(menu, {key: 'Escape'})
+      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuKeyDownEscape}),
+      )
+
+      fireEvent.click(item)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemClick}),
+      )
+
+      fireEvent.blur(menu)
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+      )
     })
 
     // eslint-disable-next-line max-statements

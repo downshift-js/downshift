@@ -15,6 +15,7 @@ import {
   handleRefs,
   debounce,
   normalizeArrowKey,
+  targetWithinDownshift,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {getInitialState, propTypes, defaultProps} from './utils'
@@ -71,6 +72,10 @@ function useSelect(userProps = {}) {
   const isInitialMount = useRef(true)
   const shouldScroll = useRef(true)
   const clearTimeout = useRef(null)
+  const mouseAndTouchTrackers = useRef({
+    isMouseDown: false,
+    isTouchMove: false,
+  })
 
   /* Effects */
   /* Sets a11y status message on changes in isOpen. */
@@ -157,6 +162,67 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     isInitialMount.current = false
   }, [])
+  /* Add mouse/touch events to document. */
+  useEffect(() => {
+    // The same strategy for checking if a click occurred inside or outside downsift
+    // as in downshift.js.
+    const onMouseDown = () => {
+      mouseAndTouchTrackers.current.isMouseDown = true
+    }
+    const onMouseUp = event => {
+      mouseAndTouchTrackers.current.isMouseDown = false
+      if (
+        isOpen &&
+        !targetWithinDownshift(
+          event.target,
+          null,
+          menuRef.current,
+          environment.document,
+        )
+      ) {
+        dispatch({
+          type: stateChangeTypes.MenuBlur,
+        })
+      }
+    }
+    const onTouchStart = () => {
+      mouseAndTouchTrackers.current.isTouchMove = false
+    }
+    const onTouchMove = () => {
+      mouseAndTouchTrackers.current.isTouchMove = true
+    }
+    const onTouchEnd = event => {
+      if (
+        isOpen &&
+        !mouseAndTouchTrackers.current.isTouchMove &&
+        !targetWithinDownshift(
+          event.target,
+          null,
+          menuRef.current,
+          environment.document,
+          false,
+        )
+      ) {
+        dispatch({
+          type: stateChangeTypes.MenuBlur,
+        })
+      }
+    }
+
+    environment.addEventListener('mousedown', onMouseDown)
+    environment.addEventListener('mouseup', onMouseUp)
+    environment.addEventListener('touchstart', onTouchStart)
+    environment.addEventListener('touchmove', onTouchMove)
+    environment.addEventListener('touchend', onTouchEnd)
+
+    return function cleanup() {
+      environment.removeEventListener('mousedown', onMouseDown)
+      environment.removeEventListener('mouseup', onMouseUp)
+      environment.removeEventListener('touchstart', onTouchStart)
+      environment.removeEventListener('touchmove', onTouchMove)
+      environment.removeEventListener('touchend', onTouchEnd)
+    }
+  })
 
   const getItemNodeFromIndex = index => itemRefs.current[index]
 
@@ -253,7 +319,12 @@ function useSelect(userProps = {}) {
   // We are toggleing special actions for these cases in reducer, not MenuBlur.
   // Since Shift-Tab also lands focus on toggleButton, we will handle it as exception and call MenuBlur.
   const menuHandleBlur = event => {
-    if (!focusLandsOnElement(event, toggleButtonRef.current)) {
+    const shouldBlur = !(
+      mouseAndTouchTrackers.current.isMouseDown ||
+      focusLandsOnElement(event, toggleButtonRef.current)
+    )
+    /* istanbul ignore else */
+    if (shouldBlur) {
       dispatch({
         type: stateChangeTypes.MenuBlur,
       })
