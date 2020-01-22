@@ -1,12 +1,8 @@
 import {renderHook} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
-import {
-  renderCombobox,
-  items,
-  defaultIds,
-  renderUseCombobox,
-} from '../testUtils'
+import {renderCombobox, renderUseCombobox} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
+import {items, defaultIds} from '../../testUtils'
 import useCombobox from '..'
 
 jest.useFakeTimers()

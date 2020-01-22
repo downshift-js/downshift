@@ -1,6 +1,7 @@
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
-import {items, renderUseSelect} from '../testUtils'
+import {items} from '../../testUtils'
+import {renderUseSelect} from '../testUtils'
 
 describe('returnProps', () => {
   afterEach(cleanup)

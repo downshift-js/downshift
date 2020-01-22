@@ -9,7 +9,7 @@ const defaultStateValues = {
   inputValue: '',
 }
 
-function getElementIds({id, labelId, menuId, getItemId, toggleButtonId} = {}) {
+function getElementIds({id, labelId, menuId, getItemId, toggleButtonId}) {
   const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
   return {

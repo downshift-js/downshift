@@ -1,31 +1,18 @@
 import PropTypes from 'prop-types'
+import {generateId} from '../../utils'
 import {
+  getInitialValue,
   getElementIds as getElementIdsCommon,
-  getInitialValue as getInitialValueCommon,
-  getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
 } from '../utils'
-import {generateId} from '../../utils'
 
-const defaultStateValues = {
-  inputValue: '',
-}
-
-function getElementIds({id, inputId, ...rest} = {}) {
+function getElementIds({id, inputId, ...rest}) {
   const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
   return {
     inputId: inputId || `${uniqueId}-input`,
     ...getElementIdsCommon({id, ...rest}),
   }
-}
-
-function getDefaultValue(props, propKey) {
-  return getDefaultValueCommon(props, propKey, defaultStateValues)
-}
-
-function getInitialValue(props, propKey) {
-  return getInitialValueCommon(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
@@ -101,11 +88,4 @@ const defaultProps = {
   circularNavigation: true,
 }
 
-export {
-  getElementIds,
-  getInitialState,
-  defaultStateValues,
-  propTypes,
-  getDefaultValue,
-  defaultProps,
-}
+export {getInitialState, propTypes, defaultProps, getElementIds}

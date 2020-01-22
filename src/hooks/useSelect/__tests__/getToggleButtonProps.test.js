@@ -1,16 +1,17 @@
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import {cleanup, act as reactAct, render} from '@testing-library/react'
+import {
+  cleanup,
+  act as reactAct,
+  render,
+  fireEvent,
+} from '@testing-library/react'
 import {act as reactHooksAct} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {
-  items,
-  renderUseSelect,
-  defaultIds,
-  renderSelect,
-  DropdownSelect,
-} from '../testUtils'
+import {renderUseSelect, renderSelect, DropdownSelect} from '../testUtils'
+import {items, defaultIds} from '../../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
 
 jest.useFakeTimers()
 
@@ -1063,6 +1064,14 @@ describe('getToggleButtonProps', () => {
         expect(document.activeElement).toBe(toggleButton)
       })
 
+      test('enter on menu closed opens the menu', () => {
+        const {keyDownOnToggleButton, getItems} = renderSelect()
+
+        keyDownOnToggleButton('Enter')
+
+        expect(getItems()).toHaveLength(items.length)
+      })
+
       test('enter it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const {keyDownOnToggleButton, getItems, toggleButton} = renderSelect({
@@ -1104,6 +1113,14 @@ describe('getToggleButtonProps', () => {
         keyDownOnToggleButton('Enter')
 
         expect(document.activeElement).toBe(toggleButton)
+      })
+
+      test('space on menu closed opens the menu', () => {
+        const {keyDownOnToggleButton, getItems} = renderSelect()
+
+        keyDownOnToggleButton(' ')
+
+        expect(getItems()).toHaveLength(items.length)
       })
 
       test('space it closes the menu and selects highlighted item', () => {
@@ -1257,6 +1274,53 @@ describe('getToggleButtonProps', () => {
 
         expect(queryAllByRole('option')).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Element')
+      })
+
+      test('by mouse is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {toggleButton, container} = renderSelect({
+          isOpen: true,
+          stateReducer,
+        })
+        document.body.appendChild(container)
+
+        fireEvent.mouseDown(toggleButton)
+        fireEvent.mouseUp(toggleButton)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.mouseDown(document.body)
+        fireEvent.mouseUp(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
+        )
+      })
+
+      test('by touch is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {container, toggleButton} = renderSelect({
+          isOpen: true,
+          stateReducer,
+        })
+        document.body.appendChild(container)
+
+        fireEvent.touchStart(toggleButton)
+        fireEvent.touchMove(toggleButton)
+        fireEvent.touchEnd(toggleButton)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.touchStart(document.body)
+        fireEvent.touchEnd(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
+        )
       })
     })
   })

@@ -1,7 +1,8 @@
 /* eslint-disable jest/no-disabled-tests */
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
-import {renderUseSelect, defaultIds, renderSelect} from '../testUtils'
+import {renderUseSelect, renderSelect} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)

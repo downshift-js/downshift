@@ -3,12 +3,8 @@ import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
-import {
-  renderUseCombobox,
-  renderCombobox,
-  defaultIds,
-  items,
-} from '../testUtils'
+import {renderUseCombobox, renderCombobox} from '../testUtils'
+import {items, defaultIds} from '../../testUtils'
 
 describe('getInputProps', () => {
   afterEach(cleanup)

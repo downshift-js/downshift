@@ -1,12 +1,8 @@
 /* eslint-disable jest/no-disabled-tests */
 import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
-import {
-  renderCombobox,
-  items,
-  renderUseCombobox,
-  defaultIds,
-} from '../testUtils'
+import {renderCombobox, renderUseCombobox} from '../testUtils'
+import {items, defaultIds} from '../../testUtils'
 
 describe('getToggleButtonProps', () => {
   afterEach(cleanup)

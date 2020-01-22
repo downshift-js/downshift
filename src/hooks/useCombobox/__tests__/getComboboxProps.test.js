@@ -1,7 +1,8 @@
 import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {renderUseCombobox, defaultIds} from '../testUtils'
+import {renderUseCombobox} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getComboboxProps', () => {
   afterEach(cleanup)

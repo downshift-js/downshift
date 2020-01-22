@@ -1,7 +1,8 @@
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {renderCombobox, renderUseCombobox, defaultIds} from '../testUtils'
+import {renderCombobox, renderUseCombobox} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)

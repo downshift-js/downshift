@@ -1,5 +1,6 @@
 import {cleanup} from '@testing-library/react'
-import {renderUseCombobox, defaultIds} from '../testUtils'
+import {renderUseCombobox} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getLabelProps', () => {
   afterEach(cleanup)

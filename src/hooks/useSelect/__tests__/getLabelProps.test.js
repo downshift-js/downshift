@@ -1,5 +1,6 @@
 import {cleanup} from '@testing-library/react'
-import {renderUseSelect, defaultIds} from '../testUtils'
+import {renderUseSelect} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getLabelProps', () => {
   afterEach(cleanup)

@@ -3,76 +3,23 @@ import {render, fireEvent} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
+import {items} from '../testUtils'
 import useCombobox from '.'
-
-jest.mock('./utils', () => {
-  const utils = require.requireActual('./utils')
-
-  return {
-    ...utils,
-    getElementIds: ({
-      id,
-      labelId,
-      menuId,
-      getItemId,
-      toggleButtonId,
-      inputId,
-    } = {}) => {
-      const prefix = id || 'downshift'
-
-      return {
-        labelId: labelId || `${prefix}-label`,
-        menuId: menuId || `${prefix}-menu`,
-        getItemId: getItemId || (index => `${prefix}-item-${index}`),
-        toggleButtonId: toggleButtonId || `${prefix}-toggle-button`,
-        inputId: inputId || `${prefix}-input`,
-      }
-    },
-  }
-})
-
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson',
-]
-
-const defaultIds = {
-  labelId: 'downshift-label',
-  menuId: 'downshift-menu',
-  getItemId: index => `downshift-item-${index}`,
-  toggleButtonId: 'downshift-toggle-button',
-  inputId: 'downshift-input',
-}
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
   item: index => `item-id-${index}`,
   input: 'input-id',
 }
+
+jest.mock('../../utils', () => {
+  const utils = require.requireActual('../../utils')
+
+  return {
+    ...utils,
+    generateId: () => 'test-id',
+  }
+})
 
 const renderCombobox = props => {
   const wrapper = render(<DropdownCombobox {...props} />)
@@ -91,12 +38,6 @@ const renderCombobox = props => {
   }
   const mouseMoveItemAtIndex = index => {
     fireEvent.mouseMove(getItemAtIndex(index))
-  }
-  const focusToggleButton = () => {
-    toggleButton.focus()
-  }
-  const tab = (shiftKey = false) => {
-    userEvent.tab({shift: shiftKey})
   }
   const getA11yStatusContainer = () => wrapper.queryByRole('status')
   const mouseLeaveMenu = () => {
@@ -129,8 +70,6 @@ const renderCombobox = props => {
     mouseMoveItemAtIndex,
     getItems,
     clickOnToggleButton,
-    focusToggleButton,
-    tab,
     getA11yStatusContainer,
     mouseLeaveMenu,
     input,
@@ -192,4 +131,4 @@ const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {renderUseCombobox, dataTestIds, defaultIds, items, renderCombobox}
+export {renderUseCombobox, dataTestIds, renderCombobox}

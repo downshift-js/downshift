@@ -105,9 +105,7 @@ export default function downshiftSelectReducer(state, action) {
       } else {
         changes = {
           isOpen: true,
-          highlightedIndex: state.isOpen
-            ? -1
-            : getHighlightedIndexOnOpen(props, state, 0),
+          highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
         }
       }
       break

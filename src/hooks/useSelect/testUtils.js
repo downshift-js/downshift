@@ -3,61 +3,17 @@ import {render, fireEvent} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
+import {items} from '../testUtils'
 import useSelect from '.'
 
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson',
-]
-
-jest.mock('../utils', () => {
-  const utils = require.requireActual('../utils')
+jest.mock('../../utils', () => {
+  const utils = require.requireActual('../../utils')
 
   return {
     ...utils,
-    getElementIds: ({id, labelId, menuId, getItemId, toggleButtonId} = {}) => {
-      const prefix = id || 'downshift'
-
-      return {
-        labelId: labelId || `${prefix}-label`,
-        menuId: menuId || `${prefix}-menu`,
-        getItemId: getItemId || (index => `${prefix}-item-${index}`),
-        toggleButtonId: toggleButtonId || `${prefix}-toggle-button`,
-      }
-    },
+    generateId: () => 'test-id',
   }
 })
-
-const defaultIds = {
-  labelId: 'downshift-label',
-  menuId: 'downshift-menu',
-  getItemId: index => `downshift-item-${index}`,
-  toggleButtonId: 'downshift-toggle-button',
-}
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
@@ -165,4 +121,4 @@ const DropdownSelect = props => {
   )
 }
 
-export {items, defaultIds, renderUseSelect, renderSelect, DropdownSelect}
+export {items, renderUseSelect, renderSelect, DropdownSelect}

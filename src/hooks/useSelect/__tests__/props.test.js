@@ -1,7 +1,8 @@
 import {renderHook} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
-import {renderSelect, items, defaultIds, renderUseSelect} from '../testUtils'
+import {renderSelect, renderUseSelect} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
+import {items, defaultIds} from '../../testUtils'
 import useSelect from '..'
 
 jest.useFakeTimers()
