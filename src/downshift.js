@@ -1050,8 +1050,7 @@ class Downshift extends Component {
         // then we don't want to reset downshift
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
-          this._rootNode,
-          this._menuNode,
+          [this._rootNode, this._menuNode],
           this.props.environment.document,
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
@@ -1077,8 +1076,7 @@ class Downshift extends Component {
       const onTouchEnd = event => {
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
-          this._rootNode,
-          this._menuNode,
+          [this._rootNode, this._menuNode],
           this.props.environment.document,
           false,
         )

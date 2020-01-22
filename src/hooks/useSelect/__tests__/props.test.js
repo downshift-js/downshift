@@ -9,8 +9,6 @@ jest.useFakeTimers()
 describe('props', () => {
   afterEach(cleanup)
 
-  afterAll(jest.useRealTimers)
-
   test('if falsy then prop types error is thrown', () => {
     global.console.error = jest.fn()
     renderHook(() => useSelect())
@@ -22,12 +20,16 @@ describe('props', () => {
 
   describe('id', () => {
     test('if passed will override downshift default', () => {
-      const {toggleButton} = renderSelect({id: 'my-custom-little-id'})
+      const {toggleButton, menu, label} = renderSelect({
+        id: 'my-custom-little-id',
+      })
 
-      expect(toggleButton).toHaveAttribute(
-        'id',
-        expect.stringContaining('my-custom-little-id'),
-      )
+      ;[(toggleButton, menu, label)].forEach(element => {
+        expect(element).toHaveAttribute(
+          'id',
+          expect.stringContaining('my-custom-little-id'),
+        )
+      })
     })
   })
 
@@ -360,32 +362,12 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    test('is called at each state change', () => {
-      const stateReducer = jest.fn((s, a) => a.changes)
-      const {keyDownOnToggleButton, clickOnToggleButton} = renderSelect({
-        stateReducer,
-      })
-
-      expect(stateReducer).not.toHaveBeenCalled()
-
-      clickOnToggleButton()
-      expect(stateReducer).toHaveBeenCalledTimes(1)
-
-      keyDownOnToggleButton('c')
-      expect(stateReducer).toHaveBeenCalledTimes(2)
-
-      keyDownOnToggleButton('ArrowUp')
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-
-      clickOnToggleButton()
-      expect(stateReducer).toHaveBeenCalledTimes(4)
-    })
-
     test('is called at each state change with the function change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {result} = renderUseSelect({stateReducer})
 
       result.current.toggleMenu()
+
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -393,6 +375,7 @@ describe('props', () => {
       )
 
       result.current.openMenu()
+
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -400,6 +383,7 @@ describe('props', () => {
       )
 
       result.current.closeMenu()
+
       expect(stateReducer).toHaveBeenCalledTimes(3)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -407,6 +391,7 @@ describe('props', () => {
       )
 
       result.current.reset()
+
       expect(stateReducer).toHaveBeenCalledTimes(4)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -414,6 +399,7 @@ describe('props', () => {
       )
 
       result.current.selectItem({})
+
       expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -421,6 +407,7 @@ describe('props', () => {
       )
 
       result.current.setHighlightedIndex(5)
+
       expect(stateReducer).toHaveBeenCalledTimes(6)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
@@ -430,6 +417,7 @@ describe('props', () => {
       )
 
       result.current.setInputValue({})
+
       expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),

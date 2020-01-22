@@ -65,10 +65,6 @@ const dataTestIds = {
   item: index => `item-id-${index}`,
 }
 
-const setupHook = props => {
-  return renderHook(() => useSelect({items, ...props}))
-}
-
 const renderUseSelect = props => {
   return renderHook(() => useSelect({items, ...props}))
 }
@@ -169,15 +165,4 @@ const DropdownSelect = props => {
   )
 }
 
-const setup = props => render(<DropdownSelect {...props} />)
-
-export {
-  dataTestIds,
-  setup,
-  items,
-  setupHook,
-  defaultIds,
-  renderUseSelect,
-  renderSelect,
-  DropdownSelect,
-}
+export {items, defaultIds, renderUseSelect, renderSelect, DropdownSelect}

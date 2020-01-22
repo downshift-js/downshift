@@ -1,15 +1,19 @@
 /* eslint-disable jest/no-disabled-tests */
-import {fireEvent, cleanup} from '@testing-library/react'
+import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
-import {noop} from '../../../utils'
-import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
+import {
+  renderCombobox,
+  items,
+  renderUseCombobox,
+  defaultIds,
+} from '../testUtils'
 
 describe('getToggleButtonProps', () => {
   afterEach(cleanup)
 
   describe('hook props', () => {
     test('assign default value to id', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const toggleButtonProps = result.current.getToggleButtonProps()
 
       expect(toggleButtonProps.id).toEqual(defaultIds.toggleButtonId)
@@ -19,14 +23,14 @@ describe('getToggleButtonProps', () => {
       const props = {
         toggleButtonId: 'my-custom-toggle-button-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseCombobox(props)
       const toggleButtonProps = result.current.getToggleButtonProps()
 
       expect(toggleButtonProps.id).toEqual(props.toggleButtonId)
     })
 
     test('omit event handlers when disabled', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const toggleButtonProps = result.current.getToggleButtonProps({
         disabled: true,
       })
@@ -38,7 +42,7 @@ describe('getToggleButtonProps', () => {
 
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       expect(result.current.getToggleButtonProps({foo: 'bar'})).toHaveProperty(
         'foo',
@@ -48,17 +52,13 @@ describe('getToggleButtonProps', () => {
 
     test('event handler onClick is called along with downshift handler', () => {
       const userOnClick = jest.fn()
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       act(() => {
-        const {ref: inputRef} = result.current.getInputProps()
-        const {
-          ref: toggleButtonRef,
-          onClick,
-        } = result.current.getToggleButtonProps({onClick: userOnClick})
+        const {onClick} = result.current.getToggleButtonProps({
+          onClick: userOnClick,
+        })
 
-        inputRef({focus: noop})
-        toggleButtonRef({})
         onClick({})
       })
 
@@ -70,17 +70,13 @@ describe('getToggleButtonProps', () => {
       const userOnClick = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       act(() => {
-        const {ref: inputRef} = result.current.getInputProps()
-        const {
-          ref: toggleButtonRef,
-          onClick,
-        } = result.current.getToggleButtonProps({onClick: userOnClick})
+        const {onClick} = result.current.getToggleButtonProps({
+          onClick: userOnClick,
+        })
 
-        toggleButtonRef({focus: noop})
-        inputRef({focus: noop})
         onClick({})
       })
 
@@ -92,145 +88,132 @@ describe('getToggleButtonProps', () => {
   describe('event handlers', () => {
     describe('on click', () => {
       test('opens the closed menu', () => {
-        const wrapper = setup()
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {getItems, clickOnToggleButton} = renderCombobox()
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(menu.childNodes).toHaveLength(items.length)
+        expect(getItems()).toHaveLength(items.length)
       })
 
       test('closes the open menu', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {getItems, clickOnToggleButton} = renderCombobox({
+          initialIsOpen: true,
+        })
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(menu.childNodes).toHaveLength(0)
+        expect(getItems()).toHaveLength(0)
       })
 
       test('opens and closes menu at consecutive clicks', () => {
-        const wrapper = setup()
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {getItems, clickOnToggleButton} = renderCombobox()
 
-        fireEvent.click(toggleButton)
-        expect(menu.childNodes).toHaveLength(items.length)
+        clickOnToggleButton()
 
-        fireEvent.click(toggleButton)
-        expect(menu.childNodes).toHaveLength(0)
-        // fireEvent.blur(input)
-        input.blur() // the code above does not blur. ToDo: figure out the blur/focus.
+        expect(getItems()).toHaveLength(items.length)
 
-        fireEvent.click(toggleButton)
-        expect(menu.childNodes).toHaveLength(items.length)
+        clickOnToggleButton()
 
-        fireEvent.click(toggleButton)
-        expect(menu.childNodes).toHaveLength(0)
+        expect(getItems()).toHaveLength(0)
+
+        clickOnToggleButton()
+
+        expect(getItems()).toHaveLength(items.length)
+
+        clickOnToggleButton()
+
+        expect(getItems()).toHaveLength(0)
       })
 
       test('opens the closed menu without any option highlighted', () => {
-        const wrapper = setup()
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {input, clickOnToggleButton} = renderCombobox()
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+        expect(input).not.toHaveAttribute('aria-activedescendant')
       })
 
       test('opens the closed menu with selected option highlighted', () => {
         const selectedIndex = 3
-        const wrapper = setup({initialSelectedItem: items[selectedIndex]})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {input, clickOnToggleButton} = renderCombobox({
+          initialSelectedItem: items[selectedIndex],
+        })
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(selectedIndex),
         )
       })
 
       test('opens the closed menu at initialHighlightedIndex, but on first click only', () => {
         const initialHighlightedIndex = 3
-        const wrapper = setup({initialHighlightedIndex})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {input, clickOnToggleButton} = renderCombobox({
+          initialHighlightedIndex,
+        })
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
 
-        fireEvent.click(toggleButton)
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBeNull()
+        expect(input).not.toHaveAttribute('aria-activedescendant')
       })
 
       test('opens the closed menu at defaultHighlightedIndex, on every click', () => {
         const defaultHighlightedIndex = 3
-        const wrapper = setup({defaultHighlightedIndex})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {input, clickOnToggleButton} = renderCombobox({
+          defaultHighlightedIndex,
+        })
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
 
-        fireEvent.click(toggleButton)
-        // fireEvent.blur(input)
-        input.blur() // the code above does not blur.
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
 
       test('opens the closed menu at highlightedIndex from props, on every click', () => {
         const highlightedIndex = 3
-        const wrapper = setup({highlightedIndex})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {input, clickOnToggleButton} = renderCombobox({
+          highlightedIndex,
+        })
 
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
 
-        fireEvent.click(toggleButton)
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
+        clickOnToggleButton()
 
-        expect(input.getAttribute('aria-activedescendant')).toBe(
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
       })
 
       test('opens the closed menu and sets focus on the input', () => {
-        const wrapper = setup()
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
+        const {clickOnToggleButton, input} = renderCombobox()
 
-        fireEvent.click(toggleButton)
-
-        expect(document.activeElement).toBe(input)
-      })
-
-      test('closes the open menu and leaves focus on the toggleButton', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const input = wrapper.getByTestId(dataTestIds.input)
-
-        fireEvent.click(toggleButton)
+        clickOnToggleButton()
 
         expect(document.activeElement).toBe(input)
       })

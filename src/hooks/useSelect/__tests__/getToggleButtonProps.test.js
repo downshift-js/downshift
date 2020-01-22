@@ -12,6 +12,8 @@ import {
   DropdownSelect,
 } from '../testUtils'
 
+jest.useFakeTimers()
+
 describe('getToggleButtonProps', () => {
   afterEach(cleanup)
 
@@ -367,14 +369,8 @@ describe('getToggleButtonProps', () => {
 
     describe('on keydown', () => {
       describe('character key', () => {
-        jest.useFakeTimers()
-
         afterEach(() => {
           reactAct(() => jest.runAllTimers())
-        })
-
-        afterAll(() => {
-          jest.useRealTimers()
         })
 
         const startsWithCharacter = (option, character) => {

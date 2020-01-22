@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as reactHooksAct} from '@testing-library/react-hooks'
-import {fireEvent, cleanup} from '@testing-library/react'
-import {setup, dataTestIds, renderUseSelect, defaultIds} from '../testUtils'
+import {act} from '@testing-library/react-hooks'
+import {cleanup} from '@testing-library/react'
+import {renderUseSelect, defaultIds, renderSelect} from '../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)
@@ -47,11 +47,10 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      reactHooksAct(() => {
+      act(() => {
         const {ref} = result.current.getMenuProps({ref: refFn})
 
         ref(menuNode)
-        result.current.toggleMenu()
       })
 
       expect(refFn).toHaveBeenCalledTimes(1)
@@ -63,14 +62,13 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      reactHooksAct(() => {
+      act(() => {
         const {blablaRef} = result.current.getMenuProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
         })
 
         blablaRef(menuNode)
-        result.current.toggleMenu()
       })
 
       expect(refFn).toHaveBeenCalledTimes(1)
@@ -84,7 +82,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      reactHooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -105,7 +103,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      reactHooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -121,15 +119,14 @@ describe('getMenuProps', () => {
   describe('event handlers', () => {
     describe('on mouse leave', () => {
       test('the highlightedIndex should be reset', () => {
-        const wrapper = setup({
+        const {mouseLeaveMenu, toggleButton} = renderSelect({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.mouseLeave(menu)
+        mouseLeaveMenu()
 
-        expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+        expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
       })
     })
   })

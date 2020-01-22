@@ -1,6 +1,7 @@
 import React from 'react'
-import {render} from '@testing-library/react'
+import {render, fireEvent} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
+import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
 import useCombobox from '.'
 
@@ -69,10 +70,76 @@ const defaultIds = {
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
-  menu: 'menu-id',
   item: index => `item-id-${index}`,
   input: 'input-id',
-  combobox: 'combobox-id',
+}
+
+const renderCombobox = props => {
+  const wrapper = render(<DropdownCombobox {...props} />)
+  const label = wrapper.getByText(/choose an element/i)
+  const menu = wrapper.getByRole('listbox')
+  const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+  const input = wrapper.getByTestId(dataTestIds.input)
+  const combobox = wrapper.getByRole('combobox')
+  const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
+  const getItems = () => wrapper.queryAllByRole('option')
+  const clickOnItemAtIndex = index => {
+    fireEvent.click(getItemAtIndex(index))
+  }
+  const clickOnToggleButton = () => {
+    fireEvent.click(toggleButton)
+  }
+  const mouseMoveItemAtIndex = index => {
+    fireEvent.mouseMove(getItemAtIndex(index))
+  }
+  const focusToggleButton = () => {
+    toggleButton.focus()
+  }
+  const tab = (shiftKey = false) => {
+    userEvent.tab({shift: shiftKey})
+  }
+  const getA11yStatusContainer = () => wrapper.queryByRole('status')
+  const mouseLeaveMenu = () => {
+    fireEvent.mouseLeave(menu)
+  }
+  const changeInputValue = async inputValue => {
+    await userEvent.type(input, inputValue)
+  }
+  const focusInput = () => {
+    input.focus()
+  }
+  const keyDownOnInput = (key, options = {}) => {
+    if (document.activeElement !== input) {
+      focusInput()
+    }
+
+    fireEvent.keyDown(input, {key, ...options})
+  }
+  const blurInput = () => {
+    input.blur()
+  }
+
+  return {
+    ...wrapper,
+    label,
+    menu,
+    toggleButton,
+    getItemAtIndex,
+    clickOnItemAtIndex,
+    mouseMoveItemAtIndex,
+    getItems,
+    clickOnToggleButton,
+    focusToggleButton,
+    tab,
+    getA11yStatusContainer,
+    mouseLeaveMenu,
+    input,
+    combobox,
+    changeInputValue,
+    keyDownOnInput,
+    blurInput,
+    focusInput,
+  }
 }
 
 const DropdownCombobox = props => {
@@ -121,10 +188,8 @@ const DropdownCombobox = props => {
   )
 }
 
-const setup = props => render(<DropdownCombobox {...props} />)
-
-const setupHook = props => {
+const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {setupHook, dataTestIds, defaultIds, items, setup}
+export {renderUseCombobox, dataTestIds, defaultIds, items, renderCombobox}

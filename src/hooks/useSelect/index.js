@@ -154,8 +154,7 @@ function useSelect(userProps = {}) {
         isOpen &&
         !targetWithinDownshift(
           event.target,
-          toggleButtonRef.current,
-          menuRef.current,
+          [toggleButtonRef.current, menuRef.current],
           environment.document,
         )
       ) {
@@ -176,8 +175,7 @@ function useSelect(userProps = {}) {
         !mouseAndTouchTrackers.current.isTouchMove &&
         !targetWithinDownshift(
           event.target,
-          toggleButtonRef.current,
-          menuRef.current,
+          [toggleButtonRef.current, menuRef.current],
           environment.document,
           false,
         )
