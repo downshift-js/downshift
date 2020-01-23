@@ -85,16 +85,20 @@ describe('props', () => {
         getA11ySelectionMessage,
         isOpen: true,
         items: [{str: 'ala'}],
+        highlightedIndex: 0,
       })
 
       clickOnItemAtIndex(0)
 
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          itemToString: expect.any(Function),
-          selectedItem: expect.any(Object),
-          resultCount: expect.any(Number),
+          highlightedIndex: expect.any(Number),
+          inputValue: expect.any(String),
           isOpen: expect.any(Boolean),
+          itemToString: expect.any(Function),
+          resultCount: expect.any(Number),
+          highlightedItem: expect.anything(),
+          selectedItem: expect.anything(),
         }),
       )
     })
@@ -191,6 +195,8 @@ describe('props', () => {
       const getA11yStatusMessage = jest.fn()
       const {clickOnToggleButton} = renderCombobox({
         getA11yStatusMessage,
+        highlightedIndex: 0,
+        selectedItem: items[0],
       })
 
       clickOnToggleButton()
@@ -198,10 +204,13 @@ describe('props', () => {
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          resultCount: expect.any(Number),
+          highlightedIndex: expect.any(Number),
+          inputValue: expect.any(String),
           isOpen: expect.any(Boolean),
           itemToString: expect.any(Function),
-          selectedItem: expect.any(Object),
+          resultCount: expect.any(Number),
+          highlightedItem: expect.anything(),
+          selectedItem: expect.anything(),
         }),
       )
     })

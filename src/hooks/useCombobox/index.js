@@ -74,11 +74,13 @@ function useCombobox(userProps = {}) {
 
     setStatus(
       getA11yStatusMessage({
-        isOpen,
-        resultCount: items.length,
-        selectedItem,
-        itemToString,
+        highlightedIndex,
         inputValue,
+        isOpen,
+        itemToString,
+        resultCount: items.length,
+        highlightedItem: items[highlightedIndex],
+        selectedItem,
       }),
       environment.document,
     )
@@ -92,11 +94,13 @@ function useCombobox(userProps = {}) {
 
     setStatus(
       getA11ySelectionMessage({
-        isOpen,
-        resultCount: items.length,
-        selectedItem,
-        itemToString,
+        highlightedIndex,
         inputValue,
+        isOpen,
+        itemToString,
+        resultCount: items.length,
+        highlightedItem: items[highlightedIndex],
+        selectedItem,
       }),
       environment.document,
     )

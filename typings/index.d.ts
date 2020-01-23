@@ -89,7 +89,7 @@ export interface A11yStatusMessageOptions<Item> {
   inputValue: string
   isOpen: boolean
   itemToString: (item: Item) => string
-  previousResultCount: number
+  previousResultCount?: number
   resultCount: number
   highlightedItem: Item
   selectedItem: Item
@@ -267,10 +267,8 @@ export enum UseSelectStateChangeTypes {
 export interface UseSelectProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage?: (options: UseSelectA11yMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (
-    options: UseSelectA11yMessageOptions<Item>,
-  ) => string
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
@@ -295,13 +293,6 @@ export interface UseSelectProps<Item> {
   onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
   onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
   environment?: Environment
-}
-
-export interface UseSelectA11yMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
 }
 
 export interface UseSelectStateChangeOptions<Item> {
@@ -406,12 +397,8 @@ export enum UseComboboxStateChangeTypes {
 export interface UseComboboxProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
-  getA11ySelectionMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
@@ -441,14 +428,6 @@ export interface UseComboboxProps<Item> {
   onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
   onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
   environment?: Environment
-}
-
-export interface UseComboboxA11yMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
-  inputValue: string
 }
 
 export interface UseComboboxStateChangeOptions<Item> {

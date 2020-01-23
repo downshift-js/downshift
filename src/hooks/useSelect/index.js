@@ -80,10 +80,13 @@ function useSelect(userProps = {}) {
 
     setStatus(
       getA11yStatusMessage({
+        highlightedIndex,
+        inputValue,
         isOpen,
-        resultCount: items.length,
-        selectedItem,
         itemToString,
+        resultCount: items.length,
+        highlightedItem: items[highlightedIndex],
+        selectedItem,
       }),
       environment.document,
     )
@@ -97,10 +100,13 @@ function useSelect(userProps = {}) {
 
     setStatus(
       getA11ySelectionMessage({
+        highlightedIndex,
+        inputValue,
         isOpen,
-        resultCount: items.length,
-        selectedItem,
         itemToString,
+        resultCount: items.length,
+        highlightedItem: items[highlightedIndex],
+        selectedItem,
       }),
       environment.document,
     )

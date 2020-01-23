@@ -86,6 +86,7 @@ describe('props', () => {
         getA11ySelectionMessage,
         isOpen: true,
         items: [{str: 'ala'}],
+        highlightedIndex: 0,
       })
 
       clickOnItemAtIndex(0)
@@ -93,10 +94,13 @@ describe('props', () => {
       expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          itemToString: expect.any(Function),
-          selectedItem: expect.any(Object),
-          resultCount: expect.any(Number),
+          highlightedIndex: expect.any(Number),
+          inputValue: expect.any(String),
           isOpen: expect.any(Boolean),
+          itemToString: expect.any(Function),
+          resultCount: expect.any(Number),
+          highlightedItem: expect.anything(),
+          selectedItem: expect.anything(),
         }),
       )
     })
@@ -193,7 +197,11 @@ describe('props', () => {
 
     test('is called with isOpen, resultCount, itemToString and selectedItem at toggle', () => {
       const getA11yStatusMessage = jest.fn()
-      const {clickOnToggleButton} = renderSelect({getA11yStatusMessage})
+      const {clickOnToggleButton} = renderSelect({
+        getA11yStatusMessage,
+        highlightedIndex: 0,
+        selectedItem: items[0],
+      })
 
       clickOnToggleButton()
       act(() => jest.advanceTimersByTime(200))
@@ -201,10 +209,13 @@ describe('props', () => {
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          resultCount: expect.any(Number),
+          highlightedIndex: expect.any(Number),
+          inputValue: expect.any(String),
           isOpen: expect.any(Boolean),
           itemToString: expect.any(Function),
-          selectedItem: expect.any(Object),
+          resultCount: expect.any(Number),
+          highlightedItem: expect.anything(),
+          selectedItem: expect.anything(),
         }),
       )
     })
