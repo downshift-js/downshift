@@ -242,28 +242,25 @@ export interface UseSelectState<Item> {
 }
 
 export enum UseSelectStateChangeTypes {
-  MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
-  MenuKeyDownArrowUp = '__menu_keydown_arrow_up__',
-  MenuKeyDownEscape = '__menu_keydown_escape__',
-  MenuKeyDownHome = '__menu_keydown_home__',
-  MenuKeyDownEnd = '__menu_keydown_end__',
-  MenuKeyDownEnter = '__menu_keydown_enter__',
-  MenuKeyDownSpaceButton = '__menu_keydown_space_button__',
-  MenuKeyDownCharacter = '__menu_keydown_character__',
-  MenuBlur = '__menu_blur__',
   MenuMouseLeave = '__menu_mouse_leave__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
   ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
   ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
   ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
+  ToggleButtonKeyDownEscape = '__togglebutton_keydown_escape__',
+  ToggleButtonKeyDownHome = '__togglebutton_keydown_home__',
+  ToggleButtonKeyDownEnd = '__togglebutton_keydown_end__',
+  ToggleButtonKeyDownEnter = '__togglebutton_keydown_enter__',
+  ToggleButtonKeyDownSpaceButton = '__togglebutton_keydown_space_button__',
+  ToggleButtonBlur = '__togglebutton_blur__',
   ToggleButtonClick = '__togglebutton_click__',
   FunctionToggleMenu = '__function_toggle_menu__',
   FunctionOpenMenu = '__function_open_menu__',
   FunctionCloseMenu = '__function_close_menu__',
   FunctionSetHighlightedIndex = '__function_set_highlighted_index__',
   FunctionSelectItem = '__function_select_item__',
-  FunctionClearKeysSoFar = '__function_clear_keys_so_far__',
+  FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
 }
 
@@ -350,28 +347,25 @@ export type UseSelectReturnValue<Item> = UseSelectState<Item> &
 export interface UseSelectInterface {
   <Item>(props: UseSelectProps<Item>): UseSelectReturnValue<Item>
   stateChangeTypes: {
-    MenuKeyDownArrowDown: UseSelectStateChangeTypes.MenuKeyDownArrowDown
-    MenuKeyDownArrowUp: UseSelectStateChangeTypes.MenuKeyDownArrowUp
-    MenuKeyDownEscape: UseSelectStateChangeTypes.MenuKeyDownEscape
-    MenuKeyDownHome: UseSelectStateChangeTypes.MenuKeyDownHome
-    MenuKeyDownEnd: UseSelectStateChangeTypes.MenuKeyDownEnd
-    MenuKeyDownEnter: UseSelectStateChangeTypes.MenuKeyDownEnter
-    MenuKeyDownSpaceButton: UseSelectStateChangeTypes.MenuKeyDownSpaceButton
-    MenuKeyDownCharacter: UseSelectStateChangeTypes.MenuKeyDownCharacter
-    MenuBlur: UseSelectStateChangeTypes.MenuBlur
     MenuMouseLeave: UseSelectStateChangeTypes.MenuMouseLeave
     ItemMouseMove: UseSelectStateChangeTypes.ItemMouseMove
     ItemClick: UseSelectStateChangeTypes.ItemClick
     ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
     ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
     ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
+    ToggleButtonKeyDownEscape: UseSelectStateChangeTypes.ToggleButtonKeyDownEscape
+    ToggleButtonKeyDownEnter: UseSelectStateChangeTypes.ToggleButtonKeyDownEnter
+    ToggleButtonKeyDownSpaceButton: UseSelectStateChangeTypes.ToggleButtonKeyDownSpaceButton
+    ToggleButtonKeyDownEnd: UseSelectStateChangeTypes.ToggleButtonKeyDownEnd
+    ToggleButtonKeyDownHome: UseSelectStateChangeTypes.ToggleButtonKeyDownHome
     ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
+    ToggleButtonBlur: UseSelectStateChangeTypes.ToggleButtonBlur
     FunctionToggleMenu: UseSelectStateChangeTypes.FunctionToggleMenu
     FunctionOpenMenu: UseSelectStateChangeTypes.FunctionOpenMenu
     FunctionCloseMenu: UseSelectStateChangeTypes.FunctionCloseMenu
     FunctionSetHighlightedIndex: UseSelectStateChangeTypes.FunctionSetHighlightedIndex
     FunctionSelectItem: UseSelectStateChangeTypes.FunctionSelectItem
-    FunctionClearKeysSoFar: UseSelectStateChangeTypes.FunctionClearKeysSoFar
+    FunctionSetInputValue: UseSelectStateChangeTypes.FunctionSetInputValue
     FunctionReset: UseSelectStateChangeTypes.FunctionReset
   }
 }
