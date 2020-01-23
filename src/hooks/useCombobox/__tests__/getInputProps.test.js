@@ -1,9 +1,11 @@
 /* eslint-disable jest/no-disabled-tests */
+import React from 'react'
 import {act} from '@testing-library/react-hooks'
-import {fireEvent, cleanup} from '@testing-library/react'
+import {fireEvent, cleanup, render} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
-import {renderUseCombobox, renderCombobox} from '../testUtils'
+import {renderUseCombobox, renderCombobox, DropdownCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
 
 describe('getInputProps', () => {
@@ -654,6 +656,90 @@ describe('getInputProps', () => {
         )
       })
 
+      test('tab it closes the menu and does not select highlighted item', () => {
+        const initialHighlightedIndex = 2
+        const {queryAllByRole, getByDisplayValue} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownCombobox
+              initialIsOpen={true}
+              initialHighlightedIndex={initialHighlightedIndex}
+            />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+
+        userEvent.tab()
+
+        expect(queryAllByRole('option')).toHaveLength(0)
+        expect(
+          getByDisplayValue(items[initialHighlightedIndex]),
+        ).toBeInTheDocument()
+      })
+
+      test('shift+tab it closes the menu', () => {
+        const initialHighlightedIndex = 2
+        const {getByDisplayValue, queryAllByRole} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownCombobox
+              initialIsOpen={true}
+              initialHighlightedIndex={initialHighlightedIndex}
+            />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+
+        userEvent.tab({shift: true})
+
+        expect(queryAllByRole('option')).toHaveLength(0)
+        expect(
+          getByDisplayValue(items[initialHighlightedIndex]),
+        ).toBeInTheDocument()
+      })
+
+      test('shift tab has the focus moved to previous element', () => {
+        const initialHighlightedIndex = 2
+        const {getByText, getByDisplayValue} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownCombobox
+              initialIsOpen={true}
+              initialHighlightedIndex={initialHighlightedIndex}
+            />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+
+        userEvent.tab({shift: true})
+
+        expect(document.activeElement).not.toEqual(
+          getByDisplayValue(items[initialHighlightedIndex]),
+        )
+        expect(document.activeElement).toEqual(getByText(/First element/))
+      })
+
+      test('tab has the focus moved to next element', () => {
+        const initialHighlightedIndex = 2
+        const {getByText, getByDisplayValue} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownCombobox
+              initialIsOpen={true}
+              initialHighlightedIndex={initialHighlightedIndex}
+            />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+
+        userEvent.tab()
+
+        expect(document.activeElement).not.toEqual(
+          getByDisplayValue(items[initialHighlightedIndex]),
+        )
+        expect(document.activeElement).toEqual(getByText(/Second element/))
+      })
+
       test("other than the ones supported don't affect anything", () => {
         const highlightedIndex = 2
         const {keyDownOnInput, input, getItems} = renderCombobox({
@@ -673,93 +759,93 @@ describe('getInputProps', () => {
         )
         expect(getItems()).toHaveLength(items.length)
       })
+    })
 
-      describe('on blur', () => {
-        test('the open menu will be closed and highlighted item will be selected', () => {
-          const initialHighlightedIndex = 2
-          const {input, getItems, blurInput} = renderCombobox({
-            initialIsOpen: true,
-            initialHighlightedIndex,
-          })
-
-          blurInput()
-
-          expect(getItems()).toHaveLength(0)
-          expect(input.value).toEqual(items[initialHighlightedIndex])
+    describe('on blur', () => {
+      test('the open menu will be closed and highlighted item will be selected', () => {
+        const initialHighlightedIndex = 2
+        const {input, getItems, blurInput} = renderCombobox({
+          initialIsOpen: true,
+          initialHighlightedIndex,
         })
 
-        test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
-          const initialHighlightedIndex = 2
-          const {blurInput, mouseLeaveMenu, getItems, input} = renderCombobox({
-            initialIsOpen: true,
-            initialHighlightedIndex,
-          })
+        blurInput()
 
-          mouseLeaveMenu()
-          blurInput()
+        expect(getItems()).toHaveLength(0)
+        expect(input.value).toEqual(items[initialHighlightedIndex])
+      })
 
-          expect(getItems()).toHaveLength(0)
-          expect(input.value).toEqual('')
+      test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
+        const initialHighlightedIndex = 2
+        const {blurInput, mouseLeaveMenu, getItems, input} = renderCombobox({
+          initialIsOpen: true,
+          initialHighlightedIndex,
         })
 
-        test('the value in the input will stay the same', () => {
-          const inputValue = 'test me'
-          const {blurInput, changeInputValue, input} = renderCombobox({
-            initialIsOpen: true,
-          })
+        mouseLeaveMenu()
+        blurInput()
 
-          changeInputValue(inputValue)
-          blurInput()
+        expect(getItems()).toHaveLength(0)
+        expect(input.value).toEqual('')
+      })
 
-          expect(input.value).toBe(inputValue)
+      test('the value in the input will stay the same', () => {
+        const inputValue = 'test me'
+        const {blurInput, changeInputValue, input} = renderCombobox({
+          initialIsOpen: true,
         })
 
-        test('by mouse is not triggered if target is within downshift', () => {
-          const stateReducer = jest.fn().mockImplementation(s => s)
-          const {input, container} = renderCombobox({
-            isOpen: true,
-            stateReducer,
-          })
-          document.body.appendChild(container)
+        changeInputValue(inputValue)
+        blurInput()
 
-          fireEvent.mouseDown(input)
-          fireEvent.mouseUp(input)
+        expect(input.value).toBe(inputValue)
+      })
 
-          expect(stateReducer).not.toHaveBeenCalled()
-
-          fireEvent.mouseDown(document.body)
-          fireEvent.mouseUp(document.body)
-
-          expect(stateReducer).toHaveBeenCalledTimes(1)
-          expect(stateReducer).toHaveBeenCalledWith(
-            expect.objectContaining({}),
-            expect.objectContaining({type: stateChangeTypes.InputBlur}),
-          )
+      test('by mouse is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {input, container} = renderCombobox({
+          isOpen: true,
+          stateReducer,
         })
+        document.body.appendChild(container)
 
-        test('by touch is not triggered if target is within downshift', () => {
-          const stateReducer = jest.fn().mockImplementation(s => s)
-          const {container, input} = renderCombobox({
-            isOpen: true,
-            stateReducer,
-          })
-          document.body.appendChild(container)
+        fireEvent.mouseDown(input)
+        fireEvent.mouseUp(input)
 
-          fireEvent.touchStart(input)
-          fireEvent.touchMove(input)
-          fireEvent.touchEnd(input)
+        expect(stateReducer).not.toHaveBeenCalled()
 
-          expect(stateReducer).not.toHaveBeenCalled()
+        fireEvent.mouseDown(document.body)
+        fireEvent.mouseUp(document.body)
 
-          fireEvent.touchStart(document.body)
-          fireEvent.touchEnd(document.body)
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+        )
+      })
 
-          expect(stateReducer).toHaveBeenCalledTimes(1)
-          expect(stateReducer).toHaveBeenCalledWith(
-            expect.objectContaining({}),
-            expect.objectContaining({type: stateChangeTypes.InputBlur}),
-          )
+      test('by touch is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {container, input} = renderCombobox({
+          isOpen: true,
+          stateReducer,
         })
+        document.body.appendChild(container)
+
+        fireEvent.touchStart(input)
+        fireEvent.touchMove(input)
+        fireEvent.touchEnd(input)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.touchStart(document.body)
+        fireEvent.touchEnd(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+        )
       })
     })
   })

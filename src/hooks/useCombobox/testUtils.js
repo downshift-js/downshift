@@ -131,4 +131,4 @@ const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {renderUseCombobox, dataTestIds, renderCombobox}
+export {renderUseCombobox, dataTestIds, renderCombobox, DropdownCombobox}
