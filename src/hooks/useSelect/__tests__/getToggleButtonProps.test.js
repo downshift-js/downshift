@@ -1167,30 +1167,36 @@ describe('getToggleButtonProps', () => {
       })
 
       test('tab it closes the menu and does not select highlighted item', () => {
-        const initialHighlightedIndex = 2
-        const {focusToggleButton, tab, getItems, toggleButton} = renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
+        const {getByText, queryAllByRole} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownSelect initialIsOpen={true} initialHighlightedIndex={2} />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+        const toggleButton = getByText('Elements')
 
-        focusToggleButton()
-        tab()
+        toggleButton.focus()
+        userEvent.tab()
 
-        expect(getItems()).toHaveLength(0)
+        expect(queryAllByRole('option')).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Elements')
       })
 
       test('shift+tab it closes the menu', () => {
-        const initialHighlightedIndex = 2
-        const {focusToggleButton, tab, getItems, toggleButton} = renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
+        const {getByText, queryAllByRole} = render(
+          <>
+            <div tabIndex={0}>First element</div>
+            <DropdownSelect initialIsOpen={true} initialHighlightedIndex={2} />
+            <div tabIndex={0}>Second element</div>
+          </>,
+        )
+        const toggleButton = getByText('Elements')
 
-        focusToggleButton()
-        tab(true)
+        toggleButton.focus()
+        userEvent.tab({shift: true})
 
-        expect(getItems()).toHaveLength(0)
+        expect(queryAllByRole('option')).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Elements')
       })
 
