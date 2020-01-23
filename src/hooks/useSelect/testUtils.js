@@ -33,7 +33,7 @@ const renderSelect = props => {
   const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
   const getItems = () => wrapper.queryAllByRole('option')
   const clickOnItemAtIndex = index => {
-    fireEvent.click(getItemAtIndex(index))
+    userEvent.click(getItemAtIndex(index))
   }
   const clickOnToggleButton = () => {
     userEvent.click(toggleButton)
@@ -87,6 +87,8 @@ const DropdownSelect = props => {
     highlightedIndex,
     getItemProps,
   } = useSelect({items, ...props})
+  const {itemToString} = props.itemToString ? props : defaultProps
+
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -95,14 +97,14 @@ const DropdownSelect = props => {
         {...getToggleButtonProps()}
       >
         {(selectedItem && selectedItem instanceof Object
-          ? defaultProps.itemToString(selectedItem)
+          ? itemToString(selectedItem)
           : selectedItem) || 'Elements'}
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
-              item instanceof Object ? defaultProps.itemToString(item) : item
+              item instanceof Object ? itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}

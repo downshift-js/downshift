@@ -48,6 +48,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
@@ -67,6 +68,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
@@ -89,6 +91,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -110,6 +113,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(3)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
@@ -462,9 +466,17 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.InputChange}),
       )
 
-      clickOnItemAtIndex(1)
+      mouseMoveItemAtIndex(1)
 
       expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+      )
+
+      clickOnItemAtIndex(1)
+
+      expect(stateReducer).toHaveBeenCalledTimes(4)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.ItemClick}),
@@ -472,7 +484,7 @@ describe('props', () => {
 
       keyDownOnInput('ArrowDown')
 
-      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.InputKeyDownArrowDown}),
@@ -480,7 +492,7 @@ describe('props', () => {
 
       keyDownOnInput('End')
 
-      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenCalledTimes(6)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.InputKeyDownEnd}),
@@ -488,18 +500,10 @@ describe('props', () => {
 
       keyDownOnInput('Home')
 
-      expect(stateReducer).toHaveBeenCalledTimes(6)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.InputKeyDownHome}),
-      )
-
-      mouseMoveItemAtIndex(2)
-
       expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
+        expect.objectContaining({type: stateChangeTypes.InputKeyDownHome}),
       )
 
       mouseLeaveMenu()

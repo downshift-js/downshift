@@ -49,6 +49,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
@@ -68,6 +69,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
@@ -90,6 +92,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
@@ -112,6 +115,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(3)
+      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
@@ -508,17 +512,9 @@ describe('props', () => {
         }),
       )
 
-      mouseMoveItemAtIndex(1)
-
-      expect(stateReducer).toHaveBeenCalledTimes(7)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
-      )
-
       mouseLeaveMenu()
 
-      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
@@ -526,7 +522,7 @@ describe('props', () => {
 
       keyDownOnToggleButton('Enter')
 
-      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenCalledTimes(8)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -536,7 +532,7 @@ describe('props', () => {
 
       keyDownOnToggleButton('Escape')
 
-      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenCalledTimes(9)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -546,7 +542,7 @@ describe('props', () => {
 
       blurToggleButton()
 
-      expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenCalledTimes(10)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
@@ -554,12 +550,20 @@ describe('props', () => {
 
       keyDownOnToggleButton(' ')
 
-      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
           type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
         }),
+      )
+
+      mouseMoveItemAtIndex(5)
+
+      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
       )
 
       clickOnItemAtIndex(5)

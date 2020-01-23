@@ -31,10 +31,10 @@ const renderCombobox = props => {
   const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
   const getItems = () => wrapper.queryAllByRole('option')
   const clickOnItemAtIndex = index => {
-    fireEvent.click(getItemAtIndex(index))
+    userEvent.click(getItemAtIndex(index))
   }
   const clickOnToggleButton = () => {
-    fireEvent.click(toggleButton)
+    userEvent.click(toggleButton)
   }
   const mouseMoveItemAtIndex = index => {
     fireEvent.mouseMove(getItemAtIndex(index))
@@ -92,6 +92,8 @@ const DropdownCombobox = props => {
     highlightedIndex,
     getItemProps,
   } = useCombobox({items, ...props})
+  const {itemToString} = props.itemToString ? props : defaultProps
+
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -108,7 +110,7 @@ const DropdownCombobox = props => {
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
-              item instanceof Object ? defaultProps.itemToString(item) : item
+              item instanceof Object ? itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}
