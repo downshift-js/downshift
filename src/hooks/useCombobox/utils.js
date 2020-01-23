@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import {generateId, getA11yStatusMessage} from '../../utils'
 import {
-  getInitialValue,
   getElementIds as getElementIdsCommon,
   defaultProps as defaultPropsCommon,
+  getInitialState as getInitialStateCommon,
 } from '../utils'
 
 function getElementIds({id, inputId, ...rest}) {
@@ -16,10 +16,9 @@ function getElementIds({id, inputId, ...rest}) {
 }
 
 function getInitialState(props) {
-  const selectedItem = getInitialValue(props, 'selectedItem')
-  const isOpen = getInitialValue(props, 'isOpen')
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
-  let inputValue = getInitialValue(props, 'inputValue')
+  const initialState = getInitialStateCommon(props)
+  const {selectedItem} = initialState
+  let {inputValue} = initialState
 
   if (
     inputValue === '' &&
@@ -32,12 +31,7 @@ function getInitialState(props) {
   }
 
   return {
-    highlightedIndex:
-      highlightedIndex < 0 && selectedItem
-        ? props.items.indexOf(selectedItem)
-        : highlightedIndex,
-    isOpen,
-    selectedItem,
+    ...initialState,
     inputValue,
   }
 }
