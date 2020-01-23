@@ -47,9 +47,6 @@ const renderSelect = props => {
   const focusToggleButton = () => {
     toggleButton.focus()
   }
-  const tab = (shiftKey = false) => {
-    userEvent.tab({shift: shiftKey})
-  }
   const blurToggleButton = () => {
     toggleButton.blur()
   }
@@ -70,7 +67,6 @@ const renderSelect = props => {
     keyDownOnToggleButton,
     clickOnToggleButton,
     focusToggleButton,
-    tab,
     blurToggleButton,
     getA11yStatusContainer,
     mouseLeaveMenu,
