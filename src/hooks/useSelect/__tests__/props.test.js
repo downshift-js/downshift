@@ -95,7 +95,7 @@ describe('props', () => {
         expect.objectContaining({
           itemToString: expect.any(Function),
           selectedItem: expect.any(Object),
-          items: expect.any(Array),
+          resultCount: expect.any(Number),
           isOpen: expect.any(Boolean),
         }),
       )
@@ -140,7 +140,7 @@ describe('props', () => {
       act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
-        '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
+        '1 result is available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
       )
     })
 
@@ -153,7 +153,7 @@ describe('props', () => {
       act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
-        '2 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
+        '2 results are available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
       )
     })
 
@@ -191,7 +191,7 @@ describe('props', () => {
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with isOpen, items, itemToString and selectedItem at toggle', () => {
+    test('is called with isOpen, resultCount, itemToString and selectedItem at toggle', () => {
       const getA11yStatusMessage = jest.fn()
       const {clickOnToggleButton} = renderSelect({getA11yStatusMessage})
 
@@ -201,7 +201,7 @@ describe('props', () => {
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          items: expect.any(Array),
+          resultCount: expect.any(Number),
           isOpen: expect.any(Boolean),
           itemToString: expect.any(Function),
           selectedItem: expect.any(Object),

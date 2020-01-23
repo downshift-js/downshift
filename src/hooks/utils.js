@@ -105,32 +105,6 @@ function stateReducer(s, a) {
 }
 
 /**
- * Returns a message to be added to aria-live region when dropdown is open.
- *
- * @param {*} selectionParameters Parameters required to build the message.
- * @returns {string} The a11y message.
- */
-function getA11yStatusMessage(selectionParameters) {
-  const {isOpen, items} = selectionParameters
-
-  if (!items) {
-    return ''
-  }
-
-  const resultCount = items.length
-  if (isOpen) {
-    if (resultCount === 0) {
-      return 'No results are available'
-    }
-    return `${resultCount} result${
-      resultCount === 1 ? ' is' : 's are'
-    } available, use up and down arrow keys to navigate. Press Enter key to select.`
-  }
-
-  return ''
-}
-
-/**
  * Returns a message to be added to aria-live region when item is selected.
  *
  * @param {Object} selectionParameters Parameters required to build the message.
@@ -145,7 +119,6 @@ function getA11ySelectionMessage(selectionParameters) {
 const defaultProps = {
   itemToString,
   stateReducer,
-  getA11yStatusMessage,
   getA11ySelectionMessage,
   scrollIntoView,
   circularNavigation: false,

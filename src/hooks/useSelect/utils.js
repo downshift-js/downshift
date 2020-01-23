@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import {defaultProps as commonDefaultProps} from '../utils'
 
 function getItemIndexByCharacterKey(
   keysSoFar,
@@ -79,4 +80,31 @@ const propTypes = {
   }),
 }
 
-export {propTypes, getItemIndexByCharacterKey}
+/**
+ * Default implementation for status message. Only added when menu is open.
+ * Will specift if there are results in the list, and if so, how many,
+ * and what keys are relevant.
+ *
+ * @param {Object} param the downshift state and other relevant properties
+ * @return {String} the a11y status message
+ */
+function getA11yStatusMessage({isOpen, resultCount}) {
+  if (!isOpen) {
+    return ''
+  }
+
+  if (!resultCount) {
+    return 'No results are available.'
+  }
+
+  return `${resultCount} result${
+    resultCount === 1 ? ' is' : 's are'
+  } available, use up and down arrow keys to navigate. Press Enter or Space keys to select.`
+}
+
+const defaultProps = {
+  ...commonDefaultProps,
+  getA11yStatusMessage,
+}
+
+export {propTypes, getItemIndexByCharacterKey, defaultProps}

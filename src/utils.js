@@ -134,28 +134,25 @@ function resetIdCounter() {
 }
 
 /**
+ * Default implementation for status message. Only added when menu is open.
+ * Will specift if there are results in the list, and if so, how many,
+ * and what keys are relevant.
+ *
  * @param {Object} param the downshift state and other relevant properties
  * @return {String} the a11y status message
  */
-function getA11yStatusMessage({
-  isOpen,
-  selectedItem,
-  resultCount,
-  previousResultCount,
-  itemToString,
-}) {
+function getA11yStatusMessage({isOpen, resultCount}) {
   if (!isOpen) {
-    return selectedItem ? itemToString(selectedItem) : ''
+    return ''
   }
+
   if (!resultCount) {
     return 'No results are available.'
   }
-  if (resultCount !== previousResultCount) {
-    return `${resultCount} result${
-      resultCount === 1 ? ' is' : 's are'
-    } available, use up and down arrow keys to navigate. Press Enter key to select.`
-  }
-  return ''
+
+  return `${resultCount} result${
+    resultCount === 1 ? ' is' : 's are'
+  } available, use up and down arrow keys to navigate. Press Enter key to select.`
 }
 
 /**

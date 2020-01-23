@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {generateId} from '../../utils'
+import {generateId, getA11yStatusMessage} from '../../utils'
 import {
   getInitialValue,
   getElementIds as getElementIdsCommon,
@@ -85,6 +85,7 @@ const propTypes = {
 
 const defaultProps = {
   ...defaultPropsCommon,
+  getA11yStatusMessage,
   circularNavigation: true,
 }
 

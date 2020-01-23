@@ -79,7 +79,7 @@ describe('props', () => {
       act(() => jest.runAllTimers())
     })
 
-    test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
+    test('is called with isOpen, resultCount, itemToString and selectedItem at selection', () => {
       const getA11ySelectionMessage = jest.fn()
       const {clickOnItemAtIndex} = renderCombobox({
         getA11ySelectionMessage,
@@ -93,7 +93,7 @@ describe('props', () => {
         expect.objectContaining({
           itemToString: expect.any(Function),
           selectedItem: expect.any(Object),
-          items: expect.any(Array),
+          resultCount: expect.any(Number),
           isOpen: expect.any(Boolean),
         }),
       )
@@ -187,7 +187,7 @@ describe('props', () => {
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with isOpen, items, itemToString and selectedItem at toggle', () => {
+    test('is called with isOpen, resultCount, itemToString and selectedItem at toggle', () => {
       const getA11yStatusMessage = jest.fn()
       const {clickOnToggleButton} = renderCombobox({
         getA11yStatusMessage,
@@ -198,7 +198,7 @@ describe('props', () => {
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          items: expect.any(Array),
+          resultCount: expect.any(Number),
           isOpen: expect.any(Boolean),
           itemToString: expect.any(Function),
           selectedItem: expect.any(Object),

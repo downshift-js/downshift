@@ -7,7 +7,6 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
   getInitialState,
-  defaultProps,
 } from '../utils'
 import setStatus from '../../set-a11y-status'
 import {
@@ -18,7 +17,7 @@ import {
   targetWithinDownshift,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
-import {propTypes} from './utils'
+import {propTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 const validatePropTypes =
@@ -82,7 +81,7 @@ function useSelect(userProps = {}) {
     setStatus(
       getA11yStatusMessage({
         isOpen,
-        items,
+        resultCount: items.length,
         selectedItem,
         itemToString,
       }),
@@ -99,7 +98,7 @@ function useSelect(userProps = {}) {
     setStatus(
       getA11ySelectionMessage({
         isOpen,
-        items,
+        resultCount: items.length,
         selectedItem,
         itemToString,
       }),

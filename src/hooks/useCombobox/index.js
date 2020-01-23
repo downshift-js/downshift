@@ -75,7 +75,7 @@ function useCombobox(userProps = {}) {
     setStatus(
       getA11yStatusMessage({
         isOpen,
-        items,
+        resultCount: items.length,
         selectedItem,
         itemToString,
         inputValue,
@@ -93,7 +93,7 @@ function useCombobox(userProps = {}) {
     setStatus(
       getA11ySelectionMessage({
         isOpen,
-        items,
+        resultCount: items.length,
         selectedItem,
         itemToString,
         inputValue,
