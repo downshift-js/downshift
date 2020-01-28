@@ -365,7 +365,7 @@ again or hitting Escape key.
 > `function(changes: object)` | optional, no useful default
 
 Called each time the value in the input text changes. The input value should
-change like any input of type test, at any character key press, `Space`,
+change like any input of type text, at any character key press, `Space`,
 `Backspace`, `Escape` etc.
 
 - `changes`: These are the properties that actually have changed since the last
