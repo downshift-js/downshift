@@ -31,10 +31,10 @@ const renderCombobox = props => {
   const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
   const getItems = () => wrapper.queryAllByRole('option')
   const clickOnItemAtIndex = index => {
-    userEvent.click(getItemAtIndex(index))
+    fireEvent.click(getItemAtIndex(index))
   }
   const clickOnToggleButton = () => {
-    userEvent.click(toggleButton)
+    fireEvent.click(toggleButton)
   }
   const mouseMoveItemAtIndex = index => {
     fireEvent.mouseMove(getItemAtIndex(index))

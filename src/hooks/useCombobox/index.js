@@ -170,7 +170,7 @@ function useCombobox(userProps = {}) {
         !mouseAndTouchTrackers.current.isTouchMove &&
         !targetWithinDownshift(
           event.target,
-          [comboboxRef.current, menuRef.current, toggleButtonRef],
+          [comboboxRef.current, menuRef.current, toggleButtonRef.current],
           environment.document,
           false,
         )

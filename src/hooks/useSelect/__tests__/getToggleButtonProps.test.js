@@ -350,18 +350,28 @@ describe('getToggleButtonProps', () => {
       })
 
       test('opens the closed menu and keeps focus on the toggle button', () => {
-        const {clickOnToggleButton, toggleButton} = renderSelect()
+        const {
+          clickOnToggleButton,
+          toggleButton,
+          focusToggleButton,
+        } = renderSelect()
 
+        focusToggleButton()
         clickOnToggleButton()
 
         expect(document.activeElement).toBe(toggleButton)
       })
 
       test('closes the open menu and keeps focus on the toggle button', () => {
-        const {clickOnToggleButton, toggleButton} = renderSelect({
+        const {
+          clickOnToggleButton,
+          toggleButton,
+          focusToggleButton,
+        } = renderSelect({
           initialIsOpen: true,
         })
 
+        focusToggleButton()
         clickOnToggleButton()
 
         expect(document.activeElement).toBe(toggleButton)

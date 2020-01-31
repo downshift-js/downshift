@@ -444,6 +444,7 @@ describe('props', () => {
     test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
+        focusToggleButton,
         clickOnToggleButton,
         blurToggleButton,
         mouseLeaveMenu,
@@ -454,6 +455,7 @@ describe('props', () => {
 
       expect(stateReducer).not.toHaveBeenCalled()
 
+      focusToggleButton()
       clickOnToggleButton()
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
@@ -643,7 +645,7 @@ describe('props', () => {
           isOpen,
         }),
       )
-      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
           highlightedIndex,

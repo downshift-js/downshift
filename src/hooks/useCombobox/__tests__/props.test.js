@@ -592,11 +592,14 @@ describe('props', () => {
       const highlightedIndex = 2
       const selectedItem = {foo: 'bar'}
       const isOpen = true
+      const inputValue = 'test'
       const stateReducer = jest.fn(() => ({
         highlightedIndex,
         isOpen,
         selectedItem,
+        inputValue,
       }))
+      const onInputValueChange = jest.fn()
       const onSelectedItemChange = jest.fn()
       const onHighlightedIndexChange = jest.fn()
       const onIsOpenChange = jest.fn()
@@ -607,10 +610,16 @@ describe('props', () => {
         onSelectedItemChange,
         onHighlightedIndexChange,
         onIsOpenChange,
+        onInputValueChange,
       })
 
       clickOnToggleButton()
 
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          inputValue,
+        }),
+      )
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex,
@@ -626,11 +635,12 @@ describe('props', () => {
           isOpen,
         }),
       )
-      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
           highlightedIndex,
           selectedItem,
+          inputValue,
         }),
       )
     })
