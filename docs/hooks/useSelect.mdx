@@ -249,8 +249,8 @@ as if no item was selected.
       } = useSelect({
         items,
         selectedItem: props.selectedItem,
-        onSelectedItemChange: item => {
-          props.onSelectedItemChange(item.selectedItem)
+        onSelectedItemChange: ({selectedItem}) => {
+          props.onSelectedItemChange(selectedItem)
         },
       })
       return (
