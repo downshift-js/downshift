@@ -1,11 +1,11 @@
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
 import {act} from '@testing-library/react-hooks'
-import {fireEvent, cleanup, render} from '@testing-library/react'
+import {fireEvent, cleanup} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
-import {renderUseCombobox, renderCombobox, DropdownCombobox} from '../testUtils'
+import {renderUseCombobox, renderCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
 
 describe('getInputProps', () => {
@@ -656,46 +656,44 @@ describe('getInputProps', () => {
         )
       })
 
-      test('tab it closes the menu and does not select highlighted item', () => {
+      test('tab it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
-        const {queryAllByRole, getByDisplayValue} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownCombobox
-              initialIsOpen={true}
-              initialHighlightedIndex={initialHighlightedIndex}
-            />
-            <div tabIndex={0}>Second element</div>
-          </>,
+        const {input, getItems} = renderCombobox(
+          {initialIsOpen: true, initialHighlightedIndex: 2},
+          ui => {
+            return (
+              <>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
         )
 
         userEvent.tab()
 
-        expect(queryAllByRole('option')).toHaveLength(0)
-        expect(
-          getByDisplayValue(items[initialHighlightedIndex]),
-        ).toBeInTheDocument()
+        expect(getItems()).toHaveLength(0)
+        expect(input.value).toEqual(items[initialHighlightedIndex])
       })
 
       test('shift+tab it closes the menu', () => {
         const initialHighlightedIndex = 2
-        const {getByDisplayValue, queryAllByRole} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownCombobox
-              initialIsOpen={true}
-              initialHighlightedIndex={initialHighlightedIndex}
-            />
-            <div tabIndex={0}>Second element</div>
-          </>,
+        const {input, getItems} = renderCombobox(
+          {initialIsOpen: true, initialHighlightedIndex: 2},
+          ui => {
+            return (
+              <>
+                <div tabIndex={0}>First element</div>
+                {ui}
+              </>
+            )
+          },
         )
 
-        userEvent.tab({shift: true})
+        userEvent.tab()
 
-        expect(queryAllByRole('option')).toHaveLength(0)
-        expect(
-          getByDisplayValue(items[initialHighlightedIndex]),
-        ).toBeInTheDocument()
+        expect(getItems()).toHaveLength(0)
+        expect(input.value).toEqual(items[initialHighlightedIndex])
       })
 
       test("other than the ones supported don't affect anything", () => {
