@@ -44,6 +44,8 @@ function useSelect(userProps = {}) {
     getA11ySelectionMessage,
     scrollIntoView,
     environment,
+    initialIsOpen,
+    defaultIsOpen,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
@@ -130,6 +132,29 @@ function useSelect(userProps = {}) {
     clearTimeout.current(dispatch)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue])
+  /* Controls the focus on the menu or the toggle button. */
+  useEffect(() => {
+    // Don't focus menu on first render.
+    if (isInitialMount.current) {
+      // Unless it was initialised as open.
+      if ((initialIsOpen || defaultIsOpen || isOpen) && menuRef.current) {
+        menuRef.current.focus()
+      }
+      return
+    }
+    // Focus menu on open.
+    // istanbul ignore next
+    if (isOpen && menuRef.current) {
+      menuRef.current.focus()
+      // Focus toggleButton on close.
+    } else if (
+      environment.document.activeElement === menuRef.current &&
+      toggleButtonRef.current
+    ) {
+      toggleButtonRef.current.focus()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
     if (highlightedIndex < 0 || !isOpen || !items.length) {
@@ -164,7 +189,7 @@ function useSelect(userProps = {}) {
         )
       ) {
         dispatch({
-          type: stateChangeTypes.ToggleButtonBlur,
+          type: stateChangeTypes.MenuBlur,
         })
       }
     }
@@ -186,7 +211,7 @@ function useSelect(userProps = {}) {
         )
       ) {
         dispatch({
-          type: stateChangeTypes.ToggleButtonBlur,
+          type: stateChangeTypes.MenuBlur,
         })
       }
     }
@@ -226,11 +251,31 @@ function useSelect(userProps = {}) {
         shiftKey: event.shiftKey,
       })
     },
+  }
+  const menuKeyDownHandlers = {
+    ArrowDown(event) {
+      event.preventDefault()
+
+      dispatch({
+        type: stateChangeTypes.MenuKeyDownArrowDown,
+        getItemNodeFromIndex,
+        shiftKey: event.shiftKey,
+      })
+    },
+    ArrowUp(event) {
+      event.preventDefault()
+
+      dispatch({
+        type: stateChangeTypes.MenuKeyDownArrowUp,
+        getItemNodeFromIndex,
+        shiftKey: event.shiftKey,
+      })
+    },
     Home(event) {
       event.preventDefault()
 
       dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownHome,
+        type: stateChangeTypes.MenuKeyDownHome,
         getItemNodeFromIndex,
       })
     },
@@ -238,37 +283,49 @@ function useSelect(userProps = {}) {
       event.preventDefault()
 
       dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownEnd,
+        type: stateChangeTypes.MenuKeyDownEnd,
         getItemNodeFromIndex,
       })
     },
     Escape() {
       dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownEscape,
+        type: stateChangeTypes.MenuKeyDownEscape,
       })
     },
     Enter(event) {
       event.preventDefault()
 
       dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownEnter,
+        type: stateChangeTypes.MenuKeyDownEnter,
       })
     },
     ' '(event) {
       event.preventDefault()
 
       dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
+        type: stateChangeTypes.MenuKeyDownSpaceButton,
       })
     },
   }
 
   // Event handlers.
-  const toggleButtonHandleBlur = () => {
+  const menuHandleKeyDown = event => {
+    const key = normalizeArrowKey(event)
+    if (key && menuKeyDownHandlers[key]) {
+      menuKeyDownHandlers[key](event)
+    } else if (isAcceptedCharacterKey(key)) {
+      dispatch({
+        type: stateChangeTypes.MenuKeyDownCharacter,
+        key,
+        getItemNodeFromIndex,
+      })
+    }
+  }
+  const menuHandleBlur = () => {
     const shouldBlur = mouseAndTouchTrackers.current.isMouseDown
     /* istanbul ignore else */
     if (!shouldBlur) {
-      dispatch({type: stateChangeTypes.ToggleButtonBlur})
+      dispatch({type: stateChangeTypes.MenuBlur})
     }
   }
   const menuHandleMouseLeave = () => {
@@ -355,19 +412,32 @@ function useSelect(userProps = {}) {
     htmlFor: elementIds.current.toggleButtonId,
     ...labelProps,
   })
-  const getMenuProps = ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
+  const getMenuProps = ({
+    onMouseLeave,
+    refKey = 'ref',
+    onKeyDown,
+    onBlur,
+    ref,
+    ...rest
+  } = {}) => ({
     [refKey]: handleRefs(ref, menuNode => {
       menuRef.current = menuNode
     }),
     id: elementIds.current.menuId,
     role: 'listbox',
+    'aria-labelledby': elementIds.current.labelId,
+    tabIndex: -1,
+    ...(highlightedIndex > -1 && {
+      'aria-activedescendant': elementIds.current.getItemId(highlightedIndex),
+    }),
     onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
+    onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
+    onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
     ...rest,
   })
   const getToggleButtonProps = ({
     onClick,
     onKeyDown,
-    onBlur,
     refKey = 'ref',
     ref,
     ...rest
@@ -380,10 +450,6 @@ function useSelect(userProps = {}) {
       'aria-haspopup': 'listbox',
       'aria-expanded': isOpen,
       'aria-labelledby': `${elementIds.current.labelId} ${elementIds.current.toggleButtonId}`,
-      ...(highlightedIndex > -1 && {
-        'aria-activedescendant': elementIds.current.getItemId(highlightedIndex),
-      }),
-      onBlur: callAllEventHandlers(onBlur, toggleButtonHandleBlur),
       ...rest,
     }
 

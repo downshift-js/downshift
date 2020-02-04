@@ -211,7 +211,7 @@ describe('getToggleButtonProps', () => {
 
         clickOnToggleButton()
 
-        expect(document.activeElement).toBe(input)
+        expect(input).toHaveFocus()
       })
     })
   })

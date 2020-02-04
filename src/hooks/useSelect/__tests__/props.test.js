@@ -244,36 +244,36 @@ describe('props', () => {
   describe('highlightedIndex', () => {
     test('controls the state property if passed', () => {
       const highlightedIndex = 1
-      const {keyDownOnToggleButton, toggleButton} = renderSelect({
+      const {keyDownOnToggleButton, keyDownOnMenu, menu} = renderSelect({
         isOpen: true,
         highlightedIndex,
       })
 
-      expect(toggleButton).toHaveAttribute(
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
       keyDownOnToggleButton('ArrowDown')
-      expect(toggleButton).toHaveAttribute(
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      keyDownOnToggleButton('End')
-      expect(toggleButton).toHaveAttribute(
+      keyDownOnMenu('End')
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      keyDownOnToggleButton('ArrowUp')
-      expect(toggleButton).toHaveAttribute(
+      keyDownOnMenu('ArrowUp')
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
 
-      keyDownOnToggleButton('c')
-      expect(toggleButton).toHaveAttribute(
+      keyDownOnMenu('c')
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(highlightedIndex),
       )
@@ -283,9 +283,9 @@ describe('props', () => {
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
       const {
-        keyDownOnToggleButton,
         clickOnToggleButton,
-        blurToggleButton,
+        keyDownOnMenu,
+        blurMenu,
         getItems,
       } = renderSelect({isOpen: true})
       expect(getItems()).toHaveLength(items.length)
@@ -293,10 +293,10 @@ describe('props', () => {
       clickOnToggleButton()
       expect(getItems()).toHaveLength(items.length)
 
-      keyDownOnToggleButton('Escape')
+      keyDownOnMenu('Escape')
       expect(getItems()).toHaveLength(items.length)
 
-      blurToggleButton('Escape')
+      blurMenu()
       expect(getItems()).toHaveLength(items.length)
     })
   })
@@ -330,17 +330,19 @@ describe('props', () => {
         clickOnItemAtIndex,
         keyDownOnToggleButton,
         toggleButton,
+        menu,
+        keyDownOnMenu,
       } = renderSelect({selectedItem})
 
       clickOnToggleButton()
 
-      expect(toggleButton).toHaveAttribute(
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
       keyDownOnToggleButton('ArrowDown')
-      keyDownOnToggleButton('Enter')
+      keyDownOnMenu('Enter')
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
 
@@ -357,17 +359,18 @@ describe('props', () => {
       const {
         clickOnItemAtIndex,
         clickOnToggleButton,
-        keyDownOnToggleButton,
+        keyDownOnMenu,
         toggleButton,
+        menu,
       } = renderSelect({selectedItem, initialIsOpen: true})
 
-      expect(toggleButton).toHaveAttribute(
+      expect(menu).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      keyDownOnToggleButton('ArrowDown')
-      keyDownOnToggleButton('Enter')
+      keyDownOnMenu('ArrowDown')
+      keyDownOnMenu('Enter')
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
       clickOnToggleButton()
@@ -444,18 +447,17 @@ describe('props', () => {
     test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
-        focusToggleButton,
         clickOnToggleButton,
-        blurToggleButton,
+        blurMenu,
         mouseLeaveMenu,
         keyDownOnToggleButton,
+        keyDownOnMenu,
         mouseMoveItemAtIndex,
         clickOnItemAtIndex,
       } = renderSelect({stateReducer, isOpen: true})
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      focusToggleButton()
       clickOnToggleButton()
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
@@ -464,19 +466,97 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.ToggleButtonClick}),
       )
 
-      keyDownOnToggleButton('c')
+      keyDownOnMenu('c')
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+          type: stateChangeTypes.MenuKeyDownCharacter,
         }),
+      )
+
+      keyDownOnMenu('ArrowDown')
+
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownArrowDown,
+        }),
+      )
+
+      keyDownOnMenu('ArrowUp')
+
+      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownArrowUp,
+        }),
+      )
+
+      keyDownOnMenu('End')
+
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownEnd,
+        }),
+      )
+
+      keyDownOnMenu('Home')
+
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownHome,
+        }),
+      )
+
+      keyDownOnMenu('Enter')
+
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownEnter,
+        }),
+      )
+
+      keyDownOnMenu('Escape')
+
+      expect(stateReducer).toHaveBeenCalledTimes(8)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownEscape,
+        }),
+      )
+
+      keyDownOnMenu(' ')
+
+      expect(stateReducer).toHaveBeenCalledTimes(9)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({
+          type: stateChangeTypes.MenuKeyDownSpaceButton,
+        }),
+      )
+
+      mouseLeaveMenu()
+
+      expect(stateReducer).toHaveBeenCalledTimes(10)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({}),
+        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
       )
 
       keyDownOnToggleButton('ArrowDown')
 
-      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenCalledTimes(11)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -486,7 +566,7 @@ describe('props', () => {
 
       keyDownOnToggleButton('ArrowUp')
 
-      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenCalledTimes(12)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -494,75 +574,27 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnToggleButton('End')
+      keyDownOnToggleButton('f')
 
-      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenCalledTimes(13)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownEnd,
+          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
         }),
       )
 
-      keyDownOnToggleButton('Home')
+      blurMenu()
 
-      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenCalledTimes(14)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
-        expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownHome,
-        }),
-      )
-
-      mouseLeaveMenu()
-
-      expect(stateReducer).toHaveBeenCalledTimes(7)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.MenuMouseLeave}),
-      )
-
-      keyDownOnToggleButton('Enter')
-
-      expect(stateReducer).toHaveBeenCalledTimes(8)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownEnter,
-        }),
-      )
-
-      keyDownOnToggleButton('Escape')
-
-      expect(stateReducer).toHaveBeenCalledTimes(9)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownEscape,
-        }),
-      )
-
-      blurToggleButton()
-
-      expect(stateReducer).toHaveBeenCalledTimes(10)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
-      )
-
-      keyDownOnToggleButton(' ')
-
-      expect(stateReducer).toHaveBeenCalledTimes(11)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({}),
-        expect.objectContaining({
-          type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
-        }),
+        expect.objectContaining({type: stateChangeTypes.MenuBlur}),
       )
 
       mouseMoveItemAtIndex(5)
 
-      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenCalledTimes(15)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({type: stateChangeTypes.ItemMouseMove}),
@@ -570,7 +602,7 @@ describe('props', () => {
 
       clickOnItemAtIndex(5)
 
-      expect(stateReducer).toHaveBeenCalledTimes(13)
+      expect(stateReducer).toHaveBeenCalledTimes(16)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({}),
         expect.objectContaining({
@@ -707,17 +739,17 @@ describe('props', () => {
 
     test('is not called if highlightedIndex is the same', () => {
       const onHighlightedIndexChange = jest.fn()
-      const {keyDownOnToggleButton} = renderSelect({
+      const {keyDownOnMenu} = renderSelect({
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
       })
 
-      keyDownOnToggleButton('ArrowUp')
+      keyDownOnMenu('ArrowUp')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      keyDownOnToggleButton('Home')
+      keyDownOnMenu('Home')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
@@ -726,12 +758,12 @@ describe('props', () => {
   describe('onIsOpenChange', () => {
     test('is called at each isOpen change', () => {
       const onIsOpenChange = jest.fn()
-      const {keyDownOnToggleButton} = renderSelect({
+      const {keyDownOnMenu} = renderSelect({
         initialIsOpen: true,
         onIsOpenChange,
       })
 
-      keyDownOnToggleButton('Escape')
+      keyDownOnMenu('Escape')
 
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({

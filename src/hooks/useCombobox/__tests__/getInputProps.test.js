@@ -306,25 +306,25 @@ describe('getInputProps', () => {
     test('is grabbed when isOpen is passed as true', () => {
       const {input} = renderCombobox({isOpen: true})
 
-      expect(document.activeElement).toBe(input)
+      expect(input).toHaveFocus()
     })
 
     test('is grabbed when initialIsOpen is passed as true', () => {
       const {input} = renderCombobox({initialIsOpen: true})
 
-      expect(document.activeElement).toBe(input)
+      expect(input).toHaveFocus()
     })
 
     test('is grabbed when defaultIsOpen is passed as true', () => {
       const {input} = renderCombobox({defaultIsOpen: true})
 
-      expect(document.activeElement).toBe(input)
+      expect(input).toHaveFocus()
     })
 
     test('is not grabbed when initial open is set to default (false)', () => {
       const {input} = renderCombobox()
 
-      expect(document.activeElement).not.toBe(input)
+      expect(input).not.toHaveFocus()
     })
   })
 
@@ -623,7 +623,7 @@ describe('getInputProps', () => {
 
         expect(getItems()).toHaveLength(0)
         expect(input.value).toBe('')
-        expect(document.activeElement).toBe(input)
+        expect(input).toHaveFocus()
       })
 
       test('enter it closes the menu and selects highlighted item', () => {
@@ -698,48 +698,6 @@ describe('getInputProps', () => {
         ).toBeInTheDocument()
       })
 
-      test('shift tab has the focus moved to previous element', () => {
-        const initialHighlightedIndex = 2
-        const {getByText, getByDisplayValue} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownCombobox
-              initialIsOpen={true}
-              initialHighlightedIndex={initialHighlightedIndex}
-            />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-
-        userEvent.tab({shift: true})
-
-        expect(document.activeElement).not.toEqual(
-          getByDisplayValue(items[initialHighlightedIndex]),
-        )
-        expect(document.activeElement).toEqual(getByText(/First element/))
-      })
-
-      test('tab has the focus moved to next element', () => {
-        const initialHighlightedIndex = 2
-        const {getByText, getByDisplayValue} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownCombobox
-              initialIsOpen={true}
-              initialHighlightedIndex={initialHighlightedIndex}
-            />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-
-        userEvent.tab()
-
-        expect(document.activeElement).not.toEqual(
-          getByDisplayValue(items[initialHighlightedIndex]),
-        )
-        expect(document.activeElement).toEqual(getByText(/Second element/))
-      })
-
       test("other than the ones supported don't affect anything", () => {
         const highlightedIndex = 2
         const {keyDownOnInput, input, getItems} = renderCombobox({
@@ -751,7 +709,7 @@ describe('getInputProps', () => {
         keyDownOnInput('Alt')
         keyDownOnInput('Control')
 
-        expect(document.activeElement).toBe(input)
+        expect(input).toHaveFocus()
         expect(input.value).toEqual(items[highlightedIndex])
         expect(input).toHaveAttribute(
           'aria-activedescendant',

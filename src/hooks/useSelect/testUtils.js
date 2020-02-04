@@ -25,8 +25,9 @@ const renderUseSelect = props => {
   return renderHook(() => useSelect({items, ...props}))
 }
 
-const renderSelect = props => {
-  const wrapper = render(<DropdownSelect {...props} />)
+const renderSelect = (props, uiCallback) => {
+  const ui = <DropdownSelect {...props} />
+  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -44,15 +45,18 @@ const renderSelect = props => {
   const keyDownOnToggleButton = (key, options = {}) => {
     fireEvent.keyDown(toggleButton, {key, ...options})
   }
-  const focusToggleButton = () => {
-    toggleButton.focus()
+  const keyDownOnMenu = (key, options = {}) => {
+    fireEvent.keyDown(menu, {key, ...options})
   }
-  const blurToggleButton = () => {
-    toggleButton.blur()
+  const blurMenu = () => {
+    menu.blur()
   }
   const getA11yStatusContainer = () => wrapper.queryByRole('status')
   const mouseLeaveMenu = () => {
     fireEvent.mouseLeave(menu)
+  }
+  const tab = (shiftKey = false) => {
+    userEvent.tab({shift: shiftKey})
   }
 
   return {
@@ -66,10 +70,11 @@ const renderSelect = props => {
     getItems,
     keyDownOnToggleButton,
     clickOnToggleButton,
-    focusToggleButton,
-    blurToggleButton,
+    blurMenu,
     getA11yStatusContainer,
     mouseLeaveMenu,
+    keyDownOnMenu,
+    tab,
   }
 }
 

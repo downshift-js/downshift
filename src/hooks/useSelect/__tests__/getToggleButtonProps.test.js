@@ -1,17 +1,9 @@
 /* eslint-disable jest/no-disabled-tests */
-import React from 'react'
-import userEvent from '@testing-library/user-event'
-import {
-  cleanup,
-  act as reactAct,
-  render,
-  fireEvent,
-} from '@testing-library/react'
+import {cleanup, act as reactAct} from '@testing-library/react'
 import {act as reactHooksAct} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {renderUseSelect, renderSelect, DropdownSelect} from '../testUtils'
+import {renderUseSelect, renderSelect} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
-import * as stateChangeTypes from '../stateChangeTypes'
 
 jest.useFakeTimers()
 
@@ -77,23 +69,6 @@ describe('getToggleButtonProps', () => {
       const toggleButtonProps = result.current.getToggleButtonProps()
 
       expect(toggleButtonProps['aria-expanded']).toEqual(true)
-    })
-
-    test('assign id of highlighted item to aria-activedescendant if item is highlighted', () => {
-      const highlightedIndex = 2
-      const {result} = renderUseSelect({isOpen: true, highlightedIndex})
-      const toggleButtonProps = result.current.getToggleButtonProps()
-
-      expect(toggleButtonProps['aria-activedescendant']).toEqual(
-        defaultIds.getItemId(highlightedIndex),
-      )
-    })
-
-    test('do not assign aria-activedescendant if no item is highlighted', () => {
-      const {result} = renderUseSelect()
-      const toggleButtonProps = result.current.getToggleButtonProps()
-
-      expect(toggleButtonProps['aria-activedescendant']).toBeUndefined()
     })
 
     test('omit event handlers when disabled', () => {
@@ -188,40 +163,6 @@ describe('getToggleButtonProps', () => {
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
       expect(result.current.isOpen).toBe(false)
     })
-
-    test('event handler onBlur is called along with downshift handler', () => {
-      const userOnBlur = jest.fn()
-      const {result} = renderUseSelect({initialIsOpen: true})
-
-      reactHooksAct(() => {
-        const {onBlur} = result.current.getToggleButtonProps({
-          onBlur: userOnBlur,
-        })
-
-        onBlur({})
-      })
-
-      expect(userOnBlur).toHaveBeenCalledTimes(1)
-      expect(result.current.isOpen).toBe(false)
-    })
-
-    test("event handler onBlur is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
-      const userOnBlur = jest.fn(event => {
-        event.preventDownshiftDefault = true
-      })
-      const {result} = renderUseSelect({initialIsOpen: true})
-
-      reactHooksAct(() => {
-        const {onBlur} = result.current.getToggleButtonProps({
-          onBlur: userOnBlur,
-        })
-
-        onBlur({})
-      })
-
-      expect(userOnBlur).toHaveBeenCalledTimes(1)
-      expect(result.current.isOpen).toBe(true)
-    })
   })
 
   describe('event handlers', () => {
@@ -274,13 +215,13 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu with selected option highlighted', () => {
         const selectedIndex = 3
-        const {clickOnToggleButton, toggleButton} = renderSelect({
+        const {clickOnToggleButton, menu} = renderSelect({
           initialSelectedItem: items[selectedIndex],
         })
 
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(selectedIndex),
         )
@@ -288,13 +229,13 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu at initialHighlightedIndex, but on first click only', () => {
         const initialHighlightedIndex = 3
-        const {clickOnToggleButton, toggleButton} = renderSelect({
+        const {clickOnToggleButton, menu} = renderSelect({
           initialHighlightedIndex,
         })
 
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
@@ -302,18 +243,18 @@ describe('getToggleButtonProps', () => {
         clickOnToggleButton()
         clickOnToggleButton()
 
-        expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
+        expect(menu).not.toHaveAttribute('aria-activedescendant')
       })
 
       test('opens the closed menu at defaultHighlightedIndex, on every click', () => {
         const defaultHighlightedIndex = 3
-        const {clickOnToggleButton, toggleButton} = renderSelect({
+        const {clickOnToggleButton, menu} = renderSelect({
           defaultHighlightedIndex,
         })
 
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
@@ -321,7 +262,7 @@ describe('getToggleButtonProps', () => {
         clickOnToggleButton()
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
@@ -329,13 +270,13 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu at highlightedIndex from props, on every click', () => {
         const highlightedIndex = 3
-        const {clickOnToggleButton, toggleButton} = renderSelect({
+        const {clickOnToggleButton, menu} = renderSelect({
           highlightedIndex,
         })
 
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
@@ -343,38 +284,28 @@ describe('getToggleButtonProps', () => {
         clickOnToggleButton()
         clickOnToggleButton()
 
-        expect(toggleButton).toHaveAttribute(
+        expect(menu).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
       })
 
-      test('opens the closed menu and keeps focus on the toggle button', () => {
-        const {
-          clickOnToggleButton,
-          toggleButton,
-          focusToggleButton,
-        } = renderSelect()
+      test('opens the closed menu and moves focus on the menu', () => {
+        const {clickOnToggleButton, menu} = renderSelect()
 
-        focusToggleButton()
         clickOnToggleButton()
 
-        expect(document.activeElement).toBe(toggleButton)
+        expect(menu).toHaveFocus()
       })
 
       test('closes the open menu and keeps focus on the toggle button', () => {
-        const {
-          clickOnToggleButton,
-          toggleButton,
-          focusToggleButton,
-        } = renderSelect({
+        const {clickOnToggleButton, toggleButton} = renderSelect({
           initialIsOpen: true,
         })
 
-        focusToggleButton()
         clickOnToggleButton()
 
-        expect(document.activeElement).toBe(toggleButton)
+        expect(toggleButton).toHaveFocus()
       })
     })
 
@@ -388,860 +319,287 @@ describe('getToggleButtonProps', () => {
           return option.toLowerCase().startsWith(character.toLowerCase())
         }
 
-        describe('with menu closed', () => {
-          test('should select the first item that starts with that key', () => {
-            const char = 'c'
-            const expectedItem = items.find(item =>
-              startsWithCharacter(item, char),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
+        test('should select the first item that starts with that key', () => {
+          const char = 'c'
+          const expectedItem = items.find(item =>
+            startsWithCharacter(item, char),
+          )
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-            keyDownOnToggleButton(char)
+          keyDownOnToggleButton(char)
 
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
-
-          test('should select the second item that starts with that key after typing it twice', () => {
-            const char = 'c'
-            const expectedItem = items
-              .slice(
-                items.indexOf(
-                  items.find(item => startsWithCharacter(item, char)),
-                ) + 1,
-              )
-              .find(item => startsWithCharacter(item, char))
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.runAllTimers())
-            keyDownOnToggleButton(char)
-
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
-
-          test('should select the first item again if the items are depleated', () => {
-            const char = 'b'
-            const expectedItem = items.find(item =>
-              startsWithCharacter(item, char),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.runAllTimers())
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.runAllTimers())
-            keyDownOnToggleButton(char)
-
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
-
-          test('should not select anything if no item starts with that key', () => {
-            const char = 'x'
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(char)
-
-            expect(toggleButton).toHaveTextContent('Elements')
-          })
-
-          test('should select the first item that starts with the keys typed in rapid succession', () => {
-            const chars = ['c', 'a']
-            const expectedItem = items.find(item =>
-              startsWithCharacter(item, chars.join('')),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(chars[0])
-            reactAct(() => jest.runTimersToTime(200))
-            keyDownOnToggleButton(chars[1])
-
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
-
-          test('should become first character after timeout passes', () => {
-            const chars = ['c', 'a', 'l']
-            const expectedItem = items.find(item =>
-              startsWithCharacter(item, chars[2]),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(chars[0])
-            reactAct(() => jest.runTimersToTime(200))
-            keyDownOnToggleButton(chars[1])
-            reactAct(() => jest.runAllTimers())
-            keyDownOnToggleButton(chars[2])
-
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
-
-          /* Here we just want to make sure the keys cleanup works. */
-          test('should not go to the second option starting with the key if timeout did not pass', () => {
-            const char = 'l'
-            const expectedItem = items.find(item =>
-              startsWithCharacter(item, char),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
-
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-
-            expect(toggleButton).toHaveTextContent(expectedItem)
-          })
+          expect(toggleButton).toHaveTextContent(expectedItem)
         })
 
-        describe('with menu open', () => {
-          test('should highlight the first item that starts with that key', () => {
-            const char = 'c'
-            const expectedIndex = defaultIds.getItemId(
+        test('should select the second item that starts with that key after typing it twice', () => {
+          const char = 'c'
+          const expectedItem = items
+            .slice(
               items.indexOf(
                 items.find(item => startsWithCharacter(item, char)),
-              ),
+              ) + 1,
             )
+            .find(item => startsWithCharacter(item, char))
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.runAllTimers())
+          keyDownOnToggleButton(char)
 
-            keyDownOnToggleButton(char)
+          expect(toggleButton).toHaveTextContent(expectedItem)
+        })
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
+        test('should select the first item again if the items are depleated', () => {
+          const char = 'b'
+          const expectedItem = items.find(item =>
+            startsWithCharacter(item, char),
+          )
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-          test('should highlight the second item that starts with that key after typing it twice', () => {
-            const char = 'c'
-            const expectedIndex = defaultIds.getItemId(
-              items.indexOf(
-                items
-                  .slice(
-                    items.indexOf(
-                      items.find(item => startsWithCharacter(item, char)),
-                    ) + 1,
-                  )
-                  .find(item => startsWithCharacter(item, char)),
-              ),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.runAllTimers())
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.runAllTimers())
+          keyDownOnToggleButton(char)
 
-            keyDownOnToggleButton(char)
-            reactAct(() => {
-              jest.runOnlyPendingTimers()
-            })
-            keyDownOnToggleButton(char)
+          expect(toggleButton).toHaveTextContent(expectedItem)
+        })
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
+        test('should not select anything if no item starts with that key', () => {
+          const char = 'x'
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-          test('should highlight the first item again if the items are depleated', () => {
-            const char = 'b'
-            const expectedIndex = defaultIds.getItemId(
-              items.indexOf(
-                items.find(item => startsWithCharacter(item, char)),
-              ),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
+          keyDownOnToggleButton(char)
 
-            keyDownOnToggleButton(char)
-            reactAct(() => {
-              jest.runOnlyPendingTimers()
-            })
-            keyDownOnToggleButton(char)
-            reactAct(() => {
-              jest.runOnlyPendingTimers()
-            })
-            keyDownOnToggleButton(char)
+          expect(toggleButton).toHaveTextContent('Elements')
+        })
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
+        test('should select the first item that starts with the keys typed in rapid succession', () => {
+          const chars = ['c', 'a']
+          const expectedItem = items.find(item =>
+            startsWithCharacter(item, chars.join('')),
+          )
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-          test('should not highlight anything if no item starts with that key', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
+          keyDownOnToggleButton(chars[0])
+          reactAct(() => jest.runTimersToTime(200))
+          keyDownOnToggleButton(chars[1])
 
-            keyDownOnToggleButton('x')
+          expect(toggleButton).toHaveTextContent(expectedItem)
+        })
 
-            expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
-          })
+        test('should become first character after timeout passes', () => {
+          const chars = ['c', 'a', 'l']
+          const expectedItem = items.find(item =>
+            startsWithCharacter(item, chars[2]),
+          )
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-          test('should highlight the first item that starts with the keys typed in rapid succession', () => {
-            const chars = ['c', 'a']
-            const expectedIndex = defaultIds.getItemId(
-              items.indexOf(
-                items.find(item => startsWithCharacter(item, chars.join(''))),
-              ),
-            )
+          keyDownOnToggleButton(chars[0])
+          reactAct(() => jest.runTimersToTime(200))
+          keyDownOnToggleButton(chars[1])
+          reactAct(() => jest.runAllTimers())
+          keyDownOnToggleButton(chars[2])
 
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
+          expect(toggleButton).toHaveTextContent(expectedItem)
+        })
 
-            keyDownOnToggleButton(chars[0])
-            reactAct(() => jest.advanceTimersByTime(200))
-            keyDownOnToggleButton(chars[1])
+        /* Here we just want to make sure the keys cleanup works. */
+        test('should not go to the second option starting with the key if timeout did not pass', () => {
+          const char = 'l'
+          const expectedItem = items.find(item =>
+            startsWithCharacter(item, char),
+          )
+          const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          keyDownOnToggleButton(char)
+          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
 
-          test('should become first character after timeout passes', () => {
-            const chars = ['c', 'a', 'l']
-            const expectedIndex = defaultIds.getItemId(
-              items.indexOf(
-                items.find(item => startsWithCharacter(item, chars[2])),
-              ),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
-
-            keyDownOnToggleButton(chars[0])
-            reactAct(() => jest.advanceTimersByTime(200))
-            keyDownOnToggleButton(chars[1])
-            reactAct(() => jest.runAllTimers())
-            keyDownOnToggleButton(chars[2])
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
-
-          /* Here we just want to make sure the keys cleanup works. */
-          test('should not go to the second option starting with the key if timeout did not pass', () => {
-            const char = 'c'
-            const expectedIndex = defaultIds.getItemId(
-              items.indexOf(
-                items.find(item => startsWithCharacter(item, char)),
-              ),
-            )
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
-
-            keyDownOnToggleButton(char)
-            reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-            keyDownOnToggleButton(char)
-
-            // highlight should stay on the first item starting with 'C'
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              expectedIndex,
-            )
-          })
+          expect(toggleButton).toHaveTextContent(expectedItem)
         })
       })
 
       describe('arrow up', () => {
-        describe('with menu closed', () => {
-          test('opens the closed menu with last option highlighted', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
+        test('opens the closed menu with last option highlighted', () => {
+          const {keyDownOnToggleButton, menu} = renderSelect()
 
-            keyDownOnToggleButton('ArrowUp')
+          keyDownOnToggleButton('ArrowUp')
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
-          })
-
-          test('opens the closed menu with selected option - 1 highlighted', () => {
-            const selectedIndex = 4
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              initialSelectedItem: items[selectedIndex],
-            })
-
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(selectedIndex - 1),
-            )
-          })
-
-          test('opens the closed menu at initialHighlightedIndex, but on first arrow up only', () => {
-            const initialHighlightedIndex = 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              initialHighlightedIndex,
-            })
-
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex),
-            )
-
-            keyDownOnToggleButton('Escape')
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
-          })
-
-          test('arrow up opens the closed menu at defaultHighlightedIndex, on every arrow up', () => {
-            const defaultHighlightedIndex = 3
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              defaultHighlightedIndex,
-            })
-
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(defaultHighlightedIndex),
-            )
-
-            keyDownOnToggleButton('Escape')
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(defaultHighlightedIndex),
-            )
-          })
-
-          test.skip('prevents event default', () => {
-            const preventDefault = jest.fn()
-            const {keyDownOnToggleButton} = renderSelect()
-
-            keyDownOnToggleButton('ArrowUp', {preventDefault})
-
-            expect(preventDefault).toHaveBeenCalledTimes(1)
-          })
-
-          test('opens the closed menu and keeps focus on the toggle button', () => {
-            const {
-              keyDownOnToggleButton,
-              focusToggleButton,
-              toggleButton,
-            } = renderSelect()
-
-            focusToggleButton()
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(document.activeElement).toBe(toggleButton)
-          })
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
-        describe('with menu open', () => {
-          test('it highlights the last option number if none is highlighted', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
 
-            keyDownOnToggleButton('ArrowUp')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
+        test('opens the closed menu with selected option - 1 highlighted', () => {
+          const selectedIndex = 4
+          const {keyDownOnToggleButton, menu} = renderSelect({
+            initialSelectedItem: items[selectedIndex],
           })
 
-          test('it highlights the previous item', () => {
-            const initialHighlightedIndex = 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowUp')
 
-            keyDownOnToggleButton('ArrowUp')
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(selectedIndex - 1),
+          )
+        })
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex - 1),
-            )
+        test('opens the closed menu at initialHighlightedIndex, but on first arrow up only', () => {
+          const initialHighlightedIndex = 2
+          const {keyDownOnToggleButton, keyDownOnMenu, menu} = renderSelect({
+            initialHighlightedIndex,
           })
 
-          test('with shift it highlights the 5th previous item', () => {
-            const initialHighlightedIndex = 6
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowUp')
 
-            keyDownOnToggleButton('ArrowUp', {shiftKey: true})
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex),
+          )
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex - 5),
-            )
+          keyDownOnMenu('Escape')
+          keyDownOnToggleButton('ArrowUp')
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
+        test('arrow up opens the closed menu at defaultHighlightedIndex, on every arrow up', () => {
+          const defaultHighlightedIndex = 3
+          const {keyDownOnToggleButton, menu} = renderSelect({
+            defaultHighlightedIndex,
           })
 
-          test('with shift it highlights the first item if not enough items remaining', () => {
-            const initialHighlightedIndex = 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowUp')
 
-            keyDownOnToggleButton('ArrowUp', {shiftKey: true})
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
+          keyDownOnToggleButton('Escape')
+          keyDownOnToggleButton('ArrowUp')
 
-          test('will stop at 0 if circularNavigatios is falsy', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex: 0,
-            })
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
 
-            keyDownOnToggleButton('ArrowUp')
+        test.skip('prevents event default', () => {
+          const preventDefault = jest.fn()
+          const {keyDownOnToggleButton} = renderSelect()
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
+          keyDownOnToggleButton('ArrowUp', {preventDefault})
 
-          test('will continue from 0 to last item if circularNavigatios is truthy', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex: 0,
-              circularNavigation: true,
-            })
+          expect(preventDefault).toHaveBeenCalledTimes(1)
+        })
 
-            keyDownOnToggleButton('ArrowUp')
+        test('opens the closed menu and moves focus on the menu', () => {
+          const {keyDownOnToggleButton, menu} = renderSelect()
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
-          })
+          keyDownOnToggleButton('ArrowUp')
+
+          expect(menu).toHaveFocus()
         })
       })
 
       describe('arrow down', () => {
-        describe('with menu closed', () => {
-          test('opens the closed menu with first option highlighted', () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect()
+        test('opens the closed menu with first option highlighted', () => {
+          const {keyDownOnToggleButton, menu} = renderSelect()
 
-            keyDownOnToggleButton('ArrowDown')
+          keyDownOnToggleButton('ArrowDown')
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
-
-          test('opens the closed menu with selected option + 1 highlighted', () => {
-            const selectedIndex = 4
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              initialSelectedItem: items[selectedIndex],
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(selectedIndex + 1),
-            )
-          })
-
-          test('opens the closed menu at initialHighlightedIndex, but on first arrow down only', () => {
-            const initialHighlightedIndex = 3
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              initialHighlightedIndex,
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex),
-            )
-
-            keyDownOnToggleButton('Escape')
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
-
-          test('opens the closed menu at defaultHighlightedIndex, on every arrow down', () => {
-            const defaultHighlightedIndex = 3
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              defaultHighlightedIndex,
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(defaultHighlightedIndex),
-            )
-
-            keyDownOnToggleButton('Escape')
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(defaultHighlightedIndex),
-            )
-          })
-
-          // also add for menu when this test works.
-          test.skip('arrow down prevents event default', () => {
-            const preventDefault = jest.fn()
-            const {keyDownOnToggleButton} = renderSelect()
-
-            keyDownOnToggleButton('ArrowDown', {preventDefault})
-
-            expect(preventDefault).toHaveBeenCalledTimes(1)
-          })
-
-          test('opens the closed menu and focuses the list', () => {
-            const {
-              keyDownOnToggleButton,
-              focusToggleButton,
-              toggleButton,
-            } = renderSelect()
-
-            focusToggleButton()
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(document.activeElement).toBe(toggleButton)
-          })
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
         })
 
-        describe('with menu open', () => {
-          test("it highlights option number '0' if none is highlighted", () => {
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
-          test('it highlights the next item', () => {
-            const initialHighlightedIndex = 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex + 1),
-            )
+        test('opens the closed menu with selected option + 1 highlighted', () => {
+          const selectedIndex = 4
+          const {keyDownOnToggleButton, menu} = renderSelect({
+            initialSelectedItem: items[selectedIndex],
           })
 
-          test('with shift it highlights the next 5th item', () => {
-            const initialHighlightedIndex = 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowDown')
 
-            keyDownOnToggleButton('ArrowDown', {shiftKey: true})
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(selectedIndex + 1),
+          )
+        })
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(initialHighlightedIndex + 5),
-            )
+        test('opens the closed menu at initialHighlightedIndex, but on first arrow down only', () => {
+          const initialHighlightedIndex = 3
+          const {keyDownOnToggleButton, keyDownOnMenu, menu} = renderSelect({
+            initialHighlightedIndex,
           })
 
-          test('with shift it highlights last item if not enough next items remaining', () => {
-            const initialHighlightedIndex = items.length - 2
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowDown')
 
-            keyDownOnToggleButton('ArrowDown', {shiftKey: true})
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex),
+          )
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
+          keyDownOnMenu('Escape')
+          keyDownOnToggleButton('ArrowDown')
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('opens the closed menu at defaultHighlightedIndex, on every arrow down', () => {
+          const defaultHighlightedIndex = 3
+          const {keyDownOnToggleButton, keyDownOnMenu, menu} = renderSelect({
+            defaultHighlightedIndex,
           })
 
-          test('will stop at last item if circularNavigatios is falsy', () => {
-            const initialHighlightedIndex = items.length - 1
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-            })
+          keyDownOnToggleButton('ArrowDown')
 
-            keyDownOnToggleButton('ArrowDown')
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
 
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(items.length - 1),
-            )
-          })
+          keyDownOnMenu('Escape')
+          keyDownOnToggleButton('ArrowDown')
 
-          test('will continue from last item to 0 if circularNavigatios is truthy', () => {
-            const initialHighlightedIndex = items.length - 1
-            const {keyDownOnToggleButton, toggleButton} = renderSelect({
-              isOpen: true,
-              initialHighlightedIndex,
-              circularNavigation: true,
-            })
-
-            keyDownOnToggleButton('ArrowDown')
-
-            expect(toggleButton).toHaveAttribute(
-              'aria-activedescendant',
-              defaultIds.getItemId(0),
-            )
-          })
-        })
-      })
-
-      test('end it highlights the last option number', () => {
-        const {keyDownOnToggleButton, toggleButton} = renderSelect({
-          isOpen: true,
-          initialHighlightedIndex: 2,
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
         })
 
-        keyDownOnToggleButton('End')
+        // also add for menu when this test works.
+        test.skip('arrow down prevents event default', () => {
+          const preventDefault = jest.fn()
+          const {keyDownOnToggleButton} = renderSelect()
 
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
-      })
+          keyDownOnToggleButton('ArrowDown', {preventDefault})
 
-      test('home it highlights the first option number', () => {
-        const {keyDownOnToggleButton, toggleButton} = renderSelect({
-          isOpen: true,
-          initialHighlightedIndex: 2,
+          expect(preventDefault).toHaveBeenCalledTimes(1)
         })
 
-        keyDownOnToggleButton('Home')
+        test('opens the closed menu and focuses the list', () => {
+          const {keyDownOnToggleButton, menu} = renderSelect()
 
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
-      })
+          keyDownOnToggleButton('ArrowDown')
 
-      test('escape it has the menu closed', () => {
-        const {keyDownOnToggleButton, getItems} = renderSelect({
-          initialIsOpen: true,
+          expect(menu).toHaveFocus()
         })
-
-        keyDownOnToggleButton('Escape')
-
-        expect(getItems()).toHaveLength(0)
-      })
-
-      test('escape it has the focus moved to toggleButton', () => {
-        const {
-          keyDownOnToggleButton,
-          focusToggleButton,
-          toggleButton,
-        } = renderSelect({
-          initialIsOpen: true,
-        })
-
-        focusToggleButton()
-        keyDownOnToggleButton('Escape')
-
-        expect(document.activeElement).toBe(toggleButton)
-      })
-
-      test('enter on menu closed opens the menu', () => {
-        const {keyDownOnToggleButton, getItems} = renderSelect()
-
-        keyDownOnToggleButton('Enter')
-
-        expect(getItems()).toHaveLength(items.length)
-      })
-
-      test('enter it closes the menu and selects highlighted item', () => {
-        const initialHighlightedIndex = 2
-        const {keyDownOnToggleButton, getItems, toggleButton} = renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
-
-        keyDownOnToggleButton('Enter')
-
-        expect(getItems()).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
-      })
-
-      test('enter selects highlighted item and resets to user defaults', () => {
-        const defaultHighlightedIndex = 2
-        const {keyDownOnToggleButton, getItems, toggleButton} = renderSelect({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
-        })
-
-        keyDownOnToggleButton('Enter')
-
-        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(defaultHighlightedIndex),
-        )
-      })
-
-      test('enter it has the focus kept on the toggleButton', () => {
-        const {
-          keyDownOnToggleButton,
-          focusToggleButton,
-          toggleButton,
-        } = renderSelect({initialIsOpen: true})
-
-        focusToggleButton()
-        keyDownOnToggleButton('Enter')
-
-        expect(document.activeElement).toBe(toggleButton)
-      })
-
-      test('space on menu closed opens the menu', () => {
-        const {keyDownOnToggleButton, getItems} = renderSelect()
-
-        keyDownOnToggleButton(' ')
-
-        expect(getItems()).toHaveLength(items.length)
-      })
-
-      test('space it closes the menu and selects highlighted item', () => {
-        const initialHighlightedIndex = 2
-        const {keyDownOnToggleButton, toggleButton, getItems} = renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
-
-        keyDownOnToggleButton(' ')
-
-        expect(getItems()).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
-      })
-
-      test('space it selects highlighted item and resets to user defaults', () => {
-        const defaultHighlightedIndex = 2
-        const {keyDownOnToggleButton, toggleButton, getItems} = renderSelect({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
-        })
-
-        keyDownOnToggleButton(' ')
-
-        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(defaultHighlightedIndex),
-        )
-      })
-
-      test('space it has the focus moved kept on the toggleButton', () => {
-        const {
-          keyDownOnToggleButton,
-          focusToggleButton,
-          toggleButton,
-        } = renderSelect({initialIsOpen: true})
-
-        focusToggleButton()
-        keyDownOnToggleButton(' ')
-
-        expect(document.activeElement).toBe(toggleButton)
-      })
-
-      test('tab it closes the menu and does not select highlighted item', () => {
-        const {getByText, queryAllByRole} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownSelect initialIsOpen={true} initialHighlightedIndex={2} />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-        const toggleButton = getByText('Elements')
-
-        toggleButton.focus()
-        userEvent.tab()
-
-        expect(queryAllByRole('option')).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent('Elements')
-      })
-
-      test('shift+tab it closes the menu', () => {
-        const {getByText, queryAllByRole} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownSelect initialIsOpen={true} initialHighlightedIndex={2} />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-        const toggleButton = getByText('Elements')
-
-        toggleButton.focus()
-        userEvent.tab({shift: true})
-
-        expect(queryAllByRole('option')).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent('Elements')
-      })
-
-      test('shift tab has the focus moved to previous element', () => {
-        const {getByText} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownSelect />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-        const toggleButton = getByText('Elements')
-
-        toggleButton.focus()
-        userEvent.tab({shift: true})
-
-        expect(document.activeElement).not.toEqual(toggleButton)
-        expect(document.activeElement).toEqual(getByText(/First element/))
-      })
-
-      test('tab has the focus moved to next element', () => {
-        const {getByText} = render(
-          <>
-            <div tabIndex={0}>First element</div>
-            <DropdownSelect />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-        const toggleButton = getByText('Elements')
-
-        toggleButton.focus()
-        userEvent.tab()
-
-        expect(document.activeElement).not.toEqual(toggleButton)
-        expect(document.activeElement).toEqual(getByText(/Second element/))
       })
 
       test("other than te ones supported don't affect anything", () => {
@@ -1253,90 +611,6 @@ describe('getToggleButtonProps', () => {
         expect(toggleButton).toHaveTextContent('Elements')
         expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
         expect(getItems()).toHaveLength(0)
-      })
-    })
-
-    describe('blur', () => {
-      test('should not select highlighted item but close the menu', () => {
-        const initialHighlightedIndex = 2
-        const {
-          focusToggleButton,
-          getItems,
-          blurToggleButton,
-          toggleButton,
-        } = renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
-
-        focusToggleButton()
-        blurToggleButton()
-
-        expect(getItems()).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent('Element')
-      })
-
-      test('by focusing another element should behave as a normal blur', () => {
-        const {getByText, queryAllByRole} = render(
-          <>
-            <DropdownSelect initialIsOpen={true} initialHighlightedIndex={2} />
-            <div tabIndex={0}>Second element</div>
-          </>,
-        )
-        const toggleButton = getByText('Elements')
-
-        toggleButton.focus()
-        getByText(/Second element/).focus()
-
-        expect(queryAllByRole('option')).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent('Element')
-      })
-
-      test('by mouse is not triggered if target is within downshift', () => {
-        const stateReducer = jest.fn().mockImplementation(s => s)
-        const {toggleButton, container} = renderSelect({
-          isOpen: true,
-          stateReducer,
-        })
-        document.body.appendChild(container)
-
-        fireEvent.mouseDown(toggleButton)
-        fireEvent.mouseUp(toggleButton)
-
-        expect(stateReducer).not.toHaveBeenCalled()
-
-        fireEvent.mouseDown(document.body)
-        fireEvent.mouseUp(document.body)
-
-        expect(stateReducer).toHaveBeenCalledTimes(1)
-        expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
-        )
-      })
-
-      test('by touch is not triggered if target is within downshift', () => {
-        const stateReducer = jest.fn().mockImplementation(s => s)
-        const {container, toggleButton} = renderSelect({
-          isOpen: true,
-          stateReducer,
-        })
-        document.body.appendChild(container)
-
-        fireEvent.touchStart(toggleButton)
-        fireEvent.touchMove(toggleButton)
-        fireEvent.touchEnd(toggleButton)
-
-        expect(stateReducer).not.toHaveBeenCalled()
-
-        fireEvent.touchStart(document.body)
-        fireEvent.touchEnd(document.body)
-
-        expect(stateReducer).toHaveBeenCalledTimes(1)
-        expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
-        )
       })
     })
   })
