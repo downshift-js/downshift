@@ -49,7 +49,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
@@ -69,7 +68,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
@@ -82,7 +80,7 @@ describe('props', () => {
       act(() => jest.runAllTimers())
     })
 
-    test('is called with isOpen, items, itemToString and selectedItem at selection', () => {
+    test('is called with defined paramaters at selection', () => {
       const getA11ySelectionMessage = jest.fn()
       const {clickOnItemAtIndex} = renderSelect({
         getA11ySelectionMessage,
@@ -92,7 +90,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
@@ -115,7 +112,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(3)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
@@ -132,7 +128,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'No results are available',
@@ -145,7 +140,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '1 result is available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
@@ -158,7 +152,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '2 results are available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
@@ -172,7 +165,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('')
     })

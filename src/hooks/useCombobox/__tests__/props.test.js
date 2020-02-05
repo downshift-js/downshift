@@ -48,7 +48,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
@@ -68,7 +67,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
@@ -91,7 +89,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -113,7 +110,6 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(3)
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
@@ -130,7 +126,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'No results are available',
@@ -143,7 +138,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
@@ -156,7 +150,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '2 results are available, use up and down arrow keys to navigate. Press Enter key to select.',
@@ -170,7 +163,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('')
     })
@@ -190,7 +182,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
@@ -204,7 +195,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -233,7 +223,6 @@ describe('props', () => {
       const {clickOnToggleButton} = renderCombobox({items: [], environment})
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(100))
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
