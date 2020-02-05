@@ -69,7 +69,7 @@ function callOnChangeProps(props, state, changes) {
     invokeOnChangeHandler(stateKey, props, state, changes)
   })
 
-  if (props.onStateChange && changes !== undefined) {
+  if (props.onStateChange && changes !== undefined && state !== changes) {
     props.onStateChange(changes)
   }
 }
