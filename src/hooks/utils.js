@@ -69,7 +69,7 @@ function callOnChangeProps(props, state, changes) {
     invokeOnChangeHandler(stateKey, props, state, changes)
   })
 
-  if (props.onStateChange && changes !== undefined && state !== changes) {
+  if (props.onStateChange && changes !== undefined) {
     props.onStateChange(changes)
   }
 }
@@ -91,7 +91,7 @@ function useEnhancedReducer(reducer, initialState, props) {
 
   const [state, dispatch] = useReducer(enhancedReducer, initialState)
   useEffect(() => {
-    if (prevState.current) {
+    if (prevState.current && prevState.current !== state) {
       callOnChangeProps(props, prevState.current, state)
     }
     prevState.current = state
