@@ -742,6 +742,19 @@ describe('getMenuProps', () => {
         expect(getItems()).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Elements')
       })
+
+      test("other than te ones supported don't affect anything", () => {
+        const {keyDownOnMenu, toggleButton, getItems} = renderSelect({
+          initialIsOpen: true,
+        })
+
+        keyDownOnMenu('Alt')
+        keyDownOnMenu('Control')
+
+        expect(toggleButton).toHaveTextContent('Elements')
+        expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
+        expect(getItems()).toHaveLength(items.length)
+      })
     })
 
     describe('on mouse leave', () => {
