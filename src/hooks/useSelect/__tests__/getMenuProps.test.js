@@ -743,14 +743,15 @@ describe('getMenuProps', () => {
         expect(toggleButton).toHaveTextContent('Elements')
       })
 
-      test("other than te ones supported don't affect anything", () => {
-        const {keyDownOnMenu, toggleButton, getItems} = renderSelect({
+      test("other than the ones supported don't affect anything", () => {
+        const {keyDownOnMenu, toggleButton, getItems, menu} = renderSelect({
           initialIsOpen: true,
         })
 
         keyDownOnMenu('Alt')
         keyDownOnMenu('Control')
 
+        expect(menu).toHaveFocus()
         expect(toggleButton).toHaveTextContent('Elements')
         expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
         expect(getItems()).toHaveLength(items.length)
