@@ -91,7 +91,7 @@ function useEnhancedReducer(reducer, initialState, props) {
 
   const [state, dispatch] = useReducer(enhancedReducer, initialState)
   useEffect(() => {
-    if (prevState.current) {
+    if (prevState.current && prevState.current !== state) {
       callOnChangeProps(props, prevState.current, state)
     }
     prevState.current = state
