@@ -80,7 +80,7 @@ describe('props', () => {
       act(() => jest.runAllTimers())
     })
 
-    test('is called with defined paramaters at selection', () => {
+    test('is called with object that contains specific props', () => {
       const getA11ySelectionMessage = jest.fn()
       const {clickOnItemAtIndex} = renderSelect({
         getA11ySelectionMessage,
@@ -186,12 +186,11 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(200))
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with isOpen, resultCount, itemToString and selectedItem at toggle', () => {
+    test('is called with object that contains specific props at toggle', () => {
       const getA11yStatusMessage = jest.fn()
       const {clickOnToggleButton} = renderSelect({
         getA11yStatusMessage,
@@ -200,7 +199,6 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(200))
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -227,7 +225,6 @@ describe('props', () => {
       const {clickOnToggleButton} = renderSelect({items: [], environment})
 
       clickOnToggleButton()
-      act(() => jest.advanceTimersByTime(200))
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
