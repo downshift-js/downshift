@@ -9,25 +9,20 @@
     "minified": 52497,
     "gzipped": 11443
   },
-  "preact/dist/downshift.umd.min.js": {
-    "bundled": 126941,
-    "minified": 41797,
-    "gzipped": 11157
-  },
   "dist/downshift.umd.min.js": {
     "bundled": 131172,
     "minified": 43108,
     "gzipped": 11705
   },
+  "preact/dist/downshift.umd.min.js": {
+    "bundled": 126941,
+    "minified": 41797,
+    "gzipped": 11157
+  },
   "preact/dist/downshift.umd.js": {
     "bundled": 143301,
     "minified": 51723,
     "gzipped": 13105
-  },
-  "dist/downshift.umd.js": {
-    "bundled": 172922,
-    "minified": 60666,
-    "gzipped": 15657
   },
   "dist/downshift.esm.js": {
     "bundled": 114973,
@@ -42,6 +37,11 @@
         "code": 4058
       }
     }
+  },
+  "dist/downshift.umd.js": {
+    "bundled": 172922,
+    "minified": 60666,
+    "gzipped": 15657
   },
   "preact/dist/downshift.esm.js": {
     "bundled": 113661,
