@@ -56,13 +56,20 @@ describe('getMenuProps', () => {
       expect(menuProps.tabIndex).toEqual(-1)
     })
 
-    test('assign id of highlighted item to aria-activedescendant if item is highlighted', () => {
+    test('assign id of highlighted item to aria-activedescendant if item is highlighted and menu is open', () => {
+      const wrapper = setup({highlightedIndex: 2, isOpen: true})
+      const menu = wrapper.getByTestId(dataTestIds.menu)
+
+      expect(menu.getAttribute('aria-activedescendant')).toEqual(
+        defaultIds.getItemId(2),
+      )
+    })
+
+    test('do not assign aria-activedescendant if menu is closed', () => {
       const {result} = setupHook({highlightedIndex: 2})
       const menuProps = result.current.getMenuProps()
 
-      expect(menuProps['aria-activedescendant']).toEqual(
-        defaultIds.getItemId(2),
-      )
+      expect(menuProps['aria-activedescendant']).toBeUndefined()
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {

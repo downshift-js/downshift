@@ -351,9 +351,10 @@ function useSelect(userProps = {}) {
     role: 'listbox',
     'aria-labelledby': labelId,
     tabIndex: -1,
-    ...(highlightedIndex > -1 && {
-      'aria-activedescendant': getItemId(highlightedIndex),
-    }),
+    ...(isOpen &&
+      highlightedIndex > -1 && {
+        'aria-activedescendant': getItemId(highlightedIndex),
+      }),
     onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
     onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
     onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),

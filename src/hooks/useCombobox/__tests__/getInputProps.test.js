@@ -57,13 +57,20 @@ describe('getInputProps', () => {
       expect(inputProps['aria-controls']).toEqual(`${props.menuId}`)
     })
 
-    test('assign id of highlighted item to aria-activedescendant if item is highlighted', () => {
+    test('assign id of highlighted item to aria-activedescendant if item is highlighted and menu is open', () => {
+      const wrapper = setup({highlightedIndex: 2, isOpen: true})
+      const input = wrapper.getByTestId(dataTestIds.input)
+
+      expect(input.getAttribute('aria-activedescendant')).toEqual(
+        defaultIds.getItemId(2),
+      )
+    })
+
+    test('do not assign aria-activedescendant if menu is closed', () => {
       const {result} = setupHook({highlightedIndex: 2})
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-activedescendant']).toEqual(
-        defaultIds.getItemId(2),
-      )
+      expect(inputProps['aria-activedescendant']).toBeUndefined()
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {

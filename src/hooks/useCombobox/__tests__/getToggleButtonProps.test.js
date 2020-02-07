@@ -208,6 +208,8 @@ describe('getToggleButtonProps', () => {
         )
 
         fireEvent.click(toggleButton)
+        // fireEvent.blur(input)
+        input.blur() // the code above does not blur.
         fireEvent.click(toggleButton)
 
         expect(input.getAttribute('aria-activedescendant')).toBe(
