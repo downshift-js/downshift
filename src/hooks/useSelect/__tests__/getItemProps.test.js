@@ -41,14 +41,14 @@ describe('getItemProps', () => {
       const {result} = setupHook({highlightedIndex: 2})
       const itemProps = result.current.getItemProps({index: 2})
 
-      expect(itemProps['aria-selected']).toEqual(true)
+      expect(itemProps['aria-selected']).toEqual('true')
     })
 
-    test('do not assign aria-selected if item is not highlighted', () => {
+    test("assign 'false' to aria-selected if item is highlighted", () => {
       const {result} = setupHook({highlightedIndex: 1})
       const itemProps = result.current.getItemProps({index: 2})
 
-      expect(itemProps['aria-selected']).toBeUndefined()
+      expect(itemProps['aria-selected']).toEqual('false')
     })
 
     test('omit event handlers when disabled', () => {
@@ -198,7 +198,7 @@ describe('getItemProps', () => {
         expect(menu.getAttribute('aria-activedescendant')).not.toBe(
           defaultIds.getItemId(previousIndex),
         )
-        expect(previousItem.getAttribute('aria-selected')).toBeNull()
+        expect(previousItem.getAttribute('aria-selected')).toEqual('false')
       })
 
       it('keeps highlight on multiple events', () => {
