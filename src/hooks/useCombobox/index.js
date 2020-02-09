@@ -357,7 +357,7 @@ function useCombobox(userProps = {}) {
         }
       }),
       role: 'option',
-      ...(itemIndex === highlightedIndex && {'aria-selected': true}),
+      'aria-selected': `${itemIndex === highlightedIndex}`,
       id: getItemId(itemIndex),
       ...(!rest.disabled && {
         onMouseMove: callAllEventHandlers(onMouseMove, () => {
