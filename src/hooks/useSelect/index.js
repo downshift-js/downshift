@@ -109,8 +109,8 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
     if (isInitialMount.current) {
-      clearTimeout.current = debounce(() => {
-        dispatch({
+      clearTimeout.current = debounce(outerDispatch => {
+        outerDispatch({
           type: stateChangeTypes.FunctionClearKeysSoFar,
         })
       }, 500)
@@ -118,7 +118,7 @@ function useSelect(userProps = {}) {
     if (!keysSoFar) {
       return
     }
-    clearTimeout.current()
+    clearTimeout.current(dispatch)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keysSoFar])
   /* Controls the focus on the menu or the toggle button. */
@@ -411,7 +411,7 @@ function useSelect(userProps = {}) {
         }
       }),
       role: 'option',
-      ...(itemIndex === highlightedIndex && {'aria-selected': true}),
+      'aria-selected': `${itemIndex === highlightedIndex}`,
       id: getItemId(itemIndex),
       ...rest,
     }

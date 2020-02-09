@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {useState, useEffect, useCallback, useReducer, useRef} from 'react'
+import {useState, useEffect, useCallback, useReducer} from 'react'
 import {scrollIntoView, getNextWrappingIndex, getState} from '../utils'
 
 const defaultStateValues = {
@@ -75,7 +75,6 @@ function callOnChangeProps(props, state, changes) {
 }
 
 function useEnhancedReducer(reducer, initialState, props) {
-  const prevState = useRef()
   const enhancedReducer = useCallback(
     (state, action) => {
       state = getState(state, action.props)
@@ -84,18 +83,14 @@ function useEnhancedReducer(reducer, initialState, props) {
       const changes = reducer(state, action)
       const newState = stateReduceLocal(state, {...action, changes})
 
+      callOnChangeProps(action.props, state, newState)
+
       return newState
     },
     [reducer],
   )
 
   const [state, dispatch] = useReducer(enhancedReducer, initialState)
-  useEffect(() => {
-    if (prevState.current) {
-      callOnChangeProps(props, prevState.current, state)
-    }
-    prevState.current = state
-  }, [state, props])
 
   return [getState(state, props), dispatch]
 }
