@@ -44,7 +44,7 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('true')
     })
 
-    test("assign 'false' to aria-selected if item is highlighted", () => {
+    test("assign 'false' to aria-selected if item is not highlighted", () => {
       const {result} = setupHook({highlightedIndex: 1})
       const itemProps = result.current.getItemProps({index: 2})
 
