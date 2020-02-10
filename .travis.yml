@@ -11,7 +11,7 @@ cache:
     - ~/.cache
 notifications:
   email: false
-node_js: '8'
+node_js: '10'
 install: npm install
 before_script:
   - npx cypress verify &
