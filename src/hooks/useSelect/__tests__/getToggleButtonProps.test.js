@@ -206,11 +206,11 @@ describe('getToggleButtonProps', () => {
       })
 
       test('opens the closed menu without any option highlighted', () => {
-        const {clickOnToggleButton, toggleButton} = renderSelect()
+        const {clickOnToggleButton, menu} = renderSelect()
 
         clickOnToggleButton()
 
-        expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
+        expect(menu).not.toHaveAttribute('aria-activedescendant')
       })
 
       test('opens the closed menu with selected option highlighted', () => {
