@@ -329,12 +329,13 @@ describe('getInputProps', () => {
   })
 
   describe('event handlers', () => {
-    test('on change should open the menu', async () => {
-      const {changeInputValue, getItems} = renderCombobox()
+    test('on change should open the menu and keep the input value', async () => {
+      const {changeInputValue, getItems, input} = renderCombobox()
 
       await changeInputValue('california')
 
       expect(getItems()).toHaveLength(items.length)
+      expect(input).toHaveValue('california')
     })
 
     describe('on key down', () => {
