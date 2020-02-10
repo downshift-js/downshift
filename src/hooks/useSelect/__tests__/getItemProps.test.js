@@ -1,13 +1,13 @@
-import {fireEvent, cleanup} from '@testing-library/react'
+import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
-import {noop} from '../../../utils'
-import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
+import {renderUseSelect, renderSelect} from '../testUtils'
+import {items, defaultIds} from '../../testUtils'
 
 describe('getItemProps', () => {
   afterEach(cleanup)
 
   test('throws error if no index or item has been passed', () => {
-    const {result} = setupHook()
+    const {result} = renderUseSelect()
 
     expect(result.current.getItemProps).toThrowError(
       'Pass either item or item index in getItemProps!',
@@ -16,43 +16,42 @@ describe('getItemProps', () => {
 
   describe('hook props', () => {
     test("assign 'option' to role", () => {
-      const {result} = setupHook()
-      const itemProps = result.current.getItemProps({index: 0})
+      const {result} = renderUseSelect()
 
-      expect(itemProps.role).toEqual('option')
+      expect(result.current.getItemProps({index: 0}).role).toEqual('option')
     })
 
     test('assign default value to id', () => {
-      const {result} = setupHook()
-      const itemProps = result.current.getItemProps({index: 0})
+      const {result} = renderUseSelect()
 
-      expect(itemProps.id).toEqual(`${defaultIds.getItemId(0)}`)
+      expect(result.current.getItemProps({index: 0}).id).toEqual(
+        `${defaultIds.getItemId(0)}`,
+      )
     })
 
     test('assign custom value passed by user to id', () => {
       const getItemId = index => `my-custom-item-id-${index}`
-      const {result} = setupHook({getItemId})
-      const itemProps = result.current.getItemProps({index: 0})
+      const {result} = renderUseSelect({getItemId})
 
-      expect(itemProps.id).toEqual(getItemId(0))
+      expect(result.current.getItemProps({index: 0}).id).toEqual(getItemId(0))
     })
 
     test("assign 'true' to aria-selected if item is highlighted", () => {
-      const {result} = setupHook({highlightedIndex: 2})
+      const {result} = renderUseSelect({highlightedIndex: 2})
       const itemProps = result.current.getItemProps({index: 2})
 
       expect(itemProps['aria-selected']).toEqual('true')
     })
 
     test("assign 'false' to aria-selected if item is not highlighted", () => {
-      const {result} = setupHook({highlightedIndex: 1})
+      const {result} = renderUseSelect({highlightedIndex: 1})
       const itemProps = result.current.getItemProps({index: 2})
 
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
     test('omit event handlers when disabled', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const itemProps = result.current.getItemProps({
         index: 0,
         disabled: true,
@@ -66,7 +65,7 @@ describe('getItemProps', () => {
 
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
 
       expect(
         result.current.getItemProps({index: 0, foo: 'bar'}),
@@ -75,18 +74,14 @@ describe('getItemProps', () => {
 
     test('event handler onClick is called along with downshift handler', () => {
       const userOnClick = jest.fn()
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        const {ref: itemRef, onClick} = result.current.getItemProps({
+        const {onClick} = result.current.getItemProps({
           index: 0,
           onClick: userOnClick,
         })
 
-        menuRef({focus: noop})
-        itemRef({})
-        result.current.toggleMenu()
         onClick({})
       })
 
@@ -97,18 +92,14 @@ describe('getItemProps', () => {
 
     test('event handler onMouseMove is called along with downshift handler', () => {
       const userOnMouseMove = jest.fn()
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        const {ref: itemRef, onMouseMove} = result.current.getItemProps({
+        const {onMouseMove} = result.current.getItemProps({
           index: 1,
           onMouseMove: userOnMouseMove,
         })
 
-        menuRef({focus: noop})
-        itemRef({})
-        result.current.toggleMenu()
         onMouseMove({})
       })
 
@@ -120,18 +111,14 @@ describe('getItemProps', () => {
       const userOnClick = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        const {ref: itemRef, onClick} = result.current.getItemProps({
+        const {onClick} = result.current.getItemProps({
           index: 0,
           onClick: userOnClick,
         })
 
-        menuRef({focus: noop})
-        itemRef({})
-        result.current.toggleMenu()
         onClick({})
       })
 
@@ -141,25 +128,21 @@ describe('getItemProps', () => {
     })
 
     test("event handler onMouseMove is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
-      const useronMouseMove = jest.fn(event => {
+      const userOnMouseMove = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        const {ref: itemRef, onMouseMove} = result.current.getItemProps({
+        const {onMouseMove} = result.current.getItemProps({
           index: 1,
-          onMouseMove: useronMouseMove,
+          onMouseMove: userOnMouseMove,
         })
 
-        menuRef({focus: noop})
-        itemRef({})
-        result.current.toggleMenu()
         onMouseMove({})
       })
 
-      expect(useronMouseMove).toHaveBeenCalledTimes(1)
+      expect(userOnMouseMove).toHaveBeenCalledTimes(1)
       expect(result.current.highlightedIndex).toBe(-1)
     })
   })
@@ -168,82 +151,89 @@ describe('getItemProps', () => {
     describe('on mouse over', () => {
       test('it highlights the item', () => {
         const index = 1
-        const wrapper = setup({isOpen: true})
-        const item = wrapper.getByTestId(dataTestIds.item(index))
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {mouseMoveItemAtIndex, menu, getItemAtIndex} = renderSelect({
+          isOpen: true,
+        })
 
-        fireEvent.mouseMove(item)
+        mouseMoveItemAtIndex(index)
 
         expect(menu.getAttribute('aria-activedescendant')).toBe(
           defaultIds.getItemId(index),
         )
-        expect(item.getAttribute('aria-selected')).toBe('true')
+        expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
       })
 
       test('it removes highlight from the previously highlighted item', () => {
         const index = 1
         const previousIndex = 2
-        const wrapper = setup({
+        const {mouseMoveItemAtIndex, menu, getItemAtIndex} = renderSelect({
           isOpen: true,
           initialHighlightedIndex: previousIndex,
         })
-        const item = wrapper.getByTestId(dataTestIds.item(index))
-        const previousItem = wrapper.getByTestId(
-          dataTestIds.item(previousIndex),
-        )
-        const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.mouseMove(item)
+        mouseMoveItemAtIndex(index)
 
-        expect(menu.getAttribute('aria-activedescendant')).not.toBe(
+        expect(menu).not.toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(previousIndex),
         )
-        expect(previousItem.getAttribute('aria-selected')).toEqual('false')
+        expect(getItemAtIndex(previousIndex)).toHaveAttribute(
+          'aria-selected',
+          'false',
+        )
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(index),
+        )
+        expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
       })
 
       it('keeps highlight on multiple events', () => {
         const index = 1
-        const wrapper = setup({isOpen: true})
-        const item = wrapper.getByTestId(dataTestIds.item(index))
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {mouseMoveItemAtIndex, menu, getItemAtIndex} = renderSelect({
+          isOpen: true,
+        })
 
-        fireEvent.mouseMove(item)
-        fireEvent.mouseMove(item)
-        fireEvent.mouseMove(item)
+        mouseMoveItemAtIndex(index)
+        mouseMoveItemAtIndex(index)
+        mouseMoveItemAtIndex(index)
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(index),
         )
-        expect(item.getAttribute('aria-selected')).toBe('true')
+        expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
       })
     })
 
     describe('on click', () => {
       test('it selects the item', () => {
         const index = 1
-        const wrapper = setup({initialIsOpen: true})
-        const item = wrapper.getByTestId(dataTestIds.item(index))
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+        const {clickOnItemAtIndex, toggleButton, getItems} = renderSelect({
+          initialIsOpen: true,
+        })
 
-        fireEvent.click(item)
+        clickOnItemAtIndex(index)
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[index])
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent(items[index])
       })
 
       test('it selects the item and resets to user defined defaults', () => {
         const index = 1
-        const wrapper = setup({defaultIsOpen: true, defaultHighlightedIndex: 2})
-        const item = wrapper.getByTestId(dataTestIds.item(index))
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+        const {clickOnItemAtIndex, menu, toggleButton, getItems} = renderSelect(
+          {
+            defaultIsOpen: true,
+            defaultHighlightedIndex: 2,
+          },
+        )
 
-        fireEvent.click(item)
+        clickOnItemAtIndex(index)
 
-        expect(toggleButton.textContent).toEqual(items[index])
-        expect(menu.childNodes).toHaveLength(items.length)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(toggleButton).toHaveTextContent(items[index])
+        expect(getItems()).toHaveLength(items.length)
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(2),
         )
       })
@@ -253,10 +243,13 @@ describe('getItemProps', () => {
   describe('scrolling', () => {
     test('is performed by the menu to the item if highlighted and not 100% visible', () => {
       const scrollIntoView = jest.fn()
-      const wrapper = setup({initialIsOpen: true, scrollIntoView})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {keyDownOnMenu} = renderSelect({
+        initialIsOpen: true,
+        scrollIntoView,
+      })
 
-      fireEvent.keyDown(menu, {key: 'End'})
+      keyDownOnMenu('End')
+
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
   })

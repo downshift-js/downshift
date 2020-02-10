@@ -1,53 +1,85 @@
 import React from 'react'
-import {render} from '@testing-library/react'
+import {render, fireEvent} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {useId, defaultProps} from '../utils'
-import {getElementIds} from './utils'
+import userEvent from '@testing-library/user-event'
+import {defaultProps} from '../utils'
+import {items} from '../testUtils'
 import useCombobox from '.'
-
-jest.mock('../utils', () => {
-  const module = require.requireActual('../utils')
-
-  module.useId = () => 'test-id'
-
-  return module
-})
-
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson',
-]
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
-  menu: 'menu-id',
   item: index => `item-id-${index}`,
   input: 'input-id',
-  combobox: 'combobox-id',
+}
+
+jest.mock('../../utils', () => {
+  const utils = require.requireActual('../../utils')
+
+  return {
+    ...utils,
+    generateId: () => 'test-id',
+  }
+})
+
+const renderCombobox = (props, uiCallback) => {
+  const ui = <DropdownCombobox {...props} />
+  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+  const label = wrapper.getByText(/choose an element/i)
+  const menu = wrapper.getByRole('listbox')
+  const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+  const input = wrapper.getByTestId(dataTestIds.input)
+  const combobox = wrapper.getByRole('combobox')
+  const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
+  const getItems = () => wrapper.queryAllByRole('option')
+  const clickOnItemAtIndex = index => {
+    fireEvent.click(getItemAtIndex(index))
+  }
+  const clickOnToggleButton = () => {
+    fireEvent.click(toggleButton)
+  }
+  const mouseMoveItemAtIndex = index => {
+    fireEvent.mouseMove(getItemAtIndex(index))
+  }
+  const getA11yStatusContainer = () => wrapper.queryByRole('status')
+  const mouseLeaveMenu = () => {
+    fireEvent.mouseLeave(menu)
+  }
+  const changeInputValue = async inputValue => {
+    await userEvent.type(input, inputValue)
+  }
+  const focusInput = () => {
+    input.focus()
+  }
+  const keyDownOnInput = (key, options = {}) => {
+    if (document.activeElement !== input) {
+      focusInput()
+    }
+
+    fireEvent.keyDown(input, {key, ...options})
+  }
+  const blurInput = () => {
+    input.blur()
+  }
+
+  return {
+    ...wrapper,
+    label,
+    menu,
+    toggleButton,
+    getItemAtIndex,
+    clickOnItemAtIndex,
+    mouseMoveItemAtIndex,
+    getItems,
+    clickOnToggleButton,
+    getA11yStatusContainer,
+    mouseLeaveMenu,
+    input,
+    combobox,
+    changeInputValue,
+    keyDownOnInput,
+    blurInput,
+    focusInput,
+  }
 }
 
 const DropdownCombobox = props => {
@@ -61,6 +93,8 @@ const DropdownCombobox = props => {
     highlightedIndex,
     getItemProps,
   } = useCombobox({items, ...props})
+  const {itemToString} = props.itemToString ? props : defaultProps
+
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -77,7 +111,7 @@ const DropdownCombobox = props => {
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
-              item instanceof Object ? defaultProps.itemToString(item) : item
+              item instanceof Object ? itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}
@@ -96,12 +130,8 @@ const DropdownCombobox = props => {
   )
 }
 
-const setup = props => render(<DropdownCombobox {...props} />)
-
-const defaultIds = getElementIds(useId)
-
-const setupHook = props => {
+const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {setupHook, dataTestIds, defaultIds, items, setup}
+export {renderUseCombobox, dataTestIds, renderCombobox, DropdownCombobox}

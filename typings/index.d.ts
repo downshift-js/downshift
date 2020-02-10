@@ -89,7 +89,7 @@ export interface A11yStatusMessageOptions<Item> {
   inputValue: string
   isOpen: boolean
   itemToString: (item: Item) => string
-  previousResultCount: number
+  previousResultCount?: number
   resultCount: number
   highlightedItem: Item
   selectedItem: Item
@@ -263,17 +263,15 @@ export enum UseSelectStateChangeTypes {
   FunctionCloseMenu = '__function_close_menu__',
   FunctionSetHighlightedIndex = '__function_set_highlighted_index__',
   FunctionSelectItem = '__function_select_item__',
-  FunctionClearKeysSoFar = '__function_clear_keys_so_far__',
+  FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
 }
 
 export interface UseSelectProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage?: (options: UseSelectA11yMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (
-    options: UseSelectA11yMessageOptions<Item>,
-  ) => string
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
@@ -298,13 +296,6 @@ export interface UseSelectProps<Item> {
   onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
   onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
   environment?: Environment
-}
-
-export interface UseSelectA11yMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
 }
 
 export interface UseSelectStateChangeOptions<Item> {
@@ -365,13 +356,12 @@ export interface UseSelectInterface {
     ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
     ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
     ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
-    ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
     FunctionToggleMenu: UseSelectStateChangeTypes.FunctionToggleMenu
     FunctionOpenMenu: UseSelectStateChangeTypes.FunctionOpenMenu
     FunctionCloseMenu: UseSelectStateChangeTypes.FunctionCloseMenu
     FunctionSetHighlightedIndex: UseSelectStateChangeTypes.FunctionSetHighlightedIndex
     FunctionSelectItem: UseSelectStateChangeTypes.FunctionSelectItem
-    FunctionClearKeysSoFar: UseSelectStateChangeTypes.FunctionClearKeysSoFar
+    FunctionSetInputValue: UseSelectStateChangeTypes.FunctionSetInputValue
     FunctionReset: UseSelectStateChangeTypes.FunctionReset
   }
 }
@@ -412,12 +402,8 @@ export enum UseComboboxStateChangeTypes {
 export interface UseComboboxProps<Item> {
   items: Item[]
   itemToString?: (item: Item) => string
-  getA11yStatusMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
-  getA11ySelectionMessage?: (
-    options: UseComboboxA11yMessageOptions<Item>,
-  ) => string
+  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
@@ -447,14 +433,6 @@ export interface UseComboboxProps<Item> {
   onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
   onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
   environment?: Environment
-}
-
-export interface UseComboboxA11yMessageOptions<Item> {
-  isOpen: boolean
-  selectedItem: Item
-  items: Item[]
-  itemToString: (item: Item) => string
-  inputValue: string
 }
 
 export interface UseComboboxStateChangeOptions<Item> {

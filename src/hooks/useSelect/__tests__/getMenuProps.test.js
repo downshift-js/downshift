@@ -1,15 +1,19 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as reactHooksAct} from '@testing-library/react-hooks'
-import {fireEvent, cleanup, act as reactAct} from '@testing-library/react'
-import {noop} from '../../../utils'
-import {setup, dataTestIds, items, setupHook, defaultIds} from '../testUtils'
+import React from 'react'
+import {act} from '@testing-library/react-hooks'
+import {cleanup, act as reactAct, fireEvent} from '@testing-library/react'
+import {renderUseSelect, renderSelect} from '../testUtils'
+import {defaultIds, items} from '../../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
+
+jest.useFakeTimers()
 
 describe('getMenuProps', () => {
   afterEach(cleanup)
 
   describe('hook props', () => {
     test('assign default value to aria-labelledby', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-labelledby']).toEqual(`${defaultIds.labelId}`)
@@ -19,14 +23,14 @@ describe('getMenuProps', () => {
       const props = {
         labelId: 'my-custom-label-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseSelect(props)
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-labelledby']).toEqual(`${props.labelId}`)
     })
 
     test('assign default value to id', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.id).toEqual(`${defaultIds.menuId}`)
@@ -36,28 +40,28 @@ describe('getMenuProps', () => {
       const props = {
         menuId: 'my-custom-menu-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseSelect(props)
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.id).toEqual(`${props.menuId}`)
     })
 
     test("assign 'listbox' to role", () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.role).toEqual('listbox')
     })
 
     test("assign '-1' to tabindex", () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.tabIndex).toEqual(-1)
     })
 
     test('assign id of highlighted item to aria-activedescendant if item is highlighted', () => {
-      const {result} = setupHook({highlightedIndex: 2})
+      const {result} = renderUseSelect({highlightedIndex: 2})
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-activedescendant']).toEqual(
@@ -66,7 +70,7 @@ describe('getMenuProps', () => {
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-activedescendant']).toBeUndefined()
@@ -75,7 +79,7 @@ describe('getMenuProps', () => {
 
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
 
       expect(result.current.getMenuProps({foo: 'bar'})).toHaveProperty(
         'foo',
@@ -84,43 +88,51 @@ describe('getMenuProps', () => {
     })
 
     test('custom ref passed by the user is used', () => {
-      const {result} = setupHook()
-      const focus = jest.fn()
+      const {result} = renderUseSelect()
+      const refFn = jest.fn()
+      const menuNode = {}
 
-      reactHooksAct(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus})
-        result.current.toggleMenu()
+      act(() => {
+        const {ref} = result.current.getMenuProps({ref: refFn})
+
+        ref(menuNode)
       })
 
-      expect(focus).toHaveBeenCalledTimes(1)
+      expect(refFn).toHaveBeenCalledTimes(1)
+      expect(refFn).toHaveBeenCalledWith(menuNode)
     })
 
     test('custom ref with custom name passed by the user is used', () => {
-      const {result} = setupHook()
-      const focus = jest.fn()
+      const {result} = renderUseSelect()
+      const refFn = jest.fn()
+      const menuNode = {}
 
-      reactHooksAct(() => {
-        const {blablaRef} = result.current.getMenuProps({refKey: 'blablaRef'})
-        blablaRef({focus})
-        result.current.toggleMenu()
+      act(() => {
+        const {blablaRef} = result.current.getMenuProps({
+          refKey: 'blablaRef',
+          blablaRef: refFn,
+        })
+
+        blablaRef(menuNode)
       })
 
-      expect(focus).toHaveBeenCalledTimes(1)
+      expect(refFn).toHaveBeenCalledTimes(1)
+      expect(refFn).toHaveBeenCalledWith(menuNode)
     })
 
     test('event handler onMouseLeave is called along with downshift handler', () => {
       const userOnMouseLeave = jest.fn()
-      const {result} = setupHook({initialHighlightedIndex: 2})
+      const {result} = renderUseSelect({
+        initialHighlightedIndex: 2,
+        initialIsOpen: true,
+      })
 
-      reactHooksAct(() => {
-        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+      act(() => {
+        const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onMouseLeave({preventDefault: noop})
+        onMouseLeave({})
       })
 
       expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
@@ -131,16 +143,17 @@ describe('getMenuProps', () => {
       const userOnMouseLeave = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook({initialHighlightedIndex: 2})
+      const {result} = renderUseSelect({
+        initialHighlightedIndex: 2,
+        initialIsOpen: true,
+      })
 
-      reactHooksAct(() => {
-        const {onMouseLeave, ref: menuRef} = result.current.getMenuProps({
+      act(() => {
+        const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onMouseLeave({preventDefault: noop})
+        onMouseLeave({})
       })
 
       expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
@@ -149,16 +162,14 @@ describe('getMenuProps', () => {
 
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
-        const {ref: menuRef, onKeyDown} = result.current.getMenuProps({
+      act(() => {
+        const {onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onKeyDown({key: 'Escape', preventDefault: noop})
+        onKeyDown({key: 'Escape'})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -169,16 +180,14 @@ describe('getMenuProps', () => {
       const userOnKeyDown = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
-        const {ref: menuRef, onKeyDown} = result.current.getMenuProps({
+      act(() => {
+        const {onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onKeyDown({key: 'Escape', preventDefault: noop})
+        onKeyDown({key: 'Escape'})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -187,15 +196,13 @@ describe('getMenuProps', () => {
 
     test('event handler onBlur is called along with downshift handler', () => {
       const userOnBlur = jest.fn()
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
-        const {ref: menuRef, onBlur} = result.current.getMenuProps({
+      act(() => {
+        const {onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
         onBlur({})
       })
 
@@ -207,16 +214,14 @@ describe('getMenuProps', () => {
       const userOnBlur = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook()
+      const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
-        const {ref: menuRef, onBlur} = result.current.getMenuProps({
+      act(() => {
+        const {onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
 
-        menuRef({focus: noop})
-        result.current.toggleMenu()
-        onBlur({key: 'Escape', preventDefault: noop})
+        onBlur({})
       })
 
       expect(userOnBlur).toHaveBeenCalledTimes(1)
@@ -226,49 +231,35 @@ describe('getMenuProps', () => {
 
   describe('initial focus', () => {
     test('is grabbed when isOpen is passed as true', () => {
-      const wrapper = setup({isOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {menu} = renderSelect({isOpen: true})
 
       expect(document.activeElement).toBe(menu)
     })
 
     test('is grabbed when initialIsOpen is passed as true', () => {
-      const wrapper = setup({initialIsOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {menu} = renderSelect({initialIsOpen: true})
 
-      expect(document.activeElement).toBe(menu)
+      expect(menu).toHaveFocus()
     })
 
     test('is grabbed when defaultIsOpen is passed as true', () => {
-      const wrapper = setup({defaultIsOpen: true})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {menu} = renderSelect({defaultIsOpen: true})
 
-      expect(document.activeElement).toBe(menu)
+      expect(menu).toHaveFocus()
     })
 
     test('is not grabbed when initial open is set to default (false)', () => {
-      const wrapper = setup({})
-      const menu = wrapper.getByTestId(dataTestIds.menu)
+      const {menu} = renderSelect()
 
-      expect(document.activeElement).not.toBe(menu)
+      expect(menu).not.toHaveFocus()
     })
   })
 
   describe('event handlers', () => {
-    describe('on key down', () => {
+    describe('on keydown', () => {
       describe('character key', () => {
-        beforeAll(() => {
-          jest.useFakeTimers()
-        })
-
-        afterAll(() => {
-          jest.useRealTimers()
-        })
-
         afterEach(() => {
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
+          reactAct(() => jest.runAllTimers())
         })
 
         const startsWithCharacter = (option, character) => {
@@ -276,198 +267,219 @@ describe('getMenuProps', () => {
         }
 
         test('should highlight the first item that starts with that key', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {key: 'c'})
-
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              items.findIndex(option => startsWithCharacter(option, 'c')),
-            ),
+          const char = 'c'
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(items.find(item => startsWithCharacter(item, char))),
           )
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
+
+          keyDownOnMenu(char)
+
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
 
         test('should highlight the second item that starts with that key after typing it twice', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-          const firstIndex = items.findIndex(option =>
-            startsWithCharacter(option, 'c'),
+          const char = 'c'
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(
+              items
+                .slice(
+                  items.indexOf(
+                    items.find(item => startsWithCharacter(item, char)),
+                  ) + 1,
+                )
+                .find(item => startsWithCharacter(item, char)),
+            ),
           )
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
 
-          fireEvent.keyDown(menu, {key: 'c'})
+          keyDownOnMenu(char)
           reactAct(() => {
             jest.runOnlyPendingTimers()
           })
-          fireEvent.keyDown(menu, {key: 'c'})
+          keyDownOnMenu(char)
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              firstIndex +
-                1 +
-                items
-                  .slice(firstIndex + 1)
-                  .findIndex(option => startsWithCharacter(option, 'c')),
-            ),
-          )
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
 
         test('should highlight the first item again if the items are depleated', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {key: 'b'})
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
-          fireEvent.keyDown(menu, {key: 'b'})
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
-          fireEvent.keyDown(menu, {key: 'b'})
-
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              items.findIndex(option => startsWithCharacter(option, 'b')),
-            ),
+          const char = 'b'
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(items.find(item => startsWithCharacter(item, char))),
           )
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
+
+          keyDownOnMenu(char)
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
+          keyDownOnMenu(char)
+          reactAct(() => {
+            jest.runOnlyPendingTimers()
+          })
+          keyDownOnMenu(char)
+
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
 
         test('should not highlight anything if no item starts with that key', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
 
-          fireEvent.keyDown(menu, {key: 'x'})
+          keyDownOnMenu('x')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+          expect(menu).not.toHaveAttribute('aria-activedescendant')
         })
 
         test('should highlight the first item that starts with the keys typed in rapid succession', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {key: 'c'})
-          fireEvent.keyDown(menu, {key: 'a'})
-
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              items.findIndex(option => startsWithCharacter(option, 'ca')),
+          const chars = ['c', 'a']
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(
+              items.find(item => startsWithCharacter(item, chars.join(''))),
             ),
           )
+
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
+
+          keyDownOnMenu(chars[0])
+          reactAct(() => jest.advanceTimersByTime(200))
+          keyDownOnMenu(chars[1])
+
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
 
         test('should become first character after timeout passes', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {key: 'c'})
-          fireEvent.keyDown(menu, {key: 'a'})
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
-          fireEvent.keyDown(menu, {key: 'l'})
-
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              items.findIndex(option => startsWithCharacter(option, 'l')),
+          const chars = ['c', 'a', 'l']
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(
+              items.find(item => startsWithCharacter(item, chars[2])),
             ),
           )
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
+
+          keyDownOnMenu(chars[0])
+          reactAct(() => jest.advanceTimersByTime(200))
+          keyDownOnMenu(chars[1])
+          reactAct(() => jest.runAllTimers())
+          keyDownOnMenu(chars[2])
+
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
 
         /* Here we just want to make sure the keys cleanup works. */
         test('should not go to the second option starting with the key if timeout did not pass', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const char = 'c'
+          const expectedIndex = defaultIds.getItemId(
+            items.indexOf(items.find(item => startsWithCharacter(item, char))),
+          )
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
 
-          fireEvent.keyDown(menu, {key: 'c'})
+          keyDownOnMenu(char)
           reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
-          fireEvent.keyDown(menu, {key: 'c'})
+          keyDownOnMenu(char)
 
           // highlight should stay on the first item starting with 'C'
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
-            defaultIds.getItemId(
-              items.findIndex(option => startsWithCharacter(option, 'c')),
-            ),
-          )
+          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
       })
 
       describe('arrow up', () => {
         test('it highlights the last option number if none is highlighted', () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
 
-          fireEvent.keyDown(menu, {key: 'ArrowUp'})
+          keyDownOnMenu('ArrowUp')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('it highlights the previous item', () => {
           const initialHighlightedIndex = 2
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-          fireEvent.keyDown(menu, {key: 'ArrowUp'})
+          keyDownOnMenu('ArrowUp')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(initialHighlightedIndex - 1),
           )
         })
 
         test('with shift it highlights the 5th previous item', () => {
           const initialHighlightedIndex = 6
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {
-            key: 'ArrowUp',
-            shiftKey: true,
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
           })
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          keyDownOnMenu('ArrowUp', {shiftKey: true})
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(initialHighlightedIndex - 5),
           )
         })
 
         test('with shift it highlights the first item if not enough items remaining', () => {
-          const initialHighlightedIndex = 1
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {
-            key: 'ArrowUp',
-            shiftKey: true,
+          const initialHighlightedIndex = 2
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
           })
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          keyDownOnMenu('ArrowUp', {shiftKey: true})
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(0),
           )
         })
 
         test('will stop at 0 if circularNavigatios is falsy', () => {
-          const wrapper = setup({isOpen: true, initialHighlightedIndex: 0})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex: 0,
+          })
 
-          fireEvent.keyDown(menu, {key: 'ArrowUp'})
+          keyDownOnMenu('ArrowUp')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(0),
           )
         })
 
         test('will continue from 0 to last item if circularNavigatios is truthy', () => {
-          const wrapper = setup({
+          const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,
             initialHighlightedIndex: 0,
             circularNavigation: true,
           })
-          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {key: 'ArrowUp'})
+          keyDownOnMenu('ArrowUp')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
         })
@@ -475,340 +487,368 @@ describe('getMenuProps', () => {
 
       describe('arrow down', () => {
         test("it highlights option number '0' if none is highlighted", () => {
-          const wrapper = setup({isOpen: true})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+          })
 
-          fireEvent.keyDown(menu, {key: 'ArrowDown'})
+          keyDownOnMenu('ArrowDown')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(0),
           )
         })
         test('it highlights the next item', () => {
           const initialHighlightedIndex = 2
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-          fireEvent.keyDown(menu, {key: 'ArrowDown'})
+          keyDownOnMenu('ArrowDown')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(initialHighlightedIndex + 1),
           )
         })
 
         test('with shift it highlights the next 5th item', () => {
           const initialHighlightedIndex = 2
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {
-            key: 'ArrowDown',
-            shiftKey: true,
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
           })
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          keyDownOnMenu('ArrowDown', {shiftKey: true})
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(initialHighlightedIndex + 5),
           )
         })
 
         test('with shift it highlights last item if not enough next items remaining', () => {
           const initialHighlightedIndex = items.length - 2
-          const wrapper = setup({isOpen: true, initialHighlightedIndex})
-          const menu = wrapper.getByTestId(dataTestIds.menu)
-
-          fireEvent.keyDown(menu, {
-            key: 'ArrowDown',
-            shiftKey: true,
+          const {keyDownOnMenu, menu} = renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
           })
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          keyDownOnMenu('ArrowDown', {shiftKey: true})
+
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('will stop at last item if circularNavigatios is falsy', () => {
-          const wrapper = setup({
+          const initialHighlightedIndex = items.length - 1
+          const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,
-            initialHighlightedIndex: items.length - 1,
+            initialHighlightedIndex,
           })
-          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {key: 'ArrowDown'})
+          keyDownOnMenu('ArrowDown')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
         })
 
         test('will continue from last item to 0 if circularNavigatios is truthy', () => {
-          const wrapper = setup({
+          const initialHighlightedIndex = items.length - 1
+          const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,
-            initialHighlightedIndex: items.length - 1,
+            initialHighlightedIndex,
             circularNavigation: true,
           })
-          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.keyDown(menu, {key: 'ArrowDown'})
+          keyDownOnMenu('ArrowDown')
 
-          expect(menu.getAttribute('aria-activedescendant')).toBe(
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
             defaultIds.getItemId(0),
           )
         })
       })
 
       test('end it highlights the last option number', () => {
-        const wrapper = setup({isOpen: true, initialHighlightedIndex: 2})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {keyDownOnMenu, menu} = renderSelect({
+          isOpen: true,
+          initialHighlightedIndex: 2,
+        })
 
-        fireEvent.keyDown(menu, {key: 'End'})
+        keyDownOnMenu('End')
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(items.length - 1),
         )
       })
 
       test('home it highlights the first option number', () => {
-        const wrapper = setup({isOpen: true, initialHighlightedIndex: 2})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {keyDownOnMenu, menu} = renderSelect({
+          isOpen: true,
+          initialHighlightedIndex: 2,
+        })
 
-        fireEvent.keyDown(menu, {key: 'Home'})
+        keyDownOnMenu('Home')
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(0),
         )
       })
 
       test('escape it has the menu closed', () => {
-        const wrapper = setup({initialIsOpen: true, initialHighlightedIndex: 2})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
+        const {keyDownOnMenu, getItems} = renderSelect({
+          initialIsOpen: true,
+        })
 
-        fireEvent.keyDown(menu, {key: 'Escape'})
+        keyDownOnMenu('Escape')
 
-        expect(menu.childNodes).toHaveLength(0)
+        expect(getItems()).toHaveLength(0)
       })
 
       test('escape it has the focus moved to toggleButton', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+        const {keyDownOnMenu, toggleButton} = renderSelect({
+          initialIsOpen: true,
+        })
 
-        menu.focus()
-        fireEvent.keyDown(menu, {key: 'Escape'})
+        keyDownOnMenu('Escape')
 
-        expect(document.activeElement).toBe(toggleButton)
+        expect(toggleButton).toHaveFocus()
       })
 
       test('enter it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
-        const wrapper = setup({
+        const {keyDownOnMenu, getItems, toggleButton} = renderSelect({
           initialIsOpen: true,
           initialHighlightedIndex,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: 'Enter'})
+        keyDownOnMenu('Enter')
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
       })
 
       test('enter selects highlighted item and resets to user defaults', () => {
         const defaultHighlightedIndex = 2
-        const wrapper = setup({
+        const {keyDownOnMenu, getItems, menu, toggleButton} = renderSelect({
           defaultHighlightedIndex,
           defaultIsOpen: true,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: 'Enter'})
+        keyDownOnMenu('Enter')
 
-        expect(toggleButton.textContent).toEqual(items[defaultHighlightedIndex])
-        expect(menu.childNodes).toHaveLength(items.length)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
+        expect(getItems()).toHaveLength(items.length)
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
 
-      test('enter it has the focus moved to toggleButton', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      test('enter it has the focus moved on the toggleButton', () => {
+        const {keyDownOnMenu, toggleButton} = renderSelect({
+          initialIsOpen: true,
+        })
 
-        menu.focus()
-        fireEvent.keyDown(menu, {key: 'Enter'})
+        keyDownOnMenu('Enter')
 
-        expect(document.activeElement).toBe(toggleButton)
+        expect(toggleButton).toHaveFocus()
       })
 
       test('space it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
-        const wrapper = setup({
+        const {keyDownOnMenu, toggleButton, getItems} = renderSelect({
           initialIsOpen: true,
           initialHighlightedIndex,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: ' '})
+        keyDownOnMenu(' ')
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
       })
 
       test('space it selects highlighted item and resets to user defaults', () => {
         const defaultHighlightedIndex = 2
-        const wrapper = setup({
+        const {keyDownOnMenu, toggleButton, menu, getItems} = renderSelect({
           defaultHighlightedIndex,
           defaultIsOpen: true,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: ' '})
+        keyDownOnMenu(' ')
 
-        expect(toggleButton.textContent).toEqual(items[defaultHighlightedIndex])
-        expect(menu.childNodes).toHaveLength(items.length)
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
+        expect(getItems()).toHaveLength(items.length)
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
 
-      test('space it has the focus moved to toggleButton', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-
-        menu.focus()
-        fireEvent.keyDown(menu, {key: ' '})
-
-        expect(document.activeElement).toBe(toggleButton)
-      })
-
-      test.skip('tab it closes the menu and selects highlighted item', () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({
+      test('space it has the focus moved on the toggleButton', () => {
+        const {keyDownOnMenu, toggleButton} = renderSelect({
           initialIsOpen: true,
-          initialHighlightedIndex,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: 'Tab'})
+        keyDownOnMenu(' ')
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual('Elements')
+        expect(toggleButton).toHaveFocus()
       })
 
-      // Special case test.
+      test('tab it closes the menu and does not select highlighted item', () => {
+        const {toggleButton, tab, getItems} = renderSelect(
+          {initialIsOpen: true, initialHighlightedIndex: 2},
+          ui => {
+            return (
+              <>
+                <div tabIndex={0}>First element</div>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
+        )
+
+        tab()
+
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent('Elements')
+      })
+
       test('shift+tab it closes the menu', () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+        const {toggleButton, tab, getItems} = renderSelect(
+          {initialIsOpen: true, initialHighlightedIndex: 2},
+          ui => {
+            return (
+              <>
+                <div tabIndex={0}>First element</div>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
+        )
 
-        fireEvent.keyDown(menu, {key: 'Tab', shiftKey: true})
+        tab(true)
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual('Elements')
-      })
-
-      test('shift+tab it has the focus moved to toggleButton', () => {
-        const wrapper = setup({initialIsOpen: true})
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-
-        fireEvent.keyDown(menu, {key: 'Tab', shiftKey: true})
-
-        expect(document.activeElement).toBe(toggleButton)
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent('Elements')
       })
 
       test("other than the ones supported don't affect anything", () => {
-        const wrapper = setup({
+        const {keyDownOnMenu, toggleButton, getItems, menu} = renderSelect({
           initialIsOpen: true,
-          initialHighlightedIndex: 2,
-          initialSelectedItem: items[2],
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.keyDown(menu, {key: 'Alt'})
-        fireEvent.keyDown(menu, {key: 'Control'})
+        keyDownOnMenu('Alt')
+        keyDownOnMenu('Control')
 
-        expect(document.activeElement).toBe(menu)
-        expect(toggleButton.textContent).toEqual(items[2])
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
-          defaultIds.getItemId(2),
-        )
-        expect(menu.childNodes).toHaveLength(items.length)
+        expect(menu).toHaveFocus()
+        expect(toggleButton).toHaveTextContent('Elements')
+        expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
+        expect(getItems()).toHaveLength(items.length)
       })
     })
 
     describe('on mouse leave', () => {
       test('the highlightedIndex should be reset', () => {
-        const wrapper = setup({
+        const {mouseLeaveMenu, menu} = renderSelect({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
 
-        fireEvent.mouseLeave(menu)
+        mouseLeaveMenu()
 
-        expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+        expect(menu).not.toHaveAttribute('aria-activedescendant')
       })
     })
 
-    describe('on blur', () => {
-      test('the open menu will be closed and highlighted item will not be selected', () => {
+    describe('blur', () => {
+      test('should not select highlighted item but close the menu', () => {
         const initialHighlightedIndex = 2
-        const wrapper = setup({
+        const {getItems, blurMenu, toggleButton} = renderSelect({
           initialIsOpen: true,
           initialHighlightedIndex,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
 
-        fireEvent.blur(menu)
+        blurMenu()
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual('Elements')
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent('Element')
       })
 
-      test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({
-          initialIsOpen: true,
-          initialHighlightedIndex,
-        })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+      test('by focusing another element should behave as a normal blur', () => {
+        const {toggleButton, getByText, getItems} = renderSelect(
+          {initialIsOpen: true, initialHighlightedIndex: 2},
+          ui => {
+            return (
+              <>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
+        )
 
-        fireEvent.mouseLeave(menu)
-        fireEvent.blur(menu)
+        getByText(/Second element/).focus()
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual('Elements')
+        expect(getItems).toHaveLength(0)
+        expect(toggleButton).toHaveTextContent('Element')
       })
 
-      test.skip('by clicking outside it should behave normally but the toggleButton should not be focused', () => {
-        const initialHighlightedIndex = 2
-        const wrapper = setup({
-          initialIsOpen: true,
-          initialHighlightedIndex,
+      test('by mouse is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {toggleButton, container} = renderSelect({
+          isOpen: true,
+          stateReducer,
         })
-        const menu = wrapper.getByTestId(dataTestIds.menu)
-        const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-        const outsideElement = wrapper.getByTestId('outside-element')
+        document.body.appendChild(container)
 
-        fireEvent.focus(outsideElement)
+        fireEvent.mouseDown(toggleButton)
+        fireEvent.mouseUp(toggleButton)
 
-        expect(menu.childNodes).toHaveLength(0)
-        expect(toggleButton.textContent).toEqual(items[initialHighlightedIndex])
-        expect(document.activeElement).not.toBe(toggleButton)
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.mouseDown(document.body)
+        fireEvent.mouseUp(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+        )
+      })
+
+      test('by touch is not triggered if target is within downshift', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {container, toggleButton} = renderSelect({
+          isOpen: true,
+          stateReducer,
+        })
+        document.body.appendChild(container)
+
+        fireEvent.touchStart(toggleButton)
+        fireEvent.touchMove(toggleButton)
+        fireEvent.touchEnd(toggleButton)
+
+        expect(stateReducer).not.toHaveBeenCalled()
+
+        fireEvent.touchStart(document.body)
+        fireEvent.touchEnd(document.body)
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          expect.objectContaining({}),
+          expect.objectContaining({type: stateChangeTypes.MenuBlur}),
+        )
       })
     })
   })

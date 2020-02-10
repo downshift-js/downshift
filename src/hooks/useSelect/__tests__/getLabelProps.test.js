@@ -1,11 +1,12 @@
 import {cleanup} from '@testing-library/react'
-import {setupHook, defaultIds} from '../testUtils'
+import {renderUseSelect} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getLabelProps', () => {
   afterEach(cleanup)
 
   test('should have a default id assigned', () => {
-    const {result} = setupHook()
+    const {result} = renderUseSelect()
     const labelProps = result.current.getLabelProps()
 
     expect(labelProps.id).toEqual(defaultIds.labelId)
@@ -15,7 +16,7 @@ describe('getLabelProps', () => {
     const props = {
       labelId: 'my-custom-label-id',
     }
-    const {result} = setupHook(props)
+    const {result} = renderUseSelect(props)
     const labelProps = result.current.getLabelProps()
 
     expect(labelProps.id).toEqual(props.labelId)
@@ -25,14 +26,14 @@ describe('getLabelProps', () => {
     const props = {
       toggleButtonId: 'my-custom-toggle-button-id',
     }
-    const {result} = setupHook(props)
+    const {result} = renderUseSelect(props)
     const labelProps = result.current.getLabelProps()
 
     expect(labelProps.htmlFor).toEqual(props.toggleButtonId)
   })
 
   test('passes props downwards', () => {
-    const {result} = setupHook()
+    const {result} = renderUseSelect()
     const props = {foo: 'bar'}
     const labelProps = result.current.getLabelProps(props)
 

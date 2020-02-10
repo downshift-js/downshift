@@ -25,19 +25,4 @@ describe('utils', () => {
       expect(index).toBe(1)
     })
   })
-
-  describe('getA11yStatusMessage', () => {
-    test('returns empty if no items', () => {
-      const message = defaultProps.getA11yStatusMessage({})
-      expect(message).toBe('')
-    })
-
-    test('returns empty if no message can be created', () => {
-      const message = defaultProps.getA11yStatusMessage({
-        items: [],
-        isOpen: false,
-      })
-      expect(message).toBe('')
-    })
-  })
 })

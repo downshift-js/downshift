@@ -10,10 +10,14 @@ export const InputKeyDownEnd = productionEnum('__input_keydown_end__')
 export const InputKeyDownEnter = productionEnum('__input_keydown_enter__')
 export const InputChange = productionEnum('__input_change__')
 export const InputBlur = productionEnum('__input_blur__')
+
 export const MenuMouseLeave = productionEnum('__menu_mouse_leave__')
+
 export const ItemMouseMove = productionEnum('__item_mouse_move__')
 export const ItemClick = productionEnum('__item_click__')
+
 export const ToggleButtonClick = productionEnum('__togglebutton_click__')
+
 export const FunctionToggleMenu = productionEnum('__function_toggle_menu__')
 export const FunctionOpenMenu = productionEnum('__function_open_menu__')
 export const FunctionCloseMenu = productionEnum('__function_close_menu__')

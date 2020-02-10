@@ -1,7 +1,5 @@
 import {getA11yStatusMessage} from '../utils'
 
-const itemToString = i => String(i)
-
 const tests = [
   {
     input: {
@@ -9,14 +7,6 @@ const tests = [
       selectedItem: null,
     },
     output: '',
-  },
-  {
-    input: {
-      itemToString,
-      isOpen: false,
-      selectedItem: 'Grapes',
-    },
-    output: 'Grapes',
   },
   {
     input: {
@@ -59,17 +49,6 @@ const tests = [
     },
     output:
       '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
-  },
-  {
-    input: {
-      itemToString,
-      isOpen: true,
-      resultCount: 7,
-      previousResultCount: 7,
-      selectedItem: 'Raspberries',
-      highlightedItem: 'Raspberries',
-    },
-    output: '',
   },
 ]
 

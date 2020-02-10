@@ -1,37 +1,24 @@
 import PropTypes from 'prop-types'
+import {generateId, getA11yStatusMessage} from '../../utils'
 import {
   getElementIds as getElementIdsCommon,
-  getInitialValue as getInitialValueCommon,
-  getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
+  getInitialState as getInitialStateCommon,
 } from '../utils'
 
-const defaultStateValues = {
-  inputValue: '',
-}
-
-function getElementIds(generateDefaultId, {id, inputId, ...rest} = {}) {
-  const uniqueId = id === undefined ? `downshift-${generateDefaultId()}` : id
+function getElementIds({id, inputId, ...rest}) {
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
   return {
     inputId: inputId || `${uniqueId}-input`,
-    ...getElementIdsCommon(generateDefaultId, {id, ...rest}),
+    ...getElementIdsCommon({id, ...rest}),
   }
 }
 
-function getDefaultValue(props, propKey) {
-  return getDefaultValueCommon(props, propKey, defaultStateValues)
-}
-
-function getInitialValue(props, propKey) {
-  return getInitialValueCommon(props, propKey, defaultStateValues)
-}
-
 function getInitialState(props) {
-  const selectedItem = getInitialValue(props, 'selectedItem')
-  const isOpen = getInitialValue(props, 'isOpen')
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
-  let inputValue = getInitialValue(props, 'inputValue')
+  const initialState = getInitialStateCommon(props)
+  const {selectedItem} = initialState
+  let {inputValue} = initialState
 
   if (
     inputValue === '' &&
@@ -44,12 +31,7 @@ function getInitialState(props) {
   }
 
   return {
-    highlightedIndex:
-      highlightedIndex < 0 && selectedItem
-        ? props.items.indexOf(selectedItem)
-        : highlightedIndex,
-    isOpen,
-    selectedItem,
+    ...initialState,
     inputValue,
   }
 }
@@ -97,14 +79,8 @@ const propTypes = {
 
 const defaultProps = {
   ...defaultPropsCommon,
+  getA11yStatusMessage,
   circularNavigation: true,
 }
 
-export {
-  getElementIds,
-  getInitialState,
-  defaultStateValues,
-  propTypes,
-  getDefaultValue,
-  defaultProps,
-}
+export {getInitialState, propTypes, defaultProps, getElementIds}

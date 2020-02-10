@@ -1,14 +1,15 @@
 import {act} from '@testing-library/react-hooks'
-import {fireEvent, cleanup} from '@testing-library/react'
+import {cleanup} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {setup, setupHook, defaultIds, dataTestIds} from '../testUtils'
+import {renderCombobox, renderUseCombobox} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getMenuProps', () => {
   afterEach(cleanup)
 
   describe('hook props', () => {
     test('assign default value to aria-labelledby', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-labelledby']).toEqual(`${defaultIds.labelId}`)
@@ -18,14 +19,14 @@ describe('getMenuProps', () => {
       const props = {
         labelId: 'my-custom-label-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseCombobox(props)
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps['aria-labelledby']).toEqual(`${props.labelId}`)
     })
 
     test('assign default value to id', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.id).toEqual(`${defaultIds.menuId}`)
@@ -35,14 +36,14 @@ describe('getMenuProps', () => {
       const props = {
         menuId: 'my-custom-menu-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseCombobox(props)
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.id).toEqual(`${props.menuId}`)
     })
 
     test("assign 'listbox' to role", () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const menuProps = result.current.getMenuProps()
 
       expect(menuProps.role).toEqual('listbox')
@@ -51,7 +52,7 @@ describe('getMenuProps', () => {
 
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       expect(result.current.getMenuProps({foo: 'bar'})).toHaveProperty(
         'foo',
@@ -61,16 +62,16 @@ describe('getMenuProps', () => {
 
     test('event handler onMouseLeave is called along with downshift handler', () => {
       const userOnMouseLeave = jest.fn()
-      const {result} = setupHook({initialHighlightedIndex: 2})
+      const {result} = renderUseCombobox({
+        initialHighlightedIndex: 2,
+        initialIsOpen: true,
+      })
 
       act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
-        const {ref: inputRef} = result.current.getInputProps()
 
-        inputRef({focus: noop})
-        result.current.toggleMenu()
         onMouseLeave({preventDefault: noop})
       })
 
@@ -82,16 +83,16 @@ describe('getMenuProps', () => {
       const userOnMouseLeave = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = setupHook({initialHighlightedIndex: 2})
+      const {result} = renderUseCombobox({
+        initialHighlightedIndex: 2,
+        initialIsOpen: true,
+      })
 
       act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
-        const {ref: inputRef} = result.current.getInputProps()
 
-        inputRef({focus: noop})
-        result.current.toggleMenu()
         onMouseLeave({preventDefault: noop})
       })
 
@@ -104,15 +105,14 @@ describe('getMenuProps', () => {
     describe('on key down', () => {
       describe('on mouse leave', () => {
         test('the highlightedIndex should be reset', () => {
-          const wrapper = setup({
+          const {mouseLeaveMenu, input} = renderCombobox({
             initialIsOpen: true,
             initialHighlightedIndex: 2,
           })
-          const menu = wrapper.getByTestId(dataTestIds.menu)
 
-          fireEvent.mouseLeave(menu)
+          mouseLeaveMenu()
 
-          expect(menu.getAttribute('aria-activedescendant')).toBeNull()
+          expect(input).not.toHaveAttribute('aria-activedescendant')
         })
       })
     })

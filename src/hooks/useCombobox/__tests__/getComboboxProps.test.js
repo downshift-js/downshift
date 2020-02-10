@@ -1,28 +1,29 @@
 import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {setupHook, defaultIds} from '../testUtils'
+import {renderUseCombobox} from '../testUtils'
+import {defaultIds} from '../../testUtils'
 
 describe('getComboboxProps', () => {
   afterEach(cleanup)
 
   describe('hook props', () => {
     test("assign 'combobox' to role", () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const comboboxProps = result.current.getComboboxProps()
 
       expect(comboboxProps.role).toEqual('combobox')
     })
 
     test("assign 'listbox' to aria-haspopup", () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const comboboxProps = result.current.getComboboxProps()
 
       expect(comboboxProps['aria-haspopup']).toEqual('listbox')
     })
 
     test('assign default value to aria-owns', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
       const comboboxProps = result.current.getComboboxProps()
 
       expect(comboboxProps['aria-owns']).toEqual(`${defaultIds.menuId}`)
@@ -32,21 +33,21 @@ describe('getComboboxProps', () => {
       const props = {
         menuId: 'my-custom-label-id',
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseCombobox(props)
       const comboboxProps = result.current.getComboboxProps()
 
       expect(comboboxProps['aria-owns']).toEqual(`${props.menuId}`)
     })
 
     test("assign 'false' value to aria-expanded when menu is closed", () => {
-      const {result} = setupHook({isOpen: false})
+      const {result} = renderUseCombobox({isOpen: false})
       const comboboxProps = result.current.getComboboxProps()
 
       expect(comboboxProps['aria-expanded']).toEqual(false)
     })
 
     test("assign 'true' value to aria-expanded when menu is open", () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       act(() => {
         const {ref: inputRef} = result.current.getInputProps()
@@ -63,7 +64,7 @@ describe('getComboboxProps', () => {
 
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = setupHook()
+      const {result} = renderUseCombobox()
 
       expect(result.current.getComboboxProps({foo: 'bar'})).toHaveProperty(
         'foo',

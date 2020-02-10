@@ -134,28 +134,25 @@ function resetIdCounter() {
 }
 
 /**
+ * Default implementation for status message. Only added when menu is open.
+ * Will specift if there are results in the list, and if so, how many,
+ * and what keys are relevant.
+ *
  * @param {Object} param the downshift state and other relevant properties
  * @return {String} the a11y status message
  */
-function getA11yStatusMessage({
-  isOpen,
-  selectedItem,
-  resultCount,
-  previousResultCount,
-  itemToString,
-}) {
+function getA11yStatusMessage({isOpen, resultCount}) {
   if (!isOpen) {
-    return selectedItem ? itemToString(selectedItem) : ''
+    return ''
   }
+
   if (!resultCount) {
     return 'No results are available.'
   }
-  if (resultCount !== previousResultCount) {
-    return `${resultCount} result${
-      resultCount === 1 ? ' is' : 's are'
-    } available, use up and down arrow keys to navigate. Press Enter key to select.`
-  }
-  return ''
+
+  return `${resultCount} result${
+    resultCount === 1 ? ' is' : 's are'
+  } available, use up and down arrow keys to navigate. Press Enter key to select.`
 }
 
 /**
@@ -395,8 +392,7 @@ function getNextNonDisabledIndex(
  * Checks if event target is within the downshift elements.
  *
  * @param {EventTarget} target Target to check.
- * @param {HTMLElement} rootNode The element with combobox role.
- * @param {HTMLElement} menuNode The elements list with listbox role.
+ * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
  * @param {Document} document The document.
  * @param {boolean} checkActiveElement Whether to also check activeElement.
  *
@@ -404,12 +400,11 @@ function getNextNonDisabledIndex(
  */
 function targetWithinDownshift(
   target,
-  rootNode,
-  menuNode,
+  downshiftElements,
   document,
   checkActiveElement = true,
 ) {
-  return [rootNode, menuNode].some(
+  return downshiftElements.some(
     contextNode =>
       contextNode &&
       (isOrContainsNode(contextNode, target) ||

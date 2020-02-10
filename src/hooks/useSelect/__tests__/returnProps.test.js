@@ -1,15 +1,14 @@
 import {act} from '@testing-library/react-hooks'
 import {cleanup} from '@testing-library/react'
-import {noop} from '../../../utils'
-import {items, setupHook} from '../testUtils'
-import {defaultStateValues} from '../../utils'
+import {items} from '../../testUtils'
+import {renderUseSelect} from '../testUtils'
 
 describe('returnProps', () => {
   afterEach(cleanup)
 
   describe('prop getters', () => {
     test('are returned as functions', () => {
-      const {result} = setupHook()
+      const {result} = renderUseSelect()
 
       expect(result.current.getMenuProps).toBeInstanceOf(Function)
       expect(result.current.getItemProps).toBeInstanceOf(Function)
@@ -20,50 +19,39 @@ describe('returnProps', () => {
 
   describe('actions', () => {
     test('openMenu opens the closed menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect()
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
         result.current.openMenu()
       })
+
       expect(result.current.isOpen).toBe(true)
     })
 
     test('openMenu does nothing to open menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        result.current.openMenu()
         result.current.openMenu()
       })
+
       expect(result.current.isOpen).toBe(true)
     })
 
     test('closeMenu closes the open menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
-        toggleButtonRef({focus: noop})
-        result.current.openMenu()
         result.current.closeMenu()
       })
+
       expect(result.current.isOpen).toBe(false)
     })
 
     test('closeMenu does nothing to closed menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect()
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
-        toggleButtonRef({focus: noop})
         result.current.closeMenu()
       })
 
@@ -71,11 +59,9 @@ describe('returnProps', () => {
     })
 
     test('toggleMenu opens closed menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect({})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
         result.current.toggleMenu()
       })
 
@@ -83,14 +69,9 @@ describe('returnProps', () => {
     })
 
     test('toggleMenu closes open menu', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: toggleButtonRef} = result.current.getToggleButtonProps()
-        toggleButtonRef({focus: noop})
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        result.current.openMenu()
         result.current.toggleMenu()
       })
 
@@ -98,12 +79,9 @@ describe('returnProps', () => {
     })
 
     test('setHighlightedIndex sets highlightedIndex', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect({initialIsOpen: true})
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        result.current.openMenu()
         result.current.setHighlightedIndex(2)
       })
 
@@ -111,12 +89,9 @@ describe('returnProps', () => {
     })
 
     test('selectItem sets selectedItem', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect()
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
-        result.current.openMenu()
         result.current.selectItem(items[2])
       })
 
@@ -124,22 +99,19 @@ describe('returnProps', () => {
     })
 
     test('reset sets the state to default values', () => {
-      const {result} = setupHook({})
+      const {result} = renderUseSelect()
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
         result.current.openMenu()
         result.current.selectItem(items[2])
         result.current.setHighlightedIndex(3)
         result.current.reset()
       })
 
-      expect(result.current.selectedItem).toBe(defaultStateValues.selectedItem)
-      expect(result.current.highlightedIndex).toBe(
-        defaultStateValues.highlightedIndex,
-      )
-      expect(result.current.isOpen).toBe(defaultStateValues.isOpen)
+      expect(result.current.selectedItem).toBe(null)
+      expect(result.current.highlightedIndex).toBe(-1)
+      expect(result.current.isOpen).toBe(false)
+      expect(result.current.inputValue).toBe('')
     })
 
     test('reset sets the state to default prop values passed by user', () => {
@@ -148,11 +120,9 @@ describe('returnProps', () => {
         defaultHighlightedIndex: 3,
         defaultSelectedItem: items[2],
       }
-      const {result} = setupHook(props)
+      const {result} = renderUseSelect(props)
 
       act(() => {
-        const {ref: menuRef} = result.current.getMenuProps()
-        menuRef({focus: noop})
         result.current.openMenu()
         result.current.selectItem(items[4])
         result.current.setHighlightedIndex(1)
@@ -169,21 +139,27 @@ describe('returnProps', () => {
 
   describe('state and props', () => {
     test('highlightedIndex is returned', () => {
-      const {result} = setupHook({highlightedIndex: 4})
+      const {result} = renderUseSelect({highlightedIndex: 4})
 
       expect(result.current.highlightedIndex).toBe(4)
     })
 
     test('isOpen is returned', () => {
-      const {result} = setupHook({isOpen: false})
+      const {result} = renderUseSelect({isOpen: false})
 
       expect(result.current.isOpen).toBe(false)
     })
 
     test('selectedItem is returned', () => {
-      const {result} = setupHook({selectedItem: items[1]})
+      const {result} = renderUseSelect({selectedItem: items[1]})
 
       expect(result.current.selectedItem).toBe(items[1])
+    })
+
+    test('inputValue is returned', () => {
+      const {result} = renderUseSelect({inputValue: 'bla'})
+
+      expect(result.current.inputValue).toBe('bla')
     })
   })
 })

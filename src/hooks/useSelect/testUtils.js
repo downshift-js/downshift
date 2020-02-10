@@ -1,47 +1,19 @@
 import React from 'react'
-import {render} from '@testing-library/react'
+import {render, fireEvent} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import {getElementIds, defaultProps, useId} from '../utils'
+import userEvent from '@testing-library/user-event'
+import {defaultProps} from '../utils'
+import {items} from '../testUtils'
 import useSelect from '.'
 
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson',
-]
+jest.mock('../../utils', () => {
+  const utils = require.requireActual('../../utils')
 
-jest.mock('../utils', () => {
-  const module = require.requireActual('../utils')
-
-  module.useId = () => 'test-id'
-
-  return module
+  return {
+    ...utils,
+    generateId: () => 'test-id',
+  }
 })
-
-const defaultIds = getElementIds(useId)
 
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
@@ -49,8 +21,61 @@ const dataTestIds = {
   item: index => `item-id-${index}`,
 }
 
-const setupHook = props => {
+const renderUseSelect = props => {
   return renderHook(() => useSelect({items, ...props}))
+}
+
+const renderSelect = (props, uiCallback) => {
+  const ui = <DropdownSelect {...props} />
+  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+  const label = wrapper.getByText(/choose an element/i)
+  const menu = wrapper.getByRole('listbox')
+  const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
+  const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
+  const getItems = () => wrapper.queryAllByRole('option')
+  const clickOnItemAtIndex = index => {
+    fireEvent.click(getItemAtIndex(index))
+  }
+  const clickOnToggleButton = () => {
+    fireEvent.click(toggleButton)
+  }
+  const mouseMoveItemAtIndex = index => {
+    fireEvent.mouseMove(getItemAtIndex(index))
+  }
+  const keyDownOnToggleButton = (key, options = {}) => {
+    fireEvent.keyDown(toggleButton, {key, ...options})
+  }
+  const keyDownOnMenu = (key, options = {}) => {
+    fireEvent.keyDown(menu, {key, ...options})
+  }
+  const blurMenu = () => {
+    menu.blur()
+  }
+  const getA11yStatusContainer = () => wrapper.queryByRole('status')
+  const mouseLeaveMenu = () => {
+    fireEvent.mouseLeave(menu)
+  }
+  const tab = (shiftKey = false) => {
+    userEvent.tab({shift: shiftKey})
+  }
+
+  return {
+    ...wrapper,
+    label,
+    menu,
+    toggleButton,
+    getItemAtIndex,
+    clickOnItemAtIndex,
+    mouseMoveItemAtIndex,
+    getItems,
+    keyDownOnToggleButton,
+    clickOnToggleButton,
+    blurMenu,
+    getA11yStatusContainer,
+    mouseLeaveMenu,
+    keyDownOnMenu,
+    tab,
+  }
 }
 
 const DropdownSelect = props => {
@@ -63,6 +88,8 @@ const DropdownSelect = props => {
     highlightedIndex,
     getItemProps,
   } = useSelect({items, ...props})
+  const {itemToString} = props.itemToString ? props : defaultProps
+
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
@@ -71,14 +98,14 @@ const DropdownSelect = props => {
         {...getToggleButtonProps()}
       >
         {(selectedItem && selectedItem instanceof Object
-          ? defaultProps.itemToString(selectedItem)
+          ? itemToString(selectedItem)
           : selectedItem) || 'Elements'}
       </button>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
-              item instanceof Object ? defaultProps.itemToString(item) : item
+              item instanceof Object ? itemToString(item) : item
             return (
               <li
                 data-testid={dataTestIds.item(index)}
@@ -97,6 +124,4 @@ const DropdownSelect = props => {
   )
 }
 
-const setup = props => render(<DropdownSelect {...props} />)
-
-export {dataTestIds, setup, items, setupHook, defaultIds}
+export {items, renderUseSelect, renderSelect, DropdownSelect}
