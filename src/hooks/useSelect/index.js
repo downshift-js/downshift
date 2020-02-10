@@ -322,9 +322,9 @@ function useSelect(userProps = {}) {
     }
   }
   const menuHandleBlur = () => {
-    const shouldBlur = mouseAndTouchTrackers.current.isMouseDown
+    const shouldBlur = !mouseAndTouchTrackers.current.isMouseDown
     /* istanbul ignore else */
-    if (!shouldBlur) {
+    if (shouldBlur) {
       dispatch({type: stateChangeTypes.MenuBlur})
     }
   }

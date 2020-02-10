@@ -653,7 +653,7 @@ describe('getMenuProps', () => {
         )
       })
 
-      test('enter it has the focus kept on the toggleButton', () => {
+      test('enter it has the focus moved on the toggleButton', () => {
         const {keyDownOnMenu, toggleButton} = renderSelect({
           initialIsOpen: true,
         })
@@ -693,7 +693,7 @@ describe('getMenuProps', () => {
         )
       })
 
-      test('space it has the focus moved kept on the toggleButton', () => {
+      test('space it has the focus moved on the toggleButton', () => {
         const {keyDownOnMenu, toggleButton} = renderSelect({
           initialIsOpen: true,
         })
