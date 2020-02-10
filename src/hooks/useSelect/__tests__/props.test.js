@@ -142,7 +142,7 @@ describe('props', () => {
       clickOnToggleButton()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
-        '1 result is available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
+        '1 result is available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
       )
     })
 
@@ -154,7 +154,7 @@ describe('props', () => {
       clickOnToggleButton()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
-        '2 results are available, use up and down arrow keys to navigate. Press Enter or Space keys to select.',
+        '2 results are available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
       )
     })
 

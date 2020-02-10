@@ -99,7 +99,7 @@ function getA11yStatusMessage({isOpen, resultCount}) {
 
   return `${resultCount} result${
     resultCount === 1 ? ' is' : 's are'
-  } available, use up and down arrow keys to navigate. Press Enter or Space keys to select.`
+  } available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.`
 }
 
 const defaultProps = {
