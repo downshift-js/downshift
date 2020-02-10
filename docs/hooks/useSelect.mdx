@@ -219,7 +219,7 @@ as if no item was selected.
 <Playground style={playgroundStyles}>
   {() => {
     function Wrapper() {
-      const [selectedItem, setSelectedItem] = useState()
+      const [selectedItem, setSelectedItem] = useState(null)
       const onSelectedItemChange = item => {
         if (item.startsWith('C')) {
           setSelectedItem(item)
