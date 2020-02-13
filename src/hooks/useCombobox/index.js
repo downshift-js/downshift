@@ -289,13 +289,13 @@ function useCombobox(userProps = {}) {
     })
   }
   const toggleButtonHandleClick = () => {
-    if (!isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-
     dispatch({
       type: stateChangeTypes.ToggleButtonClick,
     })
+
+    if (!isOpen && inputRef.current) {
+      inputRef.current.focus()
+    }
   }
 
   // returns
