@@ -60,13 +60,20 @@ describe('getInputProps', () => {
       expect(inputProps['aria-controls']).toEqual(`${props.menuId}`)
     })
 
-    test('assign id of highlighted item to aria-activedescendant if item is highlighted', () => {
-      const {result} = renderUseCombobox({highlightedIndex: 2})
+    test('assign id of highlighted item to aria-activedescendant if item is highlighted and menu is open', () => {
+      const {result} = renderUseCombobox({highlightedIndex: 2, isOpen: true})
       const inputProps = result.current.getInputProps()
 
       expect(inputProps['aria-activedescendant']).toEqual(
         defaultIds.getItemId(2),
       )
+    })
+
+    test('assign no aria-activedescendant if item is highlighted and menu is closed', () => {
+      const {result} = renderUseCombobox({highlightedIndex: 2})
+      const inputProps = result.current.getInputProps()
+
+      expect(inputProps['aria-activedescendant']).toBeUndefined()
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {
