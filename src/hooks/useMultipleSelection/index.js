@@ -32,12 +32,14 @@ function useMultipleSelection(userProps = {}) {
 
   // Effects.
   useEffect(() => {
-    if (!isInitialMount.current) {
-      if (activeIndex < 0) {
-        dropdownRef.current.focus()
-      } else {
-        itemRefs.current[activeIndex].focus()
-      }
+    if (isInitialMount.current) {
+      return
+    }
+
+    if (activeIndex === -1) {
+      dropdownRef.current.focus()
+    } else {
+      itemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
   /* Make initial ref false. */
