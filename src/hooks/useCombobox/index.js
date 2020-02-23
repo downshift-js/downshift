@@ -46,9 +46,8 @@ function useCombobox(userProps = {}) {
   // Reducer init.
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatchWithoutProps,
+    dispatch,
   ] = useEnhancedReducer(downshiftUseComboboxReducer, initialState, props)
-  const dispatch = action => dispatchWithoutProps({props, ...action})
 
   /* Refs */
   const menuRef = useRef(null)

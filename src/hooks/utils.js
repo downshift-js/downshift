@@ -89,8 +89,9 @@ function useEnhancedReducer(reducer, initialState, props) {
   )
 
   const [state, dispatch] = useReducer(enhancedReducer, initialState)
+  const dispatchWithProps = action => dispatch({props, ...action})
 
-  return [getState(state, props), dispatch]
+  return [getState(state, props), dispatchWithProps]
 }
 
 /**
