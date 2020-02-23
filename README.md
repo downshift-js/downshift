@@ -97,7 +97,6 @@ the library treeshaked (pruned) and given only the code you need. Since version
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Basic Props](#basic-props)
@@ -164,8 +163,8 @@ should be installed as one of your project's `dependencies`:
 npm install --save downshift
 ```
 
-> This package also depends on `react`. Please make sure you
-> have it installed as well.
+> This package also depends on `react`. Please make sure you have it installed
+> as well.
 
 > Note also this library supports `preact` out of the box. If you are using
 > `preact` then use the corresponding module in the `preact/dist` folder. You
@@ -176,7 +175,7 @@ npm install --save downshift
 > [Try it out in the browser](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
 
 ```jsx
-import React from 'react'
+import * as React from 'react'
 import {render} from 'react-dom'
 import Downshift from 'downshift'
 
@@ -1395,6 +1394,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

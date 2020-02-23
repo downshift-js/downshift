@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {render, fireEvent} from '@testing-library/react'
 import Downshift from '../'
 
@@ -577,9 +577,7 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   // eslint-disable-next-line jest/no-if
   if (entry) {
     throw new Error(
-      `getInputProps should not have any props that are callbacks. It has ${
-        entry[0]
-      }.`,
+      `getInputProps should not have any props that are callbacks. It has ${entry[0]}.`,
     )
   }
 })

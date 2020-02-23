@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOMServer from 'react-dom/server'
+import * as React from 'react'
+import * as ReactDOMServer from 'react-dom/server'
 import Downshift, {resetIdCounter} from '../../../src'
 
 test('does not throw an error when server rendering', () => {

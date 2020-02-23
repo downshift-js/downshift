@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {fireEvent, render} from '@testing-library/react'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'

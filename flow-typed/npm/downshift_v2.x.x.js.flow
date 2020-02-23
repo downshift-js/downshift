@@ -6,7 +6,7 @@
  * Repo: http://github.com/joarwilk/flowgen
  */
 
-import React from 'react'
+import * as React from 'react'
 
 declare module downshift {
   declare type StateChangeTypes = {

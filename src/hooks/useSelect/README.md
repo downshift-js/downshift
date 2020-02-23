@@ -28,7 +28,6 @@ between them, screen reader support, highlight by character keys etc.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -74,7 +73,7 @@ between them, screen reader support, highlight by character keys etc.
 > [Try it out in the browser][sandbox-example]
 
 ```jsx
-import React from 'react'
+import * as React from 'react'
 import {render} from 'react-dom'
 import {useSelect} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]

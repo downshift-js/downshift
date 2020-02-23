@@ -79,7 +79,7 @@ between them, screen reader support, highlight by character keys etc.
 > [Try it out in the browser][sandbox-example]
 
 ```jsx
-import React from 'react'
+import * as React from 'react'
 import {render} from 'react-dom'
 import {useCombobox} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]

@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import * as React from 'react'
 import Downshift from '../../src'
 
-class Combobox extends Component {
+class Combobox extends React.Component {
   state = {
     selectedColor: '',
   }
