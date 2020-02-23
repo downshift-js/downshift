@@ -29,6 +29,7 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
         getComboboxProps,
         highlightedIndex,
         getItemProps,
+        setInputValue,
       } = useCombobox({
         items: inputItems,
         onInputValueChange: ({inputValue}) => {
@@ -40,8 +41,9 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
         },
         onSelectedItemChange: ({selectedItem}) => {
           setSelectedItems([...selectedItems, selectedItem])
+          setInputValue('')
         },
-        selectedItem: null,
+
       })
       const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({items: selectedItems})
 
