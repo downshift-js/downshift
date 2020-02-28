@@ -9,4 +9,7 @@ export const ItemKeyDownArrowLeft = productionEnum(
   '__item_keydown_arrow_left__',
 )
 export const ItemRemoveIconClick = productionEnum('__item_remove_icon_click__')
+
 export const DropdownArrowLeft = productionEnum('__dropdown_arrow_left__')
+
+export const FunctionAddItem = productionEnum('__function_add_item__')

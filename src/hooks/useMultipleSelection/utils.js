@@ -6,6 +6,7 @@ import {
 
 const defaultStateValues = {
   activeIndex: -1,
+  items: [],
 }
 
 function getInitialValue(props, propKey) {
@@ -14,9 +15,11 @@ function getInitialValue(props, propKey) {
 
 function getInitialState(props) {
   const activeIndex = getInitialValue(props, 'activeIndex')
+  const items = getInitialValue(props, 'items')
 
   return {
     activeIndex,
+    items,
   }
 }
 

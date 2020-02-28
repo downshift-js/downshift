@@ -16,13 +16,11 @@ function useMultipleSelection(userProps = {}) {
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [{activeIndex}, dispatch] = useEnhancedReducer(
+  const [{activeIndex, items}, dispatch] = useEnhancedReducer(
     downshiftMultipleSelectionReducer,
     initialState,
     props,
   )
-
-  const {items} = props
 
   // Refs.
   const isInitialMount = useRef(true)
@@ -92,7 +90,7 @@ function useMultipleSelection(userProps = {}) {
       itemKeyDownHandlers[key](event)
     }
   }
-  const itemRemoveIconHandleClick = index => {
+  const itemHandleRemoveIconClick = index => {
     dispatch({
       type: stateChangeTypes.ItemRemoveIconClick,
       index,
@@ -145,12 +143,26 @@ function useMultipleSelection(userProps = {}) {
   const getItemRemoveIconProps = ({index, onClick} = {}) => {
     return {
       onClick: callAllEventHandlers(onClick, () => {
-        itemRemoveIconHandleClick(index)
+        itemHandleRemoveIconClick(index)
       }),
     }
   }
 
-  return {getSelectedItemProps, getItemRemoveIconProps, getDropdownProps}
+  // returns
+  const addItem = item => {
+    dispatch({
+      type: stateChangeTypes.FunctionAddItem,
+      item,
+    })
+  }
+
+  return {
+    getSelectedItemProps,
+    getItemRemoveIconProps,
+    getDropdownProps,
+    addItem,
+    items,
+  }
 }
 
 export default useMultipleSelection

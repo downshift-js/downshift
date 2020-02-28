@@ -17,8 +17,7 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
   {() => {
     const DropdownMultipleCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
-      const [selectedItems, setSelectedItems] = useState([])
-
+      const {getSelectedItemProps, getDropdownProps, addItem, items: selectedItems} = useMultipleSelection()
       const {
         isOpen,
         selectedItem,
@@ -40,12 +39,10 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
           )
         },
         onSelectedItemChange: ({selectedItem}) => {
-          setSelectedItems([...selectedItems, selectedItem])
           setInputValue('')
+          addItem(selectedItem)
         },
-
       })
-      const {getSelectedItemProps, getDropdownProps} = useMultipleSelection({items: selectedItems})
 
       return (
         <>
