@@ -26,7 +26,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
 
       break
     case stateChangeTypes.ItemRemoveIconClick: {
-      let newActiveIndex
+      let newActiveIndex = activeIndex
 
       if (items.length === 1) {
         newActiveIndex = -1
@@ -41,7 +41,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       break
     }
     case stateChangeTypes.ItemKeyDownDelete: {
-      let newActiveIndex
+      let newActiveIndex = activeIndex
 
       if (items.length === 1) {
         newActiveIndex = -1
