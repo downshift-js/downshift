@@ -546,12 +546,14 @@ describe('props', () => {
       const {clickOnToggleButton, input} = renderCombobox({stateReducer})
 
       clickOnToggleButton()
+
       expect(input.value).toBe('Robin Hood')
     })
 
     test('receives a downshift action type', () => {
       const stateReducer = jest.fn((s, a) => {
         expect(a.type).toBe(useCombobox.stateChangeTypes.ToggleButtonClick)
+
         return a.changes
       })
       const {clickOnToggleButton} = renderCombobox({stateReducer})
@@ -627,9 +629,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
-          highlightedIndex,
-          selectedItem,
-          inputValue,
+          type: stateChangeTypes.ToggleButtonClick,
         }),
       )
     })
@@ -741,44 +741,139 @@ describe('props', () => {
   describe('onStateChange', () => {
     test('is called at each state property change', () => {
       const onStateChange = jest.fn()
-      const inputChange = 'test input'
-      const itemClickIndex = 0
       const {
         clickOnToggleButton,
         changeInputValue,
-        keyDownOnInput,
         clickOnItemAtIndex,
+        mouseLeaveMenu,
+        mouseMoveItemAtIndex,
+        keyDownOnInput,
+        blurInput,
       } = renderCombobox({onStateChange})
 
       clickOnToggleButton()
 
-      expect(onStateChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledTimes(1)
+      expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           isOpen: true,
+          type: stateChangeTypes.ToggleButtonClick,
+        }),
+      )
+
+      changeInputValue('t')
+
+      expect(onStateChange).toHaveBeenCalledTimes(2)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          inputValue: 't',
+          type: stateChangeTypes.InputChange,
+        }),
+      )
+
+      mouseMoveItemAtIndex(1)
+
+      expect(onStateChange).toHaveBeenCalledTimes(3)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: 1,
+          type: stateChangeTypes.ItemMouseMove,
+        }),
+      )
+
+      clickOnItemAtIndex(2)
+
+      expect(onStateChange).toHaveBeenCalledTimes(4)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          selectedItem: items[2],
+          highlightedIndex: -1,
+          inputValue: items[2],
+          type: stateChangeTypes.ItemClick,
         }),
       )
 
       keyDownOnInput('ArrowDown')
 
-      expect(onStateChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledTimes(5)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: 3,
+          type: stateChangeTypes.InputKeyDownArrowDown,
+        }),
+      )
+
+      keyDownOnInput('End')
+
+      expect(onStateChange).toHaveBeenCalledTimes(6)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: items.length - 1,
+          type: stateChangeTypes.InputKeyDownEnd,
+        }),
+      )
+
+      keyDownOnInput('Home')
+
+      expect(onStateChange).toHaveBeenCalledTimes(7)
+      expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,
+          type: stateChangeTypes.InputKeyDownHome,
         }),
       )
 
-      changeInputValue(inputChange)
+      keyDownOnInput('Enter')
 
-      expect(onStateChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledTimes(8)
+      expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          inputValue: inputChange,
+          highlightedIndex: -1,
+          selectedItem: items[0],
+          inputValue: items[0],
+          type: stateChangeTypes.InputKeyDownEnter,
         }),
       )
 
-      clickOnItemAtIndex(itemClickIndex)
+      keyDownOnInput('Escape')
 
-      expect(onStateChange).toHaveBeenCalledWith(
+      expect(onStateChange).toHaveBeenCalledTimes(9)
+      expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          selectedItem: items[itemClickIndex],
+          selectedItem: null,
+          inputValue: '',
+          type: stateChangeTypes.InputKeyDownEscape,
+        }),
+      )
+
+      keyDownOnInput('ArrowUp')
+
+      expect(onStateChange).toHaveBeenCalledTimes(10)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: 25,
+          isOpen: true,
+          type: stateChangeTypes.InputKeyDownArrowUp,
+        }),
+      )
+
+      mouseLeaveMenu()
+
+      expect(onStateChange).toHaveBeenCalledTimes(11)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: -1,
+          type: stateChangeTypes.MenuMouseLeave,
+        }),
+      )
+
+      blurInput()
+
+      expect(onStateChange).toHaveBeenCalledTimes(12)
+      expect(onStateChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          isOpen: false,
+          type: stateChangeTypes.InputBlur,
         }),
       )
     })

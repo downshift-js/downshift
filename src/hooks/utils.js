@@ -1,6 +1,11 @@
 import PropTypes from 'prop-types'
 import {useCallback, useReducer} from 'react'
-import {scrollIntoView, getNextWrappingIndex, getState, generateId} from '../utils'
+import {
+  scrollIntoView,
+  getNextWrappingIndex,
+  getState,
+  generateId,
+} from '../utils'
 
 const defaultStateValues = {
   highlightedIndex: -1,
@@ -51,24 +56,31 @@ function capitalizeString(string) {
   return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
 }
 
-function invokeOnChangeHandler(propKey, props, state, changes) {
-  const handler = `on${capitalizeString(propKey)}Change`
+function invokeOnChangeHandler(key, props, state, newState) {
+  const handler = `on${capitalizeString(key)}Change`
   if (
     props[handler] &&
-    changes[propKey] !== undefined &&
-    changes[propKey] !== state[propKey]
+    newState[key] !== undefined &&
+    newState[key] !== state[key]
   ) {
-    props[handler](changes)
+    props[handler](newState)
   }
 }
 
-function callOnChangeProps(props, state, changes) {
-  Object.keys(state).forEach(stateKey => {
-    invokeOnChangeHandler(stateKey, props, state, changes)
+function callOnChangeProps(action, state, newState) {
+  const {props, type} = action
+  const changes = {}
+
+  Object.keys(state).forEach(key => {
+    invokeOnChangeHandler(key, props, state, newState)
+
+    if (newState[key] !== state[key]) {
+      changes[key] = newState[key]
+    }
   })
 
-  if (props.onStateChange && changes !== undefined) {
-    props.onStateChange(changes)
+  if (props.onStateChange && Object.entries(changes).length) {
+    props.onStateChange({type, ...changes})
   }
 }
 
@@ -81,7 +93,7 @@ function useEnhancedReducer(reducer, initialState, props) {
       const changes = reducer(state, action)
       const newState = stateReduceLocal(state, {...action, changes})
 
-      callOnChangeProps(action.props, state, newState)
+      callOnChangeProps(action, state, newState)
 
       return newState
     },
