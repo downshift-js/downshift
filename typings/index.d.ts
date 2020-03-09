@@ -371,8 +371,8 @@ export const useSelect: UseSelectInterface
 /* useCombobox Types */
 
 export interface UseComboboxState<Item> {
-  highlightedIndex: number
-  selectedItem: Item
+  highlightedIndex?: number
+  selectedItem?: Item
   isOpen: boolean
   inputValue: string
 }
