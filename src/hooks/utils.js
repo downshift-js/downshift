@@ -42,7 +42,7 @@ function itemToString(item) {
 function getPropTypesValidator(caller, propTypes) {
   // istanbul ignore next
   return function validate(options = {}) {
-    Object.entries(propTypes).forEach(([key]) => {
+    Object.keys(propTypes).forEach(key => {
       PropTypes.checkPropTypes(propTypes, options, key, caller.name)
     })
   }
@@ -79,7 +79,7 @@ function callOnChangeProps(action, state, newState) {
     }
   })
 
-  if (props.onStateChange && Object.entries(changes).length) {
+  if (props.onStateChange && Object.keys(changes).length) {
     props.onStateChange({type, ...changes})
   }
 }
