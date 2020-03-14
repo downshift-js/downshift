@@ -9,10 +9,26 @@ const defaultStateValues = {
   items: [],
 }
 
+/**
+ * Returns the initial value for a state key in the following order:
+ * 1. controlled prop, 2. initial prop, 3. default prop, 4. default
+ * value from Downshift.
+ *
+ * @param {Object} props Props passed to the hook.
+ * @param {string} propKey Props key to generate the value for.
+ * @returns {any} The initial value for that prop.
+ */
 function getInitialValue(props, propKey) {
   return getInitialValueCommon(props, propKey, defaultStateValues)
 }
 
+/**
+ * Gets the initial state based on the provided props. It uses initial, default
+ * and controlled props related to state in order to compute the initial value.
+ *
+ * @param {Object} props Props passed to the hook.
+ * @returns {Object} The initial state.
+ */
 export function getInitialState(props) {
   const activeIndex = getInitialValue(props, 'activeIndex')
   const items = getInitialValue(props, 'items')
