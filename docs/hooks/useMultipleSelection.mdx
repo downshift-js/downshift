@@ -32,14 +32,17 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
       } = useCombobox({
         inputValue,
         items: getFilteredItems(items),
-        onInputValueChange: ({inputValue, selectedItem}) => {
-          if (!selectedItem) {
+        onStateChange: ({inputValue, type, selectedItem}) => {
+          if (type === useCombobox.stateChangeTypes.InputChange) {
             setInputValue(inputValue)
+
+            return
           }
-        },
-        onSelectedItemChange: ({selectedItem}) => {
-          setInputValue('')
-          addItem(selectedItem)
+
+          if (selectedItem) {
+            setInputValue('')
+            addItem(selectedItem)
+          }
         },
       })
 
