@@ -40,6 +40,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       }
       break
     }
+    case stateChangeTypes.ItemKeyDownBackspace:
     case stateChangeTypes.ItemKeyDownDelete: {
       let newActiveIndex = activeIndex
 
@@ -59,9 +60,14 @@ export default function downshiftMultipleSelectionReducer(state, action) {
 
       break
     }
-    case stateChangeTypes.DropdownArrowLeft:
+    case stateChangeTypes.DropdownKeyDownArrowLeft:
       changes = {
         activeIndex: items.length - 1,
+      }
+      break
+    case stateChangeTypes.DropdownKeyDownBackspace:
+      changes = {
+        items: items.slice(0, items.length - 1),
       }
       break
     case stateChangeTypes.FunctionAddItem:

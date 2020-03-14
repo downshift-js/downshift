@@ -61,18 +61,37 @@ function useMultipleSelection(userProps = {}) {
         type: stateChangeTypes.ItemKeyDownArrowRight,
       })
     },
-    Delete(event) {
-      event.preventDefault()
-
+    Delete() {
       dispatch({
         type: stateChangeTypes.ItemKeyDownDelete,
+      })
+    },
+    Backspace() {
+      dispatch({
+        type: stateChangeTypes.ItemKeyDownBackspace,
       })
     },
   }
   const dropdownKeyDownHandlers = {
     ArrowLeft() {
       dispatch({
-        type: stateChangeTypes.DropdownArrowLeft,
+        type: stateChangeTypes.DropdownKeyDownArrowLeft,
+      })
+    },
+    Backspace(event) {
+      const element = event.target
+
+      if (
+        element instanceof HTMLInputElement && // if we have an input element
+        (element.value !== '' || // and it's not clear of text
+        element.selectionStart !== 0 || // or there is a text highlight in progress.
+          element.selectionEnd !== 0)
+      ) {
+        return // we don't remove any items.
+      }
+
+      dispatch({
+        type: stateChangeTypes.DropdownKeyDownBackspace,
       })
     },
   }
