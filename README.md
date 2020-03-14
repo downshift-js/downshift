@@ -1390,6 +1390,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/mufasa71"><img src="https://avatars1.githubusercontent.com/u/626420?v=4" width="100px;" alt=""/><br /><sub><b>Shukhrat Mukimov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=mufasa71" title="Code">💻</a></td>
     <td align="center"><a href="http://jhonnymoreira.dev"><img src="https://avatars0.githubusercontent.com/u/2177742?v=4" width="100px;" alt=""/><br /><sub><b>Jhonny Moreira</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jhonnymoreira" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/stefanprobst"><img src="https://avatars0.githubusercontent.com/u/20753323?v=4" width="100px;" alt=""/><br /><sub><b>stefanprobst</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=stefanprobst" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=stefanprobst" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/louisaspicer"><img src="https://avatars1.githubusercontent.com/u/20270031?v=4" width="100px;" alt=""/><br /><sub><b>Louisa Spicer</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=louisaspicer" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Alouisaspicer" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
