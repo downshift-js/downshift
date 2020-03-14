@@ -1,7 +1,11 @@
 import {useRef, useEffect} from 'react'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {useEnhancedReducer, getItemIndex} from '../utils'
-import {getInitialState, defaultProps} from './utils'
+import {
+  getInitialState,
+  defaultProps,
+  isKeyDownOperationPermitted,
+} from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -40,7 +44,7 @@ function useMultipleSelection(userProps = {}) {
       itemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
-  /* Make initial ref false. */
+  // Make initial ref false.
   useEffect(() => {
     isInitialMount.current = false
   }, [])
@@ -73,26 +77,19 @@ function useMultipleSelection(userProps = {}) {
     },
   }
   const dropdownKeyDownHandlers = {
-    ArrowLeft() {
-      dispatch({
-        type: stateChangeTypes.DropdownKeyDownArrowLeft,
-      })
+    ArrowLeft(event) {
+      if (isKeyDownOperationPermitted(event)) {
+        dispatch({
+          type: stateChangeTypes.DropdownKeyDownArrowLeft,
+        })
+      }
     },
     Backspace(event) {
-      const element = event.target
-
-      if (
-        element instanceof HTMLInputElement && // if we have an input element
-        (element.value !== '' || // and it's not clear of text
-        element.selectionStart !== 0 || // or there is a text highlight in progress.
-          element.selectionEnd !== 0)
-      ) {
-        return // we don't remove any items.
+      if (isKeyDownOperationPermitted(event)) {
+        dispatch({
+          type: stateChangeTypes.DropdownKeyDownBackspace,
+        })
       }
-
-      dispatch({
-        type: stateChangeTypes.DropdownKeyDownBackspace,
-      })
     },
   }
 
