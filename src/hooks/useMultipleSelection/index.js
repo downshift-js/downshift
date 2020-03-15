@@ -16,13 +16,10 @@ function useMultipleSelection(userProps = {}) {
     ...userProps,
   }
 
-  // Initial state depending on controlled props.
-  const initialState = getInitialState(props)
-
   // Reducer init.
   const [{activeIndex, items}, dispatch] = useEnhancedReducer(
     downshiftMultipleSelectionReducer,
-    initialState,
+    getInitialState(props),
     props,
   )
 
@@ -38,9 +35,9 @@ function useMultipleSelection(userProps = {}) {
       return
     }
 
-    if (activeIndex === -1) {
+    if (activeIndex === -1 && dropdownRef.current) {
       dropdownRef.current.focus()
-    } else {
+    } else if (itemRefs.current[activeIndex]) {
       itemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
@@ -127,6 +124,7 @@ function useMultipleSelection(userProps = {}) {
     onKeyDown,
     item,
     index,
+    ...rest
   } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
     if (itemIndex < 0) {
@@ -144,25 +142,29 @@ function useMultipleSelection(userProps = {}) {
         itemHandleClick(index)
       }),
       onKeyDown: callAllEventHandlers(onKeyDown, itemHandleKeyDown),
+      ...rest,
     }
   }
-  const getDropdownProps = ({refKey = 'ref', ref, onKeyDown} = {}) => {
-    return {
-      [refKey]: handleRefs(ref, dropdownNode => {
-        if (dropdownNode) {
-          dropdownRef.current = dropdownNode
-        }
-      }),
-      onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
-    }
-  }
-  const getItemRemoveIconProps = ({index, onClick} = {}) => {
-    return {
-      onClick: callAllEventHandlers(onClick, () => {
-        itemHandleRemoveIconClick(index)
-      }),
-    }
-  }
+  const getDropdownProps = ({
+    refKey = 'ref',
+    ref,
+    onKeyDown,
+    ...rest
+  } = {}) => ({
+    [refKey]: handleRefs(ref, dropdownNode => {
+      if (dropdownNode) {
+        dropdownRef.current = dropdownNode
+      }
+    }),
+    onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+    ...rest,
+  })
+  const getItemRemoveIconProps = ({index, onClick, ...rest} = {}) => ({
+    onClick: callAllEventHandlers(onClick, () => {
+      itemHandleRemoveIconClick(index)
+    }),
+    ...rest,
+  })
 
   // returns
   const addItem = item => {
@@ -178,6 +180,7 @@ function useMultipleSelection(userProps = {}) {
     getDropdownProps,
     addItem,
     items,
+    activeIndex,
   }
 }
 

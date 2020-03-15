@@ -68,13 +68,16 @@ export function isKeyDownOperationPermitted(event) {
 }
 
 export const propTypes = {
-  items: PropTypes.array.isRequired,
+  items: PropTypes.array,
+  initialItems: PropTypes.array,
   onItemRemoved: PropTypes.func,
   itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
   circularNavigation: PropTypes.bool,
   stateReducer: PropTypes.func,
   activeIndex: PropTypes.number,
+  initialActiveIndex: PropTypes.number,
+  defaultActiveIndex: PropTypes.number,
   onActiveIndexChange: PropTypes.func,
   environment: PropTypes.shape({
     addEventListener: PropTypes.func,
