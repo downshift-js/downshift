@@ -1,12 +1,12 @@
 import {act} from '@testing-library/react-hooks'
 
-import {renderMultipleCombobox, renderUseMultupleSelection} from '../testUtils'
+import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getDropdownProps', () => {
   describe('user props', () => {
     test('are passed down', () => {
-      const {result} = renderUseMultupleSelection()
+      const {result} = renderUseMultipleSelection()
 
       expect(result.current.getDropdownProps({foo: 'bar'})).toHaveProperty(
         'foo',
@@ -15,7 +15,7 @@ describe('getDropdownProps', () => {
     })
 
     test('custom ref passed by the user is used', () => {
-      const {result} = renderUseMultupleSelection()
+      const {result} = renderUseMultipleSelection()
       const refFn = jest.fn()
       const dropdownNode = {}
 
@@ -30,7 +30,7 @@ describe('getDropdownProps', () => {
     })
 
     test('custom ref with custom name passed by the user is used', () => {
-      const {result} = renderUseMultupleSelection()
+      const {result} = renderUseMultipleSelection()
       const refFn = jest.fn()
       const dropdownNode = {}
 
@@ -49,7 +49,7 @@ describe('getDropdownProps', () => {
 
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
-      const {result} = renderUseMultupleSelection({initialItems: [items[0]]})
+      const {result} = renderUseMultipleSelection({initialItems: [items[0]]})
 
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
@@ -67,7 +67,7 @@ describe('getDropdownProps', () => {
       const userOnKeyDown = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = renderUseMultupleSelection({initialItems: [items[0]]})
+      const {result} = renderUseMultipleSelection({initialItems: [items[0]]})
 
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({

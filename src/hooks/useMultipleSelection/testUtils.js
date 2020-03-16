@@ -158,6 +158,6 @@ export const renderMultipleCombobox = (props, uiCallback) => {
   }
 }
 
-export const renderUseMultupleSelection = props => {
+export const renderUseMultipleSelection = props => {
   return renderHook(() => useMultipleSelection({...props}))
 }
