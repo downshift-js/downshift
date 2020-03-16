@@ -26,7 +26,7 @@ export const dataTestIds = {
 const DropdownMultipleCombobox = (multipleProps = {}, comboboxProps = {}) => {
   const [inputValue, setInputValue] = React.useState('')
   const {
-    getSelectedItemProps,
+    getItemProps: getSelectedItemProps,
     getDropdownProps,
     addItem,
     items: selectedItems,

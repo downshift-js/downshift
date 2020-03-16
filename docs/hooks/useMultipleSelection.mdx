@@ -17,7 +17,7 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
   {() => {
     const DropdownMultipleCombobox = () => {
       const [inputValue, setInputValue] = useState('')
-      const {getSelectedItemProps, getDropdownProps, addItem, items: selectedItems} = useMultipleSelection()
+      const {getItemProps: getSelectedItemProps, getDropdownProps, addItem, items: selectedItems} = useMultipleSelection()
       const getFilteredItems = items => items.filter(item => selectedItems.indexOf(item) < 0 && item.toLowerCase().startsWith(inputValue.toLowerCase()))
       const {
         isOpen,

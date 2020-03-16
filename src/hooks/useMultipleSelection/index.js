@@ -48,16 +48,12 @@ function useMultipleSelection(userProps = {}) {
 
   // Event handler functions.
   const itemKeyDownHandlers = {
-    ArrowLeft(event) {
-      event.preventDefault()
-
+    ArrowLeft() {
       dispatch({
         type: stateChangeTypes.ItemKeyDownArrowLeft,
       })
     },
-    ArrowRight(event) {
-      event.preventDefault()
-
+    ArrowRight() {
       dispatch({
         type: stateChangeTypes.ItemKeyDownArrowRight,
       })
@@ -111,7 +107,7 @@ function useMultipleSelection(userProps = {}) {
   }
 
   // Getter props.
-  const getSelectedItemProps = ({
+  const getItemProps = ({
     refKey = 'ref',
     ref,
     onClick,
@@ -169,7 +165,7 @@ function useMultipleSelection(userProps = {}) {
   }
 
   return {
-    getSelectedItemProps,
+    getItemProps,
     getDropdownProps,
     addItem,
     removeItem,
