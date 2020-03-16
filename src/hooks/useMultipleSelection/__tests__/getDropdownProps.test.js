@@ -1,12 +1,9 @@
 import {act} from '@testing-library/react-hooks'
-import {cleanup} from '@testing-library/react'
 
 import {renderMultipleCombobox, renderUseMultupleSelection} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getDropdownProps', () => {
-  afterEach(cleanup)
-
   describe('user props', () => {
     test('are passed down', () => {
       const {result} = renderUseMultupleSelection()
