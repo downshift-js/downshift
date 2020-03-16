@@ -9,7 +9,6 @@ export const ItemKeyDownArrowRight = productionEnum(
 export const ItemKeyDownArrowLeft = productionEnum(
   '__item_keydown_arrow_left__',
 )
-export const ItemRemoveIconClick = productionEnum('__item_remove_icon_click__')
 
 export const DropdownKeyDownArrowLeft = productionEnum(
   '__dropdown_keydown_arrow_left__',
@@ -19,3 +18,4 @@ export const DropdownKeyDownBackspace = productionEnum(
 )
 
 export const FunctionAddItem = productionEnum('__function_add_item__')
+export const FunctionRemoveItem = productionEnum('__function_remove_item__')

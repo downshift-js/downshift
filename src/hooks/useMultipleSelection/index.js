@@ -103,12 +103,6 @@ function useMultipleSelection(userProps = {}) {
       itemKeyDownHandlers[key](event)
     }
   }
-  const itemHandleRemoveIconClick = index => {
-    dispatch({
-      type: stateChangeTypes.ItemRemoveIconClick,
-      index,
-    })
-  }
   const dropdownHandleKeyDown = event => {
     const key = normalizeArrowKey(event)
     if (key && dropdownKeyDownHandlers[key]) {
@@ -159,12 +153,6 @@ function useMultipleSelection(userProps = {}) {
     onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
     ...rest,
   })
-  const getItemRemoveIconProps = ({index, onClick, ...rest} = {}) => ({
-    onClick: callAllEventHandlers(onClick, () => {
-      itemHandleRemoveIconClick(index)
-    }),
-    ...rest,
-  })
 
   // returns
   const addItem = item => {
@@ -173,12 +161,18 @@ function useMultipleSelection(userProps = {}) {
       item,
     })
   }
+  const removeItem = item => {
+    dispatch({
+      type: stateChangeTypes.FunctionRemoveItem,
+      item,
+    })
+  }
 
   return {
     getSelectedItemProps,
-    getItemRemoveIconProps,
     getDropdownProps,
     addItem,
+    removeItem,
     items,
     activeIndex,
   }
