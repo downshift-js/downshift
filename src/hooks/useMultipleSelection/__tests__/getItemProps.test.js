@@ -1,6 +1,6 @@
 import {act} from '@testing-library/react-hooks'
 
-import {renderUseMultipleSelection} from '../testUtils'
+import {renderUseMultipleSelection, renderMultipleCombobox} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getItemProps', () => {
@@ -150,6 +150,118 @@ describe('getItemProps', () => {
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
       expect(result.current.activeIndex).toBe(-1)
+    })
+  })
+
+  describe('event handlers', () => {
+    describe('on click', () => {
+      test('sets tabindex to "0"', () => {
+        const {
+          clickOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+        })
+
+        clickOnSelectedItemAtIndex(0)
+
+        expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
+        expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
+      })
+
+      test('keeps tabindex "0" to an already active item', () => {
+        const {
+          clickOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+          focusSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1]],
+            initialActiveIndex: 0,
+          },
+        })
+
+        focusSelectedItemAtIndex(0)
+        clickOnSelectedItemAtIndex(0)
+
+        expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
+      })
+    })
+
+    describe('on key down', () => {
+      test('arrow left should change active item descendently', () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1]],
+            initialActiveIndex: 1,
+          },
+        })
+
+        keyDownOnSelectedItemAtIndex(1, 'ArrowLeft')
+
+        expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
+      })
+
+      test(`arrow left should not change active item if it's the first one added`, () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+          focusSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1]],
+            initialActiveIndex: 0,
+          },
+        })
+
+        focusSelectedItemAtIndex(0)
+        keyDownOnSelectedItemAtIndex(0, 'ArrowLeft')
+
+        expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
+      })
+
+      test('arrow right should change active item ascendently', () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1]],
+            initialActiveIndex: 0,
+          },
+        })
+
+        keyDownOnSelectedItemAtIndex(0, 'ArrowRight')
+
+        expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
+        expect(getSelectedItemAtIndex(1)).toHaveFocus()
+      })
+
+      test(`arrow right should make no item active if it's on last one added`, () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+          input,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1]],
+            initialActiveIndex: 1,
+          },
+        })
+
+        keyDownOnSelectedItemAtIndex(1, 'ArrowRight')
+
+        expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
+        expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
+        expect(input).toHaveFocus()
+      })
     })
   })
 })

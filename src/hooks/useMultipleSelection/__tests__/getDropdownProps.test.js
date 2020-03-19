@@ -85,23 +85,26 @@ describe('getDropdownProps', () => {
   describe('event handlers', () => {
     describe('on keydown', () => {
       test('arrow left should make first selected item active', () => {
-        const {keyDownOnDropdown, getItemAtIndex} = renderMultipleCombobox({
-          initialItems: [items[0], items[1]],
+        const {
+          keyDownOnDropdown,
+          getSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
         })
 
         keyDownOnDropdown('ArrowLeft')
 
-        expect(getItemAtIndex(1)).toHaveFocus()
+        expect(getSelectedItemAtIndex(1)).toHaveFocus()
       })
 
       test('backspace should remove the first selected item', () => {
-        const {keyDownOnDropdown, getItems} = renderMultipleCombobox({
-          initialItems: [items[0], items[1]],
+        const {keyDownOnDropdown, getSelectedItems} = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
         })
 
         keyDownOnDropdown('Backspace')
 
-        expect(getItems()).toHaveLength(1)
+        expect(getSelectedItems()).toHaveLength(1)
       })
     })
   })

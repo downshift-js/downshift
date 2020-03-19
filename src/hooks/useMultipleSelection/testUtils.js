@@ -18,19 +18,24 @@ jest.mock('../../utils', () => {
 
 export const dataTestIds = {
   toggleButton: 'toggle-button-id',
-  itemPrefix: 'selected-item-id',
-  item: index => `selected-item-id-${index}`,
+  itemPrefix: 'item-id',
+  item: index => `item-id-${index}`,
+  selectedItemPrefix: 'selected-item-id',
+  selectedItem: index => `selected-item-id-${index}`,
   input: 'input-id',
 }
 
-const DropdownMultipleCombobox = (multipleProps = {}, comboboxProps = {}) => {
+const DropdownMultipleCombobox = ({
+  multipleSelectionProps = {},
+  comboboxProps = {},
+}) => {
   const [inputValue, setInputValue] = React.useState('')
   const {
     getItemProps: getSelectedItemProps,
     getDropdownProps,
     addItem,
     items: selectedItems,
-  } = useMultipleSelection(multipleProps)
+  } = useMultipleSelection(multipleSelectionProps)
   const getFilteredItems = itemsParameter =>
     itemsParameter.filter(
       item =>
@@ -74,7 +79,7 @@ const DropdownMultipleCombobox = (multipleProps = {}, comboboxProps = {}) => {
         {selectedItems.map((selectedItem, index) => (
           <span
             key={`selected-item-${index}`}
-            data-testid={dataTestIds.item(index)}
+            data-testid={dataTestIds.selectedItem(index)}
             {...getSelectedItemProps({item: selectedItem, index})}
           >
             {selectedItem}
@@ -122,14 +127,18 @@ export const renderMultipleCombobox = (props, uiCallback) => {
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const input = wrapper.getByTestId(dataTestIds.input)
-  const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
-  const getItems = () =>
-    wrapper.queryAllByTestId(new RegExp(dataTestIds.itemPrefix))
-  const clickOnItemAtIndex = index => {
-    fireEvent.click(getItemAtIndex(index))
+  const getSelectedItemAtIndex = index =>
+    wrapper.getByTestId(dataTestIds.selectedItem(index))
+  const getSelectedItems = () =>
+    wrapper.queryAllByTestId(new RegExp(dataTestIds.selectedItemPrefix))
+  const clickOnSelectedItemAtIndex = index => {
+    fireEvent.click(getSelectedItemAtIndex(index))
   }
-  const mouseMoveItemAtIndex = index => {
-    fireEvent.mouseMove(getItemAtIndex(index))
+  const keyDownOnSelectedItemAtIndex = (index, key, options = {}) => {
+    fireEvent.keyDown(getSelectedItemAtIndex(index), {key, ...options})
+  }
+  const focusSelectedItemAtIndex = index => {
+    getSelectedItemAtIndex(index).focus()
   }
   const getA11yStatusContainer = () => wrapper.queryByRole('status')
   const focusInput = () => {
@@ -147,10 +156,11 @@ export const renderMultipleCombobox = (props, uiCallback) => {
     ...wrapper,
     label,
     menu,
-    getItemAtIndex,
-    clickOnItemAtIndex,
-    mouseMoveItemAtIndex,
-    getItems,
+    getSelectedItemAtIndex,
+    clickOnSelectedItemAtIndex,
+    keyDownOnSelectedItemAtIndex,
+    focusSelectedItemAtIndex,
+    getSelectedItems,
     getA11yStatusContainer,
     input,
     keyDownOnDropdown,
