@@ -82,7 +82,9 @@ const DropdownMultipleCombobox = ({
             data-testid={dataTestIds.selectedItem(index)}
             {...getSelectedItemProps({item: selectedItem, index})}
           >
-            {selectedItem}
+            {selectedItem instanceof Object
+              ? itemToString(selectedItem)
+              : selectedItem}
           </span>
         ))}
         <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>

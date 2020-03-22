@@ -67,10 +67,21 @@ export function isKeyDownOperationPermitted(event) {
   return true
 }
 
+/**
+ * Returns a message to be added to aria-live region when item is removed.
+ *
+ * @param {Object} selectionParameters Parameters required to build the message.
+ * @returns {string} The a11y message.
+ */
+function getA11yRemovalMessage(selectionParameters) {
+  const {removedItem, itemToString: itemToStringLocal} = selectionParameters
+
+  return `${itemToStringLocal(removedItem)} has been removed.`
+}
+
 export const propTypes = {
   items: PropTypes.array,
   initialItems: PropTypes.array,
-  onItemRemoved: PropTypes.func,
   itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
   circularNavigation: PropTypes.bool,
@@ -93,4 +104,6 @@ export const propTypes = {
 export const defaultProps = {
   itemToString: defaultPropsCommon.itemToString,
   stateReducer: defaultPropsCommon.stateReducer,
+  environment: defaultPropsCommon.environment,
+  getA11yRemovalMessage,
 }

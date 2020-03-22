@@ -1,4 +1,5 @@
 import {useRef, useEffect} from 'react'
+import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {useEnhancedReducer, getItemIndex} from '../utils'
 import {
@@ -15,6 +16,7 @@ function useMultipleSelection(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
+  const {getA11yRemovalMessage, itemToString, environment} = props
 
   // Reducer init.
   const [{activeIndex, items}, dispatch] = useEnhancedReducer(
@@ -26,10 +28,37 @@ function useMultipleSelection(userProps = {}) {
   // Refs.
   const isInitialMount = useRef(true)
   const dropdownRef = useRef(null)
+  const previosItemsRef = useRef(items)
   const itemRefs = useRef()
   itemRefs.current = []
 
   // Effects.
+  /* Sets a11y status message on changes in selectedItem. */
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+
+    if (items.length < previosItemsRef.current.length) {
+      const removedItem = previosItemsRef.current.find(
+        item => items.indexOf(item) < 0,
+      )
+
+      setStatus(
+        getA11yRemovalMessage({
+          itemToString,
+          resultCount: items.length,
+          removedItem,
+        }),
+        environment.document,
+      )
+    }
+
+    previosItemsRef.current = items
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length])
+  // Sets focus on active item.
   useEffect(() => {
     if (isInitialMount.current) {
       return
