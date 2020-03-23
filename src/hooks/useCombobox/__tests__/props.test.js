@@ -550,17 +550,6 @@ describe('props', () => {
       expect(input.value).toBe('Robin Hood')
     })
 
-    test('receives a downshift action type', () => {
-      const stateReducer = jest.fn((s, a) => {
-        expect(a.type).toBe(useCombobox.stateChangeTypes.ToggleButtonClick)
-
-        return a.changes
-      })
-      const {clickOnToggleButton} = renderCombobox({stateReducer})
-
-      clickOnToggleButton()
-    })
-
     test('receives state, changes and type', () => {
       const stateReducer = jest.fn((s, a) => {
         expect(a.type).not.toBeUndefined()
@@ -606,26 +595,31 @@ describe('props', () => {
 
       clickOnToggleButton()
 
+      expect(onInputValueChange).toHaveBeenCalledTimes(1)
       expect(onInputValueChange).toHaveBeenCalledWith(
         expect.objectContaining({
           inputValue,
         }),
       )
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex,
         }),
       )
+      expect(onSelectedItemChange).toHaveBeenCalledTimes(1)
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
           selectedItem,
         }),
       )
+      expect(onIsOpenChange).toHaveBeenCalledTimes(1)
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
         }),
       )
+      expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,

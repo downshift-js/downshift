@@ -600,16 +600,6 @@ describe('props', () => {
       )
     })
 
-    test('receives a downshift action type', () => {
-      const stateReducer = jest.fn((s, a) => {
-        expect(a.type).toBe(useSelect.stateChangeTypes.ToggleButtonClick)
-        return a.changes
-      })
-      const {clickOnToggleButton} = renderSelect({stateReducer})
-
-      clickOnToggleButton()
-    })
-
     test('receives state, changes and type', () => {
       const stateReducer = jest.fn((s, a) => {
         expect(a.type).not.toBeUndefined()
@@ -651,21 +641,25 @@ describe('props', () => {
 
       clickOnToggleButton()
 
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
           highlightedIndex,
         }),
       )
+      expect(onSelectedItemChange).toHaveBeenCalledTimes(1)
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
           selectedItem,
         }),
       )
+      expect(onIsOpenChange).toHaveBeenCalledTimes(1)
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
         }),
       )
+      expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen,
