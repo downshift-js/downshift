@@ -19,3 +19,8 @@ export const DropdownKeyDownBackspace = productionEnum(
 
 export const FunctionAddItem = productionEnum('__function_add_item__')
 export const FunctionRemoveItem = productionEnum('__function_remove_item__')
+export const FunctionSetItems = productionEnum('__function_set_items__')
+export const FunctionSetActiveIndex = productionEnum(
+  '__function_set_active_index__',
+)
+export const FunctionReset = productionEnum('__function_reset__')

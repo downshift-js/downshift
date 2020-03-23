@@ -192,12 +192,32 @@ function useMultipleSelection(userProps = {}) {
       item,
     })
   }
+  const setItems = newItems => {
+    dispatch({
+      type: stateChangeTypes.FunctionSetItems,
+      items: newItems,
+    })
+  }
+  const setActiveIndex = newActiveIndex => {
+    dispatch({
+      type: stateChangeTypes.FunctionSetActiveIndex,
+      activeIndex: newActiveIndex,
+    })
+  }
+  const reset = () => {
+    dispatch({
+      type: stateChangeTypes.FunctionReset,
+    })
+  }
 
   return {
     getItemProps,
     getDropdownProps,
     addItem,
     removeItem,
+    setItems,
+    setActiveIndex,
+    reset,
     items,
     activeIndex,
   }

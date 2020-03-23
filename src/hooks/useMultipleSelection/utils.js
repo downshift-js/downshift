@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import {
   getInitialValue as getInitialValueCommon,
+  getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
 } from '../utils'
 
@@ -20,6 +21,18 @@ const defaultStateValues = {
  */
 function getInitialValue(props, propKey) {
   return getInitialValueCommon(props, propKey, defaultStateValues)
+}
+
+/**
+ * Returns the default value for a state key in the following order:
+ * 1. controlled prop, 2. default prop, 3. default value from Downshift.
+ *
+ * @param {Object} props Props passed to the hook.
+ * @param {string} propKey Props key to generate the value for.
+ * @returns {any} The initial value for that prop.
+ */
+export function getDefaultValue(props, propKey) {
+  return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
 /**

@@ -170,6 +170,59 @@ describe('props', () => {
           type: stateChangeTypes.FunctionRemoveItem,
         }),
       )
+
+      act(() => {
+        result.current.setItems([items[0], items[1]])
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(3)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          items: expect.arrayContaining([]),
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            items: expect.arrayContaining([items[0], items[1]]),
+          }),
+          type: stateChangeTypes.FunctionSetItems,
+        }),
+      )
+
+      act(() => {
+        result.current.setActiveIndex(1)
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(4)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          activeIndex: -1,
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            activeIndex: 1,
+          }),
+          type: stateChangeTypes.FunctionSetActiveIndex,
+        }),
+      )
+
+      act(() => {
+        result.current.reset()
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(5)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          items: expect.arrayContaining([items[0], items[1]]),
+          activeIndex: 1,
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            items: expect.arrayContaining([]),
+            activeIndex: -1,
+          }),
+          type: stateChangeTypes.FunctionReset,
+        }),
+      )
     })
 
     test('is called at each state change with the appropriate change type', () => {

@@ -1,8 +1,9 @@
+import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
 export default function downshiftMultipleSelectionReducer(state, action) {
-  const {type, index} = action
+  const {type, index, props, item} = action
   const {activeIndex, items} = state
   let changes
 
@@ -62,19 +63,40 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       break
     case stateChangeTypes.FunctionRemoveItem: {
       let newActiveIndex = activeIndex
+      const itemIndex = items.indexOf(item)
 
       if (items.length === 1) {
         newActiveIndex = -1
-      } else if (index === items.length - 1) {
+      } else if (itemIndex === items.length - 1) {
         newActiveIndex = items.length - 2
       }
 
       changes = {
-        items: [...items.slice(0, index), ...items.slice(index + 1)],
+        items: [...items.slice(0, itemIndex), ...items.slice(itemIndex + 1)],
         ...{activeIndex: newActiveIndex},
       }
       break
     }
+    case stateChangeTypes.FunctionSetItems: {
+      const {items: newItems} = action
+      changes = {
+        items: newItems,
+      }
+      break
+    }
+    case stateChangeTypes.FunctionSetActiveIndex: {
+      const {activeIndex: newActiveIndex} = action
+      changes = {
+        activeIndex: newActiveIndex,
+      }
+      break
+    }
+    case stateChangeTypes.FunctionReset:
+      changes = {
+        activeIndex: getDefaultValue(props, 'activeIndex'),
+        items: getDefaultValue(props, 'items'),
+      }
+      break
     default:
       break
   }
