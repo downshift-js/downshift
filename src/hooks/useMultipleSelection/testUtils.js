@@ -90,7 +90,7 @@ const DropdownMultipleCombobox = ({
         <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
           <input
             data-testid={dataTestIds.input}
-            {...getInputProps(getDropdownProps())}
+            {...getInputProps(getDropdownProps({isOpen}))}
           />
           <button
             data-testid={dataTestIds.toggleButton}

@@ -57,7 +57,7 @@ import {items, menuStyles, comboboxStyles, playgroundStyles, comboboxWrapperStyl
               </span>
             ))}
             <div style={comboboxStyles} {...getComboboxProps()}>
-              <input {...getInputProps({...getDropdownProps()})} />
+              <input {...getInputProps({...getDropdownProps({isOpen})})} />
               <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
                 &#8595;
               </button>

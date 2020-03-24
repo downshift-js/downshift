@@ -8,10 +8,9 @@ describe('getDropdownProps', () => {
     test('are passed down', () => {
       const {result} = renderUseMultipleSelection()
 
-      expect(result.current.getDropdownProps({foo: 'bar'})).toHaveProperty(
-        'foo',
-        'bar',
-      )
+      expect(
+        result.current.getDropdownProps({foo: 'bar', isOpen: false}),
+      ).toHaveProperty('foo', 'bar')
     })
 
     test('custom ref passed by the user is used', () => {
@@ -20,7 +19,10 @@ describe('getDropdownProps', () => {
       const dropdownNode = {}
 
       act(() => {
-        const {ref} = result.current.getDropdownProps({ref: refFn})
+        const {ref} = result.current.getDropdownProps({
+          ref: refFn,
+          isOpen: false,
+        })
 
         ref(dropdownNode)
       })
@@ -38,6 +40,7 @@ describe('getDropdownProps', () => {
         const {blablaRef} = result.current.getDropdownProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
+          isOpen: false,
         })
 
         blablaRef(dropdownNode)
@@ -54,6 +57,7 @@ describe('getDropdownProps', () => {
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
           onKeyDown: userOnKeyDown,
+          isOpen: false,
         })
 
         onKeyDown({key: 'ArrowLeft'})
@@ -72,6 +76,7 @@ describe('getDropdownProps', () => {
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
           onKeyDown: userOnKeyDown,
+          isOpen: false,
         })
 
         onKeyDown({key: 'ArrowLeft'})
