@@ -6,7 +6,7 @@ import Cake from '@material-ui/icons/Cake'
 import Group from '@material-ui/icons/Group'
 import DirectionsCar from '@material-ui/icons/DirectionsCar'
 
-const menuStyles = {
+export const menuStyles = {
   maxHeight: '180px',
   overflowY: 'auto',
   width: '135px',
@@ -20,11 +20,17 @@ const menuStyles = {
   left: '175px',
 }
 
-const comboboxStyles = {display: 'inline-block'}
+export const selectedItemStyles = {margin: '0 5px', backgroundColor: 'aliceblue', borderRadius: '10px'}
 
-const playgroundStyles = {height: '160px'}
+export const selectedItemIconStyles ={cursor: 'pointer'}
 
-const useStyles = makeStyles(theme => ({
+export const comboboxStyles = {display: 'inline-block'}
+
+export const playgroundStyles = {height: '160px'}
+
+export const comboboxWrapperStyles = {display: 'inline-flex', flexWrap: 'wrap'}
+
+export const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     maxWidth: 300,
@@ -47,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const items = [
+export const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -76,7 +82,7 @@ const items = [
   'Oganesson',
 ]
 
-const itemsAsObjects = [
+export const itemsAsObjects = [
   {
     primary: 'Photos',
     secondary: 'Jan 9, 2014',
@@ -108,12 +114,3 @@ const itemsAsObjects = [
     icon: DirectionsCar,
   },
 ]
-
-export {
-  menuStyles,
-  useStyles,
-  items,
-  itemsAsObjects,
-  playgroundStyles,
-  comboboxStyles,
-}
