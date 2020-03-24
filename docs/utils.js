@@ -20,11 +20,11 @@ export const menuStyles = {
   left: '175px',
 }
 
-export const selectedItemStyles = {margin: '0 5px', backgroundColor: 'aliceblue', borderRadius: '10px'}
+export const selectedItemStyles = {marginLeft: '5px', backgroundColor: 'aliceblue', borderRadius: '10px'}
 
 export const selectedItemIconStyles ={cursor: 'pointer'}
 
-export const comboboxStyles = {display: 'inline-block'}
+export const comboboxStyles = {display: 'inline-block', marginLeft: '5px'}
 
 export const playgroundStyles = {height: '160px'}
 
