@@ -7,6 +7,14 @@ import {items} from '../../testUtils'
 jest.useFakeTimers()
 
 describe('props', () => {
+  test('if falsy then no prop types error is thrown', () => {
+    global.console.error = jest.fn()
+    renderUseMultipleSelection()
+
+    expect(global.console.error).not.toBeCalled()
+    global.console.error.mockRestore()
+  })
+
   describe('items', () => {
     afterEach(() => {
       act(() => jest.runAllTimers())

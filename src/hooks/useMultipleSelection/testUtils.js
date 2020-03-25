@@ -125,5 +125,5 @@ export const renderMultipleCombobox = props => {
 }
 
 export const renderUseMultipleSelection = props => {
-  return renderHook(() => useMultipleSelection({...props}))
+  return renderHook(() => useMultipleSelection(props))
 }

@@ -28,10 +28,7 @@ const renderUseSelect = props => {
 const renderSelect = (props, uiCallback) => {
   const ui = <DropdownSelect {...props} />
   const wrapper = render(uiCallback ? uiCallback(ui) : ui)
-  const rerender = (p, uiCb) =>
-    wrapper.rerender(
-      uiCb ? uiCb(<DropdownSelect {...p} />) : <DropdownSelect {...p} />,
-    )
+  const rerender = p => wrapper.rerender(<DropdownSelect {...p} />)
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)

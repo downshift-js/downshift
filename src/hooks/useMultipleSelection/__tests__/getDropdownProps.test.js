@@ -4,6 +4,14 @@ import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getDropdownProps', () => {
+  test('throws error if no index or item has been passed', () => {
+    const {result} = renderUseMultipleSelection()
+
+    expect(result.current.getDropdownProps).toThrowError(
+      'Pass isOpen state variable in getDropdownProps',
+    )
+  })
+
   describe('user props', () => {
     test('are passed down', () => {
       const {result} = renderUseMultipleSelection()
@@ -102,6 +110,28 @@ describe('getDropdownProps', () => {
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
       })
 
+      test('arrow left should not work if pressed with modifier keys', () => {
+        const {keyDownOnDropdown, getSelectedItems} = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+        })
+
+        keyDownOnDropdown('ArrowLeft', {shiftKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('ArrowLeft', {altKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('ArrowLeft', {metaKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('ArrowLeft', {ctrlKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+      })
+
       test('backspace should remove the first selected item', () => {
         const {keyDownOnDropdown, getSelectedItems} = renderMultipleCombobox({
           multipleSelectionProps: {initialItems: [items[0], items[1]]},
@@ -110,6 +140,78 @@ describe('getDropdownProps', () => {
         keyDownOnDropdown('Backspace')
 
         expect(getSelectedItems()).toHaveLength(1)
+      })
+
+      test('backspace should not work if pressed with modifier keys', () => {
+        const {keyDownOnDropdown, getSelectedItems} = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+        })
+
+        keyDownOnDropdown('Backspace', {shiftKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('Backspace', {altKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('Backspace', {metaKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+
+        keyDownOnDropdown('Backspace', {ctrlKey: true})
+
+        expect(getSelectedItems()).toHaveLength(2)
+      })
+
+      test('backspace should not work if pressed with cursor not on first position', () => {
+        const {
+          keyDownOnDropdown,
+          getSelectedItems,
+          input,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          comboboxProps: {initialInputValue: 'test'},
+        })
+
+        input.selectionStart = 1
+        input.selectionEnd = 1
+        keyDownOnDropdown('Backspace')
+
+        expect(getSelectedItems()).toHaveLength(2)
+      })
+
+      test('backspace should not work if pressed with cursor highlighting text', () => {
+        const {
+          keyDownOnDropdown,
+          getSelectedItems,
+          input,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          comboboxProps: {initialInputValue: 'test'},
+        })
+
+        input.selectionStart = 0
+        input.selectionEnd = 3
+        keyDownOnDropdown('Backspace')
+
+        expect(getSelectedItems()).toHaveLength(2)
+      })
+
+      test("other than the ones supported don't affect anything", () => {
+        const {
+          keyDownOnDropdown,
+          getSelectedItems,
+          input,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+        })
+
+        keyDownOnDropdown('Alt')
+        keyDownOnDropdown('Control')
+
+        expect(getSelectedItems()).toHaveLength(2)
+        expect(input).toHaveFocus()
       })
     })
   })

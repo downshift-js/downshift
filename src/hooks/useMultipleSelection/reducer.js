@@ -98,7 +98,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       }
       break
     default:
-      break
+      throw new Error('Reducer called without proper action type.')
   }
 
   return {

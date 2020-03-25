@@ -23,9 +23,10 @@ describe('returnProps', () => {
       expect(result.current.items).toStrictEqual(['test'])
     })
 
-    test('removeItem removes an item from the selected array', () => {
+    test('removeItem removes an item from the selected array and keeps active index if not last item', () => {
       const {result} = renderUseMultipleSelection({
         initialItems: ['test', 'more test'],
+        initialActiveIndex: 0,
       })
 
       act(() => {
@@ -33,6 +34,21 @@ describe('returnProps', () => {
       })
 
       expect(result.current.items).toStrictEqual(['more test'])
+      expect(result.current.activeIndex).toEqual(0)
+    })
+
+    test('removeItem removes an item from the selected array and decreases active index if last item', () => {
+      const {result} = renderUseMultipleSelection({
+        initialItems: ['test', 'more test'],
+        initialActiveIndex: 1,
+      })
+
+      act(() => {
+        result.current.removeItem('more test')
+      })
+
+      expect(result.current.items).toStrictEqual(['test'])
+      expect(result.current.activeIndex).toEqual(0)
     })
 
     test('setActiveIndex sets activeIndex', () => {

@@ -4,6 +4,14 @@ import {renderUseMultipleSelection, renderMultipleCombobox} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getItemProps', () => {
+  test('throws error if no index or item has been passed', () => {
+    const {result} = renderUseMultipleSelection()
+
+    expect(result.current.getItemProps).toThrowError(
+      'Pass either item or item index in getItemProps!',
+    )
+  })
+
   describe('hook props', () => {
     test("assign '-1' to tabindex for a non-active item", () => {
       const {result} = renderUseMultipleSelection()
@@ -361,7 +369,7 @@ describe('getItemProps', () => {
         expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
       })
 
-      test('delete removes item and moves focus to item that is counted with same active index', () => {
+      test('delete removes item and moves focus to next item if any', () => {
         const {
           keyDownOnSelectedItemAtIndex,
           getSelectedItemAtIndex,
@@ -402,6 +410,27 @@ describe('getItemProps', () => {
         expect(input).toHaveFocus()
       })
 
+      test('delete removes item and moves focus to previous item if it was the last in the array', () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItemAtIndex,
+          getSelectedItems,
+          focusSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialItems: [items[0], items[1], items[2]],
+            initialActiveIndex: 2,
+          },
+        })
+
+        focusSelectedItemAtIndex(2)
+        keyDownOnSelectedItemAtIndex(2, 'Delete')
+
+        expect(getSelectedItems()).toHaveLength(2)
+        expect(getSelectedItemAtIndex(1)).toHaveFocus()
+        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
+      })
+
       test('navigation works correctly with both click and arrow keys', () => {
         const {
           keyDownOnSelectedItemAtIndex,
@@ -436,6 +465,27 @@ describe('getItemProps', () => {
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
+      })
+
+      test("other than the ones supported don't affect anything", () => {
+        const {
+          keyDownOnSelectedItemAtIndex,
+          getSelectedItems,
+          getSelectedItemAtIndex,
+          focusSelectedItemAtIndex,
+        } = renderMultipleCombobox({
+          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+        })
+
+        focusSelectedItemAtIndex(1)
+        keyDownOnSelectedItemAtIndex(1, 'Alt')
+        keyDownOnSelectedItemAtIndex(1, 'Control')
+        keyDownOnSelectedItemAtIndex(1, 'ArrowUp')
+        keyDownOnSelectedItemAtIndex(1, 'ArrowDown')
+        keyDownOnSelectedItemAtIndex(1, 'Enter')
+
+        expect(getSelectedItems()).toHaveLength(2)
+        expect(getSelectedItemAtIndex(1)).toHaveFocus()
       })
     })
 
