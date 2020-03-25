@@ -18,30 +18,20 @@ jest.mock('../../utils', () => {
 
 export const dataTestIds = {
   toggleButton: 'toggle-button-id',
-  itemPrefix: 'item-id',
-  item: index => `item-id-${index}`,
   selectedItemPrefix: 'selected-item-id',
   selectedItem: index => `selected-item-id-${index}`,
   input: 'input-id',
 }
 
 const DropdownMultipleCombobox = ({
-  multipleSelectionProps = {},
+  multipleSelectionProps,
   comboboxProps = {},
 }) => {
-  const [inputValue, setInputValue] = React.useState('')
   const {
     getItemProps: getSelectedItemProps,
     getDropdownProps,
-    addItem,
     items: selectedItems,
   } = useMultipleSelection(multipleSelectionProps)
-  const getFilteredItems = itemsParameter =>
-    itemsParameter.filter(
-      item =>
-        selectedItems.indexOf(item) < 0 &&
-        item.toLowerCase().startsWith(inputValue.toLowerCase()),
-    )
   const {
     isOpen,
     getToggleButtonProps,
@@ -49,27 +39,12 @@ const DropdownMultipleCombobox = ({
     getMenuProps,
     getInputProps,
     getComboboxProps,
-    highlightedIndex,
-    getItemProps,
   } = useCombobox({
-    inputValue,
-    items: getFilteredItems(items),
-    onStateChange: ({inputValue: inputValueParameter, type, selectedItem}) => {
-      if (type === useCombobox.stateChangeTypes.InputChange) {
-        setInputValue(inputValueParameter)
-
-        return
-      }
-
-      if (selectedItem) {
-        setInputValue('')
-        addItem(selectedItem)
-      }
-    },
+    items,
     ...comboboxProps,
   })
-  const {itemToString} = comboboxProps.itemToString
-    ? comboboxProps
+  const {itemToString} = multipleSelectionProps.itemToString
+    ? multipleSelectionProps
     : defaultProps
 
   return (
@@ -82,9 +57,7 @@ const DropdownMultipleCombobox = ({
             data-testid={dataTestIds.selectedItem(index)}
             {...getSelectedItemProps({item: selectedItem, index})}
           >
-            {selectedItem instanceof Object
-              ? itemToString(selectedItem)
-              : selectedItem}
+            {itemToString(selectedItem)}
           </span>
         ))}
         <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
@@ -100,32 +73,13 @@ const DropdownMultipleCombobox = ({
           </button>
         </div>
       </div>
-      <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
-        {isOpen &&
-          (comboboxProps.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? itemToString(item) : item
-            return (
-              <li
-                data-testid={dataTestIds.item(index)}
-                style={
-                  highlightedIndex === index ? {backgroundColor: 'blue'} : {}
-                }
-                key={`${stringItem}${index}`}
-                {...getItemProps({item, index})}
-              >
-                {stringItem}
-              </li>
-            )
-          })}
-      </ul>
+      <ul data-testid={dataTestIds.menu} {...getMenuProps()} />
     </div>
   )
 }
 
-export const renderMultipleCombobox = (props, uiCallback) => {
-  const ui = <DropdownMultipleCombobox {...props} />
-  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+export const renderMultipleCombobox = props => {
+  const wrapper = render(<DropdownMultipleCombobox {...props} />)
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const input = wrapper.getByTestId(dataTestIds.input)
