@@ -29,21 +29,30 @@ import {items, menuStyles, comboboxStyles, playgroundStyles, comboboxWrapperStyl
         getComboboxProps,
         highlightedIndex,
         getItemProps,
+        selectItem
       } = useCombobox({
         inputValue,
         items: getFilteredItems(items),
         onStateChange: ({inputValue, type, selectedItem}) => {
-          if (type === useCombobox.stateChangeTypes.InputChange) {
-            setInputValue(inputValue)
+          switch (type) {
+            case useCombobox.stateChangeTypes.InputChange:
+              setInputValue(inputValueParameter)
 
-            return
-          }
+              break
+            case useCombobox.stateChangeTypes.InputKeyDownEnter:
+            case useCombobox.stateChangeTypes.ItemClick:
+            case useCombobox.stateChangeTypes.InputBlur:
+              if (selectedItem) {
+                setInputValue('')
+                addItem(selectedItem)
+                selectItem(null)
+              }
 
-          if (selectedItem) {
-            setInputValue('')
-            addItem(selectedItem)
+              break
+            default:
+              break
           }
-        },
+        }
       })
 
       return (
