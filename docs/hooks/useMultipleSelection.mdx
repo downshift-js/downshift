@@ -22,29 +22,34 @@ import {
 
 ## Introduction
 
-The `useMultipleSelection` hook provides functionality and accessibility to a multiple selection scenario
-for your `combobx` or `select` widgets. It does not have a dedicated ARIA pattern but it is very useful
-to offer out-of-the-box keyboard navigation and focus management to a dropdown widget augmented with
+The `useMultipleSelection` hook provides functionality and accessibility to a
+multiple selection scenario for your `combobx` or `select` widgets. It does not
+have a dedicated ARIA pattern but it is very useful to offer out-of-the-box
+keyboard navigation and focus management to a dropdown widget augmented with
 multiple selection
 
-The hook can be used on its own, but it can also be used along either `useCombobox` or `useSelect` in
-order to build an accessible `select` or `combobox` with multiple selection. It follows the same principle
-of `Downshift` and offers a set of getter props, state and actions in order to make your component
-accessible. The main value it provides is the ability to move between the selected items by keyboard,
-with focus following the active element. You can also remove items by pressing `Delete` or `Backspace`
-while focus is on the item, or if you have a combobox and it's empty, you can `Backspace` to remove the
-last selected item. It should behave similarly to `Outlook` or `Gmail` compose email `To:` field, when you can
-add multiple people to send the email to, and then you can navigate between them or remove them from selection.
+The hook can be used on its own, but it can also be used along either
+`useCombobox` or `useSelect` in order to build an accessible `select` or
+`combobox` with multiple selection. It follows the same principle of `Downshift`
+and offers a set of getter props, state and actions in order to make your
+component accessible. The main value it provides is the ability to move between
+the selected items by keyboard, with focus following the active element. You can
+also remove items by pressing `Delete` or `Backspace` while focus is on the
+item, or if you have a combobox and it's empty, you can `Backspace` to remove
+the last selected item. It should behave similarly to `Outlook` or `Gmail`
+compose email `To:` field, when you can add multiple people to send the email
+to, and then you can navigate between them or remove them from selection.
 
-In the examples below, we use the `useMultipleSelection` hook with both `useSelect` and `useCombobox`,
-destructure from its result the getter props and state variables. The `getDropdownProps` is called with a
-`isOpen` parameter, as by convention a user should not be able to navigate between selected items if the dropdown
-is still open. The getter props are used as follows:
+In the examples below, we use the `useMultipleSelection` hook with both
+`useSelect` and `useCombobox`, destructure from its result the getter props and
+state variables. The `getDropdownProps` is called with a `isOpen` parameter, as
+by convention a user should not be able to navigate between selected items if
+the dropdown is still open. The getter props are used as follows:
 
-| Returned prop          | Element                  | Comments                                                                        |
-| ---------------------- | ------------------------ | ------------------------------------------------------------------------------- |
-| `getDropdownProps`     | `<input>` or `<button>`  | Depends on what widget you have, if a select or combobox. Called with `isOpen`. |
-| `getItemProps`         | `<span>`                 | Called with `index` and `item`, adds and event listeners.                       |
+| Returned prop      | Element                 | Comments                                                                        |
+| ------------------ | ----------------------- | ------------------------------------------------------------------------------- |
+| `getDropdownProps` | `<input>` or `<button>` | Depends on what widget you have, if a select or combobox. Called with `isOpen`. |
+| `getItemProps`     | `<span>`                | Called with `index` and `item`, adds and event listeners.                       |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -52,11 +57,13 @@ information check out the
 
 ## Usage with combobox
 
-A `combobx` with multiple selection can be created in a similar way to a default equivalent, with
-the addition of selected items. The styling is completely up to the developer, as these elements can be `<span>`
-or `<div>` or anything else, with a `inline-block` or `flex` display. In the example below, each item has an
-`X` icon attached to it, with a `removeItem` callback in the `onClick` handler. Items are added using `addItem`
-callback insite the `onStateChange` handler of `useCombobox`.
+A `combobx` with multiple selection can be created in a similar way to a default
+equivalent, with the addition of selected items. The styling is completely up to
+the developer, as these elements can be `<span>` or `<div>` or anything else,
+with a `inline-block` or `flex` display. In the example below, each item has an
+`X` icon attached to it, with a `removeItem` callback in the `onClick` handler.
+Items are added using `addItem` callback insite the `onStateChange` handler of
+`useCombobox`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
@@ -164,11 +171,13 @@ callback insite the `onStateChange` handler of `useCombobox`.
 
 ## Usage with select
 
-A `select` with multiple selection can be created in a similar way to a default equivalent, with
-the addition of selected items. The styling is completely up to the developer, as these elements can be `<span>`
-or `<div>` or anything else, with a `inline-block` or `flex` display. In the example below, each item has an
-`X` icon attached to it, with a `removeItem` callback in the `onClick` handler. Items are added using `addItem`
-callback insite the `onStateChange` handler of `useSelect`.
+A `select` with multiple selection can be created in a similar way to a default
+equivalent, with the addition of selected items. The styling is completely up to
+the developer, as these elements can be `<span>` or `<div>` or anything else,
+with a `inline-block` or `flex` display. In the example below, each item has an
+`X` icon attached to it, with a `removeItem` callback in the `onClick` handler.
+Items are added using `addItem` callback insite the `onStateChange` handler of
+`useSelect`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
@@ -182,7 +191,8 @@ callback insite the `onStateChange` handler of `useSelect`.
         removeItem,
         items: selectedItems,
       } = useMultipleSelection({initialItems: [items[0], items[1]]})
-      const getFilteredItems = items => items.filter(item => selectedItems.indexOf(item) < 0)
+      const getFilteredItems = items =>
+        items.filter(item => selectedItems.indexOf(item) < 0)
       const {
         isOpen,
         selectedItem,
@@ -191,7 +201,7 @@ callback insite the `onStateChange` handler of `useSelect`.
         getMenuProps,
         highlightedIndex,
         getItemProps,
-        selectItem
+        selectItem,
       } = useSelect({
         items: getFilteredItems(items),
         onStateChange: ({type, selectedItem}) => {
@@ -209,24 +219,25 @@ callback insite the `onStateChange` handler of `useSelect`.
             default:
               break
           }
-        },})
+        },
+      })
       return (
         <>
           <label {...getLabelProps()}>Choose an element:</label>
           {selectedItems.map((selectedItem, index) => (
+            <span
+              style={selectedItemStyles}
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({item: selectedItem, index})}
+            >
+              {selectedItem}
               <span
-                style={selectedItemStyles}
-                key={`selected-item-${index}`}
-                {...getSelectedItemProps({item: selectedItem, index})}
+                style={selectedItemIconStyles}
+                onClick={() => removeItem(selectedItem)}
               >
-                {selectedItem}
-                <span
-                  style={selectedItemIconStyles}
-                  onClick={() => removeItem(selectedItem)}
-                >
-                  &#10005;
-                </span>
+                &#10005;
               </span>
+            </span>
           ))}
           <button {...getToggleButtonProps({...getDropdownProps({isOpen})})}>
             {selectedItem || 'Elements'}
@@ -252,7 +263,5 @@ callback insite the `onStateChange` handler of `useSelect`.
     }
 
     return <DropdownMultipleSelect />
-
-}}
-
+  }}
 </Playground>
