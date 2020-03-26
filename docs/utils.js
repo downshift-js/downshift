@@ -20,6 +20,11 @@ export const menuStyles = {
   left: '175px',
 }
 
+export const menuMultipleStlyes = {
+  ...menuStyles,
+  left: '380px',
+}
+
 export const selectedItemStyles = {marginLeft: '5px', backgroundColor: 'aliceblue', borderRadius: '10px'}
 
 export const selectedItemIconStyles ={cursor: 'pointer'}
