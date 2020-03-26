@@ -8,7 +8,7 @@
 autocomplete/dropdown/select/combobox components</p>
 
 > See
-> [the intro blog post](https://blog.kentcdodds.com/introducing-downshift-for-react-b1de3fca0817)
+> [the intro blog post](https://kentcdodds.com/blog/introducing-downshift-for-react)
 > and
 > [Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
 
@@ -672,7 +672,7 @@ indicated below:
 ### prop getters
 
 > See
-> [the blog post about prop getters](https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf)
+> [the blog post about prop getters](https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters)
 
 > NOTE: These prop-getters provide important `aria-` attributes which are very
 > important to your component being accessible. It's recommended that you
