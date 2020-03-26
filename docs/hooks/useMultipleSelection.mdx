@@ -139,7 +139,7 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
               </span>
             ))}
             <div style={comboboxStyles} {...getComboboxProps()}>
-              <input {...getInputProps({...getDropdownProps({isOpen})})} />
+              <input {...getInputProps(getDropdownProps({isOpen}))} />
               <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
                 &#8595;
               </button>
@@ -239,7 +239,7 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
               </span>
             </span>
           ))}
-          <button {...getToggleButtonProps({...getDropdownProps({isOpen})})}>
+          <button {...getToggleButtonProps(getDropdownProps({isOpen}))}>
             {selectedItem || 'Elements'}
           </button>
           <ul {...getMenuProps()} style={menuMultipleStlyes}>
