@@ -6,7 +6,7 @@ route: /hooks/use-multiple-selection
 
 import {useState} from 'react'
 import {Playground} from 'docz'
-import {useCombobox, useMultipleSelection} from '../../src'
+import {useCombobox, useMultipleSelection, useSelect} from '../../src'
 import {
   items,
   menuStyles,
@@ -50,15 +50,15 @@ For a complete documentation on all the returned props, hook props and more
 information check out the
 [Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection).
 
-## Usage
-
-### Combobox
+## Usage with combobox
 
 A `combobx` with multiple selection can be created in a similar way to a default equivalent, with
 the addition of selected items. The styling is completely up to the developer, as these elements can be `<span>`
 or `<div>` or anything else, with a `inline-block` or `flex` display. In the example below, each item has an
 `X` icon attached to it, with a `removeItem` callback in the `onClick` handler. Items are added using `addItem`
-callback insite the `onStateChange` handler of `useCombobox` or `useSelect`.
+callback insite the `onStateChange` handler of `useCombobox`.
+
+[CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
 <Playground style={playgroundStyles}>
   {() => {
@@ -160,4 +160,99 @@ callback insite the `onStateChange` handler of `useCombobox` or `useSelect`.
 
     return <DropdownMultipleCombobox />
   }}
+</Playground>
+
+## Usage with select
+
+A `select` with multiple selection can be created in a similar way to a default equivalent, with
+the addition of selected items. The styling is completely up to the developer, as these elements can be `<span>`
+or `<div>` or anything else, with a `inline-block` or `flex` display. In the example below, each item has an
+`X` icon attached to it, with a `removeItem` callback in the `onClick` handler. Items are added using `addItem`
+callback insite the `onStateChange` handler of `useSelect`.
+
+[CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownMultipleSelect = () => {
+      const {
+        getItemProps: getSelectedItemProps,
+        getDropdownProps,
+        addItem,
+        removeItem,
+        items: selectedItems,
+      } = useMultipleSelection({initialItems: [items[0], items[1]]})
+      const getFilteredItems = items => items.filter(item => selectedItems.indexOf(item) < 0)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+        selectItem
+      } = useSelect({
+        items: getFilteredItems(items),
+        onStateChange: ({type, selectedItem}) => {
+          switch (type) {
+            case useSelect.stateChangeTypes.MenuKeyDownEnter:
+            case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+            case useSelect.stateChangeTypes.ItemClick:
+            case useSelect.stateChangeTypes.MenuBlur:
+              if (selectedItem) {
+                addItem(selectedItem)
+                selectItem(null)
+              }
+
+              break
+            default:
+              break
+          }
+        },})
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          {selectedItems.map((selectedItem, index) => (
+              <span
+                style={selectedItemStyles}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({item: selectedItem, index})}
+              >
+                {selectedItem}
+                <span
+                  style={selectedItemIconStyles}
+                  onClick={() => removeItem(selectedItem)}
+                >
+                  &#10005;
+                </span>
+              </span>
+          ))}
+          <button {...getToggleButtonProps({...getDropdownProps({isOpen})})}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuMultipleStlyes}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+
+    return <DropdownMultipleSelect />
+
+}}
+
 </Playground>
