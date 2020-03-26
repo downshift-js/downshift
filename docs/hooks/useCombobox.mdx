@@ -4,10 +4,12 @@ menu: Hooks
 route: /hooks/use-combobox
 ---
 
+```js
 import {useState} from 'react'
 import {Playground} from 'docz'
 import {useCombobox} from '../../src'
 import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+```
 
 # useCombobox
 
@@ -57,6 +59,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
 
+```js
 <Playground style={playgroundStyles}>
   {() => {
     const DropdownCombobox = () => {
@@ -116,6 +119,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 }}
 
 </Playground>
+```
 
 ## State Reducer
 
@@ -138,6 +142,7 @@ In all other state change types, we return `Downshift` default changes.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-variations-state-reducer-x7feb)
 
+```js
 <Playground style={playgroundStyles}>
   {() => {
     function stateReducer(state, actionAndChanges) {
@@ -225,3 +230,4 @@ In all other state change types, we return `Downshift` default changes.
 }}
 
 </Playground>
+```
