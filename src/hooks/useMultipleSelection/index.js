@@ -51,6 +51,8 @@ function useMultipleSelection(userProps = {}) {
           itemToString,
           resultCount: items.length,
           removedItem,
+          activeIndex,
+          activeItem: items[activeIndex],
         }),
         environment.document,
       )

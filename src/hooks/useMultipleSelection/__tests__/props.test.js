@@ -72,6 +72,7 @@ describe('props', () => {
           initialActiveIndex: 0,
           itemToString,
           getA11yRemovalMessage,
+          activeIndex: 0,
         },
       })
 
@@ -82,6 +83,8 @@ describe('props', () => {
           itemToString,
           resultCount: 1,
           removedItem: initialItems[0],
+          activeIndex: 0,
+          activeItem: initialItems[1],
         }),
       )
     })
