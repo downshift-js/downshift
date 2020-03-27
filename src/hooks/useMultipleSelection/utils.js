@@ -97,12 +97,12 @@ export const propTypes = {
   initialItems: PropTypes.array,
   itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
-  circularNavigation: PropTypes.bool,
   stateReducer: PropTypes.func,
   activeIndex: PropTypes.number,
   initialActiveIndex: PropTypes.number,
   defaultActiveIndex: PropTypes.number,
   onActiveIndexChange: PropTypes.func,
+  onItemsChange: PropTypes.func,
   environment: PropTypes.shape({
     addEventListener: PropTypes.func,
     removeEventListener: PropTypes.func,
