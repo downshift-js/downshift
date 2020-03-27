@@ -31,6 +31,7 @@ item has been removed from selection.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [itemToString](#itemtostring)
@@ -62,7 +63,7 @@ item has been removed from selection.
 
 > [Try it out in the browser][sandbox-example]
 
-```jsx
+```javascript
 import React from 'react'
 import {render} from 'react-dom'
 import {useSelect} from 'downshift'
@@ -417,7 +418,7 @@ that state from other components, `redux`, `react-router`, or anywhere else.
 
 You use the hook like so:
 
-```jsx
+```javascript
 import {useMultipleSelection} from 'downshift'
 import {items} from './utils'
 
@@ -496,8 +497,12 @@ Similar story with `combobox` but with `getInputProps` instead of
 
 #### `getItemProps`
 
-The props returned from calling this function should be applied to any menu
-items you render.
+The props returned from calling this function should be applied to any selected
+items you render. It allows changing the activeIndex by using arrow keys or by
+clicking, but also removing items by `Delete` or `Backspace` on active item. It
+also ensures that focus moves along with the activeIndex, and it keeps a
+`tabindex="0"` on the active element even if user decides to `Tab` away. That
+way, when tabbing back, the user can pick up where he left off with selection.
 
 **This is an impure function**, so it should only be called when you will
 actually be applying the props to an item.
@@ -508,7 +513,7 @@ actually be applying the props to an item.
 
 Basically just don't do this:
 
-```jsx
+```javascript
 items.map((item, index) => {
   const props = getItemProps({item, index}) // we're calling it here
   if (!shouldRenderItem(item)) {
@@ -528,25 +533,19 @@ items.filter(shouldRenderItem).map(item => <div {...getItemProps({item})} />)
 
 Required properties:
 
-The main difference from vanilla `Downshift` is that we require the items as
-props before rendering. The reason is to open the menu with items already
-highlighted, and we need to know the items before the actual render. It is still
-required to pass either `item` or `index` to `getItemProps`.
+It is required to pass either `item` or `index` to `getItemProps` in order to be
+able to apply the activeIndex logic.
 
 - `item`: this is the item data that will be selected when the user selects a
   particular item.
 - `index`: This is how `downshift` keeps track of your item when updating the
-  `highlightedIndex` as the user keys around. By default, `downshift` will
-  assume the `index` is the order in which you're calling `getItemProps`. This
-  is often good enough, but if you find odd behavior, try setting this
-  explicitly. It's probably best to be explicit about `index` when using a
-  windowing library like `react-virtualized`.
+  `activeIndex` as the user keys around. By default, `downshift` will assume the
+  `index` is the order in which you're calling `getItemProps`. This is often
+  good enough, but if you find odd behavior, try setting this explicitly. It's
+  probably best to be explicit about `index` when using a windowing library like
+  `react-virtualized`.
 
 Optional properties:
-
-- `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be omitted. Items will not be highlighted when hovered, and
-  items will not be selected when clicked.
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
@@ -555,28 +554,38 @@ Optional properties:
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property. It defaults to `ref`.
 
-#### `getToggleButtonProps`
+#### `getDropdownProps`
 
-Call this and apply the returned props to a `button`. It allows you to toggle
-the `Menu` component.
+Call this and apply the returned props to a `button` if you are building a
+`select` or to an `input` if you're building a combobox. It allows you to move
+focus from this element to the last item selected by using `ArrowLeft` and also
+to remove the last item using `Backspace`.
+
+Required properties:
+
+It is required to pass `isOpen` to `getDropdownProps`. By convention, it is
+required for the `dropdown` to be closed in order to perform focus switch or
+deletion of items.
+
+- `isOpen`: tells `useMultipleSelection` if `dropdown` is closed and only then
+  it can have focus moved to items or remove items by keyboard.
 
 Optional properties:
 
-- `disabled`: If this is set to `true`, then all of the downshift button event
-  handlers will be omitted (it won't toggle the menu when clicked).
-
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
-  call this `innerRef`. So you'd call: `getToggleButton({refKey: 'innerRef'})`
+  call this `innerRef`. So you'd call: `getDropdownProps({refKey: 'innerRef'})`
   and your composite component would forward like:
   `<button ref={props.innerRef} />`. However, if you are just rendering a
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
 
-```jsx
-const {getToggleButtonProps} = useSelect({items})
+```javascript
+const {getDropdownProps} = useMultipleSelection()
+const {isOpen, ...rest} = useSelect({items})
 const myButton = (
-  <button {...getToggleButtonProps()}>Click me</button>
+  {/* selected items */}
+  <button {...getDropdownProps({isOpen})}>Click me</button>
   {/* menu and items */}
 )
 ```
@@ -584,18 +593,17 @@ const myButton = (
 ### actions
 
 These are functions you can call to change the state of the downshift
-`useSelect` hook.
+`useMultipleSelection` hook.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property              | type                      | description                                           |
-| --------------------- | ------------------------- | ----------------------------------------------------- |
-| `closeMenu`           | `function()`              | closes the menu                                       |
-| `openMenu`            | `function()`              | opens the menu                                        |
-| `selectItem`          | `function(item: any)`     | selects the given item                                |
-| `setHighlightedIndex` | `function(index: number)` | call to set a new highlighted index                   |
-| `toggleMenu`          | `function()`              | toggle the menu open state                            |
-| `reset`               | `function()`              | this resets downshift's state to a reasonable default |
+| property         | type                      | description                                   |
+| ---------------- | ------------------------- | --------------------------------------------- |
+| `addItem`        | `function(item: any)`     | adds an item to the selected array            |
+| `removeItem`     | `function(item: any)`     | removes an item from the selected array       |
+| `reset`          | `function()`              | resets the items and active index to defaults |
+| `setActiveIndex` | `function(index: number)` | sets activeIndex to the new value             |
+| `setItems`       | `function(items: any[])`  | sets items to the new value                   |
 
 ### state
 
@@ -603,12 +611,10 @@ These are values that represent the current state of the downshift component.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property           | type      | description                       |
-| ------------------ | --------- | --------------------------------- |
-| `highlightedIndex` | `number`  | the currently highlighted item    |
-| `isOpen`           | `boolean` | the menu open state               |
-| `selectedItem`     | `any`     | the currently selected item input |
-| `keysSoFar`        | `string`  | the character keys typed so far   |
+| property      | type     | description                           |
+| ------------- | -------- | ------------------------------------- |
+| `activeIndex` | `number` | the index of thecurrently active item |
+| `items`       | `any[]`  | the items of the selection            |
 
 ## Event Handlers
 
@@ -618,77 +624,51 @@ described below.
 
 ### Default handlers
 
-#### Toggle Button
+#### Dropdown - button or input
 
-- `Click`: If the menu is not displayed, it will open it. Otherwise it will
-  close it. It will additionally move focus on the menu in order for screen
-  readers to correctly narrate which item is currently highlighted. If there is
-  already an item selected, the menu will be opened with that item already
-  highlighted.
-- `Enter`: Has the same effect as `Click`.
-- `Space`: Has the same effect as `Click`.
-- `CharacterKey`: Selects the option that starts with that key without opening
-  the dropdown list. For instance, typing `C` will select the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  select the option starting with that key combination, for instance typing
-  `CAL` will select `californium` if this option exists.
-- `ArrowDown`: If the menu is closed, it will open it. If there is already an
-  item selected, it will open the menu with the next item (index-wise)
-  highlighted. Otherwise, it will open the menu with the first option
-  highlighted.
-- `ArrowUp`: If the menu is closed, it will open it. If there is already an item
-  selected, it will open the menu with the previous item (index-wise)
-  highlighted. Otherwise, it will open the menu with the last option
-  highlighted.
-
-#### Menu
-
-- `ArrowDown`: Moves `highlightedIndex` one position down. If
-  `circularNavigation` is true, when reaching the last option, `ArrowDown` will
-  move `highlightedIndex` to first position. Otherwise it won't change anything.
-- `ArrowUp`: Moves `highlightedIndex` one position up. If `circularNavigation`
-  is true, when reaching the first option, `ArrowUp` will move
-  `highlightedIndex` to last position. Otherwise it won't change anything.
-- `CharacterKey`: Moves `highlightedIndex` to the option that starts with that
-  key. For instance, typing `C` will move highlight to the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  move `highlightedIndex` to the option starting with that key combination, for
-  instance typing `CAL` will move the highlight to `californium` if this option
-  exists.
-- `End`: Moves `highlightedIndex` to last position.
-- `Home`: Moves `highlightedIndex` to first position.
-- `Enter`: If there is a highlighted option, it will select it, close the menu
-  and move focus to the toggle button (unless `defaultIsOpen` is true).
-- `Escape`: It will close the menu without selecting anything and move focus to
-  the toggle button.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu and move
-  focus either to the toggle button (if `Shift+Tab`), next tabbable element (if
-  `Tab`) or whatever was clicked. It will not select the highlighted item
-  anymore, if any.
-- `MouseLeave`: Will clear the value of the `highlightedIndex` if it was set.
+- `ArrowLeft`: Moves focus from `button`/`input` to the last selected item and
+  makes `activeIndex` to be `items.length - 1`. Performs this action if there
+  are any items selected.
+- `Backspace`: Removes the last selected item from selection. It always performs
+  this action on a non-input element. If the `dropdown` is a `combobox` the text
+  cursor of the `input` must be at the start of the `input` and not highlight
+  any text in order for the removal to work.
 
 #### Item
 
-- `Click`: It will select the item, close the menu and move focus to the toggle
-  button (unless `defaultIsOpen` is true).
-- `MouseOver`: It will highlight the item.
+- `Click`: It will make the item active, will modify `activeIndex` to reflect
+  the new change, and will add focus to that item.
+- `Delete`: It will remove the item from selection. `activeIndex` will stay the
+  same if the item removed was not the last one, but focus will move to the item
+  which now has that index. If the last item was removed, the `activeIndex` will
+  decrease by one and will also move focus to the corresponding item. If there
+  are no items available anymore, the focus moves to the dropdown and
+  `activeIndex` becomes `-1`.
+- `Backspace`: Same effect as `Delete`.
+- `ArrowLeft`: Moves `activeIndex` and focus to previous item. It stops at the
+  first item in the selection.
+- `ArrowRight`: Moves `activeIndex` and focus to next item. It will move focus
+  to the `dropdown` if it occurs on the last selected item.
 
 ### Customizing Handlers
 
-You can provide your own event handlers to `useSelect` which will be called
-before the default handlers:
+You can provide your own event handlers to `useMultipleSelection` which will be
+called before the default handlers:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getDropdownProps} = useMultipleSelection()
+const {getInputProps} = useCombobox({items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps({
-      onKeyDown: event => {
-        // your custom keyDown handler here.
-      },
-    })}
+  /* label, selected items, ... */
+  <input
+    {...getInputProps(
+      getDropdownProps({
+        onKeyDown: event => {
+          // your custom keyDown handler here.
+        },
+      }),
+    )}
   />
 )
 ```
@@ -697,21 +677,25 @@ If you would like to prevent the default handler behavior in some cases, you can
 set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
-const {getMenuProps} = useSelect({items})
+const items = [...] // items here.
+const {getDropdownProps} = useMultipleSelection()
+const {getInputProps} = useCombobox({items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps({
-      onKeyDown: event => {
-        // your custom keyDown handler here.
-        if (event.key === 'Enter') {
-          // Prevent Downshift's default 'Enter' behavior.
-          event.nativeEvent.preventDownshiftDefault = true
+  /* label, selected items, ... */
+  <input
+    {...getInputProps(
+      getDropdownProps({
+        onKeyDown: event => {
+          // your custom keyDown handler here.
+          if (event.key === 'Enter') {
+            // Prevent Downshift's default 'Enter' behavior.
+            event.nativeEvent.preventDownshiftDefault = true
 
-          // your handler code
-        }
-      },
-    })}
+            // your handler code
+          }
+        },
+      }),
+    )}
   />
 )
 ```
@@ -721,11 +705,18 @@ favor of your own, you can bypass prop getters:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getDropdownProps} = useMultipleSelection()
+const {getInputProps} = useCombobox({items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps()}
+  /* label, selected items, ... */
+  <input
+    {...getInputProps(
+      getDropdownProps({
+        onKeyDown: event => {
+          // your custom keyDown handler here.
+        },
+      }),
+    )}
     onKeyDown={event => {
       // your custom keyDown handler here.
     }}
