@@ -1,10 +1,14 @@
 import {act} from '@testing-library/react-hooks'
-import {cleanup} from '@testing-library/react'
 import {items} from '../../testUtils'
 import {renderUseSelect} from '../testUtils'
 
+import * as stateChangeTypes from '../stateChangeTypes'
+import useSelect from '..'
+
 describe('returnProps', () => {
-  afterEach(cleanup)
+  test('should have stateChangeTypes attached to hook', () => {
+    expect(useSelect).toHaveProperty('stateChangeTypes', stateChangeTypes)
+  })
 
   describe('prop getters', () => {
     test('are returned as functions', () => {

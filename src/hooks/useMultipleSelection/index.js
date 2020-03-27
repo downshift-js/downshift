@@ -10,6 +10,8 @@ import {
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
+useMultipleSelection.stateChangeTypes = stateChangeTypes
+
 function useMultipleSelection(userProps = {}) {
   // Props defaults and destructuring.
   const props = {

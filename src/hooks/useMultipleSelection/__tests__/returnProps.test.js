@@ -1,8 +1,17 @@
 import {act} from '@testing-library/react-hooks'
 
 import {renderUseMultipleSelection} from '../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
+import useMultipleSelection from '..'
 
 describe('returnProps', () => {
+  test('should have stateChangeTypes attached to hook', () => {
+    expect(useMultipleSelection).toHaveProperty(
+      'stateChangeTypes',
+      stateChangeTypes,
+    )
+  })
+
   describe('prop getters', () => {
     test('are returned as functions', () => {
       const {result} = renderUseMultipleSelection()
