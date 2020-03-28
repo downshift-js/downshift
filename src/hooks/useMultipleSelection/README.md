@@ -37,6 +37,8 @@ item has been removed from selection.
   - [onItemsChange](#onitemschange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
+  - [keyNavigationNext](#keynavigationnext)
+  - [keyNavigationPrevious](#keynavigationprevious)
   - [initialItems](#initialitems)
   - [initialActiveIndex](#initialactiveindex)
   - [defaultItems](#defaultitems)
@@ -254,6 +256,25 @@ function stateReducer(state, actionAndChanges) {
 
 ## Advanced Props
 
+### keyNavigationNext
+
+> `string` | defaults to `ArrowRight`
+
+The navigation key that increments `activeIndex` and moves focus to the selected
+item whose index corresponds to the new value. For a `RTL` scenario, a common
+overriden value could be `ArrowLeft`. In some scenarios it can be `ArrowDown`.
+It mostly depends on the UI the user is presented with.
+
+### keyNavigationPrevious
+
+> `string` | defaults to `ArrowLeft`
+
+The navigation key that decrements `activeIndex` and moves focus to the selected
+item whose index corresponds to the new value. Also moves focus from `dropdown`
+to item with the last index. For a `RTL` scenario, a common overriden value
+could be `ArrowRight`. In some scenarios it can be `ArrowUp`. It mostly depends
+on the UI the user is presented with.
+
 ### initialItems
 
 > `any[]` | defaults to `[]`
@@ -386,9 +407,9 @@ The list of all possible values this `type` property can take is defined in
 - `useMultipleSelection.stateChangeTypes.ItemClick`
 - `useMultipleSelection.stateChangeTypes.ItemKeyDownDelete`
 - `useMultipleSelection.stateChangeTypes.ItemKeyDownBackspace`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownArrowRight`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownArrowLeft`
-- `useMultipleSelection.stateChangeTypes.DropdownKeyDownArrowLeft`
+- `useMultipleSelection.stateChangeTypes.ItemKeyDownNavigationNext`
+- `useMultipleSelection.stateChangeTypes.ItemKeyDownNavigationPrevious`
+- `useMultipleSelection.stateChangeTypes.DropdownKeyDownNavigationPrevious`
 - `useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace`
 - `useMultipleSelection.stateChangeTypes.DropdownClick`
 - `useMultipleSelection.stateChangeTypes.FunctionAddItem`
@@ -635,7 +656,9 @@ described below.
 
 - `ArrowLeft`: Moves focus from `button`/`input` to the last selected item and
   makes `activeIndex` to be `items.length - 1`. Performs this action if there
-  are any items selected.
+  are any items selected. `ArrowLeft` can be overriden with any other key
+  depeding on the requirements. More info on
+  [`keyNavigationPrevious`](#keynavigationprevious).
 - `Backspace`: Removes the last selected item from selection. It always performs
   this action on a non-input element. If the `dropdown` is a `combobox` the text
   cursor of the `input` must be at the start of the `input` and not highlight
@@ -653,9 +676,13 @@ described below.
   `activeIndex` becomes `-1`.
 - `Backspace`: Same effect as `Delete`.
 - `ArrowLeft`: Moves `activeIndex` and focus to previous item. It stops at the
-  first item in the selection.
+  first item in the selection. `ArrowLeft` can be overriden with any other key
+  depeding on the requirements. More info on
+  [`keyNavigationPrevious`](#keynavigationprevious).
 - `ArrowRight`: Moves `activeIndex` and focus to next item. It will move focus
-  to the `dropdown` if it occurs on the last selected item.
+  to the `dropdown` if it occurs on the last selected item. `ArrowRight` can be
+  overriden with any other key depeding on the requirements. More info on
+  [`keyNavigationNext`](#keynavigationnext).
 
 ### Customizing Handlers
 

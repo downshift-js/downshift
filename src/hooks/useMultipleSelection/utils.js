@@ -104,6 +104,8 @@ export const propTypes = {
   defaultActiveIndex: PropTypes.number,
   onActiveIndexChange: PropTypes.func,
   onItemsChange: PropTypes.func,
+  keyNavigationNext: PropTypes.string,
+  keyNavigationPrevious: PropTypes.string,
   environment: PropTypes.shape({
     addEventListener: PropTypes.func,
     removeEventListener: PropTypes.func,
@@ -120,4 +122,6 @@ export const defaultProps = {
   stateReducer: defaultPropsCommon.stateReducer,
   environment: defaultPropsCommon.environment,
   getA11yRemovalMessage,
+  keyNavigationNext: 'ArrowRight',
+  keyNavigationPrevious: 'ArrowLeft',
 }

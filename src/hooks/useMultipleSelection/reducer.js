@@ -14,13 +14,13 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       }
 
       break
-    case stateChangeTypes.ItemKeyDownArrowLeft:
+    case stateChangeTypes.ItemKeyDownNavigationPrevious:
       changes = {
         activeIndex: activeIndex - 1 < 0 ? 0 : activeIndex - 1,
       }
 
       break
-    case stateChangeTypes.ItemKeyDownArrowRight:
+    case stateChangeTypes.ItemKeyDownNavigationNext:
       changes = {
         activeIndex: activeIndex + 1 >= items.length ? -1 : activeIndex + 1,
       }
@@ -46,7 +46,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
 
       break
     }
-    case stateChangeTypes.DropdownKeyDownArrowLeft:
+    case stateChangeTypes.DropdownKeyDownNavigationPrevious:
       changes = {
         activeIndex: items.length - 1,
       }

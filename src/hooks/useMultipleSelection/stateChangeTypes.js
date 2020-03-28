@@ -3,15 +3,15 @@ import productionEnum from '../../productionEnum.macro'
 export const ItemClick = productionEnum('__item_click__')
 export const ItemKeyDownDelete = productionEnum('__item_keydown_delete__')
 export const ItemKeyDownBackspace = productionEnum('__item_keydown_backspace__')
-export const ItemKeyDownArrowRight = productionEnum(
-  '__item_keydown_arrow_right__',
+export const ItemKeyDownNavigationNext = productionEnum(
+  '__item_keydown_navigation_next__',
 )
-export const ItemKeyDownArrowLeft = productionEnum(
-  '__item_keydown_arrow_left__',
+export const ItemKeyDownNavigationPrevious = productionEnum(
+  '__item_keydown_navigation_previous__',
 )
 
-export const DropdownKeyDownArrowLeft = productionEnum(
-  '__dropdown_keydown_arrow_left__',
+export const DropdownKeyDownNavigationPrevious = productionEnum(
+  '__dropdown_keydown_navigation_previous__',
 )
 export const DropdownKeyDownBackspace = productionEnum(
   '__dropdown_keydown_backspace__',

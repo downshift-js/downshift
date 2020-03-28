@@ -276,7 +276,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 1,
           }),
-          type: stateChangeTypes.DropdownKeyDownArrowLeft,
+          type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
         }),
       )
 
@@ -289,7 +289,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 0,
           }),
-          type: stateChangeTypes.ItemKeyDownArrowLeft,
+          type: stateChangeTypes.ItemKeyDownNavigationPrevious,
         }),
       )
 
@@ -302,7 +302,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 1,
           }),
-          type: stateChangeTypes.ItemKeyDownArrowRight,
+          type: stateChangeTypes.ItemKeyDownNavigationNext,
         }),
       )
 
@@ -448,7 +448,7 @@ describe('props', () => {
         expect.objectContaining({
           activeIndex,
           items: [],
-          type: stateChangeTypes.DropdownKeyDownArrowLeft,
+          type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
         }),
       )
     })
@@ -559,7 +559,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 1,
-          type: stateChangeTypes.DropdownKeyDownArrowLeft,
+          type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
         }),
       )
 
@@ -569,7 +569,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 0,
-          type: stateChangeTypes.ItemKeyDownArrowLeft,
+          type: stateChangeTypes.ItemKeyDownNavigationPrevious,
         }),
       )
 
@@ -579,7 +579,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 1,
-          type: stateChangeTypes.ItemKeyDownArrowRight,
+          type: stateChangeTypes.ItemKeyDownNavigationNext,
         }),
       )
 
@@ -613,5 +613,36 @@ describe('props', () => {
         }),
       )
     })
+  })
+
+  test('overrides navigation previos and next keys correctly', () => {
+    const {
+      keyDownOnInput,
+      getSelectedItemAtIndex,
+      keyDownOnSelectedItemAtIndex,
+      input,
+    } = renderMultipleCombobox({
+      multipleSelectionProps: {
+        keyNavigationPrevious: 'ArrowUp',
+        keyNavigationNext: 'ArrowDown',
+        initialItems: [items[0], items[1]],
+      },
+    })
+
+    keyDownOnInput('ArrowUp')
+
+    expect(getSelectedItemAtIndex(1)).toHaveFocus()
+
+    keyDownOnSelectedItemAtIndex(1, 'ArrowUp')
+
+    expect(getSelectedItemAtIndex(0)).toHaveFocus()
+
+    keyDownOnSelectedItemAtIndex(0, 'ArrowDown')
+
+    expect(getSelectedItemAtIndex(1)).toHaveFocus()
+
+    keyDownOnSelectedItemAtIndex(1, 'ArrowDown')
+
+    expect(input).toHaveFocus()
   })
 })

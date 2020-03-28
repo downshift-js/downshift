@@ -18,7 +18,13 @@ function useMultipleSelection(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {getA11yRemovalMessage, itemToString, environment} = props
+  const {
+    getA11yRemovalMessage,
+    itemToString,
+    environment,
+    keyNavigationNext,
+    keyNavigationPrevious,
+  } = props
 
   // Reducer init.
   const [{activeIndex, items}, dispatch] = useEnhancedReducer(
@@ -81,14 +87,14 @@ function useMultipleSelection(userProps = {}) {
 
   // Event handler functions.
   const itemKeyDownHandlers = {
-    ArrowLeft() {
+    [keyNavigationPrevious]() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownArrowLeft,
+        type: stateChangeTypes.ItemKeyDownNavigationPrevious,
       })
     },
-    ArrowRight() {
+    [keyNavigationNext]() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownArrowRight,
+        type: stateChangeTypes.ItemKeyDownNavigationNext,
       })
     },
     Delete() {
@@ -103,10 +109,10 @@ function useMultipleSelection(userProps = {}) {
     },
   }
   const dropdownKeyDownHandlers = {
-    ArrowLeft(event) {
+    [keyNavigationPrevious](event) {
       if (isKeyDownOperationPermitted(event)) {
         dispatch({
-          type: stateChangeTypes.DropdownKeyDownArrowLeft,
+          type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
         })
       }
     },
