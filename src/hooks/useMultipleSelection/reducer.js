@@ -61,6 +61,11 @@ export default function downshiftMultipleSelectionReducer(state, action) {
         items: [...items, action.item],
       }
       break
+    case stateChangeTypes.DropdownClick:
+      changes = {
+        activeIndex: -1,
+      }
+      break
     case stateChangeTypes.FunctionRemoveItem: {
       let newActiveIndex = activeIndex
       const itemIndex = items.indexOf(item)

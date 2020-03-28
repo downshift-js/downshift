@@ -31,7 +31,6 @@ item has been removed from selection.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [itemToString](#itemtostring)
@@ -391,6 +390,7 @@ The list of all possible values this `type` property can take is defined in
 - `useMultipleSelection.stateChangeTypes.ItemKeyDownArrowLeft`
 - `useMultipleSelection.stateChangeTypes.DropdownKeyDownArrowLeft`
 - `useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace`
+- `useMultipleSelection.stateChangeTypes.DropdownClick`
 - `useMultipleSelection.stateChangeTypes.FunctionAddItem`
 - `useMultipleSelection.stateChangeTypes.FunctionRemoveItem`
 - `useMultipleSelection.stateChangeTypes.FunctionSetItems`

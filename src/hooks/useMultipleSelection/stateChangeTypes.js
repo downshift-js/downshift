@@ -16,6 +16,7 @@ export const DropdownKeyDownArrowLeft = productionEnum(
 export const DropdownKeyDownBackspace = productionEnum(
   '__dropdown_keydown_backspace__',
 )
+export const DropdownClick = productionEnum('__dropdown_click__')
 
 export const FunctionAddItem = productionEnum('__function_add_item__')
 export const FunctionRemoveItem = productionEnum('__function_remove_item__')

@@ -138,6 +138,11 @@ function useMultipleSelection(userProps = {}) {
       dropdownKeyDownHandlers[key](event)
     }
   }
+  const dropdownHandleClick = () => {
+    dispatch({
+      type: stateChangeTypes.DropdownClick,
+    })
+  }
 
   // Getter props.
   const getItemProps = ({
@@ -172,6 +177,7 @@ function useMultipleSelection(userProps = {}) {
     refKey = 'ref',
     ref,
     onKeyDown,
+    onClick,
     isOpen,
     ...rest
   } = {}) => {
@@ -187,6 +193,7 @@ function useMultipleSelection(userProps = {}) {
       }),
       ...(!isOpen && {
         onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+        onClick: callAllEventHandlers(onClick, dropdownHandleClick),
       }),
       ...rest,
     }

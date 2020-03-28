@@ -241,8 +241,9 @@ describe('props', () => {
       const {
         keyDownOnSelectedItemAtIndex,
         clickOnSelectedItemAtIndex,
-        keyDownOnDropdown,
+        keyDownOnInput,
         input,
+        clickOnInput,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
           initialItems: [items[0], items[1], items[2]],
@@ -251,7 +252,7 @@ describe('props', () => {
       })
 
       input.focus()
-      keyDownOnDropdown('Backspace')
+      keyDownOnInput('Backspace')
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -266,7 +267,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnDropdown('ArrowLeft')
+      keyDownOnInput('ArrowLeft')
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -305,11 +306,24 @@ describe('props', () => {
         }),
       )
 
-      clickOnSelectedItemAtIndex(0)
+      clickOnInput()
 
       expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({activeIndex: 1}),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            activeIndex: -1,
+          }),
+          type: stateChangeTypes.DropdownClick,
+        }),
+      )
+
+      clickOnSelectedItemAtIndex(0)
+
+      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({activeIndex: -1}),
         expect.objectContaining({
           changes: expect.objectContaining({
             activeIndex: 0,
@@ -320,7 +334,7 @@ describe('props', () => {
 
       keyDownOnSelectedItemAtIndex(0, 'Delete')
 
-      expect(stateReducer).toHaveBeenCalledTimes(6)
+      expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
           items: expect.arrayContaining([items[0], items[1]]),
@@ -335,7 +349,7 @@ describe('props', () => {
 
       keyDownOnSelectedItemAtIndex(0, 'Backspace')
 
-      expect(stateReducer).toHaveBeenCalledTimes(7)
+      expect(stateReducer).toHaveBeenCalledTimes(8)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
           items: expect.arrayContaining([items[1]]),
@@ -405,7 +419,7 @@ describe('props', () => {
       const onItemsChange = jest.fn()
       const onActiveIndexChange = jest.fn()
       const onStateChange = jest.fn()
-      const {keyDownOnDropdown} = renderMultipleCombobox({
+      const {keyDownOnInput} = renderMultipleCombobox({
         multipleSelectionProps: {
           stateReducer,
           onStateChange,
@@ -415,7 +429,7 @@ describe('props', () => {
         },
       })
 
-      keyDownOnDropdown('ArrowLeft')
+      keyDownOnInput('ArrowLeft')
 
       expect(onActiveIndexChange).toHaveBeenCalledTimes(1)
       expect(onActiveIndexChange).toHaveBeenCalledWith(
@@ -519,7 +533,7 @@ describe('props', () => {
       const {
         keyDownOnSelectedItemAtIndex,
         clickOnSelectedItemAtIndex,
-        keyDownOnDropdown,
+        keyDownOnInput,
         input,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
@@ -529,7 +543,7 @@ describe('props', () => {
       })
 
       input.focus()
-      keyDownOnDropdown('Backspace')
+      keyDownOnInput('Backspace')
 
       expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -539,7 +553,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnDropdown('ArrowLeft')
+      keyDownOnInput('ArrowLeft')
 
       expect(onStateChange).toHaveBeenCalledTimes(2)
       expect(onStateChange).toHaveBeenLastCalledWith(

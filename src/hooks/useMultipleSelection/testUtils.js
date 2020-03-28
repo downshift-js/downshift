@@ -100,12 +100,15 @@ export const renderMultipleCombobox = props => {
   const focusInput = () => {
     input.focus()
   }
-  const keyDownOnDropdown = (key, options = {}) => {
+  const keyDownOnInput = (key, options = {}) => {
     if (document.activeElement !== input) {
       focusInput()
     }
 
     fireEvent.keyDown(input, {key, ...options})
+  }
+  const clickOnInput = () => {
+    fireEvent.click(input)
   }
 
   return {
@@ -119,8 +122,9 @@ export const renderMultipleCombobox = props => {
     getSelectedItems,
     getA11yStatusContainer,
     input,
-    keyDownOnDropdown,
+    keyDownOnInput,
     focusInput,
+    clickOnInput,
   }
 }
 
