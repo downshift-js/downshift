@@ -95,6 +95,7 @@ function getA11yRemovalMessage(selectionParameters) {
 export const propTypes = {
   items: PropTypes.array,
   initialItems: PropTypes.array,
+  defaultItems: PropTypes.array,
   itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
   stateReducer: PropTypes.func,

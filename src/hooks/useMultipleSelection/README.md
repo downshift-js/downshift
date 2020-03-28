@@ -40,6 +40,7 @@ item has been removed from selection.
 - [Advanced Props](#advanced-props)
   - [initialItems](#initialitems)
   - [initialActiveIndex](#initialactiveindex)
+  - [defaultItems](#defaultitems)
   - [defaultActiveIndex](#defaultactiveindex)
   - [getA11yRemovalMessage](#geta11yremovalmessage)
   - [onActiveIndexChange](#onactiveindexchange)
@@ -266,6 +267,12 @@ Pass an initial array of items that are considered to be selected.
 
 Pass a number that sets the index of the focused / active selected item when
 downshift is initialized.
+
+### defaultItems
+
+> `any[]` | defaults to `[]`
+
+Pass an array of items that are going to be used when downshift is reset.
 
 ### defaultActiveIndex
 
