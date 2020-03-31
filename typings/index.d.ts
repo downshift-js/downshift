@@ -287,6 +287,7 @@ export interface UseSelectProps<Item> {
   menuId?: string
   toggleButtonId?: string
   getItemId?: (index: number) => string
+  scrollIntoView?: (node: HTMLElement, menuNode: HTMLElement) => void
   stateReducer?: (
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
@@ -423,6 +424,7 @@ export interface UseComboboxProps<Item> {
   toggleButtonId?: string
   inputId?: string
   getItemId?: (index: number) => string
+  scrollIntoView?: (node: HTMLElement, menuNode: HTMLElement) => void
   stateReducer?: (
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
