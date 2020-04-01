@@ -35,20 +35,20 @@ such as when an item has been removed from selection.
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [itemToString](#itemtostring)
-  - [onItemsChange](#onitemschange)
+  - [onSelectedItemsChange](#onselecteditemschange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
   - [keyNavigationNext](#keynavigationnext)
   - [keyNavigationPrevious](#keynavigationprevious)
-  - [initialItems](#initialitems)
+  - [initialSelectedItems](#initialselecteditems)
   - [initialActiveIndex](#initialactiveindex)
-  - [defaultItems](#defaultitems)
+  - [defaultSelectedItems](#defaultselecteditems)
   - [defaultActiveIndex](#defaultactiveindex)
   - [getA11yRemovalMessage](#geta11yremovalmessage)
   - [onActiveIndexChange](#onactiveindexchange)
   - [onStateChange](#onstatechange)
   - [activeIndex](#activeindex)
-  - [items](#items)
+  - [selectedItems](#selecteditems)
   - [environment](#environment)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
@@ -83,12 +83,12 @@ import {
 const DropdownMultipleCombobox = () => {
   const [inputValue, setInputValue] = useState('')
   const {
-    getItemProps: getSelectedItemProps,
+    getSelectedItemProps,
     getDropdownProps,
-    addItem,
-    removeItem,
-    items: selectedItems,
-  } = useMultipleSelection({initialItems: [items[0], items[1]]})
+    addSelectedItem,
+    removeSelectedItem,
+    selectedItems,
+  } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
   const getFilteredItems = items =>
     items.filter(
       item =>
@@ -119,7 +119,7 @@ const DropdownMultipleCombobox = () => {
         case useCombobox.stateChangeTypes.InputBlur:
           if (selectedItem) {
             setInputValue('')
-            addItem(selectedItem)
+            addSelectedItem(selectedItem)
             selectItem(null)
           }
 
@@ -138,12 +138,12 @@ const DropdownMultipleCombobox = () => {
           <span
             style={selectedItemStyles}
             key={`selected-item-${index}`}
-            {...getSelectedItemProps({item: selectedItem, index})}
+            {...getSelectedItemProps({selectedItem, index})}
           >
             {selectedItem}
             <span
               style={selectedItemIconStyles}
-              onClick={() => removeItem(selectedItem)}
+              onClick={() => removeSelectedItem(selectedItem)}
             >
               &#10005;
             </span>
@@ -189,21 +189,21 @@ This is the list of props that you should probably know about. There are some
 Used to determine the string value for the selected item. It is used to compute
 the accessibility message that occurs after removing the item.
 
-### onItemsChange
+### onSelectedItemsChange
 
 > `function(changes: object)` | optional, no useful default
 
 Called each time the selected items array changes. Especially useful when items
 are removed, as there are many ways to do that: `Backspace` from dropdown,
-`Backspace` or `Delete` while focus is the item, executing `removeItem` when
-clicking an associated `X` icon for the item.
+`Backspace` or `Delete` while focus is the item, executing `removeSelectedItem`
+when clicking an associated `X` icon for the item.
 
 - `changes`: These are the properties that actually have changed since the last
-  state change. This object is guaranteed to contain the `items` property with
-  the new array value. This also has a `type` property which you can learn more
-  about in the [`stateChangeTypes`](#statechangetypes) section. This property
-  will be part of the actions that can trigger an `items` change, for example
-  `useSelect.stateChangeTypes.DropdownKeyDownBackspace`.
+  state change. This object is guaranteed to contain the `selectedItems`
+  property with the new array value. This also has a `type` property which you
+  can learn more about in the [`stateChangeTypes`](#statechangetypes) section.
+  This property will be part of the actions that can trigger an `selectedItems`
+  change, for example `useSelect.stateChangeTypes.DropdownKeyDownBackspace`.
 
 ### stateReducer
 
@@ -228,8 +228,8 @@ want to set.
 import {useMultipleSelection} from 'downshift'
 import {items} from './utils'
 
-const {getDropdownProps, getItemProps, ...rest} = useMultipleSelection({
-  initialItems: [items[0], items[1]],
+const {getDropdownProps, getSelectedItemProps, ...rest} = useMultipleSelection({
+  initialSelectedItems: [items[0], items[1]],
   stateReducer,
 })
 
@@ -237,8 +237,9 @@ function stateReducer(state, actionAndChanges) {
   // this adds focus to the dropdown when item is removed by keyboard action.
   if (
     action.type ===
-      useMultipleSelection.stateChangeTypes.ItemKeyDownBackspace ||
-    action.type === useMultipleSelection.stateChangeTypes.ItemKeyDownDelete
+      useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace ||
+    action.type ===
+      useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete
   ) {
     action.changes.activeIndex = -1
   }
@@ -276,7 +277,7 @@ to item with the last index. For a `RTL` scenario, a common overriden value
 could be `ArrowRight`. In some scenarios it can be `ArrowUp`. It mostly depends
 on the UI the user is presented with.
 
-### initialItems
+### initialSelectedItems
 
 > `any[]` | defaults to `[]`
 
@@ -289,7 +290,7 @@ Pass an initial array of items that are considered to be selected.
 Pass a number that sets the index of the focused / active selected item when
 downshift is initialized.
 
-### defaultItems
+### defaultSelectedItems
 
 > `any[]` | defaults to `[]`
 
@@ -311,22 +312,22 @@ This function is similar to the `getA11yStatusMessage` and
 generating a message when an item is removed.
 
 A default `getA11yRemovalMessage` function is provided. It is called when an
-item is removed and the size of `items` decreases. When an item is removed, the
-message is a removal related one, narrating "`itemToString(removedItem)` has
-been removed".
+item is removed and the size of `selectedItems` decreases. When an item is
+removed, the message is a removal related one, narrating
+"`itemToString(removedItem)` has been removed".
 
 The object you are passed to generate your status message for
 `getA11yRemovalMessage` has the following properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property       | type            | description                                                                                  |
-| -------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `resultCount`  | `number`        | The count of items in the list.                                                              |
-| `itemToString` | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `removedItem`  | `any`           | The value of the currently removed item                                                      |
-| `activeItem`   | `any`           | The value of the currently active item                                                       |
-| `activeIndex`  | `number`        | The index of the currently active item.                                                      |
+| property              | type            | description                                                                                  |
+| --------------------- | --------------- | -------------------------------------------------------------------------------------------- |
+| `resultCount`         | `number`        | The count of selected items in the list.                                                     |
+| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
+| `removedSelectedItem` | `any`           | The value of the currently removed item                                                      |
+| `activeSelectedItem`  | `any`           | The value of the currently active item                                                       |
+| `activeIndex`         | `number`        | The index of the currently active item.                                                      |
 
 ### onActiveIndexChange
 
@@ -350,8 +351,8 @@ the items and the dropdown.
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
-all of the state (e.g. items and activeIndex) and then pass it as props, rather
-than letting downshift control all its state itself.
+all of the state (e.g. selectedItems and activeIndex) and then pass it as props,
+rather than letting downshift control all its state itself.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This also has a `type` property which you can learn more about
@@ -375,7 +376,7 @@ than letting downshift control all its state itself.
 
 The index of the item that should be active and focused.
 
-### items
+### selectedItems
 
 > `any[]` | **control prop** (read more about this in
 > [the Control Props section](#control-props))
@@ -405,17 +406,17 @@ object you get. This `type` corresponds to a `stateChangeTypes` property.
 The list of all possible values this `type` property can take is defined in
 [this file][state-change-file] and is as follows:
 
-- `useMultipleSelection.stateChangeTypes.ItemClick`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownDelete`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownBackspace`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownNavigationNext`
-- `useMultipleSelection.stateChangeTypes.ItemKeyDownNavigationPrevious`
+- `useMultipleSelection.stateChangeTypes.SelectedItemClick`
+- `useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete`
+- `useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace`
+- `useMultipleSelection.stateChangeTypes.SelectedItemKeyDownNavigationNext`
+- `useMultipleSelection.stateChangeTypes.SelectedItemKeyDownNavigationPrevious`
 - `useMultipleSelection.stateChangeTypes.DropdownKeyDownNavigationPrevious`
 - `useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace`
 - `useMultipleSelection.stateChangeTypes.DropdownClick`
-- `useMultipleSelection.stateChangeTypes.FunctionAddItem`
-- `useMultipleSelection.stateChangeTypes.FunctionRemoveItem`
-- `useMultipleSelection.stateChangeTypes.FunctionSetItems`
+- `useMultipleSelection.stateChangeTypes.FunctionAddSelectedItem`
+- `useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem`
+- `useMultipleSelection.stateChangeTypes.FunctionSetSelectedItems`
 - `useMultipleSelection.stateChangeTypes.FunctionSetActiveIndex`
 - `useMultipleSelection.stateChangeTypes.FunctionReset`
 
@@ -424,11 +425,11 @@ See [`stateReducer`](#statereducer) for a concrete example on how to use the
 
 ## Control Props
 
-Downshift manages its own state internally and calls your `onItemsChange`,
-`onActiveIndexChange` and `onStateChange` handlers with any relevant changes.
-The state that downshift manages includes: `items` and `activeIndex`. Returned
-action function (read more below) can be used to manipulate this state and can
-likely support many of your use cases.
+Downshift manages its own state internally and calls your
+`onSelectedItemsChange`, `onActiveIndexChange` and `onStateChange` handlers with
+any relevant changes. The state that downshift manages includes: `selectedItems`
+and `activeIndex`. Returned action function (read more below) can be used to
+manipulate this state and can likely support many of your use cases.
 
 However, if more control is needed, you can pass any of these pieces of state as
 a prop (as indicated above) and that state becomes controlled. As soon as
@@ -453,12 +454,12 @@ import {items} from './utils'
 
 const {
   getDropdownProps,
-  getItemProps,
-  items: selectedItems,
+  getSelectedItemProps,
+  selectedItems,
   reset,
   ...rest
 } = useMultipleSelection({
-  initialItems: [items[0], [items[1]]],
+  initialSelectedItems: [items[0], [items[1]]],
   ...otherProps,
 })
 
@@ -468,7 +469,7 @@ return (
     {selectedItems.map((selectedItem, index) => (
       <span
         key={`selected-item-${index}`}
-        {...getItemProps({item: selectedItem, index})}
+        {...getSelectedItemProps({item: selectedItem, index})}
       >
         {selectedItem}
       </span>
@@ -490,7 +491,7 @@ return (
 )
 ```
 
-> NOTE: In this example we used both the getter props `getItemProps` and
+> NOTE: In this example we used both the getter props `getSelectedItemProps` and
 > `getDropdownProps` and an action prop `reset`. The properties of
 > `useMultipleSelection` can be split into three categories as indicated below:
 
@@ -519,12 +520,12 @@ Similar story with `combobox` but with `getInputProps` instead of
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property           | type           | description                                                                                      |
-| ------------------ | -------------- | ------------------------------------------------------------------------------------------------ |
-| `getDropdownProps` | `function({})` | returns the props you should apply to either your input or toggle button, depending on the case. |
-| `getItemProps`     | `function({})` | returns the props you should apply to any selected item elements you render.                     |
+| property               | type           | description                                                                                      |
+| ---------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
+| `getDropdownProps`     | `function({})` | returns the props you should apply to either your input or toggle button, depending on the case. |
+| `getSelectedItemProps` | `function({})` | returns the props you should apply to any selected item elements you render.                     |
 
-#### `getItemProps`
+#### `getSelectedItemProps`
 
 The props returned from calling this function should be applied to any selected
 items you render. It allows changing the activeIndex by using arrow keys or by
@@ -543,8 +544,8 @@ actually be applying the props to an item.
 Basically just don't do this:
 
 ```javascript
-items.map((item, index) => {
-  const props = getItemProps({item, index}) // we're calling it here
+selectedItems.map((selectedItem, index) => {
+  const props = getSelectedItemProps({selectedItem, index}) // we're calling it here
   if (!shouldRenderItem(item)) {
     return null // but we're not using props, and downshift thinks we are...
   }
@@ -555,33 +556,36 @@ items.map((item, index) => {
 Instead, you could do this:
 
 ```jsx
-items.filter(shouldRenderItem).map(item => <div {...getItemProps({item})} />)
+selectedItems
+  .filter(shouldRenderItem)
+  .map(selectedItem => <div {...getSelectedItemProps({selectedItem})} />)
 ```
 
 </details>
 
 Required properties:
 
-It is required to pass either `item` or `index` to `getItemProps` in order to be
-able to apply the activeIndex logic.
+It is required to pass either `selectedItem` or `index` to
+`getSelectedItemProps` in order to be able to apply the activeIndex logic.
 
-- `item`: this is the item data that will be selected when the user selects a
-  particular item.
+- `selectedItem`: this is the item data that will be selected when the user
+  selects a particular item.
 - `index`: This is how `downshift` keeps track of your item when updating the
   `activeIndex` as the user keys around. By default, `downshift` will assume the
-  `index` is the order in which you're calling `getItemProps`. This is often
-  good enough, but if you find odd behavior, try setting this explicitly. It's
-  probably best to be explicit about `index` when using a windowing library like
-  `react-virtualized`.
+  `index` is the order in which you're calling `getSelectedItemProps`. This is
+  often good enough, but if you find odd behavior, try setting this explicitly.
+  It's probably best to be explicit about `index` when using a windowing library
+  like `react-virtualized`.
 
 Optional properties:
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
-  call this `innerRef`. So you'd call: `getItemProps({refKey: 'innerRef'})` and
-  your composite component would forward like: `<li ref={props.innerRef} />`.
-  However, if you are just rendering a primitive component like `<div>`, there
-  is no need to specify this property. It defaults to `ref`.
+  call this `innerRef`. So you'd call:
+  `getSelectedItemProps({refKey: 'innerRef'})` and your composite component
+  would forward like: `<li ref={props.innerRef} />`. However, if you are just
+  rendering a primitive component like `<div>`, there is no need to specify this
+  property. It defaults to `ref`.
 
 #### `getDropdownProps`
 
@@ -626,13 +630,13 @@ These are functions you can call to change the state of the downshift
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property         | type                      | description                                   |
-| ---------------- | ------------------------- | --------------------------------------------- |
-| `addItem`        | `function(item: any)`     | adds an item to the selected array            |
-| `removeItem`     | `function(item: any)`     | removes an item from the selected array       |
-| `reset`          | `function()`              | resets the items and active index to defaults |
-| `setActiveIndex` | `function(index: number)` | sets activeIndex to the new value             |
-| `setItems`       | `function(items: any[])`  | sets items to the new value                   |
+| property             | type                      | description                                           |
+| -------------------- | ------------------------- | ----------------------------------------------------- |
+| `addSelectedItem`    | `function(item: any)`     | adds an item to the selected array                    |
+| `removeSelectedItem` | `function(item: any)`     | removes an item from the selected array               |
+| `reset`              | `function()`              | resets the selectedItems and active index to defaults |
+| `setActiveIndex`     | `function(index: number)` | sets activeIndex to the new value                     |
+| `setSelectedItems`   | `function(items: any[])`  | sets selectedItems to the new value                   |
 
 ### state
 
@@ -640,10 +644,10 @@ These are values that represent the current state of the downshift component.
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property      | type     | description                           |
-| ------------- | -------- | ------------------------------------- |
-| `activeIndex` | `number` | the index of thecurrently active item |
-| `items`       | `any[]`  | the items of the selection            |
+| property        | type     | description                           |
+| --------------- | -------- | ------------------------------------- |
+| `activeIndex`   | `number` | the index of thecurrently active item |
+| `selectedItems` | `any[]`  | the items of the selection            |
 
 ## Event Handlers
 
@@ -656,8 +660,8 @@ described below.
 #### Dropdown - button or input
 
 - `ArrowLeft`: Moves focus from `button`/`input` to the last selected item and
-  makes `activeIndex` to be `items.length - 1`. Performs this action if there
-  are any items selected. `ArrowLeft` can be overriden with any other key
+  makes `activeIndex` to be `selectedItems.length - 1`. Performs this action if
+  there are any items selected. `ArrowLeft` can be overriden with any other key
   depeding on the requirements. More info on
   [`keyNavigationPrevious`](#keynavigationprevious).
 - `Backspace`: Removes the last selected item from selection. It always performs

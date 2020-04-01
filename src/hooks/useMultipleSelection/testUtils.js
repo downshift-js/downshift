@@ -27,9 +27,9 @@ const DropdownMultipleCombobox = ({
   comboboxProps = {},
 }) => {
   const {
-    getItemProps: getSelectedItemProps,
+    getSelectedItemProps,
     getDropdownProps,
-    items: selectedItems,
+    selectedItems,
   } = useMultipleSelection(multipleSelectionProps)
   const {
     isOpen,
@@ -54,7 +54,7 @@ const DropdownMultipleCombobox = ({
           <span
             key={`selected-item-${index}`}
             data-testid={dataTestIds.selectedItem(index)}
-            {...getSelectedItemProps({item: selectedItem, index})}
+            {...getSelectedItemProps({selectedItem, index})}
           >
             {itemToString(selectedItem)}
           </span>

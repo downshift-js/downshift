@@ -46,10 +46,10 @@ state variables. The `getDropdownProps` is called with a `isOpen` parameter, as
 by convention a user should not be able to navigate between selected items if
 the dropdown is still open. The getter props are used as follows:
 
-| Returned prop      | Element                 | Comments                                                                        |
-| ------------------ | ----------------------- | ------------------------------------------------------------------------------- |
-| `getDropdownProps` | `<input>` or `<button>` | Depends on what widget you have, if a select or combobox. Called with `isOpen`. |
-| `getItemProps`     | `<span>`                | Called with `index` and `item`, adds tabindex and event listeners.              |
+| Returned prop          | Element                 | Comments                                                                        |
+| ---------------------- | ----------------------- | ------------------------------------------------------------------------------- |
+| `getDropdownProps`     | `<input>` or `<button>` | Depends on what widget you have, if a select or combobox. Called with `isOpen`. |
+| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.      |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -61,8 +61,8 @@ A `combobx` with multiple selection can be created in a similar way to a default
 equivalent, with the addition of selected items. The styling is completely up to
 the developer, as these elements can be `<span>` or `<div>` or anything else,
 with a `inline-block` or `flex` display. In the example below, each item has an
-`X` icon attached to it, with a `removeItem` callback in the `onClick` handler.
-Items are added using `addItem` callback insite the `onStateChange` handler of
+`X` icon attached to it, with a `removeSelectedItem` callback in the `onClick` handler.
+Items are added using `addSelectedItem` callback insite the `onStateChange` handler of
 `useCombobox`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
@@ -72,12 +72,12 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
     const DropdownMultipleCombobox = () => {
       const [inputValue, setInputValue] = useState('')
       const {
-        getItemProps: getSelectedItemProps,
+        getSelectedItemProps,
         getDropdownProps,
-        addItem,
-        removeItem,
-        items: selectedItems,
-      } = useMultipleSelection({initialItems: [items[0], items[1]]})
+        addSelectedItem,
+        removeSelectedItem,
+        selectedItems,
+      } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
       const getFilteredItems = items =>
         items.filter(
           item =>
@@ -108,7 +108,7 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
             case useCombobox.stateChangeTypes.InputBlur:
               if (selectedItem) {
                 setInputValue('')
-                addItem(selectedItem)
+                addSelectedItem(selectedItem)
                 selectItem(null)
               }
 
@@ -127,12 +127,12 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
               <span
                 style={selectedItemStyles}
                 key={`selected-item-${index}`}
-                {...getSelectedItemProps({item: selectedItem, index})}
+                {...getSelectedItemProps({selectedItem, index})}
               >
                 {selectedItem}
                 <span
                   style={selectedItemIconStyles}
-                  onClick={() => removeItem(selectedItem)}
+                  onClick={() => removeSelectedItem(selectedItem)}
                 >
                   &#10005;
                 </span>
@@ -175,8 +175,8 @@ A `select` with multiple selection can be created in a similar way to a default
 equivalent, with the addition of selected items. The styling is completely up to
 the developer, as these elements can be `<span>` or `<div>` or anything else,
 with a `inline-block` or `flex` display. In the example below, each item has an
-`X` icon attached to it, with a `removeItem` callback in the `onClick` handler.
-Items are added using `addItem` callback insite the `onStateChange` handler of
+`X` icon attached to it, with a `removeSelectedItem` callback in the `onClick` handler.
+Items are added using `addSelectedItem` callback insite the `onStateChange` handler of
 `useSelect`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
@@ -185,12 +185,12 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
   {() => {
     const DropdownMultipleSelect = () => {
       const {
-        getItemProps: getSelectedItemProps,
+        getSelectedItemProps,
         getDropdownProps,
-        addItem,
-        removeItem,
-        items: selectedItems,
-      } = useMultipleSelection({initialItems: [items[0], items[1]]})
+        addSelectedItem,
+        removeSelectedItem,
+        selectedItems,
+      } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
       const getFilteredItems = items =>
         items.filter(item => selectedItems.indexOf(item) < 0)
       const {
@@ -211,7 +211,7 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
             case useSelect.stateChangeTypes.ItemClick:
             case useSelect.stateChangeTypes.MenuBlur:
               if (selectedItem) {
-                addItem(selectedItem)
+                addSelectedItem(selectedItem)
                 selectItem(null)
               }
 
@@ -228,12 +228,12 @@ Items are added using `addItem` callback insite the `onStateChange` handler of
             <span
               style={selectedItemStyles}
               key={`selected-item-${index}`}
-              {...getSelectedItemProps({item: selectedItem, index})}
+              {...getSelectedItemProps({selectedItem, index})}
             >
               {selectedItem}
               <span
                 style={selectedItemIconStyles}
-                onClick={() => removeItem(selectedItem)}
+                onClick={() => removeSelectedItem(selectedItem)}
               >
                 &#10005;
               </span>

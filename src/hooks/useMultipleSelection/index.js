@@ -27,7 +27,7 @@ function useMultipleSelection(userProps = {}) {
   } = props
 
   // Reducer init.
-  const [{activeIndex, items}, dispatch] = useEnhancedReducer(
+  const [{activeIndex, selectedItems}, dispatch] = useEnhancedReducer(
     downshiftMultipleSelectionReducer,
     getInitialState(props),
     props,
@@ -36,9 +36,9 @@ function useMultipleSelection(userProps = {}) {
   // Refs.
   const isInitialMount = useRef(true)
   const dropdownRef = useRef(null)
-  const previosItemsRef = useRef(items)
-  const itemRefs = useRef()
-  itemRefs.current = []
+  const previousSelectedItemsRef = useRef(selectedItems)
+  const selectedItemRefs = useRef()
+  selectedItemRefs.current = []
 
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
@@ -47,27 +47,27 @@ function useMultipleSelection(userProps = {}) {
       return
     }
 
-    if (items.length < previosItemsRef.current.length) {
-      const removedItem = previosItemsRef.current.find(
-        item => items.indexOf(item) < 0,
+    if (selectedItems.length < previousSelectedItemsRef.current.length) {
+      const removedSelectedItem = previousSelectedItemsRef.current.find(
+        item => selectedItems.indexOf(item) < 0,
       )
 
       setStatus(
         getA11yRemovalMessage({
           itemToString,
-          resultCount: items.length,
-          removedItem,
+          resultCount: selectedItems.length,
+          removedSelectedItem,
           activeIndex,
-          activeItem: items[activeIndex],
+          activeSelectedItem: selectedItems[activeIndex],
         }),
         environment.document,
       )
     }
 
-    previosItemsRef.current = items
+    previousSelectedItemsRef.current = selectedItems
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items.length])
+  }, [selectedItems.length])
   // Sets focus on active item.
   useEffect(() => {
     if (isInitialMount.current) {
@@ -76,8 +76,8 @@ function useMultipleSelection(userProps = {}) {
 
     if (activeIndex === -1 && dropdownRef.current) {
       dropdownRef.current.focus()
-    } else if (itemRefs.current[activeIndex]) {
-      itemRefs.current[activeIndex].focus()
+    } else if (selectedItemRefs.current[activeIndex]) {
+      selectedItemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
   // Make initial ref false.
@@ -86,25 +86,25 @@ function useMultipleSelection(userProps = {}) {
   }, [])
 
   // Event handler functions.
-  const itemKeyDownHandlers = {
+  const selectedItemKeyDownHandlers = {
     [keyNavigationPrevious]() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownNavigationPrevious,
+        type: stateChangeTypes.SelectedItemKeyDownNavigationPrevious,
       })
     },
     [keyNavigationNext]() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownNavigationNext,
+        type: stateChangeTypes.SelectedItemKeyDownNavigationNext,
       })
     },
     Delete() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownDelete,
+        type: stateChangeTypes.SelectedItemKeyDownDelete,
       })
     },
     Backspace() {
       dispatch({
-        type: stateChangeTypes.ItemKeyDownBackspace,
+        type: stateChangeTypes.SelectedItemKeyDownBackspace,
       })
     },
   }
@@ -126,16 +126,16 @@ function useMultipleSelection(userProps = {}) {
   }
 
   // Event handlers.
-  const itemHandleClick = index => {
+  const selectedItemHandleClick = index => {
     dispatch({
-      type: stateChangeTypes.ItemClick,
+      type: stateChangeTypes.SelectedItemClick,
       index,
     })
   }
-  const itemHandleKeyDown = event => {
+  const selectedItemHandleKeyDown = event => {
     const key = normalizeArrowKey(event)
-    if (key && itemKeyDownHandlers[key]) {
-      itemKeyDownHandlers[key](event)
+    if (key && selectedItemKeyDownHandlers[key]) {
+      selectedItemKeyDownHandlers[key](event)
     }
   }
   const dropdownHandleKeyDown = event => {
@@ -151,31 +151,33 @@ function useMultipleSelection(userProps = {}) {
   }
 
   // Getter props.
-  const getItemProps = ({
+  const getSelectedItemProps = ({
     refKey = 'ref',
     ref,
     onClick,
     onKeyDown,
-    item,
+    selectedItem,
     index,
     ...rest
   } = {}) => {
-    const itemIndex = getItemIndex(index, item, items)
+    const itemIndex = getItemIndex(index, selectedItem, selectedItems)
     if (itemIndex < 0) {
-      throw new Error('Pass either item or item index in getItemProps!')
+      throw new Error(
+        'Pass either selectedItem or index in getSelectedItemProps!',
+      )
     }
 
     return {
-      [refKey]: handleRefs(ref, itemNode => {
-        if (itemNode) {
-          itemRefs.current.push(itemNode)
+      [refKey]: handleRefs(ref, selectedItemNode => {
+        if (selectedItemNode) {
+          selectedItemRefs.current.push(selectedItemNode)
         }
       }),
       tabIndex: index === activeIndex ? 0 : -1,
       onClick: callAllEventHandlers(onClick, () => {
-        itemHandleClick(index)
+        selectedItemHandleClick(index)
       }),
-      onKeyDown: callAllEventHandlers(onKeyDown, itemHandleKeyDown),
+      onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
       ...rest,
     }
   }
@@ -206,22 +208,22 @@ function useMultipleSelection(userProps = {}) {
   }
 
   // returns
-  const addItem = item => {
+  const addSelectedItem = selectedItem => {
     dispatch({
-      type: stateChangeTypes.FunctionAddItem,
-      item,
+      type: stateChangeTypes.FunctionAddSelectedItem,
+      selectedItem,
     })
   }
-  const removeItem = item => {
+  const removeSelectedItem = selectedItem => {
     dispatch({
-      type: stateChangeTypes.FunctionRemoveItem,
-      item,
+      type: stateChangeTypes.FunctionRemoveSelectedItem,
+      selectedItem,
     })
   }
-  const setItems = newItems => {
+  const setSelectedItems = newSelectedItems => {
     dispatch({
-      type: stateChangeTypes.FunctionSetItems,
-      items: newItems,
+      type: stateChangeTypes.FunctionSetSelectedItems,
+      selectedItems: newSelectedItems,
     })
   }
   const setActiveIndex = newActiveIndex => {
@@ -237,14 +239,14 @@ function useMultipleSelection(userProps = {}) {
   }
 
   return {
-    getItemProps,
+    getSelectedItemProps,
     getDropdownProps,
-    addItem,
-    removeItem,
-    setItems,
+    addSelectedItem,
+    removeSelectedItem,
+    setSelectedItems,
     setActiveIndex,
     reset,
-    items,
+    selectedItems,
     activeIndex,
   }
 }

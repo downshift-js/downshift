@@ -7,7 +7,7 @@ import {
 
 const defaultStateValues = {
   activeIndex: -1,
-  items: [],
+  selectedItems: [],
 }
 
 /**
@@ -44,11 +44,11 @@ export function getDefaultValue(props, propKey) {
  */
 export function getInitialState(props) {
   const activeIndex = getInitialValue(props, 'activeIndex')
-  const items = getInitialValue(props, 'items')
+  const selectedItems = getInitialValue(props, 'selectedItems')
 
   return {
     activeIndex,
-    items,
+    selectedItems,
   }
 }
 
@@ -87,15 +87,18 @@ export function isKeyDownOperationPermitted(event) {
  * @returns {string} The a11y message.
  */
 function getA11yRemovalMessage(selectionParameters) {
-  const {removedItem, itemToString: itemToStringLocal} = selectionParameters
+  const {
+    removedSelectedItem,
+    itemToString: itemToStringLocal,
+  } = selectionParameters
 
-  return `${itemToStringLocal(removedItem)} has been removed.`
+  return `${itemToStringLocal(removedSelectedItem)} has been removed.`
 }
 
 export const propTypes = {
-  items: PropTypes.array,
-  initialItems: PropTypes.array,
-  defaultItems: PropTypes.array,
+  selectedItems: PropTypes.array,
+  initialSelectedItems: PropTypes.array,
+  defaultSelectedItems: PropTypes.array,
   itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
   stateReducer: PropTypes.func,
@@ -103,7 +106,7 @@ export const propTypes = {
   initialActiveIndex: PropTypes.number,
   defaultActiveIndex: PropTypes.number,
   onActiveIndexChange: PropTypes.func,
-  onItemsChange: PropTypes.func,
+  onSelectedItemsChange: PropTypes.func,
   keyNavigationNext: PropTypes.string,
   keyNavigationPrevious: PropTypes.string,
   environment: PropTypes.shape({

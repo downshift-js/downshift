@@ -15,7 +15,7 @@ describe('props', () => {
     global.console.error.mockRestore()
   })
 
-  describe('items', () => {
+  describe('selectedItems', () => {
     afterEach(() => {
       act(() => jest.runAllTimers())
     })
@@ -26,7 +26,7 @@ describe('props', () => {
         getA11yStatusContainer,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [{str: 'aaa'}, {str: 'bbb'}],
+          initialSelectedItems: [{str: 'aaa'}, {str: 'bbb'}],
           initialActiveIndex: 0,
           itemToString: item => item.str,
         },
@@ -46,7 +46,7 @@ describe('props', () => {
         getSelectedItems,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          items: inputItems,
+          selectedItems: inputItems,
           initialActiveIndex: 0,
         },
       })
@@ -65,10 +65,10 @@ describe('props', () => {
     test('is called with object that contains specific props', () => {
       const getA11yRemovalMessage = jest.fn()
       const itemToString = item => item.str
-      const initialItems = [{str: 'aaa'}, {str: 'bbb'}]
+      const initialSelectedItems = [{str: 'aaa'}, {str: 'bbb'}]
       const {keyDownOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems,
+          initialSelectedItems,
           initialActiveIndex: 0,
           itemToString,
           getA11yRemovalMessage,
@@ -82,21 +82,21 @@ describe('props', () => {
         expect.objectContaining({
           itemToString,
           resultCount: 1,
-          removedItem: initialItems[0],
+          removedSelectedItem: initialSelectedItems[0],
           activeIndex: 0,
-          activeItem: initialItems[1],
+          activeSelectedItem: initialSelectedItems[1],
         }),
       )
     })
 
     test('is replaced with the user provided one', () => {
-      const initialItems = [items[0], items[1]]
+      const initialSelectedItems = [items[0], items[1]]
       const {
         keyDownOnSelectedItemAtIndex,
         getA11yStatusContainer,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems,
+          initialSelectedItems,
           initialActiveIndex: 0,
           getA11yRemovalMessage: () => 'custom message',
         },
@@ -117,7 +117,7 @@ describe('props', () => {
         focusSelectedItemAtIndex,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           activeIndex: 1,
         },
       })
@@ -149,53 +149,53 @@ describe('props', () => {
       const {result} = renderUseMultipleSelection({stateReducer})
 
       act(() => {
-        result.current.addItem(items[0])
+        result.current.addSelectedItem(items[0])
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([]),
+          selectedItems: expect.arrayContaining([]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([items[0]]),
+            selectedItems: expect.arrayContaining([items[0]]),
           }),
-          type: stateChangeTypes.FunctionAddItem,
+          type: stateChangeTypes.FunctionAddSelectedItem,
         }),
       )
 
       act(() => {
-        result.current.removeItem(items[0])
+        result.current.removeSelectedItem(items[0])
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[0]]),
+          selectedItems: expect.arrayContaining([items[0]]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([]),
+            selectedItems: expect.arrayContaining([]),
           }),
-          type: stateChangeTypes.FunctionRemoveItem,
+          type: stateChangeTypes.FunctionRemoveSelectedItem,
         }),
       )
 
       act(() => {
-        result.current.setItems([items[0], items[1]])
+        result.current.setSelectedItems([items[0], items[1]])
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(3)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([]),
+          selectedItems: expect.arrayContaining([]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([items[0], items[1]]),
+            selectedItems: expect.arrayContaining([items[0], items[1]]),
           }),
-          type: stateChangeTypes.FunctionSetItems,
+          type: stateChangeTypes.FunctionSetSelectedItems,
         }),
       )
 
@@ -223,12 +223,12 @@ describe('props', () => {
       expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[0], items[1]]),
+          selectedItems: expect.arrayContaining([items[0], items[1]]),
           activeIndex: 1,
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([]),
+            selectedItems: expect.arrayContaining([]),
             activeIndex: -1,
           }),
           type: stateChangeTypes.FunctionReset,
@@ -246,7 +246,7 @@ describe('props', () => {
         clickOnInput,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1], items[2]],
+          initialSelectedItems: [items[0], items[1], items[2]],
           stateReducer,
         },
       })
@@ -257,11 +257,11 @@ describe('props', () => {
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[0], items[1], items[2]]),
+          selectedItems: expect.arrayContaining([items[0], items[1], items[2]]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([items[0], items[1]]),
+            selectedItems: expect.arrayContaining([items[0], items[1]]),
           }),
           type: stateChangeTypes.DropdownKeyDownBackspace,
         }),
@@ -289,7 +289,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 0,
           }),
-          type: stateChangeTypes.ItemKeyDownNavigationPrevious,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationPrevious,
         }),
       )
 
@@ -302,7 +302,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 1,
           }),
-          type: stateChangeTypes.ItemKeyDownNavigationNext,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationNext,
         }),
       )
 
@@ -328,7 +328,7 @@ describe('props', () => {
           changes: expect.objectContaining({
             activeIndex: 0,
           }),
-          type: stateChangeTypes.ItemClick,
+          type: stateChangeTypes.SelectedItemClick,
         }),
       )
 
@@ -337,13 +337,13 @@ describe('props', () => {
       expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[0], items[1]]),
+          selectedItems: expect.arrayContaining([items[0], items[1]]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([items[1]]),
+            selectedItems: expect.arrayContaining([items[1]]),
           }),
-          type: stateChangeTypes.ItemKeyDownDelete,
+          type: stateChangeTypes.SelectedItemKeyDownDelete,
         }),
       )
 
@@ -352,13 +352,13 @@ describe('props', () => {
       expect(stateReducer).toHaveBeenCalledTimes(8)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[1]]),
+          selectedItems: expect.arrayContaining([items[1]]),
         }),
         expect.objectContaining({
           changes: expect.objectContaining({
-            items: expect.arrayContaining([]),
+            selectedItems: expect.arrayContaining([]),
           }),
-          type: stateChangeTypes.ItemKeyDownBackspace,
+          type: stateChangeTypes.SelectedItemKeyDownBackspace,
         }),
       )
     })
@@ -374,7 +374,7 @@ describe('props', () => {
         getSelectedItemAtIndex,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           stateReducer,
         },
       })
@@ -401,7 +401,7 @@ describe('props', () => {
       })
       const {clickOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           stateReducer,
         },
       })
@@ -414,9 +414,9 @@ describe('props', () => {
       const inputItems = ['foo', 'bar']
       const stateReducer = jest.fn(() => ({
         activeIndex,
-        items: [],
+        selectedItems: [],
       }))
-      const onItemsChange = jest.fn()
+      const onSelectedItemsChange = jest.fn()
       const onActiveIndexChange = jest.fn()
       const onStateChange = jest.fn()
       const {keyDownOnInput} = renderMultipleCombobox({
@@ -424,8 +424,8 @@ describe('props', () => {
           stateReducer,
           onStateChange,
           onActiveIndexChange,
-          onItemsChange,
-          items: inputItems,
+          onSelectedItemsChange,
+          selectedItems: inputItems,
         },
       })
 
@@ -437,17 +437,17 @@ describe('props', () => {
           activeIndex,
         }),
       )
-      expect(onActiveIndexChange).toHaveBeenCalledTimes(1)
-      expect(onItemsChange).toHaveBeenCalledWith(
+      expect(onSelectedItemsChange).toHaveBeenCalledTimes(1)
+      expect(onSelectedItemsChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          items: [],
+          selectedItems: [],
         }),
       )
-      expect(onActiveIndexChange).toHaveBeenCalledTimes(1)
+      expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenCalledWith(
         expect.objectContaining({
           activeIndex,
-          items: [],
+          selectedItems: [],
           type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
         }),
       )
@@ -459,7 +459,7 @@ describe('props', () => {
       const onActiveIndexChange = jest.fn()
       const {clickOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           onActiveIndexChange,
         },
       })
@@ -478,7 +478,7 @@ describe('props', () => {
       const onActiveIndexChange = jest.fn()
       const {clickOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           onActiveIndexChange,
           initialActiveIndex: 1,
         },
@@ -490,40 +490,40 @@ describe('props', () => {
     })
   })
 
-  describe('onItemsChange', () => {
+  describe('onSelectedItemsChange', () => {
     test('is called at items change', () => {
-      const onItemsChange = jest.fn()
+      const onSelectedItemsChange = jest.fn()
       const {keyDownOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
-          onItemsChange,
+          initialSelectedItems: [items[0], items[1]],
+          onSelectedItemsChange,
           initialActiveIndex: 1,
         },
       })
 
       keyDownOnSelectedItemAtIndex(1, 'Delete')
 
-      expect(onItemsChange).toHaveBeenCalledTimes(1)
-      expect(onItemsChange).toHaveBeenCalledWith(
+      expect(onSelectedItemsChange).toHaveBeenCalledTimes(1)
+      expect(onSelectedItemsChange).toHaveBeenCalledWith(
         expect.objectContaining({
-          items: [items[0]],
+          selectedItems: [items[0]],
         }),
       )
     })
 
     test('is not called at if items is the same', () => {
-      const onItemsChange = jest.fn()
+      const onSelectedItemsChange = jest.fn()
       const {clickOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
-          onItemsChange,
+          initialSelectedItems: [items[0], items[1]],
+          onSelectedItemsChange,
           initialActiveIndex: 1,
         },
       })
 
       clickOnSelectedItemAtIndex(0)
 
-      expect(onItemsChange).not.toHaveBeenCalled()
+      expect(onSelectedItemsChange).not.toHaveBeenCalled()
     })
   })
 
@@ -537,7 +537,7 @@ describe('props', () => {
         input,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1], items[2]],
+          initialSelectedItems: [items[0], items[1], items[2]],
           onStateChange,
         },
       })
@@ -548,7 +548,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[0], items[1]]),
+          selectedItems: expect.arrayContaining([items[0], items[1]]),
           type: stateChangeTypes.DropdownKeyDownBackspace,
         }),
       )
@@ -569,7 +569,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 0,
-          type: stateChangeTypes.ItemKeyDownNavigationPrevious,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationPrevious,
         }),
       )
 
@@ -579,7 +579,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 1,
-          type: stateChangeTypes.ItemKeyDownNavigationNext,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationNext,
         }),
       )
 
@@ -589,7 +589,7 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           activeIndex: 0,
-          type: stateChangeTypes.ItemClick,
+          type: stateChangeTypes.SelectedItemClick,
         }),
       )
 
@@ -598,8 +598,8 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenCalledTimes(6)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([items[1]]),
-          type: stateChangeTypes.ItemKeyDownDelete,
+          selectedItems: expect.arrayContaining([items[1]]),
+          type: stateChangeTypes.SelectedItemKeyDownDelete,
         }),
       )
 
@@ -608,8 +608,8 @@ describe('props', () => {
       expect(onStateChange).toHaveBeenCalledTimes(7)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          items: expect.arrayContaining([]),
-          type: stateChangeTypes.ItemKeyDownBackspace,
+          selectedItems: expect.arrayContaining([]),
+          type: stateChangeTypes.SelectedItemKeyDownBackspace,
         }),
       )
     })
@@ -625,7 +625,7 @@ describe('props', () => {
       multipleSelectionProps: {
         keyNavigationPrevious: 'ArrowUp',
         keyNavigationNext: 'ArrowDown',
-        initialItems: [items[0], items[1]],
+        initialSelectedItems: [items[0], items[1]],
       },
     })
 

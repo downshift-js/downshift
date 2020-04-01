@@ -60,7 +60,9 @@ describe('getDropdownProps', () => {
 
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
-      const {result} = renderUseMultipleSelection({initialItems: [items[0]]})
+      const {result} = renderUseMultipleSelection({
+        initialSelectedItems: [items[0]],
+      })
 
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
@@ -79,7 +81,9 @@ describe('getDropdownProps', () => {
       const userOnKeyDown = jest.fn(event => {
         event.preventDownshiftDefault = true
       })
-      const {result} = renderUseMultipleSelection({initialItems: [items[0]]})
+      const {result} = renderUseMultipleSelection({
+        initialSelectedItems: [items[0]],
+      })
 
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
@@ -100,7 +104,9 @@ describe('getDropdownProps', () => {
       test('arrow left should make first selected item active', () => {
         const {keyDownOnInput, getSelectedItemAtIndex} = renderMultipleCombobox(
           {
-            multipleSelectionProps: {initialItems: [items[0], items[1]]},
+            multipleSelectionProps: {
+              initialSelectedItems: [items[0], items[1]],
+            },
           },
         )
 
@@ -111,7 +117,7 @@ describe('getDropdownProps', () => {
 
       test('arrow left should not work if pressed with modifier keys', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
         keyDownOnInput('ArrowLeft', {shiftKey: true})
@@ -133,7 +139,7 @@ describe('getDropdownProps', () => {
 
       test('backspace should remove the first selected item', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
         keyDownOnInput('Backspace')
@@ -143,7 +149,7 @@ describe('getDropdownProps', () => {
 
       test('backspace should not work if pressed with modifier keys', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
         keyDownOnInput('Backspace', {shiftKey: true})
@@ -169,7 +175,7 @@ describe('getDropdownProps', () => {
           getSelectedItems,
           input,
         } = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
           comboboxProps: {initialInputValue: 'test'},
         })
 
@@ -186,7 +192,7 @@ describe('getDropdownProps', () => {
           getSelectedItems,
           input,
         } = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
           comboboxProps: {initialInputValue: 'test'},
         })
 
@@ -203,7 +209,7 @@ describe('getDropdownProps', () => {
           getSelectedItems,
           input,
         } = renderMultipleCombobox({
-          multipleSelectionProps: {initialItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
         keyDownOnInput('Alt')
@@ -222,7 +228,7 @@ describe('getDropdownProps', () => {
         focusSelectedItemAtIndex,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialItems: [items[0], items[1]],
+          initialSelectedItems: [items[0], items[1]],
           initialActiveIndex: 1,
         },
       })
