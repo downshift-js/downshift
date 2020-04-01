@@ -29,6 +29,7 @@ between them, screen reader support, highlight by character keys etc.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -291,12 +292,11 @@ when an item is selected.
 This function is passed as props to a `Status` component nested within and
 allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided. It is called with the
-parameters `resultCount` (actually `items.length`), `isOpen`, `selectedItem`,
-`inputValue` and `itemToString` when either `isOpen` changes. When menu is
-opened, the announcement message is "No results" if there aren't any items or
-"`resultCount` results are available, use up and down arrow keys to navigate.
-Press Enter key to select." depending on the number of items in the menu.
+A default `getA11yStatusMessage` function is provided. It is called when
+`isOpen` changes. When menu is opened, the announcement message is "No results"
+if there aren't any items or "`resultCount` results are available, use up and
+down arrow keys to navigate. Press Enter key to select." depending on the number
+of items in the menu.
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -307,11 +307,9 @@ Press Enter key to select." depending on the number of items in the menu.
 This function is similar to the `getA11yStatusMessage` but it is generating a
 message when an item is selected.
 
-A default `getA11ySelectionMessage` function is provided. It is called with the
-parameters `resultCount` (actually `items.length`), `isOpen`, `selectedItem`,
-`inputValue` and `itemToString` when `selectedItem` changes. When an item is
-selected, the message is a selection related one, narrating
-"`itemToString(selectedItem)` has been selected".
+A default `getA11ySelectionMessage` function is provided. It is called when
+`selectedItem` changes. When an item is selected, the message is a selection
+related one, narrating "`itemToString(selectedItem)` has been selected".
 
 The object you are passed to generate your status message, for both
 `getA11yStatusMessage` and `getA11ySelectionMessage` has the following

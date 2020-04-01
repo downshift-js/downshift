@@ -17,7 +17,6 @@ jest.mock('../../utils', () => {
 })
 
 export const dataTestIds = {
-  toggleButton: 'toggle-button-id',
   selectedItemPrefix: 'selected-item-id',
   selectedItem: index => `selected-item-id-${index}`,
   input: 'input-id',
@@ -65,12 +64,7 @@ const DropdownMultipleCombobox = ({
             data-testid={dataTestIds.input}
             {...getInputProps(getDropdownProps({isOpen}))}
           />
-          <button
-            data-testid={dataTestIds.toggleButton}
-            {...getToggleButtonProps()}
-          >
-            Toggle
-          </button>
+          <button {...getToggleButtonProps()}>Toggle</button>
         </div>
       </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()} />

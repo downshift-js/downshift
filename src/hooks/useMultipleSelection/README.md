@@ -14,17 +14,18 @@ flexible so you can tailor it further to your specific needs.
 needed to make the multiple selection dropdown functional and accessible. It
 returns a set of props that are meant to be called and their results
 destructured on the dropdown's elements that involve the multiple selection
-experience: the dropdown main element itself, which can be either `input` or the
-`toggle button` element, and the selected items. These are similar to the ones
-provided by vanilla `<Downshift>` to the children render prop.
+experience: the dropdown main element itself, which can be either an `input` (if
+you are building a `combobox`) or a `button` (if you are building a `select`),
+and the selected items. These are similar to the ones provided by vanilla
+`Downshift` to the children render prop.
 
 These props are called getter props and their return values are destructured as
 a set of ARIA attributes and event listeners. Together with the action props and
 state props, they create all the stateful logic needed for the dropdown to
 become accessible. Every functionality needed should be provided out-of-the-box:
 arrow navigation between dropdown and items, navigation between the items
-themselves, removing and adding items, and also helpful messages such as when an
-item has been removed from selection.
+themselves, removing and adding items, and also helpful `aria-live` messages
+such as when an item has been removed from selection.
 
 ## Table of Contents
 
@@ -309,11 +310,10 @@ This function is similar to the `getA11yStatusMessage` and
 `getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is
 generating a message when an item is removed.
 
-A default `getA11yRemovalMessage` function is provided. It is called with the
-parameters `resultCount` (actually `items.length`), `removedItem` and
-`itemToString` when and item is removed and `items` length decreases. When an
-item is removed, the message is a removal related one, narrating
-"`itemToString(selectedItem)` has been removed".
+A default `getA11yRemovalMessage` function is provided. It is called when an
+item is removed and the size of `items` decreases. When an item is removed, the
+message is a removal related one, narrating "`itemToString(removedItem)` has
+been removed".
 
 The object you are passed to generate your status message for
 `getA11yRemovalMessage` has the following properties:
@@ -323,9 +323,10 @@ The object you are passed to generate your status message for
 | property       | type            | description                                                                                  |
 | -------------- | --------------- | -------------------------------------------------------------------------------------------- |
 | `resultCount`  | `number`        | The count of items in the list.                                                              |
-| `isOpen`       | `boolean`       | The `isOpen` state                                                                           |
 | `itemToString` | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `selectedItem` | `any`           | The value of the currently selected item                                                     |
+| `removedItem`  | `any`           | The value of the currently removed item                                                      |
+| `activeItem`   | `any`           | The value of the currently active item                                                       |
+| `activeIndex`  | `number`        | The index of the currently active item.                                                      |
 
 ### onActiveIndexChange
 
@@ -333,7 +334,7 @@ The object you are passed to generate your status message for
 
 Called each time the index of the active item changes. When an item becomes
 active, it receives focus, so it can receive keyboard events. To change
-`activeIndex` you can either click on the item or use navigation arrows between
+`activeIndex` you can either click on the item or use navigation keys between
 the items and the dropdown.
 
 - `changes`: These are the properties that actually have changed since the last
@@ -365,7 +366,7 @@ than letting downshift control all its state itself.
 > to use this to handle events. If you wish handle events, put your event
 > handlers directly on the elements (make sure to use the prop getters though!
 > For example: `<button onBlur={handleBlur} />` should be
-> `<button {...getToggleButtonProps({onBlur: handleBlur})} />`).
+> `<button {...getDropdownProps({onBlur: handleBlur})} />`).
 
 ### activeIndex
 
@@ -585,7 +586,7 @@ Optional properties:
 #### `getDropdownProps`
 
 Call this and apply the returned props to a `button` if you are building a
-`select` or to an `input` if you're building a combobox. It allows you to move
+`select` or to an `input` if you're building a `combobox`. It allows you to move
 focus from this element to the last item selected by using `ArrowLeft` and also
 to remove the last item using `Backspace`.
 
@@ -596,7 +597,7 @@ required for the `dropdown` to be closed in order to perform focus switch or
 deletion of items.
 
 - `isOpen`: tells `useMultipleSelection` if `dropdown` is closed and only then
-  it can have focus moved to items or remove items by keyboard.
+  it can have focus moved from dropdown to selected items by keyboard.
 
 Optional properties:
 

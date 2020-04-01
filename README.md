@@ -40,8 +40,9 @@ This library provides its users two main sets of solutions: the `Downshift`
 component and a set of hooks. The component is still the main part of the
 library, providing autocomplete/combobox logic as a render prop. The hooks are
 newer and are going to be the way forward to provide accessibility logic to
-widgets. Right now we support `useSelect` for `select` components and
-`useCombobox` for `combobox/autocomplete`.
+widgets. Right now we support `useSelect` for `select` components, `useCombobox`
+for `combobox/autocomplete` and `useMultipleSelection` to make multiple
+selection easier for the first two experiences.
 
 Since `useCombobox` and the component `Downshift` aim to provide accessibility
 to the same kind of widget, we suggest trying the new `useCombobox` and if you
