@@ -19,7 +19,7 @@ For a `combobox/autocomplete` dropdown [click here][combobox-readme].
 
 ### useMultipleSelection
 
-For a `multiple selection` for either a `select` or `combobox` [click
+For a `multiple selection` with a `select` or `combobox` [click
 here][multiple-selection-readme].
 
 ## Roadmap and contributions

@@ -177,6 +177,8 @@ const DropdownMultipleCombobox = () => {
 render(<DropdownMultipleCombobox />, document.getElementById('root'))
 ```
 
+The example with `useSelect` is [here][select-sandbox-example].
+
 ## Basic Props
 
 This is the list of props that you should probably know about. There are some
@@ -763,7 +765,10 @@ const ui = (
 )
 ```
 
-[sandbox-example]: https://codesandbox.io/s/53qfj
+[sandbox-example]:
+  https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd
+[select-sandbox-example]:
+  https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useMultipleSelection/stateChangeTypes.js
 [blog-post-prop-getters]:
