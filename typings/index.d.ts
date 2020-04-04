@@ -540,28 +540,41 @@ export enum UseMultipleSelectionStateChangeTypes {
 }
 
 export interface UseMultipleSelectionProps<Item> {
-  selectedItems: Item[]
-  initialSelectedItems: Item[]
-  defaultSelectedItems: Item[]
+  selectedItems?: Item[]
+  initialSelectedItems?: Item[]
+  defaultSelectedItems?: Item[]
   itemToString?: (item: Item) => string
   getA11yRemovalMessage?: (options: A11yRemovalMessage<Item>) => string
   stateReducer?: (
     state: UseMultipleSelectionState<Item>,
     actionAndChanges: UseMultipleSelectionStateChangeOptions<Item>,
   ) => UseMultipleSelectionState<Item>
-  activeIndex: number
-  initialActiveIndex: number
-  defaultActiveIndex: number
-  onActiveIndexChange?: (
-    changes: Partial<UseMultipleSelectionState<Item>>,
-  ) => void
+  activeIndex?: number
+  initialActiveIndex?: number
+  defaultActiveIndex?: number
+  onActiveIndexChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
   onSelectedItemsChange?: (
-    changes: Partial<UseMultipleSelectionState<Item>>,
+    changes: UseMultipleSelectionStateChange<Item>,
   ) => void
-  onStateChange?: (changes: Partial<UseMultipleSelectionState<Item>>) => void
-  keyNavigationNext: string
-  keyNavigationPrevious: string
+  onStateChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
+  keyNavigationNext?: string
+  keyNavigationPrevious?: string
   environment?: Environment
+}
+
+export interface UseMultipleSelectionStateChangeOptions<Item>
+  extends UseMultipleSelectionDispatchAction {
+  changes: Partial<UseMultipleSelectionState<Item>>
+}
+
+export interface UseMultipleSelectionDispatchAction {
+  type: UseMultipleSelectionStateChangeTypes
+  [data: string]: any
+}
+
+export interface UseMultipleSelectionStateChange<Item>
+  extends Partial<UseMultipleSelectionState<Item>> {
+  type: UseMultipleSelectionStateChangeTypes
 }
 
 export interface A11yRemovalMessage<Item> {
@@ -570,12 +583,6 @@ export interface A11yRemovalMessage<Item> {
   activeSelectedItem: Item
   removedSelectedItem: Item
   activeIndex: number
-}
-
-export interface UseMultipleSelectionStateChangeOptions<Item> {
-  type: UseMultipleSelectionStateChangeTypes
-  changes: UseMultipleSelectionState<Item>
-  props: UseMultipleSelectionProps<Item>
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
