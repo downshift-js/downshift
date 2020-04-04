@@ -292,17 +292,26 @@ export interface UseSelectProps<Item> {
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
   ) => UseSelectState<Item>
-  onSelectedItemChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
+  onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
 }
 
 export interface UseSelectStateChangeOptions<Item> {
-  type: UseSelectStateChangeTypes
-  changes: UseSelectState<Item>
+  changes: Partial<UseSelectState<Item>>
+  action: UseSelectDispatchAction
   props: UseSelectProps<Item>
+}
+export interface UseSelectStateChange<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
+}
+
+export interface UseSelectDispatchAction {
+  type: UseSelectStateChangeTypes
+  [data: string]: any
 }
 
 export interface UseSelectGetMenuPropsOptions
@@ -431,18 +440,28 @@ export interface UseComboboxProps<Item> {
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
   ) => UseComboboxState<Item>
-  onSelectedItemChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
+  onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
+  onStateChange?: (changes: UseComboboxStateChange<Item>) => void
+  onInputValueChange?: (changes: UseComboboxStateChange<Item>) => void
   environment?: Environment
 }
 
 export interface UseComboboxStateChangeOptions<Item> {
-  type: UseComboboxStateChangeTypes
-  changes: UseComboboxState<Item>
+  changes: Partial<UseComboboxState<Item>>
+  action: UseComboboxDispatchAction
   props: UseComboboxProps<Item>
+}
+
+export interface UseComboboxStateChange<Item>
+  extends Partial<UseComboboxState<Item>> {
+  type: UseComboboxStateChangeTypes
+}
+
+export interface UseComboboxDispatchAction {
+  type: UseSelectStateChangeTypes
+  [data: string]: any
 }
 
 export interface UseComboboxGetMenuPropsOptions
