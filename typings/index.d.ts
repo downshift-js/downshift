@@ -299,19 +299,19 @@ export interface UseSelectProps<Item> {
   environment?: Environment
 }
 
-export interface UseSelectStateChangeOptions<Item> {
+export interface UseSelectStateChangeOptions<Item>
+  extends UseSelectDispatchAction {
   changes: Partial<UseSelectState<Item>>
-  action: UseSelectDispatchAction
-  props: UseSelectProps<Item>
-}
-export interface UseSelectStateChange<Item>
-  extends Partial<UseSelectState<Item>> {
-  type: UseSelectStateChangeTypes
 }
 
 export interface UseSelectDispatchAction {
   type: UseSelectStateChangeTypes
   [data: string]: any
+}
+
+export interface UseSelectStateChange<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
 }
 
 export interface UseSelectGetMenuPropsOptions
@@ -448,20 +448,19 @@ export interface UseComboboxProps<Item> {
   environment?: Environment
 }
 
-export interface UseComboboxStateChangeOptions<Item> {
+export interface UseComboboxStateChangeOptions<Item>
+  extends UseComboboxDispatchAction {
   changes: Partial<UseComboboxState<Item>>
-  action: UseComboboxDispatchAction
-  props: UseComboboxProps<Item>
-}
-
-export interface UseComboboxStateChange<Item>
-  extends Partial<UseComboboxState<Item>> {
-  type: UseComboboxStateChangeTypes
 }
 
 export interface UseComboboxDispatchAction {
   type: UseSelectStateChangeTypes
   [data: string]: any
+}
+
+export interface UseComboboxStateChange<Item>
+  extends Partial<UseComboboxState<Item>> {
+  type: UseComboboxStateChangeTypes
 }
 
 export interface UseComboboxGetMenuPropsOptions
