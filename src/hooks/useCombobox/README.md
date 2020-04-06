@@ -208,7 +208,7 @@ const {getMenuProps, getItemProps, ...rest} = useCombobox({
 function stateReducer(state, actionAndChanges) {
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
   switch (actionAndChanges.type) {
-    case useCombobox.stateChangeTypes.MenuKeyDownEnter:
+    case useCombobox.stateChangeTypes.InputKeyDownEnter:
     case useCombobox.stateChangeTypes.ItemClick:
       return {
         ...actionAndChanges.changes, // default Downshift new state changes on item selection.
