@@ -102,11 +102,8 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
         </>
       )
     }
-
     return <DropdownSelect />
-
 }}
-
 </Playground>
 
 ## MaterialUI
@@ -152,7 +149,6 @@ equialent of each item object.
         items: itemsAsObjects,
         itemToString
       })
-
       return (
         <div>
           <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
@@ -193,11 +189,8 @@ equialent of each item object.
         </div>
       );
     }
-
     return <MaterialDropdownSelect />
-
 }}
-
 </Playground>
 
 ## Controlling state
@@ -319,7 +312,6 @@ In all other state change types, we return `Downshift` default changes.
           return actionAndChanges.changes // otherwise business as usual.
       }
     }
-
     const DropdownSelect = () => {
       const {
         isOpen,
@@ -356,7 +348,5 @@ In all other state change types, we return `Downshift` default changes.
       )
     }
     return <DropdownSelect />
-
 }}
-
 </Playground>

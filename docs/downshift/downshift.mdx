@@ -80,7 +80,6 @@ wrapper element that contains the `<input>` and optionally the trigger button.
   {() => {
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
-
       return (
         <Downshift onInputValueChange={inputValue => {
           setInputItems(
@@ -127,11 +126,8 @@ wrapper element that contains the `<input>` and optionally the trigger button.
       )}
       </Downshift>
     )}
-
     return <DropdownCombobox />
-
 }}
-
 </Playground>
 
 ## Usage without `getRootProps`
@@ -150,7 +146,6 @@ example above or to `useCombobox` hook.
   {() => {
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
-
       return (
         <Downshift onInputValueChange={inputValue => {
           setInputItems(
@@ -194,9 +189,6 @@ example above or to `useCombobox` hook.
       )}
       </Downshift>
     )}
-
     return <DropdownCombobox />
-
 }}
-
 </Playground>
