@@ -1,8 +1,8 @@
 // this is stuff that I couldn't think fit anywhere else
 // but we still want to have tested.
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import {render} from '@testing-library/react'
 import Downshift from '../'
 

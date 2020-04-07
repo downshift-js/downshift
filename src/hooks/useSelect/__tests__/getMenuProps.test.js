@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-disabled-tests */
-import React from 'react'
+import * as React from 'react'
 import {act} from '@testing-library/react-hooks'
 import {cleanup, act as reactAct, fireEvent} from '@testing-library/react'
 import {renderUseSelect, renderSelect} from '../testUtils'

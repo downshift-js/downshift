@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {render, fireEvent} from '@testing-library/react'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
@@ -150,9 +150,7 @@ test(`getItemProps doesn't include event handlers when disabled is passed (for I
   // eslint-disable-next-line jest/no-if
   if (entry) {
     throw new Error(
-      `getItemProps should not have any props that are callbacks. It has ${
-        entry[0]
-      }.`,
+      `getItemProps should not have any props that are callbacks. It has ${entry[0]}.`,
     )
   }
 })

@@ -1,7 +1,7 @@
 // this is stuff that I couldn't think fit anywhere else
 // but we still want to have tested.
 
-import React from 'react'
+import * as React from 'react'
 import {render, fireEvent} from '@testing-library/react'
 import Downshift from '../'
 import {scrollIntoView} from '../utils'

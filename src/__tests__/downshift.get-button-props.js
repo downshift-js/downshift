@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {render, fireEvent} from '@testing-library/react'
 import Downshift from '../'
 
@@ -92,9 +92,7 @@ test(`getToggleButtonProps doesn't include event handlers when disabled is passe
   // eslint-disable-next-line jest/no-if
   if (entry) {
     throw new Error(
-      `getToggleButtonProps should not have any props that are callbacks. It has ${
-        entry[0]
-      }.`,
+      `getToggleButtonProps should not have any props that are callbacks. It has ${entry[0]}.`,
     )
   }
 })

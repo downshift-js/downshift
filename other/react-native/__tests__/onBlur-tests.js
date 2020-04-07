@@ -1,5 +1,5 @@
 import {Text, TextInput, View} from 'react-native'
-import React from 'react'
+import * as React from 'react'
 
 // Note: test renderer must be required after react-native.
 import TestRenderer from 'react-test-renderer'

@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-disabled-tests */
-import React from 'react'
+import * as React from 'react'
 import {act} from '@testing-library/react-hooks'
 import {fireEvent, cleanup} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
