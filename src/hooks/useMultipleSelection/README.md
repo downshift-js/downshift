@@ -67,7 +67,7 @@ such as when an item has been removed from selection.
 > [Try it out in the browser][sandbox-example]
 
 ```javascript
-import React from 'react'
+import * as React from 'react'
 import {render} from 'react-dom'
 import {useSelect} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]
