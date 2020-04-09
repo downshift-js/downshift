@@ -186,26 +186,20 @@ function useMultipleSelection(userProps = {}) {
     ref,
     onKeyDown,
     onClick,
-    isOpen,
+    preventKeyAction = false,
     ...rest
-  } = {}) => {
-    if (isOpen === undefined) {
-      throw new Error('Pass isOpen state variable in getDropdownProps!')
-    }
-
-    return {
-      [refKey]: handleRefs(ref, dropdownNode => {
-        if (dropdownNode) {
-          dropdownRef.current = dropdownNode
-        }
-      }),
-      ...(!isOpen && {
-        onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
-        onClick: callAllEventHandlers(onClick, dropdownHandleClick),
-      }),
-      ...rest,
-    }
-  }
+  } = {}) => ({
+    [refKey]: handleRefs(ref, dropdownNode => {
+      if (dropdownNode) {
+        dropdownRef.current = dropdownNode
+      }
+    }),
+    ...(!preventKeyAction && {
+      onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+      onClick: callAllEventHandlers(onClick, dropdownHandleClick),
+    }),
+    ...rest,
+  })
 
   // returns
   const addSelectedItem = selectedItem => {

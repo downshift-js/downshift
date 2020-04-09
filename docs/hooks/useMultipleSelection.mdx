@@ -42,13 +42,17 @@ can navigate between them or remove them from selection.
 
 In the examples below, we use the `useMultipleSelection` hook with both
 `useSelect` and `useCombobox`, destructure from its result the getter props and
-state variables. The `getDropdownProps` is called with a `isOpen` parameter, as
-by convention a user should not be able to navigate between selected items if
-the dropdown is still open. The getter props are used as follows:
+state variables. The `getDropdownProps` can be called with a `preventKeyAction`
+parameter. In some cases you may not want the user to navigate from the dropdown
+to the selected items or to delete them on `Backspace`. For example you can pass
+`isOpen` as its value in order to keep removal and navigation actions from occuring
+while the dropdown is open.
+
+The getter props are used as follows:
 
 | Returned prop          | Element                 | Comments                                                                        |
 | ---------------------- | ----------------------- | ------------------------------------------------------------------------------- |
-| `getDropdownProps`     | `<input>` or `<button>` | Depends on what widget you have, if a select or combobox. Called with `isOpen`. |
+| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.         |
 | `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.      |
 
 For a complete documentation on all the returned props, hook props and more
@@ -137,7 +141,7 @@ handler. Items are added using `addSelectedItem` callback inside the
               </span>
             ))}
             <div style={comboboxStyles} {...getComboboxProps()}>
-              <input {...getInputProps(getDropdownProps({isOpen}))} />
+              <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
               <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
                 &#8595;
               </button>
@@ -236,7 +240,7 @@ handler. Items are added using `addSelectedItem` callback inside the
               </span>
             </span>
           ))}
-          <button {...getToggleButtonProps(getDropdownProps({isOpen}))}>
+          <button {...getToggleButtonProps(getDropdownProps({preventKeyAction: isOpen}))}>
             {selectedItem || 'Elements'}
           </button>
           <ul {...getMenuProps()} style={menuMultipleStlyes}>

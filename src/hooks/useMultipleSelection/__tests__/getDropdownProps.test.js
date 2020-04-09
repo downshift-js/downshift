@@ -4,12 +4,11 @@ import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
 
 describe('getDropdownProps', () => {
-  test('throws error if no index or item has been passed', () => {
+  test('returns no keydown events if preventKeyAction is true', () => {
     const {result} = renderUseMultipleSelection()
+    const dropdownProps = result.current.getDropdownProps({preventKeyAction: true})
 
-    expect(result.current.getDropdownProps).toThrowError(
-      'Pass isOpen state variable in getDropdownProps',
-    )
+    expect(dropdownProps.onKeyDown).toBeUndefined()
   })
 
   describe('user props', () => {
@@ -17,7 +16,7 @@ describe('getDropdownProps', () => {
       const {result} = renderUseMultipleSelection()
 
       expect(
-        result.current.getDropdownProps({foo: 'bar', isOpen: false}),
+        result.current.getDropdownProps({foo: 'bar'}),
       ).toHaveProperty('foo', 'bar')
     })
 
@@ -29,7 +28,6 @@ describe('getDropdownProps', () => {
       act(() => {
         const {ref} = result.current.getDropdownProps({
           ref: refFn,
-          isOpen: false,
         })
 
         ref(dropdownNode)
@@ -48,7 +46,6 @@ describe('getDropdownProps', () => {
         const {blablaRef} = result.current.getDropdownProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
-          isOpen: false,
         })
 
         blablaRef(dropdownNode)
@@ -67,7 +64,6 @@ describe('getDropdownProps', () => {
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
           onKeyDown: userOnKeyDown,
-          isOpen: false,
         })
 
         onKeyDown({key: 'ArrowLeft'})
@@ -88,7 +84,6 @@ describe('getDropdownProps', () => {
       act(() => {
         const {onKeyDown} = result.current.getDropdownProps({
           onKeyDown: userOnKeyDown,
-          isOpen: false,
         })
 
         onKeyDown({key: 'ArrowLeft'})

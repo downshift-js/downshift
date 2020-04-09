@@ -5,7 +5,7 @@
 You have a custom `select` or a `combobox` in your applications which performs a
 multiple selection. You want want the whole experience to be accessible,
 including adding and removing items from selection, navigating between the items
-and back to the dropdown. ou also want this solution to be simple to use and
+and back to the dropdown. You also want this solution to be simple to use and
 flexible so you can tailor it further to your specific needs.
 
 ## This solution
@@ -69,7 +69,7 @@ such as when an item has been removed from selection.
 ```javascript
 import * as React from 'react'
 import {render} from 'react-dom'
-import {useSelect} from 'downshift'
+import {useCombobox} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]
 import {
   items,
@@ -150,7 +150,7 @@ const DropdownMultipleCombobox = () => {
           </span>
         ))}
         <div style={comboboxStyles} {...getComboboxProps()}>
-          <input {...getInputProps(getDropdownProps({isOpen}))} />
+          <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
           <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
             &#8595;
           </button>
@@ -596,17 +596,15 @@ Call this and apply the returned props to a `button` if you are building a
 focus from this element to the last item selected by using `ArrowLeft` and also
 to remove the last item using `Backspace`.
 
-Required properties:
-
-It is required to pass `isOpen` to `getDropdownProps`. By convention, it is
-required for the `dropdown` to be closed in order to perform focus switch or
-deletion of items.
-
-- `isOpen`: tells `useMultipleSelection` if `dropdown` is closed and only then
-  it can have focus moved from dropdown to selected items by keyboard.
-
 Optional properties:
 
+- `preventKeyAction`: tells `useMultipleSelection` if `dropdown` is allowed to
+  execute `downshift` handlers on `keydown`. For example, you can pass `isOpen`
+  as value and user will not be able to delete selecteditems by `Backspace` or
+  to navigate to them by arrow keys. This is useful if you don't want to mix key
+  actions from multiple selection with the ones from the dropdown. Once the
+  dropdown is closed then deletion / navigation can be resumed for multiple
+  selection. The value is `false` by default.
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getDropdownProps({refKey: 'innerRef'})`
@@ -620,7 +618,7 @@ const {getDropdownProps} = useMultipleSelection()
 const {isOpen, ...rest} = useSelect({items})
 const myButton = (
   {/* selected items */}
-  <button {...getDropdownProps({isOpen})}>Click me</button>
+  <button {...getDropdownProps({preventKeyAction: isOpen})}>Click me</button>
   {/* menu and items */}
 )
 ```

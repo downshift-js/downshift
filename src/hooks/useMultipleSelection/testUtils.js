@@ -32,7 +32,6 @@ const DropdownMultipleCombobox = ({
     selectedItems,
   } = useMultipleSelection(multipleSelectionProps)
   const {
-    isOpen,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
@@ -62,7 +61,7 @@ const DropdownMultipleCombobox = ({
         <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
           <input
             data-testid={dataTestIds.input}
-            {...getInputProps(getDropdownProps({isOpen}))}
+            {...getInputProps(getDropdownProps())}
           />
           <button {...getToggleButtonProps()}>Toggle</button>
         </div>
