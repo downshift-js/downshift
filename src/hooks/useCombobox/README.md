@@ -156,12 +156,14 @@ index, like in `Downshift`.
 
 ### itemToString
 
-> `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
+> `function(item: any)` | defaults to: `item => (item ? String(item) : '')`
 
-Used to determine the string value for the selected item. It is used to compute
-the accessibility message that occurs after selecting the item. It is also used
-to allow highlighting by typing character keys, when downshift looks for the
-items whose string version start with the keys typed.
+If your items are stored as, say, objects instead of strings, downshift still
+needs a string representation for each one. This is required for accessibility
+messages (e.g., after making a selection).
+
+**Note:** This callback _must_ include a null check: it is invoked with `null`
+whenever the user abandons input via `<Esc>`.
 
 ### onSelectedItemChange
 
@@ -381,7 +383,7 @@ change like any input of type text, at any character key press, `Space`,
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
-all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
+all of the state (e.g., isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
 
 - `changes`: These are the properties that actually have changed since the last

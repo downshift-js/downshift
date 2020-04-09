@@ -269,10 +269,13 @@ the section "[Children Function](#children-function)".
 
 ### itemToString
 
-> `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
+> `function(item: any)` | defaults to: `item => (item ? String(item) : '')`
 
-Used to determine the string value for the selected item (which is used to
-compute the `inputValue`).
+If your items are stored as, say, objects instead of strings, downshift still
+needs a string representation for each one (e.g., to set `inputValue`).
+
+**Note:** This callback _must_ include a null check: it is invoked with `null`
+whenever the user abandons input via `<Esc>`.
 
 ### onChange
 
@@ -437,7 +440,7 @@ Called with the item that was selected and the new state of `downshift`. (see
 
 This function is called anytime the internal state changes. This can be useful
 if you're using downshift as a "controlled" component, where you manage some or
-all of the state (e.g. isOpen, selectedItem, highlightedIndex, etc) and then
+all of the state (e.g., isOpen, selectedItem, highlightedIndex, etc) and then
 pass it as props, rather than letting downshift control all its state itself.
 The parameters both take the shape of internal state
 (`{highlightedIndex: number, inputValue: string, isOpen: boolean, selectedItem: any}`)
