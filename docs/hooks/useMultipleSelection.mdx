@@ -35,10 +35,10 @@ and offers a set of getter props, state and actions in order to make your
 component accessible. The main value it provides is the ability to move between
 the selected items by keyboard, with focus following the active element. You can
 also remove items by pressing `Delete` or `Backspace` while focus is on the
-item, or if you have a combobox and it's empty, you can `Backspace` to remove
-the last selected item. It should behave similarly to `Outlook` or `Gmail`
-compose email `To:` field, when you can add multiple people to send the email
-to, and then you can navigate between them or remove them from selection.
+item, or if you have a combobox input, you can `Backspace` to remove the last
+selected item. It should behave similarly to `Outlook` or `Gmail` compose email
+`To:` field, when you can add multiple people to send the email to, and then you
+can navigate between them or remove them from selection.
 
 In the examples below, we use the `useMultipleSelection` hook with both
 `useSelect` and `useCombobox`, destructure from its result the getter props and
@@ -57,13 +57,14 @@ information check out the
 
 ## Usage with combobox
 
-A `combobx` with multiple selection can be created in a similar way to a default
-equivalent, with the addition of selected items. The UI is completely up to the
-developer, as the selected items can be implemented as `<span>`, `<div>` or as
-custom Components from UI libraries, with a `inline-block` or `flex` display. In
-the example below, each item has an `X` icon attached to it, with a
-`removeSelectedItem` callback in the `onClick` handler. Items are added using
-`addSelectedItem` callback insite the `onStateChange` handler of `useCombobox`.
+A `combobx` with multiple selection can be created in a similar way to a single
+selection equivalent, with the addition of adding the selected items to the DOM.
+The UI is completely up to the developer, as the selected items can be created
+using `<span>`, `<div>` or custom Components from UI libraries, with a
+`inline-block` or `flex` display. In the example below, each item has an `X`
+icon attached to it, with a `removeSelectedItem` callback in the `onClick`
+handler. Items are added using `addSelectedItem` callback inside the
+`onStateChange` handler of `useCombobox`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
@@ -101,7 +102,6 @@ the example below, each item has an `X` icon attached to it, with a
           switch (type) {
             case useCombobox.stateChangeTypes.InputChange:
               setInputValue(inputValue)
-
               break
             case useCombobox.stateChangeTypes.InputKeyDownEnter:
             case useCombobox.stateChangeTypes.ItemClick:
@@ -111,14 +111,12 @@ the example below, each item has an `X` icon attached to it, with a
                 addSelectedItem(selectedItem)
                 selectItem(null)
               }
-
               break
             default:
               break
           }
         },
       })
-
       return (
         <>
           <label {...getLabelProps()}>Choose some elements:</label>
@@ -164,20 +162,20 @@ the example below, each item has an `X` icon attached to it, with a
         </>
       )
     }
-
     return <DropdownMultipleCombobox />
   }}
 </Playground>
 
 ## Usage with select
 
-A `select` with multiple selection can be created in a similar way to a default
-equivalent, with the addition of selected items. The UI is completely up to the
-developer, as the selected items can be implemented as `<span>`, `<div>` or as
-custom Components from UI libraries, with a `inline-block` or `flex` display. In
-the example below, each item has an `X` icon attached to it, with a
-`removeSelectedItem` callback in the `onClick` handler. Items are added using
-`addSelectedItem` callback insite the `onStateChange` handler of `useSelect`.
+A `select` with multiple selection can be created in a similar way to a single
+selection equivalent, with the addition of adding the selected items to the DOM.
+The UI is completely up to the developer, as the selected items can be created
+using `<span>`, `<div>` or custom Components from UI libraries, with a
+`inline-block` or `flex` display. In the example below, each item has an `X`
+icon attached to it, with a `removeSelectedItem` callback in the `onClick`
+handler. Items are added using `addSelectedItem` callback inside the
+`onStateChange` handler of `useSelect`.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j)
 
@@ -214,7 +212,6 @@ the example below, each item has an `X` icon attached to it, with a
                 addSelectedItem(selectedItem)
                 selectItem(null)
               }
-
               break
             default:
               break
@@ -261,7 +258,6 @@ the example below, each item has an `X` icon attached to it, with a
         </>
       )
     }
-
     return <DropdownMultipleSelect />
   }}
 </Playground>
