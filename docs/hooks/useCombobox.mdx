@@ -81,7 +81,6 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
           )
         },
       })
-
       return (
         <>
           <label {...getLabelProps()}>Choose an element:</label>
@@ -110,9 +109,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
         </>
       )
     }
-
     return <DropdownCombobox />
-
 }}
 
 </Playground>
@@ -166,7 +163,6 @@ In all other state change types, we return `Downshift` default changes.
           return actionAndChanges.changes // otherwise business as usual.
       }
     }
-
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       const {
@@ -190,7 +186,6 @@ In all other state change types, we return `Downshift` default changes.
         },
         stateReducer
       })
-
       return (
         <>
           <label {...getLabelProps()}>Choose an element:</label>
@@ -219,9 +214,6 @@ In all other state change types, we return `Downshift` default changes.
         </>
       )
     }
-
     return <DropdownCombobox />
-
 }}
-
 </Playground>

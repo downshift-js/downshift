@@ -6,7 +6,9 @@ const bodyY = 300
 
 describe('combobox', () => {
   before(() => {
-    cy.visit('/tests/combobox')
+    cy.visit('/')
+    cy.findByText('Tests').click()
+    cy.findByText('Combobox').click()
   })
 
   beforeEach(() => {
@@ -60,20 +62,15 @@ describe('combobox', () => {
   })
 
   it('can use the mouse to click an item', () => {
-    cy.findByTestId('combobox-input')
-      .type('red')
-      .findByTestId('downshift-item-0')
-      .click()
-      .findByTestId('combobox-input')
-      .should('have.value', 'Red')
+    cy.findByTestId('combobox-input').type('red')
+    cy.findByTestId('downshift-item-0').click()
+    cy.findByTestId('combobox-input').should('have.value', 'Red')
   })
 
   it('does not reset the input when mouseup outside while the input is focused', () => {
+    cy.findByTestId('combobox-input').type('red')
+    cy.findByTestId('downshift-item-0').click()
     cy.findByTestId('combobox-input')
-      .type('red')
-      .findByTestId('downshift-item-0')
-      .click()
-      .findByTestId('combobox-input')
       .should('have.value', 'Red')
       .type('{backspace}{backspace}')
       .should('have.value', 'R')
@@ -95,30 +92,22 @@ describe('combobox', () => {
       .blur()
       // https://github.com/kentcdodds/cypress-testing-library/issues/13
       .wait(1)
-      .queryByTestId('downshift-item-0', {timeout: 10})
+      .findByTestId('downshift-item-0', {timeout: 10})
       .should('not.be.visible')
   })
 
   it('does not reset when tabbing from input to the toggle button', () => {
-    cy.findByTestId('combobox-input')
-      .type('pu')
-      .findByTestId('toggle-button')
-      .focus()
-      .findByTestId('downshift-item-0')
-      .click()
-      .findByTestId('combobox-input')
-      .should('have.value', 'Purple')
+    cy.findByTestId('combobox-input').type('pu')
+    cy.findByTestId('toggle-button').focus()
+    cy.findByTestId('downshift-item-0').click()
+    cy.findByTestId('combobox-input').should('have.value', 'Purple')
   })
 
   it('does not reset when tabbing from the toggle button to the input', () => {
-    cy.findByTestId('toggle-button')
-      .click()
-      .findByTestId('combobox-input')
-      .focus()
-      .findByTestId('downshift-item-0')
-      .click()
-      .findByTestId('combobox-input')
-      .should('have.value', 'Black')
+    cy.findByTestId('toggle-button').click()
+    cy.findByTestId('combobox-input').focus()
+    cy.findByTestId('downshift-item-0').click()
+    cy.findByTestId('combobox-input').should('have.value', 'Black')
   })
 
   it('resets when tapping outside on a touch screen', () => {
@@ -127,8 +116,7 @@ describe('combobox', () => {
       .get('body')
       .trigger('touchstart', bodyX, bodyY)
       .trigger('touchend', bodyX, bodyY)
-      .queryByTestId('downshift-item-0', {timeout: 10})
-      .should('not.be.visible')
+    cy.findByTestId('downshift-item-0', {timeout: 10}).should('not.be.visible')
   })
 
   it('does not reset when swiping outside to scroll a touch screen', () => {
@@ -138,7 +126,6 @@ describe('combobox', () => {
       .trigger('touchstart', bodyX, bodyY)
       .trigger('touchmove', bodyX, bodyY + 20)
       .trigger('touchend', bodyX, bodyY + 20)
-      .queryByTestId('downshift-item-0', {timeout: 10})
-      .should('be.visible')
+    cy.findByTestId('downshift-item-0', {timeout: 10}).should('be.visible')
   })
 })
