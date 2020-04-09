@@ -592,13 +592,13 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
 export interface UseMultipleSelectionComboboxGetDropdownProps
   extends GetInputPropsOptions,
     GetPropsWithRefKey {
-  isOpen: boolean
+  preventKeyAction?: boolean
 }
 
 export interface UseMultipleSelectionSelectGetDropdownProps
   extends GetToggleButtonPropsOptions,
     GetPropsWithRefKey {
-  isOpen: boolean
+  preventKeyAction?: boolean
 }
 
 export type UseMultipleSelectionGetDropdownProps =
