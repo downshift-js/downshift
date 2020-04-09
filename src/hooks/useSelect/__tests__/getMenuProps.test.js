@@ -807,7 +807,7 @@ describe('getMenuProps', () => {
 
         getByText(/Second element/).focus()
 
-        expect(getItems).toHaveLength(0)
+        expect(getItems()).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Element')
       })
 
