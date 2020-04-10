@@ -45,15 +45,24 @@ In the examples below, we use the `useMultipleSelection` hook with both
 state variables. The `getDropdownProps` can be called with a `preventKeyAction`
 parameter. In some cases you may not want the user to navigate from the dropdown
 to the selected items or to delete them on `Backspace`. For example you can pass
-`isOpen` as its value in order to keep removal and navigation actions from occuring
-while the dropdown is open.
+`isOpen` as its value in order to keep removal and navigation actions from
+occuring while the dropdown is open.
 
-The getter props are used as follows:
+The returned props are used as follows:
 
-| Returned prop          | Element                 | Comments                                                                        |
-| ---------------------- | ----------------------- | ------------------------------------------------------------------------------- |
-| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.         |
-| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.      |
+| Getter props           | Element                 | Comments                                                                   |
+| ---------------------- | ----------------------- | -------------------------------------------------------------------------- |
+| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.    |
+| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners. |
+
+| State props     | Comments                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `selectedItems` | Current items in the selection, iterated upon in order to render HTML elements for each. |
+
+| Action props         | Comments                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `addSelectedItem`    | Called when `useSelect` or `useCombobox` selects an element, adds item to selection. |
+| `removeSelectedItem` | Called on `X` icon click, removes item from selection.                               |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
