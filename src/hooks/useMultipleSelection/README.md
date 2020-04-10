@@ -24,8 +24,9 @@ a set of ARIA attributes and event listeners. Together with the action props and
 state props, they create all the stateful logic needed for the dropdown to
 become accessible. Every functionality needed should be provided out-of-the-box:
 arrow navigation between dropdown and items, navigation between the items
-themselves, removing and adding items, and also helpful `aria-live` messages
-such as when an item has been removed from selection.
+themselves, removing and adding items, and also adding a helpful `aria-live`
+message informing the screen-reader that an item has been removed from
+selection.
 
 ## Table of Contents
 
@@ -150,7 +151,9 @@ const DropdownMultipleCombobox = () => {
           </span>
         ))}
         <div style={comboboxStyles} {...getComboboxProps()}>
-          <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
+          <input
+            {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
+          />
           <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
             &#8595;
           </button>
@@ -576,8 +579,6 @@ It is required to pass either `selectedItem` or `index` to
   `activeIndex` as the user keys around. By default, `downshift` will assume the
   `index` is the order in which you're calling `getSelectedItemProps`. This is
   often good enough, but if you find odd behavior, try setting this explicitly.
-  It's probably best to be explicit about `index` when using a windowing library
-  like `react-virtualized`.
 
 Optional properties:
 
@@ -600,11 +601,12 @@ Optional properties:
 
 - `preventKeyAction`: tells `useMultipleSelection` if `dropdown` is allowed to
   execute `downshift` handlers on `keydown`. For example, you can pass `isOpen`
-  as value and user will not be able to delete selecteditems by `Backspace` or
-  to navigate to them by arrow keys. This is useful if you don't want to mix key
-  actions from multiple selection with the ones from the dropdown. Once the
-  dropdown is closed then deletion / navigation can be resumed for multiple
-  selection. The value is `false` by default.
+  as value and, while focus is on the dropdown, user will not be able to delete
+  selecteditems by `Backspace` or to navigate to them by arrow keys. This is
+  useful if you don't want to mix keyboard actions from multiple selection with
+  the ones from the dropdown. Once the dropdown is closed then deletion /
+  navigation can be resumed for multiple selection scenario. It defaults to
+  `false`.
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getDropdownProps({refKey: 'innerRef'})`
@@ -665,9 +667,10 @@ described below.
   depeding on the requirements. More info on
   [`keyNavigationPrevious`](#keynavigationprevious).
 - `Backspace`: Removes the last selected item from selection. It always performs
-  this action on a non-input element. If the `dropdown` is a `combobox` the text
-  cursor of the `input` must be at the start of the `input` and not highlight
-  any text in order for the removal to work.
+  this action on a non-input element. But if the `dropdown` is a `combobox`, the
+  text cursor of the `input` must be at the start of the `input` and not
+  highlight any text in order for the removal to work. In other words, you
+  cannot remove characters and selected items with `Backspace` at the same time.
 
 #### Item
 
