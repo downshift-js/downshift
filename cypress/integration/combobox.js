@@ -6,7 +6,9 @@ const bodyY = 300
 
 describe('combobox', () => {
   before(() => {
-    cy.visit('/tests/combobox')
+    cy.visit('/')
+    cy.findByText('Tests').click()
+    cy.findByText('Combobox').click()
   })
 
   beforeEach(() => {
