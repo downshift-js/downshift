@@ -235,6 +235,11 @@ function useCombobox(userProps = {}) {
       })
     },
     Enter(event) {
+      // if IME composing, wait for next Enter keydown event.
+      if (event.which === 229) {
+        return
+      }
+
       event.preventDefault()
       dispatch({
         type: stateChangeTypes.InputKeyDownEnter,
