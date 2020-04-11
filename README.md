@@ -1236,7 +1236,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://twitter.com/ryanflorence"><img src="https://avatars0.githubusercontent.com/u/100200?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Florence</b></sub></a><br /><a href="#ideas-ryanflorence" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://jaredforsyth.com"><img src="https://avatars3.githubusercontent.com/u/112170?v=4" width="100px;" alt=""/><br /><sub><b>Jared Forsyth</b></sub></a><br /><a href="#ideas-jaredly" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/downshift-js/downshift/commits?author=jaredly" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/jtmthf"><img src="https://avatars1.githubusercontent.com/u/8162598?v=4" width="100px;" alt=""/><br /><sub><b>Jack Moore</b></sub></a><br /><a href="#example-jtmthf" title="Examples">💡</a></td>
-    <td align="center"><a href="http://travisrayarnold.com"><img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;" alt=""/><br /><sub><b>Travis Arnold</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://souporserious.com/"><img src="https://avatars1.githubusercontent.com/u/2762082?v=4" width="100px;" alt=""/><br /><sub><b>Travis Arnold</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=souporserious" title="Documentation">📖</a></td>
     <td align="center"><a href="http://marcysutton.com"><img src="https://avatars0.githubusercontent.com/u/1045233?v=4" width="100px;" alt=""/><br /><sub><b>Marcy Sutton</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Amarcysutton" title="Bug reports">🐛</a> <a href="#ideas-marcysutton" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://www.jeremygayed.com"><img src="https://avatars2.githubusercontent.com/u/244704?v=4" width="100px;" alt=""/><br /><sub><b>Jeremy Gayed</b></sub></a><br /><a href="#example-tizmagik" title="Examples">💡</a></td>
   </tr>
@@ -1390,12 +1390,12 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://jhonnymoreira.dev"><img src="https://avatars0.githubusercontent.com/u/2177742?v=4" width="100px;" alt=""/><br /><sub><b>Jhonny Moreira</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=jhonnymoreira" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/stefanprobst"><img src="https://avatars0.githubusercontent.com/u/20753323?v=4" width="100px;" alt=""/><br /><sub><b>stefanprobst</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=stefanprobst" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=stefanprobst" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/louisaspicer"><img src="https://avatars1.githubusercontent.com/u/20270031?v=4" width="100px;" alt=""/><br /><sub><b>Louisa Spicer</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=louisaspicer" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Alouisaspicer" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://neet.love"><img src="https://avatars2.githubusercontent.com/u/19276905?v=4" width="100px;" alt=""/><br /><sub><b>Ryō Igarashi</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Aneet" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=neet" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
