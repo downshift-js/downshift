@@ -664,6 +664,29 @@ describe('getInputProps', () => {
         )
       })
 
+      test('enter while IME composing will not select highlighted item', () => {
+        const initialHighlightedIndex = 2
+        const {keyDownOnInput, input, getItems} = renderCombobox({
+          initialHighlightedIndex,
+          initialIsOpen: true,
+        })
+
+        keyDownOnInput('Enter', {keyCode: 229})
+
+        expect(input.value).toEqual('')
+        expect(getItems()).toHaveLength(items.length)
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(initialHighlightedIndex),
+        )
+
+        keyDownOnInput('Enter')
+
+        expect(input.value).toEqual(items[2])
+        expect(getItems()).toHaveLength(0)
+        expect(input).not.toHaveAttribute('aria-activedescendant')
+      })
+
       test('tab it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const {input, getItems} = renderCombobox(

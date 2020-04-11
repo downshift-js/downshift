@@ -574,6 +574,10 @@ class Downshift extends Component {
     },
 
     Enter(event) {
+      if (event.which === 229) {
+        return
+      }
+
       const {isOpen, highlightedIndex} = this.getState()
       if (isOpen && highlightedIndex != null) {
         event.preventDefault()
