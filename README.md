@@ -40,14 +40,15 @@ This library provides its users two main sets of solutions: the `Downshift`
 component and a set of hooks. The component is still the main part of the
 library, providing autocomplete/combobox logic as a render prop. The hooks are
 newer and are going to be the way forward to provide accessibility logic to
-widgets. Right now we support `useSelect` for `<select>` components and
-`useCombobox` for combobox/autocomplete.
+widgets. Right now we support `useSelect` for `select` components, `useCombobox`
+for `combobox/autocomplete` and `useMultipleSelection` to make multiple
+selection easier for the first two experiences.
 
-Since `useCombobox` and `<Downshift />` aim to provide accessibility to the same
-kind of widget, we suggest trying the new `useCombobox` and if you feel that
-`<Downshift />` still covers your use case better then use that instead. Both of
-them are actively maintained but we are cool kids from the future and prefer to
-share `React` logic via hooks.
+Since `useCombobox` and the component `Downshift` aim to provide accessibility
+to the same kind of widget, we suggest trying the new `useCombobox` and if you
+feel that `Downshift` still covers your use case better then use that instead.
+Both of them are actively maintained but we are cool kids from the future and
+prefer to share `React` logic via hooks.
 
 The `README` on this page is only for the component while each hook has its own
 `README` file, check below. But they are similar in many concepts so you can
@@ -77,11 +78,12 @@ specific dropdown variation and be named accordingly: `useSelect`,
 `useCombobox`, `useMultipleSelection` etc.
 
 You can check the progress in the [hooks page][hooks-readme] and contribute! If
-you want to create a custom `<select>` or `combobox autocomplete` dropdown and
-want it to be functional and accessible, jump directly to the already
-implemented [useSelect][useselect-readme] and [useCombobox][combobox-readme].
-For more examples of how to use the hooks check out our
-[docsite](https://downshift.netlify.com/)!
+you want to create a custom `select` or `combobox/autocomplete` dropdown, with
+the possibility of multiple selection, and want it to be functional and
+accessible, jump directly to the already implemented
+[useSelect][useselect-readme], [useCombobox][combobox-readme] and
+[useMultipleSelection][multiple-selection-readme]. For more examples of how to
+use the hooks check out our [docsite](https://downshift.netlify.com/)!
 
 ### Bundle size concerns
 
@@ -96,6 +98,7 @@ the library treeshaked (pruned) and given only the code you need. Since version
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -1464,4 +1467,6 @@ MIT
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
 [combobox-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
+[multiple-selection-readme]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8

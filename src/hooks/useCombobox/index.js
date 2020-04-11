@@ -302,7 +302,7 @@ function useCombobox(userProps = {}) {
     }
   }
 
-  // returns
+  // Getter props.
   const getLabelProps = labelProps => ({
     id: elementIds.current.labelId,
     htmlFor: elementIds.current.inputId,

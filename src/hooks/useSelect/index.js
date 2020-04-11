@@ -72,7 +72,7 @@ function useSelect(userProps = {}) {
   const getItemNodeFromIndex = index =>
     environment.document.getElementById(elementIds.current.getItemId(index))
 
-  /* Effects */
+  // Effects.
   /* Sets a11y status message on changes in isOpen. */
   useEffect(() => {
     if (isInitialMount.current) {

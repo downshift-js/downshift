@@ -29,6 +29,7 @@ between them, screen reader support, highlight by character keys etc.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [Usage](#usage)
 - [Basic Props](#basic-props)
   - [items](#items)
@@ -291,12 +292,11 @@ when an item is selected.
 This function is passed as props to a `Status` component nested within and
 allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided. It is called with the
-parameters `items`, `isOpen`, `selectedItem`, `inputValue` and `itemToString`
-when either `isOpen` changes. When menu is opened, the announcement message is
-"No results" if there aren't any items or "`resultCount` results are available,
-use up and down arrow keys to navigate. Press Enter key to select." depending on
-the number of items in the menu.
+A default `getA11yStatusMessage` function is provided. It is called when
+`isOpen` changes. When menu is opened, the announcement message is "No results"
+if there aren't any items or "`resultCount` results are available, use up and
+down arrow keys to navigate. Press Enter key to select." depending on the number
+of items in the menu.
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -307,11 +307,9 @@ the number of items in the menu.
 This function is similar to the `getA11yStatusMessage` but it is generating a
 message when an item is selected.
 
-A default `getA11ySelectionMessage` function is provided. It is called with the
-parameters `items`, `isOpen`, `selectedItem`, `inputValue` and `itemToString`
-when `selectedItem` changes. When an item is selected, the message is a
-selection related one, narrating "`itemToString(selectedItem)` has been
-selected".
+A default `getA11ySelectionMessage` function is provided. It is called when
+`selectedItem` changes. When an item is selected, the message is a selection
+related one, narrating "`itemToString(selectedItem)` has been selected".
 
 The object you are passed to generate your status message, for both
 `getA11yStatusMessage` and `getA11ySelectionMessage` has the following
@@ -319,13 +317,15 @@ properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property       | type            | description                                                                                  |
-| -------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `items`        | `any[]`         | The items in the list.                                                                       |
-| `isOpen`       | `boolean`       | The `isOpen` state.                                                                          |
-| `inputValue`   | `string`        | The value in the text input.                                                                 |
-| `itemToString` | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `selectedItem` | `any`           | The value of the currently selected item                                                     |
+| property           | type            | description                                                                                  |
+| ------------------ | --------------- | -------------------------------------------------------------------------------------------- |
+| `highlightedIndex` | `number`        | The currently highlighted index                                                              |
+| `highlightedItem`  | `any`           | The value of the highlighted item                                                            |
+| `isOpen`           | `boolean`       | The `isOpen` state                                                                           |
+| `inputValue`       | `string`        | The value in the text input.                                                                 |
+| `itemToString`     | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
+| `resultCount`      | `number`        | The total items showing in the dropdown                                                      |
+| `selectedItem`     | `any`           | The value of the currently selected item                                                     |
 
 ### onHighlightedIndexChange
 
@@ -431,10 +431,9 @@ The value to be displayed in the text input.
 
 > `string` | defaults to a generated ID
 
-Used to generate the first part of the `Downshift` id on the elements. Uses the
-[@reach/auto-id][reach-auto-id] implementation by default. You can override this
-`id` with one of your own, provided as a prop, or you can override the `id` for
-each element altogether using the props below.
+Used to generate the first part of the `Downshift` id on the elements. You can
+override this `id` with one of your own, provided as a prop, or you can override
+the `id` for each element altogether using the props below.
 
 ### labelId
 
@@ -528,11 +527,12 @@ See [`stateReducer`](#statereducer) for a concrete example on how to use the
 
 ## Control Props
 
-Downshift manages its own state internally and calls your `onChange` and
-`onStateChange` handlers with any relevant changes. The state that downshift
-manages includes: `isOpen`, `selectedItem`, `inputValue` and `highlightedIndex`.
-Returned action function (read more below) can be used to manipulate this state
-and can likely support many of your use cases.
+Downshift manages its own state internally and calls your
+`onSelectedItemChange`, `onIsOpenChange`, `onHighlightedIndexChange`,
+`onInputChange` and `onStateChange` handlers with any relevant changes. The
+state that downshift manages includes: `isOpen`, `selectedItem`, `inputValue`
+and `highlightedIndex`. Returned action function (read more below) can be used
+to manipulate this state and can likely support many of your use cases.
 
 However, if more control is needed, you can pass any of these pieces of state as
 a prop (as indicated above) and that state becomes controlled. As soon as
@@ -920,8 +920,6 @@ const ui = (
 
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
-[reach-auto-id]:
-  https://github.com/reach/reach-ui/blob/master/packages/auto-id/src/index.js
 [sandbox-example]: https://codesandbox.io/s/usecombobox-usage-evufg
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/stateChangeTypes.js

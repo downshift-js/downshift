@@ -4,7 +4,7 @@ export default {
   menu: [
     'Home',
     'Downshift',
-    {name: 'Hooks', menu: ['useSelect', 'useCombobox']},
+    {name: 'Hooks', menu: ['useSelect', 'useCombobox', 'useMultipleSelection']},
     'Tests',
   ],
 }

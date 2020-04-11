@@ -7,7 +7,7 @@ import {
   generateId,
 } from '../utils'
 
-const defaultStateValues = {
+const dropdownDefaultStateValues = {
   highlightedIndex: -1,
   isOpen: false,
   selectedItem: null,
@@ -141,7 +141,11 @@ const defaultProps = {
       : window,
 }
 
-function getDefaultValue(props, propKey) {
+function getDefaultValue(
+  props,
+  propKey,
+  defaultStateValues = dropdownDefaultStateValues,
+) {
   const defaultPropKey = `default${capitalizeString(propKey)}`
 
   if (defaultPropKey in props) {
@@ -151,7 +155,11 @@ function getDefaultValue(props, propKey) {
   return defaultStateValues[propKey]
 }
 
-function getInitialValue(props, propKey) {
+function getInitialValue(
+  props,
+  propKey,
+  defaultStateValues = dropdownDefaultStateValues,
+) {
   if (propKey in props) {
     return props[propKey]
   }
@@ -161,7 +169,7 @@ function getInitialValue(props, propKey) {
   if (initialPropKey in props) {
     return props[initialPropKey]
   }
-  return getDefaultValue(props, propKey)
+  return getDefaultValue(props, propKey, defaultStateValues)
 }
 
 function getInitialState(props) {
@@ -224,6 +232,5 @@ export {
   getDefaultValue,
   getInitialValue,
   getHighlightedIndexOnOpen,
-  defaultStateValues,
   getInitialState,
 }

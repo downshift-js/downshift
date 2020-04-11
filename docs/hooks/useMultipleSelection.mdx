@@ -1,0 +1,276 @@
+---
+name: useMultipleSelection
+menu: Hooks
+route: /hooks/use-multiple-selection
+---
+
+import {useState} from 'react'
+import {Playground} from 'docz'
+import {useCombobox, useMultipleSelection, useSelect} from '../../src'
+import {
+  items,
+  menuStyles,
+  comboboxStyles,
+  playgroundStyles,
+  comboboxWrapperStyles,
+  selectedItemStyles,
+  selectedItemIconStyles,
+  menuMultipleStlyes,
+} from '../utils'
+
+# useMultipleSelection
+
+## Introduction
+
+The `useMultipleSelection` hook provides functionality and accessibility to a
+multiple selection scenario for your `combobx` or `select` widgets. It does not
+have a dedicated ARIA pattern but it is very useful to offer out-of-the-box
+keyboard navigation and focus management to a dropdown widget augmented with
+multiple selection
+
+The hook can be used on its own, but it can also be used along either
+`useCombobox` or `useSelect` in order to build an accessible `select` or
+`combobox` with multiple selection. It follows the same principle of `Downshift`
+and offers a set of getter props, state and actions in order to make your
+component accessible. The main value it provides is the ability to move between
+the selected items by keyboard, with focus following the active element. You can
+also remove items by pressing `Delete` or `Backspace` while focus is on the
+item, or if you have a combobox input, you can `Backspace` to remove the last
+selected item. It should behave similarly to `Outlook` or `Gmail` compose email
+`To:` field, when you can add multiple people to send the email to, and then you
+can navigate between them or remove them from selection.
+
+In the examples below, we use the `useMultipleSelection` hook with both
+`useSelect` and `useCombobox`, destructure from its result the getter props and
+state variables. The `getDropdownProps` can be called with a `preventKeyAction`
+parameter. In some cases you may not want the user to navigate from the dropdown
+to the selected items or to delete them on `Backspace`. For example you can pass
+`isOpen` as its value in order to keep removal and navigation actions from
+occuring while the dropdown is open.
+
+The returned props are used as follows:
+
+| Getter props           | Element                 | Comments                                                                   |
+| ---------------------- | ----------------------- | -------------------------------------------------------------------------- |
+| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.    |
+| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners. |
+
+| State props     | Comments                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `selectedItems` | Current items in the selection, iterated upon in order to render HTML elements for each. |
+
+| Action props         | Comments                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| `addSelectedItem`    | Called when `useSelect` or `useCombobox` selects an element, adds item to selection. |
+| `removeSelectedItem` | Called on `X` icon click, removes item from selection.                               |
+
+For a complete documentation on all the returned props, hook props and more
+information check out the
+[Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection).
+
+## Usage with combobox
+
+A `combobx` with multiple selection can be created in a similar way to a single
+selection equivalent, with the addition of adding the selected items to the DOM.
+The UI is completely up to the developer, as the selected items can be created
+using `<span>`, `<div>` or custom Components from UI libraries, with a
+`inline-block` or `flex` display. In the example below, each item has an `X`
+icon attached to it, with a `removeSelectedItem` callback in the `onClick`
+handler. Items are added using `addSelectedItem` callback inside the
+`onStateChange` handler of `useCombobox`.
+
+[CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownMultipleCombobox = () => {
+      const [inputValue, setInputValue] = useState('')
+      const {
+        getSelectedItemProps,
+        getDropdownProps,
+        addSelectedItem,
+        removeSelectedItem,
+        selectedItems,
+      } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
+      const getFilteredItems = items =>
+        items.filter(
+          item =>
+            selectedItems.indexOf(item) < 0 &&
+            item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        )
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+        selectItem,
+      } = useCombobox({
+        inputValue,
+        items: getFilteredItems(items),
+        onStateChange: ({inputValue, type, selectedItem}) => {
+          switch (type) {
+            case useCombobox.stateChangeTypes.InputChange:
+              setInputValue(inputValue)
+              break
+            case useCombobox.stateChangeTypes.InputKeyDownEnter:
+            case useCombobox.stateChangeTypes.ItemClick:
+            case useCombobox.stateChangeTypes.InputBlur:
+              if (selectedItem) {
+                setInputValue('')
+                addSelectedItem(selectedItem)
+                selectItem(null)
+              }
+              break
+            default:
+              break
+          }
+        },
+      })
+      return (
+        <>
+          <label {...getLabelProps()}>Choose some elements:</label>
+          <div style={comboboxWrapperStyles}>
+            {selectedItems.map((selectedItem, index) => (
+              <span
+                style={selectedItemStyles}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({selectedItem, index})}
+              >
+                {selectedItem}
+                <span
+                  style={selectedItemIconStyles}
+                  onClick={() => removeSelectedItem(selectedItem)}
+                >
+                  &#10005;
+                </span>
+              </span>
+            ))}
+            <div style={comboboxStyles} {...getComboboxProps()}>
+              <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
+              <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+                &#8595;
+              </button>
+            </div>
+          </div>
+          <ul {...getMenuProps()} style={menuMultipleStlyes}>
+            {isOpen &&
+              getFilteredItems(items).map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+    return <DropdownMultipleCombobox />
+  }}
+</Playground>
+
+## Usage with select
+
+A `select` with multiple selection can be created in a similar way to a single
+selection equivalent, with the addition of adding the selected items to the DOM.
+The UI is completely up to the developer, as the selected items can be created
+using `<span>`, `<div>` or custom Components from UI libraries, with a
+`inline-block` or `flex` display. In the example below, each item has an `X`
+icon attached to it, with a `removeSelectedItem` callback in the `onClick`
+handler. Items are added using `addSelectedItem` callback inside the
+`onStateChange` handler of `useSelect`.
+
+[CodeSandbox](https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    const DropdownMultipleSelect = () => {
+      const {
+        getSelectedItemProps,
+        getDropdownProps,
+        addSelectedItem,
+        removeSelectedItem,
+        selectedItems,
+      } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
+      const getFilteredItems = items =>
+        items.filter(item => selectedItems.indexOf(item) < 0)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+        selectItem,
+      } = useSelect({
+        items: getFilteredItems(items),
+        onStateChange: ({type, selectedItem}) => {
+          switch (type) {
+            case useSelect.stateChangeTypes.MenuKeyDownEnter:
+            case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+            case useSelect.stateChangeTypes.ItemClick:
+            case useSelect.stateChangeTypes.MenuBlur:
+              if (selectedItem) {
+                addSelectedItem(selectedItem)
+                selectItem(null)
+              }
+              break
+            default:
+              break
+          }
+        },
+      })
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          {selectedItems.map((selectedItem, index) => (
+            <span
+              style={selectedItemStyles}
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({selectedItem, index})}
+            >
+              {selectedItem}
+              <span
+                style={selectedItemIconStyles}
+                onClick={() => removeSelectedItem(selectedItem)}
+              >
+                &#10005;
+              </span>
+            </span>
+          ))}
+          <button {...getToggleButtonProps(getDropdownProps({preventKeyAction: isOpen}))}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul {...getMenuProps()} style={menuMultipleStlyes}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+    return <DropdownMultipleSelect />
+  }}
+</Playground>
