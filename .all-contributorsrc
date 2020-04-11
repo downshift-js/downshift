@@ -1220,6 +1220,16 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "neet",
+      "name": "Ryō Igarashi",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/19276905?v=4",
+      "profile": "https://neet.love",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
