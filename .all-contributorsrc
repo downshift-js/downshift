@@ -1230,6 +1230,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "rlue",
+      "name": "Ryan Lue",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/12194123?v=4",
+      "profile": "http://ryanlue.com/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "repoHost": "https://github.com",
