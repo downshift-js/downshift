@@ -4,7 +4,24 @@ export default {
   menu: [
     'Home',
     'Downshift',
-    {name: 'Hooks', menu: ['useSelect', 'useCombobox', 'useMultipleSelection']},
+    {name: 'Hooks', menu: ['useCombobox', 'useMultipleSelection', 'useSelect']},
     'Tests',
   ],
+  themeConfig: {
+    initialColorMode: 'light',
+    breakpoints: ['920px'],
+    logo: {
+      src: '/public/logo/downshift.svg',
+      margin: 'auto',
+      width: 128,
+    },
+    styles: {
+      Container: {
+        width: ['100%', '75%'],
+      },
+      inlineCode: {
+        fontWeight: 'bold'
+      }
+    },
+  },
 }

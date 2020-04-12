@@ -6,14 +6,36 @@ order: 1
 
 # Downshift
 
-Work in progress for the docsite. Looking to centralize Downshift examples here.
-Also using it for Cypress tests.
+<img src="https://downshift.netlify.com/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300" />
 
-For `docs` see the repo:
-[github.com/downshift-js/downshift](https://github.com/downshift-js/downshift)
+Primitives to build simple, flexible, WAI-ARIA compliant React autocomplete/combobox
+and select dropdowns/
 
-For `Downshift` examples see [component section](/downshift/component) or
-[github.com/kentcdodds/downshift-examples](https://github.com/kentcdodds/downshift-examples)
+## The problem
 
-For `Downshift` hooks examples see [useSelect](/hooks/use-select) or
-[useCombobox](/hooks/use-combobox).
+You need an autocomplete/dropdown/select experience in your application and you
+want it to be accessible. You also want it to be simple and flexible to account
+for your use cases.
+
+## This solution
+
+This library provides its users two main sets of solutions: the `Downshift`
+component and a set of hooks. The component is still the main part of the
+library, providing autocomplete/combobox logic as a render prop. The hooks are
+newer and are going to be the way forward to provide accessibility logic to
+widgets. Right now we support `useSelect` for `select` components, `useCombobox`
+for `combobox/autocomplete` and `useMultipleSelection` to make multiple
+selection easier for the first two experiences.
+
+Since `useCombobox` and the component `Downshift` aim to provide accessibility
+to the same kind of widget, we suggest trying the new `useCombobox` and if you
+feel that `Downshift` still covers your use case better then use that instead.
+Both of them are actively maintained but we are cool kids from the future and
+prefer to share `React` logic via hooks.
+
+## Contents
+
+- [Downshift component](/downshift)
+- [useSelect](/use-select)
+- [useCombobox](/use-combobox)
+- [useMultipleSelection](/use-multiple-selection)

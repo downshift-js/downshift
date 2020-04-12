@@ -1,7 +1,7 @@
 ---
 name: useCombobox
 menu: Hooks
-route: /hooks/use-combobox
+route: /use-combobox
 ---
 
 import {useState} from 'react'
@@ -11,18 +11,31 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
 
 # useCombobox
 
-## Introduction
+## The problem
 
-The `useCombobox` hook provides functionality and accessibility to a dropdown
-that should act as an autocomplete `combobox` input with listbox, as described
-by the corresponding
-[ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html).
+You have a combobox/autocomplete dropdown in your application and you want it to
+be accessible and functional. For consistency reasons you want it to follow the
+[ARIA design pattern][combobox-aria] for a combobox. You also want this solution
+to be simple to use and flexible so you can tailor it further to your specific
+needs.
 
-User should be allowed to perform a selection after opening the dropdown's menu.
-Only one item may be selected at a time. The widget should be built using a text
-label (optional but recommended), a button that toggles the menu, the combobox
-container, an input of type text inside the combobox container, the menu itself
-and the collection of items that belong in the menu.
+## This solution
+
+`useCombobox` is a React hook that manages all the stateful logic needed to make
+the combobox functional and accessible. It returns a set of props that are meant
+to be called and their results destructured on the combobox's elements: its
+label, toggle button, input, combobox container, list and list items. These are
+similar to the ones provided by vanilla `<Downshift>` to the children render
+prop.
+
+These props are called getter props and their return values are destructured as
+a set of ARIA attributes and event listeners. Together with the action props and
+state props, they create all the stateful logic needed for the combobox to
+implement the corresponding ARIA pattern. Every functionality needed should be
+provided out-of-the-box: menu toggle, item selection and up/down movement
+between them, screen reader support, highlight by character keys etc.
+
+## Props used in examples
 
 In the examples below, we use the `useCombobox` hook and destructure from its
 result the getter props and state variables. The hooks also has the
@@ -37,7 +50,7 @@ according to the input value. The getter props are used as follows:
 | `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
 | `getMenuProps`         | `<ul>`     | Adds ARIA attributes and event handlers.                                  |
 | `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
-| `isOpen`               |            | Only when it's true we render the `<li>` elements.                        |
+| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                        |
 | `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
 | `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
 
@@ -45,7 +58,7 @@ For a complete documentation on all the returned props, hook props and more
 information check out the
 [Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox).
 
-## Usage
+## Basic Usage
 
 A `combobox` element can be created with HTML elements such as: `<label>`,
 `<ul>`, `<li>`, `<button>`, `<input>` and a `<div>` or something similar to
