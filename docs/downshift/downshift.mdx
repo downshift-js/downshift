@@ -1,6 +1,6 @@
 ---
-name: Component
-menu: Downshift
+name: Downshift
+menu: Components
 route: /downshift
 ---
 
@@ -90,13 +90,15 @@ wrapper element that contains the `<input>` and optionally the trigger button.
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       return (
-        <Downshift onInputValueChange={inputValue => {
-          setInputItems(
-            items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        <Downshift
+          onInputValueChange={inputValue => {
+            setInputItems(
+              items.filter(item =>
+                item.toLowerCase().startsWith(inputValue.toLowerCase()),
+              ),
             )
-          )
-        }}>
+          }}
+        >
           {({
             getInputProps,
             getItemProps,
@@ -107,36 +109,40 @@ wrapper element that contains the `<input>` and optionally the trigger button.
             highlightedIndex,
             isOpen,
           }) => (
-        <>
-          <label {...getLabelProps()}>Choose an element:</label>
-          <div style={comboboxStyles} {...getRootProps({}, {suppressRefError: true})}>
-            <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
-              &#8595;
-            </button>
-          </div>
-          <ul {...getMenuProps()} style={menuStyles}>
-            {isOpen &&
-              inputItems.map((item, index) => (
-                <li
-                  style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
-                  }
-                  key={`${item}${index}`}
-                  {...getItemProps({item, index})}
-                >
-                  {item}
-                </li>
-              ))}
-          </ul>
-        </>
-      )}
-      </Downshift>
-    )}
+            <>
+              <label {...getLabelProps()}>Choose an element:</label>
+              <div
+                className="ds-combobox"
+                {...getRootProps({}, {suppressRefError: true})}
+              >
+                <input {...getInputProps()} />
+                <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+                  &#8595;
+                </button>
+              </div>
+              <ul {...getMenuProps()} style={menuStyles}>
+                {isOpen &&
+                  inputItems.map((item, index) => (
+                    <li
+                      style={
+                        highlightedIndex === index
+                          ? {backgroundColor: '#bde4ff'}
+                          : {}
+                      }
+                      key={`${item}${index}`}
+                      {...getItemProps({item, index})}
+                    >
+                      {item}
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
+        </Downshift>
+      )
+    }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>
 
 ## Usage without `getRootProps`
@@ -156,13 +162,15 @@ example above or to `useCombobox` hook.
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       return (
-        <Downshift onInputValueChange={inputValue => {
-          setInputItems(
-            items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        <Downshift
+          onInputValueChange={inputValue => {
+            setInputItems(
+              items.filter(item =>
+                item.toLowerCase().startsWith(inputValue.toLowerCase()),
+              ),
             )
-          )
-        }}>
+          }}
+        >
           {({
             getInputProps,
             getItemProps,
@@ -172,32 +180,33 @@ example above or to `useCombobox` hook.
             highlightedIndex,
             isOpen,
           }) => (
-        <div>
-          <label {...getLabelProps()}>Choose an element:</label>
-          <input {...getInputProps()} />
-          <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
-            &#8595;
-          </button>
-          <ul {...getMenuProps()} style={menuStyles}>
-            {isOpen &&
-              inputItems.map((item, index) => (
-                <li
-                  style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
-                  }
-                  key={`${item}${index}`}
-                  {...getItemProps({item, index})}
-                >
-                  {item}
-                </li>
-              ))}
-          </ul>
-        </div>
-      )}
-      </Downshift>
-    )}
+            <div>
+              <label {...getLabelProps()}>Choose an element:</label>
+              <input {...getInputProps()} />
+              <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+                &#8595;
+              </button>
+              <ul {...getMenuProps()} style={menuStyles}>
+                {isOpen &&
+                  inputItems.map((item, index) => (
+                    <li
+                      style={
+                        highlightedIndex === index
+                          ? {backgroundColor: '#bde4ff'}
+                          : {}
+                      }
+                      key={`${item}${index}`}
+                      {...getItemProps({item, index})}
+                    >
+                      {item}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+        </Downshift>
+      )
+    }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>

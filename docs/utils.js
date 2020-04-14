@@ -9,7 +9,6 @@ import DirectionsCar from '@material-ui/icons/DirectionsCar'
 export const menuStyles = {
   maxHeight: '180px',
   overflowY: 'auto',
-  width: '135px',
   margin: 0,
   borderTop: 0,
   background: 'white',
@@ -17,7 +16,8 @@ export const menuStyles = {
   zIndex: 1000,
   listStyle: 'none',
   padding: 0,
-  left: '175px',
+  left: '185px',
+  minWidth: '200px',
 }
 
 export const menuMultipleStlyes = {
@@ -25,9 +25,13 @@ export const menuMultipleStlyes = {
   left: '380px',
 }
 
-export const selectedItemStyles = {marginLeft: '5px', backgroundColor: 'aliceblue', borderRadius: '10px'}
+export const selectedItemStyles = {
+  marginLeft: '5px',
+  backgroundColor: 'aliceblue',
+  borderRadius: '10px',
+}
 
-export const selectedItemIconStyles ={cursor: 'pointer'}
+export const selectedItemIconStyles = {cursor: 'pointer'}
 
 export const comboboxStyles = {display: 'inline-block', marginLeft: '5px'}
 

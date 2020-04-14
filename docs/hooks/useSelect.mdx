@@ -117,7 +117,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
       )
     }
     return <DropdownSelect />
-}}
+  }}
 </Playground>
 
 ## MaterialUI
@@ -149,8 +149,8 @@ equialent of each item object.
 <Playground style={playgroundStyles}>
   {() => {
     function MaterialDropdownSelect() {
-      const classes = useStyles();
-      const itemToString = item => item.primary;
+      const classes = useStyles()
+      const itemToString = item => item.primary
       const {
         isOpen,
         selectedItem,
@@ -158,10 +158,10 @@ equialent of each item object.
         getLabelProps,
         getMenuProps,
         highlightedIndex,
-        getItemProps
+        getItemProps,
       } = useSelect({
         items: itemsAsObjects,
-        itemToString
+        itemToString,
       })
       return (
         <div>
@@ -172,7 +172,7 @@ equialent of each item object.
             className={classes.button}
             {...getToggleButtonProps()}
           >
-            {selectedItem ? itemToString(selectedItem) : "Folders"}
+            {selectedItem ? itemToString(selectedItem) : 'Folders'}
             <ExpandMoreIcon className={classes.rightIcon} />
           </Button>
           <List className={classes.root} {...getMenuProps()}>
@@ -182,11 +182,13 @@ equialent of each item object.
                   <ListItem
                     key={`${item.primary}-${index}`}
                     className={
-                      index === highlightedIndex ? classes.highlighted : undefined
+                      index === highlightedIndex
+                        ? classes.highlighted
+                        : undefined
                     }
                     {...getItemProps({
                       item,
-                      index
+                      index,
                     })}
                   >
                     <ListItemAvatar>
@@ -197,14 +199,14 @@ equialent of each item object.
                       secondary={item.secondary}
                     />
                   </ListItem>
-                );
+                )
               })}
           </List>
         </div>
-      );
+      )
     }
     return <MaterialDropdownSelect />
-}}
+  }}
 </Playground>
 
 ## Controlling state
@@ -212,7 +214,7 @@ equialent of each item object.
 Controlling state is possible by receiving the state changes done by Downshift
 via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
 changing them based on your requirements and passing them back to Downshift via
-props.
+props, for instance `highlightedIndex` or `selectedItem`.
 
 The example below shows how to control `selectedItem`. The value computed by
 Downshift is received in `onSelectedItemChange` callback. The user checks it and
@@ -362,5 +364,5 @@ In all other state change types, we return `Downshift` default changes.
       )
     }
     return <DropdownSelect />
-}}
+  }}
 </Playground>

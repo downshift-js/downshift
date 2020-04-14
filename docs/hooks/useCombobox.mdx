@@ -72,6 +72,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 
 <Playground style={playgroundStyles}>
   {() => {
+    // import {items, menuStyles, comboboxStyles} from '../utils'
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       const {
@@ -127,6 +128,100 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 
 </Playground>
 
+## Controlling state
+
+Controlling state is possible by receiving the state changes done by Downshift
+via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
+changing them based on your requirements and passing them back to Downshift via
+props, for instance `highlightedIndex` or `selectedItem`.
+
+The example below shows how to control `selectedItem`. The value computed by
+Downshift is received in `onSelectedItemChange` callback. The user checks it and
+passes back a controlled value via `selectedItem`. Here, for example, it checks
+if `selectedItem` is a movie is directed by Mr. Tarantino.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
+
+<Playground style={playgroundStyles}>
+  {() => {
+    // import {items, menuStyles, comboboxStyles} from '../utils'
+    function DropdownWrapper() {
+      const [selectedItem, setSelectedItem] = useState(null)
+      const onSelectedItemChange = item => {
+        if (item.startsWith('C')) {
+          setSelectedItem(item)
+        }
+      }
+      return (
+        <div>
+          <div>{`${
+            selectedItem ? 'Selection is ' + selectedItem + '! ' : ''
+          }Select item starting with the letter C.`}</div>
+          <DropdownCombobox
+            selectedItem={selectedItem}
+            onSelectedItemChange={onSelectedItemChange}
+          />
+        </div>
+      )
+    }
+    function DropdownCombobox(props) {
+      const [inputItems, setInputItems] = useState(items)
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+      } = useCombobox({
+        items: inputItems,
+        selectedItem: props.selectedItem,
+        onSelectedItemChange: ({selectedItem}) => {
+          props.onSelectedItemChange(selectedItem)
+        },
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
+      return (
+        <>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({item, index})}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </>
+      )
+    }
+    return <DropdownWrapper />
+  }}
+</Playground>
+
 ## State Reducer
 
 For an even more granular control of the state changing process, you can add
@@ -169,8 +264,8 @@ In all other state change types, we return `Downshift` default changes.
             // if we had an item highlighted in the previous state.
             ...(state.highlightedIndex > -1 && {
               // we will show it uppercased.
-              inputValue: actionAndChanges.changes.inputValue.toUpperCase()
-            })
+              inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+            }),
           }
         default:
           return actionAndChanges.changes // otherwise business as usual.
@@ -197,7 +292,7 @@ In all other state change types, we return `Downshift` default changes.
             ),
           )
         },
-        stateReducer
+        stateReducer,
       })
       return (
         <>
@@ -228,5 +323,5 @@ In all other state change types, we return `Downshift` default changes.
       )
     }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>

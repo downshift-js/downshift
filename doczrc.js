@@ -3,7 +3,7 @@ export default {
   src: './docs/',
   menu: [
     'Home',
-    'Downshift',
+    'Components',
     {name: 'Hooks', menu: ['useCombobox', 'useMultipleSelection', 'useSelect']},
     'Tests',
   ],
@@ -20,8 +20,8 @@ export default {
         width: ['100%', '75%'],
       },
       inlineCode: {
-        fontWeight: 'bold'
-      }
+        bg: 'blockquote.bg',
+      },
     },
   },
 }
