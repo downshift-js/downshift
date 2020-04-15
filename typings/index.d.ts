@@ -586,8 +586,10 @@ export interface A11yRemovalMessage<Item> {
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends GetItemPropsOptions<Item>,
-    GetPropsWithRefKey {}
+  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
+  index?: number
+  selectedItem: Item
+}
 
 export interface UseMultipleSelectionComboboxGetDropdownProps
   extends GetInputPropsOptions,
