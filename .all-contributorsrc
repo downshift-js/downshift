@@ -1239,6 +1239,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "mattleonowicz",
+      "name": "Mateusz Leonowicz",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/9438872?v=4",
+      "profile": "https://github.com/mattleonowicz",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
