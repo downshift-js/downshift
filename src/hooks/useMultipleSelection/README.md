@@ -150,7 +150,9 @@ const DropdownMultipleCombobox = () => {
           </span>
         ))}
         <div style={comboboxStyles} {...getComboboxProps()}>
-          <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
+          <input
+            {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
+          />
           <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
             &#8595;
           </button>
@@ -471,7 +473,7 @@ return (
     {selectedItems.map((selectedItem, index) => (
       <span
         key={`selected-item-${index}`}
-        {...getSelectedItemProps({item: selectedItem, index})}
+        {...getSelectedItemProps({selectedItem, index})}
       >
         {selectedItem}
       </span>
