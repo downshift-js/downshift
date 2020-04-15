@@ -1399,6 +1399,9 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://neet.love"><img src="https://avatars2.githubusercontent.com/u/19276905?v=4" width="100px;" alt=""/><br /><sub><b>Ryō Igarashi</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/issues?q=author%3Aneet" title="Bug reports">🐛</a> <a href="https://github.com/downshift-js/downshift/commits?author=neet" title="Code">💻</a></td>
     <td align="center"><a href="http://ryanlue.com/"><img src="https://avatars2.githubusercontent.com/u/12194123?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Lue</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=rlue" title="Documentation">📖</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/mattleonowicz"><img src="https://avatars3.githubusercontent.com/u/9438872?v=4" width="100px;" alt=""/><br /><sub><b>Mateusz Leonowicz</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=mattleonowicz" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
