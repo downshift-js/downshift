@@ -12,7 +12,6 @@ import {
   menuStyles,
   itemsAsObjects,
   useStyles,
-  playgroundStyles,
 } from '../utils'
 
 import Button from '@material-ui/core/Button'
@@ -79,7 +78,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 [CodeSandbox](https://codesandbox.io/s/useselect-usage-53qfj)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     const DropdownSelect = () => {
       const {
@@ -146,7 +145,7 @@ equialent of each item object.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-ui-libraries-materialui-fls5o)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     function MaterialDropdownSelect() {
       const classes = useStyles()
@@ -225,7 +224,7 @@ as if no item was selected.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     function Wrapper() {
       const [selectedItem, setSelectedItem] = useState(null)
@@ -312,7 +311,7 @@ In all other state change types, we return `Downshift` default changes.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     function stateReducer(state, actionAndChanges) {
       // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse

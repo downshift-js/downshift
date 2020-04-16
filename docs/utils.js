@@ -35,8 +35,6 @@ export const selectedItemIconStyles = {cursor: 'pointer'}
 
 export const comboboxStyles = {display: 'inline-block', marginLeft: '5px'}
 
-export const playgroundStyles = {height: '160px'}
-
 export const comboboxWrapperStyles = {display: 'inline-flex', flexWrap: 'wrap'}
 
 export const useStyles = makeStyles(theme => ({
