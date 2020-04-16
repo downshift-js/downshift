@@ -102,6 +102,7 @@ describe('props', () => {
           isOpen,
           highlightedIndex,
           resultCount: items.length,
+          previousResultCount: undefined,
           highlightedItem: items[0],
           itemToString: expect.any(Function),
           selectedItem: items[0],

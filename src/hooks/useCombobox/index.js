@@ -85,6 +85,7 @@ function useCombobox(userProps = {}) {
     props,
     props.getA11ySelectionMessage,
     [selectedItem],
+    {previousResultCount: previousResultCountRef.current},
   )
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {

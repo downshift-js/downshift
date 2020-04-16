@@ -89,6 +89,7 @@ function useSelect(userProps = {}) {
     props,
     props.getA11ySelectionMessage,
     [selectedItem],
+    {previousResultCount: previousResultCountRef.current},
   )
   /* Sets cleanup for the keysSoFar after 500ms. */
   useEffect(() => {

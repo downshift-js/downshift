@@ -102,6 +102,7 @@ describe('props', () => {
         highlightedItem: items[0],
         itemToString: expect.any(Function),
         selectedItem: items[0],
+        previousResultCount: undefined,
       })
     })
 
