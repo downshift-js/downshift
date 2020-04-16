@@ -1,70 +1,19 @@
 import PropTypes from 'prop-types'
-import {useCallback, useReducer} from 'react'
+import {useCallback, useReducer, useEffect} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
   getState,
   generateId,
+  debounce,
 } from '../utils'
+import setStatus from '../set-a11y-status'
 
 const dropdownDefaultStateValues = {
   highlightedIndex: -1,
   isOpen: false,
   selectedItem: null,
   inputValue: '',
-}
-
-function getElementIds({id, labelId, menuId, getItemId, toggleButtonId}) {
-  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
-
-  return {
-    labelId: labelId || `${uniqueId}-label`,
-    menuId: menuId || `${uniqueId}-menu`,
-    getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
-    toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
-  }
-}
-
-function getItemIndex(index, item, items) {
-  if (index !== undefined) {
-    return index
-  }
-  if (items.length === 0) {
-    return -1
-  }
-  return items.indexOf(item)
-}
-
-function itemToString(item) {
-  return item ? String(item) : ''
-}
-
-function getPropTypesValidator(caller, propTypes) {
-  // istanbul ignore next
-  return function validate(options = {}) {
-    Object.keys(propTypes).forEach(key => {
-      PropTypes.checkPropTypes(propTypes, options, key, caller.name)
-    })
-  }
-}
-
-function isAcceptedCharacterKey(key) {
-  return /^\S{1}$/.test(key)
-}
-
-function capitalizeString(string) {
-  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
-}
-
-function invokeOnChangeHandler(key, props, state, newState) {
-  const handler = `on${capitalizeString(key)}Change`
-  if (
-    props[handler] &&
-    newState[key] !== undefined &&
-    newState[key] !== state[key]
-  ) {
-    props[handler](newState)
-  }
 }
 
 function callOnChangeProps(action, state, newState) {
@@ -84,26 +33,15 @@ function callOnChangeProps(action, state, newState) {
   }
 }
 
-function useEnhancedReducer(reducer, initialState, props) {
-  const enhancedReducer = useCallback(
-    (state, action) => {
-      state = getState(state, action.props)
-
-      const {stateReducer: stateReduceLocal} = action.props
-      const changes = reducer(state, action)
-      const newState = stateReduceLocal(state, {...action, changes})
-
-      callOnChangeProps(action, state, newState)
-
-      return newState
-    },
-    [reducer],
-  )
-
-  const [state, dispatch] = useReducer(enhancedReducer, initialState)
-  const dispatchWithProps = action => dispatch({props, ...action})
-
-  return [getState(state, props), dispatchWithProps]
+function invokeOnChangeHandler(key, props, state, newState) {
+  const handler = `on${capitalizeString(key)}Change`
+  if (
+    props[handler] &&
+    newState[key] !== undefined &&
+    newState[key] !== state[key]
+  ) {
+    props[handler](newState)
+  }
 }
 
 /**
@@ -129,7 +67,101 @@ function getA11ySelectionMessage(selectionParameters) {
   return `${itemToStringLocal(selectedItem)} has been selected.`
 }
 
-const defaultProps = {
+/**
+ * Debounced call for updating the a11y message.
+ */
+const updateA11yStatus = debounce((getA11yMessage, state, props, rest) => {
+  const {items, environment} = props
+  const {highlightedIndex, inputValue, isOpen, selectedItem} = state
+
+  const resultCount = items ? items.length : 0
+
+  setStatus(
+    getA11yMessage({
+      highlightedIndex,
+      inputValue,
+      isOpen,
+      itemToString: props.itemToString,
+      resultCount,
+      highlightedItem: items[highlightedIndex],
+      selectedItem,
+      ...rest,
+    }),
+    environment.document,
+  )
+}, 200)
+
+export function getElementIds({
+  id,
+  labelId,
+  menuId,
+  getItemId,
+  toggleButtonId,
+}) {
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
+
+  return {
+    labelId: labelId || `${uniqueId}-label`,
+    menuId: menuId || `${uniqueId}-menu`,
+    getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
+    toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
+  }
+}
+
+export function getItemIndex(index, item, items) {
+  if (index !== undefined) {
+    return index
+  }
+  if (items.length === 0) {
+    return -1
+  }
+  return items.indexOf(item)
+}
+
+function itemToString(item) {
+  return item ? String(item) : ''
+}
+
+export function getPropTypesValidator(caller, propTypes) {
+  // istanbul ignore next
+  return function validate(options = {}) {
+    Object.keys(propTypes).forEach(key => {
+      PropTypes.checkPropTypes(propTypes, options, key, caller.name)
+    })
+  }
+}
+
+export function isAcceptedCharacterKey(key) {
+  return /^\S{1}$/.test(key)
+}
+
+export function capitalizeString(string) {
+  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
+}
+
+export function useEnhancedReducer(reducer, initialState, props) {
+  const enhancedReducer = useCallback(
+    (state, action) => {
+      state = getState(state, action.props)
+
+      const {stateReducer: stateReduceLocal} = action.props
+      const changes = reducer(state, action)
+      const newState = stateReduceLocal(state, {...action, changes})
+
+      callOnChangeProps(action, state, newState)
+
+      return newState
+    },
+    [reducer],
+  )
+
+  const [state, dispatch] = useReducer(enhancedReducer, initialState)
+  const dispatchWithProps = action => dispatch({props, ...action})
+
+  return [getState(state, props), dispatchWithProps]
+}
+
+export const defaultProps = {
   itemToString,
   stateReducer,
   getA11ySelectionMessage,
@@ -141,7 +173,7 @@ const defaultProps = {
       : window,
 }
 
-function getDefaultValue(
+export function getDefaultValue(
   props,
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
@@ -155,7 +187,7 @@ function getDefaultValue(
   return defaultStateValues[propKey]
 }
 
-function getInitialValue(
+export function getInitialValue(
   props,
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
@@ -172,7 +204,7 @@ function getInitialValue(
   return getDefaultValue(props, propKey, defaultStateValues)
 }
 
-function getInitialState(props) {
+export function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
   const highlightedIndex = getInitialValue(props, 'highlightedIndex')
@@ -189,7 +221,12 @@ function getInitialState(props) {
   }
 }
 
-function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
+export function getHighlightedIndexOnOpen(
+  props,
+  state,
+  offset,
+  getItemNodeFromIndex,
+) {
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
 
@@ -221,16 +258,30 @@ function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
   return offset < 0 ? items.length - 1 : 0
 }
 
-export {
-  getElementIds,
-  getItemIndex,
-  getPropTypesValidator,
-  isAcceptedCharacterKey,
-  useEnhancedReducer,
-  capitalizeString,
-  defaultProps,
-  getDefaultValue,
-  getInitialValue,
-  getHighlightedIndexOnOpen,
-  getInitialState,
+/**
+ * Hook to append and a11y selection message when item gets selected.
+ *
+ * @param {boolean} isInitialMount Initial mount info.
+ * @param {Object} state State of dropdown.
+ * @param {Object} props Props of dropdown.
+ * @param {Function} getA11yMessage Generator for a11y message.
+ * @param {any[]} deps Array of dependencies for useEffect.
+ * @param {Object} rest Other props to be passed to getA11yMessage.
+ */
+export function useA11yMessageEffect(
+  isInitialMount,
+  state,
+  props,
+  getA11yMessage,
+  deps,
+  rest,
+) {
+  useEffect(() => {
+    if (isInitialMount) {
+      return
+    }
+
+    updateA11yStatus(getA11yMessage, state, props, rest)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps)
 }

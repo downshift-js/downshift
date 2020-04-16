@@ -1,4 +1,6 @@
-const items = [
+import {act} from '@testing-library/react'
+
+export const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -27,7 +29,7 @@ const items = [
   'Oganesson',
 ]
 
-const defaultIds = {
+export const defaultIds = {
   labelId: 'downshift-test-id-label',
   menuId: 'downshift-test-id-menu',
   getItemId: index => `downshift-test-id-item-${index}`,
@@ -35,4 +37,6 @@ const defaultIds = {
   inputId: 'downshift-test-id-input',
 }
 
-export {items, defaultIds}
+export const waitForDebouncedA11yStatusUpdate = () => {
+  act(() => jest.advanceTimersByTime(200))
+}

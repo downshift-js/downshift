@@ -7,8 +7,8 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
   getInitialState,
+  useA11yMessageEffect,
 } from '../utils'
-import setStatus from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   handleRefs,
@@ -39,9 +39,6 @@ function useSelect(userProps = {}) {
   }
   const {
     items,
-    itemToString,
-    getA11yStatusMessage,
-    getA11ySelectionMessage,
     scrollIntoView,
     environment,
     initialIsOpen,
@@ -51,10 +48,12 @@ function useSelect(userProps = {}) {
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [
-    {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatch,
-  ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
+  const [state, dispatch] = useEnhancedReducer(
+    downshiftSelectReducer,
+    initialState,
+    props,
+  )
+  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   /* Refs */
   const toggleButtonRef = useRef(null)
@@ -67,6 +66,7 @@ function useSelect(userProps = {}) {
     isTouchMove: false,
   })
   const elementIds = useRef(getElementIds(props))
+  const previousResultCountRef = useRef()
 
   // Some utils.
   const getItemNodeFromIndex = index =>
@@ -74,45 +74,22 @@ function useSelect(userProps = {}) {
 
   // Effects.
   /* Sets a11y status message on changes in isOpen. */
-  useEffect(() => {
-    if (isInitialMount.current) {
-      return
-    }
-
-    setStatus(
-      getA11yStatusMessage({
-        highlightedIndex,
-        inputValue,
-        isOpen,
-        itemToString,
-        resultCount: items.length,
-        highlightedItem: items[highlightedIndex],
-        selectedItem,
-      }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
+  useA11yMessageEffect(
+    isInitialMount.current,
+    state,
+    props,
+    props.getA11yStatusMessage,
+    [isOpen, highlightedIndex, selectedItem, inputValue],
+    {previousResultCount: previousResultCountRef.current},
+  )
   /* Sets a11y status message on changes in selectedItem. */
-  useEffect(() => {
-    if (isInitialMount.current) {
-      return
-    }
-
-    setStatus(
-      getA11ySelectionMessage({
-        highlightedIndex,
-        inputValue,
-        isOpen,
-        itemToString,
-        resultCount: items.length,
-        highlightedItem: items[highlightedIndex],
-        selectedItem,
-      }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItem])
+  useA11yMessageEffect(
+    isInitialMount.current,
+    state,
+    props,
+    props.getA11ySelectionMessage,
+    [selectedItem],
+  )
   /* Sets cleanup for the keysSoFar after 500ms. */
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
@@ -166,6 +143,12 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
+  // Update previous result count.
+  useEffect(() => {
+    if (!isInitialMount.current) {
+      previousResultCountRef.current = items ? items.length : 0
+    }
+  })
   /* Make initial ref false. */
   useEffect(() => {
     isInitialMount.current = false
