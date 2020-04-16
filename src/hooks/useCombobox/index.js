@@ -115,7 +115,7 @@ function useCombobox(userProps = {}) {
   // Update previous result count.
   useEffect(() => {
     if (!isInitialMount.current) {
-      previousResultCountRef.current = items ? items.length : 0
+      previousResultCountRef.current = items.length
     }
   })
   useEffect(() => {

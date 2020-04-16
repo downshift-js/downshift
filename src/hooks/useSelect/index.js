@@ -146,7 +146,7 @@ function useSelect(userProps = {}) {
   // Update previous result count.
   useEffect(() => {
     if (!isInitialMount.current) {
-      previousResultCountRef.current = items ? items.length : 0
+      previousResultCountRef.current = items.length
     }
   })
   /* Make initial ref false. */

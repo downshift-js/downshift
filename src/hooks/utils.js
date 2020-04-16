@@ -74,7 +74,7 @@ const updateA11yStatus = debounce((getA11yMessage, state, props, rest) => {
   const {items, environment} = props
   const {highlightedIndex, inputValue, isOpen, selectedItem} = state
 
-  const resultCount = items ? items.length : 0
+  const resultCount = items.length
 
   setStatus(
     getA11yMessage({
