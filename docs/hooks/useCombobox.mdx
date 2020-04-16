@@ -72,35 +72,36 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 
 <Playground style={playgroundStyles}>
   {() => {
-    // import {items, menuStyles, comboboxStyles} from '../utils'
-    const DropdownCombobox = () => {
-      const [inputItems, setInputItems] = useState(items)
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [inputItems, setInputItems] = useState(items);
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps,
+        getItemProps
       } = useCombobox({
         items: inputItems,
-        onInputValueChange: ({inputValue}) => {
+        onInputValueChange: ({ inputValue }) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
-            ),
-          )
-        },
-      })
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
       return (
         <>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
           </div>
@@ -109,19 +110,17 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({item, index})}
+                  {...getItemProps({ item, index })}
                 >
                   {item}
                 </li>
               ))}
           </ul>
         </>
-      )
+      );
     }
     return <DropdownCombobox />
 }}
@@ -140,62 +139,50 @@ Downshift is received in `onSelectedItemChange` callback. The user checks it and
 passes back a controlled value via `selectedItem`. Here, for example, it checks
 if `selectedItem` is a movie is directed by Mr. Tarantino.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
+[CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
 
 <Playground style={playgroundStyles}>
   {() => {
-    // import {items, menuStyles, comboboxStyles} from '../utils'
-    function DropdownWrapper() {
-      const [selectedItem, setSelectedItem] = useState(null)
-      const onSelectedItemChange = item => {
-        if (item.startsWith('C')) {
-          setSelectedItem(item)
-        }
-      }
-      return (
-        <div>
-          <div>{`${
-            selectedItem ? 'Selection is ' + selectedItem + '! ' : ''
-          }Select item starting with the letter C.`}</div>
-          <DropdownCombobox
-            selectedItem={selectedItem}
-            onSelectedItemChange={onSelectedItemChange}
-          />
-        </div>
-      )
-    }
-    function DropdownCombobox(props) {
-      const [inputItems, setInputItems] = useState(items)
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [selectedItem, setSelectedItem] = useState(null);
+      const [inputItems, setInputItems] = useState(items);
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps,
+        getItemProps
       } = useCombobox({
         items: inputItems,
-        selectedItem: props.selectedItem,
-        onSelectedItemChange: ({selectedItem}) => {
-          props.onSelectedItemChange(selectedItem)
+        selectedItem,
+        onSelectedItemChange: ({ selectedItem }) => {
+          if (!selectedItem || selectedItem.startsWith("C")) {
+            setSelectedItem(selectedItem);
+          }
         },
-        onInputValueChange: ({inputValue}) => {
+        onInputValueChange: ({ inputValue }) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
-            ),
-          )
-        },
-      })
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
       return (
-        <>
+        <React.Fragment>
+          <div>{`${
+            selectedItem ? "Selection is " + selectedItem + "! " : ""
+          }Select item starting with the letter C.`}</div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            <button {...getToggleButtonProps()} aria-label={"toggle menu"}>
               &#8595;
             </button>
           </div>
@@ -204,21 +191,19 @@ if `selectedItem` is a movie is directed by Mr. Tarantino.
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({item, index})}
+                  {...getItemProps({ item, index })}
                 >
                   {item}
                 </li>
               ))}
           </ul>
-        </>
-      )
+        </React.Fragment>
+      );
     }
-    return <DropdownWrapper />
+    return <DropdownCombobox />
   }}
 </Playground>
 
@@ -245,16 +230,19 @@ In all other state change types, we return `Downshift` default changes.
 
 <Playground style={playgroundStyles}>
   {() => {
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
-      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      // returning an uppercased version of the item string.
       switch (actionAndChanges.type) {
         case useCombobox.stateChangeTypes.InputChange:
           return {
             // return normal changes.
             ...actionAndChanges.changes,
             // but taking the change from default reducer and uppercasing it.
-            inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
-          }
+            inputValue: actionAndChanges.changes.inputValue.toUpperCase()
+          };
         // also on selection.
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
@@ -264,42 +252,41 @@ In all other state change types, we return `Downshift` default changes.
             // if we had an item highlighted in the previous state.
             ...(state.highlightedIndex > -1 && {
               // we will show it uppercased.
-              inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
-            }),
-          }
+              inputValue: actionAndChanges.changes.inputValue.toUpperCase()
+            })
+          };
         default:
-          return actionAndChanges.changes // otherwise business as usual.
+          return actionAndChanges.changes; // otherwise business as usual.
       }
     }
-    const DropdownCombobox = () => {
-      const [inputItems, setInputItems] = useState(items)
+    function DropdownCombobox() {
+      const [inputItems, setInputItems] = useState(items);
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps,
+        getItemProps
       } = useCombobox({
         items: inputItems,
-        onInputValueChange: ({inputValue}) => {
+        stateReducer,
+        onInputValueChange: ({ inputValue }) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
-            ),
-          )
-        },
-        stateReducer,
-      })
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
       return (
-        <>
+        <React.Fragment>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
           </div>
@@ -308,19 +295,17 @@ In all other state change types, we return `Downshift` default changes.
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({item, index})}
+                  {...getItemProps({ item, index })}
                 >
                   {item}
                 </li>
               ))}
           </ul>
-        </>
-      )
+        </React.Fragment>
+      );
     }
     return <DropdownCombobox />
   }}
