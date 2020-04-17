@@ -83,7 +83,10 @@ handler. Items are added using `addSelectedItem` callback inside the
 
 <Playground>
   {() => {
-    const DropdownMultipleCombobox = () => {
+    // import React, { useState } from 'react'
+    // import { useCombobox, useMultipleSelection } from 'downshift'
+    // import { items, menuMultipleStlyes, comboboxStyles, comboboxWrapperStyles, selectedItemStyles, selectedItemIconStyles } from './utils'
+    function DropdownMultipleCombobox() {
       const [inputValue, setInputValue] = useState('')
       const {
         getSelectedItemProps,
@@ -131,7 +134,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         },
       })
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose some elements:</label>
           <div style={comboboxWrapperStyles}>
             {selectedItems.map((selectedItem, index) => (
@@ -174,7 +177,7 @@ handler. Items are added using `addSelectedItem` callback inside the
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownMultipleCombobox />
@@ -196,7 +199,10 @@ handler. Items are added using `addSelectedItem` callback inside the
 
 <Playground>
   {() => {
-    const DropdownMultipleSelect = () => {
+    // import React from 'react'
+    // import { useSelect, useMultipleSelection } from 'downshift'
+    // import { items, menuMultipleStlyes, selectedItemStyles, selectedItemIconStyles } from './utils'
+    function DropdownMultipleSelect() {
       const {
         getSelectedItemProps,
         getDropdownProps,
@@ -234,7 +240,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         },
       })
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           {selectedItems.map((selectedItem, index) => (
             <span
@@ -270,7 +276,7 @@ handler. Items are added using `addSelectedItem` callback inside the
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownMultipleSelect />
