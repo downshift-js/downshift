@@ -80,7 +80,10 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 <Playground>
   {() => {
-    const DropdownSelect = () => {
+    // import React from 'react'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
+    function DropdownSelect() {
       const {
         isOpen,
         selectedItem,
@@ -91,7 +94,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
         getItemProps,
       } = useSelect({items})
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <button {...getToggleButtonProps()}>
             {selectedItem || 'Elements'}
@@ -112,7 +115,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownSelect />
@@ -147,9 +150,13 @@ equialent of each item object.
 
 <Playground>
   {() => {
+    // import React from 'react'
+    // import { useSelect } from 'downshift'
+    // import { items, useStyles } from './utils'
+    // import the components and makeStyles from @material-ui 
     function MaterialDropdownSelect() {
       const classes = useStyles()
-      const itemToString = item => item.primary
+      const itemToString = item => item ? item.primary : ''
       const {
         isOpen,
         selectedItem,
@@ -226,29 +233,16 @@ as if no item was selected.
 
 <Playground>
   {() => {
-    function Wrapper() {
-      const [selectedItem, setSelectedItem] = useState(null)
-      const onSelectedItemChange = item => {
-        if (item.startsWith('C')) {
-          setSelectedItem(item)
-        }
-      }
-      return (
-        <div>
-          <div>{`${
-            selectedItem ? 'Selection is ' + selectedItem + '! ' : ''
-          }Select item starting with the letter C.`}</div>
-          <DropdownSelect
-            selectedItem={selectedItem}
-            onSelectedItemChange={onSelectedItemChange}
-          />
-        </div>
-      )
-    }
-    function DropdownSelect(props) {
+    // import React, { useState } from 'react'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
+    function DropdownSelect() {
+      const [selectedItem, setSelectedItem] = useState()
+      const selectionMessage = selectedItem
+        ? `Selection is ${selectedItem}! Well done!`
+        : 'Select item starting with the letter C.'
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
@@ -256,13 +250,16 @@ as if no item was selected.
         getItemProps,
       } = useSelect({
         items,
-        selectedItem: props.selectedItem,
+        selectedItem,
         onSelectedItemChange: ({selectedItem}) => {
-          props.onSelectedItemChange(selectedItem)
+          if (selectedItem.startsWith('C')) {
+            setSelectedItem(selectedItem)
+          }
         },
       })
       return (
         <div>
+          <div>{selectionMessage}</div>
           <label {...getLabelProps()}>Choose an element:</label>
           <button {...getToggleButtonProps()}>
             {selectedItem || 'Elements'}
@@ -286,7 +283,7 @@ as if no item was selected.
         </div>
       )
     }
-    return <Wrapper />
+    return <DropdownSelect />
   }}
 </Playground>
 
@@ -313,8 +310,11 @@ In all other state change types, we return `Downshift` default changes.
 
 <Playground>
   {() => {
+    // import React from 'react'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
-      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      // this prevents the menu from being closed when the user selects an item.
       switch (actionAndChanges.type) {
         case useSelect.stateChangeTypes.MenuKeyDownEnter:
         case useSelect.stateChangeTypes.ItemClick:
@@ -327,7 +327,7 @@ In all other state change types, we return `Downshift` default changes.
           return actionAndChanges.changes // otherwise business as usual.
       }
     }
-    const DropdownSelect = () => {
+    function DropdownSelect() {
       const {
         isOpen,
         selectedItem,
