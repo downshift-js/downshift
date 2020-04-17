@@ -97,7 +97,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
         }
       });
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
@@ -119,12 +119,11 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       );
     }
     return <DropdownCombobox />
 }}
-
 </Playground>
 
 ## Controlling state
@@ -148,6 +147,9 @@ if `selectedItem` is a movie is directed by Mr. Tarantino.
     // import { items, menuStyles, comboboxStyles } from './utils'
     function DropdownCombobox() {
       const [selectedItem, setSelectedItem] = useState(null);
+      const selectionMessage = selectedItem
+        ? `Selection is ${selectedItem}! Well done!`
+        : 'Select item starting with the letter C.'
       const [inputItems, setInputItems] = useState(items);
       const {
         isOpen,
@@ -175,10 +177,8 @@ if `selectedItem` is a movie is directed by Mr. Tarantino.
         }
       });
       return (
-        <React.Fragment>
-          <div>{`${
-            selectedItem ? "Selection is " + selectedItem + "! " : ""
-          }Select item starting with the letter C.`}</div>
+        <div>
+          <div>{selectionMessage}</div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
@@ -200,7 +200,7 @@ if `selectedItem` is a movie is directed by Mr. Tarantino.
                 </li>
               ))}
           </ul>
-        </React.Fragment>
+        </div>
       );
     }
     return <DropdownCombobox />
@@ -241,8 +241,8 @@ In all other state change types, we return `Downshift` default changes.
             // return normal changes.
             ...actionAndChanges.changes,
             // but taking the change from default reducer and uppercasing it.
-            inputValue: actionAndChanges.changes.inputValue.toUpperCase()
-          };
+            inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+          }
         // also on selection.
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
@@ -252,15 +252,15 @@ In all other state change types, we return `Downshift` default changes.
             // if we had an item highlighted in the previous state.
             ...(state.highlightedIndex > -1 && {
               // we will show it uppercased.
-              inputValue: actionAndChanges.changes.inputValue.toUpperCase()
-            })
-          };
+              inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+            }),
+          }
         default:
-          return actionAndChanges.changes; // otherwise business as usual.
+          return actionAndChanges.changes // otherwise business as usual.
       }
     }
     function DropdownCombobox() {
-      const [inputItems, setInputItems] = useState(items);
+      const [inputItems, setInputItems] = useState(items)
       const {
         isOpen,
         getToggleButtonProps,
@@ -269,20 +269,20 @@ In all other state change types, we return `Downshift` default changes.
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps
+        getItemProps,
       } = useCombobox({
         items: inputItems,
         stateReducer,
-        onInputValueChange: ({ inputValue }) => {
+        onInputValueChange: ({inputValue}) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase())
-            )
-          );
-        }
-      });
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
       return (
-        <React.Fragment>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
@@ -295,17 +295,19 @@ In all other state change types, we return `Downshift` default changes.
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({ item, index })}
+                  {...getItemProps({item, index})}
                 >
                   {item}
                 </li>
               ))}
           </ul>
-        </React.Fragment>
-      );
+        </div>
+      )
     }
     return <DropdownCombobox />
   }}
