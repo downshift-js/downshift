@@ -11,4 +11,4 @@ const customPreset = api => {
     plugins,
   }
 }
-module.exports = customPreset
+module.exports = customPreset;
