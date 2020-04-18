@@ -18,6 +18,7 @@ export const menuStyles = {
   padding: 0,
   left: '185px',
   minWidth: '200px',
+  color: 'black',
 }
 
 export const menuMultipleStlyes = {
