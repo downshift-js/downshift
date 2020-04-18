@@ -51,14 +51,13 @@ function useSelect(userProps = {}) {
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [state, dispatch] = useEnhancedReducer(
+  const [{isOpen, highlightedIndex, selectedItem, inputValue}, dispatch] = useEnhancedReducer(
     downshiftSelectReducer,
     initialState,
     props,
   )
-  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
-  /* Refs */
+  // Refs
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const isInitialMount = useRef(true)
@@ -183,7 +182,6 @@ function useSelect(userProps = {}) {
     }
 
     previousResultCountRef.current = items.length
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   })
   /* Make initial ref false. */
   useEffect(() => {
