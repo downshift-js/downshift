@@ -78,6 +78,33 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
+    test('reports that an item has been selected', () => {
+      const itemIndex = 0
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
+        initialIsOpen: true,
+      })
+
+      clickOnItemAtIndex(itemIndex)
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
+        `${items[itemIndex]} has been selected.`,
+      )
+    })
+
+    test('reports nothing if item is removed', () => {
+      const {keyDownOnInput, getA11yStatusContainer} = renderCombobox({
+        initialSelectedItem: items[0],
+      })
+
+      keyDownOnInput('Escape')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
+        '',
+      )
+    })
+
     test('is called with object that contains specific props', () => {
       const getA11ySelectionMessage = jest.fn()
       const inputValue = 'a'

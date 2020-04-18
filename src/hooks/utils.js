@@ -64,7 +64,7 @@ function stateReducer(s, a) {
 function getA11ySelectionMessage(selectionParameters) {
   const {selectedItem, itemToString: itemToStringLocal} = selectionParameters
 
-  return `${itemToStringLocal(selectedItem)} has been selected.`
+  return selectedItem ? `${itemToStringLocal(selectedItem)} has been selected.` : ''
 }
 
 /**

@@ -79,6 +79,20 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
+    test('reports that an item has been selected', () => {
+      const itemIndex = 0
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+        initialIsOpen: true,
+      })
+
+      clickOnItemAtIndex(itemIndex)
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
+        `${items[itemIndex]} has been selected.`,
+      )
+    })
+
     test('is called with object that contains specific props', () => {
       const getA11ySelectionMessage = jest.fn()
       const inputValue = 'a'
