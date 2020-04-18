@@ -1,13 +1,13 @@
 ---
-name: Component
-menu: Downshift
-route: /downshift/component
+name: Downshift
+menu: Components
+route: /downshift
 ---
 
 import {useState} from 'react'
 import {Playground} from 'docz'
 import Downshift from '../../src'
-import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+import {items, menuStyles, comboboxStyles} from '../utils'
 
 # Downshift
 
@@ -15,7 +15,20 @@ import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
 
 The `Downshift` component has been developed in order to provide accessibility
 and functionality to a `combobox` component, described by the corresponding
-[ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html).
+[ARIA design pattern][combobox-aria].
+
+This is a component that controls user interactions and state for you so you can
+create autocomplete/combobox or select components. It uses a [render
+prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
+because you are responsible for the rendering of everything and you simply apply
+props to what you're rendering.
+
+This differs from other solutions which render things for their use case and
+then expose many options to allow for extensibility resulting in a bigger API
+that is less flexible as well as making the implementation more complicated and
+harder to contribute to.
+
+## Props used in examples
 
 In the examples below, we use the `Downshift` hook and destructure from its
 result the getter props and state variables. The hooks also has the
@@ -41,10 +54,11 @@ information check out the
 ## Important
 
 If you are new to `Downshift` then maybe you should fist check
-[useCombobox](/hooks/use-combobox) which should provide the same functionality
+[useCombobox](/use-combobox) which should provide the same functionality
 but as a hook. If it's not suiting your use case then come back here. Also, if
 you need just a `select` dropdown without a text input, then check
-[useSelect](/hooks/use-select).
+[useSelect](/use-select). Finally, for a multiple selection, you can check the
+[useMultipleSelection](/use-multiple-selection) hook.
 
 As far as the component is concerned, you can use it in two ways, both of them
 illustrated below.
@@ -54,7 +68,7 @@ There is an _straightforward_ way, which allows you to wrap your whole
 `combobox` HTML structure is not correct, and screen readers will not widely
 support it.
 
-There is also the _not-so-straightforward-way_ which allows you to respect the
+There is also the _not-so-straightforward-way_ which allows you to follow the
 `combobox` HTML structure and you should aim for this one. Here you will use
 `getRootProps` on the element that wraps your `<input>` and then you will add
 the `<ul>` on the same level with the wrapper. More details on each of these
@@ -76,18 +90,20 @@ wrapper element that contains the `<input>` and optionally the trigger button.
 
 [CodeSandbox](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       return (
-        <Downshift onInputValueChange={inputValue => {
-          setInputItems(
-            items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        <Downshift
+          onInputValueChange={inputValue => {
+            setInputItems(
+              items.filter(item =>
+                item.toLowerCase().startsWith(inputValue.toLowerCase()),
+              ),
             )
-          )
-        }}>
+          }}
+        >
           {({
             getInputProps,
             getItemProps,
@@ -98,36 +114,40 @@ wrapper element that contains the `<input>` and optionally the trigger button.
             highlightedIndex,
             isOpen,
           }) => (
-        <>
-          <label {...getLabelProps()}>Choose an element:</label>
-          <div style={comboboxStyles} {...getRootProps({}, {suppressRefError: true})}>
-            <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
-              &#8595;
-            </button>
-          </div>
-          <ul {...getMenuProps()} style={menuStyles}>
-            {isOpen &&
-              inputItems.map((item, index) => (
-                <li
-                  style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
-                  }
-                  key={`${item}${index}`}
-                  {...getItemProps({item, index})}
-                >
-                  {item}
-                </li>
-              ))}
-          </ul>
-        </>
-      )}
-      </Downshift>
-    )}
+            <>
+              <label {...getLabelProps()}>Choose an element:</label>
+              <div
+                className="ds-combobox"
+                {...getRootProps({}, {suppressRefError: true})}
+              >
+                <input {...getInputProps()} />
+                <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+                  &#8595;
+                </button>
+              </div>
+              <ul {...getMenuProps()} style={menuStyles}>
+                {isOpen &&
+                  inputItems.map((item, index) => (
+                    <li
+                      style={
+                        highlightedIndex === index
+                          ? {backgroundColor: '#bde4ff'}
+                          : {}
+                      }
+                      key={`${item}${index}`}
+                      {...getItemProps({item, index})}
+                    >
+                      {item}
+                    </li>
+                  ))}
+              </ul>
+            </>
+          )}
+        </Downshift>
+      )
+    }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>
 
 ## Usage without `getRootProps`
@@ -142,18 +162,20 @@ example above or to `useCombobox` hook.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
     const DropdownCombobox = () => {
       const [inputItems, setInputItems] = useState(items)
       return (
-        <Downshift onInputValueChange={inputValue => {
-          setInputItems(
-            items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        <Downshift
+          onInputValueChange={inputValue => {
+            setInputItems(
+              items.filter(item =>
+                item.toLowerCase().startsWith(inputValue.toLowerCase()),
+              ),
             )
-          )
-        }}>
+          }}
+        >
           {({
             getInputProps,
             getItemProps,
@@ -163,32 +185,38 @@ example above or to `useCombobox` hook.
             highlightedIndex,
             isOpen,
           }) => (
-        <div>
-          <label {...getLabelProps()}>Choose an element:</label>
-          <input {...getInputProps()} />
-          <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
-            &#8595;
-          </button>
-          <ul {...getMenuProps()} style={menuStyles}>
-            {isOpen &&
-              inputItems.map((item, index) => (
-                <li
-                  style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
-                  }
-                  key={`${item}${index}`}
-                  {...getItemProps({item, index})}
-                >
-                  {item}
-                </li>
-              ))}
-          </ul>
-        </div>
-      )}
-      </Downshift>
-    )}
+            <div>
+              <label {...getLabelProps()}>Choose an element:</label>
+              <input {...getInputProps()} />
+              <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+                &#8595;
+              </button>
+              <ul {...getMenuProps()} style={menuStyles}>
+                {isOpen &&
+                  inputItems.map((item, index) => (
+                    <li
+                      style={
+                        highlightedIndex === index
+                          ? {backgroundColor: '#bde4ff'}
+                          : {}
+                      }
+                      key={`${item}${index}`}
+                      {...getItemProps({item, index})}
+                    >
+                      {item}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+        </Downshift>
+      )
+    }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>
+
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[use-a-render-prop]:
+  https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce

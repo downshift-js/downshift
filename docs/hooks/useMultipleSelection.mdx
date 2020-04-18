@@ -1,7 +1,7 @@
 ---
 name: useMultipleSelection
 menu: Hooks
-route: /hooks/use-multiple-selection
+route: /use-multiple-selection
 ---
 
 import {useState} from 'react'
@@ -11,7 +11,6 @@ import {
   items,
   menuStyles,
   comboboxStyles,
-  playgroundStyles,
   comboboxWrapperStyles,
   selectedItemStyles,
   selectedItemIconStyles,
@@ -20,25 +19,34 @@ import {
 
 # useMultipleSelection
 
-## Introduction
+## The problem
 
-The `useMultipleSelection` hook provides functionality and accessibility to a
-multiple selection scenario for your `combobx` or `select` widgets. It does not
-have a dedicated ARIA pattern but it is very useful to offer out-of-the-box
-keyboard navigation and focus management to a dropdown widget augmented with
-multiple selection
+You have a custom `select` or a `combobox` in your applications which performs a
+multiple selection. You want want the whole experience to be accessible,
+including adding and removing items from selection, navigating between the items
+and back to the dropdown. You also want this solution to be simple to use and
+flexible so you can tailor it further to your specific needs.
 
-The hook can be used on its own, but it can also be used along either
-`useCombobox` or `useSelect` in order to build an accessible `select` or
-`combobox` with multiple selection. It follows the same principle of `Downshift`
-and offers a set of getter props, state and actions in order to make your
-component accessible. The main value it provides is the ability to move between
-the selected items by keyboard, with focus following the active element. You can
-also remove items by pressing `Delete` or `Backspace` while focus is on the
-item, or if you have a combobox input, you can `Backspace` to remove the last
-selected item. It should behave similarly to `Outlook` or `Gmail` compose email
-`To:` field, when you can add multiple people to send the email to, and then you
-can navigate between them or remove them from selection.
+## This solution
+
+`useMultipleSelection` is a React hook that manages all the stateful logic
+needed to make the multiple selection dropdown functional and accessible. It
+returns a set of props that are meant to be called and their results
+destructured on the dropdown's elements that involve the multiple selection
+experience: the dropdown main element itself, which can be either an `input` (if
+you are building a `combobox`) or a `button` (if you are building a `select`),
+and the selected items. These are similar to the ones provided by vanilla
+`Downshift` to the children render prop.
+
+These props are called getter props and their return values are destructured as
+a set of ARIA attributes and event listeners. Together with the action props and
+state props, they create all the stateful logic needed for the dropdown to
+become accessible. Every functionality needed should be provided out-of-the-box:
+arrow navigation between dropdown and items, navigation between the items
+themselves, removing and adding items, and also helpful `aria-live` messages
+such as when an item has been removed from selection.
+
+## Props used in examples
 
 In the examples below, we use the `useMultipleSelection` hook with both
 `useSelect` and `useCombobox`, destructure from its result the getter props and
@@ -46,23 +54,15 @@ state variables. The `getDropdownProps` can be called with a `preventKeyAction`
 parameter. In some cases you may not want the user to navigate from the dropdown
 to the selected items or to delete them on `Backspace`. For example you can pass
 `isOpen` as its value in order to keep removal and navigation actions from
-occuring while the dropdown is open.
+occuring while the dropdown is open. The returned props are used as follows:
 
-The returned props are used as follows:
-
-| Getter props           | Element                 | Comments                                                                   |
-| ---------------------- | ----------------------- | -------------------------------------------------------------------------- |
-| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.    |
-| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners. |
-
-| State props     | Comments                                                                                 |
-| --------------- | ---------------------------------------------------------------------------------------- |
-| `selectedItems` | Current items in the selection, iterated upon in order to render HTML elements for each. |
-
-| Action props         | Comments                                                                             |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| `addSelectedItem`    | Called when `useSelect` or `useCombobox` selects an element, adds item to selection. |
-| `removeSelectedItem` | Called on `X` icon click, removes item from selection.                               |
+| Returned prop          | Element                 | Comments                                                                                 |
+| ---------------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
+| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.                  |
+| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.               |
+| `selectedItems`        | `<span>` creation       | Current items in the selection, iterated upon in order to render HTML elements for each. |
+| `addSelectedItem`      |                         | Called when `useSelect` or `useCombobox` selects an element, adds item to selection.     |
+| `removeSelectedItem`   | `<span>` icon container | Called on `X` icon click, removes item from selection.                                   |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -81,9 +81,12 @@ handler. Items are added using `addSelectedItem` callback inside the
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
-    const DropdownMultipleCombobox = () => {
+    // import React, { useState } from 'react'
+    // import { useCombobox, useMultipleSelection } from 'downshift'
+    // import { items, menuMultipleStlyes, comboboxStyles, comboboxWrapperStyles, selectedItemStyles, selectedItemIconStyles } from './utils'
+    function DropdownMultipleCombobox() {
       const [inputValue, setInputValue] = useState('')
       const {
         getSelectedItemProps,
@@ -131,7 +134,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         },
       })
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose some elements:</label>
           <div style={comboboxWrapperStyles}>
             {selectedItems.map((selectedItem, index) => (
@@ -150,7 +153,9 @@ handler. Items are added using `addSelectedItem` callback inside the
               </span>
             ))}
             <div style={comboboxStyles} {...getComboboxProps()}>
-              <input {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))} />
+              <input
+                {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
+              />
               <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
                 &#8595;
               </button>
@@ -172,7 +177,7 @@ handler. Items are added using `addSelectedItem` callback inside the
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownMultipleCombobox />
@@ -192,9 +197,12 @@ handler. Items are added using `addSelectedItem` callback inside the
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
-    const DropdownMultipleSelect = () => {
+    // import React from 'react'
+    // import { useSelect, useMultipleSelection } from 'downshift'
+    // import { items, menuMultipleStlyes, selectedItemStyles, selectedItemIconStyles } from './utils'
+    function DropdownMultipleSelect() {
       const {
         getSelectedItemProps,
         getDropdownProps,
@@ -232,7 +240,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         },
       })
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           {selectedItems.map((selectedItem, index) => (
             <span
@@ -268,7 +276,7 @@ handler. Items are added using `addSelectedItem` callback inside the
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownMultipleSelect />

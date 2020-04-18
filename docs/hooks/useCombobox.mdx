@@ -1,28 +1,43 @@
 ---
 name: useCombobox
 menu: Hooks
-route: /hooks/use-combobox
+route: /use-combobox
 ---
 
 import {useState} from 'react'
 import {Playground} from 'docz'
+import {Input, IconButton, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {useCombobox} from '../../src'
-import {items, menuStyles, comboboxStyles, playgroundStyles} from '../utils'
+import {items, useStyles, itemsAsObjects, menuStyles, comboboxStyles} from '../utils'
 
 # useCombobox
 
-## Introduction
+## The problem
 
-The `useCombobox` hook provides functionality and accessibility to a dropdown
-that should act as an autocomplete `combobox` input with listbox, as described
-by the corresponding
-[ARIA docs](https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html).
+You have a combobox/autocomplete dropdown in your application and you want it to
+be accessible and functional. For consistency reasons you want it to follow the
+[ARIA design pattern][combobox-aria] for a combobox. You also want this solution
+to be simple to use and flexible so you can tailor it further to your specific
+needs.
 
-User should be allowed to perform a selection after opening the dropdown's menu.
-Only one item may be selected at a time. The widget should be built using a text
-label (optional but recommended), a button that toggles the menu, the combobox
-container, an input of type text inside the combobox container, the menu itself
-and the collection of items that belong in the menu.
+## This solution
+
+`useCombobox` is a React hook that manages all the stateful logic needed to make
+the combobox functional and accessible. It returns a set of props that are meant
+to be called and their results destructured on the combobox's elements: its
+label, toggle button, input, combobox container, list and list items. These are
+similar to the ones provided by vanilla `<Downshift>` to the children render
+prop.
+
+These props are called getter props and their return values are destructured as
+a set of ARIA attributes and event listeners. Together with the action props and
+state props, they create all the stateful logic needed for the combobox to
+implement the corresponding ARIA pattern. Every functionality needed should be
+provided out-of-the-box: menu toggle, item selection and up/down movement
+between them, screen reader support, highlight by character keys etc.
+
+## Props used in examples
 
 In the examples below, we use the `useCombobox` hook and destructure from its
 result the getter props and state variables. The hooks also has the
@@ -37,7 +52,7 @@ according to the input value. The getter props are used as follows:
 | `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
 | `getMenuProps`         | `<ul>`     | Adds ARIA attributes and event handlers.                                  |
 | `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
-| `isOpen`               |            | Only when it's true we render the `<li>` elements.                        |
+| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                        |
 | `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
 | `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
 
@@ -45,7 +60,7 @@ For a complete documentation on all the returned props, hook props and more
 information check out the
 [Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox).
 
-## Usage
+## Basic Usage
 
 A `combobox` element can be created with HTML elements such as: `<label>`,
 `<ul>`, `<li>`, `<button>`, `<input>` and a `<div>` or something similar to
@@ -57,36 +72,38 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
-    const DropdownCombobox = () => {
-      const [inputItems, setInputItems] = useState(items)
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [inputItems, setInputItems] = useState(items);
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps,
+        getItemProps
       } = useCombobox({
         items: inputItems,
-        onInputValueChange: ({inputValue}) => {
+        onInputValueChange: ({ inputValue }) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase()),
-            ),
-          )
-        },
-      })
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
           </div>
@@ -95,23 +112,207 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index
-                      ? {backgroundColor: '#bde4ff'}
-                      : {}
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({item, index})}
+                  {...getItemProps({ item, index })}
                 >
                   {item}
                 </li>
               ))}
           </ul>
-        </>
-      )
+        </div>
+      );
     }
     return <DropdownCombobox />
 }}
+</Playground>
 
+## MaterialUI
+
+A custom `combobox/autocomoplete` element can be created using UI Library
+components as well. Many libraries will provide basic elements such as buttons,
+texts/labels, inputs and lists, which can be styled according to each library
+guidelines. `useCombobox` is providing the additional stateful logic that will
+transform this selection of basic components into a fully working dropdown
+element.
+
+As `useCombobox` needs to perform some `focus()` and `scroll()` logic on the DOM
+elements, it will require the refs to the `React` components used. This will
+illustrate how to use `useCombobox` with `MaterialUI` library and how to
+correctly pass refs to the hook.
+
+Since `MaterialUI` components already accept a `ref` prop that will be filled
+with the resulting DOM element, we don't need to do anything specific rather
+than just spreading the getter props, apart from the case of the `Input`, which
+renders a wrapper element over the actual HTML `<input>`. In this case, since
+`Input` provides a prop for accessing the `<input>` element called `inputRef`,
+we will use the getter function like this:
+`getInputProps({refKey: 'inputRef'})`.
+
+Another point worth mentioning is that in this case items are objects and not
+strings. As a result, the `itemToString` prop is passed to `useCombobox`. It
+will return the string equivalent of the item which will be used for filtering
+by character keys and for the a11y message that will occur on every item
+selection: `${itemToString(item)} has been selected`. `item.primary` is chosen
+to be the string equialent of each item object.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobx-ui-libraries-materialui-8jfx1)
+
+<Playground>
+  {() => {
+    // import React from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items: itemsAsObjects, useStyles, comboboxStyles } from './utils'
+    // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+    // import {IconButton, Input, FormLabel, List, ListItem, ListItemText} from '@material-ui/core'
+    function DropdownCombobox() {
+      const classes = useStyles()
+      const itemToString = item => (item ? item.primary : '')
+      const [inputItems, setInputItems] = React.useState(itemsAsObjects)
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+        getInputProps,
+        getComboboxProps,
+      } = useCombobox({
+        items: inputItems,
+        itemToString,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            itemsAsObjects.filter(item =>
+              itemToString(item)
+                .toLowerCase()
+                .startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
+      return (
+        <div>
+          <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <Input placeholder="Employees" {...getInputProps({refKey: 'inputRef'})} />
+            <IconButton
+              color="secondary"
+              className={classes.button}
+              {...getToggleButtonProps()}
+            >
+              <ExpandMoreIcon className={classes.rightIcon} />
+            </IconButton>
+          </div>
+          <List className={classes.root} {...getMenuProps()}>
+            {isOpen &&
+              inputItems.map((item, index) => {
+                return (
+                  <ListItem
+                    key={`${item.primary}-${index}`}
+                    className={
+                      index === highlightedIndex ? classes.highlighted : undefined
+                    }
+                    {...getItemProps({
+                      item,
+                      index,
+                    })}
+                  >
+                    <ListItemText
+                      primary={item.primary}
+                      secondary={item.secondary}
+                    />
+                  </ListItem>
+                )
+              })}
+          </List>
+        </div>
+      )
+    }
+    return <DropdownCombobox />
+  }}
+</Playground>
+
+## Controlling state
+
+Controlling state is possible by receiving the state changes done by Downshift
+via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
+changing them based on your requirements and passing them back to Downshift via
+props, for instance `highlightedIndex` or `selectedItem`.
+
+The example below shows how to control `selectedItem`. The value computed by
+Downshift is received in `onSelectedItemChange` callback. The user checks it and
+passes back a controlled value via `selectedItem`. Here, for example, it checks
+if `selectedItem` is an element that begings with the letter `C`.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
+
+<Playground>
+  {() => {
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [selectedItem, setSelectedItem] = useState(null);
+      const selectionMessage = selectedItem
+        ? `Selection is ${selectedItem}! Well done!`
+        : 'Select item starting with the letter C.'
+      const [inputItems, setInputItems] = useState(items);
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps
+      } = useCombobox({
+        items: inputItems,
+        selectedItem,
+        onSelectedItemChange: ({ selectedItem }) => {
+          if (!selectedItem || selectedItem.startsWith("C")) {
+            setSelectedItem(selectedItem);
+          }
+        },
+        onInputValueChange: ({ inputValue }) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
+      return (
+        <div>
+          <div>{selectionMessage}</div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    return <DropdownCombobox />
+  }}
 </Playground>
 
 ## State Reducer
@@ -135,10 +336,13 @@ In all other state change types, we return `Downshift` default changes.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-variations-state-reducer-x7feb)
 
-<Playground style={playgroundStyles}>
+<Playground>
   {() => {
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
-      // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
+      // returning an uppercased version of the item string.
       switch (actionAndChanges.type) {
         case useCombobox.stateChangeTypes.InputChange:
           return {
@@ -156,18 +360,17 @@ In all other state change types, we return `Downshift` default changes.
             // if we had an item highlighted in the previous state.
             ...(state.highlightedIndex > -1 && {
               // we will show it uppercased.
-              inputValue: actionAndChanges.changes.inputValue.toUpperCase()
-            })
+              inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+            }),
           }
         default:
           return actionAndChanges.changes // otherwise business as usual.
       }
     }
-    const DropdownCombobox = () => {
+    function DropdownCombobox() {
       const [inputItems, setInputItems] = useState(items)
       const {
         isOpen,
-        selectedItem,
         getToggleButtonProps,
         getLabelProps,
         getMenuProps,
@@ -177,6 +380,7 @@ In all other state change types, we return `Downshift` default changes.
         getItemProps,
       } = useCombobox({
         items: inputItems,
+        stateReducer,
         onInputValueChange: ({inputValue}) => {
           setInputItems(
             items.filter(item =>
@@ -184,14 +388,13 @@ In all other state change types, we return `Downshift` default changes.
             ),
           )
         },
-        stateReducer
       })
       return (
-        <>
+        <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
           </div>
@@ -211,9 +414,12 @@ In all other state change types, we return `Downshift` default changes.
                 </li>
               ))}
           </ul>
-        </>
+        </div>
       )
     }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>
+
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html

@@ -3,8 +3,26 @@ export default {
   src: './docs/',
   menu: [
     'Home',
-    'Downshift',
-    {name: 'Hooks', menu: ['useSelect', 'useCombobox', 'useMultipleSelection']},
+    'Components',
+    {name: 'Hooks', menu: ['useCombobox', 'useMultipleSelection', 'useSelect']},
     'Tests',
   ],
+  themeConfig: {
+    initialColorMode: 'light',
+    showDarkModeSwitch: false,
+    breakpoints: ['920px'],
+    logo: {
+      src: '/public/logo/downshift.svg',
+      margin: 'auto',
+      width: 128,
+    },
+    styles: {
+      Container: {
+        width: ['100%', '75%'],
+      },
+      inlineCode: {
+        bg: 'blockquote.bg',
+      },
+    },
+  },
 }

@@ -5,7 +5,7 @@
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
-autocomplete/dropdown/select/combobox components</p>
+autocomplete, combobox or select dropdown components.</p>
 
 > See
 > [the intro blog post](https://kentcdodds.com/blog/introducing-downshift-for-react)
@@ -30,9 +30,10 @@ autocomplete/dropdown/select/combobox components</p>
 
 ## The problem
 
-You need an autocomplete/dropdown/select experience in your application and you
+You need an autocomplete/combobox/select experience in your application and you
 want it to be accessible. You also want it to be simple and flexible to account
-for your use cases.
+for your use cases. Finally, it should follow the [ARIA design
+pattern][combobox-aria] for a combobox.
 
 ## This solution
 
@@ -98,7 +99,6 @@ the library treeshaked (pruned) and given only the code you need. Since version
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -1406,6 +1406,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -1477,3 +1478,5 @@ MIT
 [multiple-selection-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
