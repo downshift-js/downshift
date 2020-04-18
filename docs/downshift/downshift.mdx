@@ -13,6 +13,10 @@ import {items, menuStyles, comboboxStyles} from '../utils'
 
 ## Introduction
 
+The `Downshift` component has been developed in order to provide accessibility
+and functionality to a `combobox` component, described by the corresponding
+[ARIA design pattern][combobox-aria].
+
 This is a component that controls user interactions and state for you so you can
 create autocomplete, dropdown, select, etc. components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
@@ -50,10 +54,11 @@ information check out the
 ## Important
 
 If you are new to `Downshift` then maybe you should fist check
-[useCombobox](/hooks/use-combobox) which should provide the same functionality
+[useCombobox](/use-combobox) which should provide the same functionality
 but as a hook. If it's not suiting your use case then come back here. Also, if
 you need just a `select` dropdown without a text input, then check
-[useSelect](/hooks/use-select).
+[useSelect](/use-select). Finally, for a multiple selection, you can check the
+[useMultipleSelection](/use-multiple-selection) hook.
 
 As far as the component is concerned, you can use it in two ways, both of them
 illustrated below.
@@ -210,3 +215,8 @@ example above or to `useCombobox` hook.
     return <DropdownCombobox />
   }}
 </Playground>
+
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[use-a-render-prop]:
+  https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
