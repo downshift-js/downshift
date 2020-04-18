@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {useCallback, useReducer, useEffect} from 'react'
+import {useCallback, useReducer} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -70,25 +70,8 @@ function getA11ySelectionMessage(selectionParameters) {
 /**
  * Debounced call for updating the a11y message.
  */
-const updateA11yStatus = debounce((getA11yMessage, state, props, rest) => {
-  const {items, environment} = props
-  const {highlightedIndex, inputValue, isOpen, selectedItem} = state
-
-  const resultCount = items.length
-
-  setStatus(
-    getA11yMessage({
-      highlightedIndex,
-      inputValue,
-      isOpen,
-      itemToString: props.itemToString,
-      resultCount,
-      highlightedItem: items[highlightedIndex],
-      selectedItem,
-      ...rest,
-    }),
-    environment.document,
-  )
+export const updateA11yStatus = debounce((getA11yMessage, document) => {
+  setStatus(getA11yMessage(), document)
 }, 200)
 
 export function getElementIds({
@@ -256,32 +239,4 @@ export function getHighlightedIndexOnOpen(
     return -1
   }
   return offset < 0 ? items.length - 1 : 0
-}
-
-/**
- * Hook to append and a11y selection message when item gets selected.
- *
- * @param {boolean} isInitialMount Initial mount info.
- * @param {Object} state State of dropdown.
- * @param {Object} props Props of dropdown.
- * @param {Function} getA11yMessage Generator for a11y message.
- * @param {any[]} deps Array of dependencies for useEffect.
- * @param {Object} rest Other props to be passed to getA11yMessage.
- */
-export function useA11yMessageEffect(
-  isInitialMount,
-  state,
-  props,
-  getA11yMessage,
-  deps,
-  rest,
-) {
-  useEffect(() => {
-    if (isInitialMount) {
-      return
-    }
-
-    updateA11yStatus(getA11yMessage, state, props, rest)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps)
 }

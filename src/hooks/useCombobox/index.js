@@ -11,7 +11,7 @@ import {
   getItemIndex,
   getPropTypesValidator,
   useEnhancedReducer,
-  useA11yMessageEffect,
+  updateA11yStatus,
 } from '../utils'
 import {getInitialState, propTypes, defaultProps, getElementIds} from './utils'
 import downshiftUseComboboxReducer from './reducer'
@@ -40,17 +40,18 @@ function useCombobox(userProps = {}) {
     items,
     scrollIntoView,
     environment,
+    getA11yStatusMessage,
+    getA11ySelectionMessage,
+    itemToString,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [state, dispatch] = useEnhancedReducer(
-    downshiftUseComboboxReducer,
-    initialState,
-    props,
-  )
-  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
+  const [
+    {isOpen, highlightedIndex, selectedItem, inputValue},
+    dispatch,
+  ] = useEnhancedReducer(downshiftUseComboboxReducer, initialState, props)
 
   /* Refs */
   const menuRef = useRef(null)
@@ -69,24 +70,54 @@ function useCombobox(userProps = {}) {
   const previousResultCountRef = useRef()
 
   /* Effects */
-  /* Sets a11y status message on changes in isOpen. */
-  useA11yMessageEffect(
-    isInitialMount.current,
-    state,
-    props,
-    props.getA11yStatusMessage,
-    [isOpen, highlightedIndex, selectedItem, inputValue],
-    {previousResultCount: previousResultCountRef.current},
-  )
+  /* Sets a11y status message on changes in state. */
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+
+    const previousResultCount = previousResultCountRef.current
+
+    updateA11yStatus(
+      () =>
+        getA11yStatusMessage({
+          isOpen,
+          highlightedIndex,
+          selectedItem,
+          inputValue,
+          highlightedItem: items[highlightedIndex],
+          resultCount: items.length,
+          itemToString,
+          previousResultCount,
+        }),
+      environment.document,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, highlightedIndex, selectedItem, inputValue])
   /* Sets a11y status message on changes in selectedItem. */
-  useA11yMessageEffect(
-    isInitialMount.current,
-    state,
-    props,
-    props.getA11ySelectionMessage,
-    [selectedItem],
-    {previousResultCount: previousResultCountRef.current},
-  )
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+
+    const previousResultCount = previousResultCountRef.current
+
+    updateA11yStatus(
+      () =>
+        getA11ySelectionMessage({
+          isOpen,
+          highlightedIndex,
+          selectedItem,
+          inputValue,
+          highlightedItem: items[highlightedIndex],
+          resultCount: items.length,
+          itemToString,
+          previousResultCount,
+        }),
+      environment.document,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItem])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
     if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
@@ -113,11 +144,13 @@ function useCombobox(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
-  // Update previous result count.
   useEffect(() => {
-    if (!isInitialMount.current) {
-      previousResultCountRef.current = items.length
+    if (isInitialMount.current) {
+      return
     }
+
+    previousResultCountRef.current = items.length
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   })
   useEffect(() => {
     isInitialMount.current = false
