@@ -6,6 +6,8 @@ route: /use-combobox
 
 import {useState} from 'react'
 import {Playground} from 'docz'
+import {Input, IconButton, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {useCombobox} from '../../src'
 import {items, menuStyles, comboboxStyles} from '../utils'
 
@@ -124,6 +126,115 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
     }
     return <DropdownCombobox />
 }}
+</Playground>
+
+## MaterialUI
+
+A custom `combobox/autocomoplete` element can be created using UI Library
+components as well. Many libraries will provide basic elements such as buttons,
+texts/labels, inputs and lists, which can be styled according to each library
+guidelines. `useCombobox` is providing the additional stateful logic that will
+transform this selection of basic components into a fully working dropdown
+element.
+
+As `useCombobox` needs to perform some `focus()` and `scroll()` logic on the DOM
+elements, it will require the refs to the `React` components used. This will
+illustrate how to use `useCombobox` with `MaterialUI` library and how to
+correctly pass refs to the hook.
+
+Since `MaterialUI` components already accept a `ref` prop that will be filled
+with the resulting DOM element, we don't need to do anything specific rather
+than just spreading the getter props, apart from the case of the `Input`, which
+renders a wrapper element over the actual HTML `<input>`. In this case, since
+`Input` provides a prop for accessing the `<input>` element called `inputRef`,
+we will use the getter function like this:
+`getInputProps({refKey: 'inputRef'})`.
+
+Another point worth mentioning is that in this case items are objects and not
+strings. As a result, the `itemToString` prop is passed to `useCombobox`. It
+will return the string equivalent of the item which will be used for filtering
+by character keys and for the a11y message that will occur on every item
+selection: `${itemToString(item)} has been selected`. `item.primary` is chosen
+to be the string equialent of each item object.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobx-ui-libraries-materialui-8jfx1)
+
+<Playground>
+  {() => {
+    // import React from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, useStyles, comboboxStyles } from './utils'
+    // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+    // import {IconButton, Input, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+    function DropdownCombobox() {
+      const classes = useStyles()
+      const itemToString = item => (item ? item.primary : '')
+      const [inputItems, setInputItems] = React.useState(items)
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+        getInputProps,
+        getComboboxProps,
+      } = useCombobox({
+        items: inputItems,
+        itemToString,
+        onInputValueChange: ({inputValue}) => {
+          setInputItems(
+            items.filter(item =>
+              itemToString(item)
+                .toLowerCase()
+                .startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
+      return (
+        <div>
+          <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <Input {...getInputProps({refKey: 'inputRef'})} />
+            <IconButton
+              color="secondary"
+              className={classes.button}
+              {...getToggleButtonProps()}
+            >
+              <ExpandMoreIcon className={classes.rightIcon} />
+            </IconButton>
+          </div>
+          <List className={classes.root} {...getMenuProps()}>
+            {isOpen &&
+              inputItems.map((item, index) => {
+                return (
+                  <ListItem
+                    key={`${item.primary}-${index}`}
+                    className={
+                      index === highlightedIndex ? classes.highlighted : undefined
+                    }
+                    {...getItemProps({
+                      item,
+                      index,
+                    })}
+                  >
+                    <ListItemAvatar>
+                      <Avatar>{React.createElement(item.icon)}</Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={item.primary}
+                      secondary={item.secondary}
+                    />
+                  </ListItem>
+                )
+              })}
+          </List>
+        </div>
+      )
+    }
+    return DropdownCombobox
+  }}
 </Playground>
 
 ## Controlling state

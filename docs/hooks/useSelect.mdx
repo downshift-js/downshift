@@ -6,6 +6,8 @@ route: /use-select
 
 import {useState} from 'react'
 import {Playground} from 'docz'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import {Button, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
 import {useSelect} from '../../src'
 import {
   items,
@@ -13,15 +15,6 @@ import {
   itemsAsObjects,
   useStyles,
 } from '../utils'
-
-import Button from '@material-ui/core/Button'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import FormLabel from '@material-ui/core/FormLabel'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import Avatar from '@material-ui/core/Avatar'
 
 # useSelect
 
@@ -126,25 +119,25 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 A custom `<select>` element can be created using UI Library components as well.
 Many libraries will provide basic elements such as buttons, texts/labels and
-lists, which can be styles according to each library guidelines. `useSelect` is
+lists, which can be styled according to each library guidelines. `useSelect` is
 providing the additional stateful logic that will transform this selection of
 basic components into a fully working dropdown element.
 
 As `useSelect` needs to perform some `focus()` and `scroll()` logic on the DOM
-elements, it will require the refs to the `React` components used. I will
+elements, it will require the refs to the `React` components used. This will
 illustrate how to use `useSelect` with `MaterialUI` library and how to correctly
 pass refs to the hook.
+
+Since `MaterialUI` components already accept a `ref` prop that will be filled
+with the resulting DOM element, we don't need to do anything specific rather
+than just spreading the getter props.
 
 Another point worth mentioning is that in this case items are objects and not
 strings. As a result, the `itemToString` prop is passed to `useSelect`. It will
 return the string equivalent of the item which will be used for
 selection/highlight by character keys and for the a11y message that will occur
-on every item selection: `$ItemString has been selected`.
-
-Since `MaterialUI` components already accept a `ref` prop that will be filled
-with the resulting DOM element, we don't need to do anything specific rather
-than just spreading the getter props. `item.primary` is chosen to be the string
-equialent of each item object.
+on every item selection: `$ItemString has been selected`. `item.primary` is
+chosen to be the string equialent of each item object.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-ui-libraries-materialui-fls5o)
 
@@ -153,7 +146,8 @@ equialent of each item object.
     // import React from 'react'
     // import { useSelect } from 'downshift'
     // import { items, useStyles } from './utils'
-    // import the components and makeStyles from @material-ui 
+    // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+    // import {Button, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
     function MaterialDropdownSelect() {
       const classes = useStyles()
       const itemToString = item => item ? item.primary : ''
