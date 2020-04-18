@@ -9,7 +9,7 @@ import {Playground} from 'docz'
 import {Input, IconButton, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {useCombobox} from '../../src'
-import {items, menuStyles, comboboxStyles} from '../utils'
+import {items, useStyles, itemsAsObjects, menuStyles, comboboxStyles} from '../utils'
 
 # useCombobox
 
@@ -163,13 +163,13 @@ to be the string equialent of each item object.
   {() => {
     // import React from 'react'
     // import { useCombobox } from 'downshift'
-    // import { items, useStyles, comboboxStyles } from './utils'
+    // import { items: itemsAsObjects, useStyles, comboboxStyles } from './utils'
     // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-    // import {IconButton, Input, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+    // import {IconButton, Input, FormLabel, List, ListItem, ListItemText} from '@material-ui/core'
     function DropdownCombobox() {
       const classes = useStyles()
       const itemToString = item => (item ? item.primary : '')
-      const [inputItems, setInputItems] = React.useState(items)
+      const [inputItems, setInputItems] = React.useState(itemsAsObjects)
       const {
         isOpen,
         getToggleButtonProps,
@@ -184,7 +184,7 @@ to be the string equialent of each item object.
         itemToString,
         onInputValueChange: ({inputValue}) => {
           setInputItems(
-            items.filter(item =>
+            itemsAsObjects.filter(item =>
               itemToString(item)
                 .toLowerCase()
                 .startsWith(inputValue.toLowerCase()),
@@ -194,9 +194,9 @@ to be the string equialent of each item object.
       })
       return (
         <div>
-          <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
+          <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
           <div style={comboboxStyles} {...getComboboxProps()}>
-            <Input {...getInputProps({refKey: 'inputRef'})} />
+            <Input placeholder="Employees" {...getInputProps({refKey: 'inputRef'})} />
             <IconButton
               color="secondary"
               className={classes.button}
@@ -219,9 +219,6 @@ to be the string equialent of each item object.
                       index,
                     })}
                   >
-                    <ListItemAvatar>
-                      <Avatar>{React.createElement(item.icon)}</Avatar>
-                    </ListItemAvatar>
                     <ListItemText
                       primary={item.primary}
                       secondary={item.secondary}
@@ -233,7 +230,7 @@ to be the string equialent of each item object.
         </div>
       )
     }
-    return DropdownCombobox
+    return <DropdownCombobox />
   }}
 </Playground>
 

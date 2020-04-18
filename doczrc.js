@@ -9,6 +9,7 @@ export default {
   ],
   themeConfig: {
     initialColorMode: 'light',
+    showDarkModeSwitch: false,
     breakpoints: ['920px'],
     logo: {
       src: '/public/logo/downshift.svg',

@@ -145,9 +145,9 @@ chosen to be the string equialent of each item object.
   {() => {
     // import React from 'react'
     // import { useSelect } from 'downshift'
-    // import { items, useStyles } from './utils'
+    // import { items: itemsAsObjects, useStyles } from './utils'
     // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-    // import {Button, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+    // import {Button, FormLabel, List, ListItem, ListItemText } from '@material-ui/core'
     function MaterialDropdownSelect() {
       const classes = useStyles()
       const itemToString = item => item ? item.primary : ''
@@ -165,14 +165,14 @@ chosen to be the string equialent of each item object.
       })
       return (
         <div>
-          <FormLabel {...getLabelProps()}>My Cloud:</FormLabel>
+          <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
           <Button
             variant="contained"
             color="secondary"
             className={classes.button}
             {...getToggleButtonProps()}
           >
-            {selectedItem ? itemToString(selectedItem) : 'Folders'}
+            {selectedItem ? itemToString(selectedItem) : 'Employees'}
             <ExpandMoreIcon className={classes.rightIcon} />
           </Button>
           <List className={classes.root} {...getMenuProps()}>
@@ -191,9 +191,6 @@ chosen to be the string equialent of each item object.
                       index,
                     })}
                   >
-                    <ListItemAvatar>
-                      <Avatar>{React.createElement(item.icon)}</Avatar>
-                    </ListItemAvatar>
                     <ListItemText
                       primary={item.primary}
                       secondary={item.secondary}
