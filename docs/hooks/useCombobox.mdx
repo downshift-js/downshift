@@ -244,7 +244,7 @@ props, for instance `highlightedIndex` or `selectedItem`.
 The example below shows how to control `selectedItem`. The value computed by
 Downshift is received in `onSelectedItemChange` callback. The user checks it and
 passes back a controlled value via `selectedItem`. Here, for example, it checks
-if `selectedItem` is a movie is directed by Mr. Tarantino.
+if `selectedItem` is an element that begings with the letter `C`.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
 
@@ -290,7 +290,7 @@ if `selectedItem` is a movie is directed by Mr. Tarantino.
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
-            <button {...getToggleButtonProps()} aria-label={"toggle menu"}>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
           </div>
