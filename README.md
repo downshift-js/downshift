@@ -1,7 +1,7 @@
 <h1 align="center">
   downshift 🏎
   <br>
-  <img src="https://downshift.netlify.com/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <img src="https://downshift.netlify.app/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
@@ -83,7 +83,7 @@ the possibility of multiple selection, and want it to be functional and
 accessible, jump directly to the already implemented
 [useSelect][useselect-readme], [useCombobox][combobox-readme] and
 [useMultipleSelection][multiple-selection-readme]. For more examples of how to
-use the hooks check out our [docsite](https://downshift.netlify.com/)!
+use the hooks check out our [docsite](https://downshift.netlify.app/)!
 
 ### Bundle size concerns
 
@@ -251,7 +251,7 @@ The previous example without `getRootProps` is
 > Warning: The example without `getRootProps` is not fully accessible with
 > screen readers as it's not possible to achieve a correct HTML structure for
 > the combobox. Examples on how to use `Downshift` component with and without
-> `getRootProps` are on the [docsite](https://downshift.netlify.com/).
+> `getRootProps` are on the [docsite](https://downshift.netlify.app/).
 
 `<Downshift />` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
