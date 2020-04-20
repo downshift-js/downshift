@@ -88,7 +88,7 @@ const propTypes = {
  * @param {Object} param the downshift state and other relevant properties
  * @return {String} the a11y status message
  */
-function getA11yStatusMessage({isOpen, resultCount}) {
+function getA11yStatusMessage({isOpen, resultCount, previousResultCount}) {
   if (!isOpen) {
     return ''
   }
@@ -97,9 +97,13 @@ function getA11yStatusMessage({isOpen, resultCount}) {
     return 'No results are available.'
   }
 
-  return `${resultCount} result${
-    resultCount === 1 ? ' is' : 's are'
-  } available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.`
+  if (resultCount !== previousResultCount) {
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.`
+  }
+  
+  return ''
 }
 
 const defaultProps = {

@@ -402,10 +402,9 @@ This function is passed as props to a `Status` component nested within and
 allows you to create your own assertive ARIA statuses.
 
 A default `getA11yStatusMessage` function is provided that will check
-`resultCount` and return "No results." or if there are results but no item is
-highlighted, "`resultCount` results are available, use up and down arrow keys to
-navigate." If an item is highlighted it will run `itemToString(highlightedItem)`
-and display the value of the `highlightedItem`.
+`resultCount` and return "No results are available." or if there are results ,
+"`resultCount` results are available, use up and down arrow keys to navigate.
+Press Enter key to select."
 
 The object you are passed to generate your status message has the following
 properties:

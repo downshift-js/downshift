@@ -89,7 +89,7 @@ export interface A11yStatusMessageOptions<Item> {
   inputValue: string
   isOpen: boolean
   itemToString: (item: Item) => string
-  previousResultCount?: number
+  previousResultCount: number
   resultCount: number
   highlightedItem: Item
   selectedItem: Item

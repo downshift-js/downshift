@@ -257,11 +257,10 @@ reset or when an item is selected.
 This function is passed as props to a `Status` component nested within and
 allows you to create your own assertive ARIA statuses.
 
-A default `getA11yStatusMessage` function is provided. It is called when
-`isOpen` changes. When menu is opened, the announcement message is "No results"
-if there aren't any items or "`resultCount` results are available, use up and
-down arrow keys to navigate. Press Enter or Space Bar key to select." depending
-on the number of items in the menu.
+A default `getA11yStatusMessage` function is provided that will check
+`resultCount` and return "No results are available." or if there are results ,
+"`resultCount` results are available, use up and down arrow keys to navigate.
+Press Enter or Space Bar keys to select."
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -282,15 +281,16 @@ properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property           | type            | description                                                                                  |
-| ------------------ | --------------- | -------------------------------------------------------------------------------------------- |
-| `highlightedIndex` | `number`        | The currently highlighted index                                                              |
-| `highlightedItem`  | `any`           | The value of the highlighted item                                                            |
-| `inputValue`       | `string`        | The current input value                                                                      |
-| `isOpen`           | `boolean`       | The `isOpen` state                                                                           |
-| `itemToString`     | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `resultCount`      | `number`        | The total items showing in the dropdown                                                      |
-| `selectedItem`     | `any`           | The value of the currently selected item                                                     |
+| property              | type            | description                                                                                  |
+| --------------------- | --------------- | -------------------------------------------------------------------------------------------- |
+| `highlightedIndex`    | `number`        | The currently highlighted index                                                              |
+| `highlightedItem`     | `any`           | The value of the highlighted item                                                            |
+| `inputValue`          | `string`        | The current input value                                                                      |
+| `isOpen`              | `boolean`       | The `isOpen` state                                                                           |
+| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
+| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated                 |
+| `resultCount`         | `number`        | The total items showing in the dropdown                                                      |
+| `selectedItem`        | `any`           | The value of the currently selected item                                                     |
 
 ### onHighlightedIndexChange
 

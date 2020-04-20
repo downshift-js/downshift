@@ -7,8 +7,8 @@ import {
   isAcceptedCharacterKey,
   useEnhancedReducer,
   getInitialState,
+  updateA11yStatus,
 } from '../utils'
-import setStatus from '../../set-a11y-status'
 import {
   callAllEventHandlers,
   handleRefs,
@@ -39,24 +39,25 @@ function useSelect(userProps = {}) {
   }
   const {
     items,
-    itemToString,
-    getA11yStatusMessage,
-    getA11ySelectionMessage,
     scrollIntoView,
     environment,
     initialIsOpen,
     defaultIsOpen,
+    itemToString,
+    getA11ySelectionMessage,
+    getA11yStatusMessage,
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [
-    {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatch,
-  ] = useEnhancedReducer(downshiftSelectReducer, initialState, props)
+  const [{isOpen, highlightedIndex, selectedItem, inputValue}, dispatch] = useEnhancedReducer(
+    downshiftSelectReducer,
+    initialState,
+    props,
+  )
 
-  /* Refs */
+  // Refs
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const isInitialMount = useRef(true)
@@ -67,48 +68,57 @@ function useSelect(userProps = {}) {
     isTouchMove: false,
   })
   const elementIds = useRef(getElementIds(props))
+  const previousResultCountRef = useRef()
 
   // Some utils.
   const getItemNodeFromIndex = index =>
     environment.document.getElementById(elementIds.current.getItemId(index))
 
   // Effects.
-  /* Sets a11y status message on changes in isOpen. */
+  /* Sets a11y status message on changes in state. */
   useEffect(() => {
     if (isInitialMount.current) {
       return
     }
 
-    setStatus(
-      getA11yStatusMessage({
-        highlightedIndex,
-        inputValue,
-        isOpen,
-        itemToString,
-        resultCount: items.length,
-        highlightedItem: items[highlightedIndex],
-        selectedItem,
-      }),
+    const previousResultCount = previousResultCountRef.current
+
+    updateA11yStatus(
+      () =>
+        getA11yStatusMessage({
+          isOpen,
+          highlightedIndex,
+          selectedItem,
+          inputValue,
+          highlightedItem: items[highlightedIndex],
+          resultCount: items.length,
+          itemToString,
+          previousResultCount,
+        }),
       environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
+  }, [isOpen, highlightedIndex, selectedItem, inputValue])
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
     if (isInitialMount.current) {
       return
     }
 
-    setStatus(
-      getA11ySelectionMessage({
-        highlightedIndex,
-        inputValue,
-        isOpen,
-        itemToString,
-        resultCount: items.length,
-        highlightedItem: items[highlightedIndex],
-        selectedItem,
-      }),
+    const previousResultCount = previousResultCountRef.current
+
+    updateA11yStatus(
+      () =>
+        getA11ySelectionMessage({
+          isOpen,
+          highlightedIndex,
+          selectedItem,
+          inputValue,
+          highlightedItem: items[highlightedIndex],
+          resultCount: items.length,
+          itemToString,
+          previousResultCount,
+        }),
       environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,6 +176,13 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
+  useEffect(() => {
+    if (isInitialMount.current) {
+      return
+    }
+
+    previousResultCountRef.current = items.length
+  })
   /* Make initial ref false. */
   useEffect(() => {
     isInitialMount.current = false

@@ -2,12 +2,17 @@ import {renderHook} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
-import {items, defaultIds} from '../../testUtils'
+import {
+  items,
+  defaultIds,
+  waitForDebouncedA11yStatusUpdate,
+} from '../../testUtils'
 import useSelect from '..'
 
 jest.useFakeTimers()
 
 describe('props', () => {
+  beforeEach(jest.runAllTimers)
   afterEach(cleanup)
 
   test('if falsy then prop types error is thrown', () => {
@@ -49,6 +54,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'aaa has been selected.',
@@ -57,10 +63,6 @@ describe('props', () => {
   })
 
   describe('itemToString', () => {
-    afterEach(() => {
-      act(() => jest.runAllTimers())
-    })
-
     test('should provide string version to a11y status message', () => {
       const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
         itemToString: () => 'custom-item',
@@ -68,6 +70,7 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(0)
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'custom-item has been selected.',
@@ -76,31 +79,47 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    afterEach(() => {
-      act(() => jest.runAllTimers())
+    test('reports that an item has been selected', () => {
+      const itemIndex = 0
+      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+        initialIsOpen: true,
+      })
+
+      clickOnItemAtIndex(itemIndex)
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusContainer()).toHaveTextContent(
+        `${items[itemIndex]} has been selected.`,
+      )
     })
 
     test('is called with object that contains specific props', () => {
       const getA11ySelectionMessage = jest.fn()
+      const inputValue = 'a'
+      const isOpen = true
+      const highlightedIndex = 0
       const {clickOnItemAtIndex} = renderSelect({
         getA11ySelectionMessage,
-        isOpen: true,
-        items: [{str: 'ala'}],
-        highlightedIndex: 0,
+        inputValue,
+        isOpen,
+        highlightedIndex,
+        items,
       })
 
       clickOnItemAtIndex(0)
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
       expect(getA11ySelectionMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          highlightedIndex: expect.any(Number),
-          inputValue: expect.any(String),
-          isOpen: expect.any(Boolean),
+          inputValue,
+          isOpen,
+          highlightedIndex,
+          resultCount: items.length,
+          previousResultCount: undefined,
+          highlightedItem: items[0],
           itemToString: expect.any(Function),
-          resultCount: expect.any(Number),
-          highlightedItem: expect.anything(),
-          selectedItem: expect.anything(),
+          selectedItem: items[0],
         }),
       )
     })
@@ -112,22 +131,20 @@ describe('props', () => {
       })
 
       clickOnItemAtIndex(3)
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
   })
 
   describe('getA11yStatusMessage', () => {
-    afterEach(() => {
-      act(() => jest.runAllTimers())
-    })
-
     test('reports that no results are available if items list is empty', () => {
       const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
         items: [],
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         'No results are available',
@@ -140,6 +157,7 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '1 result is available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
@@ -152,6 +170,7 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
         '2 results are available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
@@ -165,6 +184,7 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('')
     })
@@ -175,6 +195,7 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
       act(() => jest.advanceTimersByTime(500))
 
       expect(getA11yStatusContainer()).toHaveTextContent('')
@@ -186,30 +207,69 @@ describe('props', () => {
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with object that contains specific props at toggle', () => {
+    test('is called with previousResultCount that gets updated correctly', () => {
       const getA11yStatusMessage = jest.fn()
-      const {clickOnToggleButton} = renderSelect({
+      const inputItems = ['aaa', 'bbb']
+      const {clickOnToggleButton, keyDownOnMenu} = renderSelect({
         getA11yStatusMessage,
-        highlightedIndex: 0,
-        selectedItem: items[0],
+        items: inputItems,
       })
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          highlightedIndex: expect.any(Number),
-          inputValue: expect.any(String),
-          isOpen: expect.any(Boolean),
+          previousResultCount: undefined,
+          resultCount: inputItems.length,
+        }),
+      )
+
+      inputItems.pop()
+      keyDownOnMenu('ArrowDown')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
+      expect(getA11yStatusMessage).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          previousResultCount: inputItems.length + 1,
+          resultCount: inputItems.length,
+        }),
+      )
+    })
+
+    test('is called with object that contains specific props at toggle', () => {
+      const getA11yStatusMessage = jest.fn()
+      const inputValue = 'a'
+      const highlightedIndex = 1
+      const initialSelectedItem = items[highlightedIndex]
+      const {clickOnToggleButton} = renderSelect({
+        getA11yStatusMessage,
+        inputValue,
+        initialSelectedItem,
+        selectedItem: items[highlightedIndex],
+      })
+
+      clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex,
+          inputValue,
+          isOpen: true,
           itemToString: expect.any(Function),
-          resultCount: expect.any(Number),
-          highlightedItem: expect.anything(),
-          selectedItem: expect.anything(),
+          previousResultCount: undefined,
+          resultCount: items.length,
+          highlightedItem: items[highlightedIndex],
+          selectedItem: items[highlightedIndex],
         }),
       )
     })
@@ -225,6 +285,7 @@ describe('props', () => {
       const {clickOnToggleButton} = renderSelect({items: [], environment})
 
       clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
