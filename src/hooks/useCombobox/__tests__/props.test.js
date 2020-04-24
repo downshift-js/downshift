@@ -100,9 +100,7 @@ describe('props', () => {
       keyDownOnInput('Escape')
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        '',
-      )
+      expect(getA11yStatusContainer()).toHaveTextContent('')
     })
 
     test('is called with object that contains specific props', () => {
@@ -301,36 +299,25 @@ describe('props', () => {
   describe('highlightedIndex', () => {
     test('controls the state property if passed', () => {
       const highlightedIndex = 1
+      const expectedItemId = defaultIds.getItemId(highlightedIndex)
       const {keyDownOnInput, input} = renderCombobox({
         isOpen: true,
         highlightedIndex,
       })
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
       keyDownOnInput('ArrowDown')
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
       keyDownOnInput('End')
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
       keyDownOnInput('ArrowUp')
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
     })
   })
 
@@ -360,6 +347,21 @@ describe('props', () => {
       blurInput()
 
       expect(input.value).toBe('Dohn Joe')
+    })
+
+    test('is changed once a new selectedItem comes from props', () => {
+      const initialSelectedItem = 'John Doe'
+      const finalSelectedItem = 'John Wick'
+      const {rerenderWithProps, input} = renderCombobox({
+        isOpen: true,
+        selectedItem: initialSelectedItem,
+      })
+
+      expect(input).toHaveValue(initialSelectedItem)
+
+      rerenderWithProps({selectedItem: finalSelectedItem})
+
+      expect(input).toHaveValue(finalSelectedItem)
     })
   })
 
@@ -392,41 +394,42 @@ describe('props', () => {
     test('controls the state property if passed', () => {
       const highlightedIndex = 2
       const selectedItem = items[highlightedIndex]
-      const {keyDownOnInput, input, clickOnToggleButton} = renderCombobox({
+      const expectedItemId = defaultIds.getItemId(highlightedIndex)
+      const {
+        keyDownOnInput,
+        input,
+        clickOnItemAtIndex,
+        clickOnToggleButton,
+      } = renderCombobox({
         selectedItem,
         initialIsOpen: true,
       })
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
+      keyDownOnInput('ArrowDown')
       keyDownOnInput('ArrowDown')
       keyDownOnInput('Enter')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
+      keyDownOnInput('ArrowUp')
       keyDownOnInput('ArrowUp')
       keyDownOnInput('Enter')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
 
       keyDownOnInput('Escape')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+
+      clickOnItemAtIndex(highlightedIndex + 1)
+      clickOnToggleButton()
+
+      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
     })
   })
 

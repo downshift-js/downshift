@@ -124,7 +124,17 @@ export function capitalizeString(string) {
   return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
 }
 
-export function useEnhancedReducer(reducer, initialState, props) {
+/**
+ * Computes the controlled state using a the previous state, props,
+ * two reducers, one from downshift and an optional one from the user.
+ * Also calls the onChange handlers for state values that have changed.
+ *
+ * @param {Function} reducer Reducer function from downshift.
+ * @param {Object} initialState Initial state of the hook.
+ * @param {Object} props The hook props.
+ * @returns {Array} An array with the state and an action dispatcher.
+ */
+export function useControlledState(reducer, initialState, props) {
   const [uncontrolledState, setState] = useState(initialState)
   const state = getState(uncontrolledState, props)
 
