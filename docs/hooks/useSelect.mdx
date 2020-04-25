@@ -7,14 +7,17 @@ route: /use-select
 import {useState} from 'react'
 import {Playground} from 'docz'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import {Button, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
-import {useSelect} from '../../src'
 import {
-  items,
-  menuStyles,
-  itemsAsObjects,
-  useStyles,
-} from '../utils'
+  Button,
+  FormLabel,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+} from '@material-ui/core'
+import {useSelect} from '../../src'
+import {items, menuStyles, itemsAsObjects, useStyles} from '../utils'
 
 # useSelect
 
@@ -150,7 +153,7 @@ chosen to be the string equialent of each item object.
     // import {Button, FormLabel, List, ListItem, ListItemText } from '@material-ui/core'
     function MaterialDropdownSelect() {
       const classes = useStyles()
-      const itemToString = item => item ? item.primary : ''
+      const itemToString = item => (item ? item.primary : '')
       const {
         isOpen,
         selectedItem,
@@ -213,12 +216,9 @@ via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
 changing them based on your requirements and passing them back to Downshift via
 props, for instance `highlightedIndex` or `selectedItem`.
 
-The example below shows how to control `selectedItem`. The value computed by
-Downshift is received in `onSelectedItemChange` callback. The user checks it and
-passes back a controlled value via`selectedChangeProp`. Here, for example, it
-checks if `selectedItem` starts with the letter `C` and only then updates the
-`selectedItem` in the widget. If not updated via prop, then the dropdown behaves
-as if no item was selected.
+The example below shows how to control `selectedItem`. Both selects share the
+same `selectedItem` reference, and changing it in one of the dropdowns will update 
+the value in the other one as well.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
 
@@ -227,11 +227,7 @@ as if no item was selected.
     // import React, { useState } from 'react'
     // import { useSelect } from 'downshift'
     // import { items, menuStyles } from './utils'
-    function DropdownSelect() {
-      const [selectedItem, setSelectedItem] = useState()
-      const selectionMessage = selectedItem
-        ? `Selection is ${selectedItem}! Well done!`
-        : 'Select item starting with the letter C.'
+    function DropdownSelect({selectedItem, handleSelectedItemChange}) {
       const {
         isOpen,
         getToggleButtonProps,
@@ -242,15 +238,10 @@ as if no item was selected.
       } = useSelect({
         items,
         selectedItem,
-        onSelectedItemChange: ({selectedItem}) => {
-          if (selectedItem.startsWith('C')) {
-            setSelectedItem(selectedItem)
-          }
-        },
+        onSelectedItemChange: handleSelectedItemChange,
       })
       return (
         <div>
-          <div>{selectionMessage}</div>
           <label {...getLabelProps()}>Choose an element:</label>
           <button {...getToggleButtonProps()}>
             {selectedItem || 'Elements'}
@@ -274,7 +265,25 @@ as if no item was selected.
         </div>
       )
     }
-    return <DropdownSelect />
+    function ControlledComboboxes() {
+      const [selectedItem, setSelectedItem] = useState(null)
+      function handleSelectedItemChange({selectedItem}) {
+        setSelectedItem(selectedItem)
+      }
+      return (
+        <div>
+          <DropdownSelect
+            selectedItem={selectedItem}
+            handleSelectedItemChange={handleSelectedItemChange}
+          />
+          <DropdownSelect
+            selectedItem={selectedItem}
+            handleSelectedItemChange={handleSelectedItemChange}
+          />
+        </div>
+      )
+    }
+    return <ControlledComboboxes />
   }}
 </Playground>
 
@@ -357,5 +366,4 @@ In all other state change types, we return `Downshift` default changes.
   }}
 </Playground>
 
-[select-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[select-aria]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
