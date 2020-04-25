@@ -795,6 +795,33 @@ describe('props', () => {
       clickOnToggleButton()
     })
 
+    // should check that no blur state change occurs after item selection.
+    // https://github.com/downshift-js/downshift/issues/965
+    test('is called only once on item selection', () => {
+      const stateReducer = jest.fn((s, a) => a.changes)
+      const {
+        clickOnToggleButton,
+        keyDownOnMenu,
+        clickOnItemAtIndex,
+      } = renderSelect({stateReducer, initialIsOpen: true})
+
+      clickOnItemAtIndex(0)
+
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+
+      clickOnToggleButton()
+      keyDownOnMenu('ArrowDown')
+      keyDownOnMenu('Enter')
+
+      expect(stateReducer).toHaveBeenCalledTimes(4)
+
+      clickOnToggleButton()
+      keyDownOnMenu('ArrowDown')
+      keyDownOnMenu(' ')
+
+      expect(stateReducer).toHaveBeenCalledTimes(7)
+    })
+
     test('changes are visible in onChange handlers', () => {
       const highlightedIndex = 2
       const selectedItem = {foo: 'bar'}
