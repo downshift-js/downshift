@@ -398,6 +398,7 @@ export enum UseComboboxStateChangeTypes {
   FunctionSelectItem = '__function_select_item__',
   FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
+  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__'
 }
 
 export interface UseComboboxProps<Item> {
@@ -511,6 +512,7 @@ export interface UseComboboxInterface {
     FunctionSelectItem: UseComboboxStateChangeTypes.FunctionSelectItem
     FunctionSetInputValue: UseComboboxStateChangeTypes.FunctionSetInputValue
     FunctionReset: UseComboboxStateChangeTypes.FunctionReset
+    ControlledPropUpdatedSelectedItem: UseComboboxStateChangeTypes.ControlledPropUpdatedSelectedItem
   }
 }
 

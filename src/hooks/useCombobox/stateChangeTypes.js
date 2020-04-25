@@ -30,5 +30,5 @@ export const FunctionSetInputValue = productionEnum(
 )
 export const FunctionReset = productionEnum('__function_reset__')
 export const ControlledPropUpdatedSelectedItem = productionEnum(
-  '__autocomplete_controlled_prop_updated_selected_item__',
+  '__controlled_prop_updated_selected_item__',
 )
