@@ -977,7 +977,7 @@ describe('props', () => {
       const onStateChange = jest.fn()
       const {
         clickOnToggleButton,
-        blurMenu,
+        tab,
         mouseLeaveMenu,
         keyDownOnToggleButton,
         keyDownOnMenu,
@@ -1142,7 +1142,7 @@ describe('props', () => {
         }),
       )
 
-      blurMenu()
+      tab()
 
       expect(onStateChange).toHaveBeenCalledTimes(16)
       expect(onStateChange).toHaveBeenLastCalledWith(
