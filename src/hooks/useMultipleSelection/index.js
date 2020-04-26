@@ -1,7 +1,7 @@
 import {useRef, useEffect} from 'react'
 import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
-import {useEnhancedReducer, getItemIndex} from '../utils'
+import {useControlledState, getItemIndex} from '../utils'
 import {
   getInitialState,
   defaultProps,
@@ -27,7 +27,7 @@ function useMultipleSelection(userProps = {}) {
   } = props
 
   // Reducer init.
-  const [{activeIndex, selectedItems}, dispatch] = useEnhancedReducer(
+  const [{activeIndex, selectedItems}, dispatch] = useControlledState(
     downshiftMultipleSelectionReducer,
     getInitialState(props),
     props,

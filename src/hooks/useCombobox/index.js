@@ -7,13 +7,14 @@ import {
   callAllEventHandlers,
   targetWithinDownshift,
 } from '../../utils'
+import {getItemIndex, getPropTypesValidator, updateA11yStatus} from '../utils'
 import {
-  getItemIndex,
-  getPropTypesValidator,
-  useEnhancedReducer,
-  updateA11yStatus,
-} from '../utils'
-import {getInitialState, propTypes, defaultProps, getElementIds} from './utils'
+  getInitialState,
+  propTypes,
+  defaultProps,
+  getElementIds,
+  useControlledState,
+} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -51,7 +52,7 @@ function useCombobox(userProps = {}) {
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
     dispatch,
-  ] = useEnhancedReducer(downshiftUseComboboxReducer, initialState, props)
+  ] = useControlledState(downshiftUseComboboxReducer, initialState, props)
 
   /* Refs */
   const menuRef = useRef(null)

@@ -24,6 +24,8 @@ jest.mock('../../utils', () => {
 const renderCombobox = (props, uiCallback) => {
   const ui = <DropdownCombobox {...props} />
   const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+  const rerenderWithProps = newProps =>
+    wrapper.rerender(<DropdownCombobox {...newProps} />)
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
@@ -63,6 +65,7 @@ const renderCombobox = (props, uiCallback) => {
 
   return {
     ...wrapper,
+    rerenderWithProps,
     label,
     menu,
     toggleButton,

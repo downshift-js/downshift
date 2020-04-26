@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {useCallback, useReducer} from 'react'
+import {useState} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -64,7 +64,9 @@ function stateReducer(s, a) {
 function getA11ySelectionMessage(selectionParameters) {
   const {selectedItem, itemToString: itemToStringLocal} = selectionParameters
 
-  return selectedItem ? `${itemToStringLocal(selectedItem)} has been selected.` : ''
+  return selectedItem
+    ? `${itemToStringLocal(selectedItem)} has been selected.`
+    : ''
 }
 
 /**
@@ -122,23 +124,30 @@ export function capitalizeString(string) {
   return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
 }
 
-export function useEnhancedReducer(reducer, initialState, props) {
-  const enhancedReducer = useCallback(
-    (state, action) => {
-      state = getState(state, action.props)
+/**
+ * Computes the controlled state using a the previous state, props,
+ * two reducers, one from downshift and an optional one from the user.
+ * Also calls the onChange handlers for state values that have changed.
+ *
+ * @param {Function} reducer Reducer function from downshift.
+ * @param {Object} initialState Initial state of the hook.
+ * @param {Object} props The hook props.
+ * @returns {Array} An array with the state and an action dispatcher.
+ */
+export function useControlledState(reducer, initialState, props) {
+  const [uncontrolledState, setState] = useState(initialState)
+  const state = getState(uncontrolledState, props)
 
-      const {stateReducer: stateReduceLocal} = action.props
-      const changes = reducer(state, action)
-      const newState = stateReduceLocal(state, {...action, changes})
+  const dispatch = action => {
+    const {stateReducer: stateReducerFromProps} = action.props
+    const changes = reducer(state, action)
+    const newState = stateReducerFromProps(state, {...action, changes})
 
-      callOnChangeProps(action, state, newState)
+    callOnChangeProps(action, state, newState)
 
-      return newState
-    },
-    [reducer],
-  )
+    setState(newState)
+  }
 
-  const [state, dispatch] = useReducer(enhancedReducer, initialState)
   const dispatchWithProps = action => dispatch({props, ...action})
 
   return [getState(state, props), dispatchWithProps]
