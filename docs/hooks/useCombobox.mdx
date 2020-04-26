@@ -6,10 +6,25 @@ route: /use-combobox
 
 import {useState} from 'react'
 import {Playground} from 'docz'
-import {Input, IconButton, FormLabel, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core'
+import {
+  Input,
+  IconButton,
+  FormLabel,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+} from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {useCombobox} from '../../src'
-import {items, useStyles, itemsAsObjects, menuStyles, comboboxStyles} from '../utils'
+import {
+  items,
+  useStyles,
+  itemsAsObjects,
+  menuStyles,
+  comboboxStyles,
+} from '../utils'
 
 # useCombobox
 
@@ -78,7 +93,7 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
     // import { useCombobox } from 'downshift'
     // import { items, menuStyles, comboboxStyles } from './utils'
     function DropdownCombobox() {
-      const [inputItems, setInputItems] = useState(items);
+      const [inputItems, setInputItems] = useState(items)
       const {
         isOpen,
         getToggleButtonProps,
@@ -87,17 +102,17 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps
+        getItemProps,
       } = useCombobox({
         items: inputItems,
-        onInputValueChange: ({ inputValue }) => {
+        onInputValueChange: ({inputValue}) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase())
-            )
-          );
-        }
-      });
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
@@ -112,20 +127,22 @@ combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({ item, index })}
+                  {...getItemProps({item, index})}
                 >
                   {item}
                 </li>
               ))}
           </ul>
         </div>
-      );
+      )
     }
     return <DropdownCombobox />
-}}
+  }}
 </Playground>
 
 ## MaterialUI
@@ -196,7 +213,10 @@ to be the string equialent of each item object.
         <div>
           <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
           <div style={comboboxStyles} {...getComboboxProps()}>
-            <Input placeholder="Employees" {...getInputProps({refKey: 'inputRef'})} />
+            <Input
+              placeholder="Employees"
+              {...getInputProps({refKey: 'inputRef'})}
+            />
             <IconButton
               color="secondary"
               className={classes.button}
@@ -212,7 +232,9 @@ to be the string equialent of each item object.
                   <ListItem
                     key={`${item.primary}-${index}`}
                     className={
-                      index === highlightedIndex ? classes.highlighted : undefined
+                      index === highlightedIndex
+                        ? classes.highlighted
+                        : undefined
                     }
                     {...getItemProps({
                       item,
@@ -241,10 +263,9 @@ via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
 changing them based on your requirements and passing them back to Downshift via
 props, for instance `highlightedIndex` or `selectedItem`.
 
-The example below shows how to control `selectedItem`. The value computed by
-Downshift is received in `onSelectedItemChange` callback. The user checks it and
-passes back a controlled value via `selectedItem`. Here, for example, it checks
-if `selectedItem` is an element that begings with the letter `C`.
+The example below shows how to control `selectedItem`. Both comboboxes share the
+same `selectedItem` reference, and changing it in one of the dropdowns will update
+the value in the other one as well.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
 
@@ -253,12 +274,8 @@ if `selectedItem` is an element that begings with the letter `C`.
     // import React, { useState } from 'react'
     // import { useCombobox } from 'downshift'
     // import { items, menuStyles, comboboxStyles } from './utils'
-    function DropdownCombobox() {
-      const [selectedItem, setSelectedItem] = useState(null);
-      const selectionMessage = selectedItem
-        ? `Selection is ${selectedItem}! Well done!`
-        : 'Select item starting with the letter C.'
-      const [inputItems, setInputItems] = useState(items);
+    function DropdownCombobox({selectedItem, handleSelectedItemChange}) {
+      const [inputItems, setInputItems] = useState(items)
       const {
         isOpen,
         getToggleButtonProps,
@@ -267,26 +284,21 @@ if `selectedItem` is an element that begings with the letter `C`.
         getInputProps,
         getComboboxProps,
         highlightedIndex,
-        getItemProps
+        getItemProps,
       } = useCombobox({
         items: inputItems,
         selectedItem,
-        onSelectedItemChange: ({ selectedItem }) => {
-          if (!selectedItem || selectedItem.startsWith("C")) {
-            setSelectedItem(selectedItem);
-          }
-        },
-        onInputValueChange: ({ inputValue }) => {
+        onSelectedItemChange: handleSelectedItemChange,
+        onInputValueChange: ({inputValue}) => {
           setInputItems(
             items.filter(item =>
-              item.toLowerCase().startsWith(inputValue.toLowerCase())
-            )
-          );
-        }
-      });
+              item.toLowerCase().startsWith(inputValue.toLowerCase()),
+            ),
+          )
+        },
+      })
       return (
         <div>
-          <div>{selectionMessage}</div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
             <input {...getInputProps()} />
@@ -299,19 +311,39 @@ if `selectedItem` is an element that begings with the letter `C`.
               inputItems.map((item, index) => (
                 <li
                   style={
-                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                    highlightedIndex === index
+                      ? {backgroundColor: '#bde4ff'}
+                      : {}
                   }
                   key={`${item}${index}`}
-                  {...getItemProps({ item, index })}
+                  {...getItemProps({item, index})}
                 >
                   {item}
                 </li>
               ))}
           </ul>
         </div>
-      );
+      )
     }
-    return <DropdownCombobox />
+    function ControlledComboboxes() {
+      const [selectedItem, setSelectedItem] = useState(null)
+      function handleSelectedItemChange({selectedItem}) {
+        setSelectedItem(selectedItem)
+      }
+      return (
+        <div>
+          <DropdownCombobox
+            selectedItem={selectedItem}
+            handleSelectedItemChange={handleSelectedItemChange}
+          />
+          <DropdownCombobox
+            selectedItem={selectedItem}
+            handleSelectedItemChange={handleSelectedItemChange}
+          />
+        </div>
+      )
+    }
+    return <ControlledComboboxes />
   }}
 </Playground>
 
@@ -421,5 +453,4 @@ In all other state change types, we return `Downshift` default changes.
   }}
 </Playground>
 
-[combobox-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[combobox-aria]: https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html

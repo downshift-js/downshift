@@ -29,3 +29,6 @@ export const FunctionSetInputValue = productionEnum(
   '__function_set_input_value__',
 )
 export const FunctionReset = productionEnum('__function_reset__')
+export const ControlledPropUpdatedSelectedItem = productionEnum(
+  '__controlled_prop_updated_selected_item__',
+)
