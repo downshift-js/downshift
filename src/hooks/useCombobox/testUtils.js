@@ -100,9 +100,7 @@ const DropdownCombobox = ({renderSpy, ...props}) => {
   } = useCombobox({items, ...props})
   const {itemToString} = props.itemToString ? props : defaultProps
 
-  if (renderSpy) {
-    renderSpy()
-  }
+  renderSpy()
 
   return (
     <div>
@@ -143,4 +141,4 @@ const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {renderUseCombobox, dataTestIds, renderCombobox, DropdownCombobox}
+export {renderUseCombobox, dataTestIds, renderCombobox}

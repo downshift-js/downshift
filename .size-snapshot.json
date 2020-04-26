@@ -1,74 +1,38 @@
 {
   "dist/downshift.cjs.js": {
-<<<<<<< HEAD
-    "bundled": 137464,
-    "minified": 63123,
-    "gzipped": 13314
+    "bundled": 137466,
+    "minified": 63088,
+    "gzipped": 13305
   },
   "preact/dist/downshift.cjs.js": {
-    "bundled": 136201,
-    "minified": 62104,
-    "gzipped": 13212
+    "bundled": 136204,
+    "minified": 62070,
+    "gzipped": 13203
   },
   "preact/dist/downshift.umd.min.js": {
-    "bundled": 147577,
-    "minified": 47315,
-    "gzipped": 12623
+    "bundled": 147582,
+    "minified": 47311,
+    "gzipped": 12616
   },
   "dist/downshift.umd.min.js": {
-    "bundled": 151770,
-    "minified": 48622,
-    "gzipped": 13175
+    "bundled": 151774,
+    "minified": 48618,
+    "gzipped": 13173
   },
   "preact/dist/downshift.umd.js": {
-    "bundled": 157731,
-    "minified": 55673,
-    "gzipped": 13956
+    "bundled": 157736,
+    "minified": 55669,
+    "gzipped": 13943
   },
   "dist/downshift.umd.js": {
-    "bundled": 187314,
-    "minified": 64598,
-    "gzipped": 16588
+    "bundled": 187318,
+    "minified": 64594,
+    "gzipped": 16582
   },
   "dist/downshift.esm.js": {
-    "bundled": 136840,
-    "minified": 62576,
-    "gzipped": 13240,
-=======
-    "bundled": 136444,
-    "minified": 62731,
-    "gzipped": 13205
-  },
-  "preact/dist/downshift.cjs.js": {
-    "bundled": 135178,
-    "minified": 61709,
-    "gzipped": 13110
-  },
-  "preact/dist/downshift.umd.min.js": {
-    "bundled": 146510,
-    "minified": 47019,
-    "gzipped": 12526
-  },
-  "dist/downshift.umd.min.js": {
-    "bundled": 150706,
-    "minified": 48326,
-    "gzipped": 13075
-  },
-  "preact/dist/downshift.umd.js": {
-    "bundled": 156664,
-    "minified": 55376,
-    "gzipped": 13860
-  },
-  "dist/downshift.umd.js": {
-    "bundled": 186250,
-    "minified": 64302,
-    "gzipped": 16492
-  },
-  "dist/downshift.esm.js": {
-    "bundled": 135823,
-    "minified": 62188,
-    "gzipped": 13124,
->>>>>>> fix(useCombobox): allow to submit form on pressing Enter
+    "bundled": 136836,
+    "minified": 62535,
+    "gzipped": 13230,
     "treeshaked": {
       "rollup": {
         "code": 2281,
@@ -80,15 +44,9 @@
     }
   },
   "preact/dist/downshift.esm.js": {
-<<<<<<< HEAD
-    "bundled": 135528,
-    "minified": 61508,
-    "gzipped": 13135,
-=======
-    "bundled": 134511,
-    "minified": 61120,
-    "gzipped": 13028,
->>>>>>> fix(useCombobox): allow to submit form on pressing Enter
+    "bundled": 135524,
+    "minified": 61467,
+    "gzipped": 13124,
     "treeshaked": {
       "rollup": {
         "code": 2282,
