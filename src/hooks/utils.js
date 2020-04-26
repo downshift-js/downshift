@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {useState} from 'react'
+import {useRef, useCallback, useReducer, useEffect} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -135,20 +135,29 @@ export function capitalizeString(string) {
  * @returns {Array} An array with the state and an action dispatcher.
  */
 export function useControlledState(reducer, initialState, props) {
-  const [uncontrolledState, setState] = useState(initialState)
-  const state = getState(uncontrolledState, props)
+  const prevState = useRef()
+  const enhancedReducer = useCallback(
+    (state, action) => {
+      state = getState(state, action.props)
 
-  const dispatch = action => {
-    const {stateReducer: stateReducerFromProps} = action.props
-    const changes = reducer(state, action)
-    const newState = stateReducerFromProps(state, {...action, changes})
+      const {stateReducer: stateReduceLocal} = action.props
+      const changes = reducer(state, action)
+      const newState = stateReduceLocal(state, {...action, changes})
 
-    callOnChangeProps(action, state, newState)
+      return {...newState, action}
+    },
+    [reducer],
+  )
 
-    setState(newState)
-  }
+  const [{action, ...state}, dispatch] = useReducer(enhancedReducer, initialState)
+  const dispatchWithProps = actionParameter => dispatch({props, ...actionParameter})
 
-  const dispatchWithProps = action => dispatch({props, ...action})
+  useEffect(() => {
+    if (action && prevState.current && prevState.current !== state) {
+      callOnChangeProps(action, prevState.current, state)
+    }
+    prevState.current = state
+  }, [state, props, action])
 
   return [getState(state, props), dispatchWithProps]
 }
