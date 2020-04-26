@@ -260,11 +260,13 @@ function useCombobox(userProps = {}) {
         return
       }
 
-      event.preventDefault()
-      dispatch({
-        type: stateChangeTypes.InputKeyDownEnter,
-        getItemNodeFromIndex,
-      })
+      if (isOpen && highlightedIndex > -1) {
+        event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.InputKeyDownEnter,
+          getItemNodeFromIndex,
+        })
+      }
     },
   }
 

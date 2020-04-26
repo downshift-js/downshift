@@ -1,5 +1,6 @@
 {
   "dist/downshift.cjs.js": {
+<<<<<<< HEAD
     "bundled": 137464,
     "minified": 63123,
     "gzipped": 13314
@@ -33,6 +34,41 @@
     "bundled": 136840,
     "minified": 62576,
     "gzipped": 13240,
+=======
+    "bundled": 136444,
+    "minified": 62731,
+    "gzipped": 13205
+  },
+  "preact/dist/downshift.cjs.js": {
+    "bundled": 135178,
+    "minified": 61709,
+    "gzipped": 13110
+  },
+  "preact/dist/downshift.umd.min.js": {
+    "bundled": 146510,
+    "minified": 47019,
+    "gzipped": 12526
+  },
+  "dist/downshift.umd.min.js": {
+    "bundled": 150706,
+    "minified": 48326,
+    "gzipped": 13075
+  },
+  "preact/dist/downshift.umd.js": {
+    "bundled": 156664,
+    "minified": 55376,
+    "gzipped": 13860
+  },
+  "dist/downshift.umd.js": {
+    "bundled": 186250,
+    "minified": 64302,
+    "gzipped": 16492
+  },
+  "dist/downshift.esm.js": {
+    "bundled": 135823,
+    "minified": 62188,
+    "gzipped": 13124,
+>>>>>>> fix(useCombobox): allow to submit form on pressing Enter
     "treeshaked": {
       "rollup": {
         "code": 2281,
@@ -44,9 +80,15 @@
     }
   },
   "preact/dist/downshift.esm.js": {
+<<<<<<< HEAD
     "bundled": 135528,
     "minified": 61508,
     "gzipped": 13135,
+=======
+    "bundled": 134511,
+    "minified": 61120,
+    "gzipped": 13028,
+>>>>>>> fix(useCombobox): allow to submit form on pressing Enter
     "treeshaked": {
       "rollup": {
         "code": 2282,

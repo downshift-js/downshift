@@ -687,6 +687,25 @@ describe('getInputProps', () => {
         expect(input).not.toHaveAttribute('aria-activedescendant')
       })
 
+      test('enter on an input with a closed menu does nothing', () => {
+        const {keyDownOnInput, renderSpy} = renderCombobox({
+          initialHighlightedIndex: 2,
+          initialIsOpen: false,
+        })
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+        keyDownOnInput('Enter')
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+      })
+
+      test('enter on an input with an open menu does nothing without a highlightedIndex', () => {
+        const {keyDownOnInput, renderSpy} = renderCombobox({
+          initialIsOpen: true,
+        })
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+        keyDownOnInput('Enter')
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+      })
+
       test('tab it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const {input, getItems} = renderCombobox(
