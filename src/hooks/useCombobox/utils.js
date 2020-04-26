@@ -5,7 +5,7 @@ import {
   getElementIds as getElementIdsCommon,
   defaultProps as defaultPropsCommon,
   getInitialState as getInitialStateCommon,
-  useControlledState as useControlledStateCommon,
+  useControlledReducer as useControlledReducerCommon,
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
@@ -81,10 +81,10 @@ export const propTypes = {
 }
 
 /**
- * The useCombobox version of useControlledState, which also
+ * The useCombobox version of useControlledReducer, which also
  * checks if the controlled prop selectedItem changed between
  * renders. If so, it will also update inputValue with its
- * string equivalent. It uses the common useControlledState to
+ * string equivalent. It uses the common useControlledReducer to
  * compute the rest of the state.
  *
  * @param {Function} reducer Reducer function from downshift.
@@ -92,8 +92,8 @@ export const propTypes = {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledState(reducer, initialState, props) {
-  const [newState, dispatch] = useControlledStateCommon(
+export function useControlledReducer(reducer, initialState, props) {
+  const [newState, dispatch] = useControlledReducerCommon(
     reducer,
     initialState,
     props,

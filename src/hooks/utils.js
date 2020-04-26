@@ -134,7 +134,7 @@ export function capitalizeString(string) {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledState(reducer, initialState, props) {
+export function useControlledReducer(reducer, initialState, props) {
   const prevState = useRef()
   const enhancedReducer = useCallback(
     (state, action) => {

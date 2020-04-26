@@ -5,7 +5,7 @@ import {
   getItemIndex,
   getPropTypesValidator,
   isAcceptedCharacterKey,
-  useControlledState,
+  useControlledReducer,
   getInitialState,
   updateA11yStatus,
 } from '../utils'
@@ -54,7 +54,7 @@ function useSelect(userProps = {}) {
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
     dispatch,
-  ] = useControlledState(downshiftSelectReducer, initialState, props)
+  ] = useControlledReducer(downshiftSelectReducer, initialState, props)
 
   // Refs
   const toggleButtonRef = useRef(null)

@@ -13,7 +13,7 @@ import {
   propTypes,
   defaultProps,
   getElementIds,
-  useControlledState,
+  useControlledReducer,
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -52,7 +52,7 @@ function useCombobox(userProps = {}) {
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
     dispatch,
-  ] = useControlledState(downshiftUseComboboxReducer, initialState, props)
+  ] = useControlledReducer(downshiftUseComboboxReducer, initialState, props)
 
   /* Refs */
   const menuRef = useRef(null)
