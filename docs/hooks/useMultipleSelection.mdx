@@ -95,7 +95,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         removeSelectedItem,
         selectedItems,
       } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
-      const getFilteredItems = items =>
+      const getFilteredItems = () =>
         items.filter(
           item =>
             selectedItems.indexOf(item) < 0 &&
@@ -110,10 +110,10 @@ handler. Items are added using `addSelectedItem` callback inside the
         getComboboxProps,
         highlightedIndex,
         getItemProps,
-        selectItem,
       } = useCombobox({
         inputValue,
-        items: getFilteredItems(items),
+        selectedItem: null,
+        items: getFilteredItems(),
         onStateChange: ({inputValue, type, selectedItem}) => {
           switch (type) {
             case useCombobox.stateChangeTypes.InputChange:
@@ -125,7 +125,6 @@ handler. Items are added using `addSelectedItem` callback inside the
               if (selectedItem) {
                 setInputValue('')
                 addSelectedItem(selectedItem)
-                selectItem(null)
               }
               break
             default:
@@ -146,7 +145,10 @@ handler. Items are added using `addSelectedItem` callback inside the
                 {selectedItem}
                 <span
                   style={selectedItemIconStyles}
-                  onClick={() => removeSelectedItem(selectedItem)}
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeSelectedItem(selectedItem)
+                  }}
                 >
                   &#10005;
                 </span>
@@ -210,7 +212,7 @@ handler. Items are added using `addSelectedItem` callback inside the
         removeSelectedItem,
         selectedItems,
       } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
-      const getFilteredItems = items =>
+      const getFilteredItems = () =>
         items.filter(item => selectedItems.indexOf(item) < 0)
       const {
         isOpen,
@@ -220,18 +222,16 @@ handler. Items are added using `addSelectedItem` callback inside the
         getMenuProps,
         highlightedIndex,
         getItemProps,
-        selectItem,
       } = useSelect({
-        items: getFilteredItems(items),
+        selectedItem: null,
+        items: getFilteredItems(),
         onStateChange: ({type, selectedItem}) => {
           switch (type) {
             case useSelect.stateChangeTypes.MenuKeyDownEnter:
             case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
             case useSelect.stateChangeTypes.ItemClick:
-            case useSelect.stateChangeTypes.MenuBlur:
               if (selectedItem) {
                 addSelectedItem(selectedItem)
-                selectItem(null)
               }
               break
             default:
@@ -241,7 +241,7 @@ handler. Items are added using `addSelectedItem` callback inside the
       })
       return (
         <div>
-          <label {...getLabelProps()}>Choose an element:</label>
+          <label {...getLabelProps()}>Choose some elements:</label>
           {selectedItems.map((selectedItem, index) => (
             <span
               style={selectedItemStyles}
@@ -251,18 +251,25 @@ handler. Items are added using `addSelectedItem` callback inside the
               {selectedItem}
               <span
                 style={selectedItemIconStyles}
-                onClick={() => removeSelectedItem(selectedItem)}
+                onClick={e => {
+                  e.stopPropagation()
+                  removeSelectedItem(selectedItem)
+                }}
               >
                 &#10005;
               </span>
             </span>
           ))}
-          <button {...getToggleButtonProps(getDropdownProps({preventKeyAction: isOpen}))}>
+          <button
+            {...getToggleButtonProps(
+              getDropdownProps({preventKeyAction: isOpen}),
+            )}
+          >
             {selectedItem || 'Elements'}
           </button>
           <ul {...getMenuProps()} style={menuMultipleStlyes}>
             {isOpen &&
-              items.map((item, index) => (
+              getFilteredItems(items).map((item, index) => (
                 <li
                   style={
                     highlightedIndex === index
