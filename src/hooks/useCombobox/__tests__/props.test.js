@@ -392,9 +392,7 @@ describe('props', () => {
 
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
-      const highlightedIndex = 2
-      const selectedItem = items[highlightedIndex]
-      const expectedItemId = defaultIds.getItemId(highlightedIndex)
+      const selectedItem = items[2]
       const {
         keyDownOnInput,
         input,
@@ -405,31 +403,29 @@ describe('props', () => {
         initialIsOpen: true,
       })
 
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+      expect(input).toHaveValue(selectedItem)
 
-      keyDownOnInput('ArrowDown')
       keyDownOnInput('ArrowDown')
       keyDownOnInput('Enter')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+      expect(input).toHaveValue(selectedItem)
 
-      keyDownOnInput('ArrowUp')
       keyDownOnInput('ArrowUp')
       keyDownOnInput('Enter')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+      expect(input).toHaveValue(selectedItem)
 
       keyDownOnInput('Escape')
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+      expect(input).toHaveValue(selectedItem)
 
-      clickOnItemAtIndex(highlightedIndex + 1)
+      clickOnItemAtIndex(1)
       clickOnToggleButton()
 
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+      expect(input).toHaveValue(selectedItem)
     })
   })
 
