@@ -1,11 +1,16 @@
 import {useRef} from 'react'
 import PropTypes from 'prop-types'
-import {generateId, getA11yStatusMessage, isControlledProp} from '../../utils'
+import {
+  generateId,
+  getA11yStatusMessage,
+  isControlledProp,
+  getState,
+} from '../../utils'
 import {
   getElementIds as getElementIdsCommon,
   defaultProps as defaultPropsCommon,
   getInitialState as getInitialStateCommon,
-  useControlledReducer as useControlledReducerCommon,
+  useEnhancedReducer,
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
@@ -84,7 +89,7 @@ export const propTypes = {
  * The useCombobox version of useControlledReducer, which also
  * checks if the controlled prop selectedItem changed between
  * renders. If so, it will also update inputValue with its
- * string equivalent. It uses the common useControlledReducer to
+ * string equivalent. It uses the common useEnhancedReducer to
  * compute the rest of the state.
  *
  * @param {Function} reducer Reducer function from downshift.
@@ -93,28 +98,25 @@ export const propTypes = {
  * @returns {Array} An array with the state and an action dispatcher.
  */
 export function useControlledReducer(reducer, initialState, props) {
-  const [newState, dispatch] = useControlledReducerCommon(
-    reducer,
-    initialState,
-    props,
-  )
-  const previousSelectedItemRef = useRef(null)
-  const {selectedItem, itemToString} = props
+  const previousSelectedItemRef = useRef()
+  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
   // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
-  if (
-    isControlledProp(props, 'selectedItem') &&
-    previousSelectedItemRef.current !== selectedItem
-  ) {
-    dispatch({
-      type: ControlledPropUpdatedSelectedItem,
-      inputValue: itemToString(selectedItem),
-    })
+  if (isControlledProp(props, 'selectedItem')) {
+    if (previousSelectedItemRef.current !== props.selectedItem) {
+      dispatch({
+        type: ControlledPropUpdatedSelectedItem,
+        inputValue: props.itemToString(props.selectedItem),
+      })
+    }
+
+    previousSelectedItemRef.current =
+      state.selectedItem === previousSelectedItemRef.current
+        ? props.selectedItem
+        : state.selectedItem
   }
 
-  previousSelectedItemRef.current = selectedItem
-
-  return [newState, dispatch]
+  return [getState(state, props), dispatch]
 }
 
 export const defaultProps = {

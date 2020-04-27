@@ -134,32 +134,50 @@ export function capitalizeString(string) {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledReducer(reducer, initialState, props) {
+export function useEnhancedReducer(reducer, initialState, props) {
   const prevState = useRef()
   const enhancedReducer = useCallback(
     (state, action) => {
       state = getState(state, action.props)
 
-      const {stateReducer: stateReduceLocal} = action.props
       const changes = reducer(state, action)
-      const newState = stateReduceLocal(state, {...action, changes})
+      const newState = action.props.stateReducer(state, {...action, changes})
 
       return {...newState, action}
     },
     [reducer],
   )
-
-  const [{action, ...state}, dispatch] = useReducer(enhancedReducer, initialState)
-  const dispatchWithProps = actionParameter => dispatch({props, ...actionParameter})
+  const [{action, ...state}, dispatch] = useReducer(
+    enhancedReducer,
+    initialState,
+  )
+  const dispatchWithProps = actionParameter =>
+    dispatch({props, ...actionParameter})
 
   useEffect(() => {
     if (action && prevState.current && prevState.current !== state) {
       callOnChangeProps(action, prevState.current, state)
     }
+
     prevState.current = state
   }, [state, props, action])
 
-  return [getState(state, props), dispatchWithProps]
+  return [state, dispatchWithProps]
+}
+
+/**
+ * Wraps the useEnhancedReducer and applies the controlled prop values before
+ * returning the new state.
+ *
+ * @param {Function} reducer Reducer function from downshift.
+ * @param {Object} initialState Initial state of the hook.
+ * @param {Object} props The hook props.
+ * @returns {Array} An array with the state and an action dispatcher.
+ */
+export function useControlledReducer(reducer, initialState, props) {
+  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
+
+  return [getState(state, props), dispatch]
 }
 
 export const defaultProps = {
