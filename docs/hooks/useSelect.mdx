@@ -25,19 +25,19 @@ import {items, menuStyles, itemsAsObjects, useStyles} from '../utils'
 
 You have a custom select dropdown in your application and you want it to perform
 exactly the same as the native HTML `<select>` in terms of accessibility and
-functionality. For consistency reasons you want it to follow the [ARIA design
+functionality. For consistency reasons, you want it to follow the [ARIA design
 pattern][select-aria] for a dropdown select. You also want this solution to be
-simple to use and flexible so you can tailor it further to your specific needs.
+simple to use and flexible so you can tailor it to your needs.
 
 ## This solution
 
 `useSelect` is a React hook that manages all the stateful logic needed to make
 the dropdown functional and accessible. It returns a set of props that are meant
-to be called and their results destructured on the dropdown's elements: its
-label, toggle button, list and list items. These are similar to the ones
+to be called, and their results destructured on the dropdown's elements: its
+label, toggle button, list and list items. These are similar to the props
 provided by vanilla `<Downshift>` to the children render prop.
 
-These props are called getter props and their return values are destructured as
+These props are called getter props, and their return values are destructured as
 a set of ARIA attributes and event listeners. Together with the action props and
 state props, they create all the stateful logic needed for the dropdown to
 implement the corresponding ARIA pattern. Every functionality needed should be
@@ -46,9 +46,8 @@ between them, screen reader support, highlight by character keys etc.
 
 ## Props used in examples
 
-In the examples below, we use the `useSelect` hook and destructure from its
-result the getter props and state variables. These are used in the following
-way:
+In the examples below, we use the `useSelect` hook and destructure the getter 
+props and state variables it returns. These are used in the following way:
 
 | Returned prop          | Element    | Comments                                                                  |
 | ---------------------- | ---------- | ------------------------------------------------------------------------- |
@@ -69,7 +68,7 @@ information check out the
 A custom `<select>` element can be created with HTML elements such as:
 `<label>`, `<ul>`, `<li>` and `<button>`. Using other HTML elements to create a
 custom `<select>` is useful for the custom styling of the widget, since the
-`<select>` is notoriously difficult to be styled:
+`<select>` is notoriously difficult to style:
 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 
 [CodeSandbox](https://codesandbox.io/s/useselect-usage-53qfj)
@@ -121,18 +120,18 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 ## MaterialUI
 
 A custom `<select>` element can be created using UI Library components as well.
-Many libraries will provide basic elements such as buttons, texts/labels and
-lists, which can be styled according to each library guidelines. `useSelect` is
-providing the additional stateful logic that will transform this selection of
+Many libraries provide basic elements such as buttons, texts/labels, and
+lists, which can be styled according to each library guidelines. `useSelect`
+provides the additional stateful logic to transform this selection of
 basic components into a fully working dropdown element.
 
 As `useSelect` needs to perform some `focus()` and `scroll()` logic on the DOM
-elements, it will require the refs to the `React` components used. This will
-illustrate how to use `useSelect` with `MaterialUI` library and how to correctly
+elements, it requires refs to the `React` components used. This example
+illustrates how to use `useSelect` with `MaterialUI`, and shows how to correctly
 pass refs to the hook.
 
 Since `MaterialUI` components already accept a `ref` prop that will be filled
-with the resulting DOM element, we don't need to do anything specific rather
+with the resulting DOM element, we don't need to do anything specific other
 than just spreading the getter props.
 
 Another point worth mentioning is that in this case items are objects and not
@@ -211,9 +210,9 @@ chosen to be the string equialent of each item object.
 
 ## Controlling state
 
-Controlling state is possible by receiving the state changes done by Downshift
+Controlling state is possible by receiving the state changes handled by Downshift
 via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
-changing them based on your requirements and passing them back to Downshift via
+changing data based on your requirements, and passing the data back to Downshift via
 props, for instance `highlightedIndex` or `selectedItem`.
 
 The example below shows how to control `selectedItem`. Both selects share the
@@ -289,15 +288,15 @@ the value in the other one as well.
 
 ## State Reducer
 
-For an even more granular control of the state changing process, you can add
-your own reducer on top of the default one. When it's called it will receive the
+For even more granular state change control, you can add
+your own reducer on top of the default one. When it's called, it will receive the
 previous `state` and the `actionAndChanges` object. This contains the change
 `type`, which explains why the state is changed. It also contains the `changes`
 proposed by `Downshift` that should occur as a consequence of that change type.
 You are supposed to return the new state according to your needs.
 
 In the example below, we are catching the selection event types,
-`MenuKeyDownEnter` and `ItemClick`. To keep menu open, we are overriding
+`MenuKeyDownEnter` and `ItemClick`. To keep the menu open, we override
 `isOpen` with `state.isOpen` and `highlightedIndex` with
 `state.highlightedIndex` to keep the same appearance to the user (menu open with
 same item highlighted) after selection. But selection is still performed, since
