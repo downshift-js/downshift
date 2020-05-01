@@ -1,4 +1,4 @@
-import {renderHook} from '@testing-library/react-hooks'
+import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
@@ -904,6 +904,38 @@ describe('props', () => {
 
       expect(onSelectedItemChange).not.toHaveBeenCalled()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let selectedItem = items[2]
+      const selectionIndex = 3
+      const {clickOnItemAtIndex, toggleButton, rerender} = renderSelect({
+        initialIsOpen: true,
+        selectedItem,
+        onSelectedItemChange: changes => {
+          selectedItem = changes.selectedItem
+        },
+      })
+
+      clickOnItemAtIndex(selectionIndex)
+      rerender({selectedItem})
+
+      expect(toggleButton).toHaveTextContent(items[selectionIndex])
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseSelect({
+        initialIsOpen: true,
+        onSelectedItemChange: () => {
+          result.current.openMenu()
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getItemProps({index: 2}).onClick({})
+      })
+
+      expect(result.current.isOpen).toEqual(true)
+    })
   })
 
   describe('onHighlightedIndexChange', () => {
@@ -939,6 +971,43 @@ describe('props', () => {
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let highlightedIndex = 2
+      const {keyDownOnMenu, menu, rerender} = renderSelect({
+        isOpen: true,
+        highlightedIndex,
+        onHighlightedIndexChange: changes => {
+          highlightedIndex = changes.highlightedIndex
+        },
+      })
+
+      keyDownOnMenu('ArrowDown')
+      rerender({highlightedIndex})
+
+      expect(menu).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(3),
+      )
+    })
+
+    test('can have downshift actions executed', () => {
+      const highlightedIndex = 3
+      const {result} = renderUseSelect({
+        initialIsOpen: true,
+        onHighlightedIndexChange: () => {
+          result.current.setHighlightedIndex(highlightedIndex)
+        },
+      })
+
+      hooksAct(() => {
+        result.current
+          .getToggleButtonProps()
+          .onKeyDown({key: 'ArrowDown', preventDefault: jest.fn()})
+      })
+
+      expect(result.current.highlightedIndex).toEqual(highlightedIndex)
+    })
   })
 
   describe('onIsOpenChange', () => {
@@ -969,6 +1038,36 @@ describe('props', () => {
 
       expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let isOpen = true
+      const {keyDownOnMenu, getItems, rerender} = renderSelect({
+        isOpen,
+        onIsOpenChange: changes => {
+          isOpen = changes.isOpen
+        },
+      })
+
+      keyDownOnMenu('Escape')
+      rerender({isOpen})
+
+      expect(getItems()).toHaveLength(0)
+    })
+
+    test('can have downshift actions executed', () => {
+      const highlightedIndex = 3
+      const {result} = renderUseSelect({
+        onIsOpenChange: () => {
+          result.current.setHighlightedIndex(highlightedIndex)
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getToggleButtonProps().onClick({})
+      })
+
+      expect(result.current.highlightedIndex).toEqual(highlightedIndex)
+    })
   })
 
   describe('onStateChange', () => {
@@ -977,7 +1076,7 @@ describe('props', () => {
       const onStateChange = jest.fn()
       const {
         clickOnToggleButton,
-        blurMenu,
+        tab,
         mouseLeaveMenu,
         keyDownOnToggleButton,
         keyDownOnMenu,
@@ -1142,7 +1241,7 @@ describe('props', () => {
         }),
       )
 
-      blurMenu()
+      tab()
 
       expect(onStateChange).toHaveBeenCalledTimes(16)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1151,6 +1250,21 @@ describe('props', () => {
           type: stateChangeTypes.MenuBlur,
         }),
       )
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseSelect({
+        initialIsOpen: true,
+        onStateChange: () => {
+          result.current.openMenu()
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getItemProps({index: 2}).onClick({})
+      })
+
+      expect(result.current.isOpen).toEqual(true)
     })
   })
 })

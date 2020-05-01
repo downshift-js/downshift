@@ -776,13 +776,13 @@ describe('getInputProps', () => {
         expect(input.value).toEqual('')
       })
 
-      test('the value in the input will stay the same', () => {
+      test('the value in the input will stay the same', async () => {
         const inputValue = 'test me'
         const {blurInput, changeInputValue, input} = renderCombobox({
           initialIsOpen: true,
         })
 
-        changeInputValue(inputValue)
+        await changeInputValue(inputValue)
         blurInput()
 
         expect(input.value).toBe(inputValue)

@@ -76,6 +76,8 @@ export const renderMultipleCombobox = props => {
   const label = wrapper.getByText(/choose an element/i)
   const menu = wrapper.getByRole('listbox')
   const input = wrapper.getByTestId(dataTestIds.input)
+  const rerender = newProps =>
+    wrapper.rerender(<DropdownMultipleCombobox {...newProps} />)
   const getSelectedItemAtIndex = index =>
     wrapper.getByTestId(dataTestIds.selectedItem(index))
   const getSelectedItems = () =>
@@ -108,6 +110,7 @@ export const renderMultipleCombobox = props => {
     ...wrapper,
     label,
     menu,
+    rerender,
     getSelectedItemAtIndex,
     clickOnSelectedItemAtIndex,
     keyDownOnSelectedItemAtIndex,

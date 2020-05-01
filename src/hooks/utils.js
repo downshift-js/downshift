@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {useState} from 'react'
+import {useRef, useCallback, useReducer, useEffect} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -134,23 +134,53 @@ export function capitalizeString(string) {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledState(reducer, initialState, props) {
-  const [uncontrolledState, setState] = useState(initialState)
-  const state = getState(uncontrolledState, props)
+export function useEnhancedReducer(reducer, initialState, props) {
+  const prevStateRef = useRef()
+  const actionRef = useRef()
+  const enhancedReducer = useCallback(
+    (state, action) => {
+      actionRef.current = action
+      state = getState(state, action.props)
 
-  const dispatch = action => {
-    const {stateReducer: stateReducerFromProps} = action.props
-    const changes = reducer(state, action)
-    const newState = stateReducerFromProps(state, {...action, changes})
+      const changes = reducer(state, action)
+      const newState = action.props.stateReducer(state, {...action, changes})
 
-    callOnChangeProps(action, state, newState)
+      return newState
+    },
+    [reducer],
+  )
+  const [state, dispatch] = useReducer(
+    enhancedReducer,
+    initialState,
+  )
+  const dispatchWithProps = action =>
+    dispatch({props, ...action})
+  const action = actionRef.current
 
-    setState(newState)
-  }
+  useEffect(() => {
+    if (action && prevStateRef.current && prevStateRef.current !== state) {
+      callOnChangeProps(action, prevStateRef.current, state)
+    }
 
-  const dispatchWithProps = action => dispatch({props, ...action})
+    prevStateRef.current = state
+  }, [state, props, action])
 
-  return [getState(state, props), dispatchWithProps]
+  return [state, dispatchWithProps]
+}
+
+/**
+ * Wraps the useEnhancedReducer and applies the controlled prop values before
+ * returning the new state.
+ *
+ * @param {Function} reducer Reducer function from downshift.
+ * @param {Object} initialState Initial state of the hook.
+ * @param {Object} props The hook props.
+ * @returns {Array} An array with the state and an action dispatcher.
+ */
+export function useControlledReducer(reducer, initialState, props) {
+  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
+
+  return [getState(state, props), dispatch]
 }
 
 export const defaultProps = {
