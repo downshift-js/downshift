@@ -488,6 +488,42 @@ describe('props', () => {
 
       expect(onActiveIndexChange).not.toHaveBeenCalled()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let activeIndex = 3
+      const {
+        keyDownOnSelectedItemAtIndex,
+        getSelectedItemAtIndex,
+        rerender,
+      } = renderMultipleCombobox({
+        multipleSelectionProps: {
+          initialSelectedItems: items,
+          activeIndex,
+          onActiveIndexChange: changes => {
+            activeIndex = changes.activeIndex
+          },
+        },
+      })
+
+      keyDownOnSelectedItemAtIndex(3, 'ArrowLeft')
+      rerender({multipleSelectionProps: {activeIndex}})
+
+      expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '0')
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseMultipleSelection({
+        onActiveIndexChange: () => {
+          result.current.setSelectedItems([items[0]])
+        },
+      })
+
+      act(() => {
+        result.current.getSelectedItemProps({index: 3}).onClick({})
+      })
+
+      expect(result.current.selectedItems).toEqual([items[0]])
+    })
   })
 
   describe('onSelectedItemsChange', () => {
@@ -524,6 +560,45 @@ describe('props', () => {
       clickOnSelectedItemAtIndex(0)
 
       expect(onSelectedItemsChange).not.toHaveBeenCalled()
+    })
+
+    test('works correctly with the corresponding control prop', () => {
+      let selectedItems = [items[0], items[1]]
+      const {
+        keyDownOnSelectedItemAtIndex,
+        getSelectedItems,
+        rerender,
+      } = renderMultipleCombobox({
+        multipleSelectionProps: {
+          selectedItems,
+          initialActiveIndex: 0,
+          onSelectedItemsChange: changes => {
+            selectedItems = changes.selectedItems
+          },
+        },
+      })
+
+      keyDownOnSelectedItemAtIndex(0, 'Delete')
+      rerender({multipleSelectionProps: {selectedItems}})
+
+      expect(getSelectedItems()).toHaveLength(1)
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseMultipleSelection({
+        onSelectedItemsChange: () => {
+          result.current.setActiveIndex(1)
+        },
+        initialSelectedItems: items,
+      })
+
+      act(() => {
+        result.current
+          .getSelectedItemProps({index: 3})
+          .onKeyDown({key: 'Backspace'})
+      })
+
+      expect(result.current.activeIndex).toEqual(1)
     })
   })
 
@@ -644,5 +719,20 @@ describe('props', () => {
     keyDownOnSelectedItemAtIndex(1, 'ArrowDown')
 
     expect(input).toHaveFocus()
+  })
+
+  test('can have downshift actions executed', () => {
+    const {result} = renderUseMultipleSelection({
+      initialSelectedItems: items,
+      onStateChange: () => {
+        result.current.setActiveIndex(4)
+      },
+    })
+
+    act(() => {
+      result.current.getSelectedItemProps({index: 2}).onClick({})
+    })
+
+    expect(result.current.activeIndex).toEqual(4)
   })
 })
