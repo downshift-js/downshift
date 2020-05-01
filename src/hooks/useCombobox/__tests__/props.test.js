@@ -1,4 +1,4 @@
-import {renderHook} from '@testing-library/react-hooks'
+import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
@@ -217,7 +217,7 @@ describe('props', () => {
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with previousResultCount that gets updated correctly', () => {
+    test('is called with previousResultCount that gets updated correctly', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
       const {clickOnToggleButton, changeInputValue} = renderCombobox({
@@ -237,7 +237,7 @@ describe('props', () => {
       )
 
       inputItems.pop()
-      changeInputValue('a')
+      await changeInputValue('a')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
@@ -352,14 +352,14 @@ describe('props', () => {
     test('is changed once a new selectedItem comes from props', () => {
       const initialSelectedItem = 'John Doe'
       const finalSelectedItem = 'John Wick'
-      const {rerenderWithProps, input} = renderCombobox({
+      const {rerender, input} = renderCombobox({
         isOpen: true,
         selectedItem: initialSelectedItem,
       })
 
       expect(input).toHaveValue(initialSelectedItem)
 
-      rerenderWithProps({selectedItem: finalSelectedItem})
+      rerender({selectedItem: finalSelectedItem})
 
       expect(input).toHaveValue(finalSelectedItem)
     })
@@ -494,7 +494,7 @@ describe('props', () => {
     })
 
     // eslint-disable-next-line max-statements
-    test('is called at each state change with the appropriate change type', () => {
+    test('is called at each state change with the appropriate change type', async () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
         clickOnToggleButton,
@@ -521,7 +521,7 @@ describe('props', () => {
         }),
       )
 
-      changeInputValue('c')
+      await changeInputValue('c')
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -799,6 +799,68 @@ describe('props', () => {
     })
   })
 
+  describe('onInputValueChange', () => {
+    test('is called at inputValue change', async () => {
+      const inputValue = 'test'
+      const onInputValueChange = jest.fn()
+      const {changeInputValue} = renderCombobox({
+        onInputValueChange,
+      })
+
+      await changeInputValue(inputValue)
+
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          inputValue,
+        }),
+      )
+    })
+
+    test('is not called at if inputValue is the same', () => {
+      const inputValue = items[0]
+      const onInputValueChange = jest.fn()
+      const {clickOnItemAtIndex} = renderCombobox({
+        initialInputValue: inputValue,
+        initialIsOpen: true,
+        onInputValueChange,
+      })
+
+      clickOnItemAtIndex(0)
+
+      expect(onInputValueChange).not.toHaveBeenCalled()
+    })
+
+    test('works correctly with the corresponding control prop', async () => {
+      let inputValue = 'nep'
+      const {changeInputValue, input, rerender} = renderCombobox({
+        inputValue,
+        onSelectedItemChange: changes => {
+          inputValue = changes.inputValue
+        },
+      })
+
+      await changeInputValue('nept')
+      rerender({inputValue})
+
+      expect(input).toHaveValue(inputValue)
+    })
+
+    test('can have downshift actions executed', () => {
+      const highlightedIndex = 3
+      const {result} = renderUseCombobox({
+        onInputValueChange: () => {
+          result.current.setHighlightedIndex(highlightedIndex)
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getInputProps().onChange({target: {value: 'ala'}})
+      })
+
+      expect(result.current.highlightedIndex).toEqual(highlightedIndex)
+    })
+  })
+
   describe('onSelectedItemChange', () => {
     test('is called at selectedItem change', () => {
       const itemIndex = 0
@@ -829,6 +891,38 @@ describe('props', () => {
       clickOnItemAtIndex(itemIndex)
 
       expect(onSelectedItemChange).not.toHaveBeenCalled()
+    })
+
+    test('works correctly with the corresponding control prop', () => {
+      let selectedItem = items[2]
+      const selectionIndex = 3
+      const {clickOnItemAtIndex, input, rerender} = renderCombobox({
+        initialIsOpen: true,
+        selectedItem,
+        onSelectedItemChange: changes => {
+          selectedItem = changes.selectedItem
+        },
+      })
+
+      clickOnItemAtIndex(selectionIndex)
+      rerender({selectedItem})
+
+      expect(input).toHaveValue(items[selectionIndex])
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseCombobox({
+        initialIsOpen: true,
+        onSelectedItemChange: () => {
+          result.current.openMenu()
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getItemProps({index: 2}).onClick({})
+      })
+
+      expect(result.current.isOpen).toEqual(true)
     })
   })
 
@@ -870,6 +964,43 @@ describe('props', () => {
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let highlightedIndex = 2
+      const {keyDownOnInput, input, rerender} = renderCombobox({
+        isOpen: true,
+        highlightedIndex,
+        onHighlightedIndexChange: changes => {
+          highlightedIndex = changes.highlightedIndex
+        },
+      })
+
+      keyDownOnInput('ArrowDown')
+      rerender({highlightedIndex})
+
+      expect(input).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(3),
+      )
+    })
+
+    test('can have downshift actions executed', () => {
+      const highlightedIndex = 3
+      const {result} = renderUseCombobox({
+        initialIsOpen: true,
+        onHighlightedIndexChange: () => {
+          result.current.setHighlightedIndex(highlightedIndex)
+        },
+      })
+
+      hooksAct(() => {
+        result.current
+          .getInputProps()
+          .onKeyDown({key: 'ArrowDown', preventDefault: jest.fn()})
+      })
+
+      expect(result.current.highlightedIndex).toEqual(highlightedIndex)
+    })
   })
 
   describe('onIsOpenChange', () => {
@@ -900,10 +1031,40 @@ describe('props', () => {
 
       expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
+
+    test('works correctly with the corresponding control prop', () => {
+      let isOpen = true
+      const {keyDownOnInput, getItems, rerender} = renderCombobox({
+        isOpen,
+        onIsOpenChange: changes => {
+          isOpen = changes.isOpen
+        },
+      })
+
+      keyDownOnInput('Escape')
+      rerender({isOpen})
+
+      expect(getItems()).toHaveLength(0)
+    })
+
+    test('can have downshift actions executed', () => {
+      const highlightedIndex = 3
+      const {result} = renderUseCombobox({
+        onIsOpenChange: () => {
+          result.current.setHighlightedIndex(highlightedIndex)
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getToggleButtonProps().onClick({})
+      })
+
+      expect(result.current.highlightedIndex).toEqual(highlightedIndex)
+    })
   })
 
   describe('onStateChange', () => {
-    test('is called at each state property change', () => {
+    test('is called at each state property change', async () => {
       const onStateChange = jest.fn()
       const {
         clickOnToggleButton,
@@ -925,7 +1086,7 @@ describe('props', () => {
         }),
       )
 
-      changeInputValue('t')
+      await changeInputValue('t')
 
       expect(onStateChange).toHaveBeenCalledTimes(2)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1040,6 +1201,21 @@ describe('props', () => {
           type: stateChangeTypes.InputBlur,
         }),
       )
+    })
+
+    test('can have downshift actions executed', () => {
+      const {result} = renderUseCombobox({
+        initialIsOpen: true,
+        onStateChange: () => {
+          result.current.openMenu()
+        },
+      })
+
+      hooksAct(() => {
+        result.current.getItemProps({index: 2}).onClick({})
+      })
+
+      expect(result.current.isOpen).toEqual(true)
     })
   })
 })
