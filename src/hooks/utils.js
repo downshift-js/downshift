@@ -135,31 +135,34 @@ export function capitalizeString(string) {
  * @returns {Array} An array with the state and an action dispatcher.
  */
 export function useEnhancedReducer(reducer, initialState, props) {
-  const prevState = useRef()
+  const prevStateRef = useRef()
+  const actionRef = useRef()
   const enhancedReducer = useCallback(
     (state, action) => {
+      actionRef.current = action
       state = getState(state, action.props)
 
       const changes = reducer(state, action)
       const newState = action.props.stateReducer(state, {...action, changes})
 
-      return {...newState, action}
+      return newState
     },
     [reducer],
   )
-  const [{action, ...state}, dispatch] = useReducer(
+  const [state, dispatch] = useReducer(
     enhancedReducer,
     initialState,
   )
-  const dispatchWithProps = actionParameter =>
-    dispatch({props, ...actionParameter})
+  const dispatchWithProps = action =>
+    dispatch({props, ...action})
+  const action = actionRef.current
 
   useEffect(() => {
-    if (action && prevState.current && prevState.current !== state) {
-      callOnChangeProps(action, prevState.current, state)
+    if (action && prevStateRef.current && prevStateRef.current !== state) {
+      callOnChangeProps(action, prevStateRef.current, state)
     }
 
-    prevState.current = state
+    prevStateRef.current = state
   }, [state, props, action])
 
   return [state, dispatchWithProps]
