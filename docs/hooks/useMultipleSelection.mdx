@@ -22,10 +22,10 @@ import {
 ## The problem
 
 You have a custom `select` or a `combobox` in your applications which performs a
-multiple selection. You want want the whole experience to be accessible,
-including adding and removing items from selection, navigating between the items
-and back to the dropdown. You also want this solution to be simple to use and
-flexible so you can tailor it further to your specific needs.
+multiple selection. You want the whole experience to be accessible, including
+adding and removing items from selection, navigating between the items and back
+to the dropdown. You also want this solution to be simple to use and flexible
+enough so you can tailor it further to your specific needs.
 
 ## This solution
 
@@ -35,16 +35,16 @@ returns a set of props that are meant to be called and their results
 destructured on the dropdown's elements that involve the multiple selection
 experience: the dropdown main element itself, which can be either an `input` (if
 you are building a `combobox`) or a `button` (if you are building a `select`),
-and the selected items. These are similar to the ones provided by vanilla
+and the selected items. The props are similar to the ones provided by vanilla
 `Downshift` to the children render prop.
 
 These props are called getter props and their return values are destructured as
 a set of ARIA attributes and event listeners. Together with the action props and
 state props, they create all the stateful logic needed for the dropdown to
-become accessible. Every functionality needed should be provided out-of-the-box:
+become accessible. Every functionality needed should be provided out of the box:
 arrow navigation between dropdown and items, navigation between the items
-themselves, removing and adding items, and also helpful `aria-live` messages
-such as when an item has been removed from selection.
+themselves, removing and adding items, and also a helpful `aria-live` message
+when an item has been removed from the selection.
 
 ## Props used in examples
 
@@ -52,17 +52,17 @@ In the examples below, we use the `useMultipleSelection` hook with both
 `useSelect` and `useCombobox`, destructure from its result the getter props and
 state variables. The `getDropdownProps` can be called with a `preventKeyAction`
 parameter. In some cases you may not want the user to navigate from the dropdown
-to the selected items or to delete them on `Backspace`. For example you can pass
-`isOpen` as its value in order to keep removal and navigation actions from
+to the selected items or to delete them with `Backspace`. For example you can
+pass `isOpen` as its value in order to keep removal and navigation actions from
 occuring while the dropdown is open. The returned props are used as follows:
 
-| Returned prop          | Element                 | Comments                                                                                 |
-| ---------------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
-| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.                  |
-| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.               |
-| `selectedItems`        | `<span>` creation       | Current items in the selection, iterated upon in order to render HTML elements for each. |
-| `addSelectedItem`      |                         | Called when `useSelect` or `useCombobox` selects an element, adds item to selection.     |
-| `removeSelectedItem`   | `<span>` icon container | Called on `X` icon click, removes item from selection.                                   |
+| Returned prop          | Element                 | Comments                                                                                  |
+| ---------------------- | ----------------------- | ----------------------------------------------------------------------------------------- |
+| `getDropdownProps`     | `<input>` or `<button>` | Called optionally with `preventKeyAction`, which is `false` by default.                   |
+| `getSelectedItemProps` | `<span>`                | Called with `index` and `selectedItem`, adds tabindex and event listeners.                |
+| `selectedItems`        | `<span>`                | Applied on selected items. Adds event listeners and tabindex, using a roving focus logic. |
+| `addSelectedItem`      |                         | Called when `useSelect` or `useCombobox` selects an element, adds item to selection.      |
+| `removeSelectedItem`   | `<span>` icon           | Called on `X` icon click, removes item from selection.                                    |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -71,13 +71,15 @@ information check out the
 ## Usage with combobox
 
 A `combobx` with multiple selection can be created in a similar way to a single
-selection equivalent, with the addition of adding the selected items to the DOM.
-The UI is completely up to the developer, as the selected items can be created
-using `<span>`, `<div>` or custom Components from UI libraries, with a
+selection equivalent, with the addition of rendering the selected items. The UI
+is completely up to the developer, as the selected items can be created using
+`<span>` elements or custom Components from UI libraries, within an
 `inline-block` or `flex` display. In the example below, each item has an `X`
 icon attached to it, with a `removeSelectedItem` callback in the `onClick`
-handler. Items are added using `addSelectedItem` callback inside the
-`onStateChange` handler of `useCombobox`.
+handler. Items are added using the `addSelectedItem` function inside the
+`onStateChange` handler of `useCombobox`. We also control the `selectedItem` of
+`useCombobox` and pass a `null` value since `useMultipleSelection` will handle
+the items selection in this case.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
 
@@ -188,14 +190,10 @@ handler. Items are added using `addSelectedItem` callback inside the
 
 ## Usage with select
 
-A `select` with multiple selection can be created in a similar way to a single
-selection equivalent, with the addition of adding the selected items to the DOM.
-The UI is completely up to the developer, as the selected items can be created
-using `<span>`, `<div>` or custom Components from UI libraries, with a
-`inline-block` or `flex` display. In the example below, each item has an `X`
-icon attached to it, with a `removeSelectedItem` callback in the `onClick`
-handler. Items are added using `addSelectedItem` callback inside the
-`onStateChange` handler of `useSelect`.
+A `select` with multiple selection is similar to the `combobox` equivalent. We
+use the basic `useSelect` example and add the selected items as `<span>`
+elements. Custom components from UI libraries can be used as well, since the UI
+is up to the developer.
 
 [CodeSandbox](https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j)
 
