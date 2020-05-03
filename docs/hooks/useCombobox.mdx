@@ -50,7 +50,7 @@ a set of ARIA attributes and event listeners. Together with the action props and
 state props, they create all the stateful logic needed for the combobox to
 implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
-between them, screen reader support, highlight by character keys etc.
+between them, screen reader support, focus management etc.
 
 ## Props used in examples
 
@@ -59,17 +59,17 @@ result the getter props and state variables. The hooks also has the
 `onInputValueChange` prop passed in order to filter the items in the list
 according to the input value. The getter props are used as follows:
 
-| Returned prop          | Element    | Comments                                                                  |
-| ---------------------- | ---------- | ------------------------------------------------------------------------- |
-| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `toggleButton`           |
-| `getToggleButtonProps` | `<button>` | Controls the open state of the list.                                      |
-| `getComboboxProps`     | `<div>`    | Container for `input` and `toggleButton`.                                 |
-| `getInputProps`        | `<input>`  | Can be used to filter the options. Also displays the selected item.       |
-| `getMenuProps`         | `<ul>`     | Adds ARIA attributes and event handlers.                                  |
-| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
-| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                        |
-| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
-| `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
+| Returned prop          | Element    | Comments                                                                                     |
+| ---------------------- | ---------- | -------------------------------------------------------------------------------------------- |
+| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `input`.                                    |
+| `getToggleButtonProps` | `<button>` | Controls the open state of the `menu` on click, not tabbable by default.                     |
+| `getComboboxProps`     | `<div>`    | Container for the `input` and `toggleButton`. Adds ARIA attributes.                          |
+| `getInputProps`        | `<input>`  | The `input` is the main element, with the most ARIA attributes and event listeners.          |
+| `getMenuProps`         | `<ul>`     | Adds ARIA attributes. The element should always be rendered, even if the dropdown is closed. |
+| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners.                    |
+| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                                           |
+| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                                          |
+| `selectedItem`         | `<button>` | Used to style the selected item.                                                             |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -152,12 +152,12 @@ components as well. Many libraries will provide basic elements such as buttons,
 texts/labels, inputs and lists, which can be styled according to each library
 guidelines. `useCombobox` is providing the additional stateful logic that will
 transform this selection of basic components into a fully working dropdown
-element.
+component.
 
 As `useCombobox` needs to perform some `focus()` and `scroll()` logic on the DOM
-elements, it will require the refs to the `React` components used. This will
-illustrate how to use `useCombobox` with `MaterialUI` library and how to
-correctly pass refs to the hook.
+elements, it will require the refs to the `React` components used. The example
+below will illustrate how to use `useCombobox` with `MaterialUI` library
+components and how to correctly pass refs to the hook where needed.
 
 Since `MaterialUI` components already accept a `ref` prop that will be filled
 with the resulting DOM element, we don't need to do anything specific rather
@@ -169,10 +169,14 @@ we will use the getter function like this:
 
 Another point worth mentioning is that in this case items are objects and not
 strings. As a result, the `itemToString` prop is passed to `useCombobox`. It
-will return the string equivalent of the item which will be used for filtering
-by character keys and for the a11y message that will occur on every item
-selection: `${itemToString(item)} has been selected`. `item.primary` is chosen
-to be the string equialent of each item object.
+will return the string equivalent of the item which will be used for displaying
+the item in the `<input>` once selected and for the a11y `aria-live` message
+that will occur on every item selection:
+`${itemToString(item)} has been selected`. `item.primary` is chosen to be the
+string equialent of each item object, so our prop will be passed as
+`itemToString: item => item ? item.primary : ''`. Since clearing the input by
+`Escape` key is also considered an element change, we will return an empty
+string in this case.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobx-ui-libraries-materialui-8jfx1)
 
@@ -259,13 +263,14 @@ to be the string equialent of each item object.
 ## Controlling state
 
 Controlling state is possible by receiving the state changes done by Downshift
-via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
-changing them based on your requirements and passing them back to Downshift via
-props, for instance `highlightedIndex` or `selectedItem`.
+via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange`,
+`onStateChange` etc.). You can then change them based on your requirements and
+pass them back to `useCombobox` as props, such as for instance
+`highlightedIndex` or `selectedItem`.
 
 The example below shows how to control `selectedItem`. Both comboboxes share the
-same `selectedItem` reference, and changing it in one of the dropdowns will update
-the value in the other one as well.
+same `selectedItem` reference, and changing it in one of the dropdowns will
+update the value in the other one as well.
 
 [CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
 
@@ -350,19 +355,19 @@ the value in the other one as well.
 ## State Reducer
 
 For an even more granular control of the state changing process, you can add
-your own reducer on top of the default one. When it's called it will receive the
-previous `state` and the `actionAndChanges` object. The latter contains the
-change `type`, which explains why the state is changed. It also contains the
-`changes` proposed by `Downshift` that should occur as a consequence of that
-change type. You are supposed to return the new state according to your needs.
+your own reducer on top of the default one. When `stateReducer` is called it
+will receive the previous `state` and the `actionAndChanges` object.
+`actionAndChanges` contains the change `type`, which explains why the state is
+being changed. It also contains the `changes` proposed by `Downshift` that
+should occur as a consequence of that change type. You are supposed to return
+the new state according to your needs.
 
-In the example below, let's say we want to show stuff uppercased all the time.
-We will catch the `InputChange` event, get the proposed `inputValue` from the
-default reducer, lowercase the value, and return that along with the rest of the
-changes. We will do the same thing for the cases when a selection is performed.
-We will check that `highlightedIndex` from state was greater than `-1`, since
-`InputBlur` can perform selection in combobox, but only if an item was selected.
-After that, we will return the uppercased input value.
+In the example below, let's say we want to show input characters uppercased all
+the time. In `stateReducer` we wait for the `InputChange` event, get the
+proposed `inputValue` from the default reducer, uppercase the value, and return
+the new value along with the rest of the changes. We will also uppercase the
+`inputValue` also when a selection is performed, since on item selection the
+`inputValue` is changed based on the string version of the selected item.
 
 In all other state change types, we return `Downshift` default changes.
 
@@ -374,29 +379,30 @@ In all other state change types, we return `Downshift` default changes.
     // import { useCombobox } from 'downshift'
     // import { items, menuStyles, comboboxStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
+      const {type, changes} = actionAndChanges
       // returning an uppercased version of the item string.
-      switch (actionAndChanges.type) {
+      switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
           return {
             // return normal changes.
-            ...actionAndChanges.changes,
+            ...changes,
             // but taking the change from default reducer and uppercasing it.
-            inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+            inputValue: changes.inputValue.toUpperCase(),
           }
         // also on selection.
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.InputBlur:
           return {
-            ...actionAndChanges.changes,
-            // if we had an item highlighted in the previous state.
-            ...(state.highlightedIndex > -1 && {
+            ...changes,
+            // if we had an item selected.
+            ...(changes.selectedItem && {
               // we will show it uppercased.
-              inputValue: actionAndChanges.changes.inputValue.toUpperCase(),
+              inputValue: changes.inputValue.toUpperCase(),
             }),
           }
         default:
-          return actionAndChanges.changes // otherwise business as usual.
+          return changes // otherwise business as usual.
       }
     }
     function DropdownCombobox() {
@@ -453,4 +459,5 @@ In all other state change types, we return `Downshift` default changes.
   }}
 </Playground>
 
-[combobox-aria]: https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[combobox-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
