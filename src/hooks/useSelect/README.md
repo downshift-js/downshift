@@ -470,7 +470,7 @@ See [`stateReducer`](#statereducer) for a concrete example on how to use the
 Downshift manages its own state internally and calls your
 `onSelectedItemChange`, `onIsOpenChange`, `onHighlightedIndexChange`,
 `onInputChange` and `onStateChange` handlers with any relevant changes. The
-state that downshift manages includes: `isOpen`, `selectedItem`, `inputvalue`
+state that downshift manages includes: `isOpen`, `selectedItem`, `inputValue`
 and `highlightedIndex`. Returned action function (read more below) can be used
 to manipulate this state and can likely support many of your use cases.
 
