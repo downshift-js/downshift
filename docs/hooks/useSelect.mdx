@@ -26,13 +26,13 @@ import {items, menuStyles, itemsAsObjects, useStyles} from '../utils'
 You have a custom select dropdown in your application and you want it to perform
 exactly the same as the native HTML `<select>` in terms of accessibility and
 functionality. For consistency reasons, you want it to follow the [ARIA design
-pattern][select-aria] for a dropdown select. You also want this solution to be
-simple to use and flexible so you can tailor it to your needs.
+pattern][select-aria] for a select. You also want this solution to be simple to
+use and flexible so you can tailor it to your needs.
 
 ## This solution
 
 `useSelect` is a React hook that manages all the stateful logic needed to make
-the dropdown functional and accessible. It returns a set of props that are meant
+the select functional and accessible. It returns a set of props that are meant
 to be called, and their results destructured on the dropdown's elements: its
 label, toggle button, list and list items. These are similar to the props
 provided by vanilla `<Downshift>` to the children render prop.
@@ -46,18 +46,18 @@ between them, screen reader support, highlight by character keys etc.
 
 ## Props used in examples
 
-In the examples below, we use the `useSelect` hook and destructure the getter 
+In the examples below, we use the `useSelect` hook and destructure the getter
 props and state variables it returns. These are used in the following way:
 
-| Returned prop          | Element    | Comments                                                                  |
-| ---------------------- | ---------- | ------------------------------------------------------------------------- |
-| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `toggleButton`           |
-| `getToggleButtonProps` | `<button>` | Controls the open state of the list.                                      |
-| `getMenuProps`         | `<ul>`     | Makes list focusable, adds ARIA attributes and event handlers.            |
-| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners. |
-| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                        |
-| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                       |
-| `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.            |
+| Returned prop          | Element    | Comments                                                                       |
+| ---------------------- | ---------- | ------------------------------------------------------------------------------ |
+| `getLabelProps`        | `<label>`  | Adds an `id` attribute to be used for `menu` and `toggleButton`.               |
+| `getToggleButtonProps` | `<button>` | Controls the open state of the list, adds ARIA attributes and event listeners. |
+| `getMenuProps`         | `<ul>`     | Makes list focusable, adds ARIA attributes and event handlers.                 |
+| `getItemProps`         | `<li>`     | Called with `index` and `item`, adds ARIA attributes and event listeners.      |
+| `isOpen`               | `<ul>`     | Only when it's true we render the `<li>` elements.                             |
+| `highlightedIndex`     | `<li>`     | Used to style the highlighted item.                                            |
+| `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.                 |
 
 For a complete documentation on all the returned props, hook props and more
 information check out the
@@ -120,10 +120,10 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
 ## MaterialUI
 
 A custom `<select>` element can be created using UI Library components as well.
-Many libraries provide basic elements such as buttons, texts/labels, and
-lists, which can be styled according to each library guidelines. `useSelect`
-provides the additional stateful logic to transform this selection of
-basic components into a fully working dropdown element.
+Many libraries provide basic elements such as buttons, texts/labels, and lists,
+which can be styled according to each library guidelines. `useSelect` provides
+the additional stateful logic to transform this selection of basic components
+into a fully working dropdown element.
 
 As `useSelect` needs to perform some `focus()` and `scroll()` logic on the DOM
 elements, it requires refs to the `React` components used. This example
@@ -131,15 +131,16 @@ illustrates how to use `useSelect` with `MaterialUI`, and shows how to correctly
 pass refs to the hook.
 
 Since `MaterialUI` components already accept a `ref` prop that will be filled
-with the resulting DOM element, we don't need to do anything specific other
-than just spreading the getter props.
+with the resulting DOM element, we don't need to do anything specific other than
+just spreading the getter props.
 
 Another point worth mentioning is that in this case items are objects and not
 strings. As a result, the `itemToString` prop is passed to `useSelect`. It will
 return the string equivalent of the item which will be used for
-selection/highlight by character keys and for the a11y message that will occur
-on every item selection: `$ItemString has been selected`. `item.primary` is
-chosen to be the string equialent of each item object.
+selection/highlight by character keys and for the aria-live a11y
+selectionmessage that will occur on every item selection:
+`$ItemString has been selected`. `item.primary` is chosen to be the string
+equialent of each item object.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-ui-libraries-materialui-fls5o)
 
@@ -210,14 +211,14 @@ chosen to be the string equialent of each item object.
 
 ## Controlling state
 
-Controlling state is possible by receiving the state changes handled by Downshift
-via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange` etc.),
-changing data based on your requirements, and passing the data back to Downshift via
-props, for instance `highlightedIndex` or `selectedItem`.
+Controlling state is possible by receiving the state changes handled by
+Downshift via onChange props (`onHighlightedIndexChange`, `onSelectedItemChange`
+etc.), changing data based on your requirements, and passing the data back to
+Downshift via props, for instance `highlightedIndex` or `selectedItem`.
 
-The example below shows how to control `selectedItem`. Both selects share the
-same `selectedItem` reference, and changing it in one of the dropdowns will update 
-the value in the other one as well.
+The example below shows how to control `selectedItem`. Both select elements
+share the same `selectedItem` reference, and changing it in one of the dropdowns
+will update the value in the other one as well.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
 
@@ -288,20 +289,21 @@ the value in the other one as well.
 
 ## State Reducer
 
-For even more granular state change control, you can add
-your own reducer on top of the default one. When it's called, it will receive the
-previous `state` and the `actionAndChanges` object. This contains the change
-`type`, which explains why the state is changed. It also contains the `changes`
-proposed by `Downshift` that should occur as a consequence of that change type.
-You are supposed to return the new state according to your needs.
+For even more granular state change control, you can add your own reducer on top
+of the default one. When the `stateReducer` is called, it will receive the
+previous `state` and the `actionAndChanges` object as parameters.
+`actionAndChanges` contains the change `type`, which explains why the state is
+bein g changed. It also contains the `changes` proposed by `Downshift` that
+should occur as a consequence of that change type. You are supposed to return
+the new state according to your needs.
 
 In the example below, we are catching the selection event types,
-`MenuKeyDownEnter` and `ItemClick`. To keep the menu open, we override
-`isOpen` with `state.isOpen` and `highlightedIndex` with
-`state.highlightedIndex` to keep the same appearance to the user (menu open with
-same item highlighted) after selection. But selection is still performed, since
-we are also returning the destructured `actionAndChanges.changes` which contains
-the `selectedItem` given to us by the `Downshift` default reducer.
+`MenuKeyDownEnter` and `ItemClick`. To keep the menu open, we override `isOpen`
+with `state.isOpen` and `highlightedIndex` with `state.highlightedIndex` to keep
+the same appearance to the user (menu open with same item highlighted) after
+selection. But selection is still performed, since we are also returning the
+destructured `actionAndChanges.changes` which contains the `selectedItem` given
+to us by the `Downshift` default reducer.
 
 In all other state change types, we return `Downshift` default changes.
 
@@ -313,17 +315,18 @@ In all other state change types, we return `Downshift` default changes.
     // import { useSelect } from 'downshift'
     // import { items, menuStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
+      const {type, changes} = actionAndChanges
       // this prevents the menu from being closed when the user selects an item.
-      switch (actionAndChanges.type) {
+      switch (type) {
         case useSelect.stateChangeTypes.MenuKeyDownEnter:
         case useSelect.stateChangeTypes.ItemClick:
           return {
-            ...actionAndChanges.changes, // default Downshift new state changes on item selection.
+            ...changes, // default Downshift new state changes on item selection.
             isOpen: state.isOpen, // but keep menu open.
             highlightedIndex: state.highlightedIndex, // with the item highlighted.
           }
         default:
-          return actionAndChanges.changes // otherwise business as usual.
+          return changes // otherwise business as usual.
       }
     }
     function DropdownSelect() {
@@ -365,4 +368,5 @@ In all other state change types, we return `Downshift` default changes.
   }}
 </Playground>
 
-[select-aria]: https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[select-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
