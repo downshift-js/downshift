@@ -155,7 +155,7 @@ function getA11yStatusMessage({isOpen, resultCount, previousResultCount}) {
       resultCount === 1 ? ' is' : 's are'
     } available, use up and down arrow keys to navigate. Press Enter key to select.`
   }
-  
+
   return ''
 }
 

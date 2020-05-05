@@ -1,13 +1,13 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
+import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
-  handleRefs,
-  normalizeArrowKey,
-  callAllEventHandlers,
-  targetWithinDownshift,
-} from '../../utils'
-import {getItemIndex, getPropTypesValidator, updateA11yStatus} from '../utils'
+  getItemIndex,
+  getPropTypesValidator,
+  updateA11yStatus,
+  useMouseAndTouchTracker,
+} from '../utils'
 import {
   getInitialState,
   propTypes,
@@ -63,10 +63,6 @@ function useCombobox(userProps = {}) {
   itemRefs.current = []
   const shouldScroll = useRef(true)
   const isInitialMount = useRef(true)
-  const mouseAndTouchTrackers = useRef({
-    isMouseDown: false,
-    isTouchMove: false,
-  })
   const elementIds = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
 
@@ -156,64 +152,16 @@ function useCombobox(userProps = {}) {
     isInitialMount.current = false
   }, [])
   /* Add mouse/touch events to document. */
-  useEffect(() => {
-    // The same strategy for checking if a click occurred inside or outside downsift
-    // as in downshift.js.
-    const onMouseDown = () => {
-      mouseAndTouchTrackers.current.isMouseDown = true
-    }
-    const onMouseUp = event => {
-      mouseAndTouchTrackers.current.isMouseDown = false
-      if (
-        isOpen &&
-        !targetWithinDownshift(
-          event.target,
-          [comboboxRef.current, menuRef.current, toggleButtonRef.current],
-          environment.document,
-        )
-      ) {
-        dispatch({
-          type: stateChangeTypes.InputBlur,
-        })
-      }
-    }
-    const onTouchStart = () => {
-      mouseAndTouchTrackers.current.isTouchMove = false
-    }
-    const onTouchMove = () => {
-      mouseAndTouchTrackers.current.isTouchMove = true
-    }
-    const onTouchEnd = event => {
-      if (
-        isOpen &&
-        !mouseAndTouchTrackers.current.isTouchMove &&
-        !targetWithinDownshift(
-          event.target,
-          [comboboxRef.current, menuRef.current, toggleButtonRef.current],
-          environment.document,
-          false,
-        )
-      ) {
-        dispatch({
-          type: stateChangeTypes.InputBlur,
-        })
-      }
-    }
-
-    environment.addEventListener('mousedown', onMouseDown)
-    environment.addEventListener('mouseup', onMouseUp)
-    environment.addEventListener('touchstart', onTouchStart)
-    environment.addEventListener('touchmove', onTouchMove)
-    environment.addEventListener('touchend', onTouchEnd)
-
-    return function cleanup() {
-      environment.removeEventListener('mousedown', onMouseDown)
-      environment.removeEventListener('mouseup', onMouseUp)
-      environment.removeEventListener('touchstart', onTouchStart)
-      environment.removeEventListener('touchmove', onTouchMove)
-      environment.removeEventListener('touchend', onTouchEnd)
-    }
-  })
+  const isMouseDown = useMouseAndTouchTracker(
+    isOpen,
+    [comboboxRef, menuRef, toggleButtonRef],
+    environment,
+    () => {
+      dispatch({
+        type: stateChangeTypes.InputBlur,
+      })
+    },
+  )
 
   const getItemNodeFromIndex = index => itemRefs.current[index]
 
@@ -287,7 +235,7 @@ function useCombobox(userProps = {}) {
   }
   const inputHandleBlur = () => {
     /* istanbul ignore else */
-    if (!mouseAndTouchTrackers.current.isMouseDown) {
+    if (!isMouseDown) {
       dispatch({
         type: stateChangeTypes.InputBlur,
       })

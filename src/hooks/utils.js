@@ -6,6 +6,7 @@ import {
   getState,
   generateId,
   debounce,
+  targetWithinDownshift,
 } from '../utils'
 import setStatus from '../set-a11y-status'
 
@@ -149,12 +150,8 @@ export function useEnhancedReducer(reducer, initialState, props) {
     },
     [reducer],
   )
-  const [state, dispatch] = useReducer(
-    enhancedReducer,
-    initialState,
-  )
-  const dispatchWithProps = action =>
-    dispatch({props, ...action})
+  const [state, dispatch] = useReducer(enhancedReducer, initialState)
+  const dispatchWithProps = action => dispatch({props, ...action})
   const action = actionRef.current
 
   useEffect(() => {
@@ -278,4 +275,83 @@ export function getHighlightedIndexOnOpen(
     return -1
   }
   return offset < 0 ? items.length - 1 : 0
+}
+
+/**
+ * Reuse the movement tracking of mouse and touch events.
+ *
+ * @param {boolean} isOpen Whether the dropdown is open or not.
+ * @param {Array<Object>} downshiftElementRefs Downshift element refs to track movement (toggleButton, menu etc.)
+ * @param {Object} environment Environment where component/hook exists.
+ * @param {Function} handleBlur Handler on blur from mouse or touch.
+ * @returns {boolean} Whether the mouseDown event occurred.
+ */
+export function useMouseAndTouchTracker(
+  isOpen,
+  downshiftElementRefs,
+  environment,
+  handleBlur,
+) {
+  const mouseAndTouchTrackersRef = useRef({
+    isMouseDown: false,
+    isTouchMove: false,
+  })
+
+  useEffect(() => {
+    // The same strategy for checking if a click occurred inside or outside downsift
+    // as in downshift.js.
+    const onMouseDown = () => {
+      mouseAndTouchTrackersRef.current.isMouseDown = true
+    }
+    const onMouseUp = event => {
+      mouseAndTouchTrackersRef.current.isMouseDown = false
+      if (
+        isOpen &&
+        !targetWithinDownshift(
+          event.target,
+          downshiftElementRefs.map(ref => ref.current),
+          environment.document,
+        )
+      ) {
+        handleBlur()
+      }
+    }
+    const onTouchStart = () => {
+      mouseAndTouchTrackersRef.current.isTouchMove = false
+    }
+    const onTouchMove = () => {
+      mouseAndTouchTrackersRef.current.isTouchMove = true
+    }
+    const onTouchEnd = event => {
+      if (
+        isOpen &&
+        !mouseAndTouchTrackersRef.current.isTouchMove &&
+        !targetWithinDownshift(
+          event.target,
+          downshiftElementRefs.map(ref => ref.current),
+          environment.document,
+          false,
+        )
+      ) {
+        handleBlur()
+      }
+    }
+
+    environment.addEventListener('mousedown', onMouseDown)
+    environment.addEventListener('mouseup', onMouseUp)
+    environment.addEventListener('touchstart', onTouchStart)
+    environment.addEventListener('touchmove', onTouchMove)
+    environment.addEventListener('touchend', onTouchEnd)
+
+    return function cleanup() {
+      environment.removeEventListener('mousedown', onMouseDown)
+      environment.removeEventListener('mouseup', onMouseUp)
+      environment.removeEventListener('touchstart', onTouchStart)
+      environment.removeEventListener('touchmove', onTouchMove)
+      environment.removeEventListener('touchend', onTouchEnd)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, environment])
+
+  return mouseAndTouchTrackersRef.current.isMouseDown
 }

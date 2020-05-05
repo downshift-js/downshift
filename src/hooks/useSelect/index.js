@@ -8,13 +8,13 @@ import {
   useControlledReducer,
   getInitialState,
   updateA11yStatus,
+  useMouseAndTouchTracker,
 } from '../utils'
 import {
   callAllEventHandlers,
   handleRefs,
   debounce,
   normalizeArrowKey,
-  targetWithinDownshift,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {propTypes, defaultProps} from './utils'
@@ -63,10 +63,6 @@ function useSelect(userProps = {}) {
   const shouldScrollRef = useRef(true)
   const shouldBlurRef = useRef(true)
   const clearTimeoutRef = useRef(null)
-  const mouseAndTouchTrackersRef = useRef({
-    isMouseDown: false,
-    isTouchMove: false,
-  })
   const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
 
@@ -193,64 +189,16 @@ function useSelect(userProps = {}) {
     isInitialMountRef.current = false
   }, [])
   /* Add mouse/touch events to document. */
-  useEffect(() => {
-    // The same strategy for checking if a click occurred inside or outside downsift
-    // as in downshift.js.
-    const onMouseDown = () => {
-      mouseAndTouchTrackersRef.current.isMouseDown = true
-    }
-    const onMouseUp = event => {
-      mouseAndTouchTrackersRef.current.isMouseDown = false
-      if (
-        isOpen &&
-        !targetWithinDownshift(
-          event.target,
-          [toggleButtonRef.current, menuRef.current],
-          environment.document,
-        )
-      ) {
-        dispatch({
-          type: stateChangeTypes.MenuBlur,
-        })
-      }
-    }
-    const onTouchStart = () => {
-      mouseAndTouchTrackersRef.current.isTouchMove = false
-    }
-    const onTouchMove = () => {
-      mouseAndTouchTrackersRef.current.isTouchMove = true
-    }
-    const onTouchEnd = event => {
-      if (
-        isOpen &&
-        !mouseAndTouchTrackersRef.current.isTouchMove &&
-        !targetWithinDownshift(
-          event.target,
-          [toggleButtonRef.current, menuRef.current],
-          environment.document,
-          false,
-        )
-      ) {
-        dispatch({
-          type: stateChangeTypes.MenuBlur,
-        })
-      }
-    }
-
-    environment.addEventListener('mousedown', onMouseDown)
-    environment.addEventListener('mouseup', onMouseUp)
-    environment.addEventListener('touchstart', onTouchStart)
-    environment.addEventListener('touchmove', onTouchMove)
-    environment.addEventListener('touchend', onTouchEnd)
-
-    return function cleanup() {
-      environment.removeEventListener('mousedown', onMouseDown)
-      environment.removeEventListener('mouseup', onMouseUp)
-      environment.removeEventListener('touchstart', onTouchStart)
-      environment.removeEventListener('touchmove', onTouchMove)
-      environment.removeEventListener('touchend', onTouchEnd)
-    }
-  })
+  const isMouseDown = useMouseAndTouchTracker(
+    isOpen,
+    [menuRef, toggleButtonRef],
+    environment,
+    () => {
+      dispatch({
+        type: stateChangeTypes.MenuBlur,
+      })
+    },
+  )
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = {
@@ -349,7 +297,7 @@ function useSelect(userProps = {}) {
       return
     }
 
-    const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown
+    const shouldBlur = !isMouseDown
     /* istanbul ignore else */
     if (shouldBlur) {
       dispatch({type: stateChangeTypes.MenuBlur})
