@@ -284,7 +284,7 @@ export function getHighlightedIndexOnOpen(
  * @param {Array<Object>} downshiftElementRefs Downshift element refs to track movement (toggleButton, menu etc.)
  * @param {Object} environment Environment where component/hook exists.
  * @param {Function} handleBlur Handler on blur from mouse or touch.
- * @returns {Object} Whether the mouseDown event occurred.
+ * @returns {boolean} Whether the mouseDown event occurred.
  */
 export function useMouseAndTouchTracker(
   isOpen,
