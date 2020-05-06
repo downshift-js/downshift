@@ -2,7 +2,7 @@
 
 ## The problem
 
-You have a custom select dropdown in your application and you want it to perform
+You have a custom select dropdown in your application and you want it to behave
 exactly the same as the native HTML `<select>` in terms of accessibility and
 functionality. For consistency reasons you want it to follow the [ARIA design
 pattern][select-aria] for a dropdown select. You also want this solution to be
@@ -13,7 +13,7 @@ simple to use and flexible so you can tailor it further to your specific needs.
 `useSelect` is a React hook that manages all the stateful logic needed to make
 the dropdown functional and accessible. It returns a set of props that are meant
 to be called and their results destructured on the dropdown's elements: its
-label, toggle button, list and list items. These are similar to the ones
+label, toggle button, list and list items. The props are similar to the ones
 provided by vanilla `<Downshift>` to the children render prop.
 
 These props are called getter props and their return values are destructured as
@@ -147,8 +147,8 @@ whenever the user abandons input via `<Esc>`.
 > `function(changes: object)` | optional, no useful default
 
 Called each time the selected item was changed. Selection can be performed by
-item click, Enter Key while item is highlighted or by blurring the menu while an
-item is highlighted (Tab, Shift-Tab or clicking away).
+item click, Enter or Space Key while item is highlighted or by using character
+keys while the toggle button is focused and menu is closed.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This object is guaranteed to contain the `selectedItem` property
@@ -185,17 +185,18 @@ const {getMenuProps, getItemProps, ...rest} = useSelect({
 })
 
 function stateReducer(state, actionAndChanges) {
+  const {type, changes} = actionAndChanges
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
-  switch (actionAndChanges.type) {
+  switch (type) {
     case useSelect.stateChangeTypes.MenuKeyDownEnter:
     case useSelect.stateChangeTypes.ItemClick:
       return {
-        ...actionAndChanges.changes, // default Downshift new state changes on item selection.
+        ...changes, // default Downshift new state changes on item selection.
         isOpen: state.isOpen, // but keep menu open.
         highlightedIndex: state.highlightedIndex, // with the item highlighted.
       }
     default:
-      return actionAndChanges.changes // otherwise business as usual.
+      return changes // otherwise business as usual.
   }
 }
 ```

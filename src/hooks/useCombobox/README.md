@@ -13,8 +13,8 @@ needs.
 `useCombobox` is a React hook that manages all the stateful logic needed to make
 the combobox functional and accessible. It returns a set of props that are meant
 to be called and their results destructured on the combobox's elements: its
-label, toggle button, input, combobox container, list and list items. These are
-similar to the ones provided by vanilla `<Downshift>` to the children render
+label, toggle button, input, combobox container, list and list items. The props
+are similar to the ones provided by vanilla `<Downshift>` to the children render
 prop.
 
 These props are called getter props and their return values are destructured as
@@ -208,17 +208,18 @@ const {getMenuProps, getItemProps, ...rest} = useCombobox({
 })
 
 function stateReducer(state, actionAndChanges) {
+  const {type, changes} = actionAndChanges
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
-  switch (actionAndChanges.type) {
+  switch (type) {
     case useCombobox.stateChangeTypes.InputKeyDownEnter:
     case useCombobox.stateChangeTypes.ItemClick:
       return {
-        ...actionAndChanges.changes, // default Downshift new state changes on item selection.
+        ...changes, // default Downshift new state changes on item selection.
         isOpen: state.isOpen, // but keep menu open.
         highlightedIndex: state.highlightedIndex, // with the item highlighted.
       }
     default:
-      return actionAndChanges.changes // otherwise business as usual.
+      return changes // otherwise business as usual.
   }
 }
 ```

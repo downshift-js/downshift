@@ -16,7 +16,7 @@ returns a set of props that are meant to be called and their results
 destructured on the dropdown's elements that involve the multiple selection
 experience: the dropdown main element itself, which can be either an `input` (if
 you are building a `combobox`) or a `button` (if you are building a `select`),
-and the selected items. These are similar to the ones provided by vanilla
+and the selected items. The props are similar to the ones provided by vanilla
 `Downshift` to the children render prop.
 
 These props are called getter props and their return values are destructured as
@@ -131,7 +131,7 @@ const DropdownMultipleCombobox = () => {
   })
 
   return (
-    <>
+    <div>
       <label {...getLabelProps()}>Choose some elements:</label>
       <div style={comboboxWrapperStyles}>
         {selectedItems.map((selectedItem, index) => (
@@ -172,14 +172,14 @@ const DropdownMultipleCombobox = () => {
             </li>
           ))}
       </ul>
-    </>
+    <div/>
   )
 }
 
 render(<DropdownMultipleCombobox />, document.getElementById('root'))
 ```
 
-The example with `useSelect` is [here][select-sandbox-example].
+The equivalent example with `useSelect` is [here][select-sandbox-example].
 
 ## Basic Props
 
@@ -190,8 +190,9 @@ This is the list of props that you should probably know about. There are some
 
 > `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
 
-Used to determine the string value for the selected item. It is used to compute
-the accessibility message that occurs after removing the item.
+If your items are stored as, say, objects instead of strings, downshift still
+needs a string representation for each one. This is required for accessibility
+messages (e.g., after removing a selection).
 
 ### onSelectedItemsChange
 
@@ -238,17 +239,18 @@ const {getDropdownProps, getSelectedItemProps, ...rest} = useMultipleSelection({
 })
 
 function stateReducer(state, actionAndChanges) {
+  const {type, changes} = actionAndChanges
   // this adds focus to the dropdown when item is removed by keyboard action.
-  if (
-    action.type ===
-      useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace ||
-    action.type ===
-      useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete
-  ) {
-    action.changes.activeIndex = -1
+  switch (type) {
+    case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownBackspace:
+    case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
+      return {
+        ...changes,
+        activeIndex: -1, // the focus will move to the input/button
+      }
+    default:
+      return changes // otherwise business as usual.
   }
-
-  return action.changes
 }
 ```
 

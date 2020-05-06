@@ -30,35 +30,40 @@ autocomplete, combobox or select dropdown components.</p>
 
 ## The problem
 
-You need an autocomplete/combobox/select experience in your application and you
-want it to be accessible. You also want it to be simple and flexible to account
-for your use cases. Finally, it should follow the [ARIA design
-pattern][combobox-aria] for a combobox.
+You need an autocomplete/combobox or a select experience in your application and
+you want it to be accessible. You also want it to be simple and flexible to
+account for your use cases. Finally, it should follow the ARIA design pattern
+for a [combobox][combobox-aria] or a [select][select-aria], depending on your
+use case.
 
 ## This solution
 
 This library provides its users two main sets of solutions: the `Downshift`
 component and a set of hooks. The component is still the main part of the
-library, providing autocomplete/combobox logic as a render prop. The hooks are
-newer and are going to be the way forward to provide accessibility logic to
-widgets. Right now we support `useSelect` for `select` components, `useCombobox`
-for `combobox/autocomplete` and `useMultipleSelection` to make multiple
-selection easier for the first two experiences.
+library, providing the autocomplete/combobox logic as a render prop. The hooks
+are newer and are going to be the way forward to providing accessibile
+experiences. Right now we support `useSelect` for `select` components,
+`useCombobox` for `combobox/autocomplete` inputs and `useMultipleSelection` to
+make the selection of multiple items easier for both the `select` and `combobox`
+elements.
 
-Since `useCombobox` and the component `Downshift` aim to provide accessibility
-to the same kind of widget, we suggest trying the new `useCombobox` and if you
-feel that `Downshift` still covers your use case better then use that instead.
-Both of them are actively maintained but we are cool kids from the future and
-prefer to share `React` logic via hooks.
+Since both `useCombobox` and the component `Downshift` aim to provide
+accessibility to a combobox, we suggest trying the new `useCombobox` first. If
+you feel that `Downshift` still covers your use cases better then use the
+component instead. However, if these use cases should also be covered in
+`useCombobx`, make sure to create an issue to help us improve the hook. Both the
+hooks and the component are actively maintained but we are cool kids from the
+future and prefer to share `React` logic via hooks.
 
-The `README` on this page is only for the component while each hook has its own
-`README` file, check below. But they are similar in many concepts so you can
-always switch between them in order to find information.
+The `README` on this page convers only the component while each hook has its own
+`README` file. Check [below](#the-react-hooks-api) for links to each. Both the
+component and the hooks are similar in many concepts so you can always switch
+between the documentation in order to find information.
 
 ### Downshift component
 
 This is a component that controls user interactions and state for you so you can
-create autocomplete, dropdown, select, etc. components. It uses a [render
+create autocomplete/combobox or select dropdown components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
 because you are responsible for the rendering of everything and you simply apply
 props to what you're rendering.
@@ -71,29 +76,32 @@ harder to contribute to.
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
 
-### The Hooks API
+### The React Hooks API
 
-In the effort to provide out of the box solutions for each dropdown variation, a
-set of React Hooks are being added as part of Downshift. Each hook will handle a
-specific dropdown variation and be named accordingly: `useSelect`,
-`useCombobox`, `useMultipleSelection` etc.
+`Downshift` proved to be a versatile component to create not only combobox
+inputs, but also custom select elements and even multiple selection experiences.
+However, additional code was needed to make these experiences fully accessible,
+so we decided to create a dedicated React hook for them. Each hook handles a
+specific dropdown variation and aims to make it fully accessible.
 
-You can check the progress in the [hooks page][hooks-readme] and contribute! If
-you want to create a custom `select` or `combobox/autocomplete` dropdown, with
-the possibility of multiple selection, and want it to be functional and
-accessible, jump directly to the already implemented
-[useSelect][useselect-readme], [useCombobox][combobox-readme] and
-[useMultipleSelection][multiple-selection-readme]. For more examples of how to
-use the hooks check out our [docsite](https://downshift.netlify.app/)!
+You can check the progress in the [hooks page][hooks-readme]. The hooks
+published so far are:
+
+- [useSelect][useselect-readme] for a custom select dropdown.
+- [useCombobox][combobox-readme] for a combobox/autocomplete input.
+- [useMultipleSelection][multiple-selection-readme] for allowing the selection
+  of multiple items in a select or a combobox.
+
+For examples on how to use the hooks check out our [docsite][docsite]!
 
 ### Bundle size concerns
 
-Adding the hooks into this repo increased the bundle size considerably
-throughout its existence. However, since we create the bundle with `Rollup` and
-export both `<Downshift>` and the hooks as modules, you should be able to have
-the library treeshaked (pruned) and given only the code you need. Since version
-`3.4.8` BundlePhobia marked `Downshift` as both `tree-shakeable` and
-`side-effect free` [here][bundle-phobia-link].
+Adding the hooks into this repo increased the bundle size considerably. However,
+since we create the bundle with `Rollup` and export both `<Downshift>` and the
+hooks as modules, you should be able to have the library treeshaked (pruned) and
+receive only the code you need. Since version `3.4.8`
+[BundlePhobia][bundle-phobia-link] marked `Downshift` as both `tree-shakeable`
+and `side-effect free`.
 
 ## Table of Contents
 
@@ -249,11 +257,12 @@ The previous example without `getRootProps` is
 [here](https://codesandbox.io/s/n9095).
 
 > Warning: The example without `getRootProps` is not fully accessible with
-> screen readers as it's not possible to achieve a correct HTML structure for
-> the combobox. Examples on how to use `Downshift` component with and without
-> `getRootProps` are on the [docsite](https://downshift.netlify.app/).
+> screen readers as it's not possible to achieve the HTML structure suggested by
+> ARIA. We recommend following the example with `getRootProps`. Examples on how
+> to use `Downshift` component with and without `getRootProps` are on the
+> [docsite](https://downshift.netlify.app/).
 
-`<Downshift />` is the only component exposed by this package. It doesn't render
+`Downshift` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
 render prop!"][use-a-render-prop]!
 `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
@@ -1101,6 +1110,14 @@ If you're just learning downshift, review these in order:
     Shows how to create a MultiDownshift component that allows for an array of
     selectedItems for multiple selection using a state reducer
 
+**Hooks Examples:**
+
+We are also in the process of updating our [docsite][docsite] and we aim to add
+the examples that illustrate the use of hooks there. This is a great opportunity
+to contribute, by converting existing `Downshift` examples to either `useSelect`
+or `useCombobox` or by adding any other scenarios that you feel are
+representative.
+
 **Other Examples:**
 
 Check out these examples of more advanced use/edge cases:
@@ -1479,3 +1496,6 @@ MIT
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[select-aria]:
+  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[docsite]: https://downshift.netlify.app/
