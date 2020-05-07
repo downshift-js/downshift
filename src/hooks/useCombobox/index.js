@@ -152,7 +152,7 @@ function useCombobox(userProps = {}) {
     isInitialMount.current = false
   }, [])
   /* Add mouse/touch events to document. */
-  const isMouseDown = useMouseAndTouchTracker(
+  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [comboboxRef, menuRef, toggleButtonRef],
     environment,
@@ -235,7 +235,7 @@ function useCombobox(userProps = {}) {
   }
   const inputHandleBlur = () => {
     /* istanbul ignore else */
-    if (!isMouseDown) {
+    if (!mouseAndTouchTrackersRef.current.isMouseDown) {
       dispatch({
         type: stateChangeTypes.InputBlur,
       })
