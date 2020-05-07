@@ -284,7 +284,7 @@ export function getHighlightedIndexOnOpen(
  * @param {Array<Object>} downshiftElementRefs Downshift element refs to track movement (toggleButton, menu etc.)
  * @param {Object} environment Environment where component/hook exists.
  * @param {Function} handleBlur Handler on blur from mouse or touch.
- * @returns {boolean} Whether the mouseDown event occurred.
+ * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
 export function useMouseAndTouchTracker(
   isOpen,
@@ -350,8 +350,8 @@ export function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, environment])
 
-  return mouseAndTouchTrackersRef.current.isMouseDown
+  return mouseAndTouchTrackersRef
 }

@@ -189,7 +189,7 @@ function useSelect(userProps = {}) {
     isInitialMountRef.current = false
   }, [])
   /* Add mouse/touch events to document. */
-  const isMouseDown = useMouseAndTouchTracker(
+  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [menuRef, toggleButtonRef],
     environment,
@@ -297,7 +297,7 @@ function useSelect(userProps = {}) {
       return
     }
 
-    const shouldBlur = !isMouseDown
+    const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown
     /* istanbul ignore else */
     if (shouldBlur) {
       dispatch({type: stateChangeTypes.MenuBlur})
