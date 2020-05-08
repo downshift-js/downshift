@@ -56,9 +56,9 @@ hooks and the component are actively maintained but we are cool kids from the
 future and prefer to share `React` logic via hooks.
 
 The `README` on this page convers only the component while each hook has its own
-`README` file. Check [below](#the-react-hooks-api) for links to each. Both the
-component and the hooks are similar in many concepts so you can always switch
-between the documentation in order to find information.
+`README` file. Check the [hooks section](#the-react-hooks-api) for links to
+each. Both the component and the hooks are similar in many concepts so you can
+always switch between the documentation pages in order to find information.
 
 ### Downshift component
 
