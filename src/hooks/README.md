@@ -7,20 +7,20 @@ hooks in our API.
 ## Hooks
 
 Check out one of the hooks below to use in your application and create fully
-accessible widgets without any constraint about the UI used.
+accessible widgets without any constraint about the UI library used.
 
 ### useSelect
 
-For a custom `select` dropdown [click here][select-readme].
+For a custom `select` dropdown check out [useSelect][select-readme].
 
 ### useCombobox
 
-For a `combobox/autocomplete` dropdown [click here][combobox-readme].
+For a `combobox/autocomplete` input check out [useCombobox][combobox-readme].
 
 ### useMultipleSelection
 
-For a `multiple selection` with a `select` or `combobox` [click
-here][multiple-selection-readme].
+For a `multiple selection` with either a `select` or a `combobox` check out
+[useMultipleSelection][multiple-selection-readme].
 
 ## Roadmap and contributions
 
