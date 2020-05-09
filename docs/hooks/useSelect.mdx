@@ -293,19 +293,18 @@ For even more granular state change control, you can add your own reducer on top
 of the default one. When the `stateReducer` is called, it will receive the
 previous `state` and the `actionAndChanges` object as parameters.
 `actionAndChanges` contains the change `type`, which explains why the state is
-bein g changed. It also contains the `changes` proposed by `Downshift` that
+being changed. It also contains the `changes` proposed by `useSelect` that
 should occur as a consequence of that change type. You are supposed to return
 the new state according to your needs.
 
-In the example below, we are catching the selection event types,
-`MenuKeyDownEnter` and `ItemClick`. To keep the menu open, we override `isOpen`
-with `state.isOpen` and `highlightedIndex` with `state.highlightedIndex` to keep
-the same appearance to the user (menu open with same item highlighted) after
-selection. But selection is still performed, since we are also returning the
-destructured `actionAndChanges.changes` which contains the `selectedItem` given
-to us by the `Downshift` default reducer.
+In the example below, we are implementing a Windows-specific behavior for the
+select. While menu is closed, using `ArrowUp` and `ArrowDown` should keep the
+menu closed and change `selectedItem` incrementally or decrementally. In the
+`stateReducer` we capture the `ToggleButtonKeyDownArrowDown` and
+`ToggleButtonKeyDownArrowUp` events, compute the next `selectedItem` based on
+index, and return it without any other changes.
 
-In all other state change types, we return `Downshift` default changes.
+In all other state change types, we return `useSelect` default changes.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r)
 
@@ -316,15 +315,19 @@ In all other state change types, we return `Downshift` default changes.
     // import { items, menuStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
       const {type, changes} = actionAndChanges
-      // this prevents the menu from being closed when the user selects an item.
       switch (type) {
-        case useSelect.stateChangeTypes.MenuKeyDownEnter:
-        case useSelect.stateChangeTypes.ItemClick:
-          return {
-            ...changes, // default Downshift new state changes on item selection.
-            isOpen: state.isOpen, // but keep menu open.
-            highlightedIndex: state.highlightedIndex, // with the item highlighted.
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown:
+          const nextItemIndex = items.indexOf(state.selectedItem)
+          if (nextItemIndex === items.length - 1) {
+            return {selectedItem: items[0]}
           }
+          return {selectedItem: items[nextItemIndex + 1]}
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp:
+          const previousItemIndex = items.indexOf(state.selectedItem)
+          if (previousItemIndex === 0) {
+            return {selectedItem: items[items.length - 1]}
+          }
+          return {selectedItem: items[previousItemIndex - 1]}
         default:
           return changes // otherwise business as usual.
       }
