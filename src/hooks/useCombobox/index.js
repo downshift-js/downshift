@@ -35,7 +35,6 @@ function useCombobox(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-
   const {
     initialIsOpen,
     defaultIsOpen,
