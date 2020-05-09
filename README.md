@@ -51,7 +51,7 @@ Since both `useCombobox` and the component `Downshift` aim to provide
 accessibility to a combobox, we suggest trying the new `useCombobox` first. If
 you feel that `Downshift` still covers your use cases better then use the
 component instead. However, if these use cases should also be covered in
-`useCombobx`, make sure to create an issue to help us improve the hook. Both the
+`useCombobox`, make sure to create an issue to help us improve the hook. Both the
 hooks and the component are actively maintained but we are cool kids from the
 future and prefer to share `React` logic via hooks.
 
