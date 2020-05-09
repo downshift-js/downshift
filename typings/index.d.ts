@@ -398,7 +398,7 @@ export enum UseComboboxStateChangeTypes {
   FunctionSelectItem = '__function_select_item__',
   FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
-  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__'
+  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
 export interface UseComboboxProps<Item> {
@@ -417,6 +417,7 @@ export interface UseComboboxProps<Item> {
   initialSelectedItem?: Item
   defaultSelectedItem?: Item
   inputValue?: string
+  selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   initialInputValue?: string
   defaultInputValue?: string
   id?: string
@@ -588,7 +589,8 @@ export interface A11yRemovalMessage<Item> {
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
   index?: number
   selectedItem: Item
 }
