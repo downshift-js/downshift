@@ -117,14 +117,21 @@ function useCombobox(userProps = {}) {
   }, [selectedItem])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
-    if (highlightedIndex < 0 || !isOpen || !Object.keys(itemRefs.current).length) {
+    if (
+      highlightedIndex < 0 ||
+      !isOpen ||
+      !Object.keys(itemRefs.current).length
+    ) {
       return
     }
 
     if (shouldScroll.current === false) {
       shouldScroll.current = true
     } else {
-      scrollIntoView(itemRefs.current[elementIds.current.getItemId(highlightedIndex)], menuRef.current)
+      scrollIntoView(
+        itemRefs.current[elementIds.current.getItemId(highlightedIndex)],
+        menuRef.current,
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -163,7 +170,8 @@ function useCombobox(userProps = {}) {
     },
   )
 
-  const getItemNodeFromIndex = index => itemRefs.current[elementIds.current.getItemId(index)]
+  const getItemNodeFromIndex = index =>
+    itemRefs.current[elementIds.current.getItemId(index)]
 
   /* Event handler functions */
   const inputKeyDownHandlers = {
