@@ -59,16 +59,14 @@ function useSelect(userProps = {}) {
   // Refs
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
+  const itemRefs = useRef()
+  itemRefs.current = {}
   const isInitialMountRef = useRef(true)
   const shouldScrollRef = useRef(true)
   const shouldBlurRef = useRef(true)
   const clearTimeoutRef = useRef(null)
   const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
-
-  // Some utils.
-  const getItemNodeFromIndex = index =>
-    environment.document.getElementById(elementIdsRef.current.getItemId(index))
 
   // Effects.
   /* Sets a11y status message on changes in state. */
@@ -167,13 +165,20 @@ function useSelect(userProps = {}) {
   }, [isOpen])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
-    if (highlightedIndex < 0 || !isOpen || !items.length) {
+    if (
+      highlightedIndex < 0 ||
+      !isOpen ||
+      !Object.keys(itemRefs.current).length
+    ) {
       return
     }
     if (shouldScrollRef.current === false) {
       shouldScrollRef.current = true
     } else {
-      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
+      scrollIntoView(
+        itemRefs.current[elementIdsRef.current.getItemId(highlightedIndex)],
+        menuRef.current,
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -199,6 +204,10 @@ function useSelect(userProps = {}) {
       })
     },
   )
+
+  // Some utils.
+  const getItemNodeFromIndex = index =>
+    itemRefs.current[elementIdsRef.current.getItemId(index)]
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = {
@@ -444,7 +453,15 @@ function useSelect(userProps = {}) {
 
     return toggleProps
   }
-  const getItemProps = ({item, index, onMouseMove, onClick, ...rest} = {}) => {
+  const getItemProps = ({
+    item,
+    index,
+    onMouseMove,
+    onClick,
+    refKey = 'ref',
+    ref,
+    ...rest
+  } = {}) => {
     const itemIndex = getItemIndex(index, item, items)
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!')
@@ -453,6 +470,13 @@ function useSelect(userProps = {}) {
       role: 'option',
       'aria-selected': `${itemIndex === highlightedIndex}`,
       id: elementIdsRef.current.getItemId(itemIndex),
+      [refKey]: handleRefs(ref, itemNode => {
+        if (itemNode) {
+          itemRefs.current[
+            elementIdsRef.current.getItemId(itemIndex)
+          ] = itemNode
+        }
+      }),
       ...rest,
     }
 

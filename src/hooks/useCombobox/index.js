@@ -321,7 +321,9 @@ function useCombobox(userProps = {}) {
     return {
       [refKey]: handleRefs(ref, itemNode => {
         if (itemNode) {
-          itemRefs.current[elementIdsRef.current.getItemId(itemIndex)] = itemNode
+          itemRefs.current[
+            elementIdsRef.current.getItemId(itemIndex)
+          ] = itemNode
         }
       }),
       role: 'option',
