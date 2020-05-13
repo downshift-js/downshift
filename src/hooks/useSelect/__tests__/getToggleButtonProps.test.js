@@ -382,7 +382,7 @@ describe('getToggleButtonProps', () => {
           const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
           keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.runTimersToTime(200))
+          reactAct(() => jest.advanceTimersByTime(200))
           keyDownOnToggleButton(chars[1])
 
           expect(toggleButton).toHaveTextContent(expectedItem)
@@ -396,7 +396,7 @@ describe('getToggleButtonProps', () => {
           const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
           keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.runTimersToTime(200))
+          reactAct(() => jest.advanceTimersByTime(200))
           keyDownOnToggleButton(chars[1])
           reactAct(() => jest.runAllTimers())
           keyDownOnToggleButton(chars[2])
@@ -426,6 +426,17 @@ describe('getToggleButtonProps', () => {
       })
 
       describe('arrow up', () => {
+        test('it does not open or highlight anything if there are no options', () => {
+          const {keyDownOnToggleButton, menu, getItems} = renderSelect({
+            items: [],
+          })
+
+          keyDownOnToggleButton('ArrowUp')
+
+          expect(menu).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test('opens the closed menu with last option highlighted', () => {
           const {keyDownOnToggleButton, menu} = renderSelect()
 
@@ -514,6 +525,17 @@ describe('getToggleButtonProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it does not open or highlight anything if there are no options', () => {
+          const {keyDownOnToggleButton, menu, getItems} = renderSelect({
+            items: [],
+          })
+
+          keyDownOnToggleButton('ArrowDown')
+
+          expect(menu).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test('opens the closed menu with first option highlighted', () => {
           const {keyDownOnToggleButton, menu} = renderSelect()
 

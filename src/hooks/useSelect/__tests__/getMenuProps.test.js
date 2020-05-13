@@ -404,6 +404,18 @@ describe('getMenuProps', () => {
       })
 
       describe('arrow up', () => {
+        test('it does not highlight anything if there are no options', () => {
+          const {keyDownOnMenu, menu, getItems} = renderSelect({
+            isOpen: true,
+            items: [],
+          })
+
+          keyDownOnMenu('ArrowUp')
+
+          expect(menu).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test('it highlights the last option number if none is highlighted', () => {
           const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,
@@ -493,6 +505,18 @@ describe('getMenuProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it does not highlight anything if there are no options', () => {
+          const {keyDownOnMenu, menu, getItems} = renderSelect({
+            isOpen: true,
+            items: [],
+          })
+
+          keyDownOnMenu('ArrowDown')
+
+          expect(menu).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test("it highlights option number '0' if none is highlighted", () => {
           const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,

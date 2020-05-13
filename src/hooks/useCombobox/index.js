@@ -60,11 +60,14 @@ function useCombobox(userProps = {}) {
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
-  itemRefs.current = []
+  itemRefs.current = {}
   const shouldScroll = useRef(true)
   const isInitialMount = useRef(true)
-  const elementIds = useRef(getElementIds(props))
+  const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
+
+  const getItemNodeFromIndex = index =>
+    itemRefs.current[elementIdsRef.current.getItemId(index)]
 
   /* Effects */
   /* Sets a11y status message on changes in state. */
@@ -117,14 +120,18 @@ function useCombobox(userProps = {}) {
   }, [selectedItem])
   /* Scroll on highlighted item if change comes from keyboard. */
   useEffect(() => {
-    if (highlightedIndex < 0 || !isOpen || !itemRefs.current.length) {
+    if (
+      highlightedIndex < 0 ||
+      !isOpen ||
+      !Object.keys(itemRefs.current).length
+    ) {
       return
     }
 
     if (shouldScroll.current === false) {
       shouldScroll.current = true
     } else {
-      scrollIntoView(itemRefs.current[highlightedIndex], menuRef.current)
+      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -162,9 +169,6 @@ function useCombobox(userProps = {}) {
       })
     },
   )
-
-  const getItemNodeFromIndex = index => itemRefs.current[index]
-
   /* Event handler functions */
   const inputKeyDownHandlers = {
     ArrowDown(event) {
@@ -274,17 +278,17 @@ function useCombobox(userProps = {}) {
 
   // Getter props.
   const getLabelProps = labelProps => ({
-    id: elementIds.current.labelId,
-    htmlFor: elementIds.current.inputId,
+    id: elementIdsRef.current.labelId,
+    htmlFor: elementIdsRef.current.inputId,
     ...labelProps,
   })
   const getMenuProps = ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
     [refKey]: handleRefs(ref, menuNode => {
       menuRef.current = menuNode
     }),
-    id: elementIds.current.menuId,
+    id: elementIdsRef.current.menuId,
     role: 'listbox',
-    'aria-labelledby': elementIds.current.labelId,
+    'aria-labelledby': elementIdsRef.current.labelId,
     onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
     ...rest,
   })
@@ -313,12 +317,14 @@ function useCombobox(userProps = {}) {
     return {
       [refKey]: handleRefs(ref, itemNode => {
         if (itemNode) {
-          itemRefs.current.push(itemNode)
+          itemRefs.current[
+            elementIdsRef.current.getItemId(itemIndex)
+          ] = itemNode
         }
       }),
       role: 'option',
       'aria-selected': `${itemIndex === highlightedIndex}`,
-      id: elementIds.current.getItemId(itemIndex),
+      id: elementIdsRef.current.getItemId(itemIndex),
       ...(!rest.disabled && {
         onMouseMove: callAllEventHandlers(onMouseMove, () => {
           itemHandleMouseMove(itemIndex)
@@ -341,7 +347,7 @@ function useCombobox(userProps = {}) {
       [refKey]: handleRefs(ref, toggleButtonNode => {
         toggleButtonRef.current = toggleButtonNode
       }),
-      id: elementIds.current.toggleButtonId,
+      id: elementIdsRef.current.toggleButtonId,
       tabIndex: -1,
       ...(!rest.disabled && {
         ...(isReactNative
@@ -399,16 +405,16 @@ function useCombobox(userProps = {}) {
       [refKey]: handleRefs(ref, inputNode => {
         inputRef.current = inputNode
       }),
-      id: elementIds.current.inputId,
+      id: elementIdsRef.current.inputId,
       'aria-autocomplete': 'list',
-      'aria-controls': elementIds.current.menuId,
+      'aria-controls': elementIdsRef.current.menuId,
       ...(isOpen &&
         highlightedIndex > -1 && {
-          'aria-activedescendant': elementIds.current.getItemId(
+          'aria-activedescendant': elementIdsRef.current.getItemId(
             highlightedIndex,
           ),
         }),
-      'aria-labelledby': elementIds.current.labelId,
+      'aria-labelledby': elementIdsRef.current.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
       autoComplete: 'off',
@@ -423,7 +429,7 @@ function useCombobox(userProps = {}) {
     }),
     role: 'combobox',
     'aria-haspopup': 'listbox',
-    'aria-owns': elementIds.current.menuId,
+    'aria-owns': elementIdsRef.current.menuId,
     'aria-expanded': isOpen,
     ...rest,
   })

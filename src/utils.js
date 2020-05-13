@@ -312,6 +312,10 @@ function getNextWrappingIndex(
   getItemNodeFromIndex,
   circular = true,
 ) {
+  if (itemCount === 0) {
+    return -1
+  }
+
   const itemsLastIndex = itemCount - 1
 
   if (
