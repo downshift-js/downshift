@@ -66,6 +66,9 @@ function useCombobox(userProps = {}) {
   const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
 
+  const getItemNodeFromIndex = index =>
+    itemRefs.current[elementIdsRef.current.getItemId(index)]
+
   /* Effects */
   /* Sets a11y status message on changes in state. */
   useEffect(() => {
@@ -128,10 +131,7 @@ function useCombobox(userProps = {}) {
     if (shouldScroll.current === false) {
       shouldScroll.current = true
     } else {
-      scrollIntoView(
-        itemRefs.current[elementIdsRef.current.getItemId(highlightedIndex)],
-        menuRef.current,
-      )
+      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -169,10 +169,6 @@ function useCombobox(userProps = {}) {
       })
     },
   )
-
-  const getItemNodeFromIndex = index =>
-    itemRefs.current[elementIdsRef.current.getItemId(index)]
-
   /* Event handler functions */
   const inputKeyDownHandlers = {
     ArrowDown(event) {

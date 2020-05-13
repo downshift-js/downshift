@@ -68,6 +68,10 @@ function useSelect(userProps = {}) {
   const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
 
+  // Some utils.
+  const getItemNodeFromIndex = index =>
+    itemRefs.current[elementIdsRef.current.getItemId(index)]
+
   // Effects.
   /* Sets a11y status message on changes in state. */
   useEffect(() => {
@@ -175,10 +179,7 @@ function useSelect(userProps = {}) {
     if (shouldScrollRef.current === false) {
       shouldScrollRef.current = true
     } else {
-      scrollIntoView(
-        itemRefs.current[elementIdsRef.current.getItemId(highlightedIndex)],
-        menuRef.current,
-      )
+      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
@@ -204,10 +205,6 @@ function useSelect(userProps = {}) {
       })
     },
   )
-
-  // Some utils.
-  const getItemNodeFromIndex = index =>
-    itemRefs.current[elementIdsRef.current.getItemId(index)]
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = {
