@@ -347,6 +347,27 @@ describe('getInputProps', () => {
 
     describe('on key down', () => {
       describe('arrow up', () => {
+        test('it does not open or highlight anything if there are no options', () => {
+          const {keyDownOnInput, getItems, input} = renderCombobox({items: []})
+
+          keyDownOnInput('ArrowUp')
+
+          expect(input).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
+        test('it does not highlight anything if there are no options', () => {
+          const {keyDownOnInput, getItems, input} = renderCombobox({
+            items: [],
+            isOpen: true,
+          })
+
+          keyDownOnInput('ArrowUp')
+
+          expect(input).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test('it opens the menu and highlights the last option', () => {
           const {keyDownOnInput, getItems, input} = renderCombobox()
 
@@ -446,6 +467,27 @@ describe('getInputProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it does not opne on highlight anything if there are no options', () => {
+          const {keyDownOnInput, getItems, input} = renderCombobox({items: []})
+
+          keyDownOnInput('ArrowDown')
+
+          expect(input).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
+        test('it does not highlight anything if there are no options', () => {
+          const {keyDownOnInput, getItems, input} = renderCombobox({
+            items: [],
+            isOpen: true,
+          })
+
+          keyDownOnInput('ArrowDown')
+
+          expect(input).not.toHaveAttribute('aria-activedescendant')
+          expect(getItems()).toHaveLength(0)
+        })
+
         test("it opens the menu and highlights option number '0'", () => {
           const {input, keyDownOnInput, getItems} = renderCombobox()
 

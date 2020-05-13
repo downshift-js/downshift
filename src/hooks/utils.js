@@ -249,6 +249,10 @@ export function getHighlightedIndexOnOpen(
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
 
+  if (items.length === 0) {
+    return -1
+  }
+
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
   if (
     initialHighlightedIndex !== undefined &&
