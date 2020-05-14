@@ -23,7 +23,7 @@ function noop() {}
  * @param {HTMLElement} menuNode the menu element of the component
  */
 function scrollIntoView(node, menuNode) {
-  if (node === null) {
+  if (!node) {
     return
   }
 
