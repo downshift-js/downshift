@@ -49,31 +49,34 @@ function useSelect(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-
-  // Reducer init.
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
     dispatch,
   ] = useControlledReducer(downshiftSelectReducer, initialState, props)
 
-  // Refs
+  // Element efs.
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const itemRefs = useRef()
   itemRefs.current = {}
-  const isInitialMountRef = useRef(true)
+  // used not to scroll when highlight by mouse.
   const shouldScrollRef = useRef(true)
+  // used not to trigger menu blur action in some scenarios.
   const shouldBlurRef = useRef(true)
+  // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef(null)
+  // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
+  // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
+  const isInitialMountRef = useRef(true)
 
   // Some utils.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
   // Effects.
-  /* Sets a11y status message on changes in state. */
+  // Sets a11y status message on changes in state.
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -97,7 +100,7 @@ function useSelect(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, highlightedIndex, selectedItem, inputValue])
-  /* Sets a11y status message on changes in selectedItem. */
+  // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -121,7 +124,7 @@ function useSelect(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
-  /* Sets cleanup for the keysSoFar after 500ms. */
+  // Sets cleanup for the keysSoFar after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
     if (isInitialMountRef.current) {
@@ -154,10 +157,10 @@ function useSelect(userProps = {}) {
       // istanbul ignore else
       if (menuRef.current) {
         menuRef.current.focus()
-        return
       }
+      return
     }
-    // Focus toggleButton on close, but on if was closed with (Shift+)Tab.
+    // Focus toggleButton on close, but not if it was closed with (Shift+)Tab.
     if (environment.document.activeElement === menuRef.current) {
       // istanbul ignore else
       if (toggleButtonRef.current) {
@@ -167,7 +170,7 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
-  /* Scroll on highlighted item if change comes from keyboard. */
+  // Scroll on highlighted item if change comes from keyboard.
   useEffect(() => {
     if (
       highlightedIndex < 0 ||
@@ -190,11 +193,11 @@ function useSelect(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
-  /* Make initial ref false. */
+  // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
   }, [])
-  /* Add mouse/touch events to document. */
+  // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [menuRef, toggleButtonRef],
@@ -297,7 +300,7 @@ function useSelect(userProps = {}) {
     }
   }
   const menuHandleBlur = () => {
-    // if the blur was a result of selection, we don't trigger this action.
+    // if the blur was a result of selection, we don't trigger the blur action.
     if (shouldBlurRef.current === false) {
       shouldBlurRef.current = true
       return

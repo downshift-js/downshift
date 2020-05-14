@@ -47,30 +47,31 @@ function useCombobox(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-
-  // Reducer init.
   const [
     {isOpen, highlightedIndex, selectedItem, inputValue},
     dispatch,
   ] = useControlledReducer(downshiftUseComboboxReducer, initialState, props)
 
-  /* Refs */
+  // Element refs.
   const menuRef = useRef(null)
   const itemRefs = useRef()
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
   itemRefs.current = {}
+  // used not to scroll on highlight by mouse.
   const shouldScroll = useRef(true)
   const isInitialMount = useRef(true)
+  // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
+  // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
-
+  // utility callback to get item element.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
-  /* Effects */
-  /* Sets a11y status message on changes in state. */
+  // Effects.
+  // Sets a11y status message on changes in state.
   useEffect(() => {
     if (isInitialMount.current) {
       return
@@ -94,7 +95,7 @@ function useCombobox(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, highlightedIndex, selectedItem, inputValue])
-  /* Sets a11y status message on changes in selectedItem. */
+  // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMount.current) {
       return
@@ -118,7 +119,7 @@ function useCombobox(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
-  /* Scroll on highlighted item if change comes from keyboard. */
+  // Scroll on highlighted item if change comes from keyboard.
   useEffect(() => {
     if (
       highlightedIndex < 0 ||
@@ -135,7 +136,7 @@ function useCombobox(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
-  /* Controls the focus on the menu or the toggle button. */
+  // Controls the focus on the menu or the toggle button.
   useEffect(() => {
     // Don't focus menu on first render.
     if (isInitialMount.current) {
@@ -158,7 +159,7 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     isInitialMount.current = false
   }, [])
-  /* Add mouse/touch events to document. */
+  // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [comboboxRef, menuRef, toggleButtonRef],
@@ -169,7 +170,7 @@ function useCombobox(userProps = {}) {
       })
     },
   )
-  /* Event handler functions */
+  // Event handler functions.
   const inputKeyDownHandlers = {
     ArrowDown(event) {
       event.preventDefault()
