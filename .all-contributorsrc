@@ -1248,6 +1248,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "atomicpages",
+      "name": "Dennis Thompson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1824291?v=4",
+      "profile": "https://github.com/atomicpages",
+      "contributions": [
+        "test"
+      ]
     }
   ],
   "repoHost": "https://github.com",
