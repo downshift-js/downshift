@@ -15,6 +15,7 @@ import {
   handleRefs,
   debounce,
   normalizeArrowKey,
+  validateControlledUnchanged,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {propTypes, defaultProps} from './utils'
@@ -49,10 +50,12 @@ function useSelect(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-  const [
-    {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatch,
-  ] = useControlledReducer(downshiftSelectReducer, initialState, props)
+  const [state, dispatch] = useControlledReducer(
+    downshiftSelectReducer,
+    initialState,
+    props,
+  )
+  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   // Element efs.
   const toggleButtonRef = useRef(null)
@@ -70,6 +73,8 @@ function useSelect(userProps = {}) {
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
   const isInitialMountRef = useRef(true)
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
 
   // Some utils.
   const getItemNodeFromIndex = index =>
@@ -197,6 +202,14 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     isInitialMountRef.current = false
   }, [])
+  useEffect(() => {
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,

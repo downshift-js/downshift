@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
@@ -19,7 +20,9 @@ describe('props', () => {
     global.console.error = jest.fn()
     renderHook(() => useSelect())
 
-    expect(global.console.error).toBeCalledWith(expect.any(String))
+    expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"Warning: Failed items type: The items \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`."`,
+    )
 
     global.console.error.mockRestore()
   })
@@ -1266,5 +1269,29 @@ describe('props', () => {
 
       expect(result.current.isOpen).toEqual(true)
     })
+  })
+
+  it('that are controlled should not become uncontrolled', () => {
+    global.console.error = jest.fn()
+    const {rerender} = renderSelect()
+
+    rerender({isOpen: true})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the uncontrolled prop \\"isOpen\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+    global.console.error.mockRestore()
+  })
+
+  it('that are uncontrolled should not become controlled', () => {
+    global.console.error = jest.fn()
+    const {rerender} = renderSelect({highlightedIndex: 3})
+
+    rerender({})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the controlled prop \\"highlightedIndex\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+    global.console.error.mockRestore()
   })
 })

@@ -1,7 +1,12 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
-import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {
+  handleRefs,
+  normalizeArrowKey,
+  callAllEventHandlers,
+  validateControlledUnchanged,
+} from '../../utils'
 import {
   getItemIndex,
   getPropTypesValidator,
@@ -47,10 +52,12 @@ function useCombobox(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-  const [
-    {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatch,
-  ] = useControlledReducer(downshiftUseComboboxReducer, initialState, props)
+  const [state, dispatch] = useControlledReducer(
+    downshiftUseComboboxReducer,
+    initialState,
+    props,
+  )
+  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   // Element refs.
   const menuRef = useRef(null)
@@ -61,11 +68,13 @@ function useCombobox(userProps = {}) {
   itemRefs.current = {}
   // used not to scroll on highlight by mouse.
   const shouldScroll = useRef(true)
-  const isInitialMount = useRef(true)
+  const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
   // utility callback to get item element.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
@@ -73,7 +82,7 @@ function useCombobox(userProps = {}) {
   // Effects.
   // Sets a11y status message on changes in state.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -97,7 +106,7 @@ function useCombobox(userProps = {}) {
   }, [isOpen, highlightedIndex, selectedItem, inputValue])
   // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -139,7 +148,7 @@ function useCombobox(userProps = {}) {
   // Controls the focus on the menu or the toggle button.
   useEffect(() => {
     // Don't focus menu on first render.
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       // Unless it was initialised as open.
       if (initialIsOpen || defaultIsOpen || isOpen) {
         if (inputRef.current) {
@@ -150,15 +159,23 @@ function useCombobox(userProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
     previousResultCountRef.current = items.length
   })
   useEffect(() => {
-    isInitialMount.current = false
+    isInitialMountRef.current = false
   }, [])
+  useEffect(() => {
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,

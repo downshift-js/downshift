@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
-import {cleanup, act} from '@testing-library/react'
+import {act} from '@testing-library/react'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {
@@ -13,13 +14,14 @@ jest.useFakeTimers()
 
 describe('props', () => {
   beforeEach(jest.runAllTimers)
-  afterEach(cleanup)
 
   test('if falsy then prop types error is thrown', () => {
     global.console.error = jest.fn()
     renderHook(() => useCombobox())
 
-    expect(global.console.error).toBeCalledWith(expect.any(String))
+    expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"Warning: Failed items type: The items \`items\` is marked as required in \`useCombobox\`, but its value is \`undefined\`."`,
+    )
     global.console.error.mockRestore()
   })
 
@@ -1217,5 +1219,29 @@ describe('props', () => {
 
       expect(result.current.isOpen).toEqual(true)
     })
+  })
+
+  it('that are controlled should not become uncontrolled', () => {
+    global.console.error = jest.fn()
+    const {rerender} = renderCombobox()
+
+    rerender({selectedItem: 'controlled'})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the uncontrolled prop \\"selectedItem\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+    global.console.error.mockRestore()
+  })
+
+  it('that are uncontrolled should not become controlled', () => {
+    global.console.error = jest.fn()
+    const {rerender} = renderCombobox({inputValue: 'controlled value'})
+
+    rerender({})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the controlled prop \\"inputValue\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+    global.console.error.mockRestore()
   })
 })
