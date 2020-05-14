@@ -1,5 +1,5 @@
 /* eslint-disable max-statements */
-import {useRef, useEffect} from 'react'
+import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
@@ -7,6 +7,7 @@ import {
   getPropTypesValidator,
   updateA11yStatus,
   useMouseAndTouchTracker,
+  useLatestRef,
 } from '../utils'
 import {
   getInitialState,
@@ -49,10 +50,12 @@ function useCombobox(userProps = {}) {
   const initialState = getInitialState(props)
 
   // Reducer init.
-  const [
-    {isOpen, highlightedIndex, selectedItem, inputValue},
-    dispatch,
-  ] = useControlledReducer(downshiftUseComboboxReducer, initialState, props)
+  const [state, dispatch] = useControlledReducer(
+    downshiftUseComboboxReducer,
+    initialState,
+    props,
+  )
+  const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   /* Refs */
   const menuRef = useRef(null)
@@ -65,6 +68,7 @@ function useCombobox(userProps = {}) {
   const isInitialMount = useRef(true)
   const elementIdsRef = useRef(getElementIds(props))
   const previousResultCountRef = useRef()
+  const latest = useLatestRef({state, props})
 
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
@@ -170,309 +174,339 @@ function useCombobox(userProps = {}) {
     },
   )
   /* Event handler functions */
-  const inputKeyDownHandlers = {
-    ArrowDown(event) {
-      event.preventDefault()
-      dispatch({
-        type: stateChangeTypes.InputKeyDownArrowDown,
-        shiftKey: event.shiftKey,
-        getItemNodeFromIndex,
-      })
-    },
-    ArrowUp(event) {
-      event.preventDefault()
-      dispatch({
-        type: stateChangeTypes.InputKeyDownArrowUp,
-        shiftKey: event.shiftKey,
-        getItemNodeFromIndex,
-      })
-    },
-    Home(event) {
-      event.preventDefault()
-      dispatch({
-        type: stateChangeTypes.InputKeyDownHome,
-        getItemNodeFromIndex,
-      })
-    },
-    End(event) {
-      event.preventDefault()
-      dispatch({
-        type: stateChangeTypes.InputKeyDownEnd,
-        getItemNodeFromIndex,
-      })
-    },
-    Escape() {
-      dispatch({
-        type: stateChangeTypes.InputKeyDownEscape,
-      })
-    },
-    Enter(event) {
-      // if IME composing, wait for next Enter keydown event.
-      if (event.which === 229) {
-        return
-      }
-
-      if (isOpen && highlightedIndex > -1) {
+  const inputKeyDownHandlers = useMemo(
+    () => ({
+      ArrowDown(event) {
         event.preventDefault()
         dispatch({
-          type: stateChangeTypes.InputKeyDownEnter,
+          type: stateChangeTypes.InputKeyDownArrowDown,
+          shiftKey: event.shiftKey,
           getItemNodeFromIndex,
         })
-      }
-    },
-  }
+      },
+      ArrowUp(event) {
+        event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.InputKeyDownArrowUp,
+          shiftKey: event.shiftKey,
+          getItemNodeFromIndex,
+        })
+      },
+      Home(event) {
+        event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.InputKeyDownHome,
+          getItemNodeFromIndex,
+        })
+      },
+      End(event) {
+        event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.InputKeyDownEnd,
+          getItemNodeFromIndex,
+        })
+      },
+      Escape() {
+        dispatch({
+          type: stateChangeTypes.InputKeyDownEscape,
+        })
+      },
+      Enter(event) {
+        // if IME composing, wait for next Enter keydown event.
+        if (event.which === 229) {
+          return
+        }
+        const latestState = latest.current.state
 
-  // Event handlers.
-  const inputHandleKeyDown = event => {
-    const key = normalizeArrowKey(event)
-    if (key && inputKeyDownHandlers[key]) {
-      inputKeyDownHandlers[key](event)
-    }
-  }
-  const inputHandleChange = event => {
-    dispatch({
-      type: stateChangeTypes.InputChange,
-      inputValue: isReactNative
-        ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
-        : event.target.value,
-    })
-  }
-  const inputHandleBlur = () => {
-    /* istanbul ignore else */
-    if (!mouseAndTouchTrackersRef.current.isMouseDown) {
-      dispatch({
-        type: stateChangeTypes.InputBlur,
-      })
-    }
-  }
-  const menuHandleMouseLeave = () => {
-    dispatch({
-      type: stateChangeTypes.MenuMouseLeave,
-    })
-  }
-  const itemHandleMouseMove = index => {
-    if (index === highlightedIndex) {
-      return
-    }
-    shouldScroll.current = false
-    dispatch({
-      type: stateChangeTypes.ItemMouseMove,
-      index,
-    })
-  }
-  const itemHandleClick = index => {
-    dispatch({
-      type: stateChangeTypes.ItemClick,
-      index,
-    })
-  }
-  const toggleButtonHandleClick = () => {
-    dispatch({
-      type: stateChangeTypes.ToggleButtonClick,
-    })
-
-    if (!isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }
+        if (latestState.isOpen && latestState.highlightedIndex > -1) {
+          event.preventDefault()
+          dispatch({
+            type: stateChangeTypes.InputKeyDownEnter,
+            getItemNodeFromIndex,
+          })
+        }
+      },
+    }),
+    [dispatch, latest],
+  )
 
   // Getter props.
-  const getLabelProps = labelProps => ({
-    id: elementIdsRef.current.labelId,
-    htmlFor: elementIdsRef.current.inputId,
-    ...labelProps,
-  })
-  const getMenuProps = ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
-    [refKey]: handleRefs(ref, menuNode => {
-      menuRef.current = menuNode
+  const getLabelProps = useCallback(
+    labelProps => ({
+      id: elementIdsRef.current.labelId,
+      htmlFor: elementIdsRef.current.inputId,
+      ...labelProps,
     }),
-    id: elementIdsRef.current.menuId,
-    role: 'listbox',
-    'aria-labelledby': elementIdsRef.current.labelId,
-    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
-    ...rest,
-  })
-  const getItemProps = ({
-    item,
-    index,
-    refKey = 'ref',
-    ref,
-    onMouseMove,
-    onClick,
-    onPress,
-    ...rest
-  } = {}) => {
-    const itemIndex = getItemIndex(index, item, items)
-    if (itemIndex < 0) {
-      throw new Error('Pass either item or item index in getItemProps!')
-    }
+    [],
+  )
+  const getMenuProps = useCallback(
+    ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
+      [refKey]: handleRefs(ref, menuNode => {
+        menuRef.current = menuNode
+      }),
+      id: elementIdsRef.current.menuId,
+      role: 'listbox',
+      'aria-labelledby': elementIdsRef.current.labelId,
+      onMouseLeave: callAllEventHandlers(onMouseLeave, () => {
+        dispatch({
+          type: stateChangeTypes.MenuMouseLeave,
+        })
+      }),
+      ...rest,
+    }),
+    [dispatch],
+  )
 
-    const onSelectKey = isReactNative
-      ? /* istanbul ignore next (react-native) */ 'onPress'
-      : 'onClick'
-    const customClickHandler = isReactNative
-      ? /* istanbul ignore next (react-native) */ onPress
-      : onClick
+  const getItemProps = useCallback(
+    ({
+      item,
+      index,
+      refKey = 'ref',
+      ref,
+      onMouseMove,
+      onClick,
+      onPress,
+      ...rest
+    } = {}) => {
+      const {props: latestProps, state: latestState} = latest.current
+      const itemIndex = getItemIndex(index, item, latestProps.items)
+      if (itemIndex < 0) {
+        throw new Error('Pass either item or item index in getItemProps!')
+      }
 
-    return {
-      [refKey]: handleRefs(ref, itemNode => {
-        if (itemNode) {
-          itemRefs.current[
-            elementIdsRef.current.getItemId(itemIndex)
-          ] = itemNode
+      const onSelectKey = isReactNative
+        ? /* istanbul ignore next (react-native) */ 'onPress'
+        : 'onClick'
+      const customClickHandler = isReactNative
+        ? /* istanbul ignore next (react-native) */ onPress
+        : onClick
+
+      const itemHandleMouseMove = () => {
+        if (index === latestState.highlightedIndex) {
+          return
         }
-      }),
-      role: 'option',
-      'aria-selected': `${itemIndex === highlightedIndex}`,
-      id: elementIdsRef.current.getItemId(itemIndex),
-      ...(!rest.disabled && {
-        onMouseMove: callAllEventHandlers(onMouseMove, () => {
-          itemHandleMouseMove(itemIndex)
-        }),
-        [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
-          itemHandleClick(itemIndex)
-        }),
-      }),
-      ...rest,
-    }
-  }
-  const getToggleButtonProps = ({
-    onClick,
-    onPress,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => {
-    return {
-      [refKey]: handleRefs(ref, toggleButtonNode => {
-        toggleButtonRef.current = toggleButtonNode
-      }),
-      id: elementIdsRef.current.toggleButtonId,
-      tabIndex: -1,
-      ...(!rest.disabled && {
-        ...(isReactNative
-          ? /* istanbul ignore next (react-native) */ {
-              onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
-            }
-          : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
-      }),
-      ...rest,
-    }
-  }
-  const getInputProps = ({
-    onKeyDown,
-    onChange,
-    onInput,
-    onBlur,
-    onChangeText,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => {
-    /* istanbul ignore next (preact) */
-    const onChangeKey = isPreact ? 'onInput' : 'onChange'
-    let eventHandlers = {}
+        shouldScroll.current = false
+        dispatch({
+          type: stateChangeTypes.ItemMouseMove,
+          index,
+        })
+      }
+      const itemHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.ItemClick,
+          index,
+        })
+      }
 
-    if (!rest.disabled) {
-      eventHandlers = {
-        [onChangeKey]: callAllEventHandlers(
+      return {
+        [refKey]: handleRefs(ref, itemNode => {
+          if (itemNode) {
+            itemRefs.current[
+              elementIdsRef.current.getItemId(itemIndex)
+            ] = itemNode
+          }
+        }),
+        role: 'option',
+        'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
+        id: elementIdsRef.current.getItemId(itemIndex),
+        ...(!rest.disabled && {
+          onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
+          [onSelectKey]: callAllEventHandlers(
+            customClickHandler,
+            itemHandleClick,
+          ),
+        }),
+        ...rest,
+      }
+    },
+    [dispatch, latest],
+  )
+
+  const getToggleButtonProps = useCallback(
+    ({onClick, onPress, refKey = 'ref', ref, ...rest} = {}) => {
+      const toggleButtonHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.ToggleButtonClick,
+        })
+
+        if (!latest.current.state.isOpen && inputRef.current) {
+          inputRef.current.focus()
+        }
+      }
+
+      return {
+        [refKey]: handleRefs(ref, toggleButtonNode => {
+          toggleButtonRef.current = toggleButtonNode
+        }),
+        id: elementIdsRef.current.toggleButtonId,
+        tabIndex: -1,
+        ...(!rest.disabled && {
+          ...(isReactNative
+            ? /* istanbul ignore next (react-native) */ {
+                onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+              }
+            : {
+                onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
+              }),
+        }),
+        ...rest,
+      }
+    },
+    [dispatch, latest],
+  )
+  const getInputProps = useCallback(
+    ({
+      onKeyDown,
+      onChange,
+      onInput,
+      onBlur,
+      onChangeText,
+      refKey = 'ref',
+      ref,
+      ...rest
+    } = {}) => {
+      const latestState = latest.current.state
+      const inputHandleKeyDown = event => {
+        const key = normalizeArrowKey(event)
+        if (key && inputKeyDownHandlers[key]) {
+          inputKeyDownHandlers[key](event)
+        }
+      }
+      const inputHandleChange = event => {
+        dispatch({
+          type: stateChangeTypes.InputChange,
+          inputValue: isReactNative
+            ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
+            : event.target.value,
+        })
+      }
+      const inputHandleBlur = () => {
+        /* istanbul ignore else */
+        if (!mouseAndTouchTrackersRef.current.isMouseDown) {
+          dispatch({
+            type: stateChangeTypes.InputBlur,
+          })
+        }
+      }
+
+      /* istanbul ignore next (preact) */
+      const onChangeKey = isPreact ? 'onInput' : 'onChange'
+      let eventHandlers = {}
+
+      if (!rest.disabled) {
+        eventHandlers = {
+          [onChangeKey]: callAllEventHandlers(
+            onChange,
+            onInput,
+            inputHandleChange,
+          ),
+          onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
+          onBlur: callAllEventHandlers(onBlur, inputHandleBlur),
+        }
+      }
+
+      /* istanbul ignore if (react-native) */
+      if (isReactNative) {
+        eventHandlers.onChange = callAllEventHandlers(
           onChange,
           onInput,
           inputHandleChange,
-        ),
-        onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
-        onBlur: callAllEventHandlers(onBlur, inputHandleBlur),
+        )
+        eventHandlers.onChangeText = callAllEventHandlers(
+          onChangeText,
+          onInput,
+          text => {
+            inputHandleChange({nativeEvent: {text}})
+          },
+        )
       }
-    }
 
-    /* istanbul ignore if (react-native) */
-    if (isReactNative) {
-      eventHandlers.onChange = callAllEventHandlers(
-        onChange,
-        onInput,
-        inputHandleChange,
-      )
-      eventHandlers.onChangeText = callAllEventHandlers(
-        onChangeText,
-        onInput,
-        text => {
-          inputHandleChange({nativeEvent: {text}})
-        },
-      )
-    }
-
-    return {
-      [refKey]: handleRefs(ref, inputNode => {
-        inputRef.current = inputNode
-      }),
-      id: elementIdsRef.current.inputId,
-      'aria-autocomplete': 'list',
-      'aria-controls': elementIdsRef.current.menuId,
-      ...(isOpen &&
-        highlightedIndex > -1 && {
-          'aria-activedescendant': elementIdsRef.current.getItemId(
-            highlightedIndex,
-          ),
+      return {
+        [refKey]: handleRefs(ref, inputNode => {
+          inputRef.current = inputNode
         }),
-      'aria-labelledby': elementIdsRef.current.labelId,
-      // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
-      // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
-      autoComplete: 'off',
-      value: inputValue,
-      ...eventHandlers,
+        id: elementIdsRef.current.inputId,
+        'aria-autocomplete': 'list',
+        'aria-controls': elementIdsRef.current.menuId,
+        ...(latestState.isOpen &&
+          latestState.highlightedIndex > -1 && {
+            'aria-activedescendant': elementIdsRef.current.getItemId(
+              latestState.highlightedIndex,
+            ),
+          }),
+        'aria-labelledby': elementIdsRef.current.labelId,
+        // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
+        // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
+        autoComplete: 'off',
+        value: latestState.inputValue,
+        ...eventHandlers,
+        ...rest,
+      }
+    },
+    [dispatch, inputKeyDownHandlers, latest, mouseAndTouchTrackersRef],
+  )
+  const getComboboxProps = useCallback(
+    ({refKey = 'ref', ref, ...rest} = {}) => ({
+      [refKey]: handleRefs(ref, comboboxNode => {
+        comboboxRef.current = comboboxNode
+      }),
+      role: 'combobox',
+      'aria-haspopup': 'listbox',
+      'aria-owns': elementIdsRef.current.menuId,
+      'aria-expanded': latest.current.state.isOpen,
       ...rest,
-    }
-  }
-  const getComboboxProps = ({refKey = 'ref', ref, ...rest} = {}) => ({
-    [refKey]: handleRefs(ref, comboboxNode => {
-      comboboxRef.current = comboboxNode
     }),
-    role: 'combobox',
-    'aria-haspopup': 'listbox',
-    'aria-owns': elementIdsRef.current.menuId,
-    'aria-expanded': isOpen,
-    ...rest,
-  })
+    [latest],
+  )
 
   // returns
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionToggleMenu,
     })
-  }
-  const closeMenu = () => {
+  }, [dispatch])
+  const closeMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionCloseMenu,
     })
-  }
-  const openMenu = () => {
+  }, [dispatch])
+  const openMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionOpenMenu,
     })
-  }
-  const setHighlightedIndex = newHighlightedIndex => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetHighlightedIndex,
-      highlightedIndex: newHighlightedIndex,
-    })
-  }
-  const selectItem = newSelectedItem => {
-    dispatch({
-      type: stateChangeTypes.FunctionSelectItem,
-      selectedItem: newSelectedItem,
-    })
-  }
-  const setInputValue = newInputValue => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetInputValue,
-      inputValue: newInputValue,
-    })
-  }
-  const reset = () => {
+  }, [dispatch])
+  const setHighlightedIndex = useCallback(
+    newHighlightedIndex => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetHighlightedIndex,
+        highlightedIndex: newHighlightedIndex,
+      })
+    },
+    [dispatch],
+  )
+  const selectItem = useCallback(
+    newSelectedItem => {
+      dispatch({
+        type: stateChangeTypes.FunctionSelectItem,
+        selectedItem: newSelectedItem,
+      })
+    },
+    [dispatch],
+  )
+  const setInputValue = useCallback(
+    newInputValue => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetInputValue,
+        inputValue: newInputValue,
+      })
+    },
+    [dispatch],
+  )
+  const reset = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionReset,
     })
-  }
+  }, [dispatch])
 
   return {
     // prop getters.

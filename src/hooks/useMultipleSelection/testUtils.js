@@ -8,7 +8,7 @@ import useCombobox from '../useCombobox'
 import useMultipleSelection from '.'
 
 jest.mock('../../utils', () => {
-  const utils = require.requireActual('../../utils')
+  const utils = jest.requireActual('../../utils')
 
   return {
     ...utils,
