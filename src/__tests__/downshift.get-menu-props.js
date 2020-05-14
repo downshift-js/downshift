@@ -6,6 +6,7 @@ beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
 afterEach(() => console.error.mockRestore())
 
 const Menu = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
+const RefMenu = React.forwardRef((props, ref) => <div ref={ref} {...props} />)
 
 test('using a composite component and calling getMenuProps without a refKey results in an error', () => {
   const MyComponent = () => (
@@ -111,4 +112,30 @@ test('renders fine when rendering a composite component and applying getMenuProp
   )
   render(<MyComponent />)
   expect(console.error.mock.calls).toHaveLength(0)
+})
+
+test('has access to element when a ref function is passed to getMenuProps', () => {
+  const ref = {current: null}
+
+  const MyComponent = () => {
+    return (
+      <Downshift
+        children={({getMenuProps}) => (
+          <div>
+            <RefMenu
+              {...getMenuProps({
+                ref: e => {
+                  ref.current = e
+                },
+              })}
+            />
+          </div>
+        )}
+      />
+    )
+  }
+
+  render(<MyComponent />)
+  expect(ref.current).not.toBeNull()
+  expect(ref.current).toBeInstanceOf(HTMLDivElement)
 })
