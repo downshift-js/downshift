@@ -1,7 +1,7 @@
-import {useRef, useEffect} from 'react'
+import {useRef, useEffect, useCallback, useMemo} from 'react'
 import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
-import {useControlledReducer, getItemIndex} from '../utils'
+import {useControlledReducer, getItemIndex, useLatestRef} from '../utils'
 import {
   getInitialState,
   defaultProps,
@@ -27,11 +27,12 @@ function useMultipleSelection(userProps = {}) {
   } = props
 
   // Reducer init.
-  const [{activeIndex, selectedItems}, dispatch] = useControlledReducer(
+  const [state, dispatch] = useControlledReducer(
     downshiftMultipleSelectionReducer,
     getInitialState(props),
     props,
   )
+  const {activeIndex, selectedItems} = state
 
   // Refs.
   const isInitialMount = useRef(true)
@@ -39,6 +40,7 @@ function useMultipleSelection(userProps = {}) {
   const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
   selectedItemRefs.current = []
+  const latest = useLatestRef({state, props})
 
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
@@ -86,151 +88,180 @@ function useMultipleSelection(userProps = {}) {
   }, [])
 
   // Event handler functions.
-  const selectedItemKeyDownHandlers = {
-    [keyNavigationPrevious]() {
-      dispatch({
-        type: stateChangeTypes.SelectedItemKeyDownNavigationPrevious,
-      })
-    },
-    [keyNavigationNext]() {
-      dispatch({
-        type: stateChangeTypes.SelectedItemKeyDownNavigationNext,
-      })
-    },
-    Delete() {
-      dispatch({
-        type: stateChangeTypes.SelectedItemKeyDownDelete,
-      })
-    },
-    Backspace() {
-      dispatch({
-        type: stateChangeTypes.SelectedItemKeyDownBackspace,
-      })
-    },
-  }
-  const dropdownKeyDownHandlers = {
-    [keyNavigationPrevious](event) {
-      if (isKeyDownOperationPermitted(event)) {
+  const selectedItemKeyDownHandlers = useMemo(
+    () => ({
+      [keyNavigationPrevious]() {
         dispatch({
-          type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationPrevious,
         })
-      }
-    },
-    Backspace(event) {
-      if (isKeyDownOperationPermitted(event)) {
+      },
+      [keyNavigationNext]() {
         dispatch({
-          type: stateChangeTypes.DropdownKeyDownBackspace,
+          type: stateChangeTypes.SelectedItemKeyDownNavigationNext,
         })
-      }
-    },
-  }
-
-  // Event handlers.
-  const selectedItemHandleClick = index => {
-    dispatch({
-      type: stateChangeTypes.SelectedItemClick,
-      index,
-    })
-  }
-  const selectedItemHandleKeyDown = event => {
-    const key = normalizeArrowKey(event)
-    if (key && selectedItemKeyDownHandlers[key]) {
-      selectedItemKeyDownHandlers[key](event)
-    }
-  }
-  const dropdownHandleKeyDown = event => {
-    const key = normalizeArrowKey(event)
-    if (key && dropdownKeyDownHandlers[key]) {
-      dropdownKeyDownHandlers[key](event)
-    }
-  }
-  const dropdownHandleClick = () => {
-    dispatch({
-      type: stateChangeTypes.DropdownClick,
-    })
-  }
+      },
+      Delete() {
+        dispatch({
+          type: stateChangeTypes.SelectedItemKeyDownDelete,
+        })
+      },
+      Backspace() {
+        dispatch({
+          type: stateChangeTypes.SelectedItemKeyDownBackspace,
+        })
+      },
+    }),
+    [dispatch, keyNavigationNext, keyNavigationPrevious],
+  )
+  const dropdownKeyDownHandlers = useMemo(
+    () => ({
+      [keyNavigationPrevious](event) {
+        if (isKeyDownOperationPermitted(event)) {
+          dispatch({
+            type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
+          })
+        }
+      },
+      Backspace(event) {
+        if (isKeyDownOperationPermitted(event)) {
+          dispatch({
+            type: stateChangeTypes.DropdownKeyDownBackspace,
+          })
+        }
+      },
+    }),
+    [dispatch, keyNavigationPrevious],
+  )
 
   // Getter props.
-  const getSelectedItemProps = ({
-    refKey = 'ref',
-    ref,
-    onClick,
-    onKeyDown,
-    selectedItem,
-    index,
-    ...rest
-  } = {}) => {
-    const itemIndex = getItemIndex(index, selectedItem, selectedItems)
-    if (itemIndex < 0) {
-      throw new Error(
-        'Pass either selectedItem or index in getSelectedItemProps!',
+  const getSelectedItemProps = useCallback(
+    ({
+      refKey = 'ref',
+      ref,
+      onClick,
+      onKeyDown,
+      selectedItem,
+      index,
+      ...rest
+    } = {}) => {
+      const {state: latestState} = latest.current
+      const itemIndex = getItemIndex(
+        index,
+        selectedItem,
+        latestState.selectedItems,
       )
-    }
-
-    return {
-      [refKey]: handleRefs(ref, selectedItemNode => {
-        if (selectedItemNode) {
-          selectedItemRefs.current.push(selectedItemNode)
-        }
-      }),
-      tabIndex: index === activeIndex ? 0 : -1,
-      onClick: callAllEventHandlers(onClick, () => {
-        selectedItemHandleClick(index)
-      }),
-      onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
-      ...rest,
-    }
-  }
-  const getDropdownProps = ({
-    refKey = 'ref',
-    ref,
-    onKeyDown,
-    onClick,
-    preventKeyAction = false,
-    ...rest
-  } = {}) => ({
-    [refKey]: handleRefs(ref, dropdownNode => {
-      if (dropdownNode) {
-        dropdownRef.current = dropdownNode
+      if (itemIndex < 0) {
+        throw new Error(
+          'Pass either selectedItem or index in getSelectedItemProps!',
+        )
       }
-    }),
-    ...(!preventKeyAction && {
-      onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
-      onClick: callAllEventHandlers(onClick, dropdownHandleClick),
-    }),
-    ...rest,
-  })
+
+      const selectedItemHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.SelectedItemClick,
+          index,
+        })
+      }
+      const selectedItemHandleKeyDown = event => {
+        const key = normalizeArrowKey(event)
+        if (key && selectedItemKeyDownHandlers[key]) {
+          selectedItemKeyDownHandlers[key](event)
+        }
+      }
+
+      return {
+        [refKey]: handleRefs(ref, selectedItemNode => {
+          if (selectedItemNode) {
+            selectedItemRefs.current.push(selectedItemNode)
+          }
+        }),
+        tabIndex: index === latestState.activeIndex ? 0 : -1,
+        onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
+        onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
+        ...rest,
+      }
+    },
+    [dispatch, latest, selectedItemKeyDownHandlers],
+  )
+  const getDropdownProps = useCallback(
+    ({
+      refKey = 'ref',
+      ref,
+      onKeyDown,
+      onClick,
+      preventKeyAction = false,
+      ...rest
+    } = {}) => {
+      const dropdownHandleKeyDown = event => {
+        const key = normalizeArrowKey(event)
+        if (key && dropdownKeyDownHandlers[key]) {
+          dropdownKeyDownHandlers[key](event)
+        }
+      }
+      const dropdownHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.DropdownClick,
+        })
+      }
+
+      return {
+        [refKey]: handleRefs(ref, dropdownNode => {
+          if (dropdownNode) {
+            dropdownRef.current = dropdownNode
+          }
+        }),
+        ...(!preventKeyAction && {
+          onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+          onClick: callAllEventHandlers(onClick, dropdownHandleClick),
+        }),
+        ...rest,
+      }
+    },
+    [dispatch, dropdownKeyDownHandlers],
+  )
 
   // returns
-  const addSelectedItem = selectedItem => {
-    dispatch({
-      type: stateChangeTypes.FunctionAddSelectedItem,
-      selectedItem,
-    })
-  }
-  const removeSelectedItem = selectedItem => {
-    dispatch({
-      type: stateChangeTypes.FunctionRemoveSelectedItem,
-      selectedItem,
-    })
-  }
-  const setSelectedItems = newSelectedItems => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetSelectedItems,
-      selectedItems: newSelectedItems,
-    })
-  }
-  const setActiveIndex = newActiveIndex => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetActiveIndex,
-      activeIndex: newActiveIndex,
-    })
-  }
-  const reset = () => {
+  const addSelectedItem = useCallback(
+    selectedItem => {
+      dispatch({
+        type: stateChangeTypes.FunctionAddSelectedItem,
+        selectedItem,
+      })
+    },
+    [dispatch],
+  )
+  const removeSelectedItem = useCallback(
+    selectedItem => {
+      dispatch({
+        type: stateChangeTypes.FunctionRemoveSelectedItem,
+        selectedItem,
+      })
+    },
+    [dispatch],
+  )
+  const setSelectedItems = useCallback(
+    newSelectedItems => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetSelectedItems,
+        selectedItems: newSelectedItems,
+      })
+    },
+    [dispatch],
+  )
+  const setActiveIndex = useCallback(
+    newActiveIndex => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetActiveIndex,
+        activeIndex: newActiveIndex,
+      })
+    },
+    [dispatch],
+  )
+  const reset = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionReset,
     })
-  }
+  }, [dispatch])
 
   return {
     getSelectedItemProps,

@@ -7,7 +7,7 @@ import * as utils from '../utils'
 jest.useFakeTimers()
 jest.mock('../set-a11y-status')
 jest.mock('../utils', () => {
-  const realUtils = require.requireActual('../utils')
+  const realUtils = jest.requireActual('../utils')
   return {
     ...realUtils,
     scrollIntoView: jest.fn(),

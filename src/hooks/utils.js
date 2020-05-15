@@ -125,6 +125,17 @@ export function capitalizeString(string) {
   return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
 }
 
+export function useLatestRef(val) {
+  const ref = useRef(val)
+  // technically this is not "concurrent mode safe" because we're manipulating
+  // the value during render (so it's not idempotent). However, the places this
+  // hook is used is to support memoizing callbacks which will be called
+  // *during* render, so we need the latest values *during* render.
+  // If not for this, then we'd probably want to use useLayoutEffect instead.
+  ref.current = val
+  return ref
+}
+
 /**
  * Computes the controlled state using a the previous state, props,
  * two reducers, one from downshift and an optional one from the user.
@@ -151,7 +162,11 @@ export function useEnhancedReducer(reducer, initialState, props) {
     [reducer],
   )
   const [state, dispatch] = useReducer(enhancedReducer, initialState)
-  const dispatchWithProps = action => dispatch({props, ...action})
+  const propsRef = useLatestRef(props)
+  const dispatchWithProps = useCallback(
+    action => dispatch({props: propsRef.current, ...action}),
+    [propsRef],
+  )
   const action = actionRef.current
 
   useEffect(() => {
