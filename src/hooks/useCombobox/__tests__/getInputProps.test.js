@@ -1,16 +1,15 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as React from 'react'
-import {act} from '@testing-library/react-hooks'
-import {fireEvent, cleanup} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react-hooks'
+import {fireEvent} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
 import {renderUseCombobox, renderCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
+import useCombobox from '..'
 
 describe('getInputProps', () => {
-  afterEach(cleanup)
-
   describe('hook props', () => {
     test('assign default value to id', () => {
       const {result} = renderUseCombobox()
@@ -895,6 +894,73 @@ describe('getInputProps', () => {
           expect.objectContaining({type: stateChangeTypes.InputBlur}),
         )
       })
+    })
+  })
+
+  describe('non production errors', () => {
+    test('will be displayed if getInputProps is not called', () => {
+      renderHook(() => {
+        const {getMenuProps, getComboboxProps} = useCombobox({items})
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: You forgot to call the getInputProps getter function on your component / element."`,
+      )
+    })
+
+    test('will be displayed if element ref is not set and suppressRefError is false', () => {
+      renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+        getInputProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: The ref prop \\"ref\\" from getInputProps was not applied correctly on your menu element."`,
+      )
+    })
+
+    test('will not be displayed if getInputProps is not called but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
+    })
+
+    test('will not be displayed if element ref is not set but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getComboboxProps({}, {suppressRefError: true})
+        getMenuProps({}, {suppressRefError: true})
+        getInputProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
     })
   })
 })

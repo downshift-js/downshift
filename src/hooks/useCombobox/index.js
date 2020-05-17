@@ -12,6 +12,7 @@ import {
   getPropTypesValidator,
   updateA11yStatus,
   useMouseAndTouchTracker,
+  useGetterPropsCalledChecker,
 } from '../utils'
 import {
   getInitialState,
@@ -75,6 +76,12 @@ function useCombobox(userProps = {}) {
   const previousResultCountRef = useRef()
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
+  // used to store information about getter props being called on render.
+  const getterPropsCalledRef = useRef({
+    getInputProps: {},
+    getComboboxProps: {},
+    getMenuProps: {},
+  })
   // utility callback to get item element.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
@@ -166,9 +173,6 @@ function useCombobox(userProps = {}) {
     previousResultCountRef.current = items.length
   })
   useEffect(() => {
-    isInitialMountRef.current = false
-  }, [])
-  useEffect(() => {
     if (isInitialMountRef.current) {
       return
     }
@@ -187,6 +191,10 @@ function useCombobox(userProps = {}) {
       })
     },
   )
+  useGetterPropsCalledChecker(getterPropsCalledRef)
+  useEffect(() => {
+    isInitialMountRef.current = false
+  }, [])
   // Event handler functions.
   const inputKeyDownHandlers = {
     ArrowDown(event) {
@@ -300,16 +308,25 @@ function useCombobox(userProps = {}) {
     htmlFor: elementIdsRef.current.inputId,
     ...labelProps,
   })
-  const getMenuProps = ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
-    [refKey]: handleRefs(ref, menuNode => {
-      menuRef.current = menuNode
-    }),
-    id: elementIdsRef.current.menuId,
-    role: 'listbox',
-    'aria-labelledby': elementIdsRef.current.labelId,
-    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
-    ...rest,
-  })
+  const getMenuProps = (
+    {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getMenuProps.called = true
+    getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getMenuProps.refKey = refKey
+    getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
+    return {
+      [refKey]: handleRefs(ref, menuNode => {
+        menuRef.current = menuNode
+      }),
+      id: elementIdsRef.current.menuId,
+      role: 'listbox',
+      'aria-labelledby': elementIdsRef.current.labelId,
+      onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
+      ...rest,
+    }
+  }
   const getItemProps = ({
     item,
     index,
@@ -360,33 +377,39 @@ function useCombobox(userProps = {}) {
     refKey = 'ref',
     ref,
     ...rest
-  } = {}) => {
-    return {
-      [refKey]: handleRefs(ref, toggleButtonNode => {
-        toggleButtonRef.current = toggleButtonNode
-      }),
-      id: elementIdsRef.current.toggleButtonId,
-      tabIndex: -1,
-      ...(!rest.disabled && {
-        ...(isReactNative
-          ? /* istanbul ignore next (react-native) */ {
-              onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
-            }
-          : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
-      }),
-      ...rest,
-    }
-  }
-  const getInputProps = ({
-    onKeyDown,
-    onChange,
-    onInput,
-    onBlur,
-    onChangeText,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => {
+  } = {}) => ({
+    [refKey]: handleRefs(ref, toggleButtonNode => {
+      toggleButtonRef.current = toggleButtonNode
+    }),
+    id: elementIdsRef.current.toggleButtonId,
+    tabIndex: -1,
+    ...(!rest.disabled && {
+      ...(isReactNative
+        ? /* istanbul ignore next (react-native) */ {
+            onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+          }
+        : {onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)}),
+    }),
+    ...rest,
+  })
+  const getInputProps = (
+    {
+      onKeyDown,
+      onChange,
+      onInput,
+      onBlur,
+      onChangeText,
+      refKey = 'ref',
+      ref,
+      ...rest
+    } = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getInputProps.called = true
+    getterPropsCalledRef.current.getInputProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getInputProps.refKey = refKey
+    getterPropsCalledRef.current.getInputProps.elementRef = inputRef
+
     /* istanbul ignore next (preact) */
     const onChangeKey = isPreact ? 'onInput' : 'onChange'
     let eventHandlers = {}
@@ -441,16 +464,26 @@ function useCombobox(userProps = {}) {
       ...rest,
     }
   }
-  const getComboboxProps = ({refKey = 'ref', ref, ...rest} = {}) => ({
-    [refKey]: handleRefs(ref, comboboxNode => {
-      comboboxRef.current = comboboxNode
-    }),
-    role: 'combobox',
-    'aria-haspopup': 'listbox',
-    'aria-owns': elementIdsRef.current.menuId,
-    'aria-expanded': isOpen,
-    ...rest,
-  })
+  const getComboboxProps = (
+    {refKey = 'ref', ref, ...rest} = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getComboboxProps.called = true
+    getterPropsCalledRef.current.getComboboxProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getComboboxProps.refKey = refKey
+    getterPropsCalledRef.current.getComboboxProps.elementRef = comboboxRef
+
+    return {
+      [refKey]: handleRefs(ref, comboboxNode => {
+        comboboxRef.current = comboboxNode
+      }),
+      role: 'combobox',
+      'aria-haspopup': 'listbox',
+      'aria-owns': elementIdsRef.current.menuId,
+      'aria-expanded': isOpen,
+      ...rest,
+    }
+  }
 
   // returns
   const toggleMenu = () => {

@@ -1,12 +1,10 @@
-import {act} from '@testing-library/react-hooks'
-import {cleanup} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
-import {defaultIds} from '../../testUtils'
+import {defaultIds, items} from '../../testUtils'
+import useCombobox from '..'
 
 describe('getMenuProps', () => {
-  afterEach(cleanup)
-
   describe('hook props', () => {
     test('assign default value to aria-labelledby', () => {
       const {result} = renderUseCombobox()
@@ -115,6 +113,73 @@ describe('getMenuProps', () => {
           expect(input).not.toHaveAttribute('aria-activedescendant')
         })
       })
+    })
+  })
+
+  describe('non production errors', () => {
+    test('will be displayed if getMenuProps is not called', () => {
+      renderHook(() => {
+        const {getInputProps, getComboboxProps} = useCombobox({items})
+        getInputProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: You forgot to call the getMenuProps getter function on your component / element."`,
+      )
+    })
+
+    test('will be displayed if element ref is not set and suppressRefError is false', () => {
+      renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getInputProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+        getMenuProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your menu element."`,
+      )
+    })
+
+    test('will not be displayed if getMenuProps is not called but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getInputProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getInputProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
+    })
+
+    test('will not be displayed if element ref is not set but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getInputProps({}, {suppressRefError: true})
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
     })
   })
 })
