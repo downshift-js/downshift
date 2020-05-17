@@ -1,7 +1,11 @@
 import {useRef, useEffect} from 'react'
 import setStatus from '../../set-a11y-status'
-import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
-import {useControlledReducer, getItemIndex} from '../utils'
+import {handleRefs, callAllEventHandlers, normalizeArrowKey, validateControlledUnchanged} from '../../utils'
+import {
+  useControlledReducer,
+  getItemIndex,
+  useGetterPropsCalledChecker,
+} from '../utils'
 import {
   getInitialState,
   defaultProps,
@@ -27,23 +31,30 @@ function useMultipleSelection(userProps = {}) {
   } = props
 
   // Reducer init.
-  const [{activeIndex, selectedItems}, dispatch] = useControlledReducer(
+  const [state, dispatch] = useControlledReducer(
     downshiftMultipleSelectionReducer,
     getInitialState(props),
     props,
   )
+  const {activeIndex, selectedItems} = state
 
   // Refs.
-  const isInitialMount = useRef(true)
+  const isInitialMountRef = useRef(true)
   const dropdownRef = useRef(null)
   const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
   selectedItemRefs.current = []
+  // used to store information about getter props being called on render.
+  const getterPropsCalledRef = useRef({
+    getDropdownProps: {},
+  })
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
 
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -70,7 +81,7 @@ function useMultipleSelection(userProps = {}) {
   }, [selectedItems.length])
   // Sets focus on active item.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -80,10 +91,19 @@ function useMultipleSelection(userProps = {}) {
       selectedItemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
+  useEffect(() => {
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
   // Make initial ref false.
   useEffect(() => {
-    isInitialMount.current = false
+    isInitialMountRef.current = false
   }, [])
+  useGetterPropsCalledChecker(getterPropsCalledRef)
 
   // Event handler functions.
   const selectedItemKeyDownHandlers = {
@@ -181,25 +201,35 @@ function useMultipleSelection(userProps = {}) {
       ...rest,
     }
   }
-  const getDropdownProps = ({
-    refKey = 'ref',
-    ref,
-    onKeyDown,
-    onClick,
-    preventKeyAction = false,
-    ...rest
-  } = {}) => ({
-    [refKey]: handleRefs(ref, dropdownNode => {
-      if (dropdownNode) {
-        dropdownRef.current = dropdownNode
-      }
-    }),
-    ...(!preventKeyAction && {
-      onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
-      onClick: callAllEventHandlers(onClick, dropdownHandleClick),
-    }),
-    ...rest,
-  })
+  const getDropdownProps = (
+    {
+      refKey = 'ref',
+      ref,
+      onKeyDown,
+      onClick,
+      preventKeyAction = false,
+      ...rest
+    } = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getDropdownProps.called = true
+    getterPropsCalledRef.current.getDropdownProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getDropdownProps.refKey = refKey
+    getterPropsCalledRef.current.getDropdownProps.elementRef = dropdownRef
+
+    return {
+      [refKey]: handleRefs(ref, dropdownNode => {
+        if (dropdownNode) {
+          dropdownRef.current = dropdownNode
+        }
+      }),
+      ...(!preventKeyAction && {
+        onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+        onClick: callAllEventHandlers(onClick, dropdownHandleClick),
+      }),
+      ...rest,
+    }
+  }
 
   // returns
   const addSelectedItem = selectedItem => {

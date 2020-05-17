@@ -1,18 +1,22 @@
-import {act} from '@testing-library/react-hooks'
-
+import {act, renderHook} from '@testing-library/react-hooks'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {renderUseMultipleSelection, renderMultipleCombobox} from '../testUtils'
 import {items} from '../../testUtils'
+import useMultipleSelection from '..'
 
 jest.useFakeTimers()
 
 describe('props', () => {
   test('if falsy then no prop types error is thrown', () => {
-    global.console.error = jest.fn()
-    renderUseMultipleSelection()
+    act(() => {
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+        getDropdownProps({}, {suppressRefError: true})
+      })
+    })
 
-    expect(global.console.error).not.toBeCalled()
-    global.console.error.mockRestore()
+    // eslint-disable-next-line no-console
+    expect(console.error).not.toHaveBeenCalled()
   })
 
   describe('selectedItems', () => {
@@ -734,5 +738,57 @@ describe('props', () => {
     })
 
     expect(result.current.activeIndex).toEqual(4)
+  })
+
+  test('that are controlled should not become uncontrolled', () => {
+    const {rerender} = renderMultipleCombobox()
+
+    rerender({multipleSelectionProps: {activeIndex: 1}})
+
+    // eslint-disable-next-line no-console
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the uncontrolled prop \\"activeIndex\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+  })
+
+  test('that are uncontrolled should not become controlled', () => {
+    const {rerender} = renderMultipleCombobox({
+      multipleSelectionProps: {selectedItems: [items[1]]},
+    })
+
+    rerender({})
+
+    // eslint-disable-next-line no-console
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the controlled prop \\"selectedItems\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+  })
+
+  test('should not throw the controlled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderMultipleCombobox({
+      multipleSelectionProps: {activeIndex: 1},
+    })
+
+    rerender({})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('should not throw the uncontrolled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderMultipleCombobox()
+
+    rerender({multipleSelectionProps: {activeIndex: 1}})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
   })
 })

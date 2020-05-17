@@ -16,6 +16,12 @@ jest.mock('../../utils', () => {
   }
 })
 
+beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+// eslint-disable-next-line no-console
+beforeEach(() => console.error.mockReset())
+// eslint-disable-next-line no-console
+afterAll(() => console.error.mockRestore())
+
 export const dataTestIds = {
   selectedItemPrefix: 'selected-item-id',
   selectedItem: index => `selected-item-id-${index}`,
@@ -23,7 +29,7 @@ export const dataTestIds = {
 }
 
 const DropdownMultipleCombobox = ({
-  multipleSelectionProps,
+  multipleSelectionProps = {},
   comboboxProps = {},
 }) => {
   const {
