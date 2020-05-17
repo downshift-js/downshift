@@ -9,6 +9,7 @@ import {
   getInitialState,
   updateA11yStatus,
   useMouseAndTouchTracker,
+  useGetterPropsCalledChecker,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -75,8 +76,12 @@ function useSelect(userProps = {}) {
   const isInitialMountRef = useRef(true)
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
-
-  // Some utils.
+  // used to store information about getter props being called on render.
+  const getterPropsCalledRef = useRef({
+    getToggleButtonProps: {},
+    getMenuProps: {},
+  })
+  // utility callback to get item element.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
@@ -221,6 +226,7 @@ function useSelect(userProps = {}) {
       })
     },
   )
+  useGetterPropsCalledChecker(getterPropsCalledRef)
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = {
@@ -409,39 +415,44 @@ function useSelect(userProps = {}) {
     htmlFor: elementIdsRef.current.toggleButtonId,
     ...labelProps,
   })
-  const getMenuProps = ({
-    onMouseLeave,
-    refKey = 'ref',
-    onKeyDown,
-    onBlur,
-    ref,
-    ...rest
-  } = {}) => ({
-    [refKey]: handleRefs(ref, menuNode => {
-      menuRef.current = menuNode
-    }),
-    id: elementIdsRef.current.menuId,
-    role: 'listbox',
-    'aria-labelledby': elementIdsRef.current.labelId,
-    tabIndex: -1,
-    ...(isOpen &&
-      highlightedIndex > -1 && {
-        'aria-activedescendant': elementIdsRef.current.getItemId(
-          highlightedIndex,
-        ),
+  const getMenuProps = (
+    {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getMenuProps.called = true
+    getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getMenuProps.refKey = refKey
+    getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
+
+    return {
+      [refKey]: handleRefs(ref, menuNode => {
+        menuRef.current = menuNode
       }),
-    onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
-    onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
-    onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
-    ...rest,
-  })
-  const getToggleButtonProps = ({
-    onClick,
-    onKeyDown,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => {
+      id: elementIdsRef.current.menuId,
+      role: 'listbox',
+      'aria-labelledby': elementIdsRef.current.labelId,
+      tabIndex: -1,
+      ...(isOpen &&
+        highlightedIndex > -1 && {
+          'aria-activedescendant': elementIdsRef.current.getItemId(
+            highlightedIndex,
+          ),
+        }),
+      onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
+      onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
+      onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+      ...rest,
+    }
+  }
+  const getToggleButtonProps = (
+    {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+    {suppressRefError = false} = {},
+  ) => {
+    getterPropsCalledRef.current.getToggleButtonProps.called = true
+    getterPropsCalledRef.current.getToggleButtonProps.suppressRefError = suppressRefError
+    getterPropsCalledRef.current.getToggleButtonProps.refKey = refKey
+    getterPropsCalledRef.current.getToggleButtonProps.elementRef = toggleButtonRef
+
     const toggleProps = {
       [refKey]: handleRefs(ref, toggleButtonNode => {
         toggleButtonRef.current = toggleButtonNode
