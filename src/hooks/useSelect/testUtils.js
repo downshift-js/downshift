@@ -7,7 +7,7 @@ import {items} from '../testUtils'
 import useSelect from '.'
 
 jest.mock('../../utils', () => {
-  const utils = require.requireActual('../../utils')
+  const utils = jest.requireActual('../../utils')
 
   return {
     ...utils,

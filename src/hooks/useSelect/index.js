@@ -1,5 +1,5 @@
 /* eslint-disable max-statements */
-import {useRef, useEffect} from 'react'
+import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
   getElementIds,
   getItemIndex,
@@ -10,6 +10,7 @@ import {
   updateA11yStatus,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
+  useLatestRef,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -82,6 +83,12 @@ function useSelect(userProps = {}) {
     getMenuProps: {},
   })
   // utility callback to get item element.
+  const latest = useLatestRef({
+    state,
+    props,
+  })
+
+  // Some utils.
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
@@ -229,292 +236,312 @@ function useSelect(userProps = {}) {
   useGetterPropsCalledChecker(getterPropsCalledRef)
 
   // Event handler functions.
-  const toggleButtonKeyDownHandlers = {
-    ArrowDown(event) {
-      event.preventDefault()
+  const toggleButtonKeyDownHandlers = useMemo(
+    () => ({
+      ArrowDown(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        getItemNodeFromIndex,
-        shiftKey: event.shiftKey,
-      })
-    },
-    ArrowUp(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+          getItemNodeFromIndex,
+          shiftKey: event.shiftKey,
+        })
+      },
+      ArrowUp(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-        getItemNodeFromIndex,
-        shiftKey: event.shiftKey,
-      })
-    },
-  }
-  const menuKeyDownHandlers = {
-    ArrowDown(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+          getItemNodeFromIndex,
+          shiftKey: event.shiftKey,
+        })
+      },
+    }),
+    [dispatch],
+  )
+  const menuKeyDownHandlers = useMemo(
+    () => ({
+      ArrowDown(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownArrowDown,
-        getItemNodeFromIndex,
-        shiftKey: event.shiftKey,
-      })
-    },
-    ArrowUp(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownArrowDown,
+          getItemNodeFromIndex,
+          shiftKey: event.shiftKey,
+        })
+      },
+      ArrowUp(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownArrowUp,
-        getItemNodeFromIndex,
-        shiftKey: event.shiftKey,
-      })
-    },
-    Home(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownArrowUp,
+          getItemNodeFromIndex,
+          shiftKey: event.shiftKey,
+        })
+      },
+      Home(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownHome,
-        getItemNodeFromIndex,
-      })
-    },
-    End(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownHome,
+          getItemNodeFromIndex,
+        })
+      },
+      End(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownEnd,
-        getItemNodeFromIndex,
-      })
-    },
-    Escape() {
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownEscape,
-      })
-    },
-    Enter(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownEnd,
+          getItemNodeFromIndex,
+        })
+      },
+      Escape() {
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownEscape,
+        })
+      },
+      Enter(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownEnter,
-      })
-    },
-    ' '(event) {
-      event.preventDefault()
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownEnter,
+        })
+      },
+      ' '(event) {
+        event.preventDefault()
 
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownSpaceButton,
-      })
-    },
-  }
-
-  // Event handlers.
-  const menuHandleKeyDown = event => {
-    const key = normalizeArrowKey(event)
-    if (key && menuKeyDownHandlers[key]) {
-      menuKeyDownHandlers[key](event)
-    } else if (isAcceptedCharacterKey(key)) {
-      dispatch({
-        type: stateChangeTypes.MenuKeyDownCharacter,
-        key,
-        getItemNodeFromIndex,
-      })
-    }
-  }
-  const menuHandleBlur = () => {
-    // if the blur was a result of selection, we don't trigger the blur action.
-    if (shouldBlurRef.current === false) {
-      shouldBlurRef.current = true
-      return
-    }
-
-    const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown
-    /* istanbul ignore else */
-    if (shouldBlur) {
-      dispatch({type: stateChangeTypes.MenuBlur})
-    }
-  }
-  const menuHandleMouseLeave = () => {
-    dispatch({
-      type: stateChangeTypes.MenuMouseLeave,
-    })
-  }
-  const toggleButtonHandleClick = () => {
-    dispatch({
-      type: stateChangeTypes.ToggleButtonClick,
-    })
-  }
-  const toggleButtonHandleKeyDown = event => {
-    const key = normalizeArrowKey(event)
-    if (key && toggleButtonKeyDownHandlers[key]) {
-      toggleButtonKeyDownHandlers[key](event)
-    } else if (isAcceptedCharacterKey(key)) {
-      dispatch({
-        type: stateChangeTypes.ToggleButtonKeyDownCharacter,
-        key,
-        getItemNodeFromIndex,
-      })
-    }
-  }
-  const itemHandleMouseMove = index => {
-    if (index === highlightedIndex) {
-      return
-    }
-    shouldScrollRef.current = false
-    dispatch({
-      type: stateChangeTypes.ItemMouseMove,
-      index,
-    })
-  }
-  const itemHandleClick = index => {
-    dispatch({
-      type: stateChangeTypes.ItemClick,
-      index,
-    })
-  }
+        dispatch({
+          type: stateChangeTypes.MenuKeyDownSpaceButton,
+        })
+      },
+    }),
+    [dispatch],
+  )
 
   // Action functions.
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionToggleMenu,
     })
-  }
-  const closeMenu = () => {
+  }, [dispatch])
+  const closeMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionCloseMenu,
     })
-  }
-  const openMenu = () => {
+  }, [dispatch])
+  const openMenu = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionOpenMenu,
     })
-  }
-  const setHighlightedIndex = newHighlightedIndex => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetHighlightedIndex,
-      highlightedIndex: newHighlightedIndex,
-    })
-  }
-  const selectItem = newSelectedItem => {
-    dispatch({
-      type: stateChangeTypes.FunctionSelectItem,
-      selectedItem: newSelectedItem,
-    })
-  }
-  const reset = () => {
+  }, [dispatch])
+  const setHighlightedIndex = useCallback(
+    newHighlightedIndex => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetHighlightedIndex,
+        highlightedIndex: newHighlightedIndex,
+      })
+    },
+    [dispatch],
+  )
+  const selectItem = useCallback(
+    newSelectedItem => {
+      dispatch({
+        type: stateChangeTypes.FunctionSelectItem,
+        selectedItem: newSelectedItem,
+      })
+    },
+    [dispatch],
+  )
+  const reset = useCallback(() => {
     dispatch({
       type: stateChangeTypes.FunctionReset,
     })
-  }
-  const setInputValue = newInputValue => {
-    dispatch({
-      type: stateChangeTypes.FunctionSetInputValue,
-      inputValue: newInputValue,
-    })
-  }
+  }, [dispatch])
+  const setInputValue = useCallback(
+    newInputValue => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetInputValue,
+        inputValue: newInputValue,
+      })
+    },
+    [dispatch],
+  )
   // Getter functions.
-  const getLabelProps = labelProps => ({
-    id: elementIdsRef.current.labelId,
-    htmlFor: elementIdsRef.current.toggleButtonId,
-    ...labelProps,
-  })
-  const getMenuProps = (
-    {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
-    {suppressRefError = false} = {},
-  ) => {
-    getterPropsCalledRef.current.getMenuProps.called = true
-    getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
-    getterPropsCalledRef.current.getMenuProps.refKey = refKey
-    getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
+  const getLabelProps = useCallback(
+    labelProps => ({
+      id: elementIdsRef.current.labelId,
+      htmlFor: elementIdsRef.current.toggleButtonId,
+      ...labelProps,
+    }),
+    [],
+  )
+  const getMenuProps = useCallback(
+    (
+      {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
+      {suppressRefError = false} = {},
+    ) => {
+      getterPropsCalledRef.current.getMenuProps.called = true
+      getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
+      getterPropsCalledRef.current.getMenuProps.refKey = refKey
+      getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
 
-    return {
-      [refKey]: handleRefs(ref, menuNode => {
-        menuRef.current = menuNode
-      }),
-      id: elementIdsRef.current.menuId,
-      role: 'listbox',
-      'aria-labelledby': elementIdsRef.current.labelId,
-      tabIndex: -1,
-      ...(isOpen &&
-        highlightedIndex > -1 && {
-          'aria-activedescendant': elementIdsRef.current.getItemId(
-            highlightedIndex,
-          ),
-        }),
-      onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
-      onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
-      onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
-      ...rest,
-    }
-  }
-  const getToggleButtonProps = (
-    {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
-    {suppressRefError = false} = {},
-  ) => {
-    getterPropsCalledRef.current.getToggleButtonProps.called = true
-    getterPropsCalledRef.current.getToggleButtonProps.suppressRefError = suppressRefError
-    getterPropsCalledRef.current.getToggleButtonProps.refKey = refKey
-    getterPropsCalledRef.current.getToggleButtonProps.elementRef = toggleButtonRef
+      const latestState = latest.current.state
 
-    const toggleProps = {
-      [refKey]: handleRefs(ref, toggleButtonNode => {
-        toggleButtonRef.current = toggleButtonNode
-      }),
-      id: elementIdsRef.current.toggleButtonId,
-      'aria-haspopup': 'listbox',
-      'aria-expanded': isOpen,
-      'aria-labelledby': `${elementIdsRef.current.labelId} ${elementIdsRef.current.toggleButtonId}`,
-      ...rest,
-    }
-
-    if (!rest.disabled) {
-      toggleProps.onClick = callAllEventHandlers(
-        onClick,
-        toggleButtonHandleClick,
-      )
-      toggleProps.onKeyDown = callAllEventHandlers(
-        onKeyDown,
-        toggleButtonHandleKeyDown,
-      )
-    }
-
-    return toggleProps
-  }
-  const getItemProps = ({
-    item,
-    index,
-    onMouseMove,
-    onClick,
-    refKey = 'ref',
-    ref,
-    ...rest
-  } = {}) => {
-    const itemIndex = getItemIndex(index, item, items)
-    if (itemIndex < 0) {
-      throw new Error('Pass either item or item index in getItemProps!')
-    }
-    const itemProps = {
-      role: 'option',
-      'aria-selected': `${itemIndex === highlightedIndex}`,
-      id: elementIdsRef.current.getItemId(itemIndex),
-      [refKey]: handleRefs(ref, itemNode => {
-        if (itemNode) {
-          itemRefs.current[
-            elementIdsRef.current.getItemId(itemIndex)
-          ] = itemNode
+      const menuHandleKeyDown = event => {
+        const key = normalizeArrowKey(event)
+        if (key && menuKeyDownHandlers[key]) {
+          menuKeyDownHandlers[key](event)
+        } else if (isAcceptedCharacterKey(key)) {
+          dispatch({
+            type: stateChangeTypes.MenuKeyDownCharacter,
+            key,
+            getItemNodeFromIndex,
+          })
         }
-      }),
-      ...rest,
-    }
+      }
+      const menuHandleBlur = () => {
+        // if the blur was a result of selection, we don't trigger this action.
+        if (shouldBlurRef.current === false) {
+          shouldBlurRef.current = true
+          return
+        }
 
-    if (!rest.disabled) {
-      itemProps.onMouseMove = callAllEventHandlers(onMouseMove, () =>
-        itemHandleMouseMove(itemIndex),
-      )
-      itemProps.onClick = callAllEventHandlers(onClick, () =>
-        itemHandleClick(itemIndex),
-      )
-    }
+        const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown
+        /* istanbul ignore else */
+        if (shouldBlur) {
+          dispatch({type: stateChangeTypes.MenuBlur})
+        }
+      }
+      const menuHandleMouseLeave = () => {
+        dispatch({
+          type: stateChangeTypes.MenuMouseLeave,
+        })
+      }
+      return {
+        [refKey]: handleRefs(ref, menuNode => {
+          menuRef.current = menuNode
+        }),
+        id: elementIdsRef.current.menuId,
+        role: 'listbox',
+        'aria-labelledby': elementIdsRef.current.labelId,
+        tabIndex: -1,
+        ...(latestState.isOpen &&
+          latestState.highlightedIndex > -1 && {
+            'aria-activedescendant': elementIdsRef.current.getItemId(
+              latestState.highlightedIndex,
+            ),
+          }),
+        onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
+        onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
+        onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+        ...rest,
+      }
+    },
+    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef],
+  )
+  const getToggleButtonProps = useCallback(
+    ({onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {}) => {
+      const toggleButtonHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.ToggleButtonClick,
+        })
+      }
+      const toggleButtonHandleKeyDown = event => {
+        const key = normalizeArrowKey(event)
+        if (key && toggleButtonKeyDownHandlers[key]) {
+          toggleButtonKeyDownHandlers[key](event)
+        } else if (isAcceptedCharacterKey(key)) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+            key,
+            getItemNodeFromIndex,
+          })
+        }
+      }
+      const toggleProps = {
+        [refKey]: handleRefs(ref, toggleButtonNode => {
+          toggleButtonRef.current = toggleButtonNode
+        }),
+        id: elementIdsRef.current.toggleButtonId,
+        'aria-haspopup': 'listbox',
+        'aria-expanded': latest.current.state.isOpen,
+        'aria-labelledby': `${elementIdsRef.current.labelId} ${elementIdsRef.current.toggleButtonId}`,
+        ...rest,
+      }
 
-    return itemProps
-  }
+      if (!rest.disabled) {
+        toggleProps.onClick = callAllEventHandlers(
+          onClick,
+          toggleButtonHandleClick,
+        )
+        toggleProps.onKeyDown = callAllEventHandlers(
+          onKeyDown,
+          toggleButtonHandleKeyDown,
+        )
+      }
+
+      return toggleProps
+    },
+    [dispatch, latest, toggleButtonKeyDownHandlers],
+  )
+  const getItemProps = useCallback(
+    ({
+      item,
+      index,
+      onMouseMove,
+      onClick,
+      refKey = 'ref',
+      ref,
+      ...rest
+    } = {}) => {
+      const {state: latestState, props: latestProps} = latest.current
+      const itemHandleMouseMove = () => {
+        if (index === latestState.highlightedIndex) {
+          return
+        }
+        shouldScrollRef.current = false
+        dispatch({
+          type: stateChangeTypes.ItemMouseMove,
+          index,
+        })
+      }
+      const itemHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.ItemClick,
+          index,
+        })
+      }
+
+      const itemIndex = getItemIndex(index, item, latestProps.items)
+      if (itemIndex < 0) {
+        throw new Error('Pass either item or item index in getItemProps!')
+      }
+      const itemProps = {
+        role: 'option',
+        'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
+        id: elementIdsRef.current.getItemId(itemIndex),
+        [refKey]: handleRefs(ref, itemNode => {
+          if (itemNode) {
+            itemRefs.current[
+              elementIdsRef.current.getItemId(itemIndex)
+            ] = itemNode
+          }
+        }),
+        ...rest,
+      }
+
+      if (!rest.disabled) {
+        itemProps.onMouseMove = callAllEventHandlers(
+          onMouseMove,
+          itemHandleMouseMove,
+        )
+        itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+      }
+
+      return itemProps
+    },
+    [dispatch, latest],
+  )
 
   return {
     // prop getters.
