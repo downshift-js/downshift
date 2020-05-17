@@ -359,3 +359,44 @@ export function useMouseAndTouchTracker(
 
   return mouseAndTouchTrackersRef
 }
+
+export function useGetterPropsCalledChecker(getterPropsCalledRef) {
+  const {current: getterPropsCalled} = getterPropsCalledRef
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+        const {
+          called,
+          suppressRefError,
+          refKey,
+          elementRef,
+        } = getterPropsCalled[propKey]
+
+        if (!called) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
+          )
+          return
+        }
+        if ((!elementRef || !elementRef.current) && !suppressRefError) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your menu element.`,
+          )
+        }
+      })
+    }
+
+    return function cleanup() {
+
+      Object.keys(getterPropsCalled).forEach(propKey => {
+        getterPropsCalled[propKey].called = false
+        getterPropsCalled[propKey].refKey = undefined
+        getterPropsCalled[propKey].suppressRefError = undefined
+        getterPropsCalled[propKey].elementRef = undefined
+      })
+    }
+  })
+}
