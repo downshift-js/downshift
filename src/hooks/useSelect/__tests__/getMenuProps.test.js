@@ -914,6 +914,27 @@ describe('getMenuProps', () => {
       )
     })
 
+    test('will not be displayed if called with a correct ref', () => {
+      const refFn = jest.fn()
+      const menuNode = {}
+
+      renderHook(() => {
+        const {getToggleButtonProps, getMenuProps} = useSelect({
+          items,
+        })
+
+        getToggleButtonProps({}, {suppressRefError: true})
+
+        const {ref} = getMenuProps({
+          ref: refFn,
+        })
+        ref(menuNode)
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will not be displayed if getMenuProps is not called but environment is production', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'

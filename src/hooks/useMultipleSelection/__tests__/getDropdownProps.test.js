@@ -268,7 +268,23 @@ describe('getDropdownProps', () => {
       )
     })
 
-    test('will not be displayed if getMenuProps is not called but environment is production', () => {
+    test('will not be displayed if called with a correct ref', () => {
+      const refFn = jest.fn()
+      const dropdownNode = {}
+
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+        const {ref} = getDropdownProps({
+          ref: refFn,
+        })
+        ref(dropdownNode)
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
+    test('will not be displayed if getDropdownProps is not called but environment is production', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
       renderHook(() => {

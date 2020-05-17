@@ -928,6 +928,28 @@ describe('getInputProps', () => {
       )
     })
 
+    test('will not be displayed if called with a correct ref', () => {
+      const refFn = jest.fn()
+      const inputNode = {}
+
+      renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+
+        const {ref} = getInputProps({
+          ref: refFn,
+        })
+        ref(inputNode)
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will not be displayed if getInputProps is not called but environment is production', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
