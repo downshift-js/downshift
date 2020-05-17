@@ -195,6 +195,11 @@ function useCombobox(userProps = {}) {
     },
   )
   useGetterPropsCalledChecker(getterPropsCalledRef)
+  // Make initial ref false.
+  useEffect(() => {
+    isInitialMountRef.current = false
+  }, [])
+
   /* Event handler functions */
   const inputKeyDownHandlers = useMemo(
     () => ({

@@ -106,11 +106,11 @@ function useMultipleSelection(userProps = {}) {
     validateControlledUnchanged(state, prevPropsRef.current, props)
     prevPropsRef.current = props
   }, [state, props])
+  useGetterPropsCalledChecker(getterPropsCalledRef)
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
   }, [])
-  useGetterPropsCalledChecker(getterPropsCalledRef)
 
   // Event handler functions.
   const selectedItemKeyDownHandlers = useMemo(

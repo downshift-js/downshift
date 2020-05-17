@@ -210,10 +210,6 @@ function useSelect(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
-  // Make initial ref false.
-  useEffect(() => {
-    isInitialMountRef.current = false
-  }, [])
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -234,6 +230,10 @@ function useSelect(userProps = {}) {
     },
   )
   useGetterPropsCalledChecker(getterPropsCalledRef)
+  // Make initial ref false.
+  useEffect(() => {
+    isInitialMountRef.current = false
+  }, [])
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = useMemo(
@@ -440,7 +440,15 @@ function useSelect(userProps = {}) {
     [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef],
   )
   const getToggleButtonProps = useCallback(
-    ({onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {}) => {
+    (
+      {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+      {suppressRefError = false} = {},
+    ) => {
+      getterPropsCalledRef.current.getToggleButtonProps.called = true
+      getterPropsCalledRef.current.getToggleButtonProps.suppressRefError = suppressRefError
+      getterPropsCalledRef.current.getToggleButtonProps.refKey = refKey
+      getterPropsCalledRef.current.getToggleButtonProps.elementRef = toggleButtonRef
+
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
