@@ -419,9 +419,9 @@ export function useGetterPropsCalledChecker(getterPropsCalledRef) {
  *
  * @param {string} propKey The getter prop name.
  * @param {Object} getterPropsCalledRef The ref container for the info.
- * @param {Object} elementRef The ref containing the element.
- * @param {string} refKey The ref key to get the element.
  * @param {boolean} suppressRefError Whether or not to suppress the ref error.
+ * @param {string} refKey The ref key to get the element.
+ * @param {Object} elementRef The ref containing the element.
  */
 export function setGetterPropCallInfo(
   propKey,
