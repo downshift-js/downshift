@@ -14,6 +14,7 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
+  setGetterPropCallInfo,
 } from '../utils'
 import {
   getInitialState,
@@ -271,11 +272,13 @@ function useCombobox(userProps = {}) {
       {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      getterPropsCalledRef.current.getMenuProps.called = true
-      getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getMenuProps.refKey = refKey
-      getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
-
+      setGetterPropCallInfo(
+        'getMenuProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        menuRef,
+      )
       return {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
@@ -405,10 +408,13 @@ function useCombobox(userProps = {}) {
       } = {},
       {suppressRefError = false} = {},
     ) => {
-      getterPropsCalledRef.current.getInputProps.called = true
-      getterPropsCalledRef.current.getInputProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getInputProps.refKey = refKey
-      getterPropsCalledRef.current.getInputProps.elementRef = inputRef
+      setGetterPropCallInfo(
+        'getInputProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        inputRef,
+      )
 
       const latestState = latest.current.state
       const inputHandleKeyDown = event => {
@@ -492,10 +498,14 @@ function useCombobox(userProps = {}) {
   )
   const getComboboxProps = useCallback(
     ({refKey = 'ref', ref, ...rest} = {}, {suppressRefError = false} = {}) => {
-      getterPropsCalledRef.current.getComboboxProps.called = true
-      getterPropsCalledRef.current.getComboboxProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getComboboxProps.refKey = refKey
-      getterPropsCalledRef.current.getComboboxProps.elementRef = comboboxRef
+      setGetterPropCallInfo(
+        'getComboboxProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        comboboxRef,
+      )
+
       return {
         [refKey]: handleRefs(ref, comboboxNode => {
           comboboxRef.current = comboboxNode

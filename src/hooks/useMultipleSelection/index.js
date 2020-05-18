@@ -11,6 +11,7 @@ import {
   getItemIndex,
   useGetterPropsCalledChecker,
   useLatestRef,
+  setGetterPropCallInfo
 } from '../utils'
 import {
   getInitialState,
@@ -220,10 +221,13 @@ function useMultipleSelection(userProps = {}) {
       } = {},
       {suppressRefError = false} = {},
     ) => {
-      getterPropsCalledRef.current.getDropdownProps.called = true
-      getterPropsCalledRef.current.getDropdownProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getDropdownProps.refKey = refKey
-      getterPropsCalledRef.current.getDropdownProps.elementRef = dropdownRef
+      setGetterPropCallInfo(
+        'getDropdownProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        dropdownRef,
+      )
 
       const dropdownHandleKeyDown = event => {
         const key = normalizeArrowKey(event)

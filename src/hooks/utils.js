@@ -405,7 +405,6 @@ export function useGetterPropsCalledChecker(getterPropsCalledRef) {
     }
 
     return function cleanup() {
-
       Object.keys(getterPropsCalled).forEach(propKey => {
         getterPropsCalled[propKey].called = false
         getterPropsCalled[propKey].refKey = undefined
@@ -414,4 +413,25 @@ export function useGetterPropsCalledChecker(getterPropsCalledRef) {
       })
     }
   })
+}
+
+/**
+ *
+ * @param {string} propKey The getter prop name.
+ * @param {Object} getterPropsCalledRef The ref container for the info.
+ * @param {Object} elementRef The ref containing the element.
+ * @param {string} refKey The ref key to get the element.
+ * @param {boolean} suppressRefError Whether or not to suppress the ref error.
+ */
+export function setGetterPropCallInfo(
+  propKey,
+  getterPropsCalledRef,
+  suppressRefError,
+  refKey,
+  elementRef,
+) {
+  getterPropsCalledRef.current[propKey].called = true
+  getterPropsCalledRef.current[propKey].suppressRefError = suppressRefError
+  getterPropsCalledRef.current[propKey].refKey = refKey
+  getterPropsCalledRef.current[propKey].elementRef = elementRef
 }

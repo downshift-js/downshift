@@ -11,6 +11,7 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
+  setGetterPropCallInfo
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -380,13 +381,15 @@ function useSelect(userProps = {}) {
       {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      getterPropsCalledRef.current.getMenuProps.called = true
-      getterPropsCalledRef.current.getMenuProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getMenuProps.refKey = refKey
-      getterPropsCalledRef.current.getMenuProps.elementRef = menuRef
+      setGetterPropCallInfo(
+        'getMenuProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        menuRef,
+      )
 
       const latestState = latest.current.state
-
       const menuHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
         if (key && menuKeyDownHandlers[key]) {
@@ -444,10 +447,13 @@ function useSelect(userProps = {}) {
       {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      getterPropsCalledRef.current.getToggleButtonProps.called = true
-      getterPropsCalledRef.current.getToggleButtonProps.suppressRefError = suppressRefError
-      getterPropsCalledRef.current.getToggleButtonProps.refKey = refKey
-      getterPropsCalledRef.current.getToggleButtonProps.elementRef = toggleButtonRef
+      setGetterPropCallInfo(
+        'getToggleButtonProps',
+        getterPropsCalledRef,
+        suppressRefError,
+        refKey,
+        toggleButtonRef,
+      )
 
       const toggleButtonHandleClick = () => {
         dispatch({
