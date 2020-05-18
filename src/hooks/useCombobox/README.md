@@ -284,7 +284,7 @@ reset or when an item is selected.
 
 > `string` | defaults to `''`
 
-Pass a string that sets the content of the input when downshift is is reset or
+Pass a string that sets the content of the input when downshift is reset or
 when an item is selected.
 
 ### getA11yStatusMessage
