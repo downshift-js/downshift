@@ -15,6 +15,7 @@ jest.mock('../../utils', () => {
   }
 })
 
+/* istanbul ignore next */
 beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
 // eslint-disable-next-line no-console
 beforeEach(() => console.error.mockReset())
