@@ -157,6 +157,7 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.FunctionSelectItem:
       changes = {
         selectedItem: action.selectedItem,
+        inputValue: props.itemToString(action.selectedItem)
       }
       break
     case stateChangeTypes.ControlledPropUpdatedSelectedItem:
