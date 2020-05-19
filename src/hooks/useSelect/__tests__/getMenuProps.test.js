@@ -910,7 +910,7 @@ describe('getMenuProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your menu element."`,
+        `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your element."`,
       )
     })
 

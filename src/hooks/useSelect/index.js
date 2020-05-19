@@ -11,7 +11,6 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
-  setGetterPropCallInfo
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -78,11 +77,6 @@ function useSelect(userProps = {}) {
   const isInitialMountRef = useRef(true)
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
-  // used to store information about getter props being called on render.
-  const getterPropsCalledRef = useRef({
-    getToggleButtonProps: {},
-    getMenuProps: {},
-  })
   // utility callback to get item element.
   const latest = useLatestRef({
     state,
@@ -230,7 +224,10 @@ function useSelect(userProps = {}) {
       })
     },
   )
-  useGetterPropsCalledChecker(getterPropsCalledRef)
+  const setGetterPropCallInfo = useGetterPropsCalledChecker(
+    'getMenuProps',
+    'getToggleButtonProps',
+  )
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
@@ -381,14 +378,6 @@ function useSelect(userProps = {}) {
       {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      setGetterPropCallInfo(
-        'getMenuProps',
-        getterPropsCalledRef,
-        suppressRefError,
-        refKey,
-        menuRef,
-      )
-
       const latestState = latest.current.state
       const menuHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
@@ -420,6 +409,9 @@ function useSelect(userProps = {}) {
           type: stateChangeTypes.MenuMouseLeave,
         })
       }
+
+      setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef)
+
       return {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
@@ -440,21 +432,13 @@ function useSelect(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef],
+    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef, setGetterPropCallInfo],
   )
   const getToggleButtonProps = useCallback(
     (
       {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      setGetterPropCallInfo(
-        'getToggleButtonProps',
-        getterPropsCalledRef,
-        suppressRefError,
-        refKey,
-        toggleButtonRef,
-      )
-
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
@@ -494,9 +478,16 @@ function useSelect(userProps = {}) {
         )
       }
 
+      setGetterPropCallInfo(
+        'getToggleButtonProps',
+        suppressRefError,
+        refKey,
+        toggleButtonRef,
+      )
+
       return toggleProps
     },
-    [dispatch, latest, toggleButtonKeyDownHandlers],
+    [dispatch, latest, toggleButtonKeyDownHandlers, setGetterPropCallInfo],
   )
   const getItemProps = useCallback(
     ({

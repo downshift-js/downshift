@@ -11,7 +11,6 @@ import {
   getItemIndex,
   useGetterPropsCalledChecker,
   useLatestRef,
-  setGetterPropCallInfo
 } from '../utils'
 import {
   getInitialState,
@@ -51,10 +50,6 @@ function useMultipleSelection(userProps = {}) {
   const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
   selectedItemRefs.current = []
-  // used to store information about getter props being called on render.
-  const getterPropsCalledRef = useRef({
-    getDropdownProps: {},
-  })
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
   const latest = useLatestRef({state, props})
@@ -107,7 +102,7 @@ function useMultipleSelection(userProps = {}) {
     validateControlledUnchanged(state, prevPropsRef.current, props)
     prevPropsRef.current = props
   }, [state, props])
-  useGetterPropsCalledChecker(getterPropsCalledRef)
+  const setGetterPropCallInfo = useGetterPropsCalledChecker('getDropdownProps')
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
@@ -223,7 +218,6 @@ function useMultipleSelection(userProps = {}) {
     ) => {
       setGetterPropCallInfo(
         'getDropdownProps',
-        getterPropsCalledRef,
         suppressRefError,
         refKey,
         dropdownRef,
@@ -254,7 +248,7 @@ function useMultipleSelection(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, dropdownKeyDownHandlers],
+    [dispatch, dropdownKeyDownHandlers, setGetterPropCallInfo],
   )
 
   // returns

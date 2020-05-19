@@ -14,7 +14,6 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
-  setGetterPropCallInfo,
 } from '../utils'
 import {
   getInitialState,
@@ -79,11 +78,6 @@ function useCombobox(userProps = {}) {
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
   // used to store information about getter props being called on render.
-  const getterPropsCalledRef = useRef({
-    getInputProps: {},
-    getComboboxProps: {},
-    getMenuProps: {},
-  })
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
@@ -195,7 +189,11 @@ function useCombobox(userProps = {}) {
       })
     },
   )
-  useGetterPropsCalledChecker(getterPropsCalledRef)
+  const setGetterPropCallInfo = useGetterPropsCalledChecker(
+    'getInputProps',
+    'getComboboxProps',
+    'getMenuProps',
+  )
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
@@ -272,13 +270,7 @@ function useCombobox(userProps = {}) {
       {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      setGetterPropCallInfo(
-        'getMenuProps',
-        getterPropsCalledRef,
-        suppressRefError,
-        refKey,
-        menuRef,
-      )
+      setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef)
       return {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
@@ -294,7 +286,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch],
+    [dispatch, setGetterPropCallInfo],
   )
 
   const getItemProps = useCallback(
@@ -408,13 +400,7 @@ function useCombobox(userProps = {}) {
       } = {},
       {suppressRefError = false} = {},
     ) => {
-      setGetterPropCallInfo(
-        'getInputProps',
-        getterPropsCalledRef,
-        suppressRefError,
-        refKey,
-        inputRef,
-      )
+      setGetterPropCallInfo('getInputProps', suppressRefError, refKey, inputRef)
 
       const latestState = latest.current.state
       const inputHandleKeyDown = event => {
@@ -494,13 +480,18 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, inputKeyDownHandlers, latest, mouseAndTouchTrackersRef],
+    [
+      dispatch,
+      inputKeyDownHandlers,
+      latest,
+      mouseAndTouchTrackersRef,
+      setGetterPropCallInfo,
+    ],
   )
   const getComboboxProps = useCallback(
     ({refKey = 'ref', ref, ...rest} = {}, {suppressRefError = false} = {}) => {
       setGetterPropCallInfo(
         'getComboboxProps',
-        getterPropsCalledRef,
         suppressRefError,
         refKey,
         comboboxRef,
@@ -517,7 +508,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [latest],
+    [latest, setGetterPropCallInfo],
   )
 
   // returns

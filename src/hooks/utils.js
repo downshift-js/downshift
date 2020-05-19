@@ -375,67 +375,59 @@ export function useMouseAndTouchTracker(
   return mouseAndTouchTrackersRef
 }
 
-export function useGetterPropsCalledChecker(getterPropsCalledRef) {
-  const {current: getterPropsCalled} = getterPropsCalledRef
+export function useGetterPropsCalledChecker(...propKeys) {
+  const getterPropsCalledRef = useRef(
+    propKeys.reduce((acc, propKey) => {
+      acc[propKey] = {}
+      return acc
+    }, {}),
+  )
+
+  if (process.env.NODE_ENV !== 'production') {
+    Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+      getterPropsCalledRef.current[propKey] = null
+    })
+  }
 
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') {
       Object.keys(getterPropsCalledRef.current).forEach(propKey => {
-        const {
-          called,
-          suppressRefError,
-          refKey,
-          elementRef,
-        } = getterPropsCalled[propKey]
-
-        if (!called) {
+        if (!getterPropsCalledRef.current[propKey]) {
           // eslint-disable-next-line no-console
           console.error(
             `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
           )
           return
         }
+
+        const {
+          suppressRefError,
+          refKey,
+          elementRef,
+        } = getterPropsCalledRef.current[propKey]
+
         if ((!elementRef || !elementRef.current) && !suppressRefError) {
           // eslint-disable-next-line no-console
           console.error(
-            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your menu element.`,
+            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
           )
         }
       })
     }
-
-    return function cleanup() {
-      if (process.env.NODE_ENV !== 'production') {
-        Object.keys(getterPropsCalled).forEach(propKey => {
-          getterPropsCalled[propKey].called = false
-          getterPropsCalled[propKey].refKey = undefined
-          getterPropsCalled[propKey].suppressRefError = undefined
-          getterPropsCalled[propKey].elementRef = undefined
-        })
-      }
-    }
   })
-}
 
-/**
- *
- * @param {string} propKey The getter prop name.
- * @param {Object} getterPropsCalledRef The ref container for the info.
- * @param {boolean} suppressRefError Whether or not to suppress the ref error.
- * @param {string} refKey The ref key to get the element.
- * @param {Object} elementRef The ref containing the element.
- */
-export function setGetterPropCallInfo(
-  propKey,
-  getterPropsCalledRef,
-  suppressRefError,
-  refKey,
-  elementRef,
-) {
-  if (process.env.NODE_ENV !== 'production') {
-    getterPropsCalledRef.current[propKey].called = true
-    getterPropsCalledRef.current[propKey].suppressRefError = suppressRefError
-    getterPropsCalledRef.current[propKey].refKey = refKey
-    getterPropsCalledRef.current[propKey].elementRef = elementRef
-  }
+  const setGetterPropCallInfo = useCallback(
+    (propKey, suppressRefError, refKey, elementRef) => {
+      if (process.env.NODE_ENV !== 'production') {
+        getterPropsCalledRef.current[propKey] = {
+          suppressRefError,
+          refKey,
+          elementRef,
+        }
+      }
+    },
+    [],
+  )
+
+  return setGetterPropCallInfo
 }
