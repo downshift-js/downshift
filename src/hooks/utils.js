@@ -405,12 +405,14 @@ export function useGetterPropsCalledChecker(getterPropsCalledRef) {
     }
 
     return function cleanup() {
-      Object.keys(getterPropsCalled).forEach(propKey => {
-        getterPropsCalled[propKey].called = false
-        getterPropsCalled[propKey].refKey = undefined
-        getterPropsCalled[propKey].suppressRefError = undefined
-        getterPropsCalled[propKey].elementRef = undefined
-      })
+      if (process.env.NODE_ENV !== 'production') {
+        Object.keys(getterPropsCalled).forEach(propKey => {
+          getterPropsCalled[propKey].called = false
+          getterPropsCalled[propKey].refKey = undefined
+          getterPropsCalled[propKey].suppressRefError = undefined
+          getterPropsCalled[propKey].elementRef = undefined
+        })
+      }
     }
   })
 }
@@ -430,8 +432,10 @@ export function setGetterPropCallInfo(
   refKey,
   elementRef,
 ) {
-  getterPropsCalledRef.current[propKey].called = true
-  getterPropsCalledRef.current[propKey].suppressRefError = suppressRefError
-  getterPropsCalledRef.current[propKey].refKey = refKey
-  getterPropsCalledRef.current[propKey].elementRef = elementRef
+  if (process.env.NODE_ENV !== 'production') {
+    getterPropsCalledRef.current[propKey].called = true
+    getterPropsCalledRef.current[propKey].suppressRefError = suppressRefError
+    getterPropsCalledRef.current[propKey].refKey = refKey
+    getterPropsCalledRef.current[propKey].elementRef = elementRef
+  }
 }
