@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {cleanup, act} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
@@ -16,12 +17,11 @@ describe('props', () => {
   afterEach(cleanup)
 
   test('if falsy then prop types error is thrown', () => {
-    global.console.error = jest.fn()
     renderHook(() => useSelect())
 
-    expect(global.console.error).toBeCalledWith(expect.any(String))
-
-    global.console.error.mockRestore()
+    expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"Warning: Failed items type: The items \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`."`,
+    )
   })
 
   describe('id', () => {
@@ -1266,5 +1266,51 @@ describe('props', () => {
 
       expect(result.current.isOpen).toEqual(true)
     })
+  })
+
+  it('that are uncontrolled should not become controlled', () => {
+    const {rerender} = renderSelect()
+
+    rerender({isOpen: true})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the uncontrolled prop \\"isOpen\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+  })
+
+  it('that are controlled should not become uncontrolled', () => {
+    const {rerender} = renderSelect({highlightedIndex: 3})
+
+    rerender({})
+
+    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      `"downshift: A component has changed the controlled prop \\"highlightedIndex\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+    )
+  })
+
+  test('should not throw the controlled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderSelect({highlightedIndex: 3})
+
+    rerender({})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('should not throw the uncontrolled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderSelect()
+
+    rerender({highlightedIndex: 3})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
   })
 })

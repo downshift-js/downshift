@@ -15,6 +15,13 @@ jest.mock('../../utils', () => {
   }
 })
 
+/* istanbul ignore next */
+beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+// eslint-disable-next-line no-console
+beforeEach(() => console.error.mockReset())
+// eslint-disable-next-line no-console
+afterAll(() => console.error.mockRestore())
+
 const dataTestIds = {
   toggleButton: 'toggle-button-id',
   menu: 'menu-id',

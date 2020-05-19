@@ -1,7 +1,17 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import setStatus from '../../set-a11y-status'
-import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
-import {useControlledReducer, getItemIndex, useLatestRef} from '../utils'
+import {
+  handleRefs,
+  callAllEventHandlers,
+  normalizeArrowKey,
+  validateControlledUnchanged,
+} from '../../utils'
+import {
+  useControlledReducer,
+  getItemIndex,
+  useGetterPropsCalledChecker,
+  useLatestRef,
+} from '../utils'
 import {
   getInitialState,
   defaultProps,
@@ -35,17 +45,19 @@ function useMultipleSelection(userProps = {}) {
   const {activeIndex, selectedItems} = state
 
   // Refs.
-  const isInitialMount = useRef(true)
+  const isInitialMountRef = useRef(true)
   const dropdownRef = useRef(null)
   const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
   selectedItemRefs.current = []
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
   const latest = useLatestRef({state, props})
 
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -72,7 +84,7 @@ function useMultipleSelection(userProps = {}) {
   }, [selectedItems.length])
   // Sets focus on active item.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -82,9 +94,18 @@ function useMultipleSelection(userProps = {}) {
       selectedItemRefs.current[activeIndex].focus()
     }
   }, [activeIndex])
+  useEffect(() => {
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
+  const setGetterPropCallInfo = useGetterPropsCalledChecker('getDropdownProps')
   // Make initial ref false.
   useEffect(() => {
-    isInitialMount.current = false
+    isInitialMountRef.current = false
   }, [])
 
   // Event handler functions.
@@ -184,14 +205,24 @@ function useMultipleSelection(userProps = {}) {
     [dispatch, latest, selectedItemKeyDownHandlers],
   )
   const getDropdownProps = useCallback(
-    ({
-      refKey = 'ref',
-      ref,
-      onKeyDown,
-      onClick,
-      preventKeyAction = false,
-      ...rest
-    } = {}) => {
+    (
+      {
+        refKey = 'ref',
+        ref,
+        onKeyDown,
+        onClick,
+        preventKeyAction = false,
+        ...rest
+      } = {},
+      {suppressRefError = false} = {},
+    ) => {
+      setGetterPropCallInfo(
+        'getDropdownProps',
+        suppressRefError,
+        refKey,
+        dropdownRef,
+      )
+
       const dropdownHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
         if (key && dropdownKeyDownHandlers[key]) {
@@ -217,7 +248,7 @@ function useMultipleSelection(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, dropdownKeyDownHandlers],
+    [dispatch, dropdownKeyDownHandlers, setGetterPropCallInfo],
   )
 
   // returns

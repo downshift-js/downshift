@@ -1,12 +1,14 @@
-import {act} from '@testing-library/react-hooks'
-
+import {act, renderHook} from '@testing-library/react-hooks'
 import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
+import useMultipleSelection from '..'
 
 describe('getDropdownProps', () => {
   test('returns no keydown events if preventKeyAction is true', () => {
     const {result} = renderUseMultipleSelection()
-    const dropdownProps = result.current.getDropdownProps({preventKeyAction: true})
+    const dropdownProps = result.current.getDropdownProps({
+      preventKeyAction: true,
+    })
 
     expect(dropdownProps.onKeyDown).toBeUndefined()
   })
@@ -15,9 +17,10 @@ describe('getDropdownProps', () => {
     test('are passed down', () => {
       const {result} = renderUseMultipleSelection()
 
-      expect(
-        result.current.getDropdownProps({foo: 'bar'}),
-      ).toHaveProperty('foo', 'bar')
+      expect(result.current.getDropdownProps({foo: 'bar'})).toHaveProperty(
+        'foo',
+        'bar',
+      )
     })
 
     test('custom ref passed by the user is used', () => {
@@ -237,6 +240,85 @@ describe('getDropdownProps', () => {
 
       expect(getSelectedItemAtIndex(1)).toHaveFocus()
       expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
+    })
+  })
+
+  describe('non production errors', () => {
+    test('will be displayed if getDropdownProps is not called', () => {
+      renderHook(() => {
+        useMultipleSelection()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: You forgot to call the getDropdownProps getter function on your component / element."`,
+      )
+    })
+
+    test('will be displayed if element ref is not set and suppressRefError is false', () => {
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+
+        getDropdownProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: The ref prop \\"ref\\" from getDropdownProps was not applied correctly on your element."`,
+      )
+    })
+
+    test('will not be displayed if element ref is not set but suppressRefError is true', () => {
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+
+        getDropdownProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
+    test('will not be displayed if called with a correct ref', () => {
+      const refFn = jest.fn()
+      const dropdownNode = {}
+
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+        const {ref} = getDropdownProps({
+          ref: refFn,
+        })
+        ref(dropdownNode)
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
+    test('will not be displayed if getDropdownProps is not called but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        useMultipleSelection()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
+    })
+
+    test('will not be displayed if element ref is not set but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+
+        getDropdownProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
     })
   })
 })

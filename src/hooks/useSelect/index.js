@@ -9,6 +9,7 @@ import {
   getInitialState,
   updateA11yStatus,
   useMouseAndTouchTracker,
+  useGetterPropsCalledChecker,
   useLatestRef,
 } from '../utils'
 import {
@@ -16,6 +17,7 @@ import {
   handleRefs,
   debounce,
   normalizeArrowKey,
+  validateControlledUnchanged,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {propTypes, defaultProps} from './utils'
@@ -50,8 +52,6 @@ function useSelect(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-
-  // Reducer init.
   const [state, dispatch] = useControlledReducer(
     downshiftSelectReducer,
     initialState,
@@ -59,17 +59,25 @@ function useSelect(userProps = {}) {
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
-  // Refs
+  // Element efs.
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const itemRefs = useRef()
   itemRefs.current = {}
-  const isInitialMountRef = useRef(true)
+  // used not to scroll when highlight by mouse.
   const shouldScrollRef = useRef(true)
+  // used not to trigger menu blur action in some scenarios.
   const shouldBlurRef = useRef(true)
+  // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef(null)
+  // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
+  // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
+  const isInitialMountRef = useRef(true)
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
+  // utility callback to get item element.
   const latest = useLatestRef({
     state,
     props,
@@ -80,7 +88,7 @@ function useSelect(userProps = {}) {
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
   // Effects.
-  /* Sets a11y status message on changes in state. */
+  // Sets a11y status message on changes in state.
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -104,7 +112,7 @@ function useSelect(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, highlightedIndex, selectedItem, inputValue])
-  /* Sets a11y status message on changes in selectedItem. */
+  // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -128,7 +136,7 @@ function useSelect(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
-  /* Sets cleanup for the keysSoFar after 500ms. */
+  // Sets cleanup for the keysSoFar after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
     if (isInitialMountRef.current) {
@@ -161,10 +169,10 @@ function useSelect(userProps = {}) {
       // istanbul ignore else
       if (menuRef.current) {
         menuRef.current.focus()
-        return
       }
+      return
     }
-    // Focus toggleButton on close, but on if was closed with (Shift+)Tab.
+    // Focus toggleButton on close, but not if it was closed with (Shift+)Tab.
     if (environment.document.activeElement === menuRef.current) {
       // istanbul ignore else
       if (toggleButtonRef.current) {
@@ -174,7 +182,7 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
-  /* Scroll on highlighted item if change comes from keyboard. */
+  // Scroll on highlighted item if change comes from keyboard.
   useEffect(() => {
     if (
       highlightedIndex < 0 ||
@@ -197,11 +205,15 @@ function useSelect(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
-  /* Make initial ref false. */
   useEffect(() => {
-    isInitialMountRef.current = false
-  }, [])
-  /* Add mouse/touch events to document. */
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
+  // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [menuRef, toggleButtonRef],
@@ -212,6 +224,14 @@ function useSelect(userProps = {}) {
       })
     },
   )
+  const setGetterPropCallInfo = useGetterPropsCalledChecker(
+    'getMenuProps',
+    'getToggleButtonProps',
+  )
+  // Make initial ref false.
+  useEffect(() => {
+    isInitialMountRef.current = false
+  }, [])
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = useMemo(
@@ -354,9 +374,11 @@ function useSelect(userProps = {}) {
     [],
   )
   const getMenuProps = useCallback(
-    ({onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {}) => {
+    (
+      {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
+      {suppressRefError = false} = {},
+    ) => {
       const latestState = latest.current.state
-
       const menuHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
         if (key && menuKeyDownHandlers[key]) {
@@ -387,6 +409,9 @@ function useSelect(userProps = {}) {
           type: stateChangeTypes.MenuMouseLeave,
         })
       }
+
+      setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef)
+
       return {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
@@ -407,10 +432,13 @@ function useSelect(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef],
+    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef, setGetterPropCallInfo],
   )
   const getToggleButtonProps = useCallback(
-    ({onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {}) => {
+    (
+      {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+      {suppressRefError = false} = {},
+    ) => {
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
@@ -450,9 +478,16 @@ function useSelect(userProps = {}) {
         )
       }
 
+      setGetterPropCallInfo(
+        'getToggleButtonProps',
+        suppressRefError,
+        refKey,
+        toggleButtonRef,
+      )
+
       return toggleProps
     },
-    [dispatch, latest, toggleButtonKeyDownHandlers],
+    [dispatch, latest, toggleButtonKeyDownHandlers, setGetterPropCallInfo],
   )
   const getItemProps = useCallback(
     ({

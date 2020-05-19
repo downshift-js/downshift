@@ -1,12 +1,18 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
-import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {
+  handleRefs,
+  normalizeArrowKey,
+  callAllEventHandlers,
+  validateControlledUnchanged,
+} from '../../utils'
 import {
   getItemIndex,
   getPropTypesValidator,
   updateA11yStatus,
   useMouseAndTouchTracker,
+  useGetterPropsCalledChecker,
   useLatestRef,
 } from '../utils'
 import {
@@ -48,8 +54,6 @@ function useCombobox(userProps = {}) {
   } = props
   // Initial state depending on controlled props.
   const initialState = getInitialState(props)
-
-  // Reducer init.
   const [state, dispatch] = useControlledReducer(
     downshiftUseComboboxReducer,
     initialState,
@@ -57,26 +61,33 @@ function useCombobox(userProps = {}) {
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
-  /* Refs */
+  // Element refs.
   const menuRef = useRef(null)
   const itemRefs = useRef()
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
   itemRefs.current = {}
-  const shouldScroll = useRef(true)
-  const isInitialMount = useRef(true)
+  // used not to scroll on highlight by mouse.
+  const shouldScrollRef = useRef(true)
+  const isInitialMountRef = useRef(true)
+  // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
+  // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
+  // used to store information about getter props being called on render.
+  // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
   const getItemNodeFromIndex = index =>
     itemRefs.current[elementIdsRef.current.getItemId(index)]
 
-  /* Effects */
-  /* Sets a11y status message on changes in state. */
+  // Effects.
+  // Sets a11y status message on changes in state.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -98,9 +109,9 @@ function useCombobox(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, highlightedIndex, selectedItem, inputValue])
-  /* Sets a11y status message on changes in selectedItem. */
+  // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
@@ -122,7 +133,7 @@ function useCombobox(userProps = {}) {
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedItem])
-  /* Scroll on highlighted item if change comes from keyboard. */
+  // Scroll on highlighted item if change comes from keyboard.
   useEffect(() => {
     if (
       highlightedIndex < 0 ||
@@ -132,17 +143,17 @@ function useCombobox(userProps = {}) {
       return
     }
 
-    if (shouldScroll.current === false) {
-      shouldScroll.current = true
+    if (shouldScrollRef.current === false) {
+      shouldScrollRef.current = true
     } else {
       scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [highlightedIndex])
-  /* Controls the focus on the menu or the toggle button. */
+  // Controls the focus on the menu or the toggle button.
   useEffect(() => {
     // Don't focus menu on first render.
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       // Unless it was initialised as open.
       if (initialIsOpen || defaultIsOpen || isOpen) {
         if (inputRef.current) {
@@ -153,16 +164,21 @@ function useCombobox(userProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
   useEffect(() => {
-    if (isInitialMount.current) {
+    if (isInitialMountRef.current) {
       return
     }
 
     previousResultCountRef.current = items.length
   })
   useEffect(() => {
-    isInitialMount.current = false
-  }, [])
-  /* Add mouse/touch events to document. */
+    if (isInitialMountRef.current) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props])
+  // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
     [comboboxRef, menuRef, toggleButtonRef],
@@ -173,6 +189,16 @@ function useCombobox(userProps = {}) {
       })
     },
   )
+  const setGetterPropCallInfo = useGetterPropsCalledChecker(
+    'getInputProps',
+    'getComboboxProps',
+    'getMenuProps',
+  )
+  // Make initial ref false.
+  useEffect(() => {
+    isInitialMountRef.current = false
+  }, [])
+
   /* Event handler functions */
   const inputKeyDownHandlers = useMemo(
     () => ({
@@ -240,21 +266,27 @@ function useCombobox(userProps = {}) {
     [],
   )
   const getMenuProps = useCallback(
-    ({onMouseLeave, refKey = 'ref', ref, ...rest} = {}) => ({
-      [refKey]: handleRefs(ref, menuNode => {
-        menuRef.current = menuNode
-      }),
-      id: elementIdsRef.current.menuId,
-      role: 'listbox',
-      'aria-labelledby': elementIdsRef.current.labelId,
-      onMouseLeave: callAllEventHandlers(onMouseLeave, () => {
-        dispatch({
-          type: stateChangeTypes.MenuMouseLeave,
-        })
-      }),
-      ...rest,
-    }),
-    [dispatch],
+    (
+      {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
+      {suppressRefError = false} = {},
+    ) => {
+      setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef)
+      return {
+        [refKey]: handleRefs(ref, menuNode => {
+          menuRef.current = menuNode
+        }),
+        id: elementIdsRef.current.menuId,
+        role: 'listbox',
+        'aria-labelledby': elementIdsRef.current.labelId,
+        onMouseLeave: callAllEventHandlers(onMouseLeave, () => {
+          dispatch({
+            type: stateChangeTypes.MenuMouseLeave,
+          })
+        }),
+        ...rest,
+      }
+    },
+    [dispatch, setGetterPropCallInfo],
   )
 
   const getItemProps = useCallback(
@@ -285,7 +317,7 @@ function useCombobox(userProps = {}) {
         if (index === latestState.highlightedIndex) {
           return
         }
-        shouldScroll.current = false
+        shouldScrollRef.current = false
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
@@ -355,16 +387,21 @@ function useCombobox(userProps = {}) {
     [dispatch, latest],
   )
   const getInputProps = useCallback(
-    ({
-      onKeyDown,
-      onChange,
-      onInput,
-      onBlur,
-      onChangeText,
-      refKey = 'ref',
-      ref,
-      ...rest
-    } = {}) => {
+    (
+      {
+        onKeyDown,
+        onChange,
+        onInput,
+        onBlur,
+        onChangeText,
+        refKey = 'ref',
+        ref,
+        ...rest
+      } = {},
+      {suppressRefError = false} = {},
+    ) => {
+      setGetterPropCallInfo('getInputProps', suppressRefError, refKey, inputRef)
+
       const latestState = latest.current.state
       const inputHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
@@ -443,20 +480,35 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, inputKeyDownHandlers, latest, mouseAndTouchTrackersRef],
+    [
+      dispatch,
+      inputKeyDownHandlers,
+      latest,
+      mouseAndTouchTrackersRef,
+      setGetterPropCallInfo,
+    ],
   )
   const getComboboxProps = useCallback(
-    ({refKey = 'ref', ref, ...rest} = {}) => ({
-      [refKey]: handleRefs(ref, comboboxNode => {
-        comboboxRef.current = comboboxNode
-      }),
-      role: 'combobox',
-      'aria-haspopup': 'listbox',
-      'aria-owns': elementIdsRef.current.menuId,
-      'aria-expanded': latest.current.state.isOpen,
-      ...rest,
-    }),
-    [latest],
+    ({refKey = 'ref', ref, ...rest} = {}, {suppressRefError = false} = {}) => {
+      setGetterPropCallInfo(
+        'getComboboxProps',
+        suppressRefError,
+        refKey,
+        comboboxRef,
+      )
+
+      return {
+        [refKey]: handleRefs(ref, comboboxNode => {
+          comboboxRef.current = comboboxNode
+        }),
+        role: 'combobox',
+        'aria-haspopup': 'listbox',
+        'aria-owns': elementIdsRef.current.menuId,
+        'aria-expanded': latest.current.state.isOpen,
+        ...rest,
+      }
+    },
+    [latest, setGetterPropCallInfo],
   )
 
   // returns

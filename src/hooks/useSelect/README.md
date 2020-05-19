@@ -580,6 +580,12 @@ Optional properties:
   available, then `aria-labelledby` will not be provided and screen readers can
   use your `aria-label` instead.
 
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getMenuProps`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `useSelect` will unexpectedly
+fail.**
+
 ```jsx
 const {getMenuProps} = useSelect({items})
 const ui = (
@@ -674,6 +680,12 @@ Optional properties:
   `<button ref={props.innerRef} />`. However, if you are just rendering a
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
+
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getToggleButtonProps`. **Please use it with extreme care and only if you are
+absolutely sure that the ref is correctly forwarded otherwise `useSelect` will
+unexpectedly fail.**
 
 ```jsx
 const {getToggleButtonProps} = useSelect({items})

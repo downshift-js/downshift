@@ -1,15 +1,14 @@
 /* eslint-disable jest/no-disabled-tests */
-import {cleanup, act as reactAct} from '@testing-library/react'
-import {act as reactHooksAct} from '@testing-library/react-hooks'
+import {act as reactAct} from '@testing-library/react'
+import {act as reactHooksAct, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderUseSelect, renderSelect} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
+import useSelect from '..'
 
 jest.useFakeTimers()
 
 describe('getToggleButtonProps', () => {
-  afterEach(cleanup)
-
   describe('hook props', () => {
     test('assign default value to aria-labelledby', () => {
       const {result} = renderUseSelect()
@@ -634,6 +633,90 @@ describe('getToggleButtonProps', () => {
         expect(toggleButton).not.toHaveAttribute('aria-activedescendant')
         expect(getItems()).toHaveLength(0)
       })
+    })
+  })
+
+  describe('non production errors', () => {
+    test('will be displayed if getMenuProps is not called', () => {
+      renderHook(() => {
+        const {getMenuProps} = useSelect({items})
+        getMenuProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: You forgot to call the getToggleButtonProps getter function on your component / element."`,
+      )
+    })
+
+    test('will be displayed if element ref is not set and suppressRefError is false', () => {
+      renderHook(() => {
+        const {getMenuProps, getToggleButtonProps} = useSelect({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getToggleButtonProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+        `"downshift: The ref prop \\"ref\\" from getToggleButtonProps was not applied correctly on your element."`,
+      )
+    })
+
+    test('will not be displayed if called with a correct ref', () => {
+      const refFn = jest.fn()
+      const toggleButtonNode = {}
+
+      renderHook(() => {
+        const {getToggleButtonProps, getMenuProps} = useSelect({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+
+        const {ref} = getToggleButtonProps({
+          ref: refFn,
+        })
+        ref(toggleButtonNode)
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
+    test('will not be displayed if getMenuProps is not called but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getMenuProps} = useSelect({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
+    })
+
+    test('will not be displayed if element ref is not set but environment is production', () => {
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = 'production'
+      renderHook(() => {
+        const {getMenuProps, getToggleButtonProps} = useSelect({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getToggleButtonProps()
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+      process.env.NODE_ENV = originalEnv
     })
   })
 })

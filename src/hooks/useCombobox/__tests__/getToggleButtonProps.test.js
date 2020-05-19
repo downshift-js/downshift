@@ -1,12 +1,9 @@
 /* eslint-disable jest/no-disabled-tests */
-import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
 
 describe('getToggleButtonProps', () => {
-  afterEach(cleanup)
-
   describe('hook props', () => {
     test('assign default value to id', () => {
       const {result} = renderUseCombobox()

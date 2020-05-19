@@ -617,6 +617,12 @@ Optional properties:
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
 
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getDropdownProps`. **Please use it with extreme care and only if you are
+absolutely sure that the ref is correctly forwarded otherwise
+`useMultipleSelection` will unexpectedly fail.**
+
 ```javascript
 const {getDropdownProps} = useMultipleSelection()
 const {isOpen, ...rest} = useSelect({items})

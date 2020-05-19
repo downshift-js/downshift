@@ -374,3 +374,66 @@ export function useMouseAndTouchTracker(
 
   return mouseAndTouchTrackersRef
 }
+
+/**
+ * Custom hook that checks if getter props are called correctly.
+ * 
+ * @param  {...any} propKeys Getter prop names to be handled.
+ * @returns {Function} Setter function called inside getter props to set call information.
+ */
+export function useGetterPropsCalledChecker(...propKeys) {
+  const getterPropsCalledRef = useRef(
+    propKeys.reduce((acc, propKey) => {
+      acc[propKey] = {}
+      return acc
+    }, {}),
+  )
+
+  if (process.env.NODE_ENV !== 'production') {
+    Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+      getterPropsCalledRef.current[propKey] = null
+    })
+  }
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+        if (!getterPropsCalledRef.current[propKey]) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
+          )
+          return
+        }
+
+        const {
+          suppressRefError,
+          refKey,
+          elementRef,
+        } = getterPropsCalledRef.current[propKey]
+
+        if ((!elementRef || !elementRef.current) && !suppressRefError) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
+          )
+        }
+      })
+    }
+  })
+
+  const setGetterPropCallInfo = useCallback(
+    (propKey, suppressRefError, refKey, elementRef) => {
+      if (process.env.NODE_ENV !== 'production') {
+        getterPropsCalledRef.current[propKey] = {
+          suppressRefError,
+          refKey,
+          elementRef,
+        }
+      }
+    },
+    [],
+  )
+
+  return setGetterPropCallInfo
+}

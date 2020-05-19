@@ -21,6 +21,13 @@ jest.mock('../../utils', () => {
   }
 })
 
+/* istanbul ignore next */
+beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
+// eslint-disable-next-line no-console
+beforeEach(() => console.error.mockReset())
+// eslint-disable-next-line no-console
+afterAll(() => console.error.mockRestore())
+
 const renderCombobox = (props, uiCallback) => {
   const renderSpy = jest.fn()
   const ui = <DropdownCombobox renderSpy={renderSpy} {...props} />
