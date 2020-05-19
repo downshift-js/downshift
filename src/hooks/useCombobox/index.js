@@ -70,7 +70,7 @@ function useCombobox(userProps = {}) {
   const comboboxRef = useRef(null)
   itemRefs.current = {}
   // used not to scroll on highlight by mouse.
-  const shouldScroll = useRef(true)
+  const shouldScrollRef = useRef(true)
   const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
@@ -149,8 +149,8 @@ function useCombobox(userProps = {}) {
       return
     }
 
-    if (shouldScroll.current === false) {
-      shouldScroll.current = true
+    if (shouldScrollRef.current === false) {
+      shouldScrollRef.current = true
     } else {
       scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
     }
@@ -325,7 +325,7 @@ function useCombobox(userProps = {}) {
         if (index === latestState.highlightedIndex) {
           return
         }
-        shouldScroll.current = false
+        shouldScrollRef.current = false
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,

@@ -914,6 +914,21 @@ describe('getMenuProps', () => {
       )
     })
 
+    // this test will cover also the equivalent getToggleButtonProps case.
+    test('will not be displayed if element ref is not set and suppressRefError is true', () => {
+      renderHook(() => {
+        const {getMenuProps, getToggleButtonProps} = useSelect({
+          items,
+        })
+
+        getToggleButtonProps({}, {suppressRefError: true})
+        getMenuProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will not be displayed if called with a correct ref', () => {
       const refFn = jest.fn()
       const menuNode = {}

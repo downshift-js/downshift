@@ -102,6 +102,7 @@ describe('getComboboxProps', () => {
       )
     })
 
+    // this test will cover also the equivalent getInputProps and getMenuProps cases.
     test('will not be displayed if element ref is not set and suppressRefError is true', () => {
       renderHook(() => {
         const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({

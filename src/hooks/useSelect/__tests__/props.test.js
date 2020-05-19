@@ -1268,7 +1268,7 @@ describe('props', () => {
     })
   })
 
-  it('that are controlled should not become uncontrolled', () => {
+  it('that are uncontrolled should not become controlled', () => {
     const {rerender} = renderSelect()
 
     rerender({isOpen: true})
@@ -1278,7 +1278,7 @@ describe('props', () => {
     )
   })
 
-  it('that are uncontrolled should not become controlled', () => {
+  it('that are controlled should not become uncontrolled', () => {
     const {rerender} = renderSelect({highlightedIndex: 3})
 
     rerender({})

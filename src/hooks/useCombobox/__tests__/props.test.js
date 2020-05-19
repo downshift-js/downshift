@@ -1218,7 +1218,7 @@ describe('props', () => {
     })
   })
 
-  test('that are controlled should not become uncontrolled', () => {
+  test('that are uncontrolled should not become controlled', () => {
     const {rerender} = renderCombobox()
 
     rerender({selectedItem: 'controlled'})
@@ -1229,7 +1229,7 @@ describe('props', () => {
     )
   })
 
-  test('that are uncontrolled should not become controlled', () => {
+  test('that are controlled should not become uncontrolled', () => {
     const {rerender} = renderCombobox({inputValue: 'controlled value'})
 
     rerender({})

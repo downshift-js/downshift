@@ -740,7 +740,7 @@ describe('props', () => {
     expect(result.current.activeIndex).toEqual(4)
   })
 
-  test('that are controlled should not become uncontrolled', () => {
+  test('that are uncontrolled should not become controlled', () => {
     const {rerender} = renderMultipleCombobox()
 
     rerender({multipleSelectionProps: {activeIndex: 1}})
@@ -751,7 +751,7 @@ describe('props', () => {
     )
   })
 
-  test('that are uncontrolled should not become controlled', () => {
+  test('that are controlled should not become uncontrolled', () => {
     const {rerender} = renderMultipleCombobox({
       multipleSelectionProps: {selectedItems: [items[1]]},
     })

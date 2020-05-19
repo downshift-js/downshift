@@ -268,6 +268,17 @@ describe('getDropdownProps', () => {
       )
     })
 
+    test('will not be displayed if element ref is not set but suppressRefError is true', () => {
+      renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+
+        getDropdownProps({}, {suppressRefError: true})
+      })
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will not be displayed if called with a correct ref', () => {
       const refFn = jest.fn()
       const dropdownNode = {}
