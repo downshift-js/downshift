@@ -375,6 +375,12 @@ export function useMouseAndTouchTracker(
   return mouseAndTouchTrackersRef
 }
 
+/**
+ * Custom hook that checks if getter props are called correctly.
+ * 
+ * @param  {...any} propKeys Getter prop names to be handled.
+ * @returns {Function} Setter function called inside getter props to set call information.
+ */
 export function useGetterPropsCalledChecker(...propKeys) {
   const getterPropsCalledRef = useRef(
     propKeys.reduce((acc, propKey) => {
