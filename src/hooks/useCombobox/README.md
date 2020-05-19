@@ -643,6 +643,12 @@ Optional properties:
   available, then `aria-labelledby` will not be provided and screen readers can
   use your `aria-label` instead.
 
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getMenuProps`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
+fail.**
+
 ```jsx
 const {getMenuProps} = useCombobox({items})
 const ui = (
@@ -768,6 +774,12 @@ Optional properties:
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property. It defaults to `ref`.
 
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getInput`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
+fail.**
+
 #### `getComboboxProps`
 
 This method should be applied to the `input` wrapper element. It has similar
@@ -779,6 +791,12 @@ contain the `input` and the `toggleButton` and it should be on the same level
 with the `menu`.
 
 There are no required properties for this method.
+
+In some cases, you might want to completely bypass the `refKey` check. Then you
+can provide the object `{suppressRefError : true}` as the second argument to
+`getComboboxProps`. **Please use it with extreme care and only if you are absolutely
+sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
+fail.**
 
 ### actions
 
