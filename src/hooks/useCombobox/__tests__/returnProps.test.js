@@ -101,7 +101,7 @@ describe('returnProps', () => {
       expect(result.current.inputValue).toBe("I'm Batman!")
     })
 
-    test('selectItem sets selectedItem', () => {
+    test('selectItem sets selectedItem and inputValue', () => {
       const {result} = renderUseCombobox({})
 
       act(() => {
@@ -109,6 +109,18 @@ describe('returnProps', () => {
       })
 
       expect(result.current.selectedItem).toBe(items[2])
+      expect(result.current.inputValue).toBe(items[2])
+    })
+
+    test('selectItem with null clears inputvalue', () => {
+      const {result} = renderUseCombobox({initialSelectedItem: items[2]})
+
+      act(() => {
+        result.current.selectItem(null)
+      })
+
+      expect(result.current.selectedItem).toBe(null)
+      expect(result.current.inputValue).toBe('')
     })
 
     test('reset sets the state to default values', () => {
