@@ -111,7 +111,7 @@ function useSelect(userProps = {}) {
       environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, selectedItem, inputValue, items])
+  }, [getA11yStatusMessage, isOpen, highlightedIndex, selectedItem, inputValue, items])
   // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMountRef.current) {
