@@ -1,7 +1,7 @@
 <h1 align="center">
   downshift 🏎
   <br>
-  <img src="https://downshift.netlify.app/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <img src="https://downshift-js.com/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
@@ -51,9 +51,9 @@ Since both `useCombobox` and the component `Downshift` aim to provide
 accessibility to a combobox, we suggest trying the new `useCombobox` first. If
 you feel that `Downshift` still covers your use cases better then use the
 component instead. However, if these use cases should also be covered in
-`useCombobox`, make sure to create an issue to help us improve the hook. Both the
-hooks and the component are actively maintained but we are cool kids from the
-future and prefer to share `React` logic via hooks.
+`useCombobox`, make sure to create an issue to help us improve the hook. Both
+the hooks and the component are actively maintained but we are cool kids from
+the future and prefer to share `React` logic via hooks.
 
 The `README` on this page convers only the component while each hook has its own
 `README` file. Check the [hooks section](#the-react-hooks-api) for links to
@@ -107,6 +107,7 @@ and `side-effect free`.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -260,7 +261,7 @@ The previous example without `getRootProps` is
 > screen readers as it's not possible to achieve the HTML structure suggested by
 > ARIA. We recommend following the example with `getRootProps`. Examples on how
 > to use `Downshift` component with and without `getRootProps` are on the
-> [docsite](https://downshift.netlify.app/).
+> [docsite](https://downshift-js.com/).
 
 `Downshift` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
@@ -1423,6 +1424,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
@@ -1498,4 +1500,4 @@ MIT
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
-[docsite]: https://downshift.netlify.app/
+[docsite]: https://downshift-js.com/
