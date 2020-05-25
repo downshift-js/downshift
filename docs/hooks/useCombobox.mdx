@@ -459,5 +459,42 @@ In all other state change types, we return `Downshift` default changes.
   }}
 </Playground>
 
+## Custom window
+
+When using `useCombobox` in an `<iframe>` or in any other scenario that uses a `window` object different that the default
+browser `window`, it is required to provide that `window` object to the hook as well. Internally, we are using the
+`window` object for DOM related logic, and working with the wrong object will make the hook behave unexpectedly. For
+example, when using `react-frame-component` to produce an `iframe` container, we should pass its `window` object to the
+hook like this.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect` but same concept applies).
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { useCombobox } from 'downshift';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+
+function DropdownCombobox({ environment }) {
+  // use the environment prop to pass the custom iframe window to useCombobox.
+  useCombobox({ items, environment });
+  return (
+    // your select here.
+  )
+}
+
+render(
+  <Frame style={{ height: 300 }}>
+    <FrameContextConsumer>
+      {// get the window object from the context.
+      ({ document, window }) => (
+        // pass it to the select component as prop.
+        <DropdownCombobox environment={window} />
+      )}
+    </FrameContextConsumer>
+  </Frame>,
+  document.getElementById("root")
+```
+
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
