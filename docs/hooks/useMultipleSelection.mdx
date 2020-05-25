@@ -114,8 +114,21 @@ the items selection in this case.
         getItemProps,
       } = useCombobox({
         inputValue,
+        defaultHighlightedIndex: 0, // after selection, highlight the first item.
         selectedItem: null,
         items: getFilteredItems(),
+        stateReducer: (state, actionAndChanges) => {
+          const {changes, type} = actionAndChanges
+          switch (type) {
+            case useCombobox.stateChangeTypes.InputKeyDownEnter:
+            case useCombobox.stateChangeTypes.ItemClick:
+              return {
+                ...changes,
+                isOpen: true // keep menu open after selection.
+              }
+          }
+          return changes
+        },
         onStateChange: ({inputValue, type, selectedItem}) => {
           switch (type) {
             case useCombobox.stateChangeTypes.InputChange:
@@ -222,7 +235,21 @@ is up to the developer.
         getItemProps,
       } = useSelect({
         selectedItem: null,
+        defaultHighlightedIndex: 0, // after selection, highlight the first item.
         items: getFilteredItems(),
+          stateReducer: (state, actionAndChanges) => {
+          const {changes, type} = actionAndChanges
+          switch (type) {
+            case useSelect.stateChangeTypes.MenuKeyDownEnter:
+            case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+            case useSelect.stateChangeTypes.ItemClick:
+              return {
+                ...changes,
+                isOpen: true // keep menu open after selection.
+              }
+          }
+          return changes
+        },
         onStateChange: ({type, selectedItem}) => {
           switch (type) {
             case useSelect.stateChangeTypes.MenuKeyDownEnter:
