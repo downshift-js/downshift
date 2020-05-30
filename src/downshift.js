@@ -342,6 +342,9 @@ class Downshift extends Component {
     // preserving the cursor position.
     // See https://github.com/downshift-js/downshift/issues/217 for more info.
     if (!isStateToSetFunction) {
+      // Run stateReducer over the stateToSet before we check
+      // whether it hasOwnProperty because we are able to
+      // add / remove the inputValue using the stateReducer
       const newStateToSet = this.props.stateReducer(this.state, stateToSet)
       if (newStateToSet.hasOwnProperty('inputValue')) {
         this.props.onInputValueChange(newStateToSet.inputValue, {

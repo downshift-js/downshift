@@ -261,6 +261,7 @@ test('selecting an item calls onInputValueChange with reduced state', () => {
     onInputValueChange: onInputValueChangeSpy,
   })
   selectItem('bar')
+  expect(onInputValueChangeSpy).toHaveBeenCalledTimes(1)
   expect(onInputValueChangeSpy).toHaveReturnedWith(
     expect.objectContaining({selectedItem: 'foo'}),
   )
@@ -281,6 +282,7 @@ test('onInputValueChange is called when reduced state includes inputValue', () =
   })
   openMenu()
   expect(onInputValueChangeSpy).toHaveBeenCalledTimes(1)
+  expect(onInputValueChangeSpy).toHaveBeenCalledWith('baz', expect.any(Object))
 })
 
 test('onInputValueChange is not called when reduced state does not include inputValue', () => {
@@ -295,7 +297,7 @@ test('onInputValueChange is not called when reduced state does not include input
     onInputValueChange: onInputValueChangeSpy,
   })
   selectItem('bar')
-  expect(onInputValueChangeSpy).toHaveBeenCalledTimes(0)
+  expect(onInputValueChangeSpy).not.toHaveBeenCalled()
 })
 
 function mouseDownAndUp(node) {
