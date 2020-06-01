@@ -57,7 +57,7 @@ const renderSelect = (props, uiCallback) => {
     fireEvent.keyDown(menu, {key, ...options})
   }
   const blurMenu = () => {
-    menu.blur()
+    fireEvent.blur(menu)
   }
   const getA11yStatusContainer = () => wrapper.queryByRole('status')
   const mouseLeaveMenu = () => {

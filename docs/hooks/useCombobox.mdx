@@ -579,21 +579,19 @@ render(
                       : {}
                   }
                   key={`${item}${index}`}
+                  {...getItemProps({
+                    item,
+                    index,
+                  })}
                 >
-                  <label style={checkboxLabelStyles}>
-                    <input
-                      type="checkbox"
-                      {...getItemProps({
-                        item,
-                        index,
-                        checked: selectedItems.includes(item)
-                      })}
-                      value={item}
-                      onChange={() => null}
-                    />
-                    <span />
-                    {item}
-                  </label>
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item)}
+                    value={item}
+                    onChange={() => null}
+                  />
+                  <span />
+                  {item}
                 </li>
               ))}
           </ul>

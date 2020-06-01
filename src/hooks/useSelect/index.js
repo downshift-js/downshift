@@ -432,7 +432,13 @@ function useSelect(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef, setGetterPropCallInfo],
+    [
+      dispatch,
+      latest,
+      menuKeyDownHandlers,
+      mouseAndTouchTrackersRef,
+      setGetterPropCallInfo,
+    ],
   )
   const getToggleButtonProps = useCallback(
     (
