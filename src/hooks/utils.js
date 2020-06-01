@@ -171,7 +171,11 @@ export function useEnhancedReducer(reducer, initialState, props) {
 
   useEffect(() => {
     if (action && prevStateRef.current && prevStateRef.current !== state) {
-      callOnChangeProps(action, prevStateRef.current, state)
+      callOnChangeProps(
+        action,
+        getState(prevStateRef.current, action.props),
+        state,
+      )
     }
 
     prevStateRef.current = state
@@ -377,7 +381,7 @@ export function useMouseAndTouchTracker(
 
 /**
  * Custom hook that checks if getter props are called correctly.
- * 
+ *
  * @param  {...any} propKeys Getter prop names to be handled.
  * @returns {Function} Setter function called inside getter props to set call information.
  */
