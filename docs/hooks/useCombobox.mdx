@@ -463,12 +463,12 @@ In all other state change types, we return `Downshift` default changes.
 ## Custom window
 
 When using `useCombobox` in an `<iframe>` or in any other scenario that uses a
-`window` object different that the default browser `window`, it is required to
-provide that `window` object to the hook as well. Internally, we are using the
-`window` object for DOM related logic, and working with the wrong object will
-make the hook behave unexpectedly. For example, when using
-`react-frame-component` to produce an `iframe` container, we should pass its
-`window` object to the hook like this.
+`window` object different than the default browser `window`, it is required to
+provide that `window` object to the hook as well. Internally, we rely on the
+`window` for DOM related logic and working with the wrong object will make the 
+hook behave unexpectedly. For example, when using `react-frame-component` to
+produce an `iframe` container, we should pass its `window` object to the hook
+like below.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect`
 but same concepts apply).
