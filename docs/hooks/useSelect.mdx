@@ -379,7 +379,7 @@ provide that `window` object to the hook as well. Internally, we rely on the
 `window` for DOM related logic and working with the wrong object will make the 
 hook behave unexpectedly. For example, when using `react-frame-component` to
 produce an `iframe` container, we should pass its `window` object to the hook
-like below.
+like shown below.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6)
 
@@ -413,12 +413,12 @@ render(
 ## Basic Multiple selection
 
 The `useSelect` hook can be used to create a widget that supports multiple
-selection. In this case, our multiple selection only marks the selected items
-with checkboxes inside the menu list. Every other aspect remains the same as
+selection. In the example below, we mark each selected item with a checked
+checkbox inside the menu list. Every other aspect remains the same as
 with the single selection dropdown. For a more interactive example of multiple
 selection, you can use our `useMultipleSelection` hook together with
-`useSelect`, as shown by the
-[multiple selection section](/use-multiple-selection).
+`useSelect`, as shown in the
+[multiple selection section](/use-multiple-selection#usage-with-select).
 
 In the example below, we control the `selectedItem` to always be `null` and keep
 our selected items in a state variable, `selectedItems`. We use

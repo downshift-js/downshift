@@ -468,7 +468,7 @@ provide that `window` object to the hook as well. Internally, we rely on the
 `window` for DOM related logic and working with the wrong object will make the 
 hook behave unexpectedly. For example, when using `react-frame-component` to
 produce an `iframe` container, we should pass its `window` object to the hook
-like below.
+like shown below.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect`
 but same concepts apply).
@@ -493,7 +493,7 @@ render(
     <FrameContextConsumer>
       {// get the window object from the context.
       ({ document, window }) => (
-        // pass it to the select component as prop.
+        // pass window to the combobox component as the environment prop.
         <DropdownCombobox environment={window} />
       )}
     </FrameContextConsumer>
@@ -504,12 +504,12 @@ render(
 ## Basic Multiple Selection
 
 The `useCombobox` hook can be used to create a widget that supports multiple
-selection. In this case, our multiple selection only marks the selected items
-with checkboxes inside the menu list. Every other aspect remains the same as
+selection. In the example below, we mark each selected item with a checked
+checkbox inside the menu list. Every other aspect remains the same as
 with the single selection combobox. For a more interactive example of multiple
 selection, you can use our `useMultipleSelection` hook together with
-`useCombobox`, as shown by the
-[multiple selection section](/use-multiple-selection).
+`useCombobox`, as shown in the
+[multiple selection section](/use-multiple-selection#usage-with-combobox).
 
 In the example below, we control the `selectedItem` to always be `null` and keep
 our selected items in a state variable, `selectedItems`. We use
