@@ -58,7 +58,7 @@ const renderCombobox = (props, uiCallback) => {
     await userEvent.type(input, inputValue)
   }
   const focusInput = () => {
-    input.focus()
+    fireEvent.focus(input)
   }
   const keyDownOnInput = (key, options = {}) => {
     if (document.activeElement !== input) {
@@ -68,7 +68,7 @@ const renderCombobox = (props, uiCallback) => {
     fireEvent.keyDown(input, {key, ...options})
   }
   const blurInput = () => {
-    input.blur()
+    fireEvent.blur(input)
   }
 
   return {

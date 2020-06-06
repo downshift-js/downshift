@@ -19,6 +19,10 @@ export const menuMultipleStlyes = {
   left: '380px',
 }
 
+export const checkboxLabelStyles = {
+  display: 'block'
+}
+
 export const selectedItemStyles = {
   marginLeft: '5px',
   backgroundColor: 'aliceblue',

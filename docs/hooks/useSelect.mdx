@@ -17,7 +17,7 @@ import {
   Avatar,
 } from '@material-ui/core'
 import {useSelect} from '../../src'
-import {items, menuStyles, itemsAsObjects, useStyles} from '../utils'
+import {items, menuStyles, itemsAsObjects, useStyles, checkboxLabelStyles} from '../utils'
 
 # useSelect
 
@@ -265,7 +265,7 @@ will update the value in the other one as well.
         </div>
       )
     }
-    function ControlledComboboxes() {
+    function ControlledSelects() {
       const [selectedItem, setSelectedItem] = useState(null)
       function handleSelectedItemChange({selectedItem}) {
         setSelectedItem(selectedItem)
@@ -283,7 +283,7 @@ will update the value in the other one as well.
         </div>
       )
     }
-    return <ControlledComboboxes />
+    return <ControlledSelects />
   }}
 </Playground>
 
@@ -370,6 +370,201 @@ In all other state change types, we return `useSelect` default changes.
     return <DropdownSelect />
   }}
 </Playground>
+
+## Custom window
+
+When using `useSelect` in an `<iframe>` or in any other scenario that uses a
+`window` object different than the default browser `window`, it is required to
+provide that `window` object to the hook as well. Internally, we rely on the
+`window` for DOM related logic and working with the wrong object will make the 
+hook behave unexpectedly. For example, when using `react-frame-component` to
+produce an `iframe` container, we should pass its `window` object to the hook
+like shown below.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6)
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { useSelect } from 'downshift';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+
+function DropdownSelect({ environment }) {
+  // use the environment prop to pass the custom iframe window to useSelect.
+  useSelect({ items, environment });
+  return (
+    // your select here.
+  )
+}
+
+render(
+  <Frame style={{ height: 300 }}>
+    <FrameContextConsumer>
+      {// get the window object from the context.
+      ({ document, window }) => (
+        // pass it to the select component as prop.
+        <DropdownSelect environment={window} />
+      )}
+    </FrameContextConsumer>
+  </Frame>,
+  document.getElementById("root")
+```
+
+## Basic Multiple selection
+
+The `useSelect` hook can be used to create a widget that supports multiple
+selection. In the example below, we mark each selected item with a checked
+checkbox inside the menu list. Every other aspect remains the same as
+with the single selection dropdown. For a more interactive example of multiple
+selection, you can use our `useMultipleSelection` hook together with
+`useSelect`, as shown in the
+[multiple selection section](/use-multiple-selection#usage-with-select).
+
+In the example below, we control the `selectedItem` to always be `null` and keep
+our selected items in a state variable, `selectedItems`. We use
+`onSelectedItemChange` prop to retrieve the `selectedItem` from `useSelect`,
+which is added to / removed from the `selectedItems` array. We also use
+`stateReducer` to keep the menu open on selection by Enter key or by click, and
+also to keep the `highlightedIndex` to be the most recent selected item.
+
+In order to visually illustrate the selection, we render a checkbox before each
+of them and check only the ones that are selected.
+
+<Playground>
+  {() => {
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function stateReducer(state, actionAndChanges) {
+      const {changes, type} = actionAndChanges
+      switch (type) {
+        case useSelect.stateChangeTypes.MenuKeyDownEnter:
+        case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+        case useSelect.stateChangeTypes.ItemClick:
+          return {
+            ...changes,
+            isOpen: true, // keep menu open after selection.
+            highlightedIndex: state.highlightedIndex,
+          }
+        default:
+          return changes
+      }
+    }
+    function DropdownSelect() {
+      const [selectedItems, setSelectedItems] = useState([])
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+      } = useSelect({
+        items,
+        stateReducer,
+        selectedItem: null,
+        onSelectedItemChange: ({selectedItem}) => {
+          if (!selectedItem) {
+            return
+          }
+          const index = selectedItems.indexOf(selectedItem)
+          if (index > 0) {
+            setSelectedItems([
+              ...selectedItems.slice(0, index),
+              ...selectedItems.slice(index + 1),
+            ])
+          } else if (index === 0) {
+            setSelectedItems([...selectedItems.slice(1)])
+          } else {
+            setSelectedItems([...selectedItems, selectedItem])
+          }
+        },
+      })
+      const buttonText = selectedItems.length
+        ? `${selectedItems.length} elements selected`
+        : 'Elements'
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>{buttonText}</button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({
+                    item,
+                    index,
+                  })}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item)}
+                    value={item}
+                    onChange={() => null}
+                  />
+                  <span />
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )
+    }
+    return <DropdownSelect />
+  }}
+</Playground>
+
+## Using action props
+
+Action props are functions returned by `useSelect` along with the state props
+and getter props. They are handy when you need to execute select state changes
+from event handlers, state change handlers or any other external location. In the
+example below we open the menu when the toggle button is hovered, and clear
+the selection by clicking on the custom selection clearing button. We use the
+`openMenu` and `selectItem` action props in order to achieve these custom
+behaviors.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-action-props-zljdg)
+
+```jsx
+import React from 'react';
+import { useCombobox } from 'downshift';
+import { items } from './utils'
+
+function DropdownCombobox() {
+  const {getInputProps, getMenuProps, isOpen, openMenu, selectItem} = useSelect({items});
+  return (
+    <div>
+      {/* label */}
+      <button
+        {...getToggleButtonProps({
+          onMouseEnter: () => {
+            openMenu()
+          }
+        })}
+      >
+        {selectedItem || "Elements"}
+      </button>
+      <button
+        tabindex={-1}
+        onClick={() => {
+          selectItem(null)
+        }}
+        aria-label="clear selection"
+      >
+        &#215;
+      </button>
+      <ul {...getMenuProps()}>
+        {isOpen && items.map((map, index) => /* render items when isOpen is true. */)}
+      </ul>
+    </div>
+  )
+}
+```
 
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
