@@ -373,11 +373,13 @@ In all other state change types, we return `useSelect` default changes.
 
 ## Custom window
 
-When using `useSelect` in an `<iframe>` or in any other scenario that uses a `window` object different that the default
-browser `window`, it is required to provide that `window` object to the hook as well. Internally, we are using the
-`window` object for DOM related logic, and working with the wrong object will make the hook behave unexpectedly. For
-example, when using `react-frame-component` to produce an `iframe` container, we should pass its `window` object to the
-hook like this.
+When using `useSelect` in an `<iframe>` or in any other scenario that uses a
+`window` object different that the default browser `window`, it is required to
+provide that `window` object to the hook as well. Internally, we are using the
+`window` object for DOM related logic, and working with the wrong object will
+make the hook behave unexpectedly. For example, when using
+`react-frame-component` to produce an `iframe` container, we should pass its
+`window` object to the hook like this.
 
 [CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6)
 
@@ -409,6 +411,24 @@ render(
 ```
 
 ## Basic Multiple selection
+
+The `useSelect` hook can be used to create a widget that supports multiple
+selection. In this case, our multiple selection only marks the selected items
+with checkboxes inside the menu list. Every other aspect remains the same as
+with the single selection dropdown. For a more interactive example of multiple
+selection, you can use our `useMultipleSelection` hook together with
+`useSelect`, as shown by the
+[multiple selection section](/use-multiple-selection).
+
+In the example below, we control the `selectedItem` to always be `null` and keep
+our selected items in a state variable, `selectedItems`. We use
+`onSelectedItemChange` prop to retrieve the `selectedItem` from `useSelect`,
+which is added to / removed from the `selectedItems` array. We also use
+`stateReducer` to keep the menu open on selection by Enter key or by click, and
+also to keep the `highlightedIndex` to be the most recent selected item.
+
+In order to visually illustrate the selection, we render a checkbox before each
+of them and check only the ones that are selected.
 
 <Playground>
   {() => {
@@ -460,10 +480,13 @@ render(
           }
         },
       })
+      const buttonText = selectedItems.length
+        ? `${selectedItems.length} elements selected`
+        : 'Elements'
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
-          <button {...getToggleButtonProps()}>{'Elements'}</button>
+          <button {...getToggleButtonProps()}>{buttonText}</button>
           <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
               items.map((item, index) => (
@@ -494,6 +517,54 @@ render(
     return <DropdownSelect />
   }}
 </Playground>
+
+## Using action props
+
+Action props are functions returned by `useSelect` along with the state props
+and getter props. They are handy when you need to execute select state changes
+from event handlers, state change handlers or any other external location. In the
+example below we open the menu when the toggle button is hovered, and clear
+the selection by clicking on the custom selection clearing button. We use the
+`openMenu` and `selectItem` action props in order to achieve these custom
+behaviors.
+
+[CodeSandbox](https://codesandbox.io/s/useselect-action-props-zljdg)
+
+```jsx
+import React from 'react';
+import { useCombobox } from 'downshift';
+import { items } from './utils'
+
+function DropdownCombobox() {
+  const {getInputProps, getMenuProps, isOpen, openMenu, selectItem} = useSelect({items});
+  return (
+    <div>
+      {/* label */}
+      <button
+        {...getToggleButtonProps({
+          onMouseEnter: () => {
+            openMenu()
+          }
+        })}
+      >
+        {selectedItem || "Elements"}
+      </button>
+      <button
+        tabindex={-1}
+        onClick={() => {
+          selectItem(null)
+        }}
+        aria-label="clear selection"
+      >
+        &#215;
+      </button>
+      <ul {...getMenuProps()}>
+        {isOpen && items.map((map, index) => /* render items when isOpen is true. */)}
+      </ul>
+    </div>
+  )
+}
+```
 
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html

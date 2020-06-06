@@ -24,7 +24,7 @@ import {
   itemsAsObjects,
   menuStyles,
   comboboxStyles,
-  checkboxLabelStyles
+  checkboxLabelStyles,
 } from '../utils'
 
 # useCombobox
@@ -42,8 +42,8 @@ needs.
 `useCombobox` is a React hook that manages all the stateful logic needed to make
 the combobox functional and accessible. It returns a set of props that are meant
 to be called and their results destructured on the combobox's elements: its
-label, toggle button, input, combobox container, list and list items. The props are
-similar to the ones provided by vanilla `<Downshift>` to the children render
+label, toggle button, input, combobox container, list and list items. The props
+are similar to the ones provided by vanilla `<Downshift>` to the children render
 prop.
 
 These props are called getter props and their return values are destructured as
@@ -462,25 +462,29 @@ In all other state change types, we return `Downshift` default changes.
 
 ## Custom window
 
-When using `useCombobox` in an `<iframe>` or in any other scenario that uses a `window` object different that the default
-browser `window`, it is required to provide that `window` object to the hook as well. Internally, we are using the
-`window` object for DOM related logic, and working with the wrong object will make the hook behave unexpectedly. For
-example, when using `react-frame-component` to produce an `iframe` container, we should pass its `window` object to the
-hook like this.
+When using `useCombobox` in an `<iframe>` or in any other scenario that uses a
+`window` object different that the default browser `window`, it is required to
+provide that `window` object to the hook as well. Internally, we are using the
+`window` object for DOM related logic, and working with the wrong object will
+make the hook behave unexpectedly. For example, when using
+`react-frame-component` to produce an `iframe` container, we should pass its
+`window` object to the hook like this.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect` but same concept applies).
+[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect`
+but same concepts apply).
 
 ```js
 import React from 'react';
 import { render } from 'react-dom';
 import { useCombobox } from 'downshift';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
+import { items } from './utils'
 
 function DropdownCombobox({ environment }) {
   // use the environment prop to pass the custom iframe window to useCombobox.
   useCombobox({ items, environment });
   return (
-    // your select here.
+    // your combobox here.
   )
 }
 
@@ -498,6 +502,24 @@ render(
 ```
 
 ## Basic Multiple Selection
+
+The `useCombobox` hook can be used to create a widget that supports multiple
+selection. In this case, our multiple selection only marks the selected items
+with checkboxes inside the menu list. Every other aspect remains the same as
+with the single selection combobox. For a more interactive example of multiple
+selection, you can use our `useMultipleSelection` hook together with
+`useCombobox`, as shown by the
+[multiple selection section](/use-multiple-selection).
+
+In the example below, we control the `selectedItem` to always be `null` and keep
+our selected items in a state variable, `selectedItems`. We use
+`onSelectedItemChange` prop to retrieve the `selectedItem` from `useCombobox`,
+which is added to / removed from the `selectedItems` array. We also use
+`stateReducer` to keep the menu open on selection by Enter key or by click, and
+also to keep the `highlightedIndex` to be the most recent selected item.
+
+In order to visually illustrate the selection, we render a checkbox before each
+of them and check only the ones that are selected.
 
 <Playground>
   {() => {
@@ -560,11 +582,14 @@ render(
           )
         },
       })
+      const placeholderText = selectedItems.length
+        ? `${selectedItems.length} elements selected`
+        : 'elements'
       return (
         <div>
           <label {...getLabelProps()}>Choose an element:</label>
           <div style={comboboxStyles} {...getComboboxProps()}>
-            <input {...getInputProps()} />
+            <input placeholder={placeholderText} {...getInputProps()} />
             <button {...getToggleButtonProps()} aria-label="toggle menu">
               &#8595;
             </button>
@@ -601,6 +626,41 @@ render(
     return <DropdownCombobox />
   }}
 </Playground>
+
+## Using action props
+
+Action props are functions returned by `useCombobox` along with the state props
+and getter props. They are handy when you need to execute combobox state changes
+from event handlers, state change handlers or any other external location. In the
+example below we open the menu when the combobox input is focused, and clear
+the selection by clicking on the custom selection clearing button. We use the
+`openMenu` and `selectItem` action props in order to achieve these custom
+behaviors.
+
+[CodeSandbox](https://codesandbox.io/s/usecombobox-action-props-kzwos)
+
+```jsx
+import React from 'react';
+import { useCombobox } from 'downshift';
+import { items } from './utils'
+
+function DropdownCombobox() {
+  const {getInputProps, getMenuProps, isOpen, openMenu, selectItem} = useCombobox({items});
+  return (
+    <div>
+      {/* label and combobox container. */}
+      <input {...getInputProps({onFocus: () => { openMenu() }})} />
+      <button tabindex={-1} onClick={() => { selectItem(null) }} aria-label="clear selection">
+        &#215;
+      </button>
+      {/* toggle button. */}
+      <ul {...getMenuProps()}>
+        {isOpen && items.map((map, index) => /* render items when isOpen is true. */)}
+      </ul>
+    </div>
+  )
+}
+```
 
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
