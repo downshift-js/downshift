@@ -255,13 +255,14 @@ reset or when an item is selected.
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is passed as props to a `Status` component nested within and
-allows you to create your own assertive ARIA statuses.
+This function is passed as props to a status updating function nested within and
+allows you to create your own ARIA statuses. It is called when one of the
+following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
 
 A default `getA11yStatusMessage` function is provided that will check
 `resultCount` and return "No results are available." or if there are results ,
 "`resultCount` results are available, use up and down arrow keys to navigate.
-Press Enter or Space Bar keys to select."
+Press Enter key to select."
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -270,14 +271,16 @@ Press Enter or Space Bar keys to select."
 > `function({/* see below */})` | default messages provided in English
 
 This function is similar to the `getA11yStatusMessage` but it is generating a
-message when an item is selected.
+message when an item is selected. It is passed as props to a status updating
+function nested within and allows you to create your own ARIA statuses. It is
+called when `selectedItem` changes.
 
-A default `getA11ySelectionMessage` function is provided. It is called when
-`selectedItem` changes. When an item is selected, the message is a selection
-related one, narrating "`itemToString(selectedItem)` has been selected".
+A default `getA11ySelectionMessage` function is provided. When an item is
+selected, the message is a selection related one, narrating
+"`itemToString(selectedItem)` has been selected".
 
 The object you are passed to generate your status message, for both
-`getA11yStatusMessage` and `getA11ySelectionMessage` has the following
+`getA11yStatusMessage` and `getA11ySelectionMessage`, has the following
 properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->

@@ -284,15 +284,16 @@ reset or when an item is selected.
 
 > `string` | defaults to `''`
 
-Pass a string that sets the content of the input when downshift is reset or
-when an item is selected.
+Pass a string that sets the content of the input when downshift is reset or when
+an item is selected.
 
 ### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is passed as props to a `Status` component nested within and
-allows you to create your own assertive ARIA statuses.
+This function is passed as props to a status updating function nested within and
+allows you to create your own ARIA statuses. It is called when one of the
+following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
 
 A default `getA11yStatusMessage` function is provided that will check
 `resultCount` and return "No results are available." or if there are results ,
@@ -306,14 +307,16 @@ Press Enter key to select."
 > `function({/* see below */})` | default messages provided in English
 
 This function is similar to the `getA11yStatusMessage` but it is generating a
-message when an item is selected.
+message when an item is selected. It is passed as props to a status updating
+function nested within and allows you to create your own ARIA statuses. It is
+called when `selectedItem` changes.
 
-A default `getA11ySelectionMessage` function is provided. It is called when
-`selectedItem` changes. When an item is selected, the message is a selection
-related one, narrating "`itemToString(selectedItem)` has been selected".
+A default `getA11ySelectionMessage` function is provided. When an item is
+selected, the message is a selection related one, narrating
+"`itemToString(selectedItem)` has been selected".
 
 The object you are passed to generate your status message, for both
-`getA11yStatusMessage` and `getA11ySelectionMessage` has the following
+`getA11yStatusMessage` and `getA11ySelectionMessage`, has the following
 properties:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
@@ -646,8 +649,8 @@ Optional properties:
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
 `getMenuProps`. **Please use it with extreme care and only if you are absolutely
-sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
-fail.**
+sure that the ref is correctly forwarded otherwise `useCombobox` will
+unexpectedly fail.**
 
 ```jsx
 const {getMenuProps} = useCombobox({items})
@@ -777,8 +780,8 @@ Optional properties:
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
 `getInput`. **Please use it with extreme care and only if you are absolutely
-sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
-fail.**
+sure that the ref is correctly forwarded otherwise `useCombobox` will
+unexpectedly fail.**
 
 #### `getComboboxProps`
 
@@ -794,9 +797,9 @@ There are no required properties for this method.
 
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
-`getComboboxProps`. **Please use it with extreme care and only if you are absolutely
-sure that the ref is correctly forwarded otherwise `useCombobox` will unexpectedly
-fail.**
+`getComboboxProps`. **Please use it with extreme care and only if you are
+absolutely sure that the ref is correctly forwarded otherwise `useCombobox` will
+unexpectedly fail.**
 
 ### actions
 
