@@ -111,7 +111,7 @@ function useSelect(userProps = {}) {
       environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, selectedItem, inputValue])
+  }, [isOpen, highlightedIndex, inputValue, items])
   // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMountRef.current) {
@@ -432,13 +432,7 @@ function useSelect(userProps = {}) {
         ...rest,
       }
     },
-    [
-      dispatch,
-      latest,
-      menuKeyDownHandlers,
-      mouseAndTouchTrackersRef,
-      setGetterPropCallInfo,
-    ],
+    [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef, setGetterPropCallInfo],
   )
   const getToggleButtonProps = useCallback(
     (
