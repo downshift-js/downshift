@@ -108,7 +108,7 @@ function useCombobox(userProps = {}) {
       environment.document,
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, selectedItem, inputValue])
+  }, [isOpen, highlightedIndex, inputValue, items])
   // Sets a11y status message on changes in selectedItem.
   useEffect(() => {
     if (isInitialMountRef.current) {
