@@ -197,7 +197,7 @@ export interface Actions<Item> {
     cb?: Callback,
   ) => void
   // props
-  itemToString: (item: Item) => string
+  itemToString: (item: Item | null) => string
 }
 
 export type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
@@ -269,7 +269,7 @@ export enum UseSelectStateChangeTypes {
 
 export interface UseSelectProps<Item> {
   items: Item[]
-  itemToString?: (item: Item) => string
+  itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
@@ -403,7 +403,7 @@ export enum UseComboboxStateChangeTypes {
 
 export interface UseComboboxProps<Item> {
   items: Item[]
-  itemToString?: (item: Item) => string
+  itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   circularNavigation?: boolean
