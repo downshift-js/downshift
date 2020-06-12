@@ -313,12 +313,13 @@ downshift is reset.
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is similar to the `getA11yStatusMessage` and
-`getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is
-generating a message when an item is removed.
+This function is similar to the `getA11yStatusMessage` or
+`getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is generating an ARIA a11y
+message when an item is removed. It is passed as props to a status updating
+function nested within that allows you to create your own ARIA statuses. It is
+called when an item is removed and the size of `selectedItems` decreases.
 
-A default `getA11yRemovalMessage` function is provided. It is called when an
-item is removed and the size of `selectedItems` decreases. When an item is
+A default `getA11yRemovalMessage` function is provided. When an item is
 removed, the message is a removal related one, narrating
 "`itemToString(removedItem)` has been removed".
 

@@ -289,6 +289,49 @@ describe('props', () => {
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
+
+    test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
+      const getA11yStatusMessage = jest.fn()
+      const inputItems = ['aaa', 'bbb']
+      const {clickOnToggleButton, rerender, keyDownOnMenu} = renderSelect({
+        getA11yStatusMessage,
+        items,
+      })
+
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).not.toHaveBeenCalled()
+
+      // should not be called when any other prop is changed.
+      rerender({getA11yStatusMessage, items, circularNavigation: true})
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).not.toHaveBeenCalled()
+
+      rerender({getA11yStatusMessage, items: inputItems})
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({resultCount: inputItems.length}))
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+
+      clickOnToggleButton()
+      waitForDebouncedA11yStatusUpdate()
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({isOpen: true}))
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
+      
+      keyDownOnMenu('b')
+      waitForDebouncedA11yStatusUpdate()
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({inputValue: 'b', highlightedIndex: 1}))
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
+
+      keyDownOnMenu('ArrowUp')
+      waitForDebouncedA11yStatusUpdate()
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({highlightedIndex: 0}))
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(4)
+    })
   })
 
   describe('highlightedIndex', () => {
