@@ -354,6 +354,7 @@ export interface UseSelectInterface {
     MenuMouseLeave: UseSelectStateChangeTypes.MenuMouseLeave
     ItemMouseMove: UseSelectStateChangeTypes.ItemMouseMove
     ItemClick: UseSelectStateChangeTypes.ItemClick
+    ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
     ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
     ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
     ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
