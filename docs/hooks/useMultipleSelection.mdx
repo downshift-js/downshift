@@ -14,7 +14,7 @@ import {
   comboboxWrapperStyles,
   selectedItemStyles,
   selectedItemIconStyles,
-  menuMultipleStlyes,
+  menuMultipleStyles,
 } from '../utils'
 
 # useMultipleSelection
@@ -87,7 +87,7 @@ the items selection in this case.
   {() => {
     // import React, { useState } from 'react'
     // import { useCombobox, useMultipleSelection } from 'downshift'
-    // import { items, menuMultipleStlyes, comboboxStyles, comboboxWrapperStyles, selectedItemStyles, selectedItemIconStyles } from './utils'
+    // import { items, menuMultipleStyles, comboboxStyles, comboboxWrapperStyles, selectedItemStyles, selectedItemIconStyles } from './utils'
     function DropdownMultipleCombobox() {
       const [inputValue, setInputValue] = useState('')
       const {
@@ -178,7 +178,7 @@ the items selection in this case.
               </button>
             </div>
           </div>
-          <ul {...getMenuProps()} style={menuMultipleStlyes}>
+          <ul {...getMenuProps()} style={menuMultipleStyles}>
             {isOpen &&
               getFilteredItems(items).map((item, index) => (
                 <li
@@ -214,7 +214,7 @@ is up to the developer.
   {() => {
     // import React from 'react'
     // import { useSelect, useMultipleSelection } from 'downshift'
-    // import { items, menuMultipleStlyes, selectedItemStyles, selectedItemIconStyles } from './utils'
+    // import { items, menuMultipleStyles, selectedItemStyles, selectedItemIconStyles } from './utils'
     function DropdownMultipleSelect() {
       const {
         getSelectedItemProps,
@@ -292,7 +292,7 @@ is up to the developer.
           >
             {selectedItem || 'Elements'}
           </button>
-          <ul {...getMenuProps()} style={menuMultipleStlyes}>
+          <ul {...getMenuProps()} style={menuMultipleStyles}>
             {isOpen &&
               getFilteredItems(items).map((item, index) => (
                 <li

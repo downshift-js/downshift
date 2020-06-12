@@ -158,7 +158,7 @@ const DropdownMultipleCombobox = () => {
           </button>
         </div>
       </div>
-      <ul {...getMenuProps()} style={menuMultipleStlyes}>
+      <ul {...getMenuProps()} style={menuMultipleStyles}>
         {isOpen &&
           getFilteredItems(items).map((item, index) => (
             <li
