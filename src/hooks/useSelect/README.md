@@ -255,14 +255,14 @@ reset or when an item is selected.
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is passed as props to a status updating function nested within and
-allows you to create your own ARIA statuses. It is called when one of the
+This function is passed as props to a status updating function nested within
+that allows you to create your own ARIA statuses. It is called when one of the
 following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
 
 A default `getA11yStatusMessage` function is provided that will check
 `resultCount` and return "No results are available." or if there are results ,
 "`resultCount` results are available, use up and down arrow keys to navigate.
-Press Enter key to select."
+Press Enter or Space Bar keys to select."
 
 > Note: `resultCount` is `items.length` in our default version of the function.
 
@@ -272,7 +272,7 @@ Press Enter key to select."
 
 This function is similar to the `getA11yStatusMessage` but it is generating a
 message when an item is selected. It is passed as props to a status updating
-function nested within and allows you to create your own ARIA statuses. It is
+function nested within that allows you to create your own ARIA statuses. It is
 called when `selectedItem` changes.
 
 A default `getA11ySelectionMessage` function is provided. When an item is

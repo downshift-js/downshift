@@ -291,8 +291,8 @@ an item is selected.
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is passed as props to a status updating function nested within and
-allows you to create your own ARIA statuses. It is called when one of the
+This function is passed as props to a status updating function nested within
+that allows you to create your own ARIA statuses. It is called when one of the
 following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
 
 A default `getA11yStatusMessage` function is provided that will check
@@ -308,7 +308,7 @@ Press Enter key to select."
 
 This function is similar to the `getA11yStatusMessage` but it is generating a
 message when an item is selected. It is passed as props to a status updating
-function nested within and allows you to create your own ARIA statuses. It is
+function nested within that allows you to create your own ARIA statuses. It is
 called when `selectedItem` changes.
 
 A default `getA11ySelectionMessage` function is provided. When an item is
