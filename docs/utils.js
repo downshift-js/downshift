@@ -14,7 +14,7 @@ export const menuStyles = {
   minWidth: '200px',
 }
 
-export const menuMultipleStlyes = {
+export const menuMultipleStyles = {
   ...menuStyles,
   left: '380px',
 }
