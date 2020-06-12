@@ -321,7 +321,7 @@ called when an item is removed and the size of `selectedItems` decreases.
 
 A default `getA11yRemovalMessage` function is provided. When an item is
 removed, the message is a removal related one, narrating
-"`itemToString(remvedItem)` has been removed".
+"`itemToString(removedItem)` has been removed".
 
 The object you are passed to generate your status message for
 `getA11yRemovalMessage` has the following properties:
