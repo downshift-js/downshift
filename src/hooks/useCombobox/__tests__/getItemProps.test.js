@@ -208,7 +208,7 @@ describe('getItemProps', () => {
     })
 
     describe('on click', () => {
-      test('it selects the item and moves focus on input', () => {
+      test('it selects the item', () => {
         const index = 1
         const {input, getItems, clickOnItemAtIndex} = renderCombobox({
           initialIsOpen: true,
