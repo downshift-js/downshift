@@ -208,7 +208,7 @@ describe('getItemProps', () => {
     })
 
     describe('on click', () => {
-      test('it selects the item', () => {
+      test('it selects the item and moves focus on input', () => {
         const index = 1
         const {input, getItems, clickOnItemAtIndex} = renderCombobox({
           initialIsOpen: true,
@@ -217,7 +217,7 @@ describe('getItemProps', () => {
         clickOnItemAtIndex(index)
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual(items[index])
+        expect(input).toHaveValue(items[index])
       })
 
       test('it selects the item and resets to user defined defaults', () => {
@@ -230,7 +230,7 @@ describe('getItemProps', () => {
 
         clickOnItemAtIndex(index)
 
-        expect(input.value).toEqual(items[index])
+        expect(input).toHaveValue(items[index])
         expect(getItems()).toHaveLength(items.length)
         expect(input).toHaveAttribute(
           'aria-activedescendant',

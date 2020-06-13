@@ -685,7 +685,7 @@ describe('getInputProps', () => {
         keyDownOnInput('Enter')
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual(items[initialHighlightedIndex])
+        expect(input).toHaveValue(items[initialHighlightedIndex])
       })
 
       test('enter selects highlighted item and resets to user defaults', () => {
@@ -697,7 +697,7 @@ describe('getInputProps', () => {
 
         keyDownOnInput('Enter')
 
-        expect(input.value).toEqual(items[defaultHighlightedIndex])
+        expect(input).toHaveValue(items[defaultHighlightedIndex])
         expect(getItems()).toHaveLength(items.length)
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -714,7 +714,7 @@ describe('getInputProps', () => {
 
         keyDownOnInput('Enter', {keyCode: 229})
 
-        expect(input.value).toEqual('')
+        expect(input).toHaveValue('')
         expect(getItems()).toHaveLength(items.length)
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -723,7 +723,7 @@ describe('getInputProps', () => {
 
         keyDownOnInput('Enter')
 
-        expect(input.value).toEqual(items[2])
+        expect(input).toHaveValue(items[2])
         expect(getItems()).toHaveLength(0)
         expect(input).not.toHaveAttribute('aria-activedescendant')
       })
@@ -764,7 +764,7 @@ describe('getInputProps', () => {
         userEvent.tab()
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual(items[initialHighlightedIndex])
+        expect(input).toHaveValue(items[initialHighlightedIndex])
       })
 
       test('shift+tab it closes the menu', () => {
@@ -784,7 +784,7 @@ describe('getInputProps', () => {
         userEvent.tab()
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual(items[initialHighlightedIndex])
+        expect(input).toHaveValue(items[initialHighlightedIndex])
       })
 
       test("other than the ones supported don't affect anything", () => {
@@ -799,7 +799,7 @@ describe('getInputProps', () => {
         keyDownOnInput('Control')
 
         expect(input).toHaveFocus()
-        expect(input.value).toEqual(items[highlightedIndex])
+        expect(input).toHaveValue(items[highlightedIndex])
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
@@ -819,7 +819,7 @@ describe('getInputProps', () => {
         blurInput()
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual(items[initialHighlightedIndex])
+        expect(input).toHaveValue(items[initialHighlightedIndex])
       })
 
       test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', () => {
@@ -833,7 +833,7 @@ describe('getInputProps', () => {
         blurInput()
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toEqual('')
+        expect(input).toHaveValue('')
       })
 
       test('the value in the input will stay the same', async () => {
