@@ -911,6 +911,27 @@ describe('getInputProps', () => {
       )
     })
 
+    test('will not be displayed if getInputProps is not called on subsequent renders', () => {
+      let firstRender = true
+      const {rerender} = renderHook(() => {
+        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+          items,
+        })
+        getMenuProps({}, {suppressRefError: true})
+        getComboboxProps({}, {suppressRefError: true})
+        
+        if (firstRender) {
+          firstRender = false
+          getInputProps({}, {suppressRefError: true})
+        }
+      })
+
+      rerender()
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will be displayed if element ref is not set and suppressRefError is false', () => {
       renderHook(() => {
         const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({

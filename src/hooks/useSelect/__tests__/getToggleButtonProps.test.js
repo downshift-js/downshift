@@ -637,7 +637,7 @@ describe('getToggleButtonProps', () => {
   })
 
   describe('non production errors', () => {
-    test('will be displayed if getMenuProps is not called', () => {
+    test('will be displayed if getToggleButtonProps is not called', () => {
       renderHook(() => {
         const {getMenuProps} = useSelect({items})
         getMenuProps({}, {suppressRefError: true})
@@ -647,6 +647,24 @@ describe('getToggleButtonProps', () => {
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
         `"downshift: You forgot to call the getToggleButtonProps getter function on your component / element."`,
       )
+    })
+
+    test('will not be displayed if getToggleButtonProps is not called on subsequent renders', () => {
+      let firstRender = true
+      const {rerender} = renderHook(() => {
+        const {getMenuProps, getToggleButtonProps} = useSelect({items})
+        getMenuProps({}, {suppressRefError: true})
+
+        if (firstRender) {
+          firstRender = false
+          getToggleButtonProps({}, {suppressRefError: true})
+        }
+      })
+
+      rerender()
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
     })
 
     test('will be displayed if element ref is not set and suppressRefError is false', () => {
@@ -686,7 +704,7 @@ describe('getToggleButtonProps', () => {
       expect(console.error).not.toHaveBeenCalled()
     })
 
-    test('will not be displayed if getMenuProps is not called but environment is production', () => {
+    test('will not be displayed not called but environment is production', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
       renderHook(() => {

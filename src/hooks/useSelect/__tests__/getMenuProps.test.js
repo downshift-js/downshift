@@ -898,6 +898,24 @@ describe('getMenuProps', () => {
       )
     })
 
+    test('will not be displayed if getMenuProps is not called on subsequent renders', () => {
+      let firstRender = true
+      const {rerender} = renderHook(() => {
+        const {getToggleButtonProps, getMenuProps} = useSelect({items})
+        getToggleButtonProps({}, {suppressRefError: true})
+
+        if (firstRender) {
+          firstRender = false
+          getMenuProps({}, {suppressRefError: true})
+        }
+      })
+
+      rerender()
+
+      // eslint-disable-next-line no-console
+      expect(console.error).not.toHaveBeenCalled()
+    })
+
     test('will be displayed if element ref is not set and suppressRefError is false', () => {
       renderHook(() => {
         const {getMenuProps, getToggleButtonProps} = useSelect({
@@ -950,7 +968,7 @@ describe('getMenuProps', () => {
       expect(console.error).not.toHaveBeenCalled()
     })
 
-    test('will not be displayed if getMenuProps is not called but environment is production', () => {
+    test('will not be displayed if not called but environment is production', () => {
       const originalEnv = process.env.NODE_ENV
       process.env.NODE_ENV = 'production'
       renderHook(() => {
