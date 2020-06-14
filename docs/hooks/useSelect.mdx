@@ -16,6 +16,7 @@ import {
   ListItemAvatar,
   Avatar,
 } from '@material-ui/core'
+import Frame, { FrameContextConsumer } from 'react-frame-component'
 import {useSelect} from '../../src'
 import {items, menuStyles, itemsAsObjects, useStyles, checkboxLabelStyles} from '../utils'
 
@@ -60,18 +61,16 @@ props and state variables it returns. These are used in the following way:
 | `selectedItem`         | `<button>` | Used to render text equivalent of selected item on the button.                 |
 
 For a complete documentation on all the returned props, hook props and more
-information check out the
-[Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect).
+information check out the [Github Page][use-select-github].
 
 ## Basic Usage
 
 A custom `<select>` element can be created with HTML elements such as:
 `<label>`, `<ul>`, `<li>` and `<button>`. Using other HTML elements to create a
 custom `<select>` is useful for the custom styling of the widget, since the
-`<select>` is notoriously difficult to style:
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+`<select>` is notoriously [difficult to style][mdn-select].
 
-[CodeSandbox](https://codesandbox.io/s/useselect-usage-53qfj)
+[CodeSandbox for basic usage example][code-sandbox-basic-usage].
 
 <Playground>
   {() => {
@@ -142,13 +141,13 @@ selectionmessage that will occur on every item selection:
 `$ItemString has been selected`. `item.primary` is chosen to be the string
 equialent of each item object.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-ui-libraries-materialui-fls5o)
+[CodeSandbox for MaterialUI usage example][code-sandbox-material-ui-usage].
 
 <Playground>
   {() => {
     // import React from 'react'
     // import { useSelect } from 'downshift'
-    // import { items: itemsAsObjects, useStyles } from './utils'
+    // import { items, useStyles } from './utils'
     // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
     // import {Button, FormLabel, List, ListItem, ListItemText } from '@material-ui/core'
     function MaterialDropdownSelect() {
@@ -162,10 +161,7 @@ equialent of each item object.
         getMenuProps,
         highlightedIndex,
         getItemProps,
-      } = useSelect({
-        items: itemsAsObjects,
-        itemToString,
-      })
+      } = useSelect({items, itemToString})
       return (
         <div>
           <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
@@ -220,7 +216,7 @@ The example below shows how to control `selectedItem`. Both select elements
 share the same `selectedItem` reference, and changing it in one of the dropdowns
 will update the value in the other one as well.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj)
+[CodeSandbox for controlling state example][code-sandbox-controlling-state].
 
 <Playground>
   {() => {
@@ -306,7 +302,7 @@ index, and return it without any other changes.
 
 In all other state change types, we return `useSelect` default changes.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r)
+[CodeSandbox for state reducer example][code-sandbox-state-reducer].
 
 <Playground>
   {() => {
@@ -381,34 +377,59 @@ hook behave unexpectedly. For example, when using `react-frame-component` to
 produce an `iframe` container, we should pass its `window` object to the hook
 like shown below.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6)
+[CodeSandbox for custom window example][code-sandbox-custom-window].
 
-```js
-import React from 'react';
-import { render } from 'react-dom';
-import { useSelect } from 'downshift';
-import Frame, { FrameContextConsumer } from 'react-frame-component';
-
-function DropdownSelect({ environment }) {
-  // use the environment prop to pass the custom iframe window to useSelect.
-  useSelect({ items, environment });
-  return (
-    // your select here.
-  )
-}
-
-render(
-  <Frame style={{ height: 300 }}>
-    <FrameContextConsumer>
-      {// get the window object from the context.
-      ({ document, window }) => (
-        // pass it to the select component as prop.
-        <DropdownSelect environment={window} />
-      )}
-    </FrameContextConsumer>
-  </Frame>,
-  document.getElementById("root")
-```
+<Playground>
+  {() => {
+    // import React, { useState } from 'react'
+    // import Frame, { FrameContextConsumer } from 'react-frame-component'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
+    function DropdownSelect({ environment }) {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps
+      } = useSelect({ items, environment });
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button {...getToggleButtonProps()}>{selectedItem || "Elements"}</button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    return (
+      <Frame style={{ height: 250, width: 400 }}>
+        <FrameContextConsumer>
+          {// Callback is invoked with iframe's window and document instances
+            ({ document, window }) => (
+              // Render Children
+              <DropdownSelect environment={window} />
+            )
+          }
+        </FrameContextConsumer>
+      </Frame>
+    )
+  }}
+</Playground>
 
 ## Basic Multiple selection
 
@@ -430,11 +451,13 @@ also to keep the `highlightedIndex` to be the most recent selected item.
 In order to visually illustrate the selection, we render a checkbox before each
 of them and check only the ones that are selected.
 
+[CodeSandbox for basic multiple selection example][code-sandbox-basic-multiple-selection].
+
 <Playground>
   {() => {
     // import React, { useState } from 'react'
-    // import { useCombobox } from 'downshift'
-    // import { items, menuStyles, comboboxStyles } from './utils'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
     function stateReducer(state, actionAndChanges) {
       const {changes, type} = actionAndChanges
       switch (type) {
@@ -528,43 +551,84 @@ the selection by clicking on the custom selection clearing button. We use the
 `openMenu` and `selectItem` action props in order to achieve these custom
 behaviors.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-action-props-zljdg)
+[CodeSandbox for action props example][code-sandbox-action-props].
 
-```jsx
-import React from 'react';
-import { useCombobox } from 'downshift';
-import { items } from './utils'
-
-function DropdownCombobox() {
-  const {getInputProps, getMenuProps, isOpen, openMenu, selectItem} = useSelect({items});
-  return (
-    <div>
-      {/* label */}
-      <button
-        {...getToggleButtonProps({
-          onMouseEnter: () => {
-            openMenu()
-          }
-        })}
-      >
-        {selectedItem || "Elements"}
-      </button>
-      <button
-        tabindex={-1}
-        onClick={() => {
-          selectItem(null)
-        }}
-        aria-label="clear selection"
-      >
-        &#215;
-      </button>
-      <ul {...getMenuProps()}>
-        {isOpen && items.map((map, index) => /* render items when isOpen is true. */)}
-      </ul>
-    </div>
-  )
-}
-```
+<Playground>
+  {() => {
+    // import React from 'react'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles } from './utils'
+    function DropdownSelect() {
+      const {
+        isOpen,
+        selectedItem,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        getItemProps,
+        openMenu,
+        selectItem
+      } = useSelect({ items });
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button
+            {...getToggleButtonProps({
+              onMouseEnter: () => {
+                openMenu();
+              }
+            })}
+          >
+            {selectedItem || "Elements"}
+          </button>
+          <button
+            tabindex={-1}
+            onClick={() => {
+              selectItem(null);
+            }}
+            aria-label="clear selection"
+          >
+            &#215;
+          </button>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              items.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    return <DropdownSelect />
+  }}
+</Playground>
 
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+[mdn-select]:
+  https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
+[use-select-github]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect
+[code-sandbox-basic-usage]:
+  https://codesandbox.io/s/useselect-usage-53qfj
+[code-sandbox-material-ui-usage]:
+  https://codesandbox.io/s/useselect-ui-libraries-materialui-fls5o
+[code-sandbox-controlling-state]:
+  https://codesandbox.io/s/useselect-variations-controlling-state-8tvwj
+[code-sandbox-state-reducer]:
+  https://codesandbox.io/s/useselect-variations-state-reducer-ysc2r
+[code-sandbox-custom-window]:
+  https://codesandbox.io/s/useselect-iframe-l40g6
+[code-sandbox-basic-multiple-selection]:
+  https://codesandbox.io/s/useselect-basic-multiple-selection-4lj25
+[code-sandbox-action-props]:
+  https://codesandbox.io/s/useselect-action-props-zljdg
