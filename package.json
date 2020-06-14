@@ -102,6 +102,7 @@
     "preact": "^10.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-frame-component": "^4.1.2",
     "react-native": "^0.62.2",
     "react-test-renderer": "^16.13.1",
     "rollup-plugin-babel": "^4.4.0",
