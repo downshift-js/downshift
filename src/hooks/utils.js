@@ -386,6 +386,8 @@ export function useMouseAndTouchTracker(
  * @returns {Function} Setter function called inside getter props to set call information.
  */
 export function useGetterPropsCalledChecker(...propKeys) {
+  const isNotProduction = process.env.NODE_ENV !== 'production'
+  const isInitialMountRef = useRef(true)
   const getterPropsCalledRef = useRef(
     propKeys.reduce((acc, propKey) => {
       acc[propKey] = {}
@@ -393,37 +395,34 @@ export function useGetterPropsCalledChecker(...propKeys) {
     }, {}),
   )
 
-  if (process.env.NODE_ENV !== 'production') {
-    Object.keys(getterPropsCalledRef.current).forEach(propKey => {
-      getterPropsCalledRef.current[propKey] = null
-    })
-  }
-
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
-      Object.keys(getterPropsCalledRef.current).forEach(propKey => {
-        if (!getterPropsCalledRef.current[propKey]) {
+    if (!isNotProduction) {
+      return
+    }
+
+    Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+      const propCallInfo = getterPropsCalledRef.current[propKey]
+      if (isInitialMountRef.current) {
+        if (!Object.keys(propCallInfo).length) {
           // eslint-disable-next-line no-console
           console.error(
             `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
           )
           return
         }
+      }
 
-        const {
-          suppressRefError,
-          refKey,
-          elementRef,
-        } = getterPropsCalledRef.current[propKey]
+      const {suppressRefError, refKey, elementRef} = propCallInfo
 
-        if ((!elementRef || !elementRef.current) && !suppressRefError) {
-          // eslint-disable-next-line no-console
-          console.error(
-            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
-          )
-        }
-      })
-    }
+      if ((!elementRef || !elementRef.current) && !suppressRefError) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
+        )
+      }
+    })
+
+    isInitialMountRef.current = false
   })
 
   const setGetterPropCallInfo = useCallback(
