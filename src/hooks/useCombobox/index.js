@@ -77,7 +77,6 @@ function useCombobox(userProps = {}) {
   const previousResultCountRef = useRef()
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
-  // used to store information about getter props being called on render.
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
