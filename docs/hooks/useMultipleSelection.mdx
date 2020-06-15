@@ -65,8 +65,7 @@ occuring while the dropdown is open. The returned props are used as follows:
 | `removeSelectedItem`   | `<span>` icon           | Called on `X` icon click, removes item from selection.                                    |
 
 For a complete documentation on all the returned props, hook props and more
-information check out the
-[Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection).
+information check out the [Github Page][use-multiple-selection-github].
 
 ## Usage with combobox
 
@@ -81,7 +80,7 @@ handler. Items are added using the `addSelectedItem` function inside the
 `useCombobox` and pass a `null` value since `useMultipleSelection` will handle
 the items selection in this case.
 
-[CodeSandbox](https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd)
+[CodeSandbox for combobox usage example][code-sandbox-combobox-usage].
 
 <Playground>
   {() => {
@@ -208,7 +207,7 @@ use the basic `useSelect` example and add the selected items as `<span>`
 elements. Custom components from UI libraries can be used as well, since the UI
 is up to the developer.
 
-[CodeSandbox](https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j)
+[CodeSandbox for select usage example][code-sandbox-select-usage].
 
 <Playground>
   {() => {
@@ -314,3 +313,10 @@ is up to the developer.
     return <DropdownMultipleSelect />
   }}
 </Playground>
+
+[use-multiple-selection-github]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
+[code-sandbox-combobox-usage]:
+  https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd
+[code-sandbox-select-usage]:
+  https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j
