@@ -342,7 +342,11 @@ function getNextWrappingIndex(
     circular,
   )
 
-  return nonDisabledNewIndex === -1 ? baseIndex : nonDisabledNewIndex
+  if (nonDisabledNewIndex === -1) {
+    return baseIndex >= itemCount ? -1 : baseIndex
+  }
+  
+  return nonDisabledNewIndex
 }
 
 /**
