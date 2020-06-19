@@ -223,3 +223,21 @@ test('should skip disabled and not wrap to first if circular when reaching last'
     ),
   ).toEqual(1)
 })
+
+test('should not select any if all disabled when arrow up', () => {
+  const moveAmount = -1
+  const baseIndex = -1
+  const itemCount = 3
+  const getItemNodeFromIndex = () => ({hasAttribute: () => true})
+  const circular = true
+
+  expect(
+    getNextWrappingIndex(
+      moveAmount,
+      baseIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+    ),
+  ).toEqual(-1)
+})
