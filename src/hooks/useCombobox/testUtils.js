@@ -54,8 +54,8 @@ const renderCombobox = (props, uiCallback) => {
   const mouseLeaveMenu = () => {
     fireEvent.mouseLeave(menu)
   }
-  const changeInputValue = inputValue => {
-    return userEvent.type(input, inputValue)
+  const changeInputValue = async inputValue => {
+    await userEvent.type(input, inputValue)
   }
   const focusInput = () => {
     fireEvent.focus(input)
