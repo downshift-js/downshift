@@ -279,7 +279,7 @@ export interface UseSelectProps<Item> {
   isOpen?: boolean
   initialIsOpen?: boolean
   defaultIsOpen?: boolean
-  selectedItem?: Item
+  selectedItem?: Item | null
   initialSelectedItem?: Item
   defaultSelectedItem?: Item
   id?: string
@@ -414,7 +414,7 @@ export interface UseComboboxProps<Item> {
   isOpen?: boolean
   initialIsOpen?: boolean
   defaultIsOpen?: boolean
-  selectedItem?: Item
+  selectedItem?: Item | null
   initialSelectedItem?: Item
   defaultSelectedItem?: Item
   inputValue?: string
