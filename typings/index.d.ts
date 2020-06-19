@@ -300,13 +300,19 @@ export interface UseSelectProps<Item> {
 }
 
 export interface UseSelectStateChangeOptions<Item>
-  extends UseSelectDispatchAction {
+  extends UseSelectDispatchAction<Item> {
   changes: Partial<UseSelectState<Item>>
 }
 
-export interface UseSelectDispatchAction {
+export interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
-  [data: string]: any
+  getItemNodeFromIndex?: (index: number) => HTMLElement
+  shiftKey?: boolean
+  key?: string
+  index?: number
+  highlightedIndex?: number
+  selectedItem?: Item | null
+  inputValue?: string
 }
 
 export interface UseSelectStateChange<Item>
@@ -449,13 +455,18 @@ export interface UseComboboxProps<Item> {
 }
 
 export interface UseComboboxStateChangeOptions<Item>
-  extends UseComboboxDispatchAction {
+  extends UseComboboxDispatchAction<Item> {
   changes: Partial<UseComboboxState<Item>>
 }
 
-export interface UseComboboxDispatchAction {
+export interface UseComboboxDispatchAction<Item> {
   type: UseSelectStateChangeTypes
-  [data: string]: any
+  shiftKey?: boolean
+  getItemNodeFromIndex?: (index: number) => HTMLElement
+  inputValue?: string
+  index?: number
+  highlightedIndex?: number
+  selectedItem?: Item | null
 }
 
 export interface UseComboboxStateChange<Item>
@@ -584,13 +595,16 @@ export interface UseMultipleSelectionProps<Item> {
 }
 
 export interface UseMultipleSelectionStateChangeOptions<Item>
-  extends UseMultipleSelectionDispatchAction {
+  extends UseMultipleSelectionDispatchAction<Item> {
   changes: Partial<UseMultipleSelectionState<Item>>
 }
 
-export interface UseMultipleSelectionDispatchAction {
+export interface UseMultipleSelectionDispatchAction<Item> {
   type: UseMultipleSelectionStateChangeTypes
-  [data: string]: any
+  index?: number
+  selectedItem?: Item | null
+  selectedItems?: Item[]
+  activeIndex?: number
 }
 
 export interface UseMultipleSelectionStateChange<Item>
