@@ -328,6 +328,10 @@ function useCombobox(userProps = {}) {
           type: stateChangeTypes.ItemClick,
           index,
         })
+
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
       }
 
       return {
