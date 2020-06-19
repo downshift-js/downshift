@@ -17,6 +17,7 @@ import {
   Avatar,
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Frame, { FrameContextConsumer } from 'react-frame-component'
 import {useCombobox} from '../../src'
 import {
   items,
@@ -73,8 +74,7 @@ according to the input value. The getter props are used as follows:
 | `selectedItem`         | `<button>` | Used to style the selected item.                                                             |
 
 For a complete documentation on all the returned props, hook props and more
-information check out the
-[Github Page](https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox).
+information check out the [Github Page][use-combobox-github].
 
 ## Basic Usage
 
@@ -86,7 +86,7 @@ with the widget. Most importantly, the `<input>` needs to be contained by the
 combobox `<div>` and the `<ul>` needs to be at the same level with the combobox
 `<div>`.
 
-[CodeSandbox](https://codesandbox.io/s/usecombobox-usage-evufg)
+[CodeSandbox for basic usage example][code-sandbox-basic-usage].
 
 <Playground>
   {() => {
@@ -179,7 +179,7 @@ string equialent of each item object, so our prop will be passed as
 `Escape` key is also considered an element change, we will return an empty
 string in this case.
 
-[CodeSandbox](https://codesandbox.io/s/usecombobx-ui-libraries-materialui-8jfx1)
+[CodeSandbox for MaterialUI usage example][code-sandbox-material-ui-usage].
 
 <Playground>
   {() => {
@@ -273,7 +273,7 @@ The example below shows how to control `selectedItem`. Both comboboxes share the
 same `selectedItem` reference, and changing it in one of the dropdowns will
 update the value in the other one as well.
 
-[CodeSandbox](https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j)
+[CodeSandbox for controlling state example][code-sandbox-controlling-state].
 
 <Playground>
   {() => {
@@ -372,7 +372,7 @@ the new value along with the rest of the changes. We will also uppercase the
 
 In all other state change types, we return `Downshift` default changes.
 
-[CodeSandbox](https://codesandbox.io/s/usecombobox-variations-state-reducer-x7feb)
+[CodeSandbox for state reducer example][code-sandbox-state-reducer].
 
 <Playground>
   {() => {
@@ -470,36 +470,75 @@ hook behave unexpectedly. For example, when using `react-frame-component` to
 produce an `iframe` container, we should pass its `window` object to the hook
 like shown below.
 
-[CodeSandbox](https://codesandbox.io/s/useselect-iframe-l40g6) (with `useSelect`
-but same concepts apply).
+[CodeSandbox for custom window example][code-sandbox-custom-window].
 
-```js
-import React from 'react';
-import { render } from 'react-dom';
-import { useCombobox } from 'downshift';
-import Frame, { FrameContextConsumer } from 'react-frame-component';
-import { items } from './utils'
-
-function DropdownCombobox({ environment }) {
-  // use the environment prop to pass the custom iframe window to useCombobox.
-  useCombobox({ items, environment });
-  return (
-    // your combobox here.
-  )
-}
-
-render(
-  <Frame style={{ height: 300 }}>
-    <FrameContextConsumer>
-      {// get the window object from the context.
-      ({ document, window }) => (
-        // pass window to the combobox component as the environment prop.
-        <DropdownCombobox environment={window} />
-      )}
-    </FrameContextConsumer>
-  </Frame>,
-  document.getElementById("root")
-```
+<Playground>
+  {() => {
+    // import React, { useState } from 'react'
+    // import Frame, { FrameContextConsumer } from 'react-frame-component'
+    // import { useSelect } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [inputItems, setInputItems] = useState(items);
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({ inputValue }) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input {...getInputProps()} />
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    return (
+      <Frame style={{ height: 250, width: 400 }}>
+        <FrameContextConsumer>
+          {// Callback is invoked with iframe's window and document instances
+            ({ document, window }) => (
+              // Render Children
+              <DropdownCombobox environment={window} />
+            )
+          }
+        </FrameContextConsumer>
+      </Frame>
+    )
+  }}
+</Playground>
 
 ## Basic Multiple Selection
 
@@ -520,6 +559,8 @@ also to keep the `highlightedIndex` to be the most recent selected item.
 
 In order to visually illustrate the selection, we render a checkbox before each
 of them and check only the ones that are selected.
+
+[CodeSandbox for basic multiple selection example][code-sandbox-basic-multiple-selection].
 
 <Playground>
   {() => {
@@ -637,30 +678,96 @@ the selection by clicking on the custom selection clearing button. We use the
 `openMenu` and `selectItem` action props in order to achieve these custom
 behaviors.
 
-[CodeSandbox](https://codesandbox.io/s/usecombobox-action-props-kzwos)
+[CodeSandbox for action props example][code-sandbox-action-props].
 
-```jsx
-import React from 'react';
-import { useCombobox } from 'downshift';
-import { items } from './utils'
-
-function DropdownCombobox() {
-  const {getInputProps, getMenuProps, isOpen, openMenu, selectItem} = useCombobox({items});
-  return (
-    <div>
-      {/* label and combobox container. */}
-      <input {...getInputProps({onFocus: () => { openMenu() }})} />
-      <button tabindex={-1} onClick={() => { selectItem(null) }} aria-label="clear selection">
-        &#215;
-      </button>
-      {/* toggle button. */}
-      <ul {...getMenuProps()}>
-        {isOpen && items.map((map, index) => /* render items when isOpen is true. */)}
-      </ul>
-    </div>
-  )
-}
-```
+<Playground>
+  {() => {
+    // import React, { useState } from 'react'
+    // import { useCombobox } from 'downshift'
+    // import { items, menuStyles, comboboxStyles } from './utils'
+    function DropdownCombobox() {
+      const [inputItems, setInputItems] = useState(items);
+      const {
+        isOpen,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getComboboxProps,
+        highlightedIndex,
+        getItemProps,
+        openMenu,
+        selectItem
+      } = useCombobox({
+        items: inputItems,
+        onInputValueChange: ({ inputValue }) => {
+          setInputItems(
+            items.filter(item =>
+              item.toLowerCase().startsWith(inputValue.toLowerCase())
+            )
+          );
+        }
+      });
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <div style={comboboxStyles} {...getComboboxProps()}>
+            <input
+              {...getInputProps({
+                onFocus: () => {
+                  openMenu();
+                }
+              })}
+            />
+            <button
+              tabindex={-1}
+              onClick={() => {
+                selectItem(null);
+              }}
+              aria-label="clear selection"
+            >
+              &#215;
+            </button>
+            <button {...getToggleButtonProps()} aria-label="toggle menu">
+              &#8595;
+            </button>
+          </div>
+          <ul {...getMenuProps()} style={menuStyles}>
+            {isOpen &&
+              inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}
+                  }
+                  key={`${item}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </li>
+              ))}
+          </ul>
+        </div>
+      );
+    }
+    return <DropdownCombobox />
+  }}
+</Playground>
 
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+[use-combobox-github]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
+[code-sandbox-basic-usage]:
+  https://codesandbox.io/s/usecombobox-usage-evufg
+[code-sandbox-material-ui-usage]:
+  https://codesandbox.io/s/usecombobx-ui-libraries-materialui-8jfx1
+[code-sandbox-controlling-state]:
+  https://codesandbox.io/s/usecombobox-variations-controlling-state-wfr1j
+[code-sandbox-state-reducer]:
+  https://codesandbox.io/s/usecombobox-variations-state-reducer-x7feb
+[code-sandbox-custom-window]:
+  https://codesandbox.io/s/usecombobox-iframe-n27ii
+[code-sandbox-basic-multiple-selection]:
+  https://codesandbox.io/s/usecombobox-usage-x2hsf
+[code-sandbox-action-props]:
+  https://codesandbox.io/s/usecombobox-action-props-kzwos
