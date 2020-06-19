@@ -490,7 +490,7 @@ for downshift.
 
 ### circularNavigation
 
-> `boolean` | defaults to `false`
+> `boolean` | defaults to `true`
 
 Controls the circular keyboard navigation between items. If set to `true`, when
 first item is highlighted, the Arrow Up will move highlight to the last item,
