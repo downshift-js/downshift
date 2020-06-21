@@ -17,6 +17,7 @@ import {
   Avatar,
 } from '@material-ui/core'
 import Frame, { FrameContextConsumer } from 'react-frame-component'
+import {useVirtual} from 'react-virtual'
 import {useSelect} from '../../src'
 import {items, menuStyles, itemsAsObjects, useStyles, checkboxLabelStyles} from '../utils'
 
@@ -612,6 +613,104 @@ behaviors.
   }}
 </Playground>
 
+## Virtualizing items with react-virtual
+
+When the number of items in the dropdown is too big, you may want to consider
+using a virtualization technique to avoid loss in performance due to unnecessary
+elements rendered in the DOM. [react-virtual][react-virtual-github] is a great 
+library to provide items virtualization and it's the one we will show in the
+example below. There are other libraries as well, such as
+[react-virtualized][react-virtualized-github] and
+[react-virtual][react-virtual-github].
+
+Since `react-virtual` has its own scrolling library, we will use it instead of
+the default one from `Downshift`. Apart from this it's business as usual in both
+the case of using `useSelect` and `useVirtual`, about which you can learn in
+the [react-virtual github link][react-virtual-github].
+
+[CodeSandbox for virtualized list example][code-sandbox-react-virtual].
+
+<Playground>
+  {() => {
+    // import React, {useState} from 'react'
+    // import {useSelect} from 'downshift'
+    // import {useVirtual} from 'react-virtual'
+    // import {items, menuStyles} from './utils'
+    function DropdownSelect() {
+      const listRef = React.useRef()
+      const rowVirtualizer = useVirtual({
+        size: items.length,
+        parentRef: listRef,
+        estimateSize: React.useCallback(() => 30, []),
+        overscan: 2,
+      })
+      const {
+        getItemProps,
+        getLabelProps,
+        getMenuProps,
+        highlightedIndex,
+        selectedItem,
+        getToggleButtonProps,
+        isOpen,
+      } = useSelect({
+        items,
+        scrollIntoView: () => {},
+        onHighlightedIndexChange: ({highlightedIndex}) =>
+          rowVirtualizer.scrollToIndex(highlightedIndex),
+      })
+      return (
+        <div>
+          <label {...getLabelProps()}>Choose an element:</label>
+          <button data-testid="select-toggle-button" {...getToggleButtonProps()}>
+            {selectedItem || 'Elements'}
+          </button>
+          <ul
+            {...getMenuProps({
+              ref: listRef,
+              style: menuStyles,
+            })}
+          >
+            {isOpen && (
+              <>
+                <li key="total-size" style={{height: rowVirtualizer.totalSize}} />
+                {rowVirtualizer.virtualItems.map(virtualRow => (
+                  <li
+                    key={items[virtualRow.index].id}
+                    {...getItemProps({
+                      index: virtualRow.index,
+                      item: items[virtualRow.index],
+                      style: {
+                        backgroundColor:
+                          highlightedIndex === virtualRow.index
+                            ? 'lightgray'
+                            : 'inherit',
+                        fontWeight:
+                          selectedItem &&
+                          selectedItem.id === items[virtualRow.index].id
+                            ? 'bold'
+                            : 'normal',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: virtualRow.size,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      },
+                    })}
+                  >
+                    {items[virtualRow.index]}
+                  </li>
+                ))}
+              </>
+            )}
+          </ul>
+        </div>
+      )
+    }
+    return <DropdownSelect />
+  }}
+</Playground>
+
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
 [mdn-select]:
@@ -632,3 +731,11 @@ behaviors.
   https://codesandbox.io/s/useselect-basic-multiple-selection-4lj25
 [code-sandbox-action-props]:
   https://codesandbox.io/s/useselect-action-props-zljdg
+[code-sandbox-react-virtual]:
+  https://codesandbox.io/s/useselect-virtualized-478eu
+[react-virtual-github]:
+  https://github.com/tannerlinsley/react-virtual
+[react-virtualized-github]:
+  https://github.com/bvaughn/react-virtualized
+[react-window-github]:
+  https://github.com/bvaughn/react-window
