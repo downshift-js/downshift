@@ -106,6 +106,7 @@
     "react-frame-component": "^4.1.2",
     "react-native": "^0.62.2",
     "react-test-renderer": "^16.13.1",
+    "react-virtual": "^2.2.0",
     "rollup-plugin-babel": "^4.4.0",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.11.0",
