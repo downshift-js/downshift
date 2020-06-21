@@ -7,10 +7,11 @@
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
 autocomplete, combobox or select dropdown components.</p>
 
-> See
-> [the intro blog post](https://kentcdodds.com/blog/introducing-downshift-for-react)
-> and
-> [Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
+> [Read the docs](https://downshift-js.com)
+> |
+> [See the intro blog post](https://kentcdodds.com/blog/introducing-downshift-for-react)
+> |
+> [Listen to the Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
 
 <hr />
 
