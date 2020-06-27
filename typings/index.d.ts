@@ -292,17 +292,32 @@ export interface UseSelectProps<Item> {
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
   ) => UseSelectState<Item>
-  onSelectedItemChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseSelectState<Item>>) => void
-  onStateChange?: (changes: Partial<UseSelectState<Item>>) => void
+  onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
+  onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
 }
 
-export interface UseSelectStateChangeOptions<Item> {
+export interface UseSelectStateChangeOptions<Item>
+  extends UseSelectDispatchAction<Item> {
+  changes: Partial<UseSelectState<Item>>
+}
+
+export interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
-  changes: UseSelectState<Item>
-  props: UseSelectProps<Item>
+  getItemNodeFromIndex?: (index: number) => HTMLElement
+  shiftKey?: boolean
+  key?: string
+  index?: number
+  highlightedIndex?: number
+  selectedItem?: Item | null
+  inputValue?: string
+}
+
+export interface UseSelectStateChange<Item>
+  extends Partial<UseSelectState<Item>> {
+  type: UseSelectStateChangeTypes
 }
 
 export interface UseSelectGetMenuPropsOptions
@@ -431,18 +446,32 @@ export interface UseComboboxProps<Item> {
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
   ) => UseComboboxState<Item>
-  onSelectedItemChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onIsOpenChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onHighlightedIndexChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
+  onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
+  onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
+  onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
+  onStateChange?: (changes: UseComboboxStateChange<Item>) => void
+  onInputValueChange?: (changes: UseComboboxStateChange<Item>) => void
   environment?: Environment
 }
 
-export interface UseComboboxStateChangeOptions<Item> {
+export interface UseComboboxStateChangeOptions<Item>
+  extends UseComboboxDispatchAction<Item> {
+  changes: Partial<UseComboboxState<Item>>
+}
+
+export interface UseComboboxDispatchAction<Item> {
+  type: UseSelectStateChangeTypes
+  shiftKey?: boolean
+  getItemNodeFromIndex?: (index: number) => HTMLElement
+  inputValue?: string
+  index?: number
+  highlightedIndex?: number
+  selectedItem?: Item | null
+}
+
+export interface UseComboboxStateChange<Item>
+  extends Partial<UseComboboxState<Item>> {
   type: UseComboboxStateChangeTypes
-  changes: UseComboboxState<Item>
-  props: UseComboboxProps<Item>
 }
 
 export interface UseComboboxGetMenuPropsOptions
@@ -566,13 +595,16 @@ export interface UseMultipleSelectionProps<Item> {
 }
 
 export interface UseMultipleSelectionStateChangeOptions<Item>
-  extends UseMultipleSelectionDispatchAction {
+  extends UseMultipleSelectionDispatchAction<Item> {
   changes: Partial<UseMultipleSelectionState<Item>>
 }
 
-export interface UseMultipleSelectionDispatchAction {
+export interface UseMultipleSelectionDispatchAction<Item> {
   type: UseMultipleSelectionStateChangeTypes
-  [data: string]: any
+  index?: number
+  selectedItem?: Item | null
+  selectedItems?: Item[]
+  activeIndex?: number
 }
 
 export interface UseMultipleSelectionStateChange<Item>
