@@ -716,7 +716,9 @@ behaviors.
             <input
               {...getInputProps({
                 onFocus: () => {
-                  openMenu();
+                  if (!isOpen) {
+                    openMenu();
+                  }
                 }
               })}
             />
