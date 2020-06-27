@@ -92,7 +92,7 @@ export interface A11yStatusMessageOptions<Item> {
   previousResultCount: number
   resultCount: number
   highlightedItem: Item
-  selectedItem: Item
+  selectedItem: Item | null
 }
 
 export interface StateChangeOptions<Item>
@@ -236,9 +236,9 @@ export function resetIdCounter(): void
 
 export interface UseSelectState<Item> {
   highlightedIndex: number
-  selectedItem: Item
+  selectedItem: Item | null
   isOpen: boolean
-  keySoFar: string
+  inputValue: string
 }
 
 export enum UseSelectStateChangeTypes {
@@ -279,9 +279,9 @@ export interface UseSelectProps<Item> {
   isOpen?: boolean
   initialIsOpen?: boolean
   defaultIsOpen?: boolean
-  selectedItem?: Item
-  initialSelectedItem?: Item
-  defaultSelectedItem?: Item
+  selectedItem?: Item | null
+  initialSelectedItem?: Item | null
+  defaultSelectedItem?: Item | null
   id?: string
   labelId?: string
   menuId?: string
@@ -374,7 +374,7 @@ export const useSelect: UseSelectInterface
 
 export interface UseComboboxState<Item> {
   highlightedIndex: number
-  selectedItem: Item
+  selectedItem: Item | null
   isOpen: boolean
   inputValue: string
 }
@@ -414,9 +414,9 @@ export interface UseComboboxProps<Item> {
   isOpen?: boolean
   initialIsOpen?: boolean
   defaultIsOpen?: boolean
-  selectedItem?: Item
-  initialSelectedItem?: Item
-  defaultSelectedItem?: Item
+  selectedItem?: Item | null
+  initialSelectedItem?: Item | null
+  defaultSelectedItem?: Item | null
   inputValue?: string
   initialInputValue?: string
   defaultInputValue?: string
