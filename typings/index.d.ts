@@ -467,6 +467,7 @@ export interface UseComboboxDispatchAction<Item> {
   index?: number
   highlightedIndex?: number
   selectedItem?: Item | null
+  selectItem?: boolean
 }
 
 export interface UseComboboxStateChange<Item>

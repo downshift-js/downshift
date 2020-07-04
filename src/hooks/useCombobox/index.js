@@ -185,6 +185,7 @@ function useCombobox(userProps = {}) {
     () => {
       dispatch({
         type: stateChangeTypes.InputBlur,
+        selectItem: false,
       })
     },
   )
@@ -425,6 +426,7 @@ function useCombobox(userProps = {}) {
         if (!mouseAndTouchTrackersRef.current.isMouseDown) {
           dispatch({
             type: stateChangeTypes.InputBlur,
+            selectItem: true,
           })
         }
       }
