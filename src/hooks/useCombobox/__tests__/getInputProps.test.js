@@ -845,13 +845,14 @@ describe('getInputProps', () => {
         await changeInputValue(inputValue)
         blurInput()
 
-        expect(input.value).toBe(inputValue)
+        expect(input).toHaveValue(inputValue)
       })
 
       test('by mouse is not triggered if target is within downshift', () => {
         const stateReducer = jest.fn().mockImplementation(s => s)
         const {input, container} = renderCombobox({
           isOpen: true,
+          highlightedIndex: 0,
           stateReducer,
         })
         document.body.appendChild(container)
@@ -866,8 +867,21 @@ describe('getInputProps', () => {
 
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
         )
       })
 
@@ -875,6 +889,7 @@ describe('getInputProps', () => {
         const stateReducer = jest.fn().mockImplementation(s => s)
         const {container, input} = renderCombobox({
           isOpen: true,
+          highlightedIndex: 0,
           stateReducer,
         })
         document.body.appendChild(container)
@@ -890,8 +905,21 @@ describe('getInputProps', () => {
 
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
         )
       })
     })
@@ -919,7 +947,7 @@ describe('getInputProps', () => {
         })
         getMenuProps({}, {suppressRefError: true})
         getComboboxProps({}, {suppressRefError: true})
-        
+
         if (firstRender) {
           firstRender = false
           getInputProps({}, {suppressRefError: true})
