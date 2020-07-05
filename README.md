@@ -7,8 +7,7 @@
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
 autocomplete, combobox or select dropdown components.</p>
 
-> [Read the docs](https://downshift-js.com)
-> |
+> [Read the docs](https://downshift-js.com) |
 > [See the intro blog post](https://kentcdodds.com/blog/introducing-downshift-for-react)
 > |
 > [Listen to the Episode 79 of the Full Stack Radio podcast](https://simplecast.com/s/f2e65eaf)
@@ -108,7 +107,6 @@ and `side-effect free`.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -972,9 +970,9 @@ described below.
   work normally). See below for customizing the handlers.
 
 - `Escape`: will clear downshift's state. This means that `highlightedIndex`
-  will be set to the `defaultHighlightedIndex`, the `inputValue` will be set to
-  empty string, `selectedItem` will be set to `null`, and the `isOpen` state
-  will be set to the `defaultIsOpen`.
+  will be set to the `defaultHighlightedIndex` and the `isOpen` state will be
+  set to the `defaultIsOpen`. If `isOpen` is already false, the `inputValue`
+  will be set to an empty string and `selectedItem` will be set to `null`
 
 ### customizing handlers
 
@@ -1426,6 +1424,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
