@@ -80,9 +80,11 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputKeyDownEscape:
       changes = {
         isOpen: false,
-        selectedItem: null,
         highlightedIndex: -1,
-        inputValue: '',
+        ...(!state.isOpen && {
+          selectedItem: null,
+          inputValue: '',
+        }),
       }
       break
     case stateChangeTypes.InputKeyDownHome:

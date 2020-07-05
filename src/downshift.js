@@ -27,7 +27,7 @@ import {
   getNextNonDisabledIndex,
   getState,
   isControlledProp,
-  validateControlledUnchanged
+  validateControlledUnchanged,
 } from './utils'
 
 class Downshift extends Component {
@@ -597,8 +597,7 @@ class Downshift extends Component {
       event.preventDefault()
       this.reset({
         type: stateChangeTypes.keyDownEscape,
-        selectedItem: null,
-        inputValue: '',
+        ...(!this.state.isOpen && {selectedItem: null, inputValue: ''}),
       })
     },
   }

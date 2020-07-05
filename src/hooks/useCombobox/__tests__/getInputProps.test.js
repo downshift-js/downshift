@@ -661,7 +661,7 @@ describe('getInputProps', () => {
         )
       })
 
-      test('escape it has the menu closed, item removed and focused kept on input', () => {
+      test('escape with menu open has the menu closed and focused kept on input', () => {
         const {keyDownOnInput, input, getItems} = renderCombobox({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
@@ -671,7 +671,21 @@ describe('getInputProps', () => {
         keyDownOnInput('Escape')
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toBe('')
+        expect(input).toHaveValue(items[0])
+        expect(input).toHaveFocus()
+      })
+
+      test('escape with closed menu has item removed and focused kept on input', () => {
+        const {keyDownOnInput, input, getItems} = renderCombobox({
+          initialHighlightedIndex: 2,
+          initialSelectedItem: items[0],
+        })
+
+        input.focus()
+        keyDownOnInput('Escape')
+
+        expect(getItems()).toHaveLength(0)
+        expect(input).toHaveValue('')
         expect(input).toHaveFocus()
       })
 

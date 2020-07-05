@@ -403,12 +403,14 @@ test('enter on an input with an open menu and a highlightedIndex but with IME co
 
   // now it behaves normally
   expect(childrenSpy).toHaveBeenCalledTimes(1)
-  expect(childrenSpy).toHaveBeenCalledWith(expect.objectContaining({
-    selectedItem: colors[0],
-    inputValue: colors[0],
-    isOpen: false,
-    highlightedIndex: null,
-  }))
+  expect(childrenSpy).toHaveBeenCalledWith(
+    expect.objectContaining({
+      selectedItem: colors[0],
+      inputValue: colors[0],
+      isOpen: false,
+      highlightedIndex: null,
+    }),
+  )
 })
 
 test('enter on an input with an open menu and a highlightedIndex selects that item', () => {
@@ -451,8 +453,17 @@ test('escape on an input without a selection should reset downshift and close th
   )
 })
 
-test('escape on an input with a selection should reset downshift, clear input and close the menu', () => {
+test('escape on an input with a selection and open should only reset downshift', () => {
+  const {escapeOnInput, childrenSpy} = renderDownshift()
+  escapeOnInput()
+  expect(childrenSpy).toHaveBeenLastCalledWith(
+    expect.objectContaining({isOpen: false}),
+  )
+})
+
+test('escape on an input with a selection and closed menu should reset downshift, clear input and close the menu', () => {
   const {escapeOnInput, childrenSpy} = setupDownshiftWithState()
+  escapeOnInput()
   escapeOnInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
