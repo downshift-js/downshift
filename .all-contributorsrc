@@ -1266,6 +1266,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "IwalkAlone",
+      "name": "Sergey Skrynnikov",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5685800?v=4",
+      "profile": "http://dataart.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
     }
   ],
   "repoHost": "https://github.com",
