@@ -1,4 +1,4 @@
-import {useRef} from 'react'
+import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {
   generateId,
@@ -102,19 +102,21 @@ export function useControlledReducer(reducer, initialState, props) {
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
   // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
-  if (isControlledProp(props, 'selectedItem')) {
-    if (previousSelectedItemRef.current !== props.selectedItem) {
-      dispatch({
-        type: ControlledPropUpdatedSelectedItem,
-        inputValue: props.itemToString(props.selectedItem),
-      })
-    }
+  useEffect(() => {
+    if (isControlledProp(props, 'selectedItem')) {
+      if (previousSelectedItemRef.current !== props.selectedItem) {
+        dispatch({
+          type: ControlledPropUpdatedSelectedItem,
+          inputValue: props.itemToString(props.selectedItem),
+        })
+      }
 
-    previousSelectedItemRef.current =
-      state.selectedItem === previousSelectedItemRef.current
-        ? props.selectedItem
-        : state.selectedItem
-  }
+      previousSelectedItemRef.current =
+        state.selectedItem === previousSelectedItemRef.current
+          ? props.selectedItem
+          : state.selectedItem
+    }
+  })
 
   return [getState(state, props), dispatch]
 }

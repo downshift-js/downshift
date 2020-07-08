@@ -1,3 +1,4 @@
+import React from 'react'
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {act} from '@testing-library/react'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
@@ -950,6 +951,23 @@ describe('props', () => {
       rerender({selectedItem})
 
       expect(input).toHaveValue(items[selectionIndex])
+    })
+
+    test('works correctly with the corresponding control prop in strict mode', () => {
+      const onSelectedItemChange = jest.fn()
+      const itemIndex = 0
+      const {clickOnItemAtIndex} = renderCombobox(
+        {selectedItem: null, initialIsOpen: true, onSelectedItemChange},
+        ui => <React.StrictMode>{ui}</React.StrictMode>,
+      )
+
+      clickOnItemAtIndex(itemIndex)
+
+      expect(onSelectedItemChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          selectedItem: items[itemIndex],
+        }),
+      )
     })
 
     test('can have downshift actions executed', () => {
