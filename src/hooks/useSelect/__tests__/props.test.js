@@ -1033,6 +1033,42 @@ describe('props', () => {
       )
     })
 
+    test('is called on first open when selectedItem is set', () => {
+      const index = 2
+      const onHighlightedIndexChange = jest.fn()
+      const {clickOnToggleButton} = renderSelect({
+        selectedItem: items[index],
+        onHighlightedIndexChange,
+      })
+
+      clickOnToggleButton()
+
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex: index,
+        }),
+      )
+    })
+
+    test('is called on first open when defaultSelectedItem is set', () => {
+      const index = 2
+      const onHighlightedIndexChange = jest.fn()
+      const {clickOnToggleButton} = renderSelect({
+        defaultSelectedItem: items[index],
+        onHighlightedIndexChange,
+      })
+
+      clickOnToggleButton()
+
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex: index,
+        }),
+      )
+    })
+
     test('works correctly with the corresponding control prop', () => {
       let highlightedIndex = 2
       const {keyDownOnMenu, menu, rerender} = renderSelect({
