@@ -379,6 +379,11 @@ export interface UseComboboxState<Item> {
   inputValue: string
 }
 
+export interface UseComboboxStateWithType<Item>
+  extends Partial<UseComboboxState<Item>> {
+  type: UseComboboxStateChangeTypes
+}
+
 export enum UseComboboxStateChangeTypes {
   InputKeyDownArrowDown = '__input_keydown_arrow_down__',
   InputKeyDownArrowUp = '__input_keydown_arrow_up__',
@@ -399,7 +404,7 @@ export enum UseComboboxStateChangeTypes {
   FunctionSelectItem = '__function_select_item__',
   FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
-  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__'
+  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
 export interface UseComboboxProps<Item> {
@@ -434,7 +439,7 @@ export interface UseComboboxProps<Item> {
   onSelectedItemChange?: (changes: Partial<UseComboboxState<Item>>) => void
   onIsOpenChange?: (changes: Partial<UseComboboxState<Item>>) => void
   onHighlightedIndexChange?: (changes: Partial<UseComboboxState<Item>>) => void
-  onStateChange?: (changes: Partial<UseComboboxState<Item>>) => void
+  onStateChange?: (changes: UseComboboxStateWithType<Item>) => void
   onInputValueChange?: (changes: Partial<UseComboboxState<Item>>) => void
   environment?: Environment
 }
@@ -589,7 +594,8 @@ export interface A11yRemovalMessage<Item> {
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
   index?: number
   selectedItem: Item
 }
