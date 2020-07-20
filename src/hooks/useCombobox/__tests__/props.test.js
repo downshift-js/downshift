@@ -1025,6 +1025,60 @@ describe('props', () => {
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
 
+    test('is called on first open when initialSelectedItem is set', () => {
+      const index = 2
+      const onHighlightedIndexChange = jest.fn()
+      const {clickOnToggleButton} = renderCombobox({
+        initialSelectedItem: items[index],
+        onHighlightedIndexChange,
+      })
+
+      clickOnToggleButton()
+
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex: index,
+        }),
+      )
+    })
+
+    test('is called on first open when selectedItem is set', () => {
+      const index = 2
+      const onHighlightedIndexChange = jest.fn()
+      const {clickOnToggleButton} = renderCombobox({
+        selectedItem: items[index],
+        onHighlightedIndexChange,
+      })
+
+      clickOnToggleButton()
+
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex: index,
+        }),
+      )
+    })
+
+    test('is called on first open when defaultSelectedItem is set', () => {
+      const index = 2
+      const onHighlightedIndexChange = jest.fn()
+      const {clickOnToggleButton} = renderCombobox({
+        defaultSelectedItem: items[index],
+        onHighlightedIndexChange,
+      })
+
+      clickOnToggleButton()
+
+      expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
+      expect(onHighlightedIndexChange).toHaveBeenCalledWith(
+        expect.objectContaining({
+          highlightedIndex: index,
+        }),
+      )
+    })
+
     test('works correctly with the corresponding control prop', () => {
       let highlightedIndex = 2
       const {keyDownOnInput, input, rerender} = renderCombobox({

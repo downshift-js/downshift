@@ -250,7 +250,7 @@ export function getInitialState(props) {
 
   return {
     highlightedIndex:
-      highlightedIndex < 0 && selectedItem
+      highlightedIndex < 0 && selectedItem && isOpen
         ? props.items.indexOf(selectedItem)
         : highlightedIndex,
     isOpen,
