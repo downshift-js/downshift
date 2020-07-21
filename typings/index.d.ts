@@ -576,7 +576,6 @@ export interface UseMultipleSelectionProps<Item> {
   selectedItems?: Item[]
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
-
   itemToString?: (item: Item | null) => string
   getA11yRemovalMessage?: (options: A11yRemovalMessage<Item>) => string
   stateReducer?: (
