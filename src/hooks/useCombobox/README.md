@@ -865,13 +865,16 @@ described below.
 - `Home`: Moves `highlightedIndex` to first position.
 - `Enter`: If there is a highlighted option, it will select it and close the
   menu.
-- `Escape`: It will close the menu if open and will clear selection: the value
-  in the `input` and the item stored as `selectedItem`.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu select the
-  highlighted item if any. In the case of `(Shift+)Tab` the focus will move
-  naturally.
+- `Escape`: It will close the menu if open. If the menu is closed, it will clear
+  selection: the value in the `input` will become an empty string and the item
+  stored as `selectedItem` will become `null`.
+- `Blur(Tab, Shift+Tab)`: It will close the menu and select the highlighted
+  item, if any. The focus will move naturally to the next/previous element in
+  the Tab order.
+- `Blur(mouse click outside)`: It will close the menu without selecting any
+  element, even if there is one highlighted.
 
-  #### Menu
+#### Menu
 
 - `MouseLeave`: Will clear the value of the `highlightedIndex` if it was set.
 

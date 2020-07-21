@@ -80,9 +80,11 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputKeyDownEscape:
       changes = {
         isOpen: false,
-        selectedItem: null,
         highlightedIndex: -1,
-        inputValue: '',
+        ...(!state.isOpen && {
+          selectedItem: null,
+          inputValue: '',
+        }),
       }
       break
     case stateChangeTypes.InputKeyDownHome:
@@ -110,11 +112,12 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputBlur:
       changes = {
         isOpen: false,
-        ...(state.highlightedIndex >= 0 && {
-          selectedItem: props.items[state.highlightedIndex],
-          inputValue: props.itemToString(props.items[state.highlightedIndex]),
-          highlightedIndex: -1,
-        }),
+        highlightedIndex: -1,
+        ...(state.highlightedIndex >= 0 &&
+          action.selectItem && {
+            selectedItem: props.items[state.highlightedIndex],
+            inputValue: props.itemToString(props.items[state.highlightedIndex]),
+          }),
       }
       break
     case stateChangeTypes.InputChange:
@@ -157,7 +160,7 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.FunctionSelectItem:
       changes = {
         selectedItem: action.selectedItem,
-        inputValue: props.itemToString(action.selectedItem)
+        inputValue: props.itemToString(action.selectedItem),
       }
       break
     case stateChangeTypes.ControlledPropUpdatedSelectedItem:

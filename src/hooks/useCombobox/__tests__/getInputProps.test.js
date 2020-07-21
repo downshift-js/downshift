@@ -661,7 +661,7 @@ describe('getInputProps', () => {
         )
       })
 
-      test('escape it has the menu closed, item removed and focused kept on input', () => {
+      test('escape with menu open has the menu closed and focused kept on input', () => {
         const {keyDownOnInput, input, getItems} = renderCombobox({
           initialIsOpen: true,
           initialHighlightedIndex: 2,
@@ -671,7 +671,21 @@ describe('getInputProps', () => {
         keyDownOnInput('Escape')
 
         expect(getItems()).toHaveLength(0)
-        expect(input.value).toBe('')
+        expect(input).toHaveValue(items[0])
+        expect(input).toHaveFocus()
+      })
+
+      test('escape with closed menu has item removed and focused kept on input', () => {
+        const {keyDownOnInput, input, getItems} = renderCombobox({
+          initialHighlightedIndex: 2,
+          initialSelectedItem: items[0],
+        })
+
+        input.focus()
+        keyDownOnInput('Escape')
+
+        expect(getItems()).toHaveLength(0)
+        expect(input).toHaveValue('')
         expect(input).toHaveFocus()
       })
 
@@ -845,13 +859,14 @@ describe('getInputProps', () => {
         await changeInputValue(inputValue)
         blurInput()
 
-        expect(input.value).toBe(inputValue)
+        expect(input).toHaveValue(inputValue)
       })
 
       test('by mouse is not triggered if target is within downshift', () => {
         const stateReducer = jest.fn().mockImplementation(s => s)
         const {input, container} = renderCombobox({
           isOpen: true,
+          highlightedIndex: 0,
           stateReducer,
         })
         document.body.appendChild(container)
@@ -866,8 +881,21 @@ describe('getInputProps', () => {
 
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
         )
       })
 
@@ -875,6 +903,7 @@ describe('getInputProps', () => {
         const stateReducer = jest.fn().mockImplementation(s => s)
         const {container, input} = renderCombobox({
           isOpen: true,
+          highlightedIndex: 0,
           stateReducer,
         })
         document.body.appendChild(container)
@@ -890,8 +919,21 @@ describe('getInputProps', () => {
 
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
-          expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.InputBlur}),
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
         )
       })
     })
@@ -919,7 +961,7 @@ describe('getInputProps', () => {
         })
         getMenuProps({}, {suppressRefError: true})
         getComboboxProps({}, {suppressRefError: true})
-        
+
         if (firstRender) {
           firstRender = false
           getInputProps({}, {suppressRefError: true})
