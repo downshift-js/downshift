@@ -113,7 +113,7 @@ function DropdownCombobox() {
       <label {...getLabelProps()}>Choose an element:</label>
       <div style={comboboxStyles} {...getComboboxProps()}>
         <input {...getInputProps()} />
-        <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
+        <button type="button" {...getToggleButtonProps()} aria-label={'toggle menu'}>
           &#8595;
         </button>
       </div>
