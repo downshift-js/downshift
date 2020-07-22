@@ -291,7 +291,7 @@ export interface UseSelectProps<Item> {
   stateReducer?: (
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
-  ) => UseSelectState<Item>
+  ) => Partial<UseSelectState<Item>>
   onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
   onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
   onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
@@ -445,7 +445,7 @@ export interface UseComboboxProps<Item> {
   stateReducer?: (
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
-  ) => UseComboboxState<Item>
+  ) => Partial<UseComboboxState<Item>>
   onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
   onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
   onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
@@ -581,7 +581,7 @@ export interface UseMultipleSelectionProps<Item> {
   stateReducer?: (
     state: UseMultipleSelectionState<Item>,
     actionAndChanges: UseMultipleSelectionStateChangeOptions<Item>,
-  ) => UseMultipleSelectionState<Item>
+  ) => Partial<UseMultipleSelectionState<Item>>
   activeIndex?: number
   initialActiveIndex?: number
   defaultActiveIndex?: number
