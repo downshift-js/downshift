@@ -1276,6 +1276,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "vvo",
+      "name": "Vincent Voyer",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/123822?v=4",
+      "profile": "https://www.linkedin.com/in/vvoyer",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "repoHost": "https://github.com",
