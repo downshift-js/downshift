@@ -1285,6 +1285,16 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "limejoe",
+      "name": "limejoe",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/7977551?v=4",
+      "profile": "https://github.com/limejoe",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
