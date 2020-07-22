@@ -460,7 +460,7 @@ export interface UseComboboxStateChangeOptions<Item>
 }
 
 export interface UseComboboxDispatchAction<Item> {
-  type: UseSelectStateChangeTypes
+  type: UseComboboxStateChangeTypes
   shiftKey?: boolean
   getItemNodeFromIndex?: (index: number) => HTMLElement
   inputValue?: string
