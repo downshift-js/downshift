@@ -81,7 +81,7 @@ harder to contribute to.
 `Downshift` proved to be a versatile component to create not only combobox
 inputs, but also custom select elements and even multiple selection experiences.
 However, additional code was needed to make these experiences fully accessible,
-so we decided to create a dedicated React hook for them. Each hook handles a
+so we decided to create dedicated React hooks for them. Each hook handles a
 specific dropdown variation and aims to make it fully accessible.
 
 You can check the progress in the [hooks page][hooks-readme]. The hooks
