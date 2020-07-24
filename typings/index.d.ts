@@ -148,7 +148,10 @@ export interface PropGetters<Item> {
     options?: GetRootPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
-  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
+  getToggleButtonProps: (
+    options?: GetToggleButtonPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getMenuProps: (
     options?: GetMenuPropsOptions,
@@ -325,7 +328,10 @@ export interface UseSelectGetItemPropsOptions<Item>
 export interface UseSelectPropGetters<Item> {
   getToggleButtonProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
   getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseSelectGetMenuPropsOptions) => any
+  getMenuProps: (
+    options?: UseSelectGetMenuPropsOptions,
+    extraOptions?: GetPropsCommonOptions,
+  ) => any
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
 }
 
@@ -483,7 +489,10 @@ export interface UseComboboxPropGetters<Item> {
     options?: UseComboboxGetInputPropsOptions,
     extraOptions?: GetPropsCommonOptions,
   ) => any
-  getComboboxProps: (options?: UseComboboxGetComboboxPropsOptions) => any
+  getComboboxProps: (
+    options?: UseComboboxGetComboboxPropsOptions,
+    extraOptions?: GetPropsCommonOptions,
+  ) => any
 }
 
 export interface UseComboboxActions<Item> {
@@ -621,7 +630,10 @@ export type UseMultipleSelectionGetDropdownProps =
   | UseMultipleSelectionComboboxGetDropdownProps
 
 export interface UseMultipleSelectionPropGetters<Item> {
-  getDropdownProps: (options?: UseMultipleSelectionGetDropdownProps) => any
+  getDropdownProps: (
+    options?: UseMultipleSelectionGetDropdownProps,
+    extraOptions?: GetPropsCommonOptions,
+  ) => any
   getSelectedItemProps: (
     options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
   ) => any
