@@ -186,7 +186,6 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     if (
       highlightedIndex < 0 ||
-      !isOpen ||
       !Object.keys(itemRefs.current).length
     ) {
       return
