@@ -152,6 +152,11 @@ function useCombobox(userProps = {}) {
   }, [highlightedIndex])
   // Controls the focus on the menu or the toggle button.
   useEffect(() => {
+    // Always scroll to selected item on open
+    if (isOpen) {
+      shouldScrollRef.current = true
+    }
+    
     // Don't focus menu on first render.
     if (isInitialMountRef.current) {
       // Unless it was initialised as open.
