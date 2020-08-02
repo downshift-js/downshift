@@ -148,19 +148,13 @@ export interface PropGetters<Item> {
     options?: GetRootPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
-  getToggleButtonProps: (
-    options?: GetToggleButtonPropsOptions,
-    otherOptions?: GetPropsCommonOptions,
-  ) => any
+  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
   getLabelProps: (options?: GetLabelPropsOptions) => any
   getMenuProps: (
     options?: GetMenuPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
-  getInputProps: <T>(
-    options?: T,
-    otherOptions?: GetPropsCommonOptions,
-  ) => T & GetInputPropsOptions
+  getInputProps: <T>(options?: T) => T & GetInputPropsOptions
   getItemProps: (options: GetItemPropsOptions<Item>) => any
 }
 
@@ -326,11 +320,14 @@ export interface UseSelectGetItemPropsOptions<Item>
     GetPropsWithRefKey {}
 
 export interface UseSelectPropGetters<Item> {
-  getToggleButtonProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
+  getToggleButtonProps: (
+    options?: UseSelectGetToggleButtonPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
   getMenuProps: (
     options?: UseSelectGetMenuPropsOptions,
-    extraOptions?: GetPropsCommonOptions,
+    otherOptions?: GetPropsCommonOptions,
   ) => any
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
 }
@@ -482,16 +479,16 @@ export interface UseComboboxPropGetters<Item> {
   getLabelProps: (options?: UseComboboxGetLabelPropsOptions) => any
   getMenuProps: (
     options?: UseComboboxGetMenuPropsOptions,
-    extraOptions?: GetPropsCommonOptions,
+    otherOptions?: GetPropsCommonOptions,
   ) => any
   getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any
   getInputProps: (
     options?: UseComboboxGetInputPropsOptions,
-    extraOptions?: GetPropsCommonOptions,
+    otherOptions?: GetPropsCommonOptions,
   ) => any
   getComboboxProps: (
     options?: UseComboboxGetComboboxPropsOptions,
-    extraOptions?: GetPropsCommonOptions,
+    otherOptions?: GetPropsCommonOptions,
   ) => any
 }
 
