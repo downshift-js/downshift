@@ -1422,6 +1422,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="http://dataart.com"><img src="https://avatars1.githubusercontent.com/u/5685800?v=4" width="100px;" alt=""/><br /><sub><b>Sergey Skrynnikov</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=IwalkAlone" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/commits?author=IwalkAlone" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://www.linkedin.com/in/vvoyer"><img src="https://avatars0.githubusercontent.com/u/123822?v=4" width="100px;" alt=""/><br /><sub><b>Vincent Voyer</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=vvo" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/limejoe"><img src="https://avatars2.githubusercontent.com/u/7977551?v=4" width="100px;" alt=""/><br /><sub><b>limejoe</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=limejoe" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Alimejoe" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/k88manish"><img src="https://avatars2.githubusercontent.com/u/19614770?v=4" width="100px;" alt=""/><br /><sub><b>Manish Kumar</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=k88manish" title="Code">💻</a></td>
   </tr>
 </table>
 
