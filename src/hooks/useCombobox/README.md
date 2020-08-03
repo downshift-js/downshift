@@ -113,7 +113,11 @@ function DropdownCombobox() {
       <label {...getLabelProps()}>Choose an element:</label>
       <div style={comboboxStyles} {...getComboboxProps()}>
         <input {...getInputProps()} />
-        <button type="button" {...getToggleButtonProps()} aria-label={'toggle menu'}>
+        <button
+          type="button"
+          {...getToggleButtonProps()}
+          aria-label={'toggle menu'}
+        >
           &#8595;
         </button>
       </div>
@@ -718,6 +722,11 @@ required to pass either `item` or `index` to `getItemProps`.
 
 Optional properties:
 
+- `ref`: if you need to access the item element via a ref object, you'd call the
+  function like this: `getItemProps({ref: yourItemRef})`. As a result, the item
+  element will receive a composed `ref` property, which guarantees that both
+  your code and `useCombobox` use the same correct reference to the element.
+
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getItemProps({refKey: 'innerRef'})` and
@@ -735,6 +744,12 @@ Call this and apply the returned props to a `button`. It allows you to toggle
 the `Menu` component.
 
 Optional properties:
+
+- `ref`: if you need to access the button element via a ref object, you'd call
+  the function like this: `getToggleButton({ref: yourButtonRef})`. As a result,
+  the button element will receive a composed `ref` property, which guarantees
+  that both your code and `useCombobox` use the same correct reference to the
+  element.
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
@@ -769,6 +784,12 @@ Optional properties:
 - `disabled`: If this is set to true, then no event handlers will be returned
   from `getInputProps` and a `disabled` prop will be returned (effectively
   disabling the input).
+
+- `ref`: if you need to access the input element via a ref object, you'd call
+  the function like this: `getInputProps({ref: yourInputRef})`. As a result, the
+  input element will receive a composed `ref` property, which guarantees that
+  both your code and `useCombobox` use the same correct reference to the
+  element.
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks

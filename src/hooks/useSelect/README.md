@@ -566,6 +566,11 @@ This handles the proper ARIA roles and attributes.
 
 Optional properties:
 
+- `ref`: if you need to access the menu element via a ref object, you'd call the
+  function like this: `getMenuProps({ref: yourMenuRef})`. As a result, the menu
+  element will receive a composed `ref` property, which guarantees that both
+  your code and `useSelect` use the same correct reference to the element.
+
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getMenuProps({refKey: 'innerRef'})` and
@@ -659,6 +664,11 @@ Optional properties:
   handlers will be omitted. Items will not be highlighted when hovered, and
   items will not be selected when clicked.
 
+- `ref`: if you need to access the item element via a ref object, you'd call the
+  function like this: `getItemProps({ref: yourItemRef})`. As a result, the item
+  element will receive a composed `ref` property, which guarantees that both
+  your code and `useSelect` use the same correct reference to the element.
+
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
   call this `innerRef`. So you'd call: `getItemProps({refKey: 'innerRef'})` and
@@ -675,6 +685,12 @@ Optional properties:
 
 - `disabled`: If this is set to `true`, then all of the downshift button event
   handlers will be omitted (it won't toggle the menu when clicked).
+
+- `ref`: if you need to access the button element via a ref object, you'd call
+  the function like this: `getToggleButtonProps({ref: yourToggleButtonRef})`. As
+  a result, the button element will receive a composed `ref` property, which
+  guarantees that both your code and `useSelect` use the same correct reference
+  to the element.
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
