@@ -335,9 +335,15 @@ export interface UseSelectGetItemPropsOptions<Item>
     GetPropsWithRefKey {}
 
 export interface UseSelectPropGetters<Item> {
-  getToggleButtonProps: (options?: UseSelectGetToggleButtonPropsOptions) => any
+  getToggleButtonProps: (
+    options?: UseSelectGetToggleButtonPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseSelectGetMenuPropsOptions) => any
+  getMenuProps: (
+    options?: UseSelectGetMenuPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
 }
 
@@ -414,7 +420,7 @@ export enum UseComboboxStateChangeTypes {
   FunctionSelectItem = '__function_select_item__',
   FunctionSetInputValue = '__function_set_input_value__',
   FunctionReset = '__function_reset__',
-  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__'
+  ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
 export interface UseComboboxProps<Item> {
@@ -501,10 +507,19 @@ export interface UseComboboxPropGetters<Item> {
     options?: UseComboboxGetToggleButtonPropsOptions,
   ) => any
   getLabelProps: (options?: UseComboboxGetLabelPropsOptions) => any
-  getMenuProps: (options?: UseComboboxGetMenuPropsOptions) => any
+  getMenuProps: (
+    options?: UseComboboxGetMenuPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
   getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any
-  getInputProps: (options?: UseComboboxGetInputPropsOptions) => any
-  getComboboxProps: (options?: UseComboboxGetComboboxPropsOptions) => any
+  getInputProps: (
+    options?: UseComboboxGetInputPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
+  getComboboxProps: (
+    options?: UseComboboxGetComboboxPropsOptions,
+    otherOptions?: GetPropsCommonOptions,
+  ) => any
 }
 
 export interface UseComboboxActions<Item> {
@@ -622,7 +637,8 @@ export interface A11yRemovalMessage<Item> {
 }
 
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
   index?: number
   selectedItem: Item
 }
@@ -644,7 +660,10 @@ export type UseMultipleSelectionGetDropdownProps =
   | UseMultipleSelectionComboboxGetDropdownProps
 
 export interface UseMultipleSelectionPropGetters<Item> {
-  getDropdownProps: (options?: UseMultipleSelectionGetDropdownProps) => any
+  getDropdownProps: (
+    options?: UseMultipleSelectionGetDropdownProps,
+    extraOptions?: GetPropsCommonOptions,
+  ) => any
   getSelectedItemProps: (
     options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
   ) => any
