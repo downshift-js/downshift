@@ -314,14 +314,15 @@ downshift is reset.
 > `function({/* see below */})` | default messages provided in English
 
 This function is similar to the `getA11yStatusMessage` or
-`getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is generating an ARIA a11y
-message when an item is removed. It is passed as props to a status updating
-function nested within that allows you to create your own ARIA statuses. It is
-called when an item is removed and the size of `selectedItems` decreases.
+`getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is
+generating an ARIA a11y message when an item is removed. It is passed as props
+to a status updating function nested within that allows you to create your own
+ARIA statuses. It is called when an item is removed and the size of
+`selectedItems` decreases.
 
-A default `getA11yRemovalMessage` function is provided. When an item is
-removed, the message is a removal related one, narrating
-"`itemToString(removedItem)` has been removed".
+A default `getA11yRemovalMessage` function is provided. When an item is removed,
+the message is a removal related one, narrating "`itemToString(removedItem)` has
+been removed".
 
 The object you are passed to generate your status message for
 `getA11yRemovalMessage` has the following properties:
@@ -585,6 +586,12 @@ It is required to pass either `selectedItem` or `index` to
   like `react-virtualized`.
 
 Optional properties:
+
+- `ref`: if you need to access the dropdown element via a ref object, you'd call
+  the function like this: `getDropdown({ref: yourDropdownRef})`. As a result,
+  the dropdown element will receive a composed `ref` property, which guarantees
+  that both your code and `useMultipleSelection` use the same correct reference
+  to the element.
 
 - `refKey`: if you're rendering a composite component, that component will need
   to accept a prop which it forwards to the root DOM element. Commonly, folks
