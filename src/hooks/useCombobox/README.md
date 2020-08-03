@@ -723,7 +723,7 @@ required to pass either `item` or `index` to `getItemProps`.
 Optional properties:
 
 - `ref`: if you need to access the item element via a ref object, you'd call the
-  function like this: `getItemProps({ref: yourInputRef})`. As a result, the item
+  function like this: `getItemProps({ref: yourItemRef})`. As a result, the item
   element will receive a composed `ref` property, which guarantees that both
   your code and `useCombobox` use the same correct reference to the element.
 
