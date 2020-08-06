@@ -799,3 +799,4 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useMultipleSelection/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
+[docsite]: https://downshift-js.com/
