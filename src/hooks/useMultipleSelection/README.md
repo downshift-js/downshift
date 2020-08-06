@@ -781,6 +781,16 @@ const ui = (
 )
 ```
 
+## Examples
+
+Usage examples are kept on the [downshift docsite][docsite] and also on
+Codesandbox. Each example has a link to its own Codesandbox version, so check
+the docs.
+
+It can be a great contributing opportunity to provide relevant use cases as
+docsite examples. If you have such an example, please create an issue with the
+suggestion and the Codesandbox for it, and we will take it from there.
+
 [sandbox-example]:
   https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd
 [select-sandbox-example]:

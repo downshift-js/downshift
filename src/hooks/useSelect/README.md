@@ -866,6 +866,16 @@ const ui = (
 )
 ```
 
+## Examples
+
+Usage examples are kept on the [downshift docsite][docsite] and also on
+Codesandbox. Each example has a link to its own Codesandbox version, so check
+the docs.
+
+It can be a great contributing opportunity to provide relevant use cases as
+docsite examples. If you have such an example, please create an issue with the
+suggestion and the Codesandbox for it, and we will take it from there.
+
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
 [sandbox-example]: https://codesandbox.io/s/53qfj
@@ -873,3 +883,4 @@ const ui = (
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
+[docsite]: https://downshift-js.com/

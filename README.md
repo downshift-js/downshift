@@ -38,29 +38,31 @@ use case.
 
 ## This solution
 
-This library provides its users two main sets of solutions: the `Downshift`
-component and a set of hooks. The component is still the main part of the
-library, providing the autocomplete/combobox logic as a render prop. The hooks
-are newer and are going to be the way forward to providing accessibile
-experiences. Right now we support `useSelect` for `select` components,
-`useCombobox` for `combobox/autocomplete` inputs and `useMultipleSelection` to
-make the selection of multiple items easier for both the `select` and `combobox`
-elements.
+The library offers a couple of solutions. The first solution, which is the one
+we recommend you to try first, is a set of React hooks, each serving a specific
+use case:
 
-Since both `useCombobox` and the component `Downshift` aim to provide
-accessibility to a combobox, we suggest trying the new `useCombobox` first. If
-you feel that `Downshift` still covers your use cases better then use the
-component instead. However, if these use cases should also be covered in
-`useCombobox`, make sure to create an issue to help us improve the hook. Both
-the hooks and the component are actively maintained but we are cool kids from
-the future and prefer to share `React` logic via hooks.
+- [useSelect][useselect-readme] for a custom select component.
+- [useCombobox][combobox-readme] for a combobox/autocomplete input.
+- [useMultipleSelection][multiple-selection-readme] for selecting multiple items
+  in a select or a combobox, as well as deleting items from selection or
+  navigating between the selected items.
+
+The second solution is the `Downshift` component, which can also be used to
+create accessible combobox and select components, providing the logic in the
+form of a render prop. It served as inspiration for developing the hooks and it
+has been around for a while. It established a successful pattern for making
+components accessible and functional while giving developers complete freedom
+when building the UI.
 
 The `README` on this page convers only the component while each hook has its own
-`README` file. Check the [hooks section](#the-react-hooks-api) for links to
-each. Both the component and the hooks are similar in many concepts so you can
-always switch between the documentation pages in order to find information.
+`README` page. You can navigate to the [hooks page][hooks-readme] or go directly
+to the hook you need by using the links in the list above.
 
-### Downshift component
+For examples on how to use the hooks or the Downshift component, check out our
+[docsite][docsite]!
+
+### Downshift
 
 This is a component that controls user interactions and state for you so you can
 create autocomplete/combobox or select dropdown components. It uses a [render
@@ -75,33 +77,6 @@ harder to contribute to.
 
 > NOTE: The original use case of this component is autocomplete, however the API
 > is powerful and flexible enough to build things like dropdowns as well.
-
-### The React Hooks API
-
-`Downshift` proved to be a versatile component to create not only combobox
-inputs, but also custom select elements and even multiple selection experiences.
-However, additional code was needed to make these experiences fully accessible,
-so we decided to create dedicated React hooks for them. Each hook handles a
-specific dropdown variation and aims to make it fully accessible.
-
-You can check the progress in the [hooks page][hooks-readme]. The hooks
-published so far are:
-
-- [useSelect][useselect-readme] for a custom select dropdown.
-- [useCombobox][combobox-readme] for a combobox/autocomplete input.
-- [useMultipleSelection][multiple-selection-readme] for allowing the selection
-  of multiple items in a select or a combobox.
-
-For examples on how to use the hooks check out our [docsite][docsite]!
-
-### Bundle size concerns
-
-Adding the hooks into this repo increased the bundle size considerably. However,
-since we create the bundle with `Rollup` and export both `<Downshift>` and the
-hooks as modules, you should be able to have the library treeshaked (pruned) and
-receive only the code you need. Since version `3.4.8`
-[BundlePhobia][bundle-phobia-link] marked `Downshift` as both `tree-shakeable`
-and `side-effect free`.
 
 ## Table of Contents
 
@@ -1428,6 +1403,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.
