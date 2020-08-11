@@ -39,8 +39,10 @@ use case.
 ## This solution
 
 The library offers a couple of solutions. The first solution, which is the one
-we recommend you to try first, is a set of React hooks, each serving a specific
-use case:
+we recommend you to try first, is a set of React hooks. Each hook provides the
+stateful logic needed to make the corresponding component functional and
+accessible. Navigate to the documentation for each by using the links in the
+list below.
 
 - [useSelect][useselect-readme] for a custom select component.
 - [useCombobox][combobox-readme] for a combobox/autocomplete input.
