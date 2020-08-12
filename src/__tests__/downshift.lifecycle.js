@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {fireEvent, render} from '@testing-library/react'
+import {fireEvent, render, screen} from '@testing-library/react'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
 import * as utils from '../utils'
@@ -29,8 +29,8 @@ test('do not set state after unmount', () => {
   const MyComponent = () => (
     <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
   )
-  const {queryByTestId, container, unmount} = render(<MyComponent />)
-  const button = queryByTestId('button')
+  const {container, unmount} = render(<MyComponent />)
+  const button = screen.queryByTestId('button')
   document.body.appendChild(container)
 
   // blur toggle button
@@ -52,8 +52,8 @@ test('handles mouse events properly to reset state', () => {
   const MyComponent = () => (
     <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
   )
-  const {queryByTestId, container, unmount} = render(<MyComponent />)
-  const input = queryByTestId('input')
+  const {container, unmount} = render(<MyComponent />)
+  const input = screen.queryByTestId('input')
   document.body.appendChild(container)
 
   // open the menu
@@ -90,10 +90,10 @@ test('handles state change for touchevent events', () => {
   const MyComponent = () => (
     <Downshift onStateChange={handleStateChange}>{childrenSpy}</Downshift>
   )
-  const {queryByTestId, container, unmount} = render(<MyComponent />)
+  const {container, unmount} = render(<MyComponent />)
   document.body.appendChild(container)
 
-  const button = queryByTestId('button')
+  const button = screen.queryByTestId('button')
 
   // touch outside for coverage
   fireEvent.touchStart(document.body)
@@ -233,7 +233,7 @@ test('controlled highlighted index change scrolls the item into view', () => {
       </div>
     </div>
   ))
-  const {container, updateProps, queryByTestId} = setup({
+  const {container, updateProps} = setup({
     highlightedIndex: 1,
     render: renderFn,
   })
@@ -243,9 +243,9 @@ test('controlled highlighted index change scrolls the item into view', () => {
   expect(renderFn).toHaveBeenCalledTimes(1)
 
   expect(utils.scrollIntoView).toHaveBeenCalledTimes(1)
-  const menuDiv = queryByTestId('menu')
+  const menuDiv = screen.queryByTestId('menu')
   expect(utils.scrollIntoView).toHaveBeenCalledWith(
-    queryByTestId('item-75'),
+    screen.queryByTestId('item-75'),
     menuDiv,
   )
 })

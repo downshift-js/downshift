@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import Downshift from '../'
 import {resetIdCounter} from '../utils'
 
@@ -29,8 +29,8 @@ test('if aria-label is provided to the menu then aria-labelledby is not applied 
   const {menu} = renderDownshift({
     menuProps: {'aria-label': customLabel},
   })
-  expect(menu.getAttribute('aria-labelledby')).toBeNull()
-  expect(menu.getAttribute('aria-label')).toBe(customLabel)
+  expect(menu).not.toHaveAttribute('aria-labelledby')
+  expect(menu).toHaveAttribute('aria-label', customLabel)
 })
 
 function renderDownshift({renderFn, props, menuProps} = {}) {
@@ -66,8 +66,8 @@ function renderDownshift({renderFn, props, menuProps} = {}) {
   return {
     ...utils,
     renderArg,
-    root: utils.queryByTestId('root'),
-    input: utils.queryByTestId('input'),
-    menu: utils.queryByTestId('menu'),
+    root: screen.queryByTestId('root'),
+    input: screen.queryByTestId('input'),
+    menu: screen.queryByTestId('menu'),
   }
 }

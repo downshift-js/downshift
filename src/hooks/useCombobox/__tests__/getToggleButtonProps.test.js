@@ -29,6 +29,7 @@ describe('getToggleButtonProps', () => {
       })
 
       expect(toggleButtonProps.onClick).toBeUndefined()
+      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(toggleButtonProps.disabled).toBe(true)
     })
   })

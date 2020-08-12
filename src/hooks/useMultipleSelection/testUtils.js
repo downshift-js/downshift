@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import {defaultProps} from '../utils'
 import {items} from '../testUtils'
@@ -80,15 +80,15 @@ const DropdownMultipleCombobox = ({
 
 export const renderMultipleCombobox = props => {
   const wrapper = render(<DropdownMultipleCombobox {...props} />)
-  const label = wrapper.getByText(/choose an element/i)
-  const menu = wrapper.getByRole('listbox')
-  const input = wrapper.getByTestId(dataTestIds.input)
+  const label = screen.getByText(/choose an element/i)
+  const menu = screen.getByRole('listbox')
+  const input = screen.getByTestId(dataTestIds.input)
   const rerender = newProps =>
     wrapper.rerender(<DropdownMultipleCombobox {...newProps} />)
   const getSelectedItemAtIndex = index =>
-    wrapper.getByTestId(dataTestIds.selectedItem(index))
+    screen.getByTestId(dataTestIds.selectedItem(index))
   const getSelectedItems = () =>
-    wrapper.queryAllByTestId(new RegExp(dataTestIds.selectedItemPrefix))
+    screen.queryAllByTestId(new RegExp(dataTestIds.selectedItemPrefix))
   const clickOnSelectedItemAtIndex = index => {
     fireEvent.click(getSelectedItemAtIndex(index))
   }
@@ -98,7 +98,7 @@ export const renderMultipleCombobox = props => {
   const focusSelectedItemAtIndex = index => {
     getSelectedItemAtIndex(index).focus()
   }
-  const getA11yStatusContainer = () => wrapper.queryByRole('status')
+  const getA11yStatusContainer = () => screen.queryByRole('status')
   const focusInput = () => {
     input.focus()
   }

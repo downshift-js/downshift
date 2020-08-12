@@ -66,51 +66,51 @@
     "react": ">=16.8.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2",
+    "@babel/runtime": "^7.11.2",
     "compute-scroll-into-view": "^1.0.14",
     "prop-types": "^15.7.2",
     "react-is": "^16.13.1"
   },
   "devDependencies": {
-    "@babel/helpers": "^7.10.1",
-    "@material-ui/core": "^4.10.2",
+    "@babel/helpers": "^7.10.4",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
     "@testing-library/cypress": "^6.0.0",
-    "@testing-library/dom": "^7.16.1",
-    "@testing-library/jest-dom": "^5.10.1",
-    "@testing-library/preact": "^1.0.2",
-    "@testing-library/react": "^10.2.1",
-    "@testing-library/react-hooks": "^3.3.0",
-    "@testing-library/user-event": "^11.4.2",
-    "@types/jest": "^26.0.0",
-    "@types/react": "^16.9.36",
+    "@testing-library/dom": "^7.22.1",
+    "@testing-library/jest-dom": "^5.11.2",
+    "@testing-library/preact": "^2.0.0",
+    "@testing-library/react": "^10.4.8",
+    "@testing-library/react-hooks": "^3.4.1",
+    "@testing-library/user-event": "^12.1.1",
+    "@types/jest": "^26.0.9",
+    "@types/react": "^16.9.46",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
     "buble": "^0.20.0",
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.2",
-    "cypress": "^4.8.0",
+    "cypress": "^4.12.1",
     "docz": "^2.3.1",
     "docz-theme-default": "^1.2.0",
     "eslint-plugin-cypress": "^2.11.1",
-    "eslint-plugin-react": "7.20.0",
-    "flow-bin": "^0.127.0",
+    "eslint-plugin-react": "7.20.5",
+    "flow-bin": "^0.131.0",
     "flow-coverage-report": "^0.7.0",
-    "kcd-scripts": "^6.2.3",
+    "kcd-scripts": "^6.2.4",
     "npm-run-all": "^4.1.5",
-    "preact": "^10.4.4",
+    "preact": "^10.4.7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-frame-component": "^4.1.2",
-    "react-native": "^0.62.2",
+    "react-frame-component": "^4.1.3",
+    "react-native": "^0.63.2",
     "react-test-renderer": "^16.13.1",
-    "react-virtual": "^2.2.0",
+    "react-virtual": "^2.2.1",
     "rollup-plugin-babel": "^4.4.0",
     "serve": "^11.3.2",
-    "start-server-and-test": "^1.11.0",
-    "typescript": "^3.9.5"
+    "start-server-and-test": "^1.11.3",
+    "typescript": "^3.9.7"
   },
   "eslintConfig": {
     "extends": "./node_modules/kcd-scripts/eslint.js",
@@ -125,11 +125,22 @@
       "react/prop-types": "off",
       "jsx-a11y/label-has-for": "off",
       "jsx-a11y/label-has-associated-control": "off",
+      "jsx-a11y/autocomplete-valid": "off",
       "complexity": [
         "error",
         12
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "cypress/**/*.js"
+        ],
+        "rules": {
+          "testing-library/prefer-screen-queries": "off"
+        }
+      }
+    ]
   },
   "eslintIgnore": [
     "node_modules",

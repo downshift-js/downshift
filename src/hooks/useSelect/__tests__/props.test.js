@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
-import {cleanup, act} from '@testing-library/react'
+import {act} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {
@@ -14,7 +14,6 @@ jest.useFakeTimers()
 
 describe('props', () => {
   beforeEach(jest.runAllTimers)
-  afterEach(cleanup)
 
   test('if falsy then prop types error is thrown', () => {
     renderHook(() => useSelect())
@@ -412,7 +411,7 @@ describe('props', () => {
 
       clickOnItemAtIndex(4)
 
-      expect(toggleButton.textContent).toEqual(items[2])
+      expect(toggleButton).toHaveTextContent(items[2])
     })
 
     test('highlightedIndex on open gets computed based on the selectedItem prop value', () => {

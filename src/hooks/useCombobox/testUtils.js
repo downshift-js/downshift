@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
@@ -34,13 +34,13 @@ const renderCombobox = (props, uiCallback) => {
   const wrapper = render(uiCallback ? uiCallback(ui) : ui)
   const rerender = newProps =>
     wrapper.rerender(<DropdownCombobox renderSpy={renderSpy} {...newProps} />)
-  const label = wrapper.getByText(/choose an element/i)
-  const menu = wrapper.getByRole('listbox')
-  const toggleButton = wrapper.getByTestId(dataTestIds.toggleButton)
-  const input = wrapper.getByTestId(dataTestIds.input)
-  const combobox = wrapper.getByRole('combobox')
-  const getItemAtIndex = index => wrapper.getByTestId(dataTestIds.item(index))
-  const getItems = () => wrapper.queryAllByRole('option')
+  const label = screen.getByText(/choose an element/i)
+  const menu = screen.getByRole('listbox')
+  const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
+  const input = screen.getByTestId(dataTestIds.input)
+  const combobox = screen.getByRole('combobox')
+  const getItemAtIndex = index => screen.getByTestId(dataTestIds.item(index))
+  const getItems = () => screen.queryAllByRole('option')
   const clickOnItemAtIndex = index => {
     fireEvent.click(getItemAtIndex(index))
   }
@@ -50,7 +50,7 @@ const renderCombobox = (props, uiCallback) => {
   const mouseMoveItemAtIndex = index => {
     fireEvent.mouseMove(getItemAtIndex(index))
   }
-  const getA11yStatusContainer = () => wrapper.queryByRole('status')
+  const getA11yStatusContainer = () => screen.queryByRole('status')
   const mouseLeaveMenu = () => {
     fireEvent.mouseLeave(menu)
   }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
 import {setIdCounter} from '../utils'
 
@@ -13,8 +13,8 @@ afterEach(() => console.error.mockRestore())
 test('clicking on a DOM node within an item selects that item', () => {
   // inspiration: https://github.com/downshift-js/downshift/issues/113
   const items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}]
-  const {queryByTestId, childrenSpy} = renderDownshift({items})
-  const firstButton = queryByTestId('item-0-button')
+  const {childrenSpy} = renderDownshift({items})
+  const firstButton = screen.queryByTestId('item-0-button')
   childrenSpy.mockClear()
   fireEvent.click(firstButton)
   expect(childrenSpy).toHaveBeenCalledWith(
@@ -37,8 +37,8 @@ test('clicking anywhere within the rendered downshift but outside an item does n
 })
 
 test('on mousemove of an item updates the highlightedIndex to that item', () => {
-  const {queryByTestId, childrenSpy} = renderDownshift()
-  const thirdButton = queryByTestId('item-2-button')
+  const {childrenSpy} = renderDownshift()
+  const thirdButton = screen.queryByTestId('item-2-button')
   childrenSpy.mockClear()
   fireEvent.mouseMove(thirdButton)
   expect(childrenSpy).toHaveBeenCalledWith(
@@ -49,10 +49,10 @@ test('on mousemove of an item updates the highlightedIndex to that item', () => 
 })
 
 test('on mousemove of the highlighted item should not emit changes', () => {
-  const {queryByTestId, childrenSpy} = renderDownshift({
+  const {childrenSpy} = renderDownshift({
     props: {defaultHighlightedIndex: 1},
   })
-  const secondButton = queryByTestId('item-1-button')
+  const secondButton = screen.queryByTestId('item-1-button')
   childrenSpy.mockClear()
   fireEvent.mouseMove(secondButton)
   expect(childrenSpy).not.toHaveBeenCalled()
@@ -67,22 +67,22 @@ test('on mousedown of the item should not change current focused element', () =>
       </div>
     </div>
   ))
-  const {queryByTestId} = render(<Downshift>{childrenSpy}</Downshift>)
-  const externalButton = queryByTestId('external-button')
-  const inItemButton = queryByTestId('in-item-button')
+  render(<Downshift>{childrenSpy}</Downshift>)
+  const externalButton = screen.queryByTestId('external-button')
+  const inItemButton = screen.queryByTestId('in-item-button')
   childrenSpy.mockClear()
 
   externalButton.focus()
-  expect(document.activeElement).toBe(externalButton)
+  expect(externalButton).toHaveFocus()
   fireEvent.mouseDown(inItemButton)
-  expect(document.activeElement).toBe(externalButton)
+  expect(externalButton).toHaveFocus()
 })
 
 test('after selecting an item highlightedIndex should be reset to defaultHighlightIndex', () => {
-  const {queryByTestId, childrenSpy} = renderDownshift({
+  const {childrenSpy} = renderDownshift({
     props: {defaultHighlightedIndex: 1},
   })
-  const firstButton = queryByTestId('item-0-button')
+  const firstButton = screen.queryByTestId('item-0-button')
   childrenSpy.mockClear()
   fireEvent.click(firstButton)
   expect(childrenSpy).toHaveBeenCalledWith(
@@ -164,8 +164,9 @@ test(`disabled item can't be selected by pressing enter`, () => {
   const utils = renderDownshift({items})
   const {input, arrowDownInput, enterOnInput, changeInputValue} = utils
 
-  const firstItem = utils.queryByTestId('item-0')
-  expect(firstItem.hasAttribute('disabled')).toBe(true)
+  const firstItem = screen.queryByTestId('item-0')
+  // eslint-disable-next-line jest-dom/prefer-enabled-disabled
+  expect(firstItem).toHaveAttribute('disabled')
 
   changeInputValue('c')
   // ↓
@@ -349,7 +350,7 @@ function renderDownshift({
       {...props}
     />,
   )
-  const input = utils.queryByTestId('input')
+  const input = screen.queryByTestId('input')
   return {
     ...utils,
     childrenSpy,
