@@ -20,12 +20,12 @@ afterEach(() => {
 
 test('no children provided renders nothing', () => {
   const MyComponent = () => <Downshift />
-  expect(render(<MyComponent />).container.firstChild).toBe(null)
+  expect(render(<MyComponent />).container).toBeEmptyDOMElement()
 })
 
 test('returning null renders nothing', () => {
   const MyComponent = () => <Downshift children={() => null} />
-  expect(render(<MyComponent />).container.firstChild).toBe(null)
+  expect(render(<MyComponent />).container).toBeEmptyDOMElement()
 })
 
 test('returning a composite component without calling getRootProps results in an error', () => {

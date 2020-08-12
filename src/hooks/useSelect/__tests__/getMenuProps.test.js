@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as React from 'react'
 import {act, renderHook} from '@testing-library/react-hooks'
-import {cleanup, act as reactAct, fireEvent} from '@testing-library/react'
+import {act as reactAct, fireEvent, screen} from '@testing-library/react'
 import {renderUseSelect, renderSelect} from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
@@ -10,8 +10,6 @@ import useSelect from '..'
 jest.useFakeTimers()
 
 describe('getMenuProps', () => {
-  afterEach(cleanup)
-
   describe('hook props', () => {
     test('assign default value to aria-labelledby', () => {
       const {result} = renderUseSelect()
@@ -241,7 +239,7 @@ describe('getMenuProps', () => {
     test('is grabbed when isOpen is passed as true', () => {
       const {menu} = renderSelect({isOpen: true})
 
-      expect(document.activeElement).toBe(menu)
+      expect(menu).toHaveFocus()
     })
 
     test('is grabbed when initialIsOpen is passed as true', () => {
@@ -818,7 +816,7 @@ describe('getMenuProps', () => {
       })
 
       test('by focusing another element should behave as a normal blur', () => {
-        const {toggleButton, getByText, getItems} = renderSelect(
+        const {toggleButton, getItems} = renderSelect(
           {initialIsOpen: true, initialHighlightedIndex: 2},
           ui => {
             return (
@@ -830,7 +828,7 @@ describe('getMenuProps', () => {
           },
         )
 
-        getByText(/Second element/).focus()
+        screen.getByText(/Second element/).focus()
 
         expect(getItems()).toHaveLength(0)
         expect(toggleButton).toHaveTextContent('Element')
@@ -904,6 +902,7 @@ describe('getMenuProps', () => {
         const {getToggleButtonProps, getMenuProps} = useSelect({items})
         getToggleButtonProps({}, {suppressRefError: true})
 
+        // eslint-disable-next-line jest/no-if
         if (firstRender) {
           firstRender = false
           getMenuProps({}, {suppressRefError: true})

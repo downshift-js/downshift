@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
 
 test('will not reset when clicking within the menu', () => {
@@ -52,26 +52,26 @@ test('will not reset when clicking within the menu', () => {
       </Downshift>
     )
   }
-  const {getByTestId, queryByTestId} = render(<MyPortalAutocomplete />)
-  expect(queryByTestId('menu')).toBeNull()
-  getByTestId('button').click()
-  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
+  render(<MyPortalAutocomplete />)
+  expect(screen.queryByTestId('menu')).toBeNull()
+  screen.getByTestId('button').click()
+  expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
-  const notAnItem = getByTestId('not-an-item')
+  const notAnItem = screen.getByTestId('not-an-item')
 
   // Mouse events
   fireEvent.mouseDown(notAnItem)
   notAnItem.focus() // sets document.activeElement
   fireEvent.mouseUp(notAnItem)
-  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
+  expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   // Touch events
   fireEvent.touchStart(notAnItem)
   fireEvent.touchEnd(notAnItem)
   notAnItem.focus() // sets document.activeElement
-  expect(getByTestId('menu')).toBeInstanceOf(HTMLElement)
+  expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
-  getByTestId('item').click()
-  expect(queryByTestId('menu')).toBeNull()
-  expect(getByTestId('selection')).toHaveTextContent('The item')
+  screen.getByTestId('item').click()
+  expect(screen.queryByTestId('menu')).toBeNull()
+  expect(screen.getByTestId('selection')).toHaveTextContent('The item')
 })

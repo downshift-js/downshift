@@ -1,11 +1,8 @@
-import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {renderCombobox, renderUseCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
 
 describe('getItemProps', () => {
-  afterEach(cleanup)
-
   test('throws error if no index or item has been passed', () => {
     const {result} = renderUseCombobox()
 
@@ -60,6 +57,7 @@ describe('getItemProps', () => {
 
       expect(itemProps.onClick).toBeUndefined()
       expect(itemProps.onMouseMove).toBeUndefined()
+      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(itemProps.disabled).toBe(true)
     })
   })
@@ -184,9 +182,10 @@ describe('getItemProps', () => {
           'aria-activedescendant',
           defaultIds.getItemId(index),
         )
-        expect(
-          getItemAtIndex(previousIndex).getAttribute('aria-selected'),
-        ).toEqual('false')
+        expect(getItemAtIndex(previousIndex)).toHaveAttribute(
+          'aria-selected',
+          'false',
+        )
       })
 
       it('keeps highlight on multiple events', () => {

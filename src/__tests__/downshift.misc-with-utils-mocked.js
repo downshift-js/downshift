@@ -2,7 +2,7 @@
 // but we still want to have tested.
 
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
 import {scrollIntoView} from '../utils'
 
@@ -34,9 +34,9 @@ test('does not scroll from an onMouseMove event', () => {
       )
     }
   }
-  const {queryByTestId} = render(<HighlightedIndexController />)
-  const input = queryByTestId('input')
-  const item = queryByTestId('item-2')
+  render(<HighlightedIndexController />)
+  const input = screen.queryByTestId('input')
+  const item = screen.queryByTestId('item-2')
   fireEvent.mouseMove(item)
   jest.runAllTimers()
   expect(scrollIntoView).not.toHaveBeenCalled()

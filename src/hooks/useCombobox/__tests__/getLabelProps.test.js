@@ -1,10 +1,7 @@
-import {cleanup} from '@testing-library/react'
 import {renderUseCombobox} from '../testUtils'
 import {defaultIds} from '../../testUtils'
 
 describe('getLabelProps', () => {
-  afterEach(cleanup)
-
   test('should have a default id assigned', () => {
     const {result} = renderUseCombobox()
     const labelProps = result.current.getLabelProps()

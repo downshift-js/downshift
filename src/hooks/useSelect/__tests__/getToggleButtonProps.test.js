@@ -78,6 +78,7 @@ describe('getToggleButtonProps', () => {
 
       expect(toggleButtonProps.onClick).toBeUndefined()
       expect(toggleButtonProps.onKeyDown).toBeUndefined()
+      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(toggleButtonProps.disabled).toBe(true)
     })
   })
@@ -655,6 +656,7 @@ describe('getToggleButtonProps', () => {
         const {getMenuProps, getToggleButtonProps} = useSelect({items})
         getMenuProps({}, {suppressRefError: true})
 
+        // eslint-disable-next-line jest/no-if
         if (firstRender) {
           firstRender = false
           getToggleButtonProps({}, {suppressRefError: true})

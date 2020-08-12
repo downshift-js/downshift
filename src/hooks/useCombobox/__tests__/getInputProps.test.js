@@ -108,6 +108,7 @@ describe('getInputProps', () => {
       expect(inputProps.onChange).toBeUndefined()
       expect(inputProps.onKeyDown).toBeUndefined()
       expect(inputProps.onBlur).toBeUndefined()
+      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(inputProps.disabled).toBe(true)
     })
   })

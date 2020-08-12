@@ -1,11 +1,8 @@
-import {cleanup} from '@testing-library/react'
 import {act} from '@testing-library/react-hooks'
 import {renderUseSelect, renderSelect} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
 
 describe('getItemProps', () => {
-  afterEach(cleanup)
-
   test('throws error if no index or item has been passed', () => {
     const {result} = renderUseSelect()
 
@@ -59,6 +56,7 @@ describe('getItemProps', () => {
 
       expect(itemProps.onMouseMove).toBeUndefined()
       expect(itemProps.onClick).toBeUndefined()
+      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(itemProps.disabled).toBe(true)
     })
   })
@@ -157,7 +155,8 @@ describe('getItemProps', () => {
 
         mouseMoveItemAtIndex(index)
 
-        expect(menu.getAttribute('aria-activedescendant')).toBe(
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
           defaultIds.getItemId(index),
         )
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')

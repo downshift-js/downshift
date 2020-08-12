@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -537,12 +537,12 @@ test('itemCount can be set and unset asynchronously', () => {
       </div>
     )
   })
-  const {queryByTestId} = render(
+  render(
     <Downshift isOpen={true} itemCount={10}>
       {childrenSpy}
     </Downshift>,
   )
-  const input = queryByTestId('input')
+  const input = screen.queryByTestId('input')
   const up = () => fireEvent.keyDown(input, {key: 'ArrowUp'})
   const down = () => fireEvent.keyDown(input, {key: 'ArrowDown'})
 
@@ -708,13 +708,13 @@ function setup({items = colors} = {}) {
 function renderDownshift({items, props} = {}) {
   const {Component, childrenSpy} = setup({items})
   const utils = render(<Component {...props} />)
-  const input = utils.queryByTestId('input')
+  const input = screen.queryByTestId('input')
   return {
     Component,
     childrenSpy,
     ...utils,
     input,
-    button: utils.queryByTestId('button'),
+    button: screen.queryByTestId('button'),
     arrowDownInput: extraEventProps =>
       fireEvent.keyDown(input, {key: 'ArrowDown', ...extraEventProps}),
     arrowUpInput: extraEventProps =>

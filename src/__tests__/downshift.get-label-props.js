@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import Downshift from '../'
 
 beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
@@ -7,8 +7,7 @@ afterEach(() => console.error.mockRestore())
 
 test('label "for" attribute is set to the input "id" attribute', () => {
   const {label, input} = renderDownshift()
-  expect(label.getAttribute('for')).toBeDefined()
-  expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
+  expect(label).toHaveAttribute('for', input.getAttribute('id'))
 })
 
 test('when the inputId prop is set, the label for is set to it', () => {
@@ -16,16 +15,16 @@ test('when the inputId prop is set, the label for is set to it', () => {
   const {label, input} = renderDownshift({
     props: {inputId: id},
   })
-  expect(label.getAttribute('for')).toBe(id)
-  expect(label.getAttribute('for')).toBe(input.getAttribute('id'))
+  expect(label).toHaveAttribute('for', input.getAttribute('id'))
+  expect(label).toHaveAttribute('for', id)
 })
 
 function renderDownshift({props} = {}) {
   const utils = render(<BasicDownshift {...props} />)
   return {
     ...utils,
-    input: utils.queryByTestId('input'),
-    label: utils.queryByTestId('label'),
+    input: screen.queryByTestId('input'),
+    label: screen.queryByTestId('label'),
   }
 }
 
