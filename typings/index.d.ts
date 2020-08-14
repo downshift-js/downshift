@@ -170,7 +170,7 @@ export interface Actions<Item> {
     cb?: Callback,
   ) => void
   selectItem: (
-    item: Item | undefined,
+    item: Item | null,
     otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
   ) => void
