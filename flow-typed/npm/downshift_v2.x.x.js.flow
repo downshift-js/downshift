@@ -209,7 +209,7 @@ declare module downshift {
     openMenu: (cb?: Callback) => void;
     closeMenu: (cb?: Callback) => void;
     toggleMenu: (otherStateToSet?: {}, cb?: Callback) => void;
-    selectItem: (item: Item, otherStateToSet?: {}, cb?: Callback) => void;
+    selectItem: (item: ?Item, otherStateToSet?: {}, cb?: Callback) => void;
     selectItemAtIndex: (
       index: number,
       otherStateToSet?: {},
