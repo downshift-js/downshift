@@ -5,15 +5,16 @@ import {
   handleRefs,
   normalizeArrowKey,
   callAllEventHandlers,
-  validateControlledUnchanged,
 } from '../../utils'
 import {
   getItemIndex,
   getPropTypesValidator,
-  updateA11yStatus,
+  useA11yMessageSetter,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
+  useScrollIntoView,
+  useControlPropsValidator,
 } from '../utils'
 import {
   getInitialState,
@@ -68,15 +69,11 @@ function useCombobox(userProps = {}) {
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
   itemRefs.current = {}
-  // used not to scroll on highlight by mouse.
-  const shouldScrollRef = useRef(true)
   const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
   const elementIdsRef = useRef(getElementIds(props))
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
-  // used for checking when props are moving from controlled to uncontrolled.
-  const prevPropsRef = useRef(props)
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
@@ -85,71 +82,42 @@ function useCombobox(userProps = {}) {
 
   // Effects.
   // Sets a11y status message on changes in state.
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    const previousResultCount = previousResultCountRef.current
-
-    updateA11yStatus(
-      () =>
-        getA11yStatusMessage({
-          isOpen,
-          highlightedIndex,
-          selectedItem,
-          inputValue,
-          highlightedItem: items[highlightedIndex],
-          resultCount: items.length,
-          itemToString,
-          previousResultCount,
-        }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, inputValue, items])
+  useA11yMessageSetter(
+    getA11yStatusMessage,
+    [isOpen, highlightedIndex, inputValue, items],
+    {
+      isInitialMount: isInitialMountRef.current,
+      previousResultCount: previousResultCountRef.current,
+      items,
+      environment,
+      itemToString,
+      ...state,
+    },
+  )
   // Sets a11y status message on changes in selectedItem.
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    const previousResultCount = previousResultCountRef.current
-
-    updateA11yStatus(
-      () =>
-        getA11ySelectionMessage({
-          isOpen,
-          highlightedIndex,
-          selectedItem,
-          inputValue,
-          highlightedItem: items[highlightedIndex],
-          resultCount: items.length,
-          itemToString,
-          previousResultCount,
-        }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItem])
+  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
+    isInitialMount: isInitialMountRef.current,
+    previousResultCount: previousResultCountRef.current,
+    items,
+    environment,
+    itemToString,
+    ...state,
+  })
   // Scroll on highlighted item if change comes from keyboard.
-  useEffect(() => {
-    if (
-      highlightedIndex < 0 ||
-      !isOpen ||
-      !Object.keys(itemRefs.current).length
-    ) {
-      return
-    }
-
-    if (shouldScrollRef.current === false) {
-      shouldScrollRef.current = true
-    } else {
-      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightedIndex])
-  // Controls the focus on the menu or the toggle button.
+  const shouldScrollRef = useScrollIntoView({
+    menuElement: menuRef.current,
+    highlightedIndex,
+    isOpen,
+    itemRefs,
+    scrollIntoView,
+    getItemNodeFromIndex
+  })
+  useControlPropsValidator({
+    isInitialMount: isInitialMountRef.current,
+    props,
+    state,
+  })
+  // Controls the focus on the input on open.
   useEffect(() => {
     // Don't focus menu on first render.
     if (isInitialMountRef.current) {
@@ -169,14 +137,6 @@ function useCombobox(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    validateControlledUnchanged(state, prevPropsRef.current, props)
-    prevPropsRef.current = props
-  }, [state, props])
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
@@ -356,7 +316,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest],
+    [dispatch, latest, shouldScrollRef],
   )
 
   const getToggleButtonProps = useCallback(
