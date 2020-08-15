@@ -444,18 +444,15 @@ export function useGetterPropsCalledChecker(...propKeys) {
 }
 
 export function useA11yMessageSetter(
-  getA11yStatusMessage,
+  getA11yMessage,
   dependencyArray,
   {
     isInitialMount,
     previousResultCount,
-    isOpen,
     highlightedIndex,
-    selectedItem,
-    inputValue,
     items,
     environment,
-    itemToString: itemToStringProp,
+    ...rest
   },
 ) {
   // Sets a11y status message on changes in state.
@@ -466,15 +463,12 @@ export function useA11yMessageSetter(
 
     updateA11yStatus(
       () =>
-        getA11yStatusMessage({
-          isOpen,
+        getA11yMessage({
           highlightedIndex,
-          selectedItem,
-          inputValue,
           highlightedItem: items[highlightedIndex],
           resultCount: items.length,
-          itemToString: itemToStringProp,
           previousResultCount,
+          ...rest,
         }),
       environment.document,
     )
@@ -516,7 +510,7 @@ export function useScrollIntoView({
 export function useControlPropsValidator({isInitialMount, props, state}) {
   // used for checking when props are moving from controlled to uncontrolled.
   const prevPropsRef = useRef(props)
-  
+
   useEffect(() => {
     if (isInitialMount) {
       return
