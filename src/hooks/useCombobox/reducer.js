@@ -69,12 +69,13 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownEnter:
       changes = {
-        ...(state.highlightedIndex >= 0 && {
-          selectedItem: props.items[state.highlightedIndex],
-          isOpen: getDefaultValue(props, 'isOpen'),
-          highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-          inputValue: props.itemToString(props.items[state.highlightedIndex]),
-        }),
+        ...(state.isOpen &&
+          state.highlightedIndex >= 0 && {
+            selectedItem: props.items[state.highlightedIndex],
+            isOpen: getDefaultValue(props, 'isOpen'),
+            highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+            inputValue: props.itemToString(props.items[state.highlightedIndex]),
+          }),
       }
       break
     case stateChangeTypes.InputKeyDownEscape:
@@ -89,24 +90,28 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownHome:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          1,
-          0,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
-        ),
+        ...(state.isOpen && {
+          highlightedIndex: getNextNonDisabledIndex(
+            1,
+            0,
+            props.items.length,
+            action.getItemNodeFromIndex,
+            false,
+          ),
+        }),
       }
       break
     case stateChangeTypes.InputKeyDownEnd:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          -1,
-          props.items.length - 1,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
-        ),
+        ...(state.isOpen && {
+          highlightedIndex: getNextNonDisabledIndex(
+            -1,
+            props.items.length - 1,
+            props.items.length,
+            action.getItemNodeFromIndex,
+            false,
+          ),
+        }),
       }
       break
     case stateChangeTypes.InputBlur:

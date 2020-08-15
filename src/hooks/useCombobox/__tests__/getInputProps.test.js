@@ -744,22 +744,26 @@ describe('getInputProps', () => {
       })
 
       test('enter on an input with a closed menu does nothing', () => {
-        const {keyDownOnInput, renderSpy} = renderCombobox({
+        const {keyDownOnInput, getItems, input} = renderCombobox({
           initialHighlightedIndex: 2,
           initialIsOpen: false,
         })
-        expect(renderSpy).toHaveBeenCalledTimes(1)
+
         keyDownOnInput('Enter')
-        expect(renderSpy).toHaveBeenCalledTimes(1)
+
+        expect(getItems()).toHaveLength(0)
+        expect(input).not.toHaveValue()
       })
 
       test('enter on an input with an open menu does nothing without a highlightedIndex', () => {
-        const {keyDownOnInput, renderSpy} = renderCombobox({
+        const {keyDownOnInput, getItems, input} = renderCombobox({
           initialIsOpen: true,
         })
-        expect(renderSpy).toHaveBeenCalledTimes(1)
+
         keyDownOnInput('Enter')
-        expect(renderSpy).toHaveBeenCalledTimes(1)
+
+        expect(getItems()).toHaveLength(items.length)
+        expect(input).not.toHaveValue()
       })
 
       test('tab it closes the menu and selects highlighted item', () => {

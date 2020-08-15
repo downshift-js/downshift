@@ -148,7 +148,7 @@ equialent of each item object.
   {() => {
     // import React from 'react'
     // import { useSelect } from 'downshift'
-    // import { items, useStyles } from './utils'
+    // import { itemsAsObjects, useStyles } from './utils'
     // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
     // import {Button, FormLabel, List, ListItem, ListItemText } from '@material-ui/core'
     function MaterialDropdownSelect() {
@@ -162,7 +162,7 @@ equialent of each item object.
         getMenuProps,
         highlightedIndex,
         getItemProps,
-      } = useSelect({items, itemToString})
+      } = useSelect({itemsAsObjects, itemToString})
       return (
         <div>
           <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
