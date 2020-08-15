@@ -244,13 +244,14 @@ function useCombobox(userProps = {}) {
         }
         const latestState = latest.current.state
 
-        if (latestState.isOpen && latestState.highlightedIndex > -1) {
+        if (latestState.isOpen) {
           event.preventDefault()
-          dispatch({
-            type: stateChangeTypes.InputKeyDownEnter,
-            getItemNodeFromIndex,
-          })
         }
+
+        dispatch({
+          type: stateChangeTypes.InputKeyDownEnter,
+          getItemNodeFromIndex,
+        })
       },
     }),
     [dispatch, latest],

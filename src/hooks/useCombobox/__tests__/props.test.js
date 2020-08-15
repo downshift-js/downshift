@@ -298,7 +298,12 @@ describe('props', () => {
     test('is called when isOpen, highlightedIndex, inputValue or items change', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {clickOnToggleButton, rerender, keyDownOnInput, changeInputValue} = renderCombobox({
+      const {
+        clickOnToggleButton,
+        rerender,
+        keyDownOnInput,
+        changeInputValue,
+      } = renderCombobox({
         getA11yStatusMessage,
         items,
       })
@@ -316,25 +321,33 @@ describe('props', () => {
       rerender({getA11yStatusMessage, items: inputItems})
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({resultCount: inputItems.length}))
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({resultCount: inputItems.length}),
+      )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
       clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
-      
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({isOpen: true}))
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({isOpen: true}),
+      )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
-      
+
       await changeInputValue('b')
       waitForDebouncedA11yStatusUpdate()
-      
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({inputValue: 'b'}))
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({inputValue: 'b'}),
+      )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
 
       keyDownOnInput('ArrowDown')
       waitForDebouncedA11yStatusUpdate()
-      
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({highlightedIndex: 0}))
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(
+        expect.objectContaining({highlightedIndex: 0}),
+      )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(4)
     })
   })
@@ -712,9 +725,30 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('ArrowUp')
+      keyDownOnInput('Escape')
 
       expect(stateReducer).toHaveBeenCalledTimes(11)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: -1,
+          isOpen: false,
+          selectedItem: null,
+          inputValue: '',
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            selectedItem: null,
+            inputValue: '',
+            isOpen: false,
+            highlightedIndex: -1,
+          }),
+          type: stateChangeTypes.InputKeyDownEscape,
+        }),
+      )
+
+      keyDownOnInput('ArrowUp')
+
+      expect(stateReducer).toHaveBeenCalledTimes(12)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
           isOpen: false,
@@ -731,7 +765,7 @@ describe('props', () => {
 
       blurInput()
 
-      expect(stateReducer).toHaveBeenCalledTimes(12)
+      expect(stateReducer).toHaveBeenCalledTimes(13)
       expect(stateReducer).toHaveBeenLastCalledWith(
         expect.objectContaining({
           highlightedIndex: items.length - 1,
@@ -745,6 +779,69 @@ describe('props', () => {
             highlightedIndex: -1,
           }),
           type: stateChangeTypes.InputBlur,
+        }),
+      )
+
+      keyDownOnInput('Home')
+
+      expect(stateReducer).toHaveBeenCalledTimes(14)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: -1,
+          isOpen: false,
+          selectedItem: items[items.length - 1],
+          inputValue: items[items.length - 1],
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            selectedItem: items[items.length - 1],
+            inputValue: items[items.length - 1],
+            isOpen: false,
+            highlightedIndex: -1,
+          }),
+          type: stateChangeTypes.InputKeyDownHome,
+        }),
+      )
+
+      keyDownOnInput('End')
+
+      expect(stateReducer).toHaveBeenCalledTimes(15)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: -1,
+          isOpen: false,
+          selectedItem: items[items.length - 1],
+          inputValue: items[items.length - 1],
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            selectedItem: items[items.length - 1],
+            inputValue: items[items.length - 1],
+            isOpen: false,
+            highlightedIndex: -1,
+          }),
+          type: stateChangeTypes.InputKeyDownEnd,
+        }),
+      )
+
+      keyDownOnInput('Enter')
+
+      expect(stateReducer).toHaveBeenCalledTimes(16)
+      expect(stateReducer).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          highlightedIndex: -1,
+          isOpen: false,
+          selectedItem: items[items.length - 1],
+          inputValue: items[items.length - 1],
+        }),
+        expect.objectContaining({
+          changes: expect.objectContaining({
+            selectedItem: items[items.length - 1],
+            inputValue: items[items.length - 1],
+            isOpen: false,
+            highlightedIndex: -1,
+          }),
+          type: stateChangeTypes.InputKeyDownEnter,
         }),
       )
     })
