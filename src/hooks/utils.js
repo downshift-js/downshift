@@ -7,6 +7,7 @@ import {
   generateId,
   debounce,
   targetWithinDownshift,
+  validateControlledUnchanged,
 } from '../utils'
 import setStatus from '../set-a11y-status'
 
@@ -74,7 +75,7 @@ function getA11ySelectionMessage(selectionParameters) {
 /**
  * Debounced call for updating the a11y message.
  */
-export const updateA11yStatus = debounce((getA11yMessage, document) => {
+const updateA11yStatus = debounce((getA11yMessage, document) => {
   setStatus(getA11yMessage(), document)
 }, 200)
 
@@ -440,4 +441,82 @@ export function useGetterPropsCalledChecker(...propKeys) {
   )
 
   return setGetterPropCallInfo
+}
+
+export function useA11yMessageSetter(
+  getA11yMessage,
+  dependencyArray,
+  {
+    isInitialMount,
+    previousResultCount,
+    highlightedIndex,
+    items,
+    environment,
+    ...rest
+  },
+) {
+  // Sets a11y status message on changes in state.
+  useEffect(() => {
+    if (isInitialMount) {
+      return
+    }
+
+    updateA11yStatus(
+      () =>
+        getA11yMessage({
+          highlightedIndex,
+          highlightedItem: items[highlightedIndex],
+          resultCount: items.length,
+          previousResultCount,
+          ...rest,
+        }),
+      environment.document,
+    )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencyArray)
+}
+
+export function useScrollIntoView({
+  highlightedIndex,
+  isOpen,
+  itemRefs,
+  getItemNodeFromIndex,
+  menuElement,
+  scrollIntoView: scrollIntoViewProp,
+}) {
+  // used not to scroll on highlight by mouse.
+  const shouldScrollRef = useRef(true)
+  // Scroll on highlighted item if change comes from keyboard.
+  useEffect(() => {
+    if (
+      highlightedIndex < 0 ||
+      !isOpen ||
+      !Object.keys(itemRefs.current).length
+    ) {
+      return
+    }
+
+    if (shouldScrollRef.current === false) {
+      shouldScrollRef.current = true
+    } else {
+      scrollIntoViewProp(getItemNodeFromIndex(highlightedIndex), menuElement)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightedIndex])
+
+  return shouldScrollRef
+}
+
+export function useControlPropsValidator({isInitialMount, props, state}) {
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
+
+  useEffect(() => {
+    if (isInitialMount) {
+      return
+    }
+
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props, isInitialMount])
 }

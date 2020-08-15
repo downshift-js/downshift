@@ -7,17 +7,18 @@ import {
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
-  updateA11yStatus,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
+  useA11yMessageSetter,
+  useScrollIntoView,
+  useControlPropsValidator,
 } from '../utils'
 import {
   callAllEventHandlers,
   handleRefs,
   debounce,
   normalizeArrowKey,
-  validateControlledUnchanged,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
 import {propTypes, defaultProps} from './utils'
@@ -64,8 +65,6 @@ function useSelect(userProps = {}) {
   const menuRef = useRef(null)
   const itemRefs = useRef()
   itemRefs.current = {}
-  // used not to scroll when highlight by mouse.
-  const shouldScrollRef = useRef(true)
   // used not to trigger menu blur action in some scenarios.
   const shouldBlurRef = useRef(true)
   // used to keep the inputValue clearTimeout object between renders.
@@ -75,8 +74,6 @@ function useSelect(userProps = {}) {
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
   const isInitialMountRef = useRef(true)
-  // used for checking when props are moving from controlled to uncontrolled.
-  const prevPropsRef = useRef(props)
   // utility callback to get item element.
   const latest = useLatestRef({
     state,
@@ -89,53 +86,36 @@ function useSelect(userProps = {}) {
 
   // Effects.
   // Sets a11y status message on changes in state.
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    const previousResultCount = previousResultCountRef.current
-
-    updateA11yStatus(
-      () =>
-        getA11yStatusMessage({
-          isOpen,
-          highlightedIndex,
-          selectedItem,
-          inputValue,
-          highlightedItem: items[highlightedIndex],
-          resultCount: items.length,
-          itemToString,
-          previousResultCount,
-        }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, inputValue, items])
+  useA11yMessageSetter(
+    getA11yStatusMessage,
+    [isOpen, highlightedIndex, inputValue, items],
+    {
+      isInitialMount: isInitialMountRef.current,
+      previousResultCount: previousResultCountRef.current,
+      items,
+      environment,
+      itemToString,
+      ...state,
+    },
+  )
   // Sets a11y status message on changes in selectedItem.
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    const previousResultCount = previousResultCountRef.current
-
-    updateA11yStatus(
-      () =>
-        getA11ySelectionMessage({
-          isOpen,
-          highlightedIndex,
-          selectedItem,
-          inputValue,
-          highlightedItem: items[highlightedIndex],
-          resultCount: items.length,
-          itemToString,
-          previousResultCount,
-        }),
-      environment.document,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItem])
+  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
+    isInitialMount: isInitialMountRef.current,
+    previousResultCount: previousResultCountRef.current,
+    items,
+    environment,
+    itemToString,
+    ...state,
+  })
+  // Scroll on highlighted item if change comes from keyboard.
+  const shouldScrollRef = useScrollIntoView({
+    menuElement: menuRef.current,
+    highlightedIndex,
+    isOpen,
+    itemRefs,
+    scrollIntoView,
+    getItemNodeFromIndex,
+  })
   // Sets cleanup for the keysSoFar after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
@@ -152,8 +132,12 @@ function useSelect(userProps = {}) {
       return
     }
     clearTimeoutRef.current(dispatch)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputValue])
+  }, [dispatch, inputValue])
+  useControlPropsValidator({
+    isInitialMount: isInitialMountRef.current,
+    props,
+    state,
+  })
   /* Controls the focus on the menu or the toggle button. */
   useEffect(() => {
     // Don't focus menu on first render.
@@ -182,22 +166,6 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
-  // Scroll on highlighted item if change comes from keyboard.
-  useEffect(() => {
-    if (
-      highlightedIndex < 0 ||
-      !isOpen ||
-      !Object.keys(itemRefs.current).length
-    ) {
-      return
-    }
-    if (shouldScrollRef.current === false) {
-      shouldScrollRef.current = true
-    } else {
-      scrollIntoView(getItemNodeFromIndex(highlightedIndex), menuRef.current)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlightedIndex])
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -205,14 +173,6 @@ function useSelect(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
-  useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
-    }
-
-    validateControlledUnchanged(state, prevPropsRef.current, props)
-    prevPropsRef.current = props
-  }, [state, props])
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
@@ -551,7 +511,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [dispatch, latest],
+    [dispatch, latest, shouldScrollRef],
   )
 
   return {
