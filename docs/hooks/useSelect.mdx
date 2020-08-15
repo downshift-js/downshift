@@ -162,7 +162,7 @@ equialent of each item object.
         getMenuProps,
         highlightedIndex,
         getItemProps,
-      } = useSelect({itemsAsObjects, itemToString})
+      } = useSelect({items: itemsAsObjects, itemToString})
       return (
         <div>
           <FormLabel {...getLabelProps()}>Choose an employee:</FormLabel>
