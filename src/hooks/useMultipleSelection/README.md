@@ -172,7 +172,7 @@ const DropdownMultipleCombobox = () => {
             </li>
           ))}
       </ul>
-    <div/>
+    </div>
   )
 }
 
