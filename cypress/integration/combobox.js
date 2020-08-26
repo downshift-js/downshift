@@ -1,8 +1,8 @@
 // the combobox happens to be in the center of the page.
 // without specifying an x and y for the body events
 // we actually wind up firing events on the combobox.
-const bodyX = 500
-const bodyY = 300
+const bodyX = 100
+const bodyY = 500
 
 describe('combobox', () => {
   before(() => {
