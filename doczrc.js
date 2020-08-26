@@ -3,8 +3,6 @@ export default {
   src: './docs/',
   menu: [
     'Home',
-    'Components',
-    {name: 'Hooks', menu: ['useCombobox', 'useMultipleSelection', 'useSelect']},
     'Tests',
   ],
   themeConfig: {

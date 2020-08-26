@@ -2,7 +2,7 @@
 // without specifying an x and y for the body events
 // we actually wind up firing events on the combobox.
 const bodyX = 100
-const bodyY = 300
+const bodyY = 500
 
 describe('combobox', () => {
   before(() => {
