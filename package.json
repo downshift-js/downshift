@@ -152,7 +152,7 @@
   "bugs": {
     "url": "https://github.com/downshift-js/downshift/issues"
   },
-  "homepage": "https://github.com/downshift-js/downshift#readme",
+  "homepage": "https://downshift-js.com",
   "flow-coverage-report": {
     "includeGlob": [
       "test/**/*.js"
