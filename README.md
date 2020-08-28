@@ -1399,11 +1399,13 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/limejoe"><img src="https://avatars2.githubusercontent.com/u/7977551?v=4" width="100px;" alt=""/><br /><sub><b>limejoe</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=limejoe" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Alimejoe" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/k88manish"><img src="https://avatars2.githubusercontent.com/u/19614770?v=4" width="100px;" alt=""/><br /><sub><b>Manish Kumar</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=k88manish" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/fcrezza"><img src="https://avatars2.githubusercontent.com/u/48123020?v=4" width="100px;" alt=""/><br /><sub><b>Anang Fachreza</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=fcrezza" title="Documentation">📖</a> <a href="#example-fcrezza" title="Examples">💡</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

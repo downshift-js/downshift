@@ -1304,6 +1304,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "fcrezza",
+      "name": "Anang Fachreza",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/48123020?v=4",
+      "profile": "https://github.com/fcrezza",
+      "contributions": [
+        "doc",
+        "example"
+      ]
     }
   ],
   "repoHost": "https://github.com",
