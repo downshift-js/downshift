@@ -783,20 +783,21 @@ const ui = (
 
 ## Examples
 
-Usage examples are kept on the [downshift docsite][docsite] and also on
-Codesandbox. Each example has a link to its own Codesandbox version, so check
-the docs.
+Usage examples are kept on the [downshift docsite][docsite] and also on [the
+sandbox repo][sandbox-repo]. Each example has a link to its own Codesandbox
+version, so check the docs.
 
 It can be a great contributing opportunity to provide relevant use cases as
 docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [sandbox-example]:
-  https://codesandbox.io/s/usemultipleselection-combobox-usage-ft8zd
+  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useMultipleSelection/combobox.js
 [select-sandbox-example]:
-  https://codesandbox.io/s/usemultipleselection-select-usage-x4p1j
+  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useMultipleSelection/select.js
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useMultipleSelection/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
+[sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples

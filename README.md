@@ -160,7 +160,7 @@ npm install --save downshift
 
 ## Usage
 
-> [Try it out in the browser](https://codesandbox.io/s/simple-downshift-with-getrootprops-example-24s13)
+> [Try it out in the browser][code-sandbox-try-it-out]
 
 ```jsx
 import * as React from 'react'
@@ -230,8 +230,7 @@ render(
 )
 ```
 
-The previous example without `getRootProps` is
-[here](https://codesandbox.io/s/n9095).
+There is also an [example without getRootProps][code-sandbox-no-get-root-props].
 
 > Warning: The example without `getRootProps` is not fully accessible with
 > screen readers as it's not possible to achieve the HTML structure suggested by
@@ -1067,14 +1066,21 @@ platforms:
 ## Examples
 
 > 🚨 We're in the process of moving all examples to the
-> [downshift-examples](https://github.com/kentcdodds/downshift-examples) repo
+> [downshift-examples](https://github.com/downshift-js/downshift-examples) repo
 > (which you can open, interact with, and contribute back to live on
 > [codesandbox](https://codesandbox.io/s/github/kentcdodds/downshift-examples))
+
+> 🚨 We're also in the process of updating our examples from the
+> [downshift-docs](https://github.com/downshift-js/downshift-docs) repo which is
+> actually used to create our docsite at [downshit-js.com][docsite]). Make sure to
+> check it out for the most relevant Downshift examples or try out the new hooks
+> that aim to replace Downshift.
 
 **Ordered Examples:**
 
 If you're just learning downshift, review these in order:
 
+0.  [basic automplete with getRootProps](https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js) -    the same as example #1 but using the correct HTML structure as suggested by ARIA-WCAG.
 1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
     very bare bones, not styled at all. Good place to start.
 2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
@@ -1086,14 +1092,6 @@ If you're just learning downshift, review these in order:
 4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
     Shows how to create a MultiDownshift component that allows for an array of
     selectedItems for multiple selection using a state reducer
-
-**Hooks Examples:**
-
-We are also in the process of updating our [docsite][docsite] and we aim to add
-the examples that illustrate the use of hooks there. This is a great opportunity
-to contribute, by converting existing `Downshift` examples to either `useSelect`
-or `useCombobox` or by adding any other scenarios that you feel are
-representative.
 
 **Other Examples:**
 
@@ -1214,7 +1212,7 @@ You can implement these other solutions using `downshift`, but if you'd prefer
 to use these out of the box solutions, then that's fine too:
 
 - [`react-select`](https://github.com/JedWatson/react-select)
-- [`react-autocomplete`](https://github.com/reactjs/react-autocomplete)
+- [`react-autosuggest`](https://github.com/moroshko/react-autosuggest)
 
 ## Bindings for ReasonML
 
@@ -1482,3 +1480,7 @@ MIT
 [select-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
 [docsite]: https://downshift-js.com/
+[code-sandbox-try-it-out]:
+  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
+[code-sandbox-no-get-root-props]:
+  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/01-basic-autocomplete.js
