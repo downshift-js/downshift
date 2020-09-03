@@ -1,13 +1,13 @@
 {
   "downshift.cjs.js": {
-    "bundled": 148748,
-    "minified": 68970,
-    "gzipped": 14355
+    "bundled": 150704,
+    "minified": 70561,
+    "gzipped": 14462
   },
   "downshift.umd.min.js": {
-    "bundled": 158171,
-    "minified": 50945,
-    "gzipped": 13951
+    "bundled": 155781,
+    "minified": 50361,
+    "gzipped": 13442
   },
   "downshift.umd.js": {
     "bundled": 194751,
