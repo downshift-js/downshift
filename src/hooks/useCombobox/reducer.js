@@ -115,14 +115,18 @@ export default function downshiftUseComboboxReducer(state, action) {
       }
       break
     case stateChangeTypes.InputBlur:
-      changes = {
-        isOpen: false,
-        highlightedIndex: -1,
-        ...(state.highlightedIndex >= 0 &&
-          action.selectItem && {
-            selectedItem: props.items[state.highlightedIndex],
-            inputValue: props.itemToString(props.items[state.highlightedIndex]),
-          }),
+      if (state.isOpen) {
+        changes = {
+          isOpen: false,
+          highlightedIndex: -1,
+          ...(state.highlightedIndex >= 0 &&
+            action.selectItem && {
+              selectedItem: props.items[state.highlightedIndex],
+              inputValue: props.itemToString(
+                props.items[state.highlightedIndex],
+              ),
+            }),
+        }
       }
       break
     case stateChangeTypes.InputChange:
