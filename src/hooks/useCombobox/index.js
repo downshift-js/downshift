@@ -1,11 +1,7 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
-import {
-  handleRefs,
-  normalizeArrowKey,
-  callAllEventHandlers,
-} from '../../utils'
+import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
   getItemIndex,
   getPropTypesValidator,
@@ -110,7 +106,7 @@ function useCombobox(userProps = {}) {
     isOpen,
     itemRefs,
     scrollIntoView,
-    getItemNodeFromIndex
+    getItemNodeFromIndex,
   })
   useControlPropsValidator({
     isInitialMount: isInitialMountRef.current,
