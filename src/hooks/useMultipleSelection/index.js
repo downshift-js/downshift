@@ -121,7 +121,9 @@ function useMultipleSelection(userProps = {}) {
           type: stateChangeTypes.SelectedItemKeyDownDelete,
         })
       },
-      Backspace() {
+      Backspace(event) {
+        // Prevent browser navigation when pressing `Backspace`.
+        event.preventDefault()
         dispatch({
           type: stateChangeTypes.SelectedItemKeyDownBackspace,
         })
