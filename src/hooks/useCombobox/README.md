@@ -2,7 +2,7 @@
 
 ## The problem
 
-You have a combobox/autocomplete dropdown in your application and you want it to
+You have a combobox or autocomplete dropdown in your application and you want it to
 be accessible and functional. For consistency reasons you want it to follow the
 [ARIA design pattern][combobox-aria] for a combobox. You also want this solution
 to be simple to use and flexible so you can tailor it further to your specific
@@ -164,7 +164,7 @@ index, like in `Downshift`.
 
 If your items are stored as, say, objects instead of strings, downshift still
 needs a string representation for each one. This is required for accessibility
-messages (e.g., after making a selection).
+aria-live messages (e.g., after making a selection).
 
 **Note:** This callback _must_ include a null check: it is invoked with `null`
 whenever the user abandons input via `<Esc>`.

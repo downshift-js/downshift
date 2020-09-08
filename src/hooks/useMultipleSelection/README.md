@@ -192,7 +192,7 @@ This is the list of props that you should probably know about. There are some
 
 If your items are stored as, say, objects instead of strings, downshift still
 needs a string representation for each one. This is required for accessibility
-messages (e.g., after removing a selection).
+aria-live messages (e.g., after removing a selection).
 
 ### onSelectedItemsChange
 

@@ -30,8 +30,8 @@ autocomplete, combobox or select dropdown components.</p>
 
 ## The problem
 
-You need an autocomplete/combobox or a select experience in your application and
-you want it to be accessible. You also want it to be simple and flexible to
+You need an autocomplete, a combobox or a select experience in your application
+and you want it to be accessible. You also want it to be simple and flexible to
 account for your use cases. Finally, it should follow the ARIA design pattern
 for a [combobox][combobox-aria] or a [select][select-aria], depending on your
 use case.
@@ -45,7 +45,7 @@ accessible. Navigate to the documentation for each by using the links in the
 list below.
 
 - [useSelect][useselect-readme] for a custom select component.
-- [useCombobox][combobox-readme] for a combobox/autocomplete input.
+- [useCombobox][combobox-readme] for a combobox or autocomplete input.
 - [useMultipleSelection][multiple-selection-readme] for selecting multiple items
   in a select or a combobox, as well as deleting items from selection or
   navigating between the selected items.
@@ -67,7 +67,7 @@ For examples on how to use the hooks or the Downshift component, check out our
 ### Downshift
 
 This is a component that controls user interactions and state for you so you can
-create autocomplete/combobox or select dropdown components. It uses a [render
+create autocomplete, combobox or select dropdown components. It uses a [render
 prop][use-a-render-prop] which gives you maximum flexibility with a minimal API
 because you are responsible for the rendering of everything and you simply apply
 props to what you're rendering.
@@ -1072,9 +1072,9 @@ platforms:
 
 > 🚨 We're also in the process of updating our examples from the
 > [downshift-docs](https://github.com/downshift-js/downshift-docs) repo which is
-> actually used to create our docsite at [downshit-js.com][docsite]). Make sure to
-> check it out for the most relevant Downshift examples or try out the new hooks
-> that aim to replace Downshift.
+> actually used to create our docsite at [downshit-js.com][docsite]). Make sure
+> to check it out for the most relevant Downshift examples or try out the new
+> hooks that aim to replace Downshift.
 
 **Ordered Examples:**
 
@@ -1406,6 +1406,7 @@ Thanks goes to these people ([emoji key][emojis]):
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors][all-contributors] specification.

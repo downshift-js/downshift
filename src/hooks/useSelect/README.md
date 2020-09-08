@@ -138,11 +138,8 @@ index, like in `Downshift`.
 
 If your items are stored as, say, objects instead of strings, downshift still
 needs a string representation for each one. This is required for accessibility
-messages (e.g., after making a selection) and keyboard interaction features
-(e.g., highlighting an item by typing its first few characters).
-
-**Note:** This callback _must_ include a null check: it is invoked with `null`
-whenever the user abandons input via `<Esc>`.
+aria-live messages (e.g., after making a selection) and for keyboard interaction
+features (e.g., highlighting an item by typing its first few characters).
 
 ### onSelectedItemChange
 
