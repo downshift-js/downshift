@@ -1314,6 +1314,16 @@
         "doc",
         "example"
       ]
+    },
+    {
+      "login": "ndeom",
+      "name": "Nick Deom",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/56491159?v=4",
+      "profile": "http://nickdeom.com",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
