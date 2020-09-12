@@ -69,7 +69,7 @@ such as when an item has been removed from selection.
 ```javascript
 import * as React from 'react'
 import {render} from 'react-dom'
-import {useCombobox} from 'downshift'
+import {useCombobox, useMultipleSelection} from 'downshift'
 // items = ['Neptunium', 'Plutonium', ...]
 import {
   items,
