@@ -1072,7 +1072,7 @@ platforms:
 
 > 🚨 We're also in the process of updating our examples from the
 > [downshift-docs](https://github.com/downshift-js/downshift-docs) repo which is
-> actually used to create our docsite at [downshit-js.com][docsite]). Make sure
+> actually used to create our docsite at [downshift-js.com][docsite]). Make sure
 > to check it out for the most relevant Downshift examples or try out the new
 > hooks that aim to replace Downshift.
 
