@@ -93,7 +93,7 @@ describe('combobox', () => {
       // https://github.com/kentcdodds/cypress-testing-library/issues/13
       .wait(1)
       .findByTestId('downshift-item-0', {timeout: 10})
-      .should('not.be.visible')
+      .should('not.exist')
   })
 
   it('does not reset when tabbing from input to the toggle button', () => {
@@ -116,7 +116,7 @@ describe('combobox', () => {
       .get('body')
       .trigger('touchstart', bodyX, bodyY)
       .trigger('touchend', bodyX, bodyY)
-    cy.findByTestId('downshift-item-0', {timeout: 10}).should('not.be.visible')
+    cy.findByTestId('downshift-item-0', {timeout: 10}).should('not.exist')
   })
 
   it('does not reset when swiping outside to scroll a touch screen', () => {

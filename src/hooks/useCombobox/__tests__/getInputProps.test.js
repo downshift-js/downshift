@@ -336,10 +336,10 @@ describe('getInputProps', () => {
   })
 
   describe('event handlers', () => {
-    test('on change should open the menu and keep the input value', async () => {
+    test('on change should open the menu and keep the input value', () => {
       const {changeInputValue, getItems, input} = renderCombobox()
 
-      await changeInputValue('california')
+      changeInputValue('california')
 
       expect(getItems()).toHaveLength(items.length)
       expect(input).toHaveValue('california')
@@ -855,13 +855,13 @@ describe('getInputProps', () => {
         expect(input).toHaveValue('')
       })
 
-      test('the value in the input will stay the same', async () => {
+      test('the value in the input will stay the same', () => {
         const inputValue = 'test me'
         const {blurInput, changeInputValue, input} = renderCombobox({
           initialIsOpen: true,
         })
 
-        await changeInputValue(inputValue)
+        changeInputValue(inputValue)
         blurInput()
 
         expect(input).toHaveValue(inputValue)

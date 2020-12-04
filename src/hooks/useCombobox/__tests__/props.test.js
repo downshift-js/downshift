@@ -217,7 +217,7 @@ describe('props', () => {
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with previousResultCount that gets updated correctly', async () => {
+    test('is called with previousResultCount that gets updated correctly', () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
       const {clickOnToggleButton, changeInputValue} = renderCombobox({
@@ -237,7 +237,7 @@ describe('props', () => {
       )
 
       inputItems.pop()
-      await changeInputValue('a')
+      changeInputValue('a')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
@@ -295,7 +295,7 @@ describe('props', () => {
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
 
-    test('is called when isOpen, highlightedIndex, inputValue or items change', async () => {
+    test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
       const {
@@ -334,7 +334,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
 
-      await changeInputValue('b')
+      changeInputValue('b')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -550,7 +550,7 @@ describe('props', () => {
     })
 
     // eslint-disable-next-line max-statements
-    test('is called at each state change with the appropriate change type', async () => {
+    test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
         clickOnToggleButton,
@@ -577,7 +577,7 @@ describe('props', () => {
         }),
       )
 
-      await changeInputValue('c')
+      changeInputValue('c')
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -940,14 +940,14 @@ describe('props', () => {
   })
 
   describe('onInputValueChange', () => {
-    test('is called at inputValue change', async () => {
+    test('is called at inputValue change', () => {
       const inputValue = 'test'
       const onInputValueChange = jest.fn()
       const {changeInputValue} = renderCombobox({
         onInputValueChange,
       })
 
-      await changeInputValue(inputValue)
+      changeInputValue(inputValue)
 
       expect(onInputValueChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -970,7 +970,7 @@ describe('props', () => {
       expect(onInputValueChange).not.toHaveBeenCalled()
     })
 
-    test('works correctly with the corresponding control prop', async () => {
+    test('works correctly with the corresponding control prop', () => {
       let inputValue = 'nep'
       const {changeInputValue, input, rerender} = renderCombobox({
         inputValue,
@@ -979,7 +979,7 @@ describe('props', () => {
         },
       })
 
-      await changeInputValue('nept')
+      changeInputValue('nept')
       rerender({inputValue})
 
       expect(input).toHaveValue(inputValue)
@@ -1278,7 +1278,7 @@ describe('props', () => {
   })
 
   describe('onStateChange', () => {
-    test('is called at each state property change', async () => {
+    test('is called at each state property change', () => {
       const onStateChange = jest.fn()
       const {
         clickOnToggleButton,
@@ -1300,7 +1300,7 @@ describe('props', () => {
         }),
       )
 
-      await changeInputValue('t')
+      changeInputValue('t')
 
       expect(onStateChange).toHaveBeenCalledTimes(2)
       expect(onStateChange).toHaveBeenLastCalledWith(
