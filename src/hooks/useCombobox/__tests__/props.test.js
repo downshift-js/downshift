@@ -389,20 +389,20 @@ describe('props', () => {
       keyDownOnInput('ArrowDown')
       keyDownOnInput('Enter')
 
-      expect(input.value).toBe('Dohn Joe')
+      expect(input).toHaveValue('Dohn Joe')
 
       clickOnItemAtIndex(0)
 
-      expect(input.value).toBe('Dohn Joe')
+      expect(input).toHaveValue('Dohn Joe')
 
       keyDownOnInput('ArrowUp')
       keyDownOnInput('Enter')
 
-      expect(input.value).toBe('Dohn Joe')
+      expect(input).toHaveValue('Dohn Joe')
 
       blurInput()
 
-      expect(input.value).toBe('Dohn Joe')
+      expect(input).toHaveValue('Dohn Joe')
     })
 
     test('is changed once a new selectedItem comes from props', () => {
@@ -857,7 +857,7 @@ describe('props', () => {
 
       clickOnToggleButton()
 
-      expect(input.value).toBe('Robin Hood')
+      expect(input).toHaveValue('Robin Hood')
     })
 
     test('receives state, changes and type', () => {
