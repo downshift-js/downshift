@@ -443,7 +443,7 @@ test('escape on an input without a selection should reset downshift and close th
   } = renderDownshift()
   changeInputValue('p')
   escapeOnInput()
-  expect(input.value).toBe('')
+  expect(input).toHaveValue('')
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -665,7 +665,7 @@ function setupDownshiftWithState() {
   arrowDownInput()
   // ENTER to select the first one
   enterOnInput()
-  expect(input.value).toBe(items[0])
+  expect(input).toHaveValue(items[0])
   // ↓
   arrowDownInput()
   changeInputValue('bu')

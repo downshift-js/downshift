@@ -174,7 +174,7 @@ test(`disabled item can't be selected by pressing enter`, () => {
   // ENTER to select the first one
   enterOnInput()
   // item was not selected -> input value should still be 'c'
-  expect(input.value).toBe('c')
+  expect(input).toHaveValue('c')
 })
 
 test(`disabled item can't be highlighted when navigating via keyDown`, () => {
@@ -193,7 +193,7 @@ test(`disabled item can't be highlighted when navigating via keyDown`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Checkers')
+  expect(input).toHaveValue('Checkers')
 })
 
 test(`disabled item can't be highlighted and may wrap when navigating via keyDown`, () => {
@@ -212,7 +212,7 @@ test(`disabled item can't be highlighted and may wrap when navigating via keyDow
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Chess')
+  expect(input).toHaveValue('Chess')
 })
 
 test(`disabled item can't be highlighted when navigating via keyUp`, () => {
@@ -230,7 +230,7 @@ test(`disabled item can't be highlighted when navigating via keyUp`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Chess')
+  expect(input).toHaveValue('Chess')
 })
 
 test(`disabled item can't be highlighted and it may wrap when navigating via keyUp`, () => {
@@ -248,7 +248,7 @@ test(`disabled item can't be highlighted and it may wrap when navigating via key
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Backgammon')
+  expect(input).toHaveValue('Backgammon')
 })
 
 test(`disabled item can't be highlighted when navigating via end`, () => {
@@ -266,7 +266,7 @@ test(`disabled item can't be highlighted when navigating via end`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Chess')
+  expect(input).toHaveValue('Chess')
 })
 
 test(`disabled item can't be highlighted when navigating via home`, () => {
@@ -284,7 +284,7 @@ test(`disabled item can't be highlighted when navigating via home`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Checkers')
+  expect(input).toHaveValue('Checkers')
 })
 
 test(`highlight wrapping works with disabled items upwards`, () => {
@@ -301,7 +301,7 @@ test(`highlight wrapping works with disabled items upwards`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Checkers')
+  expect(input).toHaveValue('Checkers')
 })
 
 test(`highlight wrapping works with disabled items downwards`, () => {
@@ -318,7 +318,7 @@ test(`highlight wrapping works with disabled items downwards`, () => {
   // ENTER to select
   enterOnInput()
 
-  expect(input.value).toBe('Chess')
+  expect(input).toHaveValue('Chess')
 })
 
 function renderDownshift({
