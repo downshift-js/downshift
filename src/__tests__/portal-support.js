@@ -53,7 +53,7 @@ test('will not reset when clicking within the menu', () => {
     )
   }
   render(<MyPortalAutocomplete />)
-  expect(screen.queryByTestId('menu')).toBeNull()
+  expect(screen.queryByTestId('menu')).not.toBeInTheDocument()
   screen.getByTestId('button').click()
   expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
@@ -72,6 +72,6 @@ test('will not reset when clicking within the menu', () => {
   expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   screen.getByTestId('item').click()
-  expect(screen.queryByTestId('menu')).toBeNull()
+  expect(screen.queryByTestId('menu')).not.toBeInTheDocument()
   expect(screen.getByTestId('selection')).toHaveTextContent('The item')
 })
