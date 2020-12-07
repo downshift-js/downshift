@@ -44,7 +44,7 @@ function scrollIntoView(node, menuNode) {
  * @return {Boolean} whether the parent is the child or the child is in the parent
  */
 function isOrContainsNode(parent, child) {
-  return parent === child || (parent.contains && parent.contains(child))
+  return parent === child || (child instanceof Node && parent.contains && parent.contains(child))
 }
 
 /**
