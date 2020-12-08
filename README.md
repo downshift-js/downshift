@@ -1420,8 +1420,8 @@ MIT
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [build-badge]:
-  https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
-[build]: https://travis-ci.org/downshift-js/downshift
+  https://img.shields.io/github/workflow/status/downshift-js/downshift/validate?logo=github&style=flat-square
+[build]: https://github.com/downshift-js/downshift/actions?query=workflow%3Avalidate+branch%3Amaster
 [coverage-badge]:
   https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
 [coverage]: https://codecov.io/github/downshift-js/downshift
