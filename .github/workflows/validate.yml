@@ -16,11 +16,16 @@ jobs:
     if: ${{ !contains(github.head_ref, 'all-contributors') }}
     strategy:
       matrix:
-        node: [10.14]
+        node: [12]
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v2
+
+      - name: Increase watchers
+        run:
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+          && sudo sysctl -p
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v1
@@ -54,7 +59,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 12
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1
