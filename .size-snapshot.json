@@ -1,31 +1,31 @@
 {
   "downshift.umd.min.js": {
-    "bundled": 159043,
-    "minified": 52711,
-    "gzipped": 14331
+    "bundled": 159104,
+    "minified": 52733,
+    "gzipped": 14335
   },
   "downshift.umd.js": {
-    "bundled": 201021,
-    "minified": 70419,
-    "gzipped": 18265
+    "bundled": 201082,
+    "minified": 70441,
+    "gzipped": 18270
   },
   "downshift.esm.js": {
-    "bundled": 143881,
-    "minified": 64857,
-    "gzipped": 14134,
+    "bundled": 143942,
+    "minified": 64879,
+    "gzipped": 14144,
     "treeshaked": {
       "rollup": {
         "code": 2275,
         "import_statements": 318
       },
       "webpack": {
-        "code": 4496
+        "code": 4499
       }
     }
   },
   "downshift.cjs.js": {
-    "bundled": 148614,
-    "minified": 68901,
-    "gzipped": 14351
+    "bundled": 148675,
+    "minified": 68923,
+    "gzipped": 14360
   }
 }

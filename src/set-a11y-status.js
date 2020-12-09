@@ -1,7 +1,7 @@
 import {debounce} from './utils'
 
-const cleanupStatus = debounce(() => {
-  getStatusDiv().textContent = ''
+const cleanupStatus = debounce((documentProp) => {
+  getStatusDiv(documentProp).textContent = ''
 }, 500)
 
 /**
@@ -15,7 +15,7 @@ function setStatus(status, documentProp) {
   }
 
   div.textContent = status
-  cleanupStatus()
+  cleanupStatus(documentProp)
 }
 
 /**
