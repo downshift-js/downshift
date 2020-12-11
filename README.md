@@ -1,7 +1,7 @@
 <h1 align="center">
   downshift 🏎
   <br>
-  <img src="https://github.com/downshift-js/downshift/blob/master/other/public/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
+  <img src="https://raw.githubusercontent.com/downshift-js/downshift/master/other/public/logo/downshift.svg" alt="downshift logo" title="downshift logo" width="300">
   <br>
 </h1>
 <p align="center" style="font-size: 1.2rem;">Primitives to build simple, flexible, WAI-ARIA compliant React
@@ -1420,8 +1420,8 @@ MIT
 [npm]: https://www.npmjs.com/
 [node]: https://nodejs.org
 [build-badge]:
-  https://img.shields.io/travis/downshift-js/downshift.svg?style=flat-square
-[build]: https://travis-ci.org/downshift-js/downshift
+  https://img.shields.io/github/workflow/status/downshift-js/downshift/validate?logo=github&style=flat-square
+[build]: https://github.com/downshift-js/downshift/actions?query=workflow%3Avalidate+branch%3Amaster
 [coverage-badge]:
   https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
 [coverage]: https://codecov.io/github/downshift-js/downshift
