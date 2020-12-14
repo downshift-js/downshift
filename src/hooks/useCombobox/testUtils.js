@@ -144,8 +144,101 @@ const DropdownCombobox = ({renderSpy, ...props}) => {
   )
 }
 
+const renderMemoizedCombobox = props => {
+  const renderSpy = jest.fn()
+  const ui = <MemoizedDropdownCombobox renderSpy={renderSpy} {...props} />
+  const wrapper = render(ui)
+  const rerender = newProps =>
+    wrapper.rerender(<MemoizedDropdownCombobox renderSpy={renderSpy} {...newProps} />)
+  const input = screen.getByTestId(dataTestIds.input)
+  const keyDownOnInput = (key, options = {}) => {
+    fireEvent.keyDown(input, {key, ...options})
+  }
+
+  return {
+    ...wrapper,
+    renderSpy,
+    rerender,
+    input,
+    keyDownOnInput,
+  }
+}
+
+// Eslint incorrectly marks this as an error.
+// PR that should've fixed this: https://github.com/yannickcr/eslint-plugin-react/pull/2109
+// eslint-disable-next-line react/display-name
+const DropdownItem = React.memo(({
+  item,
+  index,
+  isDisabled,
+  isHighlighted,
+  getItemProps,
+  stringItem,
+  ...props
+}) => {
+  return (
+    <li
+      style={isHighlighted ? {backgroundColor: 'blue'} : {}}
+      {...getItemProps({
+        item,
+        index,
+        disabled: isDisabled,
+      })}
+      {...props}
+    >
+      {stringItem}
+    </li>
+  )
+})
+
+const MemoizedDropdownCombobox = ({renderSpy, ...props}) => {
+  const {
+    isOpen,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+  } = useCombobox({items, ...props})
+  renderSpy()
+
+  return (
+    <div>
+      <label {...getLabelProps()}>Choose an element:</label>
+      <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+        <input data-testid={dataTestIds.input} {...getInputProps()} />
+        <button
+          data-testid={dataTestIds.toggleButton}
+          {...getToggleButtonProps()}
+        >
+          Toggle
+        </button>
+      </div>
+      <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
+        {isOpen &&
+          (props.items || items).map((item, index) => {
+            return (
+              <DropdownItem
+                data-testid={dataTestIds.item(index)}
+                getItemProps={getItemProps}
+                index={index}
+                isDisabled={items.length - 2 === index}
+                isHighlighted={highlightedIndex === index}
+                item={item}
+                key={`${item}${index}`}
+                stringItem={item}
+              />
+            )
+          })}
+      </ul>
+    </div>
+  )
+}
+
 const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-export {renderUseCombobox, dataTestIds, renderCombobox}
+export {renderUseCombobox, dataTestIds, renderCombobox, renderMemoizedCombobox}

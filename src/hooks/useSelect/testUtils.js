@@ -133,4 +133,78 @@ const DropdownSelect = props => {
   )
 }
 
-export {items, renderUseSelect, renderSelect, DropdownSelect}
+const renderMemoizedSelect = props => {
+  const ui = <MemoizedDropdownSelect {...props} />
+  const wrapper = render(ui)
+  const rerender = p => wrapper.rerender(<MemoizedDropdownSelect {...p} />)
+  const menu = screen.getByRole('listbox')
+  const keyDownOnMenu = (key, options = {}) => {
+    fireEvent.keyDown(menu, {key, ...options})
+  }
+
+  return {
+    ...wrapper,
+    rerender,
+    menu,
+    keyDownOnMenu,
+  }
+}
+
+// Eslint incorrectly marks this as an error.
+// PR that should've fixed this: https://github.com/yannickcr/eslint-plugin-react/pull/2109
+// eslint-disable-next-line react/display-name
+const DropdownItem = React.memo(({
+  item,
+  index,
+  isDisabled,
+  isHighlighted,
+  getItemProps,
+  stringItem,
+  ...props
+}) => {
+  return (
+    <li
+      style={isHighlighted ? {backgroundColor: 'blue'} : {}}
+      {...getItemProps({
+        item,
+        index,
+        disabled: isDisabled,
+      })}
+      {...props}
+    >
+      {stringItem}
+    </li>
+  )
+})
+
+const MemoizedDropdownSelect = props => {
+  const {
+    isOpen,
+    getMenuProps,
+    highlightedIndex,
+    getItemProps,
+  } = useSelect({items, ...props})
+  return (
+    <div>
+      <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
+        {isOpen &&
+          (props.items || items).map((item, index) => {
+            return (
+              <DropdownItem
+                data-testid={dataTestIds.item(index)}
+                getItemProps={getItemProps}
+                index={index}
+                isDisabled={items.length - 2 === index}
+                isHighlighted={highlightedIndex === index}
+                item={item}
+                key={`${item}${index}`}
+                stringItem={item}
+            />
+            )
+          })}
+      </ul>
+    </div>
+  )
+}
+
+export {items, renderUseSelect, renderSelect, DropdownSelect, renderMemoizedSelect}
