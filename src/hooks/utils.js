@@ -1,5 +1,11 @@
 import PropTypes from 'prop-types'
-import {useRef, useCallback, useReducer, useEffect} from 'react'
+import {
+  useRef,
+  useCallback,
+  useReducer,
+  useEffect,
+  useLayoutEffect,
+} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -487,7 +493,7 @@ export function useScrollIntoView({
   // used not to scroll on highlight by mouse.
   const shouldScrollRef = useRef(true)
   // Scroll on highlighted item if change comes from keyboard.
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       highlightedIndex < 0 ||
       !isOpen ||
