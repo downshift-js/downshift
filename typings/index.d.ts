@@ -677,15 +677,15 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<
+export type UseMultipleSelectionReturnValue<
   Item
-> &
+> = UseMultipleSelectionState<Item> &
   UseMultipleSelectionPropGetters<Item> &
   UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(
-    props: UseMultipleSelectionProps<Item>,
+    props?: UseMultipleSelectionProps<Item>,
   ): UseMultipleSelectionReturnValue<Item>
   stateChangeTypes: {
     SelectedItemClick: UseMultipleSelectionStateChangeTypes.SelectedItemClick
