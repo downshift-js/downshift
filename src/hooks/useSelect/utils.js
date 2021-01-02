@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import {defaultProps as commonDefaultProps} from '../utils'
+import {noop} from '../../utils'
 
 function getItemIndexByCharacterKey(
   keysSoFar,
@@ -102,7 +103,7 @@ function getA11yStatusMessage({isOpen, resultCount, previousResultCount}) {
       resultCount === 1 ? ' is' : 's are'
     } available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.`
   }
-  
+
   return ''
 }
 
@@ -111,4 +112,13 @@ const defaultProps = {
   getA11yStatusMessage,
 }
 
-export {propTypes, getItemIndexByCharacterKey, defaultProps}
+// eslint-disable-next-line import/no-mutable-exports
+let validatePropTypes = noop
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'production') {
+  validatePropTypes = (options, caller) => {
+    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
+  }
+}
+
+export {getItemIndexByCharacterKey, defaultProps, validatePropTypes}

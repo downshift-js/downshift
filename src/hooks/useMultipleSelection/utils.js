@@ -4,6 +4,7 @@ import {
   getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
 } from '../utils'
+import {noop} from '../../utils'
 
 const defaultStateValues = {
   activeIndex: -1,
@@ -128,3 +129,14 @@ export const defaultProps = {
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft',
 }
+
+// eslint-disable-next-line import/no-mutable-exports
+let validatePropTypes = noop
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'production') {
+  validatePropTypes = (options, caller) => {
+    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
+  }
+}
+
+export {validatePropTypes}

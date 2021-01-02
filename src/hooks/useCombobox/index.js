@@ -4,36 +4,27 @@ import {isPreact, isReactNative} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
   getItemIndex,
-  getPropTypesValidator,
   useA11yMessageSetter,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
   useScrollIntoView,
   useControlPropsValidator,
+  useElementIds,
 } from '../utils'
 import {
   getInitialState,
-  propTypes,
   defaultProps,
-  getElementIds,
   useControlledReducer,
+  validatePropTypes,
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
-const validatePropTypes =
-  process.env.NODE_ENV === 'production'
-    ? /* istanbul ignore next */ null
-    : getPropTypesValidator(useCombobox, propTypes)
-
 useCombobox.stateChangeTypes = stateChangeTypes
 
 function useCombobox(userProps = {}) {
-  /* istanbul ignore else */
-  if (process.env.NODE_ENV !== 'production') {
-    validatePropTypes(userProps)
-  }
+  validatePropTypes(userProps, useCombobox)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
@@ -67,14 +58,16 @@ function useCombobox(userProps = {}) {
   itemRefs.current = {}
   const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
-  const elementIdsRef = useRef(getElementIds(props))
+  const elementIds = useElementIds(props)
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
-  const getItemNodeFromIndex = index =>
-    itemRefs.current[elementIdsRef.current.getItemId(index)]
+  const getItemNodeFromIndex = useCallback(
+    index => itemRefs.current[elementIds.getItemId(index)],
+    [elementIds],
+  )
 
   // Effects.
   // Sets a11y status message on changes in state.
@@ -113,19 +106,15 @@ function useCombobox(userProps = {}) {
     props,
     state,
   })
-  // Controls the focus on the input on open.
+  // Focus the input on first render if required.
   useEffect(() => {
-    // Don't focus menu on first render.
-    if (isInitialMountRef.current) {
-      // Unless it was initialised as open.
-      if (initialIsOpen || defaultIsOpen || isOpen) {
-        if (inputRef.current) {
-          inputRef.current.focus()
-        }
-      }
+    const focusOnOpen = initialIsOpen || defaultIsOpen || isOpen
+
+    if (focusOnOpen && inputRef.current) {
+      inputRef.current.focus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
+  }, [])
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -210,17 +199,17 @@ function useCombobox(userProps = {}) {
         })
       },
     }),
-    [dispatch, latest],
+    [dispatch, latest, getItemNodeFromIndex],
   )
 
   // Getter props.
   const getLabelProps = useCallback(
     labelProps => ({
-      id: elementIdsRef.current.labelId,
-      htmlFor: elementIdsRef.current.inputId,
+      id: elementIds.labelId,
+      htmlFor: elementIds.inputId,
       ...labelProps,
     }),
-    [],
+    [elementIds],
   )
   const getMenuProps = useCallback(
     (
@@ -232,9 +221,9 @@ function useCombobox(userProps = {}) {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
         }),
-        id: elementIdsRef.current.menuId,
+        id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby': elementIdsRef.current.labelId,
+        'aria-labelledby': elementIds.labelId,
         onMouseLeave: callAllEventHandlers(onMouseLeave, () => {
           dispatch({
             type: stateChangeTypes.MenuMouseLeave,
@@ -243,7 +232,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, setGetterPropCallInfo],
+    [dispatch, setGetterPropCallInfo, elementIds],
   )
 
   const getItemProps = useCallback(
@@ -294,14 +283,12 @@ function useCombobox(userProps = {}) {
       return {
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[
-              elementIdsRef.current.getItemId(itemIndex)
-            ] = itemNode
+            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
           }
         }),
         role: 'option',
         'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
-        id: elementIdsRef.current.getItemId(itemIndex),
+        id: elementIds.getItemId(itemIndex),
         ...(!rest.disabled && {
           onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
           [onSelectKey]: callAllEventHandlers(
@@ -312,7 +299,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, shouldScrollRef],
+    [dispatch, latest, shouldScrollRef, elementIds],
   )
 
   const getToggleButtonProps = useCallback(
@@ -331,7 +318,7 @@ function useCombobox(userProps = {}) {
         [refKey]: handleRefs(ref, toggleButtonNode => {
           toggleButtonRef.current = toggleButtonNode
         }),
-        id: elementIdsRef.current.toggleButtonId,
+        id: elementIds.toggleButtonId,
         tabIndex: -1,
         ...(!rest.disabled && {
           ...(isReactNative
@@ -345,7 +332,7 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest],
+    [dispatch, latest, elementIds],
   )
   const getInputProps = useCallback(
     (
@@ -424,16 +411,16 @@ function useCombobox(userProps = {}) {
         [refKey]: handleRefs(ref, inputNode => {
           inputRef.current = inputNode
         }),
-        id: elementIdsRef.current.inputId,
+        id: elementIds.inputId,
         'aria-autocomplete': 'list',
-        'aria-controls': elementIdsRef.current.menuId,
+        'aria-controls': elementIds.menuId,
         ...(latestState.isOpen &&
           latestState.highlightedIndex > -1 && {
-            'aria-activedescendant': elementIdsRef.current.getItemId(
+            'aria-activedescendant': elementIds.getItemId(
               latestState.highlightedIndex,
             ),
           }),
-        'aria-labelledby': elementIdsRef.current.labelId,
+        'aria-labelledby': elementIds.labelId,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
         // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
         autoComplete: 'off',
@@ -448,6 +435,7 @@ function useCombobox(userProps = {}) {
       latest,
       mouseAndTouchTrackersRef,
       setGetterPropCallInfo,
+      elementIds,
     ],
   )
   const getComboboxProps = useCallback(
@@ -465,12 +453,12 @@ function useCombobox(userProps = {}) {
         }),
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': elementIdsRef.current.menuId,
+        'aria-owns': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         ...rest,
       }
     },
-    [latest, setGetterPropCallInfo],
+    [latest, setGetterPropCallInfo, elementIds],
   )
 
   // returns

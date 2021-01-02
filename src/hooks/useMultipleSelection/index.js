@@ -1,10 +1,6 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import setStatus from '../../set-a11y-status'
-import {
-  handleRefs,
-  callAllEventHandlers,
-  normalizeArrowKey,
-} from '../../utils'
+import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {
   useControlledReducer,
   getItemIndex,
@@ -16,6 +12,7 @@ import {
   getInitialState,
   defaultProps,
   isKeyDownOperationPermitted,
+  validatePropTypes
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -23,6 +20,7 @@ import * as stateChangeTypes from './stateChangeTypes'
 useMultipleSelection.stateChangeTypes = stateChangeTypes
 
 function useMultipleSelection(userProps = {}) {
+  validatePropTypes(userProps, useMultipleSelection)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
