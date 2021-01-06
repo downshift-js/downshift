@@ -1,5 +1,11 @@
 import PropTypes from 'prop-types'
-import {useRef, useCallback, useReducer, useEffect} from 'react'
+import {
+  useRef,
+  useCallback,
+  useReducer,
+  useEffect,
+  useLayoutEffect,
+} from 'react'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -78,6 +84,15 @@ function getA11ySelectionMessage(selectionParameters) {
 const updateA11yStatus = debounce((getA11yMessage, document) => {
   setStatus(getA11yMessage(), document)
 }, 200)
+
+
+// istanbul ignore next
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' &&
+  typeof window.document !== 'undefined' &&
+  typeof window.document.createElement !== 'undefined'
+    ? useLayoutEffect
+    : useEffect
 
 export function getElementIds({
   id,
@@ -487,7 +502,7 @@ export function useScrollIntoView({
   // used not to scroll on highlight by mouse.
   const shouldScrollRef = useRef(true)
   // Scroll on highlighted item if change comes from keyboard.
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (
       highlightedIndex < 0 ||
       !isOpen ||
