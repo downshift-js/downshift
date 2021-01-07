@@ -6,39 +6,24 @@ function getItemIndexByCharacterKey(
   keysSoFar,
   highlightedIndex,
   items,
-  itemToStringParam,
+  itemToString,
   getItemNodeFromIndex,
 ) {
-  const lowerCasedItemStrings = items.map(item =>
-    itemToStringParam(item).toLowerCase(),
-  )
   const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
-  const isValid = (itemString, index) => {
-    const element = getItemNodeFromIndex(index)
 
-    return (
-      itemString.startsWith(lowerCasedKeysSoFar) &&
-      !(element && element.hasAttribute('disabled'))
-    )
-  }
+  for (let index = 0; index < items.length; index++) {
+    const offsetIndex = (index + highlightedIndex + 1) % items.length
 
-  for (
-    let index = highlightedIndex + 1;
-    index < lowerCasedItemStrings.length;
-    index++
-  ) {
-    const itemString = lowerCasedItemStrings[index]
+    if (
+      itemToString(items[offsetIndex])
+        .toLowerCase()
+        .startsWith(lowerCasedKeysSoFar)
+    ) {
+      const element = getItemNodeFromIndex(offsetIndex)
 
-    if (isValid(itemString, index)) {
-      return index
-    }
-  }
-
-  for (let index = 0; index < highlightedIndex; index++) {
-    const itemString = lowerCasedItemStrings[index]
-
-    if (isValid(itemString, index)) {
-      return index
+      if (!(element && element.hasAttribute('disabled'))) {
+        return offsetIndex
+      }
     }
   }
 

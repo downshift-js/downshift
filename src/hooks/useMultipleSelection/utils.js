@@ -32,7 +32,7 @@ function getInitialValue(props, propKey) {
  * @param {string} propKey Props key to generate the value for.
  * @returns {any} The initial value for that prop.
  */
-export function getDefaultValue(props, propKey) {
+function getDefaultValue(props, propKey) {
   return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
@@ -43,7 +43,7 @@ export function getDefaultValue(props, propKey) {
  * @param {Object} props Props passed to the hook.
  * @returns {Object} The initial state.
  */
-export function getInitialState(props) {
+function getInitialState(props) {
   const activeIndex = getInitialValue(props, 'activeIndex')
   const selectedItems = getInitialValue(props, 'selectedItems')
 
@@ -62,7 +62,7 @@ export function getInitialState(props) {
  * @param {KeyboardEvent} event The event from keydown.
  * @returns {boolean} Whether the operation is allowed.
  */
-export function isKeyDownOperationPermitted(event) {
+function isKeyDownOperationPermitted(event) {
   if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) {
     return false
   }
@@ -96,7 +96,7 @@ function getA11yRemovalMessage(selectionParameters) {
   return `${itemToStringLocal(removedSelectedItem)} has been removed.`
 }
 
-export const propTypes = {
+const propTypes = {
   selectedItems: PropTypes.array,
   initialSelectedItems: PropTypes.array,
   defaultSelectedItems: PropTypes.array,
@@ -139,4 +139,9 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-export {validatePropTypes}
+export {
+  validatePropTypes,
+  getDefaultValue,
+  getInitialState,
+  isKeyDownOperationPermitted,
+}
