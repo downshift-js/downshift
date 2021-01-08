@@ -18,3 +18,8 @@ export const FunctionSetInputValue = productionEnum(
   '__function_set_input_value__',
 )
 export const FunctionReset = productionEnum('__function_reset__')
+
+// to be used by useSelect and useCombobox
+export function productionEnumFn(state) {
+  return productionEnum(state)
+}
