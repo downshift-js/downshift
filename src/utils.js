@@ -44,10 +44,7 @@ function scrollIntoView(node, menuNode) {
  * @return {Boolean} whether the parent is the child or the child is in the parent
  */
 function isOrContainsNode(parent, child) {
-  return (
-    parent === child ||
-    (child instanceof Node && parent.contains && parent.contains(child))
-  )
+  return parent === child || (child instanceof Node && parent.contains && parent.contains(child))
 }
 
 /**
@@ -348,7 +345,7 @@ function getNextWrappingIndex(
   if (nonDisabledNewIndex === -1) {
     return baseIndex >= itemCount ? -1 : baseIndex
   }
-
+  
   return nonDisabledNewIndex
 }
 
@@ -428,33 +425,29 @@ function targetWithinDownshift(
   )
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-let validateControlledUnchanged = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV  !== 'production') {
-  validateControlledUnchanged = (state, prevProps, nextProps) => {
-    const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`
-
-    Object.keys(state).forEach(propKey => {
-      if (
-        prevProps[propKey] !== undefined &&
-        nextProps[propKey] === undefined
-      ) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `downshift: A component has changed the controlled prop "${propKey}" to be uncontrolled. ${warningDescription}`,
-        )
-      } else if (
-        prevProps[propKey] === undefined &&
-        nextProps[propKey] !== undefined
-      ) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `downshift: A component has changed the uncontrolled prop "${propKey}" to be controlled. ${warningDescription}`,
-        )
-      }
-    })
+export function validateControlledUnchanged(state, prevProps, nextProps) {
+  if (process.env.NODE_ENV === 'production') {
+    return
   }
+
+  const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`
+
+  Object.keys(state).forEach(propKey => {
+    if (prevProps[propKey] !== undefined && nextProps[propKey] === undefined) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `downshift: A component has changed the controlled prop "${propKey}" to be uncontrolled. ${warningDescription}`,
+      )
+    } else if (
+      prevProps[propKey] === undefined &&
+      nextProps[propKey] !== undefined
+    ) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `downshift: A component has changed the uncontrolled prop "${propKey}" to be controlled. ${warningDescription}`,
+      )
+    }
+  })
 }
 
 export {
@@ -480,5 +473,4 @@ export {
   targetWithinDownshift,
   getState,
   isControlledProp,
-  validateControlledUnchanged
 }

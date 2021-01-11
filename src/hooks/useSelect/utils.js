@@ -1,29 +1,43 @@
 import PropTypes from 'prop-types'
 import {defaultProps as commonDefaultProps} from '../utils'
-import {noop} from '../../utils'
 
 function getItemIndexByCharacterKey(
   keysSoFar,
   highlightedIndex,
   items,
-  itemToString,
+  itemToStringParam,
   getItemNodeFromIndex,
 ) {
+  const lowerCasedItemStrings = items.map(item =>
+    itemToStringParam(item).toLowerCase(),
+  )
   const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
+  const isValid = (itemString, index) => {
+    const element = getItemNodeFromIndex(index)
 
-  for (let index = 0; index < items.length; index++) {
-    const offsetIndex = (index + highlightedIndex + 1) % items.length
+    return (
+      itemString.startsWith(lowerCasedKeysSoFar) &&
+      !(element && element.hasAttribute('disabled'))
+    )
+  }
 
-    if (
-      itemToString(items[offsetIndex])
-        .toLowerCase()
-        .startsWith(lowerCasedKeysSoFar)
-    ) {
-      const element = getItemNodeFromIndex(offsetIndex)
+  for (
+    let index = highlightedIndex + 1;
+    index < lowerCasedItemStrings.length;
+    index++
+  ) {
+    const itemString = lowerCasedItemStrings[index]
 
-      if (!(element && element.hasAttribute('disabled'))) {
-        return offsetIndex
-      }
+    if (isValid(itemString, index)) {
+      return index
+    }
+  }
+
+  for (let index = 0; index < highlightedIndex; index++) {
+    const itemString = lowerCasedItemStrings[index]
+
+    if (isValid(itemString, index)) {
+      return index
     }
   }
 
@@ -88,7 +102,7 @@ function getA11yStatusMessage({isOpen, resultCount, previousResultCount}) {
       resultCount === 1 ? ' is' : 's are'
     } available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.`
   }
-
+  
   return ''
 }
 
@@ -97,13 +111,4 @@ const defaultProps = {
   getA11yStatusMessage,
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-let validatePropTypes = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  validatePropTypes = (options, caller) => {
-    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
-  }
-}
-
-export {getItemIndexByCharacterKey, defaultProps, validatePropTypes}
+export {propTypes, getItemIndexByCharacterKey, defaultProps}

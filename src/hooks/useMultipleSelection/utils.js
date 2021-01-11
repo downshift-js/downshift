@@ -4,7 +4,6 @@ import {
   getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
 } from '../utils'
-import {noop} from '../../utils'
 
 const defaultStateValues = {
   activeIndex: -1,
@@ -32,7 +31,7 @@ function getInitialValue(props, propKey) {
  * @param {string} propKey Props key to generate the value for.
  * @returns {any} The initial value for that prop.
  */
-function getDefaultValue(props, propKey) {
+export function getDefaultValue(props, propKey) {
   return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
@@ -43,7 +42,7 @@ function getDefaultValue(props, propKey) {
  * @param {Object} props Props passed to the hook.
  * @returns {Object} The initial state.
  */
-function getInitialState(props) {
+export function getInitialState(props) {
   const activeIndex = getInitialValue(props, 'activeIndex')
   const selectedItems = getInitialValue(props, 'selectedItems')
 
@@ -62,7 +61,7 @@ function getInitialState(props) {
  * @param {KeyboardEvent} event The event from keydown.
  * @returns {boolean} Whether the operation is allowed.
  */
-function isKeyDownOperationPermitted(event) {
+export function isKeyDownOperationPermitted(event) {
   if (event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) {
     return false
   }
@@ -96,7 +95,7 @@ function getA11yRemovalMessage(selectionParameters) {
   return `${itemToStringLocal(removedSelectedItem)} has been removed.`
 }
 
-const propTypes = {
+export const propTypes = {
   selectedItems: PropTypes.array,
   initialSelectedItems: PropTypes.array,
   defaultSelectedItems: PropTypes.array,
@@ -128,20 +127,4 @@ export const defaultProps = {
   getA11yRemovalMessage,
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft',
-}
-
-// eslint-disable-next-line import/no-mutable-exports
-let validatePropTypes = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  validatePropTypes = (options, caller) => {
-    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
-  }
-}
-
-export {
-  validatePropTypes,
-  getDefaultValue,
-  getInitialState,
-  isKeyDownOperationPermitted,
 }

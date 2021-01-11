@@ -763,4 +763,32 @@ describe('props', () => {
       `"downshift: A component has changed the controlled prop \\"selectedItems\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
     )
   })
+
+  test('should not throw the controlled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderMultipleCombobox({
+      multipleSelectionProps: {activeIndex: 1},
+    })
+
+    rerender({})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('should not throw the uncontrolled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderMultipleCombobox()
+
+    rerender({multipleSelectionProps: {activeIndex: 1}})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
 })

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import {
   useRef,
   useCallback,
@@ -13,7 +14,6 @@ import {
   debounce,
   targetWithinDownshift,
   validateControlledUnchanged,
-  noop,
 } from '../utils'
 import setStatus from '../set-a11y-status'
 
@@ -85,6 +85,7 @@ const updateA11yStatus = debounce((getA11yMessage, document) => {
   setStatus(getA11yMessage(), document)
 }, 200)
 
+
 // istanbul ignore next
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' &&
@@ -93,26 +94,24 @@ const useIsomorphicLayoutEffect =
     ? useLayoutEffect
     : useEffect
 
-function useElementIds({
-  id = `downshift-${generateId()}`,
+export function getElementIds({
+  id,
   labelId,
   menuId,
   getItemId,
   toggleButtonId,
-  inputId,
 }) {
-  const elementIdsRef = useRef({
-    labelId: labelId || `${id}-label`,
-    menuId: menuId || `${id}-menu`,
-    getItemId: getItemId || (index => `${id}-item-${index}`),
-    toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-    inputId: inputId || `${id}-input`,
-  })
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
 
-  return elementIdsRef.current
+  return {
+    labelId: labelId || `${uniqueId}-label`,
+    menuId: menuId || `${uniqueId}-menu`,
+    getItemId: getItemId || (index => `${uniqueId}-item-${index}`),
+    toggleButtonId: toggleButtonId || `${uniqueId}-toggle-button`,
+  }
 }
 
-function getItemIndex(index, item, items) {
+export function getItemIndex(index, item, items) {
   if (index !== undefined) {
     return index
   }
@@ -126,15 +125,24 @@ function itemToString(item) {
   return item ? String(item) : ''
 }
 
-function isAcceptedCharacterKey(key) {
+export function getPropTypesValidator(caller, propTypes) {
+  // istanbul ignore next
+  return function validate(options = {}) {
+    Object.keys(propTypes).forEach(key => {
+      PropTypes.checkPropTypes(propTypes, options, key, caller.name)
+    })
+  }
+}
+
+export function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
 }
 
-function capitalizeString(string) {
+export function capitalizeString(string) {
   return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
 }
 
-function useLatestRef(val) {
+export function useLatestRef(val) {
   const ref = useRef(val)
   // technically this is not "concurrent mode safe" because we're manipulating
   // the value during render (so it's not idempotent). However, the places this
@@ -155,7 +163,7 @@ function useLatestRef(val) {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useEnhancedReducer(reducer, initialState, props) {
+export function useEnhancedReducer(reducer, initialState, props) {
   const prevStateRef = useRef()
   const actionRef = useRef()
   const enhancedReducer = useCallback(
@@ -202,13 +210,13 @@ function useEnhancedReducer(reducer, initialState, props) {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useControlledReducer(reducer, initialState, props) {
+export function useControlledReducer(reducer, initialState, props) {
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
   return [getState(state, props), dispatch]
 }
 
-const defaultProps = {
+export const defaultProps = {
   itemToString,
   stateReducer,
   getA11ySelectionMessage,
@@ -220,7 +228,7 @@ const defaultProps = {
       : window,
 }
 
-function getDefaultValue(
+export function getDefaultValue(
   props,
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
@@ -234,7 +242,7 @@ function getDefaultValue(
   return defaultStateValues[propKey]
 }
 
-function getInitialValue(
+export function getInitialValue(
   props,
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
@@ -251,7 +259,7 @@ function getInitialValue(
   return getDefaultValue(props, propKey, defaultStateValues)
 }
 
-function getInitialState(props) {
+export function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
   const highlightedIndex = getInitialValue(props, 'highlightedIndex')
@@ -268,7 +276,12 @@ function getInitialState(props) {
   }
 }
 
-function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
+export function getHighlightedIndexOnOpen(
+  props,
+  state,
+  offset,
+  getItemNodeFromIndex,
+) {
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
 
@@ -313,7 +326,7 @@ function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
  * @param {Function} handleBlur Handler on blur from mouse or touch.
  * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
-function useMouseAndTouchTracker(
+export function useMouseAndTouchTracker(
   isOpen,
   downshiftElementRefs,
   environment,
@@ -383,71 +396,79 @@ function useMouseAndTouchTracker(
   return mouseAndTouchTrackersRef
 }
 
-/* istanbul ignore next */
-// eslint-disable-next-line import/no-mutable-exports
-let useGetterPropsCalledChecker = () => noop
 /**
  * Custom hook that checks if getter props are called correctly.
  *
  * @param  {...any} propKeys Getter prop names to be handled.
  * @returns {Function} Setter function called inside getter props to set call information.
  */
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  useGetterPropsCalledChecker = (...propKeys) => {
-    const isInitialMountRef = useRef(true)
-    const getterPropsCalledRef = useRef(
-      propKeys.reduce((acc, propKey) => {
-        acc[propKey] = {}
-        return acc
-      }, {}),
-    )
+export function useGetterPropsCalledChecker(...propKeys) {
+  const isNotProduction = process.env.NODE_ENV !== 'production'
+  const isInitialMountRef = useRef(true)
+  const getterPropsCalledRef = useRef(
+    propKeys.reduce((acc, propKey) => {
+      acc[propKey] = {}
+      return acc
+    }, {}),
+  )
 
-    useEffect(() => {
-      Object.keys(getterPropsCalledRef.current).forEach(propKey => {
-        const propCallInfo = getterPropsCalledRef.current[propKey]
-        if (isInitialMountRef.current) {
-          if (!Object.keys(propCallInfo).length) {
-            // eslint-disable-next-line no-console
-            console.error(
-              `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
-            )
-            return
-          }
-        }
+  useEffect(() => {
+    if (!isNotProduction) {
+      return
+    }
 
-        const {suppressRefError, refKey, elementRef} = propCallInfo
-
-        if ((!elementRef || !elementRef.current) && !suppressRefError) {
+    Object.keys(getterPropsCalledRef.current).forEach(propKey => {
+      const propCallInfo = getterPropsCalledRef.current[propKey]
+      if (isInitialMountRef.current) {
+        if (!Object.keys(propCallInfo).length) {
           // eslint-disable-next-line no-console
           console.error(
-            `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
+            `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
           )
+          return
         }
-      })
+      }
 
-      isInitialMountRef.current = false
+      const {suppressRefError, refKey, elementRef} = propCallInfo
+
+      if ((!elementRef || !elementRef.current) && !suppressRefError) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
+        )
+      }
     })
 
-    const setGetterPropCallInfo = useCallback(
-      (propKey, suppressRefError, refKey, elementRef) => {
+    isInitialMountRef.current = false
+  })
+
+  const setGetterPropCallInfo = useCallback(
+    (propKey, suppressRefError, refKey, elementRef) => {
+      if (process.env.NODE_ENV !== 'production') {
         getterPropsCalledRef.current[propKey] = {
           suppressRefError,
           refKey,
           elementRef,
         }
-      },
-      [],
-    )
+      }
+    },
+    [],
+  )
 
-    return setGetterPropCallInfo
-  }
+  return setGetterPropCallInfo
 }
 
-function useA11yMessageSetter(
+export function useA11yMessageSetter(
   getA11yMessage,
   dependencyArray,
-  {isInitialMount, highlightedIndex, items, environment, ...rest},
+  {
+    isInitialMount,
+    previousResultCount,
+    highlightedIndex,
+    items,
+    environment,
+    ...rest
+  },
 ) {
   // Sets a11y status message on changes in state.
   useEffect(() => {
@@ -461,6 +482,7 @@ function useA11yMessageSetter(
           highlightedIndex,
           highlightedItem: items[highlightedIndex],
           resultCount: items.length,
+          previousResultCount,
           ...rest,
         }),
       environment.document,
@@ -469,7 +491,7 @@ function useA11yMessageSetter(
   }, dependencyArray)
 }
 
-function useScrollIntoView({
+export function useScrollIntoView({
   highlightedIndex,
   isOpen,
   itemRefs,
@@ -500,41 +522,16 @@ function useScrollIntoView({
   return shouldScrollRef
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-let useControlPropsValidator = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  useControlPropsValidator = ({isInitialMount, props, state}) => {
-    // used for checking when props are moving from controlled to uncontrolled.
-    const prevPropsRef = useRef(props)
+export function useControlPropsValidator({isInitialMount, props, state}) {
+  // used for checking when props are moving from controlled to uncontrolled.
+  const prevPropsRef = useRef(props)
 
-    useEffect(() => {
-      if (isInitialMount) {
-        return
-      }
+  useEffect(() => {
+    if (isInitialMount) {
+      return
+    }
 
-      validateControlledUnchanged(state, prevPropsRef.current, props)
-      prevPropsRef.current = props
-    }, [state, props, isInitialMount])
-  }
-}
-
-export {
-  useControlPropsValidator,
-  useScrollIntoView,
-  useA11yMessageSetter,
-  useGetterPropsCalledChecker,
-  useMouseAndTouchTracker,
-  getHighlightedIndexOnOpen,
-  getInitialState,
-  getInitialValue,
-  getDefaultValue,
-  defaultProps,
-  useControlledReducer,
-  useEnhancedReducer,
-  useLatestRef,
-  capitalizeString,
-  isAcceptedCharacterKey,
-  getItemIndex,
-  useElementIds,
+    validateControlledUnchanged(state, prevPropsRef.current, props)
+    prevPropsRef.current = props
+  }, [state, props, isInitialMount])
 }
