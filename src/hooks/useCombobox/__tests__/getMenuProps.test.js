@@ -189,40 +189,5 @@ describe('getMenuProps', () => {
       // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
-
-    test('will not be displayed if getMenuProps is not called but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getInputProps, getComboboxProps} = useCombobox({
-          items,
-        })
-
-        getInputProps({}, {suppressRefError: true})
-        getComboboxProps({}, {suppressRefError: true})
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
-    })
-
-    test('will not be displayed if element ref is not set but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
-          items,
-        })
-
-        getInputProps({}, {suppressRefError: true})
-        getMenuProps({}, {suppressRefError: true})
-        getComboboxProps()
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
-    })
   })
 })
