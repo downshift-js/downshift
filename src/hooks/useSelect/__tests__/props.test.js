@@ -19,7 +19,7 @@ describe('props', () => {
     renderHook(() => useSelect())
 
     expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Warning: Failed prop type: The prop \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`."`,
+      `"Warning: Failed items type: The items \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`."`,
     )
   })
 
@@ -310,33 +310,25 @@ describe('props', () => {
       rerender({getA11yStatusMessage, items: inputItems})
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({resultCount: inputItems.length}),
-      )
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({resultCount: inputItems.length}))
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
       clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({isOpen: true}),
-      )
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({isOpen: true}))
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
-
+      
       keyDownOnMenu('b')
       waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({inputValue: 'b', highlightedIndex: 1}),
-      )
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({inputValue: 'b', highlightedIndex: 1}))
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
 
       keyDownOnMenu('ArrowUp')
       waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({highlightedIndex: 0}),
-      )
+      
+      expect(getA11yStatusMessage).toHaveBeenCalledWith(expect.objectContaining({highlightedIndex: 0}))
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(4)
     })
   })
@@ -1393,5 +1385,31 @@ describe('props', () => {
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
       `"downshift: A component has changed the controlled prop \\"highlightedIndex\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
     )
+  })
+
+  test('should not throw the controlled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderSelect({highlightedIndex: 3})
+
+    rerender({})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('should not throw the uncontrolled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderSelect()
+
+    rerender({highlightedIndex: 3})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
   })
 })

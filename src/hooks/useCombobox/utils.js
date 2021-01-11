@@ -1,19 +1,29 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {
+  generateId,
   getA11yStatusMessage,
   isControlledProp,
   getState,
-  noop,
 } from '../../utils'
 import {
+  getElementIds as getElementIdsCommon,
   defaultProps as defaultPropsCommon,
   getInitialState as getInitialStateCommon,
   useEnhancedReducer,
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
-function getInitialState(props) {
+export function getElementIds({id, inputId, ...rest}) {
+  const uniqueId = id === undefined ? `downshift-${generateId()}` : id
+
+  return {
+    inputId: inputId || `${uniqueId}-input`,
+    ...getElementIdsCommon({id, ...rest}),
+  }
+}
+
+export function getInitialState(props) {
   const initialState = getInitialStateCommon(props)
   const {selectedItem} = initialState
   let {inputValue} = initialState
@@ -34,7 +44,7 @@ function getInitialState(props) {
   }
 }
 
-const propTypes = {
+export const propTypes = {
   items: PropTypes.array.isRequired,
   itemToString: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
@@ -87,7 +97,7 @@ const propTypes = {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useControlledReducer(reducer, initialState, props) {
+export function useControlledReducer(reducer, initialState, props) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
@@ -111,19 +121,8 @@ function useControlledReducer(reducer, initialState, props) {
   return [getState(state, props), dispatch]
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-let validatePropTypes = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  validatePropTypes = (options, caller) => {
-    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
-  }
-}
-
-const defaultProps = {
+export const defaultProps = {
   ...defaultPropsCommon,
   getA11yStatusMessage,
   circularNavigation: true,
 }
-
-export {validatePropTypes, useControlledReducer, getInitialState, defaultProps}

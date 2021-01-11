@@ -19,7 +19,7 @@ describe('props', () => {
     renderHook(() => useCombobox())
 
     expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Warning: Failed prop type: The prop \`items\` is marked as required in \`useCombobox\`, but its value is \`undefined\`."`,
+      `"Warning: Failed items type: The items \`items\` is marked as required in \`useCombobox\`, but its value is \`undefined\`."`,
     )
   })
 
@@ -1453,5 +1453,31 @@ describe('props', () => {
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
       `"downshift: A component has changed the controlled prop \\"inputValue\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
     )
+  })
+
+  test('should not throw the controlled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderCombobox({inputValue: 'controlled value'})
+
+    rerender({})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
+  })
+
+  test('should not throw the uncontrolled error if on production', () => {
+    const originalEnv = process.env.NODE_ENV
+    process.env.NODE_ENV = 'production'
+
+    const {rerender} = renderCombobox()
+
+    rerender({inputValue: 'controlled value'})
+
+    /* eslint-disable no-console */
+    expect(console.error).not.toHaveBeenCalled()
+    process.env.NODE_ENV = originalEnv
   })
 })
