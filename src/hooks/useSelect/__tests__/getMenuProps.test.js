@@ -966,38 +966,5 @@ describe('getMenuProps', () => {
       // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
-
-    test('will not be displayed if not called but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getToggleButtonProps} = useSelect({
-          items,
-        })
-
-        getToggleButtonProps({}, {suppressRefError: true})
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
-    })
-
-    test('will not be displayed if element ref is not set but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getMenuProps, getToggleButtonProps} = useSelect({
-          items,
-        })
-
-        getToggleButtonProps({}, {suppressRefError: true})
-        getMenuProps()
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
-    })
   })
 })

@@ -1,9 +1,7 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  getElementIds,
   getItemIndex,
-  getPropTypesValidator,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
@@ -13,6 +11,7 @@ import {
   useA11yMessageSetter,
   useScrollIntoView,
   useControlPropsValidator,
+  useElementIds,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -21,21 +20,13 @@ import {
   normalizeArrowKey,
 } from '../../utils'
 import downshiftSelectReducer from './reducer'
-import {propTypes, defaultProps} from './utils'
+import {validatePropTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
-
-const validatePropTypes =
-  process.env.NODE_ENV === 'production'
-    ? /* istanbul ignore next */ null
-    : getPropTypesValidator(useSelect, propTypes)
 
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
-  /* istanbul ignore else */
-  if (process.env.NODE_ENV !== 'production') {
-    validatePropTypes(userProps)
-  }
+  validatePropTypes(userProps, useSelect)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
@@ -70,7 +61,7 @@ function useSelect(userProps = {}) {
   // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef(null)
   // prevent id re-generation between renders.
-  const elementIdsRef = useRef(getElementIds(props))
+  const elementIds = useElementIds(props)
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
   const isInitialMountRef = useRef(true)
@@ -81,8 +72,10 @@ function useSelect(userProps = {}) {
   })
 
   // Some utils.
-  const getItemNodeFromIndex = index =>
-    itemRefs.current[elementIdsRef.current.getItemId(index)]
+  const getItemNodeFromIndex = useCallback(
+    index => itemRefs.current[elementIds.getItemId(index)],
+    [elementIds],
+  )
 
   // Effects.
   // Sets a11y status message on changes in state.
@@ -215,7 +208,7 @@ function useSelect(userProps = {}) {
         })
       },
     }),
-    [dispatch],
+    [dispatch, getItemNodeFromIndex],
   )
   const menuKeyDownHandlers = useMemo(
     () => ({
@@ -273,7 +266,7 @@ function useSelect(userProps = {}) {
         })
       },
     }),
-    [dispatch],
+    [dispatch, getItemNodeFromIndex],
   )
 
   // Action functions.
@@ -327,11 +320,11 @@ function useSelect(userProps = {}) {
   // Getter functions.
   const getLabelProps = useCallback(
     labelProps => ({
-      id: elementIdsRef.current.labelId,
-      htmlFor: elementIdsRef.current.toggleButtonId,
+      id: elementIds.labelId,
+      htmlFor: elementIds.toggleButtonId,
       ...labelProps,
     }),
-    [],
+    [elementIds],
   )
   const getMenuProps = useCallback(
     (
@@ -376,13 +369,13 @@ function useSelect(userProps = {}) {
         [refKey]: handleRefs(ref, menuNode => {
           menuRef.current = menuNode
         }),
-        id: elementIdsRef.current.menuId,
+        id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby': elementIdsRef.current.labelId,
+        'aria-labelledby': elementIds.labelId,
         tabIndex: -1,
         ...(latestState.isOpen &&
           latestState.highlightedIndex > -1 && {
-            'aria-activedescendant': elementIdsRef.current.getItemId(
+            'aria-activedescendant': elementIds.getItemId(
               latestState.highlightedIndex,
             ),
           }),
@@ -398,6 +391,8 @@ function useSelect(userProps = {}) {
       menuKeyDownHandlers,
       mouseAndTouchTrackersRef,
       setGetterPropCallInfo,
+      elementIds,
+      getItemNodeFromIndex,
     ],
   )
   const getToggleButtonProps = useCallback(
@@ -426,10 +421,10 @@ function useSelect(userProps = {}) {
         [refKey]: handleRefs(ref, toggleButtonNode => {
           toggleButtonRef.current = toggleButtonNode
         }),
-        id: elementIdsRef.current.toggleButtonId,
+        id: elementIds.toggleButtonId,
         'aria-haspopup': 'listbox',
         'aria-expanded': latest.current.state.isOpen,
-        'aria-labelledby': `${elementIdsRef.current.labelId} ${elementIdsRef.current.toggleButtonId}`,
+        'aria-labelledby': `${elementIds.labelId} ${elementIds.toggleButtonId}`,
         ...rest,
       }
 
@@ -453,7 +448,14 @@ function useSelect(userProps = {}) {
 
       return toggleProps
     },
-    [dispatch, latest, toggleButtonKeyDownHandlers, setGetterPropCallInfo],
+    [
+      dispatch,
+      latest,
+      toggleButtonKeyDownHandlers,
+      setGetterPropCallInfo,
+      elementIds,
+      getItemNodeFromIndex,
+    ],
   )
   const getItemProps = useCallback(
     ({
@@ -490,12 +492,10 @@ function useSelect(userProps = {}) {
       const itemProps = {
         role: 'option',
         'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
-        id: elementIdsRef.current.getItemId(itemIndex),
+        id: elementIds.getItemId(itemIndex),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[
-              elementIdsRef.current.getItemId(itemIndex)
-            ] = itemNode
+            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
           }
         }),
         ...rest,
@@ -511,7 +511,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [dispatch, latest, shouldScrollRef],
+    [dispatch, latest, shouldScrollRef, elementIds],
   )
 
   return {

@@ -139,23 +139,6 @@ describe('getComboboxProps', () => {
       expect(console.error).not.toHaveBeenCalled()
     })
 
-    test('will not be displayed if getComboboxProps is not called but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getInputProps, getMenuProps} = useCombobox({
-          items,
-        })
-
-        getInputProps({}, {suppressRefError: true})
-        getMenuProps({}, {suppressRefError: true})
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
-    })
-
     test('will not be displayed if called with a correct ref', () => {
       const refFn = jest.fn()
       const comboboxNode = {}
@@ -176,24 +159,6 @@ describe('getComboboxProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
-    })
-
-    test('will not be displayed if element ref is not set but environment is production', () => {
-      const originalEnv = process.env.NODE_ENV
-      process.env.NODE_ENV = 'production'
-      renderHook(() => {
-        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
-          items,
-        })
-
-        getInputProps({}, {suppressRefError: true})
-        getMenuProps({}, {suppressRefError: true})
-        getComboboxProps()
-      })
-
-      // eslint-disable-next-line no-console
-      expect(console.error).not.toHaveBeenCalled()
-      process.env.NODE_ENV = originalEnv
     })
   })
 })
