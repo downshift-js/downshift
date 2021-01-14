@@ -500,7 +500,7 @@ export interface UseComboboxGetInputPropsOptions
     GetPropsWithRefKey {}
 
 export interface UseComboboxGetComboboxPropsOptions
-  extends React.HTMLProps<HTMLLabelElement> {}
+  extends React.HTMLProps<HTMLDivElement> {}
 
 export interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: (

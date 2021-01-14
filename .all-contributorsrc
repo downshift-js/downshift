@@ -1324,6 +1324,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "clementgarbay",
+      "name": "Clément Garbay",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12433625?v=4",
+      "profile": "https://github.com/clementgarbay",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",

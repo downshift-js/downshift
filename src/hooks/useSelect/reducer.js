@@ -163,7 +163,7 @@ export default function downshiftSelectReducer(state, action) {
 
       break
     default:
-      return commonReducer(state, action)
+      return commonReducer(state, action, stateChangeTypes)
   }
 
   return {

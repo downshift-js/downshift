@@ -1,8 +1,7 @@
 import {getHighlightedIndexOnOpen, getDefaultValue} from './utils'
-import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftCommonReducer(state, action) {
+export default function downshiftCommonReducer(state, action, stateChangeTypes) {
   const {type, props} = action
   let changes
 
