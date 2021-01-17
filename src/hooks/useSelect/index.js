@@ -54,8 +54,7 @@ function useSelect(userProps = {}) {
   // Element efs.
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
-  const itemRefs = useRef()
-  itemRefs.current = {}
+  const itemRefs = useRef({})
   // used not to trigger menu blur action in some scenarios.
   const shouldBlurRef = useRef(true)
   // used to keep the inputValue clearTimeout object between renders.
@@ -185,6 +184,12 @@ function useSelect(userProps = {}) {
   useEffect(() => {
     isInitialMountRef.current = false
   }, [])
+  // Reset itemRefs on close.
+  useEffect(() => {
+    if (!isOpen) {
+      itemRefs.current = {}
+    }
+  }, [isOpen])
 
   // Event handler functions.
   const toggleButtonKeyDownHandlers = useMemo(

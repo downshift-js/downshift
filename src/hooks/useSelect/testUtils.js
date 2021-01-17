@@ -33,9 +33,11 @@ const renderUseSelect = props => {
 }
 
 const renderSelect = (props, uiCallback) => {
-  const ui = <DropdownSelect {...props} />
+  const renderSpy = jest.fn()
+  const ui = <DropdownSelect renderSpy={renderSpy} {...props} />
   const wrapper = render(uiCallback ? uiCallback(ui) : ui)
-  const rerender = p => wrapper.rerender(<DropdownSelect {...p} />)
+  const rerender = p =>
+    wrapper.rerender(<DropdownSelect renderSpy={renderSpy} {...p} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
   const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
@@ -87,17 +89,18 @@ const renderSelect = (props, uiCallback) => {
   }
 }
 
-const DropdownSelect = props => {
+const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
   const {
     isOpen,
     selectedItem,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
-    highlightedIndex,
     getItemProps,
   } = useSelect({items, ...props})
   const {itemToString} = props.itemToString ? props : defaultProps
+
+  renderSpy()
 
   return (
     <div>
@@ -115,12 +118,11 @@ const DropdownSelect = props => {
           (props.items || items).map((item, index) => {
             const stringItem =
               item instanceof Object ? itemToString(item) : item
-            return (
+            return renderItem ? (
+              renderItem({index, item, getItemProps, dataTestIds, stringItem})
+            ) : (
               <li
                 data-testid={dataTestIds.item(index)}
-                style={
-                  highlightedIndex === index ? {backgroundColor: 'blue'} : {}
-                }
                 key={`${stringItem}${index}`}
                 {...getItemProps({item, index})}
               >

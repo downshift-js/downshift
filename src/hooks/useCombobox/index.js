@@ -51,11 +51,10 @@ function useCombobox(userProps = {}) {
 
   // Element refs.
   const menuRef = useRef(null)
-  const itemRefs = useRef()
+  const itemRefs = useRef({})
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
   const comboboxRef = useRef(null)
-  itemRefs.current = {}
   const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
@@ -143,6 +142,12 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     isInitialMountRef.current = false
   }, [])
+  // Reset itemRefs on close.
+  useEffect(() => {
+    if (!isOpen) {
+      itemRefs.current = {}
+    }
+  }, [isOpen])
 
   /* Event handler functions */
   const inputKeyDownHandlers = useMemo(

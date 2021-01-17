@@ -1,6 +1,7 @@
+import React from 'react'
 import {act} from '@testing-library/react'
 
-export const items = [
+const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -29,7 +30,7 @@ export const items = [
   'Oganesson',
 ]
 
-export const defaultIds = {
+const defaultIds = {
   labelId: 'downshift-test-id-label',
   menuId: 'downshift-test-id-menu',
   getItemId: index => `downshift-test-id-item-${index}`,
@@ -37,6 +38,27 @@ export const defaultIds = {
   inputId: 'downshift-test-id-input',
 }
 
-export const waitForDebouncedA11yStatusUpdate = () => {
+const waitForDebouncedA11yStatusUpdate = () => {
   act(() => jest.advanceTimersByTime(200))
 }
+
+const MemoizedItem = React.memo(function Item({
+  index,
+  item,
+  getItemProps,
+  dataTestIds,
+  stringItem,
+  ...rest
+}) {
+  return (
+    <li
+      data-testid={dataTestIds.item(index)}
+      key={`${stringItem}${index}`}
+      {...getItemProps({item, index, ...rest})}
+    >
+      {stringItem}
+    </li>
+  )
+})
+
+export {items, defaultIds, waitForDebouncedA11yStatusUpdate, MemoizedItem}
