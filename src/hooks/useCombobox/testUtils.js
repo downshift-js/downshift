@@ -94,7 +94,7 @@ const renderCombobox = (props, uiCallback) => {
   }
 }
 
-const DropdownCombobox = ({renderSpy, ...props}) => {
+const DropdownCombobox = ({renderSpy, renderItem, ...props}) => {
   const {
     isOpen,
     getToggleButtonProps,
@@ -102,7 +102,6 @@ const DropdownCombobox = ({renderSpy, ...props}) => {
     getMenuProps,
     getInputProps,
     getComboboxProps,
-    highlightedIndex,
     getItemProps,
   } = useCombobox({items, ...props})
   const {itemToString} = props.itemToString ? props : defaultProps
@@ -126,12 +125,11 @@ const DropdownCombobox = ({renderSpy, ...props}) => {
           (props.items || items).map((item, index) => {
             const stringItem =
               item instanceof Object ? itemToString(item) : item
-            return (
+            return renderItem ? (
+              renderItem({index, item, getItemProps, dataTestIds, stringItem})
+            ) : (
               <li
                 data-testid={dataTestIds.item(index)}
-                style={
-                  highlightedIndex === index ? {backgroundColor: 'blue'} : {}
-                }
                 key={`${stringItem}${index}`}
                 {...getItemProps({item, index})}
               >
