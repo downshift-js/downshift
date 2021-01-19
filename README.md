@@ -57,7 +57,7 @@ has been around for a while. It established a successful pattern for making
 components accessible and functional while giving developers complete freedom
 when building the UI.
 
-The `README` on this page convers only the component while each hook has its own
+The `README` on this page covers only the component while each hook has its own
 `README` page. You can navigate to the [hooks page][hooks-readme] or go directly
 to the hook you need by using the links in the list above.
 
