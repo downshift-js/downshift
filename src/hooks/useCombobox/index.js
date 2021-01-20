@@ -169,6 +169,10 @@ function useCombobox(userProps = {}) {
         })
       },
       Home(event) {
+        if (!latest.current.state.isOpen) {
+          return
+        }
+
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownHome,
@@ -176,6 +180,10 @@ function useCombobox(userProps = {}) {
         })
       },
       End(event) {
+        if (!latest.current.state.isOpen) {
+          return
+        }
+
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnd,
@@ -183,21 +191,30 @@ function useCombobox(userProps = {}) {
         })
       },
       Escape() {
-        dispatch({
-          type: stateChangeTypes.InputKeyDownEscape,
-        })
+        const latestState = latest.current.state
+        if (
+          latestState.isOpen ||
+          latestState.inputValue ||
+          latestState.selectedItem ||
+          latestState.highlightedIndex > -1
+        ) {
+          dispatch({
+            type: stateChangeTypes.InputKeyDownEscape,
+          })
+        }
       },
       Enter(event) {
-        // if IME composing, wait for next Enter keydown event.
-        if (event.which === 229) {
+        const latestState = latest.current.state
+        // if closed or no highlighted index, do nothing.
+        if (
+          !latestState.isOpen ||
+          latestState.highlightedIndex < 0 ||
+          event.which === 229 // if IME composing, wait for next Enter keydown event.
+        ) {
           return
         }
-        const latestState = latest.current.state
 
-        if (latestState.isOpen) {
-          event.preventDefault()
-        }
-
+        event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnter,
           getItemNodeFromIndex,
@@ -372,7 +389,7 @@ function useCombobox(userProps = {}) {
       }
       const inputHandleBlur = () => {
         /* istanbul ignore else */
-        if (!mouseAndTouchTrackersRef.current.isMouseDown) {
+        if (latestState.isOpen && !mouseAndTouchTrackersRef.current.isMouseDown) {
           dispatch({
             type: stateChangeTypes.InputBlur,
             selectItem: true,

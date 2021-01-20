@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render, fireEvent, screen} from '@testing-library/react'
+import {render, fireEvent, screen, createEvent} from '@testing-library/react'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -365,6 +365,32 @@ test('home and end keys should not call highlighting method when menu is closed'
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({isOpen: false, highlightedIndex: null}),
   )
+})
+
+test('home and end keys should not prevent event default when menu is closed', () => {
+  const {input} = renderDownshift()
+  const homeKeyDownEvent = createEvent.keyDown(input, {key: 'Home'})
+  const endKeyDownEvent = createEvent.keyDown(input, {key: 'End'})
+  // home
+  fireEvent(input, homeKeyDownEvent)
+  expect(homeKeyDownEvent.defaultPrevented).toBe(false)
+
+  // end
+  fireEvent(input, endKeyDownEvent)
+  expect(endKeyDownEvent.defaultPrevented).toBe(false)
+})
+
+test('home and end keys should prevent event default when menu is open', () => {
+  const {input} = renderDownshift({props: {defaultIsOpen: true}})
+  const homeKeyDownEvent = createEvent.keyDown(input, {key: 'Home'})
+  const endKeyDownEvent = createEvent.keyDown(input, {key: 'End'})
+  // home
+  fireEvent(input, homeKeyDownEvent)
+  expect(homeKeyDownEvent.defaultPrevented).toBe(true)
+
+  // end
+  fireEvent(input, endKeyDownEvent)
+  expect(endKeyDownEvent.defaultPrevented).toBe(true)
 })
 
 test('enter on an input with a closed menu does nothing', () => {

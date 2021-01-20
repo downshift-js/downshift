@@ -616,10 +616,15 @@ class Downshift extends Component {
   inputKeyDownHandlers = {
     ...this.keyDownHandlers,
     Home(event) {
+      const {isOpen} = this.getState()
+
+      if (!isOpen) {
+        return
+      }
+
       event.preventDefault()
 
       const itemCount = this.getItemCount()
-      const {isOpen} = this.getState()
 
       if (itemCount <= 0 || !isOpen) {
         return
@@ -640,10 +645,15 @@ class Downshift extends Component {
     },
 
     End(event) {
+      const {isOpen} = this.getState()
+
+      if (!isOpen) {
+        return
+      }
+
       event.preventDefault()
 
       const itemCount = this.getItemCount()
-      const {isOpen} = this.getState()
 
       if (itemCount <= 0 || !isOpen) {
         return

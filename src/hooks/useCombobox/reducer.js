@@ -36,7 +36,7 @@ export default function downshiftUseComboboxReducer(state, action) {
             1,
             action.getItemNodeFromIndex,
           ),
-          isOpen: true,
+          isOpen: props.items.length >= 0,
         }
       }
       break
@@ -59,7 +59,7 @@ export default function downshiftUseComboboxReducer(state, action) {
             -1,
             action.getItemNodeFromIndex,
           ),
-          isOpen: true,
+          isOpen: props.items.length >= 0,
         }
       }
       break
@@ -86,43 +86,35 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownHome:
       changes = {
-        ...(state.isOpen && {
-          highlightedIndex: getNextNonDisabledIndex(
-            1,
-            0,
-            props.items.length,
-            action.getItemNodeFromIndex,
-            false,
-          ),
-        }),
+        highlightedIndex: getNextNonDisabledIndex(
+          1,
+          0,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.InputKeyDownEnd:
       changes = {
-        ...(state.isOpen && {
-          highlightedIndex: getNextNonDisabledIndex(
-            -1,
-            props.items.length - 1,
-            props.items.length,
-            action.getItemNodeFromIndex,
-            false,
-          ),
-        }),
+        highlightedIndex: getNextNonDisabledIndex(
+          -1,
+          props.items.length - 1,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.InputBlur:
-      if (state.isOpen) {
-        changes = {
-          isOpen: false,
-          highlightedIndex: -1,
-          ...(state.highlightedIndex >= 0 &&
-            action.selectItem && {
-              selectedItem: props.items[state.highlightedIndex],
-              inputValue: props.itemToString(
-                props.items[state.highlightedIndex],
-              ),
-            }),
-        }
+      changes = {
+        isOpen: false,
+        highlightedIndex: -1,
+        ...(state.highlightedIndex >= 0 &&
+          action.selectItem && {
+            selectedItem: props.items[state.highlightedIndex],
+            inputValue: props.itemToString(props.items[state.highlightedIndex]),
+          }),
       }
       break
     case stateChangeTypes.InputChange:

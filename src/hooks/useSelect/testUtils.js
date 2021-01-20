@@ -71,6 +71,7 @@ const renderSelect = (props, uiCallback) => {
 
   return {
     ...wrapper,
+    renderSpy,
     rerender,
     label,
     menu,
