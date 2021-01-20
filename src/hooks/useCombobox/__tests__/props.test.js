@@ -549,7 +549,6 @@ describe('props', () => {
       )
     })
 
-    // eslint-disable-next-line max-statements
     test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
@@ -561,289 +560,191 @@ describe('props', () => {
         keyDownOnInput,
         blurInput,
       } = renderCombobox({stateReducer})
+      const initialState = {
+        isOpen: false,
+        highlightedIndex: -1,
+        inputValue: '',
+        selectedItem: null,
+      }
+      const testCases = [
+        {
+          step: clickOnToggleButton,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.ToggleButtonClick,
+        },
+        {
+          step: mouseMoveItemAtIndex,
+          args: 2,
+          state: {
+            isOpen: true,
+            highlightedIndex: 2,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.ItemMouseMove,
+        },
+        {
+          step: mouseLeaveMenu,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuMouseLeave,
+        },
+        {
+          step: blurInput,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputBlur,
+        },
+        {
+          step: changeInputValue,
+          args: 'c',
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputChange,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'ArrowDown',
+          state: {
+            isOpen: true,
+            highlightedIndex: 0,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownArrowDown,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'Enter',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: items[0],
+            selectedItem: items[0],
+          },
+          type: stateChangeTypes.InputKeyDownEnter,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'Escape',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownEscape,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'ArrowDown',
+          state: {
+            isOpen: true,
+            highlightedIndex: 0,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownArrowDown,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'ArrowUp',
+          state: {
+            isOpen: true,
+            highlightedIndex: items.length - 1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownArrowUp,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'Home',
+          state: {
+            isOpen: true,
+            highlightedIndex: 0,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownHome,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'End',
+          state: {
+            isOpen: true,
+            highlightedIndex: items.length - 1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownEnd,
+        },
+        {
+          step: clickOnItemAtIndex,
+          args: 3,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: items[3],
+            selectedItem: items[3],
+          },
+          type: stateChangeTypes.ItemClick,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'ArrowUp',
+          state: {
+            isOpen: true,
+            highlightedIndex: 2,
+            inputValue: items[3],
+            selectedItem: items[3],
+          },
+          type: stateChangeTypes.InputKeyDownArrowUp,
+        },
+        {
+          step: keyDownOnInput,
+          args: 'Escape',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: items[3],
+            selectedItem: items[3],
+          },
+          type: stateChangeTypes.InputKeyDownEscape,
+        },
+      ]
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      clickOnToggleButton()
+      for (let index = 0; index < testCases.length; index++) {
+        const {step, state, args, type} = testCases[index]
+        const previousState = testCases[index - 1]?.state ?? initialState
 
-      expect(stateReducer).toHaveBeenCalledTimes(1)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({isOpen: false}),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: true,
-          }),
-          type: stateChangeTypes.ToggleButtonClick,
-        }),
-      )
+        step(args)
 
-      changeInputValue('c')
-
-      expect(stateReducer).toHaveBeenCalledTimes(2)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          inputValue: '',
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            inputValue: 'c',
-          }),
-          type: stateChangeTypes.InputChange,
-        }),
-      )
-
-      mouseMoveItemAtIndex(1)
-
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 1,
-          }),
-          type: stateChangeTypes.ItemMouseMove,
-        }),
-      )
-
-      clickOnItemAtIndex(1)
-
-      expect(stateReducer).toHaveBeenCalledTimes(4)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 1,
-          isOpen: true,
-          selectedItem: null,
-          inputValue: 'c',
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: false,
-            highlightedIndex: -1,
-            selectedItem: items[1],
-            inputValue: items[1],
-          }),
-          type: stateChangeTypes.ItemClick,
-        }),
-      )
-
-      keyDownOnInput('ArrowDown')
-
-      expect(stateReducer).toHaveBeenCalledTimes(5)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({isOpen: true, highlightedIndex: 2}),
-          type: stateChangeTypes.InputKeyDownArrowDown,
-        }),
-      )
-
-      keyDownOnInput('End')
-
-      expect(stateReducer).toHaveBeenCalledTimes(6)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 2,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: items.length - 1,
-          }),
-          type: stateChangeTypes.InputKeyDownEnd,
-        }),
-      )
-
-      mouseLeaveMenu()
-
-      expect(stateReducer).toHaveBeenCalledTimes(7)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: items.length - 1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.MenuMouseLeave,
-        }),
-      )
-
-      keyDownOnInput('Home')
-
-      expect(stateReducer).toHaveBeenCalledTimes(8)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 0,
-          }),
-          type: stateChangeTypes.InputKeyDownHome,
-        }),
-      )
-
-      keyDownOnInput('Enter')
-
-      expect(stateReducer).toHaveBeenCalledTimes(9)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 0,
-          selectedItem: items[1],
-          isOpen: true,
-          inputValue: items[1],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: -1,
-            isOpen: false,
-            inputValue: items[0],
-            selectedItem: items[0],
-          }),
-          type: stateChangeTypes.InputKeyDownEnter,
-        }),
-      )
-
-      keyDownOnInput('Escape')
-
-      expect(stateReducer).toHaveBeenCalledTimes(10)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          inputValue: items[0],
-          selectedItem: items[0],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            inputValue: '',
-            selectedItem: null,
-          }),
-          type: stateChangeTypes.InputKeyDownEscape,
-        }),
-      )
-
-      keyDownOnInput('Escape')
-
-      expect(stateReducer).toHaveBeenCalledTimes(11)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          isOpen: false,
-          selectedItem: null,
-          inputValue: '',
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: null,
-            inputValue: '',
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.InputKeyDownEscape,
-        }),
-      )
-
-      keyDownOnInput('ArrowUp')
-
-      expect(stateReducer).toHaveBeenCalledTimes(12)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: items.length - 1,
-            isOpen: true,
-          }),
-          type: stateChangeTypes.InputKeyDownArrowUp,
-        }),
-      )
-
-      blurInput()
-
-      expect(stateReducer).toHaveBeenCalledTimes(13)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: items.length - 1,
-          isOpen: true,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[items.length - 1],
-            inputValue: items[items.length - 1],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.InputBlur,
-        }),
-      )
-
-      keyDownOnInput('Home')
-
-      expect(stateReducer).toHaveBeenCalledTimes(14)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          isOpen: false,
-          selectedItem: items[items.length - 1],
-          inputValue: items[items.length - 1],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[items.length - 1],
-            inputValue: items[items.length - 1],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.InputKeyDownHome,
-        }),
-      )
-
-      keyDownOnInput('End')
-
-      expect(stateReducer).toHaveBeenCalledTimes(15)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          isOpen: false,
-          selectedItem: items[items.length - 1],
-          inputValue: items[items.length - 1],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[items.length - 1],
-            inputValue: items[items.length - 1],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.InputKeyDownEnd,
-        }),
-      )
-
-      keyDownOnInput('Enter')
-
-      expect(stateReducer).toHaveBeenCalledTimes(16)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          isOpen: false,
-          selectedItem: items[items.length - 1],
-          inputValue: items[items.length - 1],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[items.length - 1],
-            inputValue: items[items.length - 1],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.InputKeyDownEnter,
-        }),
-      )
+        expect(stateReducer).toHaveBeenCalledTimes(index + 1)
+        expect(stateReducer).toHaveBeenLastCalledWith(
+          previousState,
+          expect.objectContaining({changes: state, type}),
+        )
+      }
     })
 
     test('replaces prop values with user defined', () => {

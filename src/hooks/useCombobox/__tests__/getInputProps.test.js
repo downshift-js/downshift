@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as React from 'react'
 import {act, renderHook} from '@testing-library/react-hooks'
-import {fireEvent} from '@testing-library/react'
+import {fireEvent, createEvent} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
@@ -160,13 +160,14 @@ describe('getInputProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = renderUseCombobox()
 
+      const {ref: inputRef, onKeyDown} = result.current.getInputProps({
+        onKeyDown: userOnKeyDown,
+      })
+      inputRef({focus: noop})
       act(() => {
-        const {ref: inputRef, onKeyDown} = result.current.getInputProps({
-          onKeyDown: userOnKeyDown,
-        })
-
-        inputRef({focus: noop})
         result.current.toggleMenu()
+      })
+      act(() => {
         onKeyDown({key: 'Escape', preventDefault: noop})
       })
 
@@ -196,7 +197,7 @@ describe('getInputProps', () => {
 
     test('event handler onBlur is called along with downshift handler', () => {
       const userOnBlur = jest.fn()
-      const {result} = renderUseCombobox()
+      const {result} = renderUseCombobox({initialIsOpen: true})
 
       act(() => {
         const {ref: inputRef, onBlur} = result.current.getInputProps({
@@ -347,6 +348,15 @@ describe('getInputProps', () => {
 
     describe('on key down', () => {
       describe('arrow up', () => {
+        test('it prevents the default event behavior', () => {
+          const {input} = renderCombobox()
+          const keyDownEvent = createEvent.keyDown(input, {key: 'ArrowUp'})
+
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not open or highlight anything if there are no options', () => {
           const {keyDownOnInput, getItems, input} = renderCombobox({items: []})
 
@@ -467,6 +477,15 @@ describe('getInputProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it prevents the default event behavior', () => {
+          const {input} = renderCombobox()
+          const keyDownEvent = createEvent.keyDown(input, {key: 'ArrowDown'})
+
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not opne on highlight anything if there are no options', () => {
           const {keyDownOnInput, getItems, input} = renderCombobox({items: []})
 
@@ -648,6 +667,24 @@ describe('getInputProps', () => {
         )
       })
 
+      test('end it prevents the default event and calls dispatch only when menu is open', () => {
+        const {input, rerender, renderSpy} = renderCombobox()
+        const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
+
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(false)
+        expect(renderSpy).not.toHaveBeenCalled()
+
+        rerender({isOpen: true})
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+      })
+
       test('home it highlights the first option number', () => {
         const {keyDownOnInput, input} = renderCombobox({
           isOpen: true,
@@ -660,6 +697,24 @@ describe('getInputProps', () => {
           'aria-activedescendant',
           defaultIds.getItemId(0),
         )
+      })
+
+      test('home it prevents the default event calls dispatch only when menu is open', () => {
+        const {input, rerender, renderSpy} = renderCombobox()
+        const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
+
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(false)
+        expect(renderSpy).not.toHaveBeenCalled()
+
+        rerender({isOpen: true})
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
       })
 
       test('escape with menu open has the menu closed and focused kept on input', () => {
@@ -688,6 +743,27 @@ describe('getInputProps', () => {
         expect(getItems()).toHaveLength(0)
         expect(input).toHaveValue('')
         expect(input).toHaveFocus()
+      })
+
+      test('escape it prevents the rerender when menu closed, no selectedItem and no inputValue', () => {
+        const {keyDownOnInput, rerender, renderSpy} = renderCombobox()
+
+        renderSpy.mockClear()
+        keyDownOnInput('Escape')
+
+        expect(renderSpy).toHaveBeenCalledTimes(0) // no re-render
+
+        rerender({isOpen: true})
+        renderSpy.mockClear() // reset rerender and initial render
+        keyDownOnInput('Escape')
+
+        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+
+        rerender({isOpen: false, inputValue: 'still'})
+        renderSpy.mockClear() // reset rerender and initial render
+        keyDownOnInput('Escape')
+
+        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
       })
 
       test('enter it closes the menu and selects highlighted item', () => {
@@ -743,7 +819,7 @@ describe('getInputProps', () => {
         expect(input).not.toHaveAttribute('aria-activedescendant')
       })
 
-      test('enter on an input with a closed menu does nothing', () => {
+      test('enter with a closed menu does nothing', () => {
         const {keyDownOnInput, getItems, input} = renderCombobox({
           initialHighlightedIndex: 2,
           initialIsOpen: false,
@@ -755,7 +831,7 @@ describe('getInputProps', () => {
         expect(input).not.toHaveValue()
       })
 
-      test('enter on an input with an open menu does nothing without a highlightedIndex', () => {
+      test('enter with an open menu does nothing without a highlightedIndex', () => {
         const {keyDownOnInput, getItems, input} = renderCombobox({
           initialIsOpen: true,
         })
@@ -764,6 +840,43 @@ describe('getInputProps', () => {
 
         expect(getItems()).toHaveLength(items.length)
         expect(input).not.toHaveValue()
+      })
+
+      test('enter with closed menu, no item highlighted or composing event, it will not rerender or prevent event default', () => {
+        const {input, renderSpy, rerender} = renderCombobox()
+        let keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
+
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(renderSpy).not.toHaveBeenCalled()
+        expect(keyDownEvent.defaultPrevented).toBe(false)
+
+        rerender({
+          isOpen: true,
+        })
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(renderSpy).not.toHaveBeenCalled()
+        expect(keyDownEvent.defaultPrevented).toBe(false)
+
+        keyDownEvent = createEvent.keyDown(input, {key: 'Enter', keyCode: 229})
+        rerender({
+          isOpen: true,
+          highlightedIndex: 2,
+        })
+        renderSpy.mockClear()
+        fireEvent(input, keyDownEvent)
+
+        expect(renderSpy).not.toHaveBeenCalled()
+        expect(keyDownEvent.defaultPrevented).toBe(false)
+
+        keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
+        fireEvent(input, keyDownEvent)
+
+        expect(renderSpy).toHaveBeenCalledTimes(1)
+        expect(keyDownEvent.defaultPrevented).toBe(true)
       })
 
       test('tab it closes the menu and selects highlighted item', () => {
@@ -784,6 +897,21 @@ describe('getInputProps', () => {
 
         expect(getItems()).toHaveLength(0)
         expect(input).toHaveValue(items[initialHighlightedIndex])
+      })
+
+      test('tab it prevents the rerender and does not call dispatch when menu is closed', () => {
+        const {rerender, renderSpy} = renderCombobox()
+
+        renderSpy.mockClear()
+        userEvent.tab()
+
+        expect(renderSpy).toHaveBeenCalledTimes(0)
+
+        rerender({isOpen: true})
+        renderSpy.mockClear()
+        userEvent.tab()
+
+        expect(renderSpy).toHaveBeenCalledTimes(1)
       })
 
       test('shift+tab it closes the menu', () => {

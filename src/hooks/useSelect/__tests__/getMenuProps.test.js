@@ -1,7 +1,12 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as React from 'react'
 import {act, renderHook} from '@testing-library/react-hooks'
-import {act as reactAct, fireEvent, screen} from '@testing-library/react'
+import {
+  act as reactAct,
+  fireEvent,
+  screen,
+  createEvent,
+} from '@testing-library/react'
 import {renderUseSelect, renderSelect} from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
@@ -403,6 +408,15 @@ describe('getMenuProps', () => {
       })
 
       describe('arrow up', () => {
+        test('it prevents the default event behavior', () => {
+          const {menu} = renderSelect()
+          const keyDownEvent = createEvent.keyDown(menu, {key: 'ArrowUp'})
+
+          fireEvent(menu, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not highlight anything if there are no options', () => {
           const {keyDownOnMenu, menu, getItems} = renderSelect({
             isOpen: true,
@@ -504,6 +518,15 @@ describe('getMenuProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it prevents the default event behavior', () => {
+          const {menu} = renderSelect()
+          const keyDownEvent = createEvent.keyDown(menu, {key: 'ArrowDown'})
+
+          fireEvent(menu, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not highlight anything if there are no options', () => {
           const {keyDownOnMenu, menu, getItems} = renderSelect({
             isOpen: true,
@@ -619,6 +642,15 @@ describe('getMenuProps', () => {
         )
       })
 
+      test('end it prevents the default event behavior', () => {
+        const {menu} = renderSelect()
+        const keyDownEvent = createEvent.keyDown(menu, {key: 'End'})
+
+        fireEvent(menu, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+      })
+
       test('home it highlights the first option number', () => {
         const {keyDownOnMenu, menu} = renderSelect({
           isOpen: true,
@@ -631,6 +663,15 @@ describe('getMenuProps', () => {
           'aria-activedescendant',
           defaultIds.getItemId(0),
         )
+      })
+
+      test('home it prevents the default event behavior', () => {
+        const {menu} = renderSelect()
+        const keyDownEvent = createEvent.keyDown(menu, {key: 'Home'})
+
+        fireEvent(menu, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
       })
 
       test('escape it has the menu closed', () => {
@@ -693,6 +734,15 @@ describe('getMenuProps', () => {
         expect(toggleButton).toHaveFocus()
       })
 
+      test('enter it prevents the default event behavior', () => {
+        const {menu} = renderSelect()
+        const keyDownEvent = createEvent.keyDown(menu, {key: 'Enter'})
+
+        fireEvent(menu, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+      })
+
       test('space it closes the menu and selects highlighted item', () => {
         const initialHighlightedIndex = 2
         const {keyDownOnMenu, toggleButton, getItems} = renderSelect({
@@ -731,6 +781,15 @@ describe('getMenuProps', () => {
         keyDownOnMenu(' ')
 
         expect(toggleButton).toHaveFocus()
+      })
+
+      test('space it prevents the default event behavior', () => {
+        const {menu} = renderSelect()
+        const keyDownEvent = createEvent.keyDown(menu, {key: ' '})
+
+        fireEvent(menu, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
       })
 
       test('tab it closes the menu and does not select highlighted item', () => {

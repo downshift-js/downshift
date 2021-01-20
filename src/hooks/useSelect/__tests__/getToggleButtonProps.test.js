@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-disabled-tests */
-import {act as reactAct} from '@testing-library/react'
+import {act as reactAct, createEvent, fireEvent} from '@testing-library/react'
 import {act as reactHooksAct, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderUseSelect, renderSelect} from '../testUtils'
@@ -426,6 +426,15 @@ describe('getToggleButtonProps', () => {
       })
 
       describe('arrow up', () => {
+        test('it prevents the default event behavior', () => {
+          const {toggleButton} = renderSelect()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'ArrowUp'})
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not open or highlight anything if there are no options', () => {
           const {keyDownOnToggleButton, menu, getItems} = renderSelect({
             items: [],
@@ -525,6 +534,15 @@ describe('getToggleButtonProps', () => {
       })
 
       describe('arrow down', () => {
+        test('it prevents the default event behavior', () => {
+          const {toggleButton} = renderSelect()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'ArrowDown'})
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
         test('it does not open or highlight anything if there are no options', () => {
           const {keyDownOnToggleButton, menu, getItems} = renderSelect({
             items: [],

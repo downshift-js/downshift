@@ -543,7 +543,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionSetInputValue}),
       )
     })
-    // eslint-disable-next-line max-statements
+
     test('is called at each state change with the appropriate change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {
@@ -554,277 +554,213 @@ describe('props', () => {
         keyDownOnMenu,
         mouseMoveItemAtIndex,
         clickOnItemAtIndex,
-        rerender,
-      } = renderSelect({stateReducer, isOpen: true})
+      } = renderSelect({stateReducer})
+      const initialState = {
+        isOpen: false,
+        highlightedIndex: -1,
+        selectedItem: null,
+        inputValue: '',
+      }
+      const testCases = [
+        {
+          step: clickOnToggleButton,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.ToggleButtonClick,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'c',
+          state: {
+            isOpen: true,
+            highlightedIndex: 3,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuKeyDownCharacter,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'ArrowDown',
+          state: {
+            isOpen: true,
+            highlightedIndex: 4,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuKeyDownArrowDown,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'ArrowUp',
+          state: {
+            isOpen: true,
+            highlightedIndex: 3,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuKeyDownArrowUp,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'End',
+          state: {
+            isOpen: true,
+            highlightedIndex: items.length - 1,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuKeyDownEnd,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'Home',
+          state: {
+            isOpen: true,
+            highlightedIndex: 0,
+            inputValue: 'c',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.MenuKeyDownHome,
+        },
+        {
+          step: keyDownOnMenu,
+          args: 'Enter',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: 'c',
+            selectedItem: items[0],
+          },
+          type: stateChangeTypes.MenuKeyDownEnter,
+        },
+        {
+          step: keyDownOnToggleButton,
+          args: 'o',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: 'co',
+            selectedItem: items[19],
+          },
+          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+        },
+        {
+          step: keyDownOnToggleButton,
+          args: 'ArrowDown',
+          state: {
+            isOpen: true,
+            highlightedIndex: 20,
+            inputValue: 'co',
+            selectedItem: items[19],
+          },
+          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+        },
+        {
+          step: clickOnItemAtIndex,
+          args: 10,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.ItemClick,
+        },
+        {
+          step: keyDownOnToggleButton,
+          args: 'ArrowUp',
+          state: {
+            isOpen: true,
+            highlightedIndex: 9,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+        },
+        {
+          step: mouseMoveItemAtIndex,
+          args: 6,
+          state: {
+            isOpen: true,
+            highlightedIndex: 6,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.ItemMouseMove,
+        },
+        {
+          step: mouseLeaveMenu,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.MenuMouseLeave,
+        },
+        {
+          step: blurMenu,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.MenuBlur,
+        },
+        {
+          step: keyDownOnToggleButton,
+          args: 'ArrowUp',
+          state: {
+            isOpen: true,
+            highlightedIndex: 9,
+            inputValue: 'co',
+            selectedItem: items[10],
+          },
+          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+        },
+        {
+          step: keyDownOnMenu,
+          args: ' ',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: 'co',
+            selectedItem: items[9],
+          },
+          type: stateChangeTypes.MenuKeyDownSpaceButton,
+        },
+        {
+          step: jest.runAllTimers,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: items[9],
+          },
+          type: stateChangeTypes.FunctionSetInputValue,
+        },
+      ]
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      clickOnToggleButton()
+      for (let index = 0; index < testCases.length; index++) {
+        const {step, state, args, type} = testCases[index]
+        const previousState = testCases[index - 1]?.state ?? initialState
 
-      expect(stateReducer).toHaveBeenCalledTimes(1)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: true,
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.ToggleButtonClick,
-        }),
-      )
+        step(args)
 
-      keyDownOnMenu('c')
-
-      expect(stateReducer).toHaveBeenCalledTimes(2)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 3,
-          }),
-          type: stateChangeTypes.MenuKeyDownCharacter,
-        }),
-      )
-
-      keyDownOnMenu('ArrowDown')
-
-      expect(stateReducer).toHaveBeenCalledTimes(3)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 3,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 4,
-          }),
-          type: stateChangeTypes.MenuKeyDownArrowDown,
-        }),
-      )
-
-      keyDownOnMenu('ArrowUp')
-
-      expect(stateReducer).toHaveBeenCalledTimes(4)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 4,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 3,
-          }),
-          type: stateChangeTypes.MenuKeyDownArrowUp,
-        }),
-      )
-
-      keyDownOnMenu('End')
-
-      expect(stateReducer).toHaveBeenCalledTimes(5)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 3,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: items.length - 1,
-          }),
-          type: stateChangeTypes.MenuKeyDownEnd,
-        }),
-      )
-
-      keyDownOnMenu('Home')
-
-      expect(stateReducer).toHaveBeenCalledTimes(6)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: items.length - 1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 0,
-          }),
-          type: stateChangeTypes.MenuKeyDownHome,
-        }),
-      )
-
-      keyDownOnMenu('Enter')
-
-      expect(stateReducer).toHaveBeenCalledTimes(7)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 0,
-          selectedItem: null,
-          isOpen: true,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[0],
-            highlightedIndex: -1,
-            isOpen: false,
-          }),
-          type: stateChangeTypes.MenuKeyDownEnter,
-        }),
-      )
-
-      keyDownOnMenu('Escape')
-
-      expect(stateReducer).toHaveBeenCalledTimes(8)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: true,
-          selectedItem: items[0],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: false,
-            selectedItem: items[0],
-          }),
-          type: stateChangeTypes.MenuKeyDownEscape,
-        }),
-      )
-
-      blurMenu()
-
-      expect(stateReducer).toHaveBeenCalledTimes(9)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: true,
-          selectedItem: items[0],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: false,
-            selectedItem: items[0],
-          }),
-          type: stateChangeTypes.MenuBlur,
-        }),
-      )
-
-      mouseMoveItemAtIndex(5)
-
-      expect(stateReducer).toHaveBeenCalledTimes(10)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: 5,
-          }),
-          type: stateChangeTypes.ItemMouseMove,
-        }),
-      )
-
-      keyDownOnMenu(' ')
-
-      expect(stateReducer).toHaveBeenCalledTimes(11)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 5,
-          isOpen: true,
-          selectedItem: items[0],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[5],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.MenuKeyDownSpaceButton,
-        }),
-      )
-
-      mouseLeaveMenu()
-
-      expect(stateReducer).toHaveBeenCalledTimes(12)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({highlightedIndex: -1}),
-        expect.objectContaining({
-          changes: expect.objectContaining({highlightedIndex: -1}),
-          type: stateChangeTypes.MenuMouseLeave,
-        }),
-      )
-
-      clickOnItemAtIndex(3)
-
-      expect(stateReducer).toHaveBeenCalledTimes(13)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          isOpen: true,
-          selectedItem: items[5],
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            highlightedIndex: -1,
-            isOpen: false,
-            selectedItem: items[3],
-          }),
-          type: stateChangeTypes.ItemClick,
-        }),
-      )
-
-      rerender({stateReducer, isOpen: false, highlightedIndex: -1})
-      keyDownOnToggleButton('ArrowDown')
-
-      expect(stateReducer).toHaveBeenCalledTimes(14)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          selectedItem: items[3],
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            isOpen: true,
-            selectedItem: items[3],
-            highlightedIndex: 4,
-          }),
-          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        }),
-      )
-
-      keyDownOnToggleButton('ArrowUp')
-
-      expect(stateReducer).toHaveBeenCalledTimes(15)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          selectedItem: items[3],
-          isOpen: false,
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[3],
-            isOpen: true,
-            highlightedIndex: 2,
-          }),
-          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-        }),
-      )
-
-      keyDownOnToggleButton('a')
-
-      expect(stateReducer).toHaveBeenCalledTimes(16)
-      expect(stateReducer).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          selectedItem: items[3],
-          isOpen: false,
-          highlightedIndex: -1,
-        }),
-        expect.objectContaining({
-          changes: expect.objectContaining({
-            selectedItem: items[5],
-            isOpen: false,
-            highlightedIndex: -1,
-          }),
-          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
-        }),
-      )
+        expect(stateReducer).toHaveBeenCalledTimes(index + 1)
+        expect(stateReducer).toHaveBeenLastCalledWith(
+          previousState,
+          expect.objectContaining({changes: state, type}),
+        )
+      }
     })
 
     test('receives state, changes and type', () => {
