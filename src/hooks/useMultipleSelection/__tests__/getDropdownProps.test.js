@@ -1,6 +1,8 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
+// eslint-disable-next-line import/default
+import utils from '../../utils'
 import useMultipleSelection from '..'
 
 describe('getDropdownProps', () => {
@@ -244,6 +246,14 @@ describe('getDropdownProps', () => {
   })
 
   describe('non production errors', () => {
+    beforeEach(() => {
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      jest
+        .spyOn(utils, 'useGetterPropsCalledChecker')
+        .mockImplementation(useGetterPropsCalledChecker)
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
     test('will be displayed if getDropdownProps is not called', () => {
       renderHook(() => {
         useMultipleSelection()

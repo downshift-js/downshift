@@ -2,7 +2,8 @@ import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderUseCombobox} from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
-import useCombobox from '..'
+import useCombobox from '..'// eslint-disable-next-line import/default
+import utils from '../../utils'
 
 describe('getComboboxProps', () => {
   describe('hook props', () => {
@@ -72,6 +73,14 @@ describe('getComboboxProps', () => {
   })
 
   describe('non production errors', () => {
+    beforeEach(() => {
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      jest
+        .spyOn(utils, 'useGetterPropsCalledChecker')
+        .mockImplementation(useGetterPropsCalledChecker)
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
     test('will be displayed if getComboboxProps is not called', () => {
       renderHook(() => {
         const {getInputProps, getMenuProps} = useCombobox({items})

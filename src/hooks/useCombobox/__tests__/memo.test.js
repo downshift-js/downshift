@@ -13,7 +13,11 @@ test('functions are memoized', () => {
 test('will skip disabled items after component rerenders and items are memoized', () => {
   function renderItem(props) {
     return (
-      <MemoizedItem disabled={props.index === items.length - 2} {...props} />
+      <MemoizedItem
+        key={props.index}
+        disabled={props.index === items.length - 2}
+        {...props}
+      />
     )
   }
 
@@ -23,7 +27,7 @@ test('will skip disabled items after component rerenders and items are memoized'
     renderItem,
   })
 
-  rerender({renderItem})
+  rerender({renderItem, isOpen: true})
   keyDownOnInput('ArrowUp')
 
   expect(input).toHaveAttribute(

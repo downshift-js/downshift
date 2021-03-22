@@ -143,7 +143,7 @@ describe('props', () => {
   describe('getA11yStatusMessage', () => {
     beforeEach(jest.useFakeTimers)
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      act(jest.runAllTimers)
     })
     afterAll(jest.useRealTimers)
 
@@ -195,7 +195,7 @@ describe('props', () => {
       clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent('')
+      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
     test('is removed after 500ms as a cleanup', () => {
@@ -207,7 +207,7 @@ describe('props', () => {
       waitForDebouncedA11yStatusUpdate()
       act(() => jest.advanceTimersByTime(500))
 
-      expect(getA11yStatusContainer()).toHaveTextContent('')
+      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
     test('is replaced with the user provided one', () => {
