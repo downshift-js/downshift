@@ -3,10 +3,10 @@ import {act as reactAct, createEvent, fireEvent} from '@testing-library/react'
 import {act as reactHooksAct, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderUseSelect, renderSelect} from '../testUtils'
+// eslint-disable-next-line import/default
+import utils from '../../utils'
 import {items, defaultIds} from '../../testUtils'
 import useSelect from '..'
-
-jest.useFakeTimers()
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -311,9 +311,11 @@ describe('getToggleButtonProps', () => {
 
     describe('on keydown', () => {
       describe('character key', () => {
+        beforeEach(jest.useFakeTimers)
         afterEach(() => {
           reactAct(() => jest.runAllTimers())
         })
+        afterAll(jest.useRealTimers)
 
         const startsWithCharacter = (option, character) => {
           return option.toLowerCase().startsWith(character.toLowerCase())
@@ -343,7 +345,7 @@ describe('getToggleButtonProps', () => {
           const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
           keyDownOnToggleButton(char)
-          reactAct(() => jest.runAllTimers())
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnToggleButton(char)
 
           expect(toggleButton).toHaveTextContent(expectedItem)
@@ -357,9 +359,9 @@ describe('getToggleButtonProps', () => {
           const {keyDownOnToggleButton, toggleButton} = renderSelect()
 
           keyDownOnToggleButton(char)
-          reactAct(() => jest.runAllTimers())
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnToggleButton(char)
-          reactAct(() => jest.runAllTimers())
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnToggleButton(char)
 
           expect(toggleButton).toHaveTextContent(expectedItem)
@@ -656,6 +658,14 @@ describe('getToggleButtonProps', () => {
   })
 
   describe('non production errors', () => {
+    beforeEach(() => {
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      jest
+        .spyOn(utils, 'useGetterPropsCalledChecker')
+        .mockImplementation(useGetterPropsCalledChecker)
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
     test('will be displayed if getToggleButtonProps is not called', () => {
       renderHook(() => {
         const {getMenuProps} = useSelect({items})
