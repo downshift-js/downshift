@@ -50,6 +50,14 @@ const tests = [
     output:
       '1 result is available, use up and down arrow keys to navigate. Press Enter key to select.',
   },
+  {
+    input: {
+      isOpen: true,
+      resultCount: 5,
+      previousResultCount: 5,
+    },
+    output: '',
+  },
 ]
 
 tests.forEach(({input, output}) => {

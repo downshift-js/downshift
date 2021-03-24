@@ -8,11 +8,11 @@ jest.useFakeTimers()
 
 describe('props', () => {
   test('if falsy then no prop types error is thrown', () => {
-    act(() => {
-      renderHook(() => {
-        const {getDropdownProps} = useMultipleSelection()
-        getDropdownProps({}, {suppressRefError: true})
-      })
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    renderHook(() => {
+      const {getDropdownProps} = useMultipleSelection()
+      getDropdownProps({}, {suppressRefError: true})
     })
 
     // eslint-disable-next-line no-console
@@ -741,6 +741,7 @@ describe('props', () => {
   })
 
   test('that are uncontrolled should not become controlled', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderMultipleCombobox()
 
     rerender({multipleSelectionProps: {activeIndex: 1}})
@@ -752,6 +753,7 @@ describe('props', () => {
   })
 
   test('that are controlled should not become uncontrolled', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderMultipleCombobox({
       multipleSelectionProps: {selectedItems: [items[1]]},
     })

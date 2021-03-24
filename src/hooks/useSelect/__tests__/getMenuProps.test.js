@@ -1,6 +1,6 @@
 /* eslint-disable jest/no-disabled-tests */
 import * as React from 'react'
-import {act, renderHook} from '@testing-library/react-hooks'
+import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {
   act as reactAct,
   fireEvent,
@@ -9,10 +9,10 @@ import {
 } from '@testing-library/react'
 import {renderUseSelect, renderSelect} from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
+// eslint-disable-next-line import/default
+import utils from '../../utils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
-
-jest.useFakeTimers()
 
 describe('getMenuProps', () => {
   describe('hook props', () => {
@@ -103,7 +103,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      act(() => {
+      hooksAct(() => {
         const {ref} = result.current.getMenuProps({ref: refFn})
 
         ref(menuNode)
@@ -118,7 +118,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      act(() => {
+      hooksAct(() => {
         const {blablaRef} = result.current.getMenuProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
@@ -138,7 +138,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      act(() => {
+      hooksAct(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -159,7 +159,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      act(() => {
+      hooksAct(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -175,7 +175,7 @@ describe('getMenuProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      act(() => {
+      hooksAct(() => {
         const {onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
@@ -193,7 +193,7 @@ describe('getMenuProps', () => {
       })
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      act(() => {
+      hooksAct(() => {
         const {onKeyDown} = result.current.getMenuProps({
           onKeyDown: userOnKeyDown,
         })
@@ -209,7 +209,7 @@ describe('getMenuProps', () => {
       const userOnBlur = jest.fn()
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      act(() => {
+      hooksAct(() => {
         const {onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
@@ -227,7 +227,7 @@ describe('getMenuProps', () => {
       })
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      act(() => {
+      hooksAct(() => {
         const {onBlur} = result.current.getMenuProps({
           onBlur: userOnBlur,
         })
@@ -269,9 +269,11 @@ describe('getMenuProps', () => {
   describe('event handlers', () => {
     describe('on keydown', () => {
       describe('character key', () => {
+        beforeEach(jest.useFakeTimers)
         afterEach(() => {
           reactAct(() => jest.runAllTimers())
         })
+        afterAll(jest.useRealTimers)
 
         const startsWithCharacter = (option, character) => {
           return option.toLowerCase().startsWith(character.toLowerCase())
@@ -293,28 +295,22 @@ describe('getMenuProps', () => {
 
         test('should highlight the second item that starts with that key after typing it twice', () => {
           const char = 'c'
-          const expectedIndex = defaultIds.getItemId(
-            items.indexOf(
-              items
-                .slice(
-                  items.indexOf(
-                    items.find(item => startsWithCharacter(item, char)),
-                  ) + 1,
-                )
-                .find(item => startsWithCharacter(item, char)),
-            ),
-          )
           const {keyDownOnMenu, menu} = renderSelect({
             isOpen: true,
           })
 
           keyDownOnMenu(char)
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(3),
+          )
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnMenu(char)
 
-          expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
+          expect(menu).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(5),
+          )
         })
 
         test('should highlight the first item again if the items are depleated', () => {
@@ -327,13 +323,9 @@ describe('getMenuProps', () => {
           })
 
           keyDownOnMenu(char)
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnMenu(char)
-          reactAct(() => {
-            jest.runOnlyPendingTimers()
-          })
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnMenu(char)
 
           expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
@@ -382,7 +374,7 @@ describe('getMenuProps', () => {
           keyDownOnMenu(chars[0])
           reactAct(() => jest.advanceTimersByTime(200))
           keyDownOnMenu(chars[1])
-          reactAct(() => jest.runAllTimers())
+          reactAct(jest.runOnlyPendingTimers)
           keyDownOnMenu(chars[2])
 
           expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
@@ -943,6 +935,14 @@ describe('getMenuProps', () => {
   })
 
   describe('non production errors', () => {
+    beforeEach(() => {
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      jest
+        .spyOn(utils, 'useGetterPropsCalledChecker')
+        .mockImplementation(useGetterPropsCalledChecker)
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
     test('will be displayed if getMenuProps is not called', () => {
       renderHook(() => {
         const {getToggleButtonProps} = useSelect({items})

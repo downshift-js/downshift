@@ -10,12 +10,9 @@ import {
 } from '../../testUtils'
 import useCombobox from '..'
 
-jest.useFakeTimers()
-
 describe('props', () => {
-  beforeEach(jest.runAllTimers)
-
   test('if falsy then prop types error is thrown', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     renderHook(() => useCombobox())
 
     expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
@@ -46,6 +43,7 @@ describe('props', () => {
     })
 
     test('passed as objects should work with custom itemToString', () => {
+      jest.useFakeTimers()
       const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
         items: [{str: 'aaa'}, {str: 'bbb'}],
         itemToString: item => item.str,
@@ -63,6 +61,7 @@ describe('props', () => {
 
   describe('itemToString', () => {
     test('should provide string version to a11y status message', () => {
+      jest.useFakeTimers()
       const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
         itemToString: () => 'custom-item',
         initialIsOpen: true,
@@ -78,6 +77,12 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
+    beforeEach(jest.useFakeTimers)
+    afterEach(() => {
+      act(jest.runAllTimers)
+    })
+    afterAll(jest.useRealTimers)
+
     test('reports that an item has been selected', () => {
       const itemIndex = 0
       const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
@@ -99,8 +104,9 @@ describe('props', () => {
 
       keyDownOnInput('Escape')
       waitForDebouncedA11yStatusUpdate()
+      jest.runAllTimers()
 
-      expect(getA11yStatusContainer()).toHaveTextContent('')
+      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
     test('is called with object that contains specific props', () => {
@@ -145,6 +151,12 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
+    beforeEach(jest.useFakeTimers)
+    afterEach(() => {
+      act(jest.runAllTimers)
+    })
+    afterAll(jest.useRealTimers)
+
     test('reports that no results are available if items list is empty', () => {
       const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
         items: [],
@@ -193,7 +205,7 @@ describe('props', () => {
       clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent('')
+      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
     test('is removed after 500ms as a cleanup', () => {
@@ -415,7 +427,7 @@ describe('props', () => {
 
       expect(input).toHaveValue(initialSelectedItem)
 
-      rerender({selectedItem: finalSelectedItem})
+      rerender({selectedItem: finalSelectedItem, isOpen: true})
 
       expect(input).toHaveValue(finalSelectedItem)
     })
@@ -486,11 +498,19 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
+    beforeEach(jest.useFakeTimers)
+    afterEach(() => {
+      hooksAct(() => jest.runAllTimers())
+    })
+    afterAll(jest.useRealTimers)
+
     test('is called at each state change with the function change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {result} = renderUseCombobox({stateReducer})
 
-      result.current.toggleMenu()
+      hooksAct(() => {
+        result.current.toggleMenu()
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -498,7 +518,9 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionToggleMenu}),
       )
 
-      result.current.openMenu()
+      hooksAct(() => {
+        result.current.openMenu()
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -506,7 +528,9 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionOpenMenu}),
       )
 
-      result.current.closeMenu()
+      hooksAct(() => {
+        result.current.closeMenu()
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(3)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -514,7 +538,9 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionCloseMenu}),
       )
 
-      result.current.reset()
+      hooksAct(() => {
+        result.current.reset()
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(4)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -522,7 +548,9 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionReset}),
       )
 
-      result.current.selectItem({})
+      hooksAct(() => {
+        result.current.selectItem({})
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(5)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -530,7 +558,9 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionSelectItem}),
       )
 
-      result.current.setHighlightedIndex(5)
+      hooksAct(() => {
+        result.current.setHighlightedIndex(5)
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(6)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -540,7 +570,9 @@ describe('props', () => {
         }),
       )
 
-      result.current.setInputValue({})
+      hooksAct(() => {
+        result.current.setInputValue({})
+      })
 
       expect(stateReducer).toHaveBeenCalledTimes(7)
       expect(stateReducer).toHaveBeenLastCalledWith(
@@ -1090,7 +1122,7 @@ describe('props', () => {
       })
 
       keyDownOnInput('ArrowDown')
-      rerender({highlightedIndex})
+      rerender({highlightedIndex, isOpen: true})
 
       expect(input).toHaveAttribute(
         'aria-activedescendant',
@@ -1335,6 +1367,7 @@ describe('props', () => {
   })
 
   test('that are uncontrolled should not become controlled', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderCombobox()
 
     rerender({selectedItem: 'controlled'})
@@ -1346,6 +1379,7 @@ describe('props', () => {
   })
 
   test('that are controlled should not become uncontrolled', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderCombobox({inputValue: 'controlled value'})
 
     rerender({})

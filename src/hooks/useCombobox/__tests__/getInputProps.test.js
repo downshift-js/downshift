@@ -7,6 +7,8 @@ import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
 import {renderUseCombobox, renderCombobox} from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
+// eslint-disable-next-line import/default
+import utils from '../../utils'
 import useCombobox from '..'
 
 describe('getInputProps', () => {
@@ -668,7 +670,7 @@ describe('getInputProps', () => {
       })
 
       test('end it prevents the default event and calls dispatch only when menu is open', () => {
-        const {input, rerender, renderSpy} = renderCombobox()
+        const {input, rerender, renderSpy} = renderCombobox({isOpen: false})
         const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
 
         renderSpy.mockClear()
@@ -700,7 +702,7 @@ describe('getInputProps', () => {
       })
 
       test('home it prevents the default event calls dispatch only when menu is open', () => {
-        const {input, rerender, renderSpy} = renderCombobox()
+        const {input, rerender, renderSpy} = renderCombobox({isOpen: false})
         const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
 
         renderSpy.mockClear()
@@ -746,14 +748,17 @@ describe('getInputProps', () => {
       })
 
       test('escape it prevents the rerender when menu closed, no selectedItem and no inputValue', () => {
-        const {keyDownOnInput, rerender, renderSpy} = renderCombobox()
+        const {keyDownOnInput, rerender, renderSpy} = renderCombobox({
+          isOpen: false,
+          inputValue: '',
+        })
 
         renderSpy.mockClear()
         keyDownOnInput('Escape')
 
         expect(renderSpy).toHaveBeenCalledTimes(0) // no re-render
 
-        rerender({isOpen: true})
+        rerender({isOpen: true, inputValue: ''})
         renderSpy.mockClear() // reset rerender and initial render
         keyDownOnInput('Escape')
 
@@ -843,7 +848,10 @@ describe('getInputProps', () => {
       })
 
       test('enter with closed menu, no item highlighted or composing event, it will not rerender or prevent event default', () => {
-        const {input, renderSpy, rerender} = renderCombobox()
+        const {input, renderSpy, rerender} = renderCombobox({
+          isOpen: false,
+          highlightedIndex: -1,
+        })
         let keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
 
         renderSpy.mockClear()
@@ -854,6 +862,7 @@ describe('getInputProps', () => {
 
         rerender({
           isOpen: true,
+          highlightedIndex: -1,
         })
         renderSpy.mockClear()
         fireEvent(input, keyDownEvent)
@@ -900,7 +909,7 @@ describe('getInputProps', () => {
       })
 
       test('tab it prevents the rerender and does not call dispatch when menu is closed', () => {
-        const {rerender, renderSpy} = renderCombobox()
+        const {rerender, renderSpy} = renderCombobox({isOpen: false})
 
         renderSpy.mockClear()
         userEvent.tab()
@@ -1073,6 +1082,14 @@ describe('getInputProps', () => {
   })
 
   describe('non production errors', () => {
+    beforeEach(() => {
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      jest
+        .spyOn(utils, 'useGetterPropsCalledChecker')
+        .mockImplementation(useGetterPropsCalledChecker)
+      jest.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
     test('will be displayed if getInputProps is not called', () => {
       renderHook(() => {
         const {getMenuProps, getComboboxProps} = useCombobox({items})

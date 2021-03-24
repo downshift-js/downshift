@@ -3,6 +3,7 @@ import {renderUseSelect, renderSelect} from '../testUtils'
 import {items, defaultIds, MemoizedItem} from '../../testUtils'
 
 test('functions are memoized', () => {
+
   const {result, rerender} = renderUseSelect()
   const firstRenderResult = result.current
   rerender()
@@ -13,7 +14,11 @@ test('functions are memoized', () => {
 test('will skip disabled items after component rerenders and items are memoized', () => {
   function renderItem(props) {
     return (
-      <MemoizedItem disabled={props.index === items.length - 2} {...props} />
+      <MemoizedItem
+        key={props.index}
+        disabled={props.index === items.length - 2}
+        {...props}
+      />
     )
   }
 
@@ -23,7 +28,7 @@ test('will skip disabled items after component rerenders and items are memoized'
     renderItem,
   })
 
-  rerender({renderItem})
+  rerender({renderItem, isOpen: true})
   keyDownOnMenu('ArrowUp')
 
   expect(menu).toHaveAttribute(

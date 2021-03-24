@@ -21,12 +21,18 @@ jest.mock('../../utils', () => {
   }
 })
 
-/* istanbul ignore next */
-beforeAll(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
-// eslint-disable-next-line no-console
-beforeEach(() => console.error.mockReset())
-// eslint-disable-next-line no-console
-afterAll(() => console.error.mockRestore())
+jest.mock('../utils', () => {
+  const utils = jest.requireActual('../utils')
+  const hooksUtils = jest.requireActual('../../utils')
+
+  return {
+    ...utils,
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 const renderCombobox = (props, uiCallback) => {
   const renderSpy = jest.fn()
