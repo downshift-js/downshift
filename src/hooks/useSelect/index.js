@@ -108,23 +108,32 @@ function useSelect(userProps = {}) {
     scrollIntoView,
     getItemNodeFromIndex,
   })
-  // Sets cleanup for the keysSoFar after 500ms.
+
+  // Sets cleanup for the keysSoFar callback, debounded after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
-    if (isInitialMountRef.current) {
-      clearTimeoutRef.current = debounce(outerDispatch => {
-        outerDispatch({
-          type: stateChangeTypes.FunctionSetInputValue,
-          inputValue: '',
-        })
-      }, 500)
-    }
+    clearTimeoutRef.current = debounce(outerDispatch => {
+      outerDispatch({
+        type: stateChangeTypes.FunctionSetInputValue,
+        inputValue: '',
+      })
+    }, 500)
 
+    // Cancel any pending debounced calls on mount
+    return () => {
+      clearTimeoutRef.current.cancel()
+    }
+  }, [])
+
+  // Invokes the keysSoFar callback set up above.
+  useEffect(() => {
     if (!inputValue) {
       return
     }
+
     clearTimeoutRef.current(dispatch)
   }, [dispatch, inputValue])
+
   useControlPropsValidator({
     isInitialMount: isInitialMountRef.current,
     props,
