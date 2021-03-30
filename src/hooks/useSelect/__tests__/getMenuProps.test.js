@@ -397,6 +397,22 @@ describe('getMenuProps', () => {
           // highlight should stay on the first item starting with 'C'
           expect(menu).toHaveAttribute('aria-activedescendant', expectedIndex)
         })
+
+        test('should not attempt update after unmount', () => {
+          const consoleErrorSpy = jest.spyOn(console, 'error')
+          const char = 'c'
+          const {keyDownOnMenu, unmount} = renderSelect({
+            isOpen: true,
+          })
+
+          // Enter key twice to queue up debounced call
+          keyDownOnMenu(char)
+          keyDownOnMenu(char)
+          unmount()
+          jest.runAllTimers()
+
+          expect(consoleErrorSpy).not.toHaveBeenCalled()
+        })
       })
 
       describe('arrow up', () => {
