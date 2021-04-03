@@ -5,7 +5,7 @@
   "main": "dist/downshift.cjs.js",
   "react-native": "dist/downshift.native.cjs.js",
   "module": "dist/downshift.esm.js",
-  "typings": "typings/index.d.ts",
+  "typings": "dist/typings/index.d.ts",
   "sideEffects": false,
   "scripts": {
     "build": "npm run build:web --silent && npm run build:native --silent",
@@ -73,7 +73,9 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.13.10",
+    "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-typescript": "^8.2.1",
     "@testing-library/cypress": "^7.0.4",
     "@testing-library/dom": "^7.30.0",
     "@testing-library/jest-dom": "^5.11.9",
@@ -83,6 +85,8 @@
     "@testing-library/user-event": "^13.0.10",
     "@types/jest": "^26.0.21",
     "@types/react": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
     "babel-plugin-macros": "^3.0.1",
     "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
@@ -103,13 +107,33 @@
     "react-dom": "^17.0.2",
     "react-native": "^0.64.0",
     "react-test-renderer": "^17.0.2",
-    "rollup-plugin-babel": "^4.4.0",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.12.1",
+    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
   },
   "eslintConfig": {
-    "extends": "./node_modules/kcd-scripts/eslint.js",
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
+        }
+      }
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "./node_modules/kcd-scripts/eslint.js"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
     "rules": {
       "eqeqeq": "off",
       "import/no-useless-path-segments": "off",
@@ -128,6 +152,14 @@
       ]
     },
     "overrides": [
+      {
+        "files": [
+          "*.js"
+        ],
+        "rules": {
+          "@typescript-eslint/explicit-function-return-type": "off"
+        }
+      },
       {
         "files": [
           "cypress/**/*.js"

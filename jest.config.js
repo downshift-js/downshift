@@ -7,4 +7,8 @@ module.exports = Object.assign(jestConfig, {
     '<rootDir>/src/stateChangeTypes.js',
   ],
   setupFilesAfterEnv: ['<rootDir>/test/setup.js'],
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
+  moduleFileExtensions: ['ts', 'js'],
 })
