@@ -18,5 +18,6 @@
   "include": [
     "typings/**/*.d.ts",
     "**/*.ts",
+    "**/*.tsx",
   ],
 }

@@ -109,7 +109,6 @@
     "react-test-renderer": "^17.0.2",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.12.1",
-    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
   },
   "eslintConfig": {
@@ -157,7 +156,8 @@
           "*.js"
         ],
         "rules": {
-          "@typescript-eslint/explicit-function-return-type": "off"
+          "@typescript-eslint/explicit-function-return-type": "off",
+          "@typescript-eslint/explicit-module-boundary-types": "off"
         }
       },
       {

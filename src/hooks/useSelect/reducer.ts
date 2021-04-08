@@ -3,11 +3,14 @@ import {getHighlightedIndexOnOpen, getDefaultValue} from '../utils'
 import commonReducer from '../reducer'
 import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
+import {UseSelectState, UseSelectDispatchAction} from './types'
 
-/* eslint-disable complexity */
-export default function downshiftSelectReducer(state, action) {
+export default function downshiftSelectReducer<Item>(
+  state: UseSelectState<Item>,
+  action: UseSelectDispatchAction<Item>,
+): UseSelectState<Item> {
   const {type, props, shiftKey} = action
-  let changes
+  let changes: Partial<UseSelectState<Item>>
 
   switch (type) {
     case stateChangeTypes.ItemClick:
@@ -22,13 +25,15 @@ export default function downshiftSelectReducer(state, action) {
       {
         const lowercasedKey = action.key
         const inputValue = `${state.inputValue}${lowercasedKey}`
-        const itemIndex = getItemIndexByCharacterKey(
-          inputValue,
-          state.selectedItem ? props.items.indexOf(state.selectedItem) : -1,
-          props.items,
-          props.itemToString,
-          action.getItemNodeFromIndex,
-        )
+        const itemIndex = getItemIndexByCharacterKey({
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          items: props.items,
+          itemToString: props.itemToString,
+          highlightedIndex: state.selectedItem
+            ? props.items.indexOf(state.selectedItem)
+            : -1,
+          keysSoFar: inputValue,
+        })
 
         changes = {
           inputValue,
@@ -116,13 +121,13 @@ export default function downshiftSelectReducer(state, action) {
       {
         const lowercasedKey = action.key
         const inputValue = `${state.inputValue}${lowercasedKey}`
-        const highlightedIndex = getItemIndexByCharacterKey(
-          inputValue,
-          state.highlightedIndex,
-          props.items,
-          props.itemToString,
-          action.getItemNodeFromIndex,
-        )
+        const highlightedIndex = getItemIndexByCharacterKey({
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          items: props.items,
+          itemToString: props.itemToString,
+          highlightedIndex: state.highlightedIndex,
+          keysSoFar: inputValue,
+        })
 
         changes = {
           inputValue,
@@ -171,4 +176,3 @@ export default function downshiftSelectReducer(state, action) {
     ...changes,
   }
 }
-/* eslint-enable complexity */
