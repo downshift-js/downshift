@@ -32,7 +32,7 @@ autocomplete, combobox or select dropdown components.</p>
 
 You need an autocomplete, a combobox or a select experience in your application
 and you want it to be accessible. You also want it to be simple and flexible to
-account for your use cases. Finally, it should follow the ARIA design pattern
+account for your use cases. Finally, it should follow the [ARIA][aria] design pattern
 for a [combobox][combobox-aria] or a [select][select-aria], depending on your
 use case.
 
@@ -1480,6 +1480,8 @@ MIT
 [multiple-selection-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
+[aria]:
+  https://www.w3.org/TR/wai-aria-practices/
 [combobox-aria]:
   https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
 [select-aria]:
