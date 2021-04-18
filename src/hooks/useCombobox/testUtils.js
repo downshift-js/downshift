@@ -37,9 +37,9 @@ afterAll(jest.restoreAllMocks)
 const renderCombobox = (props, uiCallback) => {
   const renderSpy = jest.fn()
   const ui = <DropdownCombobox renderSpy={renderSpy} {...props} />
-  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+  const utils = render(uiCallback ? uiCallback(ui) : ui)
   const rerender = newProps =>
-    wrapper.rerender(<DropdownCombobox renderSpy={renderSpy} {...newProps} />)
+    utils.rerender(<DropdownCombobox renderSpy={renderSpy} {...newProps} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
   const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
@@ -48,17 +48,18 @@ const renderCombobox = (props, uiCallback) => {
   const getItemAtIndex = index => screen.getByTestId(dataTestIds.item(index))
   const getItems = () => screen.queryAllByRole('option')
   const clickOnItemAtIndex = index => {
+    // keeping fireEvent so we don't trigger input blur via user event
     fireEvent.click(getItemAtIndex(index))
   }
   const clickOnToggleButton = () => {
-    fireEvent.click(toggleButton)
+    userEvent.click(toggleButton)
   }
   const mouseMoveItemAtIndex = index => {
-    fireEvent.mouseMove(getItemAtIndex(index))
+    userEvent.hover(getItemAtIndex(index))
   }
   const getA11yStatusContainer = () => screen.queryByRole('status')
   const mouseLeaveMenu = () => {
-    fireEvent.mouseLeave(menu)
+   userEvent.unhover(menu)
   }
   const changeInputValue = inputValue => {
     userEvent.type(input, inputValue)
@@ -78,7 +79,7 @@ const renderCombobox = (props, uiCallback) => {
   }
 
   return {
-    ...wrapper,
+    ...utils,
     renderSpy,
     rerender,
     label,

@@ -41,9 +41,9 @@ const renderUseSelect = props => {
 const renderSelect = (props, uiCallback) => {
   const renderSpy = jest.fn()
   const ui = <DropdownSelect renderSpy={renderSpy} {...props} />
-  const wrapper = render(uiCallback ? uiCallback(ui) : ui)
+  const utils = render(uiCallback ? uiCallback(ui) : ui)
   const rerender = p =>
-    wrapper.rerender(<DropdownSelect renderSpy={renderSpy} {...p} />)
+    utils.rerender(<DropdownSelect renderSpy={renderSpy} {...p} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
   const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
@@ -69,14 +69,14 @@ const renderSelect = (props, uiCallback) => {
   }
   const getA11yStatusContainer = () => screen.queryByRole('status')
   const mouseLeaveMenu = () => {
-    fireEvent.mouseLeave(menu)
+    userEvent.unhover(menu)
   }
   const tab = (shiftKey = false) => {
     userEvent.tab({shift: shiftKey})
   }
 
   return {
-    ...wrapper,
+    ...utils,
     renderSpy,
     rerender,
     label,
