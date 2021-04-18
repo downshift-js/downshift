@@ -1,11 +1,12 @@
 import * as React from 'react'
-import {render, fireEvent, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Downshift from '../'
 
 test('focus restored upon item mouse click', () => {
-  const {container} = renderDownshift(['A', 'B'])
-  const inputNode = container.querySelector(`input`)
-  const buttonNode = container.querySelector('button')
+  renderDownshift(['A', 'B'])
+  const inputNode = screen.getByRole(`textbox`)
+  const buttonNode = screen.getByRole('button')
   const item = screen.queryByTestId('A')
 
   expect(document.activeElement.nodeName).toEqual('BODY')
@@ -13,13 +14,13 @@ test('focus restored upon item mouse click', () => {
   inputNode.focus()
   expect(inputNode).toHaveFocus()
 
-  fireEvent.click(item)
+  userEvent.click(item)
   expect(inputNode).toHaveFocus()
 
   buttonNode.focus()
   expect(buttonNode).toHaveFocus()
 
-  fireEvent.click(item)
+  userEvent.click(item)
   expect(buttonNode).toHaveFocus()
 })
 

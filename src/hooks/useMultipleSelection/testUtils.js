@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import {render, fireEvent, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
+import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
 import {items} from '../testUtils'
 import useCombobox from '../useCombobox'
@@ -86,12 +87,12 @@ const DropdownMultipleCombobox = ({
 }
 
 export const renderMultipleCombobox = props => {
-  const wrapper = render(<DropdownMultipleCombobox {...props} />)
+  const utils = render(<DropdownMultipleCombobox {...props} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
   const input = screen.getByTestId(dataTestIds.input)
   const rerender = newProps =>
-    wrapper.rerender(<DropdownMultipleCombobox {...newProps} />)
+    utils.rerender(<DropdownMultipleCombobox {...newProps} />)
   const getSelectedItemAtIndex = index =>
     screen.getByTestId(dataTestIds.selectedItem(index))
   const getSelectedItems = () =>
@@ -117,11 +118,11 @@ export const renderMultipleCombobox = props => {
     fireEvent.keyDown(input, {key, ...options})
   }
   const clickOnInput = () => {
-    fireEvent.click(input)
+    userEvent.click(input)
   }
 
   return {
-    ...wrapper,
+    ...utils,
     label,
     menu,
     rerender,

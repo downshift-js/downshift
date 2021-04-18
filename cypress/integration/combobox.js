@@ -91,6 +91,7 @@ describe('combobox', () => {
       .type('re')
       .blur()
       // https://github.com/kentcdodds/cypress-testing-library/issues/13
+      // eslint-disable-next-line testing-library/await-async-utils
       .wait(1)
       .findByTestId('downshift-item-0', {timeout: 10})
       .should('not.exist')
