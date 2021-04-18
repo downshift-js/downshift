@@ -13,6 +13,7 @@ import {
   UseSelectProps,
   RenderSelectResult,
   UseSelectReturnValue,
+  RenderSelectOptions,
 } from './types'
 
 jest.mock('../../utils', () => {
@@ -50,14 +51,19 @@ export function renderUseSelect<Item>(
 }
 
 export function renderSelect<Item>(
-  props: Partial<UseSelectProps<Item>>,
-  uiCallback?: (ui: JSX.Element) => JSX.Element,
+  props: Partial<UseSelectProps<Item>> = {},
+  {uiCallback, renderItem}: RenderSelectOptions<Item> = {},
 ): RenderSelectResult<Item> {
   const renderSpy = jest.fn()
-  const ui = <DropdownSelect renderSpy={renderSpy} {...props} />
+  const ui = (
+    <DropdownSelect renderItem={renderItem} renderSpy={renderSpy} {...props} />
+  )
   const wrapper = render(uiCallback ? uiCallback(ui) : ui)
-  const rerender = (p: Partial<UseSelectProps<Item>>): void =>
-    wrapper.rerender(<DropdownSelect renderSpy={renderSpy} {...p} />)
+  const rerender = (
+    p: Partial<UseSelectProps<Item>>,
+    o: RenderSelectOptions<Item>,
+  ): void =>
+    wrapper.rerender(<DropdownSelect renderSpy={renderSpy} {...p} {...o} />)
 
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')

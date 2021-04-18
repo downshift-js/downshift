@@ -1,4 +1,3 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import {defaultProps as commonDefaultProps} from '../utils'
 import {noop} from '../../utils'
@@ -81,7 +80,7 @@ function getA11yStatusMessage<Item>({
   isOpen,
   resultCount,
   previousResultCount,
-}: A11yStatusMessageOptions<Item>) {
+}: A11yStatusMessageOptions<Item>): string {
   if (!isOpen) {
     return ''
   }

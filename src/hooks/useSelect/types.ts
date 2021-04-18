@@ -33,12 +33,19 @@ export type RenderItemOptions<Item> = UseSelectGetItemPropsOptions<Item> & {
   getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
   dataTestIds: UseSelectDataTestIDs
   stringItem: string
+  index: number
+  item: Item
 }
 
 export interface DropdownSelectProps<Item>
   extends Partial<UseSelectProps<Item>> {
   renderItem?: (item: RenderItemOptions<Item>) => JSX.Element
   renderSpy?: jest.Mock
+}
+
+export interface RenderSelectOptions<Item> {
+  uiCallback?: (ui: JSX.Element) => JSX.Element
+  renderItem?: (item: RenderItemOptions<Item>) => JSX.Element
 }
 
 export interface DropdownSelectResult extends RenderResult {
@@ -48,7 +55,10 @@ export interface DropdownSelectResult extends RenderResult {
 export interface RenderSelectResult<Item>
   extends Omit<RenderResult, 'rerender'> {
   renderSpy: jest.Mock
-  rerender: (p: Partial<UseSelectProps<Item>>) => void
+  rerender: (
+    p: Partial<UseSelectProps<Item>>,
+    u: RenderSelectOptions<Item>,
+  ) => void
   label: HTMLElement
   menu: HTMLElement
   toggleButton: HTMLElement
@@ -62,7 +72,7 @@ export interface RenderSelectResult<Item>
   getA11yStatusContainer: () => HTMLElement
   mouseLeaveMenu: () => void
   keyDownOnMenu: (key: string, options?: unknown) => void
-  tab: () => void
+  tab: (shiftKey?: boolean) => void
 }
 
 /* External */

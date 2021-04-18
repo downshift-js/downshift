@@ -5,6 +5,7 @@ import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 import {UseSelectState, UseSelectDispatchAction} from './types'
 
+// eslint-disable-next-line complexity
 export default function downshiftSelectReducer<Item>(
   state: UseSelectState<Item>,
   action: UseSelectDispatchAction<Item>,
@@ -81,25 +82,25 @@ export default function downshiftSelectReducer<Item>(
       break
     case stateChangeTypes.MenuKeyDownHome:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          1,
-          0,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
-        ),
+        highlightedIndex: getNextNonDisabledIndex({
+          moveAmount: 1,
+          baseIndex: 0,
+          itemCount: props.items.length,
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          circular: false,
+        }),
       }
 
       break
     case stateChangeTypes.MenuKeyDownEnd:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          -1,
-          props.items.length - 1,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
-        ),
+        highlightedIndex: getNextNonDisabledIndex({
+          moveAmount: -1,
+          baseIndex: props.items.length - 1,
+          itemCount: props.items.length,
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          circular: false,
+        }),
       }
 
       break
@@ -139,25 +140,25 @@ export default function downshiftSelectReducer<Item>(
       break
     case stateChangeTypes.MenuKeyDownArrowDown:
       changes = {
-        highlightedIndex: getNextWrappingIndex(
-          shiftKey ? 5 : 1,
-          state.highlightedIndex,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          props.circularNavigation,
-        ),
+        highlightedIndex: getNextWrappingIndex({
+          moveAmount: shiftKey ? 5 : 1,
+          baseIndex: state.highlightedIndex,
+          itemCount: props.items.length,
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          circular: props.circularNavigation,
+        }),
       }
 
       break
     case stateChangeTypes.MenuKeyDownArrowUp:
       changes = {
-        highlightedIndex: getNextWrappingIndex(
-          shiftKey ? -5 : -1,
-          state.highlightedIndex,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          props.circularNavigation,
-        ),
+        highlightedIndex: getNextWrappingIndex({
+          moveAmount: shiftKey ? -5 : -1,
+          baseIndex: state.highlightedIndex,
+          itemCount: props.items.length,
+          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          circular: props.circularNavigation,
+        }),
       }
       break
 

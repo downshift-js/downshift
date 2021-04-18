@@ -1,5 +1,23 @@
 import * as React from 'react'
 
+/* Internal */
+
+export interface GetNextIndexOptions {
+  moveAmount: number
+  baseIndex: number
+  itemCount: number
+  getItemNodeFromIndex: (index: number) => HTMLElement
+  circular: boolean
+}
+
+/* External */
+
+export interface DownshiftEvent<T = Element, E = Event>
+  extends React.SyntheticEvent<T, E> {
+  preventDownshiftDefault?: boolean
+  nativeEvent: E & {preventDownshiftDefault?: boolean}
+}
+
 type Callback = () => void
 
 export interface DownshiftState<Item> {
