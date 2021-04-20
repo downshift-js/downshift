@@ -143,6 +143,14 @@
       }
     ]
   },
+  "eslintIgnore": [
+    "node_modules",
+    "coverage",
+    "dist",
+    ".docz",
+    "typings",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/downshift-js/downshift.git"
