@@ -1065,7 +1065,7 @@ class Downshift extends Component {
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
           [this._rootNode, this._menuNode],
-          this.props.environment.document,
+          this.props.environment,
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: stateChangeTypes.mouseUp}, () =>
@@ -1091,7 +1091,7 @@ class Downshift extends Component {
         const contextWithinDownshift = targetWithinDownshift(
           event.target,
           [this._rootNode, this._menuNode],
-          this.props.environment.document,
+          this.props.environment,
           false,
         )
         if (

@@ -41,13 +41,16 @@ function scrollIntoView(node, menuNode) {
 /**
  * @param {HTMLElement} parent the parent node
  * @param {HTMLElement} child the child node
+ * @param {Window} environment The window context where downshift renders.
  * @return {Boolean} whether the parent is the child or the child is in the parent
  */
-function isOrContainsNode(parent, child) {
-  return (
+function isOrContainsNode(parent, child, environment) {
+  const result =
     parent === child ||
-    (child instanceof Node && parent.contains && parent.contains(child))
-  )
+    (child instanceof environment.Node &&
+      parent.contains &&
+      parent.contains(child))
+  return result
 }
 
 /**
@@ -408,7 +411,7 @@ function getNextNonDisabledIndex(
  *
  * @param {EventTarget} target Target to check.
  * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
- * @param {Document} document The document.
+ * @param {Window} environment The window context where downshift renders.
  * @param {boolean} checkActiveElement Whether to also check activeElement.
  *
  * @returns {boolean} Whether or not the target is within downshift elements.
@@ -416,22 +419,26 @@ function getNextNonDisabledIndex(
 function targetWithinDownshift(
   target,
   downshiftElements,
-  document,
+  environment,
   checkActiveElement = true,
 ) {
   return downshiftElements.some(
     contextNode =>
       contextNode &&
-      (isOrContainsNode(contextNode, target) ||
+      (isOrContainsNode(contextNode, target, environment) ||
         (checkActiveElement &&
-          isOrContainsNode(contextNode, document.activeElement))),
+          isOrContainsNode(
+            contextNode,
+            environment.document.activeElement,
+            environment,
+          ))),
   )
 }
 
 // eslint-disable-next-line import/no-mutable-exports
 let validateControlledUnchanged = noop
 /* istanbul ignore next */
-if (process.env.NODE_ENV  !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   validateControlledUnchanged = (state, prevProps, nextProps) => {
     const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`
 
@@ -480,5 +487,5 @@ export {
   targetWithinDownshift,
   getState,
   isControlledProp,
-  validateControlledUnchanged
+  validateControlledUnchanged,
 }

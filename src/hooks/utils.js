@@ -337,7 +337,7 @@ function useMouseAndTouchTracker(
         !targetWithinDownshift(
           event.target,
           downshiftElementRefs.map(ref => ref.current),
-          environment.document,
+          environment,
         )
       ) {
         handleBlur()
@@ -356,7 +356,7 @@ function useMouseAndTouchTracker(
         !targetWithinDownshift(
           event.target,
           downshiftElementRefs.map(ref => ref.current),
-          environment.document,
+          environment,
           false,
         )
       ) {
