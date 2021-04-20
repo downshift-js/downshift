@@ -1333,6 +1333,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "KaiminHuang",
+      "name": "Kaimin Huang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5600404?v=4",
+      "profile": "https://github.com/KaiminHuang",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",

@@ -1403,6 +1403,7 @@ Thanks goes to these people ([emoji key][emojis]):
     <td align="center"><a href="https://github.com/fcrezza"><img src="https://avatars2.githubusercontent.com/u/48123020?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Anang Fachreza</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=fcrezza" title="Documentation">📖</a> <a href="#example-fcrezza" title="Examples">💡</a></td>
     <td align="center"><a href="http://nickdeom.com"><img src="https://avatars2.githubusercontent.com/u/56491159?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nick Deom</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=ndeom" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Andeom" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/clementgarbay"><img src="https://avatars3.githubusercontent.com/u/12433625?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Clément Garbay</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=clementgarbay" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/KaiminHuang"><img src="https://avatars.githubusercontent.com/u/5600404?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Kaimin Huang</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=KaiminHuang" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3AKaiminHuang" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
