@@ -17,7 +17,7 @@ export function getItemIndexByCharacterKey<Item>({
     const offsetIndex = (index + highlightedIndex + 1) % items.length
 
     if (
-      itemToString(items[offsetIndex])
+      itemToString(items[offsetIndex] ?? null)
         .toLowerCase()
         .startsWith(lowerCasedKeysSoFar)
     ) {

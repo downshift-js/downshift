@@ -12,7 +12,7 @@
     "noUncheckedIndexedAccess": true,
     "module": "ESNext",
     "typeRoots": ["./typings", "./node_modules/@types"],
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "outDir": "dist",
   },
   "include": [

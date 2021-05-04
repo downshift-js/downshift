@@ -85,6 +85,8 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^26.0.24",
     "@types/react": "^17.0.15",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
