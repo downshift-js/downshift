@@ -32,6 +32,20 @@ describe('getSelectedItemProps', () => {
 
       expect(itemProps.tabIndex).toEqual(0)
     })
+
+    test("handlers are not called if it's disabled", () => {
+      const {result} = renderUseMultipleSelection()
+      const itemProps = result.current.getSelectedItemProps({
+        disabled: true,
+        index: 0,
+        selectedItem: items[0],
+      })
+
+      expect(itemProps.onChange).toBeUndefined()
+      expect(itemProps.onKeyDown).toBeUndefined()
+      expect(itemProps.onBlur).toBeUndefined()
+      expect(itemProps.disabled).toBe(true)
+    })
   })
 
   describe('user props', () => {

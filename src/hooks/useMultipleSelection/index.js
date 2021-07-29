@@ -190,8 +190,10 @@ function useMultipleSelection(userProps = {}) {
           }
         }),
         tabIndex: index === latestState.activeIndex ? 0 : -1,
-        onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
-        onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
+        ...(!rest.disabled && {
+          onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
+          onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
+        }),
         ...rest,
       }
     },
