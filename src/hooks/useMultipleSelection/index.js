@@ -12,7 +12,7 @@ import {
   getInitialState,
   defaultProps,
   isKeyDownOperationPermitted,
-  validatePropTypes
+  validatePropTypes,
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'

@@ -2,45 +2,45 @@
 
 exports[`basic snapshot 1`] = `
 <div
-  aria-expanded="false"
-  aria-haspopup="listbox"
-  aria-labelledby="downshift-0-label"
-  role="combobox"
+  aria-expanded=false
+  aria-haspopup=listbox
+  aria-labelledby=downshift-0-label
+  role=combobox
 >
   <label
-    data-testid="label"
-    for="downshift-0-input"
-    id="downshift-0-label"
+    data-testid=label
+    for=downshift-0-input
+    id=downshift-0-label
   >
     label
   </label>
   <input
-    aria-autocomplete="list"
-    aria-labelledby="downshift-0-label"
-    autocomplete="off"
-    data-testid="input"
-    id="downshift-0-input"
-    value="item"
+    aria-autocomplete=list
+    aria-labelledby=downshift-0-label
+    autocomplete=off
+    data-testid=input
+    id=downshift-0-input
+    value=item
   />
   <button
-    aria-haspopup="true"
-    aria-label="open menu"
-    data-testid="button"
-    data-toggle="true"
-    role="button"
-    type="button"
+    aria-haspopup=true
+    aria-label=open menu
+    data-testid=button
+    data-toggle=true
+    role=button
+    type=button
   />
   <ul
-    aria-labelledby="downshift-0-label"
-    data-testid="menu"
-    id="downshift-0-menu"
-    role="listbox"
+    aria-labelledby=downshift-0-label
+    data-testid=menu
+    id=downshift-0-menu
+    role=listbox
   >
     <li
-      aria-selected="false"
-      data-testid="item-0"
-      id="downshift-0-item-0"
-      role="option"
+      aria-selected=false
+      data-testid=item-0
+      id=downshift-0-item-0
+      role=option
     >
       item
     </li>
@@ -50,45 +50,45 @@ exports[`basic snapshot 1`] = `
 
 exports[`can override the ids 1`] = `
 <div
-  aria-expanded="false"
-  aria-haspopup="listbox"
-  aria-labelledby="custom-label-id"
-  role="combobox"
+  aria-expanded=false
+  aria-haspopup=listbox
+  aria-labelledby=custom-label-id
+  role=combobox
 >
   <label
-    data-testid="label"
-    for="custom-input-id"
-    id="custom-label-id"
+    data-testid=label
+    for=custom-input-id
+    id=custom-label-id
   >
     label
   </label>
   <input
-    aria-autocomplete="list"
-    aria-labelledby="custom-label-id"
-    autocomplete="off"
-    data-testid="input"
-    id="custom-input-id"
-    value=""
+    aria-autocomplete=list
+    aria-labelledby=custom-label-id
+    autocomplete=off
+    data-testid=input
+    id=custom-input-id
+    value=
   />
   <button
-    aria-haspopup="true"
-    aria-label="open menu"
-    data-testid="button"
-    data-toggle="true"
-    role="button"
-    type="button"
+    aria-haspopup=true
+    aria-label=open menu
+    data-testid=button
+    data-toggle=true
+    role=button
+    type=button
   />
   <ul
-    aria-labelledby="custom-label-id"
-    data-testid="menu"
-    id="custom-menu-id"
-    role="listbox"
+    aria-labelledby=custom-label-id
+    data-testid=menu
+    id=custom-menu-id
+    role=listbox
   >
     <li
-      aria-selected="false"
-      data-testid="item-0"
-      id="custom-item-id-0"
-      role="option"
+      aria-selected=false
+      data-testid=item-0
+      id=custom-item-id-0
+      role=option
     >
       item
     </li>

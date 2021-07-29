@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`not applying the ref prop results in an error 1`] = `"downshift: You must apply the ref prop \\"ref\\" from getRootProps onto your root element."`;
+exports[`not applying the ref prop results in an error 1`] = `downshift: You must apply the ref prop "ref" from getRootProps onto your root element.`;
 
-exports[`returning a DOM element and calling getRootProps with a refKey results in an error 1`] = `"downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified \\"blah\\""`;
+exports[`returning a DOM element and calling getRootProps with a refKey results in an error 1`] = `downshift: You returned a DOM element. You should not specify a refKey in getRootProps. You specified "blah"`;
 
-exports[`returning a composite component and calling getRootProps without a refKey results in an error 1`] = `"downshift: You returned a non-DOM element. You must specify a refKey in getRootProps"`;
+exports[`returning a composite component and calling getRootProps without a refKey results in an error 1`] = `downshift: You returned a non-DOM element. You must specify a refKey in getRootProps`;
 
-exports[`returning a composite component without calling getRootProps results in an error 1`] = `"downshift: If you return a non-DOM element, you must apply the getRootProps function"`;
+exports[`returning a composite component without calling getRootProps results in an error 1`] = `downshift: If you return a non-DOM element, you must apply the getRootProps function`;

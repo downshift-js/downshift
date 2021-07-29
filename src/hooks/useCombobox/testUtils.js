@@ -59,7 +59,7 @@ const renderCombobox = (props, uiCallback) => {
   }
   const getA11yStatusContainer = () => screen.queryByRole('status')
   const mouseLeaveMenu = () => {
-   userEvent.unhover(menu)
+    userEvent.unhover(menu)
   }
   const changeInputValue = inputValue => {
     userEvent.type(input, inputValue)

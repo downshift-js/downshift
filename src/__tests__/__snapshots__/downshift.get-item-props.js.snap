@@ -2,49 +2,49 @@
 
 exports[`getItemProps defaults the index when no index is given 1`] = `
 <div
-  aria-expanded="false"
-  aria-haspopup="listbox"
-  aria-labelledby="downshift-1-label"
-  role="combobox"
+  aria-expanded=false
+  aria-haspopup=listbox
+  aria-labelledby=downshift-1-label
+  role=combobox
 >
   <span
-    aria-selected="false"
-    id="downshift-1-item-0"
-    role="option"
+    aria-selected=false
+    id=downshift-1-item-0
+    role=option
   >
     0
   </span>
   <span
-    aria-selected="false"
-    id="downshift-1-item-1"
-    role="option"
+    aria-selected=false
+    id=downshift-1-item-1
+    role=option
   >
     1
   </span>
   <span
-    aria-selected="false"
-    id="downshift-1-item-2"
-    role="option"
+    aria-selected=false
+    id=downshift-1-item-2
+    role=option
   >
     2
   </span>
   <span
-    aria-selected="false"
-    id="downshift-1-item-3"
-    role="option"
+    aria-selected=false
+    id=downshift-1-item-3
+    role=option
   >
     3
   </span>
   <span
-    aria-selected="false"
-    id="downshift-1-item-4"
-    role="option"
+    aria-selected=false
+    id=downshift-1-item-4
+    role=option
   >
     4
   </span>
 </div>
 `;
 
-exports[`getItemProps logs a helpful error when no object is given 1`] = `"The property \\"item\\" is required in \\"getItemProps\\""`;
+exports[`getItemProps logs a helpful error when no object is given 1`] = `The property "item" is required in "getItemProps"`;
 
-exports[`getItemProps logs error when no item is given 1`] = `"The property \\"item\\" is required in \\"getItemProps\\""`;
+exports[`getItemProps logs error when no item is given 1`] = `The property "item" is required in "getItemProps"`;
