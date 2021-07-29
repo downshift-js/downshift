@@ -2,7 +2,7 @@ import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {renderUseCombobox} from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
-import useCombobox from '..'// eslint-disable-next-line import/default
+import useCombobox from '..' // eslint-disable-next-line import/default
 import utils from '../../utils'
 
 describe('getComboboxProps', () => {
@@ -90,7 +90,7 @@ describe('getComboboxProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: You forgot to call the getComboboxProps getter function on your component / element."`,
+        `downshift: You forgot to call the getComboboxProps getter function on your component / element.`,
       )
     })
 
@@ -128,7 +128,7 @@ describe('getComboboxProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: The ref prop \\"ref\\" from getComboboxProps was not applied correctly on your element."`,
+        `downshift: The ref prop "ref" from getComboboxProps was not applied correctly on your element.`,
       )
     })
 

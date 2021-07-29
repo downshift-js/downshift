@@ -2,21 +2,21 @@
 
 exports[`does add anything for an empty string 1`] = `
 <div
-  aria-live="polite"
-  aria-relevant="additions text"
-  id="a11y-status-message"
-  role="status"
-  style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"
+  aria-live=polite
+  aria-relevant=additions text
+  id=a11y-status-message
+  role=status
+  style=border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;
 />
 `;
 
 exports[`escapes HTML 1`] = `
 <div
-  aria-live="polite"
-  aria-relevant="additions text"
-  id="a11y-status-message"
-  role="status"
-  style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"
+  aria-live=polite
+  aria-relevant=additions text
+  id=a11y-status-message
+  role=status
+  style=border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;
 >
   &lt;script&gt;alert("!!!")&lt;/script&gt;
 </div>
@@ -24,21 +24,21 @@ exports[`escapes HTML 1`] = `
 
 exports[`performs cleanup after a timeout 1`] = `
 <div
-  aria-live="polite"
-  aria-relevant="additions text"
-  id="a11y-status-message"
-  role="status"
-  style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"
+  aria-live=polite
+  aria-relevant=additions text
+  id=a11y-status-message
+  role=status
+  style=border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;
 />
 `;
 
 exports[`replaces the status with a different one 1`] = `
 <div
-  aria-live="polite"
-  aria-relevant="additions text"
-  id="a11y-status-message"
-  role="status"
-  style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"
+  aria-live=polite
+  aria-relevant=additions text
+  id=a11y-status-message
+  role=status
+  style=border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;
 >
   goodbye
 </div>
@@ -46,11 +46,11 @@ exports[`replaces the status with a different one 1`] = `
 
 exports[`sets the status 1`] = `
 <div
-  aria-live="polite"
-  aria-relevant="additions text"
-  id="a11y-status-message"
-  role="status"
-  style="border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;"
+  aria-live=polite
+  aria-relevant=additions text
+  id=a11y-status-message
+  role=status
+  style=border: 0px; height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;
 >
   hello
 </div>

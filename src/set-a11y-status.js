@@ -1,6 +1,6 @@
 import {debounce} from './utils'
 
-const cleanupStatus = debounce((documentProp) => {
+const cleanupStatus = debounce(documentProp => {
   getStatusDiv(documentProp).textContent = ''
 }, 500)
 

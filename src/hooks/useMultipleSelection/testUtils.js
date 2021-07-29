@@ -30,7 +30,6 @@ jest.mock('../utils', () => {
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
-
 export const dataTestIds = {
   selectedItemPrefix: 'selected-item-id',
   selectedItem: index => `selected-item-id-${index}`,

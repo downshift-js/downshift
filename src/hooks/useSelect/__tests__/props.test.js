@@ -16,7 +16,7 @@ describe('props', () => {
     renderHook(() => useSelect())
 
     expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Warning: Failed prop type: The prop \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`."`,
+      `Warning: Failed prop type: The prop \`items\` is marked as required in \`useSelect\`, but its value is \`undefined\`.`,
     )
   })
 
@@ -25,8 +25,9 @@ describe('props', () => {
       const {toggleButton, menu, label} = renderSelect({
         id: 'my-custom-little-id',
       })
+      const elements = [toggleButton, menu, label]
 
-      ;[(toggleButton, menu, label)].forEach(element => {
+      elements.forEach(element => {
         expect(element).toHaveAttribute(
           'id',
           expect.stringContaining('my-custom-little-id'),
@@ -1348,7 +1349,7 @@ describe('props', () => {
     rerender({isOpen: true})
 
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the uncontrolled prop \\"isOpen\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the uncontrolled prop "isOpen" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 
@@ -1359,7 +1360,7 @@ describe('props', () => {
     rerender({})
 
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the controlled prop \\"highlightedIndex\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the controlled prop "highlightedIndex" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 })

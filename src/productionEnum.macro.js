@@ -19,9 +19,7 @@ module.exports = createMacro(({references, babel: {types: t, template}}) => {
   references.default.forEach(({parentPath: ref}, index) => {
     if (!ref.isCallExpression()) {
       throw new Error(
-        `${__filename} is supposed to be used as function call, instead you have used it as ${
-          ref.node.type
-        }.`,
+        `${__filename} is supposed to be used as function call, instead you have used it as ${ref.node.type}.`,
       )
     }
     ref.replaceWith(

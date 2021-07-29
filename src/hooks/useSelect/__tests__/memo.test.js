@@ -3,7 +3,6 @@ import {renderUseSelect, renderSelect} from '../testUtils'
 import {items, defaultIds, MemoizedItem} from '../../testUtils'
 
 test('functions are memoized', () => {
-
   const {result, rerender} = renderUseSelect()
   const firstRenderResult = result.current
   rerender()

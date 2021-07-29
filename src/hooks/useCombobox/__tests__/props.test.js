@@ -16,7 +16,7 @@ describe('props', () => {
     renderHook(() => useCombobox())
 
     expect(global.console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"Warning: Failed prop type: The prop \`items\` is marked as required in \`useCombobox\`, but its value is \`undefined\`."`,
+      `Warning: Failed prop type: The prop \`items\` is marked as required in \`useCombobox\`, but its value is \`undefined\`.`,
     )
   })
 
@@ -25,8 +25,9 @@ describe('props', () => {
       const {toggleButton, menu, label, input} = renderCombobox({
         id: 'my-custom-little-id',
       })
+      const elements = [toggleButton, menu, label, input]
 
-      ;[(toggleButton, menu, label, input)].forEach(element => {
+      elements.forEach(element => {
         expect(element).toHaveAttribute(
           'id',
           expect.stringContaining('my-custom-little-id'),
@@ -1374,7 +1375,7 @@ describe('props', () => {
 
     // eslint-disable-next-line no-console
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the uncontrolled prop \\"selectedItem\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the uncontrolled prop "selectedItem" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 
@@ -1386,7 +1387,7 @@ describe('props', () => {
 
     // eslint-disable-next-line no-console
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the controlled prop \\"inputValue\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the controlled prop "inputValue" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 })

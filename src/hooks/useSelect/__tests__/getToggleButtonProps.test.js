@@ -430,7 +430,9 @@ describe('getToggleButtonProps', () => {
       describe('arrow up', () => {
         test('it prevents the default event behavior', () => {
           const {toggleButton} = renderSelect()
-          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'ArrowUp'})
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'ArrowUp',
+          })
 
           fireEvent(toggleButton, keyDownEvent)
 
@@ -538,7 +540,9 @@ describe('getToggleButtonProps', () => {
       describe('arrow down', () => {
         test('it prevents the default event behavior', () => {
           const {toggleButton} = renderSelect()
-          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'ArrowDown'})
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'ArrowDown',
+          })
 
           fireEvent(toggleButton, keyDownEvent)
 
@@ -674,7 +678,7 @@ describe('getToggleButtonProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: You forgot to call the getToggleButtonProps getter function on your component / element."`,
+        `downshift: You forgot to call the getToggleButtonProps getter function on your component / element.`,
       )
     })
 
@@ -709,7 +713,7 @@ describe('getToggleButtonProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: The ref prop \\"ref\\" from getToggleButtonProps was not applied correctly on your element."`,
+        `downshift: The ref prop "ref" from getToggleButtonProps was not applied correctly on your element.`,
       )
     })
 

@@ -389,7 +389,10 @@ function useCombobox(userProps = {}) {
       }
       const inputHandleBlur = () => {
         /* istanbul ignore else */
-        if (latestState.isOpen && !mouseAndTouchTrackersRef.current.isMouseDown) {
+        if (
+          latestState.isOpen &&
+          !mouseAndTouchTrackersRef.current.isMouseDown
+        ) {
           dispatch({
             type: stateChangeTypes.InputBlur,
             selectItem: true,

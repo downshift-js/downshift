@@ -967,7 +967,7 @@ describe('getMenuProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: You forgot to call the getMenuProps getter function on your component / element."`,
+        `downshift: You forgot to call the getMenuProps getter function on your component / element.`,
       )
     })
 
@@ -1002,7 +1002,7 @@ describe('getMenuProps', () => {
 
       // eslint-disable-next-line no-console
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-        `"downshift: The ref prop \\"ref\\" from getMenuProps was not applied correctly on your element."`,
+        `downshift: The ref prop "ref" from getMenuProps was not applied correctly on your element.`,
       )
     })
 

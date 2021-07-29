@@ -748,7 +748,7 @@ describe('props', () => {
 
     // eslint-disable-next-line no-console
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the uncontrolled prop \\"activeIndex\\" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the uncontrolled prop "activeIndex" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 
@@ -762,7 +762,7 @@ describe('props', () => {
 
     // eslint-disable-next-line no-console
     expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
-      `"downshift: A component has changed the controlled prop \\"selectedItems\\" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props"`,
+      `downshift: A component has changed the controlled prop "selectedItems" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
 })
