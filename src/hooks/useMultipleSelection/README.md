@@ -587,6 +587,10 @@ It is required to pass either `selectedItem` or `index` to
 
 Optional properties:
 
+- `disabled`: If this is set to true, then no event handlers will be returned
+  from `getSelectedItemProps` and a `disabled` prop will be returned
+  (effectively disabling `Delete` and `Backspace` keys events).
+
 - `ref`: if you need to access the dropdown element via a ref object, you'd call
   the function like this: `getDropdown({ref: yourDropdownRef})`. As a result,
   the dropdown element will receive a composed `ref` property, which guarantees

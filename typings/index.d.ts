@@ -678,10 +678,11 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> =
-  UseMultipleSelectionState<Item> &
-    UseMultipleSelectionPropGetters<Item> &
-    UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<
+  Item
+> = UseMultipleSelectionState<Item> &
+  UseMultipleSelectionPropGetters<Item> &
+  UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(
