@@ -639,6 +639,7 @@ export interface A11yRemovalMessage<Item> {
 export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
   extends React.HTMLProps<HTMLElement>,
     GetPropsWithRefKey {
+  disabled?: boolean
   index?: number
   selectedItem: Item
 }
@@ -677,11 +678,10 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<
-  Item
-> = UseMultipleSelectionState<Item> &
-  UseMultipleSelectionPropGetters<Item> &
-  UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<Item> =
+  UseMultipleSelectionState<Item> &
+    UseMultipleSelectionPropGetters<Item> &
+    UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(
