@@ -3,14 +3,16 @@ import reducer from '../reducer'
 
 describe('getItemIndexByCharacterKey', () => {
   const items = ['a', 'b', 'aba', 'aab', 'bab']
+  const itemToString = jest.fn().mockImplementation(item => item)
+  const getItemNodeFromIndex = jest.fn()
 
   test('returns to check from start if from highlightedIndex does not find anything', () => {
     const index = getItemIndexByCharacterKey({
       keysSoFar: 'a',
       highlightedIndex: 3,
       items,
-      itemToString: item => item,
-      getItemNodeFromIndex: () => {},
+      itemToString,
+      getItemNodeFromIndex,
     })
     expect(index).toBe(0)
   })
@@ -20,8 +22,8 @@ describe('getItemIndexByCharacterKey', () => {
       keysSoFar: 'aba',
       highlightedIndex: 2,
       items,
-      itemToString: item => item,
-      getItemNodeFromIndex: () => {},
+      itemToString,
+      getItemNodeFromIndex,
     })
     expect(index).toBe(2)
   })
@@ -31,8 +33,8 @@ describe('getItemIndexByCharacterKey', () => {
       keysSoFar: 'a',
       highlightedIndex: 2,
       items,
-      itemToString: item => item,
-      getItemNodeFromIndex: () => {},
+      itemToString,
+      getItemNodeFromIndex,
     })
     expect(index).toBe(3)
   })
@@ -40,8 +42,6 @@ describe('getItemIndexByCharacterKey', () => {
   test('skips disabled item and moves to next', () => {
     const keysSoFar = 'b'
     const highlightedIndex = 0
-    const itemToString = item => item
-    const getItemNodeFromIndex = index => ({hasAttribute: () => index === 1})
 
     expect(
       getItemIndexByCharacterKey({
@@ -49,7 +49,9 @@ describe('getItemIndexByCharacterKey', () => {
         highlightedIndex,
         items,
         itemToString,
-        getItemNodeFromIndex,
+        getItemNodeFromIndex: jest
+          .fn()
+          .mockImplementation(index => ({hasAttribute: () => index === 1})),
       }),
     ).toEqual(4)
   })
