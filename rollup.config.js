@@ -1,7 +1,7 @@
-import commonjs from '@rollup/plugin-commonjs'
-import {babel} from '@rollup/plugin-babel'
-import typescript from '@rollup/plugin-typescript'
-import * as config from 'kcd-scripts/dist/config/rollup.config'
+const commonjs = require('@rollup/plugin-commonjs')
+const {babel} = require('@rollup/plugin-babel')
+const typescript = require('@rollup/plugin-typescript')
+const config = require('kcd-scripts/dist/config/rollup.config')
 
 const babelPluginIndex = config.plugins.findIndex(
   plugin => plugin.name === 'babel',
