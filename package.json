@@ -63,7 +63,7 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=16.12.0"
+    "react": ">=17.0.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.8",
@@ -74,7 +74,8 @@
   "devDependencies": {
     "@babel/helpers": "^7.14.8",
     "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^19.0.2",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-typescript": "^8.2.5",
     "@testing-library/cypress": "^8.0.0",
     "@testing-library/dom": "^8.1.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -84,15 +85,18 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^26.0.24",
     "@types/react": "^17.0.15",
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
     "buble": "^0.20.0",
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
-    "cypress": "^8.0.0",
+    "cypress": "^8.1.0",
     "docz": "^2.3.1",
     "docz-theme-default": "^1.2.0",
+    "eslint": "^7.32.0",
     "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-react": "7.24.0",
     "flow-bin": "^0.156.0",
@@ -101,7 +105,7 @@
     "kcd-scripts": "^11.2.0",
     "npm-run-all": "^4.1.5",
     "preact": "^10.5.14",
-    "react": "^16.13.1",
+    "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-native": "^0.64.2",
     "react-test-renderer": "^17.0.2",
@@ -110,30 +114,26 @@
     "typescript": "^4.3.5"
   },
   "eslintConfig": {
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
+        }
+      }
+    },
     "extends": "./node_modules/kcd-scripts/eslint.js",
     "rules": {
-      "eqeqeq": "off",
-      "import/no-useless-path-segments": "off",
-      "import/no-unassigned-import": "off",
-      "max-lines": "off",
-      "max-lines-per-function": "off",
-      "no-eq-null": "off",
       "react/jsx-indent": "off",
       "react/prop-types": "off",
+      "max-lines-per-function": "off",
       "jsx-a11y/label-has-for": "off",
       "jsx-a11y/label-has-associated-control": "off",
       "jsx-a11y/autocomplete-valid": "off",
-      "complexity": [
-        "error",
-        12
-      ],
-      "no-unsafe-optional-chaining": "off",
-      "no-loss-of-precision": "off",
-      "no-unreachable-loop": "off",
-      "no-useless-backreference": "off",
-      "default-case-last": "off",
-      "no-nonoctal-decimal-escape": "off",
-      "id-denylist": "off",
       "testing-library/prefer-user-event": "off",
       "testing-library/no-node-access": "off",
       "testing-library/no-container": "off",
