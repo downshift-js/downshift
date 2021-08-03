@@ -5,6 +5,7 @@ import {
   useEffect,
   useLayoutEffect,
 } from 'react'
+import {isReactNative} from '../is.macro'
 import {
   scrollIntoView,
   getNextWrappingIndex,
@@ -450,7 +451,7 @@ function useA11yMessageSetter(
 ) {
   // Sets a11y status message on changes in state.
   useEffect(() => {
-    if (isInitialMount) {
+    if (isInitialMount || isReactNative) {
       return
     }
 
