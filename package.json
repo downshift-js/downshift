@@ -1,6 +1,6 @@
 {
   "name": "downshift",
-  "version": "0.0.0-semantically-released",
+  "version": "6.1.5-alpha.0",
   "description": "🏎 A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete, combobox or select dropdown components.",
   "main": "dist/downshift.cjs.js",
   "react-native": "dist/downshift.native.cjs.js",
