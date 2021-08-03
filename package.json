@@ -63,7 +63,7 @@
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=17.0.2"
+    "react": ">=16.12.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.8",
