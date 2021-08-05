@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-export {A11yStatusMessageOptions} from '../src/types'
-
 type Callback = () => void
 
 export interface DownshiftState<Item> {
@@ -84,6 +82,17 @@ export interface Environment {
   addEventListener: typeof window.addEventListener
   removeEventListener: typeof window.removeEventListener
   document: Document
+}
+
+export interface A11yStatusMessageOptions<Item> {
+  highlightedIndex: number | null
+  inputValue: string
+  isOpen: boolean
+  itemToString: (item: Item | null) => string
+  previousResultCount: number
+  resultCount: number
+  highlightedItem: Item
+  selectedItem: Item | null
 }
 
 export interface StateChangeOptions<Item>
