@@ -144,7 +144,7 @@ harder to contribute to.
 
 ## Installation
 
-This module is distributed via [npm][npm] which is bundled with [node][node] and
+This module is distributed via [npm][npm]/[yarn][yarn] which is bundled with [node][node] and
 should be installed as one of your project's `dependencies`:
 
 ```
@@ -1494,3 +1494,5 @@ MIT
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
 [code-sandbox-no-get-root-props]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/01-basic-autocomplete.js
+[yarn]:
+  https://yarnpkg.com/package/downshift
