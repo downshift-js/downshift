@@ -108,6 +108,9 @@ export interface GetRootPropsOptions {
   refKey: string
 }
 
+export interface GetComboboxPropsOptions
+  extends React.HTMLProps<HTMLDivElement> {}
+
 export interface GetInputPropsOptions
   extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
@@ -500,7 +503,8 @@ export interface UseComboboxGetInputPropsOptions
     GetPropsWithRefKey {}
 
 export interface UseComboboxGetComboboxPropsOptions
-  extends React.HTMLProps<HTMLDivElement> {}
+  extends GetComboboxPropsOptions,
+    GetPropsWithRefKey {}
 
 export interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: (
@@ -677,11 +681,10 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<
-  Item
-> &
-  UseMultipleSelectionPropGetters<Item> &
-  UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<Item> =
+  UseMultipleSelectionState<Item> &
+    UseMultipleSelectionPropGetters<Item> &
+    UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(
