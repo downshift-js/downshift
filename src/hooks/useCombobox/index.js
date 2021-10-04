@@ -49,6 +49,8 @@ function useCombobox(userProps = {}) {
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
+  console.warn('Loaded useCombobox')
+
   // Element refs.
   const menuRef = useRef(null)
   const itemRefs = useRef({})
