@@ -833,7 +833,7 @@ These are functions you can call to change the state of the downshift
 | --------------------- | ------------------------- | ----------------------------------------------------- |
 | `closeMenu`           | `function()`              | closes the menu                                       |
 | `openMenu`            | `function()`              | opens the menu                                        |
-| `selectItem`          | `function(item: any)`     | selects the given item                                |
+| `selectItem`          | `function(item: any)`     | selects the given item or `null`                      |
 | `setHighlightedIndex` | `function(index: number)` | call to set a new highlighted index                   |
 | `setInputValue`       | `function(value: string)` | call to set a new value in the input                  |
 | `toggleMenu`          | `function()`              | toggle the menu open state                            |

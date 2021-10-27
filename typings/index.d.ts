@@ -527,7 +527,7 @@ export interface UseComboboxActions<Item> {
   openMenu: () => void
   closeMenu: () => void
   toggleMenu: () => void
-  selectItem: (item: Item) => void
+  selectItem: (item: Item | null) => void
   setHighlightedIndex: (index: number) => void
   setInputValue: (inputValue: string) => void
 }
