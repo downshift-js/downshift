@@ -1081,15 +1081,15 @@ platforms:
 If you're just learning downshift, review these in order:
 
 0.  [basic automplete with getRootProps](https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js) -    the same as example #1 but using the correct HTML structure as suggested by ARIA-WCAG.
-1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
+1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/ordered-examples/01-basic-autocomplete.js&moduleview=1) -
     very bare bones, not styled at all. Good place to start.
-2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
+2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/ordered-examples/02-complete-autocomplete.js&moduleview=1) -
     more complete autocomplete solution using emotion for styling and
     match-sorter for filtering the items.
-3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) -
+3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/ordered-examples/03-typeahead.js&moduleview=1) -
     Shows how to control the `selectedItem` so the selected item can be one of
     your items or whatever the user types.
-4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
+4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/ordered-examples/04-multi-select.js&moduleview=1) -
     Shows how to create a MultiDownshift component that allows for an array of
     selectedItems for multiple selection using a state reducer
 
@@ -1097,16 +1097,16 @@ If you're just learning downshift, review these in order:
 
 Check out these examples of more advanced use/edge cases:
 
-- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) -
+- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/other-examples/dropdown-select-by-key/index.js&moduleview=1) -
   An example of using the render prop pattern to utilize a reusable component to
   provide the downshift dropdown component with the functionality of being able
   to highlight a selection item that starts with the key pressed.
-- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) -
+- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/other-examples/using-actions.js&moduleview=1) -
   An example of using one of downshift's actions as an event handler.
-- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) -
+- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/other-examples/gmail/index.js&moduleview=1) -
   An example of a highly complex autocomplete component featuring asynchronously
   loading items, multiple selection, and windowing (with react-virtualized)
-- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) -
+- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=/src/downshift/other-examples/hoc/index.js&moduleview=1) -
   An example of how to implementat compound components with
   `React.createContext` and a downshift higher order component. This is
   generally not recommended because the render prop API exported by downshift is
