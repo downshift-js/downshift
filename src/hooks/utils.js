@@ -101,6 +101,7 @@ function useElementIds({
   getItemId,
   toggleButtonId,
   inputId,
+  ariaControls,
 }) {
   const elementIdsRef = useRef({
     labelId: labelId || `${id}-label`,
@@ -108,6 +109,7 @@ function useElementIds({
     getItemId: getItemId || (index => `${id}-item-${index}`),
     toggleButtonId: toggleButtonId || `${id}-toggle-button`,
     inputId: inputId || `${id}-input`,
+    ariaControls: ariaControls || `${id}`,
   })
 
   return elementIdsRef.current

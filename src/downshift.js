@@ -73,6 +73,7 @@ class Downshift extends Component {
     inputId: PropTypes.string,
     menuId: PropTypes.string,
     getItemId: PropTypes.func,
+    ariaControls: PropTypes.string,
     /* eslint-enable react/no-unused-prop-types */
   }
 
@@ -148,6 +149,7 @@ class Downshift extends Component {
   labelId = this.props.labelId || `${this.id}-label`
   inputId = this.props.inputId || `${this.id}-input`
   getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
+  ariaControls = this.props.ariaControls || `${this.id}`
 
   input = null
   items = []
@@ -498,6 +500,9 @@ class Downshift extends Component {
       'aria-haspopup': 'listbox',
       'aria-owns': isOpen ? this.menuId : null,
       'aria-labelledby': this.labelId,
+      // Until cypress-axe fixes issue of trowing flag "aria-required-attr" on aria-expanded=true
+      // After fixed, use `isOpen ? this.ariaControls : null`
+      'aria-controls': this.ariaControls,
       ...rest,
     }
   }
@@ -821,7 +826,7 @@ class Downshift extends Component {
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
           : null,
-      'aria-controls': isOpen ? this.menuId : null,
+      'aria-controls': this.ariaControls,
       'aria-labelledby': this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera

@@ -438,7 +438,7 @@ function useCombobox(userProps = {}) {
         }),
         id: elementIds.inputId,
         'aria-autocomplete': 'list',
-        'aria-controls': elementIds.menuId,
+        'aria-controls': elementIds.ariaControls,
         ...(latestState.isOpen &&
           latestState.highlightedIndex > -1 && {
             'aria-activedescendant': elementIds.getItemId(
@@ -480,6 +480,7 @@ function useCombobox(userProps = {}) {
         'aria-haspopup': 'listbox',
         'aria-owns': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
+        'aria-controls': elementIds.ariaControls,
         ...rest,
       }
     },

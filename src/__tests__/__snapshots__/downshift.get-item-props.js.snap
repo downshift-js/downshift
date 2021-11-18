@@ -2,6 +2,7 @@
 
 exports[`getItemProps defaults the index when no index is given 1`] = `
 <div
+  aria-controls=downshift-1
   aria-expanded=false
   aria-haspopup=listbox
   aria-labelledby=downshift-1-label

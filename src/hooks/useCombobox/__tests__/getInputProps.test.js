@@ -48,17 +48,18 @@ describe('getInputProps', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-controls']).toEqual(`${defaultIds.menuId}`)
+      expect(inputProps['aria-controls']).toEqual(`${defaultIds.ariaControls}`)
     })
 
     test('assign custom value passed by user to aria-controls', () => {
       const props = {
         menuId: 'my-custom-menu-id',
+        ariaControls: 'downshift-test-id',
       }
       const {result} = renderUseCombobox(props)
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-controls']).toEqual(`${props.menuId}`)
+      expect(inputProps['aria-controls']).toEqual(`${props.ariaControls}`)
     })
 
     test('assign id of highlighted item to aria-activedescendant if item is highlighted and menu is open', () => {

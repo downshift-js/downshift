@@ -36,6 +36,7 @@ const defaultIds = {
   getItemId: index => `downshift-test-id-item-${index}`,
   toggleButtonId: 'downshift-test-id-toggle-button',
   inputId: 'downshift-test-id-input',
+  ariaControls: 'downshift-test-id',
 }
 
 const waitForDebouncedA11yStatusUpdate = () =>
