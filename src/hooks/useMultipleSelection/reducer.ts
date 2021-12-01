@@ -3,7 +3,7 @@ import {
   UseMultipleSelectionState,
   UseMultipleSelectionReducerAction,
 } from './types'
-import {getDefaultValue} from './utils'
+import {defaultStateValues} from './utils'
 
 /* eslint-disable complexity */
 export default function downshiftMultipleSelectionReducer<Item>(
@@ -94,11 +94,20 @@ export default function downshiftMultipleSelectionReducer<Item>(
         selectedItems,
       }
     }
-    case stateChangeTypes.FunctionReset:
+    case stateChangeTypes.FunctionReset: {
+      const {props} = action
+      
       return {
-        activeIndex: getDefaultValue(action.props, 'activeIndex'),
-        selectedItems: getDefaultValue(action.props, 'selectedItems'),
+        activeIndex:
+          props.activeIndex ??
+          props.defaultActiveIndex ??
+          defaultStateValues.activeIndex,
+        selectedItems:
+          props.selectedItems ??
+          props.defaultSelectedItems ??
+          (defaultStateValues.selectedItems as Item[]),
       }
+    }
     default:
       throw new Error('Reducer called without proper action type.')
   }
