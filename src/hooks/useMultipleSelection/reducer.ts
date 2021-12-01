@@ -1,75 +1,72 @@
-import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
+import {
+  UseMultipleSelectionState,
+  UseMultipleSelectionReducerAction,
+} from './types'
+import {getDefaultValue} from './utils'
 
 /* eslint-disable complexity */
-export default function downshiftMultipleSelectionReducer(state, action) {
-  const {type, index, props, selectedItem} = action
-  const {activeIndex, selectedItems} = state
-  let changes
+export default function downshiftMultipleSelectionReducer<Item>(
+  state: UseMultipleSelectionState<Item>,
+  action: UseMultipleSelectionReducerAction<Item>,
+): UseMultipleSelectionState<Item> {
+  const {selectedItems, activeIndex} = state
 
-  switch (type) {
+  switch (action.type) {
     case stateChangeTypes.SelectedItemClick:
-      changes = {
-        activeIndex: index,
+      return {
+        selectedItems,
+        activeIndex: action.index,
       }
-
-      break
     case stateChangeTypes.SelectedItemKeyDownNavigationPrevious:
-      changes = {
+      return {
         activeIndex: activeIndex - 1 < 0 ? 0 : activeIndex - 1,
+        selectedItems,
       }
-
-      break
     case stateChangeTypes.SelectedItemKeyDownNavigationNext:
-      changes = {
+      return {
         activeIndex:
           activeIndex + 1 >= selectedItems.length ? -1 : activeIndex + 1,
+        selectedItems,
       }
-
-      break
     case stateChangeTypes.SelectedItemKeyDownBackspace:
     case stateChangeTypes.SelectedItemKeyDownDelete: {
       let newActiveIndex = activeIndex
 
       if (selectedItems.length === 1) {
         newActiveIndex = -1
-      } else if (activeIndex === selectedItems.length - 1) {
+      } else if (state.activeIndex === selectedItems.length - 1) {
         newActiveIndex = selectedItems.length - 2
       }
 
-      changes = {
-        selectedItems: [
-          ...selectedItems.slice(0, activeIndex),
-          ...selectedItems.slice(activeIndex + 1),
-        ],
-        ...{activeIndex: newActiveIndex},
+      return {
+        selectedItems: [...selectedItems].splice(activeIndex),
+        activeIndex: newActiveIndex,
       }
-
-      break
     }
     case stateChangeTypes.DropdownKeyDownNavigationPrevious:
-      changes = {
+      return {
         activeIndex: selectedItems.length - 1,
+        selectedItems,
       }
-      break
     case stateChangeTypes.DropdownKeyDownBackspace:
-      changes = {
+      return {
         selectedItems: selectedItems.slice(0, selectedItems.length - 1),
+        activeIndex,
       }
-      break
     case stateChangeTypes.FunctionAddSelectedItem:
-      changes = {
-        selectedItems: [...selectedItems, selectedItem],
+      return {
+        activeIndex,
+        selectedItems: [...selectedItems, action.selectedItem],
       }
-      break
     case stateChangeTypes.DropdownClick:
-      changes = {
+      return {
+        selectedItems,
         activeIndex: -1,
       }
-      break
     case stateChangeTypes.FunctionRemoveSelectedItem: {
       let newActiveIndex = activeIndex
-      const selectedItemIndex = selectedItems.indexOf(selectedItem)
+      const selectedItemIndex = selectedItems.indexOf(action.selectedItem)
 
       if (selectedItems.length === 1) {
         newActiveIndex = -1
@@ -77,41 +74,32 @@ export default function downshiftMultipleSelectionReducer(state, action) {
         newActiveIndex = selectedItems.length - 2
       }
 
-      changes = {
+      return {
         selectedItems: [
           ...selectedItems.slice(0, selectedItemIndex),
           ...selectedItems.slice(selectedItemIndex + 1),
         ],
-        ...{activeIndex: newActiveIndex},
-      }
-      break
-    }
-    case stateChangeTypes.FunctionSetSelectedItems: {
-      const {selectedItems: newSelectedItems} = action
-      changes = {
-        selectedItems: newSelectedItems,
-      }
-      break
-    }
-    case stateChangeTypes.FunctionSetActiveIndex: {
-      const {activeIndex: newActiveIndex} = action
-      changes = {
         activeIndex: newActiveIndex,
       }
-      break
+    }
+    case stateChangeTypes.FunctionSetSelectedItems: {
+      return {
+        selectedItems: action.selectedItems,
+        activeIndex,
+      }
+    }
+    case stateChangeTypes.FunctionSetActiveIndex: {
+      return {
+        activeIndex: action.activeIndex,
+        selectedItems,
+      }
     }
     case stateChangeTypes.FunctionReset:
-      changes = {
-        activeIndex: getDefaultValue(props, 'activeIndex'),
-        selectedItems: getDefaultValue(props, 'selectedItems'),
+      return {
+        activeIndex: getDefaultValue(action.props, 'activeIndex'),
+        selectedItems: getDefaultValue(action.props, 'selectedItems'),
       }
-      break
     default:
       throw new Error('Reducer called without proper action type.')
-  }
-
-  return {
-    ...state,
-    ...changes,
   }
 }

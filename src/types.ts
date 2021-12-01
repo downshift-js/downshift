@@ -1,6 +1,15 @@
+/* Internal Types */
+
+export interface DropdownState<Item = unknown> {
+  highlightedIndex: number
+  inputValue: string
+  isOpen: boolean
+  selectedItem: Item | null
+}
+
 /* External Types */
 
-export interface A11yStatusMessageOptions<Item> {
+export type A11yStatusMessageOptions<Item> = {
   highlightedIndex: number | null
   inputValue: string
   isOpen: boolean
@@ -9,4 +18,10 @@ export interface A11yStatusMessageOptions<Item> {
   resultCount: number
   highlightedItem: Item
   selectedItem: Item | null
+}
+
+export interface Environment {
+  addEventListener: typeof window.addEventListener
+  removeEventListener: typeof window.removeEventListener
+  document: Document
 }
