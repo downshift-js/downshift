@@ -40,7 +40,10 @@ export default function downshiftMultipleSelectionReducer<Item>(
       }
 
       return {
-        selectedItems: [...selectedItems].splice(activeIndex),
+        selectedItems: [
+          ...selectedItems.slice(0, activeIndex),
+          ...selectedItems.slice(activeIndex + 1),
+        ],
         activeIndex: newActiveIndex,
       }
     }
@@ -96,7 +99,7 @@ export default function downshiftMultipleSelectionReducer<Item>(
     }
     case stateChangeTypes.FunctionReset: {
       const {props} = action
-      
+
       return {
         activeIndex:
           props.activeIndex ??

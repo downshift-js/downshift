@@ -3,27 +3,26 @@ import * as React from 'react'
 import {render, fireEvent, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import userEvent from '@testing-library/user-event'
-import {defaultProps} from '../utils'
+import {UseComboboxProps} from '../../../typings'
+import * as downshiftUtils from '../../utils'
+import * as hooksUtils from '../utils'
 import {items} from '../testUtils'
 import useCombobox from '../useCombobox'
 import useMultipleSelection from '.'
+import {UseMultipleSelectionProps} from './types'
 
-jest.mock('../../utils', () => {
-  const utils = jest.requireActual('../../utils')
+type DropdownMultipleComboboxProps = {
+  multipleSelectionProps: Partial<UseMultipleSelectionProps<string>>
+  comboboxProps: Partial<UseComboboxProps<string>>
+}
 
-  return {
-    ...utils,
-    generateId: () => 'test-id',
-  }
-})
-
+jest.spyOn(downshiftUtils, 'generateId').mockReturnValue('test-id')
 jest.mock('../utils', () => {
-  const utils = jest.requireActual('../utils')
-  const hooksUtils = jest.requireActual('../../utils')
+  const noop = () => {}
 
   return {
-    ...utils,
-    useGetterPropsCalledChecker: () => hooksUtils.noop,
+    ...jest.requireActual('../utils'),
+    useGetterPropsCalledChecker: () => noop,
   }
 })
 
@@ -32,14 +31,16 @@ afterAll(jest.restoreAllMocks)
 
 export const dataTestIds = {
   selectedItemPrefix: 'selected-item-id',
-  selectedItem: index => `selected-item-id-${index}`,
+  selectedItem: (index: number) => `selected-item-id-${index}`,
   input: 'input-id',
+  combobox: 'combobox-id',
+  menu: 'menu-id',
 }
 
 const DropdownMultipleCombobox = ({
   multipleSelectionProps = {},
   comboboxProps = {},
-}) => {
+}: Partial<DropdownMultipleComboboxProps> = {}) => {
   const {
     getSelectedItemProps,
     getDropdownProps,
@@ -55,15 +56,14 @@ const DropdownMultipleCombobox = ({
     items,
     ...comboboxProps,
   })
-  const {itemToString} = multipleSelectionProps.itemToString
-    ? multipleSelectionProps
-    : defaultProps
+  const itemToString =
+    multipleSelectionProps.itemToString ?? hooksUtils.defaultProps.itemToString
 
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
-        {selectedItems.map((selectedItem, index) => (
+        {(selectedItems as string[]).map((selectedItem, index) => (
           <span
             key={`selected-item-${index}`}
             data-testid={dataTestIds.selectedItem(index)}
@@ -85,31 +85,37 @@ const DropdownMultipleCombobox = ({
   )
 }
 
-export const renderMultipleCombobox = props => {
+export const renderMultipleCombobox = (
+  props: DropdownMultipleComboboxProps,
+) => {
   const utils = render(<DropdownMultipleCombobox {...props} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
   const input = screen.getByTestId(dataTestIds.input)
-  const rerender = newProps =>
+  const rerender = (newProps: DropdownMultipleComboboxProps) =>
     utils.rerender(<DropdownMultipleCombobox {...newProps} />)
-  const getSelectedItemAtIndex = index =>
+  const getSelectedItemAtIndex = (index: number) =>
     screen.getByTestId(dataTestIds.selectedItem(index))
   const getSelectedItems = () =>
     screen.queryAllByTestId(new RegExp(dataTestIds.selectedItemPrefix))
-  const clickOnSelectedItemAtIndex = index => {
+  const clickOnSelectedItemAtIndex = (index: number) => {
     fireEvent.click(getSelectedItemAtIndex(index))
   }
-  const keyDownOnSelectedItemAtIndex = (index, key, options = {}) => {
+  const keyDownOnSelectedItemAtIndex = (
+    index: number,
+    key: string,
+    options = {},
+  ) => {
     fireEvent.keyDown(getSelectedItemAtIndex(index), {key, ...options})
   }
-  const focusSelectedItemAtIndex = index => {
+  const focusSelectedItemAtIndex = (index: number) => {
     getSelectedItemAtIndex(index).focus()
   }
   const getA11yStatusContainer = () => screen.queryByRole('status')
   const focusInput = () => {
     input.focus()
   }
-  const keyDownOnInput = (key, options = {}) => {
+  const keyDownOnInput = (key: string, options = {}) => {
     if (document.activeElement !== input) {
       focusInput()
     }
@@ -138,6 +144,8 @@ export const renderMultipleCombobox = props => {
   }
 }
 
-export const renderUseMultipleSelection = props => {
+export const renderUseMultipleSelection = (
+  props: Partial<UseMultipleSelectionProps<string>> = {},
+) => {
   return renderHook(() => useMultipleSelection(props))
 }
