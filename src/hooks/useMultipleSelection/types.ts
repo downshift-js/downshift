@@ -66,6 +66,19 @@ export type UseMultipleSelectionReducerAction<Item> = {
   | FunctionSetSelectedItemsAction<Item>
 )
 
+
+export interface UseMultipleSelectionDefaultProps<Item> {
+  itemToString: (item: Item) => string
+  getA11yRemovalMessage: (options: A11yRemovalMessage<Item>) => string
+  stateReducer: (
+    state: UseMultipleSelectionState<Item>,
+    actionAndChanges: UseMultipleSelectionStateChangeOptions<Item>,
+  ) => Partial<UseMultipleSelectionState<Item>>
+  keyNavigationNext: string
+  keyNavigationPrevious: string
+  environment: Environment
+}
+
 /* External Types */
 
 export interface UseMultipleSelectionState<Item> {

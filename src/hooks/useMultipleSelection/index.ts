@@ -16,14 +16,17 @@ import {
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
+import {UseMultipleSelectionProps, UseMultipleSelectionState} from './types'
 
 useMultipleSelection.stateChangeTypes = stateChangeTypes
 
-function useMultipleSelection(userProps = {}) {
+function useMultipleSelection<Item>(
+  userProps: UseMultipleSelectionProps<Item> = {},
+) {
   validatePropTypes(userProps, useMultipleSelection)
   // Props defaults and destructuring.
-  const props = {
-    ...defaultProps,
+  const props: UseMultipleSelectionProps<Item> = {
+    ...(defaultProps as UseMultipleSelectionProps<Item>),
     ...userProps,
   }
   const {
@@ -40,13 +43,13 @@ function useMultipleSelection(userProps = {}) {
     getInitialState(props),
     props,
   )
-  const {activeIndex, selectedItems} = state
+  const {activeIndex, selectedItems} = state as UseMultipleSelectionState<Item>
 
   // Refs.
   const isInitialMountRef = useRef(true)
   const dropdownRef = useRef(null)
   const previousSelectedItemsRef = useRef(selectedItems)
-  const selectedItemRefs = useRef()
+  const selectedItemRefs = useRef([])
   selectedItemRefs.current = []
   const latest = useLatestRef({state, props})
 
@@ -59,7 +62,7 @@ function useMultipleSelection(userProps = {}) {
 
     if (selectedItems.length < previousSelectedItemsRef.current.length) {
       const removedSelectedItem = previousSelectedItemsRef.current.find(
-        item => selectedItems.indexOf(item) < 0,
+        item => !selectedItems.includes(item),
       )
 
       setStatus(
