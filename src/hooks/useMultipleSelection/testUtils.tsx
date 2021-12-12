@@ -63,7 +63,7 @@ const DropdownMultipleCombobox = ({
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
-        {(selectedItems as string[]).map((selectedItem, index) => (
+        {selectedItems.map((selectedItem, index) => (
           <span
             key={`selected-item-${index}`}
             data-testid={dataTestIds.selectedItem(index)}

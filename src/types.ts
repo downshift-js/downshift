@@ -25,3 +25,12 @@ export interface Environment {
   removeEventListener: typeof window.removeEventListener
   document: Document
 }
+
+export interface GetPropsWithRefKey {
+  refKey?: string
+}
+
+export interface GetToggleButtonPropsOptions
+  extends React.HTMLProps<HTMLButtonElement> {
+  disabled?: boolean
+}

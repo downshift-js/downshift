@@ -1,4 +1,5 @@
-import {Environment} from '../../types'
+import {Environment, GetPropsWithRefKey, GetToggleButtonPropsOptions} from '../../types'
+import {GetInputPropsOptions} from '../useCombobox/types'
 
 /* Internal Types */
 
@@ -48,9 +49,7 @@ type FunctionSetSelectedItemsAction<Item> = {
   selectedItems: Item[]
 }
 
-export type UseMultipleSelectionReducerAction<Item> = {
-  props: UseMultipleSelectionProps<Item>
-} & (
+export type UseMultipleSelectionDispatchProps<Item> =
   | SelectedItemKeyDownNavigationPreviousAction
   | SelectedItemKeyDownNavigatioNextAction
   | SelectedItemKeyDownBackspaceAction
@@ -64,8 +63,14 @@ export type UseMultipleSelectionReducerAction<Item> = {
   | FunctionSetActiveIndexAction
   | FunctionResetAction
   | FunctionSetSelectedItemsAction<Item>
-)
 
+export type UseMultipleSelectionDispatch<Item> = (
+  props: UseMultipleSelectionDispatchProps<Item>,
+) => void
+
+export type UseMultipleSelectionReducerAction<Item> = {
+  props: UseMultipleSelectionProps<Item>
+} & UseMultipleSelectionDispatchProps<Item>
 
 export interface UseMultipleSelectionDefaultProps<Item> {
   itemToString: (item: Item) => string
@@ -144,9 +149,32 @@ export enum UseMultipleSelectionStateChangeTypes {
 }
 
 export interface A11yRemovalMessage<Item> {
+  activeIndex: number
+  activeSelectedItem?: Item
   itemToString: (item: Item) => string
   resultCount: number
-  activeSelectedItem: Item
   removedSelectedItem: Item
-  activeIndex: number
 }
+
+export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
+  index?: number
+  selectedItem: Item
+}
+
+export interface UseMultipleSelectionComboboxGetDropdownProps
+  extends GetInputPropsOptions,
+    GetPropsWithRefKey {
+  preventKeyAction?: boolean
+}
+
+export interface UseMultipleSelectionSelectGetDropdownProps
+  extends GetToggleButtonPropsOptions,
+    GetPropsWithRefKey {
+  preventKeyAction?: boolean
+}
+
+export type UseMultipleSelectionGetDropdownProps =
+  | UseMultipleSelectionSelectGetDropdownProps
+  | UseMultipleSelectionComboboxGetDropdownProps

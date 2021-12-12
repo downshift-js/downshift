@@ -6,6 +6,7 @@ import {
   A11yRemovalMessage,
   UseMultipleSelectionState,
   UseMultipleSelectionProps,
+  UseMultipleSelectionDefaultProps,
 } from './types'
 
 /**
@@ -108,14 +109,16 @@ export function isKeyDownOperationPermitted(event: KeyboardEvent): boolean {
   return true
 }
 
-export const defaultProps: Partial<UseMultipleSelectionProps<unknown>> = {
+export const getDefaultProps: <Item>() => UseMultipleSelectionDefaultProps<
+  Item
+> = () => ({
   environment: defaultPropsCommon.environment as Environment,
   itemToString: defaultPropsCommon.itemToString,
   getA11yRemovalMessage,
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft',
   stateReducer: defaultPropsCommon.stateReducer,
-}
+})
 
 // eslint-disable-next-line import/no-mutable-exports
 export let validatePropTypes: (

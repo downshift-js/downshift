@@ -1,4 +1,12 @@
-import {useRef, useEffect, useCallback, useMemo} from 'react'
+import {
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  MouseEventHandler,
+  HTMLProps,
+  KeyboardEventHandler,
+} from 'react'
 import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {
@@ -10,13 +18,19 @@ import {
 } from '../utils'
 import {
   getInitialState,
-  defaultProps,
+  getDefaultProps,
   isKeyDownOperationPermitted,
   validatePropTypes,
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
-import {UseMultipleSelectionProps, UseMultipleSelectionState} from './types'
+import {
+  UseMultipleSelectionDispatch,
+  UseMultipleSelectionGetDropdownProps,
+  UseMultipleSelectionGetSelectedItemPropsOptions,
+  UseMultipleSelectionProps,
+  UseMultipleSelectionState,
+} from './types'
 
 useMultipleSelection.stateChangeTypes = stateChangeTypes
 
@@ -25,8 +39,8 @@ function useMultipleSelection<Item>(
 ) {
   validatePropTypes(userProps, useMultipleSelection)
   // Props defaults and destructuring.
-  const props: UseMultipleSelectionProps<Item> = {
-    ...(defaultProps as UseMultipleSelectionProps<Item>),
+  const props = {
+    ...getDefaultProps<Item>(),
     ...userProps,
   }
   const {
@@ -42,14 +56,14 @@ function useMultipleSelection<Item>(
     downshiftMultipleSelectionReducer,
     getInitialState(props),
     props,
-  )
-  const {activeIndex, selectedItems} = state as UseMultipleSelectionState<Item>
+  ) as [UseMultipleSelectionState<Item>, UseMultipleSelectionDispatch<Item>]
+  const {activeIndex, selectedItems} = state
 
   // Refs.
   const isInitialMountRef = useRef(true)
-  const dropdownRef = useRef(null)
+  const dropdownRef = useRef<HTMLElement | null>(null)
   const previousSelectedItemsRef = useRef(selectedItems)
-  const selectedItemRefs = useRef([])
+  const selectedItemRefs = useRef<HTMLElement[]>([])
   selectedItemRefs.current = []
   const latest = useLatestRef({state, props})
 
@@ -63,7 +77,7 @@ function useMultipleSelection<Item>(
     if (selectedItems.length < previousSelectedItemsRef.current.length) {
       const removedSelectedItem = previousSelectedItemsRef.current.find(
         item => !selectedItems.includes(item),
-      )
+      ) as Item
 
       setStatus(
         getA11yRemovalMessage({
@@ -90,7 +104,7 @@ function useMultipleSelection<Item>(
     if (activeIndex === -1 && dropdownRef.current) {
       dropdownRef.current.focus()
     } else if (selectedItemRefs.current[activeIndex]) {
-      selectedItemRefs.current[activeIndex].focus()
+      selectedItemRefs.current[activeIndex]?.focus()
     }
   }, [activeIndex])
   useControlPropsValidator({
@@ -132,14 +146,14 @@ function useMultipleSelection<Item>(
   )
   const dropdownKeyDownHandlers = useMemo(
     () => ({
-      [keyNavigationPrevious](event) {
+      [keyNavigationPrevious](event: KeyboardEvent) {
         if (isKeyDownOperationPermitted(event)) {
           dispatch({
             type: stateChangeTypes.DropdownKeyDownNavigationPrevious,
           })
         }
       },
-      Backspace(event) {
+      Backspace(event: KeyboardEvent) {
         if (isKeyDownOperationPermitted(event)) {
           dispatch({
             type: stateChangeTypes.DropdownKeyDownBackspace,
@@ -160,13 +174,15 @@ function useMultipleSelection<Item>(
       selectedItem,
       index,
       ...rest
-    } = {}) => {
+    }: UseMultipleSelectionGetSelectedItemPropsOptions<Item>): HTMLProps<
+      HTMLElement
+    > => {
       const {state: latestState} = latest.current
       const itemIndex = getItemIndex(
         index,
         selectedItem,
         latestState.selectedItems,
-      )
+      ) as number
       if (itemIndex < 0) {
         throw new Error(
           'Pass either selectedItem or index in getSelectedItemProps!',
@@ -176,25 +192,38 @@ function useMultipleSelection<Item>(
       const selectedItemHandleClick = () => {
         dispatch({
           type: stateChangeTypes.SelectedItemClick,
-          index,
+          index: itemIndex,
         })
       }
-      const selectedItemHandleKeyDown = event => {
+      const selectedItemHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
-        if (key && selectedItemKeyDownHandlers[key]) {
-          selectedItemKeyDownHandlers[key](event)
+        if (key) {
+          const handler = selectedItemKeyDownHandlers[key]
+
+          if (handler) {
+            handler()
+          }
         }
       }
 
       return {
-        [refKey]: handleRefs(ref, selectedItemNode => {
-          if (selectedItemNode) {
-            selectedItemRefs.current.push(selectedItemNode)
-          }
-        }),
+        [refKey]: handleRefs(
+          ref,
+          (selectedItemNode?: HTMLElement | null | undefined) => {
+            if (selectedItemNode) {
+              selectedItemRefs.current.push(selectedItemNode)
+            }
+          },
+        ),
         tabIndex: index === latestState.activeIndex ? 0 : -1,
-        onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
-        onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
+        onClick: callAllEventHandlers(
+          onClick,
+          selectedItemHandleClick,
+        ) as MouseEventHandler,
+        onKeyDown: callAllEventHandlers(
+          onKeyDown,
+          selectedItemHandleKeyDown,
+        ) as KeyboardEventHandler,
         ...rest,
       }
     },
@@ -209,7 +238,7 @@ function useMultipleSelection<Item>(
         onClick,
         preventKeyAction = false,
         ...rest
-      } = {},
+      }: UseMultipleSelectionGetDropdownProps = {},
       {suppressRefError = false} = {},
     ) => {
       setGetterPropCallInfo(
@@ -219,10 +248,14 @@ function useMultipleSelection<Item>(
         dropdownRef,
       )
 
-      const dropdownHandleKeyDown = event => {
+      const dropdownHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
-        if (key && dropdownKeyDownHandlers[key]) {
-          dropdownKeyDownHandlers[key](event)
+        if (key) {
+          const handler = dropdownKeyDownHandlers[key]
+
+          if (handler) {
+            handler(event)
+          }
         }
       }
       const dropdownHandleClick = () => {
@@ -232,11 +265,14 @@ function useMultipleSelection<Item>(
       }
 
       return {
-        [refKey]: handleRefs(ref, dropdownNode => {
-          if (dropdownNode) {
-            dropdownRef.current = dropdownNode
-          }
-        }),
+        [refKey]: handleRefs(
+          ref,
+          (dropdownNode?: HTMLElement | null | undefined) => {
+            if (dropdownNode) {
+              dropdownRef.current = dropdownNode
+            }
+          },
+        ),
         ...(!preventKeyAction && {
           onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
           onClick: callAllEventHandlers(onClick, dropdownHandleClick),
@@ -249,7 +285,7 @@ function useMultipleSelection<Item>(
 
   // returns
   const addSelectedItem = useCallback(
-    selectedItem => {
+    (selectedItem: Item) => {
       dispatch({
         type: stateChangeTypes.FunctionAddSelectedItem,
         selectedItem,
@@ -258,7 +294,7 @@ function useMultipleSelection<Item>(
     [dispatch],
   )
   const removeSelectedItem = useCallback(
-    selectedItem => {
+    (selectedItem: Item) => {
       dispatch({
         type: stateChangeTypes.FunctionRemoveSelectedItem,
         selectedItem,
@@ -267,7 +303,7 @@ function useMultipleSelection<Item>(
     [dispatch],
   )
   const setSelectedItems = useCallback(
-    newSelectedItems => {
+    (newSelectedItems: Item[]) => {
       dispatch({
         type: stateChangeTypes.FunctionSetSelectedItems,
         selectedItems: newSelectedItems,
@@ -276,7 +312,7 @@ function useMultipleSelection<Item>(
     [dispatch],
   )
   const setActiveIndex = useCallback(
-    newActiveIndex => {
+    (newActiveIndex: number) => {
       dispatch({
         type: stateChangeTypes.FunctionSetActiveIndex,
         activeIndex: newActiveIndex,

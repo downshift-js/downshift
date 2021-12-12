@@ -384,8 +384,8 @@ function useMouseAndTouchTracker(
 }
 
 /* istanbul ignore next */
-// eslint-disable-next-line import/no-mutable-exports
-let useGetterPropsCalledChecker = () => noop
+// eslint-disable-next-line
+let useGetterPropsCalledChecker = (...propKeys) => noop
 /**
  * Custom hook that checks if getter props are called correctly.
  *

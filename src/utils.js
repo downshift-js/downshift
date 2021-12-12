@@ -15,7 +15,8 @@ function cbToCb(cb) {
   return typeof cb === 'function' ? cb : noop
 }
 
-function noop() {}
+// eslint-disable-next-line no-unused-vars
+function noop(...args) {}
 
 /**
  * Scroll node into view if necessary
@@ -87,7 +88,7 @@ function debounce(fn, time) {
  * This is intended to be used to compose event handlers.
  * They are executed in order until one of them sets
  * `event.preventDownshiftDefault = true`.
- * @param {...Function} fns the event handler functions
+ * @param {...Function = []} fns the event handler functions
  * @return {Function} the event handler to add to an element
  */
 function callAllEventHandlers(...fns) {
