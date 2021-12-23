@@ -1,8 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import {act, renderHook} from '@testing-library/react-hooks'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {renderUseMultipleSelection, renderMultipleCombobox} from '../testUtils'
 import {items} from '../../testUtils'
 import useMultipleSelection from '..'
+import {
+  UseMultipleSelectionState,
+  UseMultipleSelectionStateChange,
+  UseMultipleSelectionStateChangeOptions,
+} from '../types'
 
 jest.useFakeTimers()
 
@@ -21,7 +29,9 @@ describe('props', () => {
 
   describe('selectedItems', () => {
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      act(() => {
+        jest.runAllTimers()
+      })
     })
 
     test('passed as objects should work with custom itemToString', () => {
@@ -44,13 +54,12 @@ describe('props', () => {
     })
 
     test('controls the state property if passed', () => {
-      const inputItems = [items[0], items[1]]
       const {
         keyDownOnSelectedItemAtIndex,
         getSelectedItems,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          selectedItems: inputItems,
+          selectedItems: items.slice(0, 2),
           initialActiveIndex: 0,
         },
       })
@@ -63,12 +72,14 @@ describe('props', () => {
 
   describe('getA11yRemovalMessage', () => {
     afterEach(() => {
-      act(() => jest.runAllTimers())
+      act(() => {
+        jest.runAllTimers()
+      })
     })
 
     test('is called with object that contains specific props', () => {
       const getA11yRemovalMessage = jest.fn()
-      const itemToString = item => item.str
+      const itemToString = (item: {str: string}) => item.str
       const initialSelectedItems = [{str: 'aaa'}, {str: 'bbb'}]
       const {keyDownOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
@@ -149,11 +160,16 @@ describe('props', () => {
 
   describe('stateReducer', () => {
     test('is called at each state change with the function change type', () => {
-      const stateReducer = jest.fn((s, a) => a.changes)
+      const stateReducer = jest.fn(
+        (
+          s: UseMultipleSelectionState<string>,
+          a: UseMultipleSelectionStateChangeOptions<string>,
+        ) => a.changes,
+      )
       const {result} = renderUseMultipleSelection({stateReducer})
 
       act(() => {
-        result.current.addSelectedItem(items[0])
+        result.current.addSelectedItem(items[0] as string)
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
@@ -170,7 +186,7 @@ describe('props', () => {
       )
 
       act(() => {
-        result.current.removeSelectedItem(items[0])
+        result.current.removeSelectedItem(items[0] as string)
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(2)
@@ -187,7 +203,7 @@ describe('props', () => {
       )
 
       act(() => {
-        result.current.setSelectedItems([items[0], items[1]])
+        result.current.setSelectedItems(items.slice(0, 2))
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(3)
@@ -368,17 +384,22 @@ describe('props', () => {
     })
 
     test('replaces prop values with user defined', () => {
-      const stateReducer = jest.fn((s, a) => {
-        const changes = a.changes
-        changes.activeIndex = 0
-        return changes
-      })
+      const stateReducer = jest.fn(
+        (
+          s: UseMultipleSelectionState<string>,
+          a: UseMultipleSelectionStateChangeOptions<string>,
+        ) => {
+          const changes = a.changes
+          changes.activeIndex = 0
+          return changes
+        },
+      )
       const {
         clickOnSelectedItemAtIndex,
         getSelectedItemAtIndex,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems: [items[0], items[1]],
+          initialSelectedItems: items.slice(0, 2),
           stateReducer,
         },
       })
@@ -391,21 +412,26 @@ describe('props', () => {
     })
 
     test('receives state, changes and type', () => {
-      const stateReducer = jest.fn((s, a) => {
-        expect(a.type).not.toBeUndefined()
-        expect(a.type).not.toBeNull()
+      const stateReducer = jest.fn(
+        (
+          s: UseMultipleSelectionState<string>,
+          a: UseMultipleSelectionStateChangeOptions<string>,
+        ) => {
+          expect(a.type).not.toBeUndefined()
+          expect(a.type).not.toBeNull()
 
-        expect(s).not.toBeUndefined()
-        expect(s).not.toBeNull()
+          expect(s).not.toBeUndefined()
+          expect(s).not.toBeNull()
 
-        expect(a.changes).not.toBeUndefined()
-        expect(a.changes).not.toBeNull()
+          expect(a.changes).not.toBeUndefined()
+          expect(a.changes).not.toBeNull()
 
-        return a.changes
-      })
+          return a.changes
+        },
+      )
       const {clickOnSelectedItemAtIndex} = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems: [items[0], items[1]],
+          initialSelectedItems: items.slice(0, 2),
           stateReducer,
         },
       })
@@ -504,7 +530,7 @@ describe('props', () => {
           initialSelectedItems: items,
           activeIndex,
           onActiveIndexChange: changes => {
-            activeIndex = changes.activeIndex
+            activeIndex = changes.activeIndex as number
           },
         },
       })
@@ -518,12 +544,13 @@ describe('props', () => {
     test('can have downshift actions executed', () => {
       const {result} = renderUseMultipleSelection({
         onActiveIndexChange: () => {
-          result.current.setSelectedItems([items[0]])
+          result.current.setSelectedItems(items.slice(0, 1))
         },
       })
 
       act(() => {
-        result.current.getSelectedItemProps({index: 3}).onClick({})
+        // eslint-disable-next-line
+        result.current.getSelectedItemProps({index: 3} as any).onClick({})
       })
 
       expect(result.current.selectedItems).toEqual([items[0]])
@@ -577,7 +604,7 @@ describe('props', () => {
           selectedItems,
           initialActiveIndex: 0,
           onSelectedItemsChange: changes => {
-            selectedItems = changes.selectedItems
+            selectedItems = changes.selectedItems as string[]
           },
         },
       })
@@ -597,8 +624,10 @@ describe('props', () => {
       })
 
       act(() => {
+        // eslint-disable-next-line
         result.current
-          .getSelectedItemProps({index: 3})
+          // eslint-disable-next-line
+          .getSelectedItemProps({index: 3} as any)
           .onKeyDown({key: 'Backspace'})
       })
 
@@ -626,8 +655,8 @@ describe('props', () => {
 
       expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          selectedItems: expect.arrayContaining([items[0], items[1]]),
+        expect.objectContaining<UseMultipleSelectionStateChange<string>>({
+          selectedItems: expect.arrayContaining<string>(items.slice(0, 2)),
           type: stateChangeTypes.DropdownKeyDownBackspace,
         }),
       )
@@ -734,7 +763,8 @@ describe('props', () => {
     })
 
     act(() => {
-      result.current.getSelectedItemProps({index: 2}).onClick({})
+      // eslint-disable-next-line
+      result.current.getSelectedItemProps({index: 2} as any).onClick({})
     })
 
     expect(result.current.activeIndex).toEqual(4)
@@ -746,8 +776,7 @@ describe('props', () => {
 
     rerender({multipleSelectionProps: {activeIndex: 1}})
 
-    // eslint-disable-next-line no-console
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect((console.error as jest.Mock).mock.calls[0][0]).toMatchInlineSnapshot(
       `downshift: A component has changed the uncontrolled prop "activeIndex" to be controlled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
@@ -761,7 +790,7 @@ describe('props', () => {
     rerender({})
 
     // eslint-disable-next-line no-console
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect((console.error as jest.Mock).mock.calls[0][0]).toMatchInlineSnapshot(
       `downshift: A component has changed the controlled prop "selectedItems" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })

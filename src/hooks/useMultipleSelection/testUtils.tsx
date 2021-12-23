@@ -11,12 +11,13 @@ import useCombobox from '../useCombobox'
 import useMultipleSelection from '.'
 import {UseMultipleSelectionProps} from './types'
 
-type DropdownMultipleComboboxProps = {
-  multipleSelectionProps: Partial<UseMultipleSelectionProps<string>>
-  comboboxProps: Partial<UseComboboxProps<string>>
+type DropdownMultipleComboboxProps<Item> = {
+  multipleSelectionProps?: Partial<UseMultipleSelectionProps<Item>>
+  comboboxProps?: Partial<UseComboboxProps<string>>
 }
 
 jest.spyOn(downshiftUtils, 'generateId').mockReturnValue('test-id')
+
 jest.mock('../utils', () => {
   const noop = () => {}
 
@@ -37,15 +38,15 @@ export const dataTestIds = {
   menu: 'menu-id',
 }
 
-const DropdownMultipleCombobox = ({
+function DropdownMultipleCombobox<Item>({
   multipleSelectionProps = {},
   comboboxProps = {},
-}: Partial<DropdownMultipleComboboxProps> = {}) => {
+}: Partial<DropdownMultipleComboboxProps<Item>> = {}) {
   const {
     getSelectedItemProps,
     getDropdownProps,
     selectedItems,
-  } = useMultipleSelection(multipleSelectionProps)
+  } = useMultipleSelection<Item>(multipleSelectionProps)
   const {
     getToggleButtonProps,
     getLabelProps,
@@ -84,15 +85,14 @@ const DropdownMultipleCombobox = ({
     </div>
   )
 }
-
-export const renderMultipleCombobox = (
-  props: DropdownMultipleComboboxProps,
-) => {
-  const utils = render(<DropdownMultipleCombobox {...props} />)
+export function renderMultipleCombobox<Item = string>(
+  props: DropdownMultipleComboboxProps<Item> = {},
+) {
+  const utils = render(<DropdownMultipleCombobox<Item> {...props} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
-  const input = screen.getByTestId(dataTestIds.input)
-  const rerender = (newProps: DropdownMultipleComboboxProps) =>
+  const input = screen.getByTestId(dataTestIds.input) as HTMLInputElement
+  const rerender = (newProps: DropdownMultipleComboboxProps<Item>) =>
     utils.rerender(<DropdownMultipleCombobox {...newProps} />)
   const getSelectedItemAtIndex = (index: number) =>
     screen.getByTestId(dataTestIds.selectedItem(index))
@@ -144,8 +144,8 @@ export const renderMultipleCombobox = (
   }
 }
 
-export const renderUseMultipleSelection = (
-  props: Partial<UseMultipleSelectionProps<string>> = {},
-) => {
+export function renderUseMultipleSelection<Item = string> (
+  props: Partial<UseMultipleSelectionProps<Item>> = {},
+) {
   return renderHook(() => useMultipleSelection(props))
 }

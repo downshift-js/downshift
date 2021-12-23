@@ -1,28 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {act, renderHook} from '@testing-library/react-hooks'
 import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
 import {items} from '../../testUtils'
-// eslint-disable-next-line import/default
-import utils from '../../utils'
+import * as utils from '../../utils'
 import useMultipleSelection from '..'
 
 describe('getDropdownProps', () => {
   test('returns no keydown events if preventKeyAction is true', () => {
     const {result} = renderUseMultipleSelection()
-    const dropdownProps = result.current.getDropdownProps({
+    const {onKeyDown} = result.current.getDropdownProps({
       preventKeyAction: true,
     })
 
-    expect(dropdownProps.onKeyDown).toBeUndefined()
+    expect(onKeyDown).toBeUndefined()
   })
 
   describe('user props', () => {
     test('are passed down', () => {
       const {result} = renderUseMultipleSelection()
 
-      expect(result.current.getDropdownProps({foo: 'bar'})).toHaveProperty(
-        'foo',
-        'bar',
-      )
+      expect(
+        // eslint-disable-next-line
+        result.current.getDropdownProps({foo: 'bar'} as any),
+      ).toHaveProperty('foo', 'bar')
     })
 
     test('custom ref passed by the user is used', () => {
@@ -50,7 +52,7 @@ describe('getDropdownProps', () => {
       act(() => {
         const {blablaRef} = result.current.getDropdownProps({
           refKey: 'blablaRef',
-          blablaRef: refFn,
+          ref: refFn,
         })
 
         blablaRef(dropdownNode)
@@ -63,7 +65,7 @@ describe('getDropdownProps', () => {
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0]],
+        initialSelectedItems: items.slice(0, 1),
       })
 
       act(() => {
@@ -83,7 +85,7 @@ describe('getDropdownProps', () => {
         event.preventDownshiftDefault = true
       })
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0]],
+        initialSelectedItems: items.slice(0, 1),
       })
 
       act(() => {
@@ -105,7 +107,7 @@ describe('getDropdownProps', () => {
         const {keyDownOnInput, getSelectedItemAtIndex} = renderMultipleCombobox(
           {
             multipleSelectionProps: {
-              initialSelectedItems: [items[0], items[1]],
+              initialSelectedItems: items.slice(0, 2),
             },
           },
         )
@@ -117,7 +119,7 @@ describe('getDropdownProps', () => {
 
       test('arrow left should not work if pressed with modifier keys', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: items.slice(0, 2)},
         })
 
         keyDownOnInput('ArrowLeft', {shiftKey: true})
@@ -139,7 +141,7 @@ describe('getDropdownProps', () => {
 
       test('backspace should remove the first selected item', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: items.slice(0, 2)},
         })
 
         keyDownOnInput('Backspace')
@@ -149,7 +151,7 @@ describe('getDropdownProps', () => {
 
       test('backspace should not work if pressed with modifier keys', () => {
         const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
-          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: items.slice(0, 2)},
         })
 
         keyDownOnInput('Backspace', {shiftKey: true})
@@ -176,7 +178,7 @@ describe('getDropdownProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
           },
           comboboxProps: {initialInputValue: 'test'},
         })
@@ -195,7 +197,7 @@ describe('getDropdownProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
           },
           comboboxProps: {initialInputValue: 'test'},
         })
@@ -214,7 +216,7 @@ describe('getDropdownProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
           },
         })
 
@@ -234,7 +236,7 @@ describe('getDropdownProps', () => {
         focusSelectedItemAtIndex,
       } = renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems: [items[0], items[1]],
+          initialSelectedItems: items.slice(0, 2),
           initialActiveIndex: 1,
         },
       })
@@ -255,7 +257,9 @@ describe('getDropdownProps', () => {
     beforeEach(() => {
       const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
       jest
-        .spyOn(utils, 'useGetterPropsCalledChecker')
+        // eslint-disable-next-line
+        .spyOn((utils as any).default, 'useGetterPropsCalledChecker')
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         .mockImplementation(useGetterPropsCalledChecker)
       jest.spyOn(console, 'error').mockImplementation(() => {})
     })
@@ -265,8 +269,9 @@ describe('getDropdownProps', () => {
         useMultipleSelection()
       })
 
-      // eslint-disable-next-line no-console
-      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      expect(
+        (console.error as jest.Mock).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
         `downshift: You forgot to call the getDropdownProps getter function on your component / element.`,
       )
     })
@@ -278,8 +283,9 @@ describe('getDropdownProps', () => {
         getDropdownProps()
       })
 
-      // eslint-disable-next-line no-console
-      expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+      expect(
+        (console.error as jest.Mock).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
         `downshift: The ref prop "ref" from getDropdownProps was not applied correctly on your element.`,
       )
     })
@@ -291,7 +297,6 @@ describe('getDropdownProps', () => {
         getDropdownProps({}, {suppressRefError: true})
       })
 
-      // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
 
@@ -307,7 +312,6 @@ describe('getDropdownProps', () => {
         ref(dropdownNode)
       })
 
-      // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
   })

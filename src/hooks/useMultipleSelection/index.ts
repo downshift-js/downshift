@@ -4,7 +4,6 @@ import {
   useCallback,
   useMemo,
   MouseEventHandler,
-  HTMLProps,
   KeyboardEventHandler,
 } from 'react'
 import setStatus from '../../set-a11y-status'
@@ -26,7 +25,7 @@ import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   UseMultipleSelectionDispatch,
-  UseMultipleSelectionGetDropdownProps,
+  UseMultipleSelectionGetDropdownPropsOptions,
   UseMultipleSelectionGetSelectedItemPropsOptions,
   UseMultipleSelectionProps,
   UseMultipleSelectionState,
@@ -174,9 +173,8 @@ function useMultipleSelection<Item>(
       selectedItem,
       index,
       ...rest
-    }: UseMultipleSelectionGetSelectedItemPropsOptions<Item>): HTMLProps<
-      HTMLElement
-    > => {
+    }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    UseMultipleSelectionGetSelectedItemPropsOptions<Item>): any => {
       const {state: latestState} = latest.current
       const itemIndex = getItemIndex(
         index,
@@ -238,9 +236,10 @@ function useMultipleSelection<Item>(
         onClick,
         preventKeyAction = false,
         ...rest
-      }: UseMultipleSelectionGetDropdownProps = {},
+      }: UseMultipleSelectionGetDropdownPropsOptions = {},
       {suppressRefError = false} = {},
-    ) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): any => {
       setGetterPropCallInfo(
         'getDropdownProps',
         suppressRefError,

@@ -1,4 +1,8 @@
-import {Environment, GetPropsWithRefKey, GetToggleButtonPropsOptions} from '../../types'
+import {
+  Environment,
+  GetPropsWithRefKey,
+  GetToggleButtonPropsOptions,
+} from '../../types'
 import {GetInputPropsOptions} from '../useCombobox/types'
 
 /* Internal Types */
@@ -163,18 +167,18 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
   selectedItem: Item
 }
 
-export interface UseMultipleSelectionComboboxGetDropdownProps
+export interface UseMultipleSelectionComboboxGetDropdownPropsOptions
   extends GetInputPropsOptions,
     GetPropsWithRefKey {
   preventKeyAction?: boolean
 }
 
-export interface UseMultipleSelectionSelectGetDropdownProps
+export interface UseMultipleSelectionSelectGetDropdownPropsOptions
   extends GetToggleButtonPropsOptions,
     GetPropsWithRefKey {
   preventKeyAction?: boolean
 }
 
-export type UseMultipleSelectionGetDropdownProps =
-  | UseMultipleSelectionSelectGetDropdownProps
-  | UseMultipleSelectionComboboxGetDropdownProps
+export type UseMultipleSelectionGetDropdownPropsOptions =
+  | UseMultipleSelectionSelectGetDropdownPropsOptions
+  | UseMultipleSelectionComboboxGetDropdownPropsOptions

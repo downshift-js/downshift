@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {act} from '@testing-library/react-hooks'
 
 import {renderUseMultipleSelection, renderMultipleCombobox} from '../testUtils'
@@ -7,7 +10,8 @@ describe('getSelectedItemProps', () => {
   test('throws error if no index or item has been passed', () => {
     const {result} = renderUseMultipleSelection()
 
-    expect(() => result.current.getSelectedItemProps({})).toThrowError(
+    // eslint-disable-next-line
+    expect(() => result.current.getSelectedItemProps({} as any)).toThrowError(
       'Pass either selectedItem or index in getSelectedItemProps!',
     )
   })
@@ -17,7 +21,7 @@ describe('getSelectedItemProps', () => {
       const {result} = renderUseMultipleSelection()
       const itemProps = result.current.getSelectedItemProps({
         index: 0,
-        selectedItem: items[0],
+        selectedItem: items[0] as string,
       })
 
       expect(itemProps.tabIndex).toEqual(-1)
@@ -27,7 +31,7 @@ describe('getSelectedItemProps', () => {
       const {result} = renderUseMultipleSelection({activeIndex: 0})
       const itemProps = result.current.getSelectedItemProps({
         index: 0,
-        selectedItem: items[0],
+        selectedItem: items[0] as string,
       })
 
       expect(itemProps.tabIndex).toEqual(0)
@@ -39,11 +43,13 @@ describe('getSelectedItemProps', () => {
       const {result} = renderUseMultipleSelection()
 
       expect(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           foo: 'bar',
-        }),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any),
       ).toHaveProperty('foo', 'bar')
     })
 
@@ -55,7 +61,7 @@ describe('getSelectedItemProps', () => {
       act(() => {
         const {ref} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           ref: refFn,
         })
 
@@ -72,12 +78,14 @@ describe('getSelectedItemProps', () => {
       const itemNode = {}
 
       act(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const {blablaRef} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           refKey: 'blablaRef',
           blablaRef: refFn,
-        })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any)
 
         blablaRef(itemNode)
       })
@@ -89,13 +97,13 @@ describe('getSelectedItemProps', () => {
     test('event handler onClick is called along with downshift handler', () => {
       const userOnClick = jest.fn()
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0], items[1]],
+        initialSelectedItems: items.slice(0, 2),
       })
 
       act(() => {
         const {onClick} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           onClick: userOnClick,
         })
 
@@ -111,13 +119,13 @@ describe('getSelectedItemProps', () => {
         event.preventDownshiftDefault = true
       })
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0], items[1]],
+        initialSelectedItems: items.slice(0, 2),
       })
 
       act(() => {
         const {onClick} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           onClick: userOnClick,
         })
 
@@ -131,13 +139,13 @@ describe('getSelectedItemProps', () => {
     test('event handler onKeyDown is called along with downshift handler', () => {
       const userOnKeyDown = jest.fn()
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0], items[1]],
+        initialSelectedItems: items.slice(0, 2),
       })
 
       act(() => {
         const {onKeyDown} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           onKeyDown: userOnKeyDown,
         })
 
@@ -153,13 +161,13 @@ describe('getSelectedItemProps', () => {
         event.preventDownshiftDefault = true
       })
       const {result} = renderUseMultipleSelection({
-        initialSelectedItems: [items[0], items[1]],
+        initialSelectedItems: items.slice(0, 2),
       })
 
       act(() => {
         const {onKeyDown} = result.current.getSelectedItemProps({
           index: 1,
-          selectedItem: items[1],
+          selectedItem: items[1] as string,
           onKeyDown: userOnKeyDown,
         })
 
@@ -178,7 +186,7 @@ describe('getSelectedItemProps', () => {
           clickOnSelectedItemAtIndex,
           getSelectedItemAtIndex,
         } = renderMultipleCombobox({
-          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: items.slice(0, 2)},
         })
 
         clickOnSelectedItemAtIndex(0)
@@ -195,7 +203,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
             initialActiveIndex: 0,
           },
         })
@@ -215,7 +223,7 @@ describe('getSelectedItemProps', () => {
           getSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
             initialActiveIndex: 1,
           },
         })
@@ -233,7 +241,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
             initialActiveIndex: 0,
           },
         })
@@ -251,7 +259,7 @@ describe('getSelectedItemProps', () => {
           getSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
             initialActiveIndex: 0,
           },
         })
@@ -269,7 +277,7 @@ describe('getSelectedItemProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1]],
+            initialSelectedItems: items.slice(0, 2),
             initialActiveIndex: 1,
           },
         })
@@ -287,7 +295,7 @@ describe('getSelectedItemProps', () => {
           getSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 2,
           },
         })
@@ -325,7 +333,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 1,
           },
         })
@@ -335,7 +343,7 @@ describe('getSelectedItemProps', () => {
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
-        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[2])
+        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[2] as string)
       })
 
       test('backspace removes item and moves focus to input if no items left', () => {
@@ -346,7 +354,7 @@ describe('getSelectedItemProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0]],
+            initialSelectedItems: items.slice(0, 1),
             initialActiveIndex: 0,
           },
         })
@@ -366,7 +374,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 2,
           },
         })
@@ -376,7 +384,7 @@ describe('getSelectedItemProps', () => {
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
-        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
+        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1] as string)
       })
 
       test('delete removes item and moves focus to next item if any', () => {
@@ -387,7 +395,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 1,
           },
         })
@@ -397,7 +405,7 @@ describe('getSelectedItemProps', () => {
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
-        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[2])
+        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[2] as string)
       })
 
       test('delete removes item and moves focus to input if no items left', () => {
@@ -408,7 +416,7 @@ describe('getSelectedItemProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0]],
+            initialSelectedItems: items.slice(0, 1),
             initialActiveIndex: 0,
           },
         })
@@ -428,7 +436,7 @@ describe('getSelectedItemProps', () => {
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 2,
           },
         })
@@ -438,7 +446,7 @@ describe('getSelectedItemProps', () => {
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
-        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
+        expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1] as string)
       })
 
       test('navigation works correctly with both click and arrow keys', () => {
@@ -448,7 +456,7 @@ describe('getSelectedItemProps', () => {
           clickOnSelectedItemAtIndex,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
           },
         })
 
@@ -484,7 +492,7 @@ describe('getSelectedItemProps', () => {
           getSelectedItemAtIndex,
           focusSelectedItemAtIndex,
         } = renderMultipleCombobox({
-          multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
+          multipleSelectionProps: {initialSelectedItems: items.slice(0, 2)},
         })
 
         focusSelectedItemAtIndex(1)
@@ -508,7 +516,7 @@ describe('getSelectedItemProps', () => {
           input,
         } = renderMultipleCombobox({
           multipleSelectionProps: {
-            initialSelectedItems: [items[0], items[1], items[2]],
+            initialSelectedItems: items.slice(0, 3),
             initialActiveIndex: 0,
           },
         })

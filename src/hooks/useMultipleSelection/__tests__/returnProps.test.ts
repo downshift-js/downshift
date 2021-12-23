@@ -72,7 +72,7 @@ describe('returnProps', () => {
 
     test('setSelectedItems sets selectedItems', () => {
       const inputItems = [1, 2, 3]
-      const {result} = renderUseMultipleSelection()
+      const {result} = renderUseMultipleSelection<number>()
 
       act(() => {
         result.current.setSelectedItems(inputItems)
@@ -82,7 +82,7 @@ describe('returnProps', () => {
     })
 
     test('reset sets the state to default values', () => {
-      const {result} = renderUseMultipleSelection()
+      const {result} = renderUseMultipleSelection<number>()
 
       act(() => {
         result.current.setSelectedItems([1, 2, 3])
