@@ -359,51 +359,67 @@ function getNextWrappingIndex(
  * Returns the next index in the list of an item that is not disabled.
  *
  * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
- * @param {number} baseIndex The initial position to move from.
+ * @param {number} targetIndex The initial position to move from.
  * @param {number} itemCount The total number of items.
  * @param {Function} getItemNodeFromIndex Used to check if item is disabled.
  * @param {boolean} circular Specify if navigation is circular. Default is true.
- * @returns {number} The new index. Returns baseIndex if item is not disabled. Returns next non-disabled item otherwise. If no non-disabled found it will return -1.
+ * @param {number} startIndex The first target index that was attempted before we started recursion
+ * @returns {number} The new index. Returns targetIndex if item is not disabled. Returns next non-disabled item otherwise. If no non-disabled found it will return -1.
  */
 function getNextNonDisabledIndex(
   moveAmount,
-  baseIndex,
+  targetIndex,
   itemCount,
   getItemNodeFromIndex,
   circular,
+  startIndex = targetIndex,
 ) {
-  const currentElementNode = getItemNodeFromIndex(baseIndex)
+  const currentElementNode = getItemNodeFromIndex(targetIndex)
+  // We are assuming that if the element node doesn't exist then it is virtualised
+  // and we should return this index to be highlighted
+  // N.B This does not work very well with disabled virtualised items - we will return
+  // the first virtualised item that we find even if it's disabled
   if (!currentElementNode || !currentElementNode.hasAttribute('disabled')) {
-    return baseIndex
+    return targetIndex
   }
+
+  const maxIndex = itemCount - 1
 
   if (moveAmount > 0) {
-    for (let index = baseIndex + 1; index < itemCount; index++) {
-      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
-        return index
-      }
+    // Short circuit when we have checked every index or when we reach the end if this isn't circular
+    const finalIndex = startIndex - 1 < 0 ? maxIndex : startIndex - 1
+    if (targetIndex === finalIndex || (!circular && targetIndex >= maxIndex)) {
+      return -1
     }
+
+    const newTargetIndex = targetIndex >= maxIndex ? 0 : targetIndex + 1
+
+    return getNextNonDisabledIndex(
+      1,
+      newTargetIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+      startIndex,
+    )
   } else {
-    for (let index = baseIndex - 1; index >= 0; index--) {
-      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
-        return index
-      }
+    // Short circuit when we have checked every index or when we reach the end if this isn't circular
+    const finalIndex = startIndex + 1 > maxIndex ? 0 : startIndex + 1
+    if (targetIndex === finalIndex || (!circular && targetIndex <= 0)) {
+      return -1
     }
-  }
 
-  if (circular) {
-    return moveAmount > 0
-      ? getNextNonDisabledIndex(1, 0, itemCount, getItemNodeFromIndex, false)
-      : getNextNonDisabledIndex(
-          -1,
-          itemCount - 1,
-          itemCount,
-          getItemNodeFromIndex,
-          false,
-        )
-  }
+    const newTargetIndex = targetIndex <= 0 ? maxIndex : targetIndex - 1
 
-  return -1
+    return getNextNonDisabledIndex(
+      -1,
+      newTargetIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+      startIndex,
+    )
+  }
 }
 
 /**
