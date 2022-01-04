@@ -91,7 +91,7 @@ export function renderMultipleCombobox<Item = string>(
   const utils = render(<DropdownMultipleCombobox<Item> {...props} />)
   const label = screen.getByText(/choose an element/i)
   const menu = screen.getByRole('listbox')
-  const input = screen.getByTestId(dataTestIds.input) as HTMLInputElement
+  const input = screen.getByTestId(dataTestIds.input)
   const rerender = (newProps: DropdownMultipleComboboxProps<Item>) =>
     utils.rerender(<DropdownMultipleCombobox {...newProps} />)
   const getSelectedItemAtIndex = (index: number) =>
