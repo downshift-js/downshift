@@ -28,11 +28,7 @@ describe('props', () => {
   })
 
   describe('selectedItems', () => {
-    afterEach(() => {
-      act(() => {
-        jest.runAllTimers()
-      })
-    })
+    afterEach(jest.runAllTimers)
 
     test('passed as objects should work with custom itemToString', () => {
       const {
@@ -71,11 +67,7 @@ describe('props', () => {
   })
 
   describe('getA11yRemovalMessage', () => {
-    afterEach(() => {
-      act(() => {
-        jest.runAllTimers()
-      })
-    })
+    afterEach(jest.runAllTimers)
 
     test('is called with object that contains specific props', () => {
       const getA11yRemovalMessage = jest.fn()
