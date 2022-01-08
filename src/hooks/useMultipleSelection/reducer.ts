@@ -3,7 +3,6 @@ import {
   UseMultipleSelectionState,
   UseMultipleSelectionReducerAction,
 } from './types'
-import {defaultStateValues} from './utils'
 
 /* eslint-disable complexity */
 export default function downshiftMultipleSelectionReducer<Item>(
@@ -101,14 +100,8 @@ export default function downshiftMultipleSelectionReducer<Item>(
       const {props} = action
 
       return {
-        activeIndex:
-          props.activeIndex ??
-          props.defaultActiveIndex ??
-          defaultStateValues.activeIndex,
-        selectedItems:
-          props.selectedItems ??
-          props.defaultSelectedItems ??
-          (defaultStateValues.selectedItems as Item[]),
+        activeIndex: props.activeIndex ?? props.defaultActiveIndex ?? -1,
+        selectedItems: props.selectedItems ?? props.defaultSelectedItems ?? [],
       }
     }
     default:

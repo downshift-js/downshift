@@ -3,11 +3,12 @@ import * as React from 'react'
 import {render, fireEvent, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import userEvent from '@testing-library/user-event'
-import {UseComboboxProps} from '../../../typings'
+
 import * as downshiftUtils from '../../utils'
-import * as hooksUtils from '../utils'
+import {UseComboboxProps} from '../useCombobox/types'
 import {items} from '../testUtils'
 import useCombobox from '../useCombobox'
+import * as hooksUtils from '../utils'
 import useMultipleSelection from '.'
 import {UseMultipleSelectionProps} from './types'
 
@@ -41,13 +42,10 @@ export const dataTestIds = {
 // istanbul ignore next
 function DropdownMultipleCombobox<Item>({
   multipleSelectionProps = {},
-  comboboxProps = {},
+  comboboxProps = {items: []},
 }: Partial<DropdownMultipleComboboxProps<Item>> = {}) {
-  const {
-    getSelectedItemProps,
-    getDropdownProps,
-    selectedItems,
-  } = useMultipleSelection<Item>(multipleSelectionProps)
+  const {getSelectedItemProps, getDropdownProps, selectedItems} =
+    useMultipleSelection<Item>(multipleSelectionProps)
   const {
     getToggleButtonProps,
     getLabelProps,
@@ -145,7 +143,7 @@ export function renderMultipleCombobox<Item = string>(
   }
 }
 
-export function renderUseMultipleSelection<Item = string> (
+export function renderUseMultipleSelection<Item = string>(
   props: Partial<UseMultipleSelectionProps<Item>> = {},
 ) {
   return renderHook(() => useMultipleSelection(props))

@@ -48,11 +48,6 @@ const propTypes = {
   }),
 }
 
-export const defaultStateValues: UseMultipleSelectionState<unknown> = {
-  activeIndex: -1,
-  selectedItems: [],
-}
-
 /**
  * Gets the initial state based on the provided props. It uses initial, default
  * and controlled props related to state in order to compute the initial value.
@@ -68,12 +63,12 @@ export function getInitialState<I>(
     props.activeIndex ??
     props.initialActiveIndex ??
     props.defaultActiveIndex ??
-    defaultStateValues.activeIndex
+    -1
   const selectedItems =
     props.selectedItems ??
     props.initialSelectedItems ??
     props.defaultSelectedItems ??
-    (defaultStateValues.selectedItems as I[])
+    []
 
   return {
     activeIndex,
@@ -109,9 +104,9 @@ export function isKeyDownOperationPermitted(event: KeyboardEvent): boolean {
   return true
 }
 
-export const getDefaultProps: <Item>() => UseMultipleSelectionDefaultProps<
-  Item
-> = () => ({
+export const getDefaultProps: <
+  Item,
+>() => UseMultipleSelectionDefaultProps<Item> = () => ({
   environment: defaultPropsCommon.environment as Environment,
   itemToString: defaultPropsCommon.itemToString,
   getA11yRemovalMessage,
@@ -121,10 +116,8 @@ export const getDefaultProps: <Item>() => UseMultipleSelectionDefaultProps<
 })
 
 // eslint-disable-next-line import/no-mutable-exports
-export let validatePropTypes: (
-  options: unknown,
-  caller: Function,
-) => void = noop
+export let validatePropTypes: (options: unknown, caller: Function) => void =
+  noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   validatePropTypes = (options, caller) => {
