@@ -195,12 +195,10 @@ function useMultipleSelection<Item>(
       }
       const selectedItemHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
-        if (key) {
-          const handler = selectedItemKeyDownHandlers[key]
+        const handler = selectedItemKeyDownHandlers[key]
 
-          if (handler) {
-            handler()
-          }
+        if (handler) {
+          handler()
         }
       }
 
@@ -249,12 +247,10 @@ function useMultipleSelection<Item>(
 
       const dropdownHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
-        if (key) {
-          const handler = dropdownKeyDownHandlers[key]
+        const handler = dropdownKeyDownHandlers[key]
 
-          if (handler) {
-            handler(event)
-          }
+        if (handler) {
+          handler(event)
         }
       }
       const dropdownHandleClick = () => {

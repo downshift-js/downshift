@@ -38,6 +38,7 @@ export const dataTestIds = {
   menu: 'menu-id',
 }
 
+// istanbul ignore next
 function DropdownMultipleCombobox<Item>({
   multipleSelectionProps = {},
   comboboxProps = {},

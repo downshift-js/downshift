@@ -501,6 +501,7 @@ describe('getSelectedItemProps', () => {
         keyDownOnSelectedItemAtIndex(1, 'ArrowUp')
         keyDownOnSelectedItemAtIndex(1, 'ArrowDown')
         keyDownOnSelectedItemAtIndex(1, 'Enter')
+        keyDownOnSelectedItemAtIndex(1, 'Super Bogus Key')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
