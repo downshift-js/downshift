@@ -153,23 +153,24 @@ export type A11yRemovalMessage<Item> = {
   removedSelectedItem: Item
 }
 
-export type UseMultipleSelectionGetSelectedItemPropsOptions<
-  Item
-> = React.HTMLProps<HTMLElement> &
-  GetPropsWithRefKey & {
-    index?: number
-    selectedItem: Item
-  }
+export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
+  extends React.HTMLProps<HTMLElement>,
+    GetPropsWithRefKey {
+  index?: number
+  selectedItem: Item
+}
 
-export type UseMultipleSelectionComboboxGetDropdownPropsOptions = GetInputPropsOptions &
-  GetPropsWithRefKey & {
-    preventKeyAction?: boolean
-  }
+export interface UseMultipleSelectionComboboxGetDropdownPropsOptions
+  extends GetInputPropsOptions,
+    GetPropsWithRefKey {
+  preventKeyAction?: boolean
+}
 
-export type UseMultipleSelectionSelectGetDropdownPropsOptions = GetToggleButtonPropsOptions &
-  GetPropsWithRefKey & {
-    preventKeyAction?: boolean
-  }
+export interface UseMultipleSelectionSelectGetDropdownPropsOptions
+  extends GetToggleButtonPropsOptions,
+    GetPropsWithRefKey {
+  preventKeyAction?: boolean
+}
 
 export type UseMultipleSelectionGetDropdownPropsOptions =
   | UseMultipleSelectionSelectGetDropdownPropsOptions
