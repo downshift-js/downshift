@@ -7,8 +7,7 @@ export interface GetInputPropsOptions
 
 /* External Types */
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UseComboboxState<Item> extends DropdownState<Item> {}
+export type UseComboboxState<Item> = DropdownState<Item>
 
 export enum UseComboboxStateChangeTypes {
   InputKeyDownArrowDown = '__input_keydown_arrow_down__',

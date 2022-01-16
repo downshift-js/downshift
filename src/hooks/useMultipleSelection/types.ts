@@ -10,7 +10,6 @@ import {GetInputPropsOptions} from '../useCombobox/types'
 type SelectedItemKeyDownNavigationPreviousAction = {
   type: UseMultipleSelectionStateChangeTypes.SelectedItemKeyDownNavigationPrevious
 }
-
 type SelectedItemKeyDownNavigatioNextAction = {
   type: UseMultipleSelectionStateChangeTypes.SelectedItemKeyDownNavigationNext
 }
@@ -76,7 +75,7 @@ export type UseMultipleSelectionReducerAction<Item> = {
   props: UseMultipleSelectionProps<Item>
 } & UseMultipleSelectionDispatchProps<Item>
 
-export interface UseMultipleSelectionDefaultProps<Item> {
+export type UseMultipleSelectionDefaultProps<Item> = {
   itemToString: (item: Item) => string
   getA11yRemovalMessage: (options: A11yRemovalMessage<Item>) => string
   stateReducer: (
@@ -90,12 +89,12 @@ export interface UseMultipleSelectionDefaultProps<Item> {
 
 /* External Types */
 
-export interface UseMultipleSelectionState<Item> {
+export type UseMultipleSelectionState<Item> = {
   selectedItems: Item[]
   activeIndex: number
 }
 
-export interface UseMultipleSelectionProps<Item> {
+export type UseMultipleSelectionProps<Item> = {
   selectedItems?: Item[]
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
@@ -118,21 +117,15 @@ export interface UseMultipleSelectionProps<Item> {
   environment?: Environment
 }
 
-export interface UseMultipleSelectionStateChangeOptions<Item>
-  extends UseMultipleSelectionDispatchAction<Item> {
+export type UseMultipleSelectionStateChangeOptions<
+  Item
+> = UseMultipleSelectionDispatchProps<Item> & {
   changes: Partial<UseMultipleSelectionState<Item>>
 }
 
-export interface UseMultipleSelectionDispatchAction<Item> {
-  type: UseMultipleSelectionStateChangeTypes
-  index?: number
-  selectedItem?: Item | null
-  selectedItems?: Item[]
-  activeIndex?: number
-}
-
-export interface UseMultipleSelectionStateChange<Item>
-  extends Partial<UseMultipleSelectionState<Item>> {
+export type UseMultipleSelectionStateChange<Item> = Partial<
+  UseMultipleSelectionState<Item>
+> & {
   type: UseMultipleSelectionStateChangeTypes
 }
 
@@ -152,7 +145,7 @@ export enum UseMultipleSelectionStateChangeTypes {
   FunctionReset = '__function_reset__',
 }
 
-export interface A11yRemovalMessage<Item> {
+export type A11yRemovalMessage<Item> = {
   activeIndex: number
   activeSelectedItem?: Item
   itemToString: (item: Item) => string
@@ -160,24 +153,23 @@ export interface A11yRemovalMessage<Item> {
   removedSelectedItem: Item
 }
 
-export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>,
-    GetPropsWithRefKey {
-  index?: number
-  selectedItem: Item
-}
+export type UseMultipleSelectionGetSelectedItemPropsOptions<
+  Item
+> = React.HTMLProps<HTMLElement> &
+  GetPropsWithRefKey & {
+    index?: number
+    selectedItem: Item
+  }
 
-export interface UseMultipleSelectionComboboxGetDropdownPropsOptions
-  extends GetInputPropsOptions,
-    GetPropsWithRefKey {
-  preventKeyAction?: boolean
-}
+export type UseMultipleSelectionComboboxGetDropdownPropsOptions = GetInputPropsOptions &
+  GetPropsWithRefKey & {
+    preventKeyAction?: boolean
+  }
 
-export interface UseMultipleSelectionSelectGetDropdownPropsOptions
-  extends GetToggleButtonPropsOptions,
-    GetPropsWithRefKey {
-  preventKeyAction?: boolean
-}
+export type UseMultipleSelectionSelectGetDropdownPropsOptions = GetToggleButtonPropsOptions &
+  GetPropsWithRefKey & {
+    preventKeyAction?: boolean
+  }
 
 export type UseMultipleSelectionGetDropdownPropsOptions =
   | UseMultipleSelectionSelectGetDropdownPropsOptions
