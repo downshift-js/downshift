@@ -1,5 +1,7 @@
 import {A11yStatusMessageOptions, DropdownState, Environment} from '../../types'
 
+/* Internal Types */
+
 export interface GetInputPropsOptions
   extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
@@ -32,7 +34,7 @@ export enum UseComboboxStateChangeTypes {
   ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
-export interface UseComboboxDispatchAction<Item> {
+export type UseComboboxDispatchAction<Item> = {
   type: UseComboboxStateChangeTypes
   shiftKey?: boolean
   getItemNodeFromIndex?: (index: number) => HTMLElement
@@ -43,17 +45,17 @@ export interface UseComboboxDispatchAction<Item> {
   selectItem?: boolean
 }
 
-export interface UseComboboxStateChange<Item>
-  extends Partial<UseComboboxState<Item>> {
+export type UseComboboxStateChange<Item> = Partial<UseComboboxState<Item>> & {
   type: UseComboboxStateChangeTypes
 }
 
-export interface UseComboboxStateChangeOptions<Item>
-  extends UseComboboxDispatchAction<Item> {
+export type UseComboboxStateChangeOptions<Item> = UseComboboxDispatchAction<
+  Item
+> & {
   changes: Partial<UseComboboxState<Item>>
 }
 
-export interface UseComboboxProps<Item> {
+export type UseComboboxProps<Item> = {
   items: Item[]
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string

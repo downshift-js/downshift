@@ -2,7 +2,7 @@
 
 import {A11yStatusMessageOptions, DropdownState, Environment} from '../../types'
 
-export interface GetItemIndexByCharacterKeyOptions<Item> {
+export type GetItemIndexByCharacterKeyOptions<Item> = {
   keysSoFar: string
   highlightedIndex: number
   items: Item[]
@@ -12,8 +12,7 @@ export interface GetItemIndexByCharacterKeyOptions<Item> {
 
 /* External Types */
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UseSelectState<Item> extends DropdownState<Item> {}
+export type UseSelectState<Item> = DropdownState<Item>
 
 export enum UseSelectStateChangeTypes {
   MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
@@ -40,7 +39,7 @@ export enum UseSelectStateChangeTypes {
   FunctionReset = '__function_reset__',
 }
 
-export interface UseSelectDispatchAction<Item> {
+export type UseSelectDispatchAction<Item> = {
   type: UseSelectStateChangeTypes
   getItemNodeFromIndex?: (index: number) => HTMLElement
   shiftKey?: boolean
@@ -52,17 +51,17 @@ export interface UseSelectDispatchAction<Item> {
   props: UseSelectProps<Item>
 }
 
-export interface UseSelectStateChange<Item>
-  extends Partial<UseSelectState<Item>> {
+export type UseSelectStateChange<Item> = Partial<UseSelectState<Item>> & {
   type: UseSelectStateChangeTypes
 }
 
-export interface UseSelectStateChangeOptions<Item>
-  extends UseSelectDispatchAction<Item> {
+export type UseSelectStateChangeOptions<Item> = UseSelectDispatchAction<
+  Item
+> & {
   changes: Partial<UseSelectState<Item>>
 }
 
-export interface UseSelectProps<Item> {
+export type UseSelectProps<Item> = {
   items: Item[]
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
