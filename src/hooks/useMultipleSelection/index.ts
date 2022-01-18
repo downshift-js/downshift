@@ -17,7 +17,7 @@ import {
 } from '../utils'
 import {
   getInitialState,
-  getDefaultProps,
+  defaultProps,
   isKeyDownOperationPermitted,
   validatePropTypes,
 } from './utils'
@@ -39,7 +39,7 @@ function useMultipleSelection<Item>(
   validatePropTypes(userProps, useMultipleSelection)
   // Props defaults and destructuring.
   const props = {
-    ...getDefaultProps<Item>(),
+    ...defaultProps,
     ...userProps,
   }
   const {

@@ -616,7 +616,7 @@ describe('props', () => {
       })
 
       act(() => {
-        // eslint-disable-next-line
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         result.current
           // eslint-disable-next-line
           .getSelectedItemProps({index: 3} as any)
