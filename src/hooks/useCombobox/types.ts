@@ -7,6 +7,109 @@ export interface GetInputPropsOptions
   disabled?: boolean
 }
 
+type InputKeyDownArrowDownAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownArrowDown
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type InputKeyDownArrowUpAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownArrowUp
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type InputKeyDownEscapeAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownEscape
+}
+type InputKeyDownHomeAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownHome
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type InputKeyDownEndAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownEnd
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type InputKeyDownEnterAction = {
+  type: UseComboboxStateChangeTypes.InputKeyDownEnter
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type InputChangeAction = {
+  type: UseComboboxStateChangeTypes.InputChange
+  inputValue: string
+}
+type InputBlurAction = {
+  type: UseComboboxStateChangeTypes.InputBlur
+  selectItem: boolean
+}
+type MenuMouseLeaveAction = {
+  type: UseComboboxStateChangeTypes.MenuMouseLeave
+}
+type ItemMouseMoveAction = {
+  type: UseComboboxStateChangeTypes.ItemMouseMove
+  index: number
+}
+type ItemClickAction = {
+  type: UseComboboxStateChangeTypes.ItemClick
+  index: number
+}
+type ToggleButtonClickAction = {
+  type: UseComboboxStateChangeTypes.ToggleButtonClick
+}
+type FunctionToggleMenuAction = {
+  type: UseComboboxStateChangeTypes.FunctionToggleMenu
+}
+type FunctionOpenMenuAction = {
+  type: UseComboboxStateChangeTypes.FunctionOpenMenu
+}
+type FunctionCloseMenuAction = {
+  type: UseComboboxStateChangeTypes.FunctionCloseMenu
+}
+type FunctionSetHighlightedIndexAction = {
+  type: UseComboboxStateChangeTypes.FunctionSetHighlightedIndex
+  highlightedIndex: number
+}
+type FunctionSelectItemAction<Item> = {
+  type: UseComboboxStateChangeTypes.FunctionSelectItem
+  selectedItem: Item
+}
+type FunctionSetInputValueAction = {
+  type: UseComboboxStateChangeTypes.FunctionSetInputValue
+  inputValue: string
+}
+type FunctionResetAction = {
+  type: UseComboboxStateChangeTypes.FunctionReset
+}
+type ControlledPropUpdatedSelectedItemAction = {
+  type: UseComboboxStateChangeTypes.ControlledPropUpdatedSelectedItem
+}
+
+export type UseComboboxDispatchProps<Item> =
+  | InputKeyDownArrowDownAction
+  | InputKeyDownArrowUpAction
+  | InputKeyDownEscapeAction
+  | InputKeyDownHomeAction
+  | InputKeyDownEndAction
+  | InputKeyDownEnterAction
+  | InputChangeAction
+  | InputBlurAction
+  | MenuMouseLeaveAction
+  | ItemMouseMoveAction
+  | ItemClickAction
+  | ToggleButtonClickAction
+  | FunctionToggleMenuAction
+  | FunctionOpenMenuAction
+  | FunctionCloseMenuAction
+  | FunctionSetHighlightedIndexAction
+  | FunctionSelectItemAction<Item>
+  | FunctionSetInputValueAction
+  | FunctionResetAction
+  | ControlledPropUpdatedSelectedItemAction
+
+export type UseComboboxStateChangeOptions<Item> = UseComboboxDispatchProps<
+  Item
+> & {
+  changes: Partial<UseComboboxState<Item>>
+}
+
 /* External Types */
 
 export type UseComboboxState<Item> = DropdownState<Item>
@@ -34,25 +137,8 @@ export enum UseComboboxStateChangeTypes {
   ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
-export type UseComboboxDispatchAction<Item> = {
-  type: UseComboboxStateChangeTypes
-  shiftKey?: boolean
-  getItemNodeFromIndex?: (index: number) => HTMLElement
-  inputValue?: string
-  index?: number
-  highlightedIndex?: number
-  selectedItem?: Item | null
-  selectItem?: boolean
-}
-
 export type UseComboboxStateChange<Item> = Partial<UseComboboxState<Item>> & {
   type: UseComboboxStateChangeTypes
-}
-
-export type UseComboboxStateChangeOptions<Item> = UseComboboxDispatchAction<
-  Item
-> & {
-  changes: Partial<UseComboboxState<Item>>
 }
 
 export type UseComboboxProps<Item> = {

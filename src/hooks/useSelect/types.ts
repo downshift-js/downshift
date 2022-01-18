@@ -10,6 +10,121 @@ export type GetItemIndexByCharacterKeyOptions<Item> = {
   getItemNodeFromIndex(index: number): HTMLElement | undefined
 }
 
+type MenuKeyDownArrowDownAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownArrowDown
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type MenuKeyDownArrowUpAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownArrowUp
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type MenuKeyDownEscapeAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownEscape
+}
+type MenuKeyDownHomeAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownHome
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type MenuKeyDownEndAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownEnd
+  getItemNodeFromIndex: (index: number) => HTMLElement
+
+}
+type MenuKeyDownEnterAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownEnter
+}
+type MenuKeyDownSpaceButtonAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownSpaceButton
+}
+type MenuKeyDownCharacterAction = {
+  type: UseSelectStateChangeTypes.MenuKeyDownCharacter
+  key: string
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type MenuBlurAction = {
+  type: UseSelectStateChangeTypes.MenuBlur
+}
+type MenuMouseLeaveAction = {
+  type: UseSelectStateChangeTypes.MenuMouseLeave
+}
+type ItemMouseMoveAction = {
+  type: UseSelectStateChangeTypes.ItemMouseMove
+}
+type ItemClickAction = {
+  type: UseSelectStateChangeTypes.ItemClick
+}
+type ToggleButtonKeyDownCharacterAction = {
+  type: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
+  key: string
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type ToggleButtonKeyDownArrowDownAction = {
+  type: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type ToggleButtonKeyDownArrowUpAction = {
+  type: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
+  shiftKey: boolean
+  getItemNodeFromIndex: (index: number) => HTMLElement
+}
+type FunctionToggleMenuAction = {
+  type: UseSelectStateChangeTypes.FunctionToggleMenu
+}
+type FunctionOpenMenuAction = {
+  type: UseSelectStateChangeTypes.FunctionOpenMenu
+}
+type FunctionCloseMenuAction = {
+  type: UseSelectStateChangeTypes.FunctionCloseMenu
+}
+type FunctionSetHighlightedIndexAction = {
+  type: UseSelectStateChangeTypes.FunctionSetHighlightedIndex
+  highlightedIndex: number
+}
+type FunctionSelectItemAction<Item> = {
+  type: UseSelectStateChangeTypes.FunctionSelectItem
+  selectedItem: Item
+}
+type FunctionSetInputValueAction = {
+  type: UseSelectStateChangeTypes.FunctionSetInputValue
+  inputValue: string
+}
+type FunctionResetAction = {
+  type: UseSelectStateChangeTypes.FunctionReset
+}
+
+export type UseSelectDispatchProps<Item> =
+  | MenuKeyDownArrowDownAction
+  | MenuKeyDownArrowUpAction
+  | MenuKeyDownEscapeAction
+  | MenuKeyDownHomeAction
+  | MenuKeyDownEndAction
+  | MenuKeyDownEnterAction
+  | MenuKeyDownSpaceButtonAction
+  | MenuKeyDownCharacterAction
+  | MenuBlurAction
+  | MenuMouseLeaveAction
+  | ItemMouseMoveAction
+  | ItemClickAction
+  | ToggleButtonKeyDownCharacterAction
+  | ToggleButtonKeyDownArrowDownAction
+  | ToggleButtonKeyDownArrowUpAction
+  | FunctionToggleMenuAction
+  | FunctionOpenMenuAction
+  | FunctionCloseMenuAction
+  | FunctionSetHighlightedIndexAction
+  | FunctionSelectItemAction<Item>
+  | FunctionSetInputValueAction
+  | FunctionResetAction
+
+  export type UseSelectStateChangeOptions<Item> = UseSelectDispatchProps<
+  Item
+> & {
+  changes: Partial<UseSelectState<Item>>
+}
+
 /* External Types */
 
 export type UseSelectState<Item> = DropdownState<Item>
@@ -39,26 +154,8 @@ export enum UseSelectStateChangeTypes {
   FunctionReset = '__function_reset__',
 }
 
-export type UseSelectDispatchAction<Item> = {
-  type: UseSelectStateChangeTypes
-  getItemNodeFromIndex?: (index: number) => HTMLElement
-  shiftKey?: boolean
-  key?: string
-  index?: number
-  highlightedIndex?: number
-  selectedItem?: Item | null
-  inputValue?: string
-  props: UseSelectProps<Item>
-}
-
 export type UseSelectStateChange<Item> = Partial<UseSelectState<Item>> & {
   type: UseSelectStateChangeTypes
-}
-
-export type UseSelectStateChangeOptions<Item> = UseSelectDispatchAction<
-  Item
-> & {
-  changes: Partial<UseSelectState<Item>>
 }
 
 export type UseSelectProps<Item> = {
