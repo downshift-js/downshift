@@ -311,15 +311,11 @@ describe('props', () => {
     test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {
-        clickOnToggleButton,
-        rerender,
-        keyDownOnInput,
-        changeInputValue,
-      } = renderCombobox({
-        getA11yStatusMessage,
-        items,
-      })
+      const {clickOnToggleButton, rerender, keyDownOnInput, changeInputValue} =
+        renderCombobox({
+          getA11yStatusMessage,
+          items,
+        })
 
       waitForDebouncedA11yStatusUpdate()
 
@@ -392,12 +388,8 @@ describe('props', () => {
 
   describe('inputValue', () => {
     test('controls the state property if passed', () => {
-      const {
-        keyDownOnInput,
-        input,
-        blurInput,
-        clickOnItemAtIndex,
-      } = renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
+      const {keyDownOnInput, input, blurInput, clickOnItemAtIndex} =
+        renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
 
       keyDownOnInput('ArrowDown')
       keyDownOnInput('Enter')
@@ -436,12 +428,8 @@ describe('props', () => {
 
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        getItems,
-        blurInput,
-        keyDownOnInput,
-      } = renderCombobox({isOpen: true})
+      const {clickOnToggleButton, getItems, blurInput, keyDownOnInput} =
+        renderCombobox({isOpen: true})
 
       expect(getItems()).toHaveLength(items.length)
 
@@ -462,15 +450,11 @@ describe('props', () => {
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
       const selectedItem = items[2]
-      const {
-        keyDownOnInput,
-        input,
-        clickOnItemAtIndex,
-        clickOnToggleButton,
-      } = renderCombobox({
-        selectedItem,
-        initialIsOpen: true,
-      })
+      const {keyDownOnInput, input, clickOnItemAtIndex, clickOnToggleButton} =
+        renderCombobox({
+          selectedItem,
+          initialIsOpen: true,
+        })
 
       expect(input).toHaveValue(selectedItem)
 
@@ -768,7 +752,8 @@ describe('props', () => {
 
       for (let index = 0; index < testCases.length; index++) {
         const {step, state, args, type} = testCases[index]
-        const previousState = testCases[index - 1]?.state ?? initialState
+        const previousState =
+          index > 0 ? testCases[index - 1].state : initialState
 
         step(args)
 

@@ -38,6 +38,52 @@ const renderUseSelect = props => {
   return renderHook(() => useSelect({items, ...props}))
 }
 
+function DropdownSelect({renderSpy, renderItem, ...props}) {
+  const {
+    isOpen,
+    selectedItem,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getItemProps,
+  } = useSelect({items, ...props})
+  const {itemToString} = props.itemToString ? props : defaultProps
+
+  renderSpy()
+
+  return (
+    <div>
+      <label {...getLabelProps()}>Choose an element:</label>
+      <button
+        data-testid={dataTestIds.toggleButton}
+        {...getToggleButtonProps()}
+      >
+        {(selectedItem && selectedItem instanceof Object
+          ? itemToString(selectedItem)
+          : selectedItem) || 'Elements'}
+      </button>
+      <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
+        {isOpen &&
+          (props.items || items).map((item, index) => {
+            const stringItem =
+              item instanceof Object ? itemToString(item) : item
+            return renderItem ? (
+              renderItem({index, item, getItemProps, dataTestIds, stringItem})
+            ) : (
+              <li
+                data-testid={dataTestIds.item(index)}
+                key={`${stringItem}${index}`}
+                {...getItemProps({item, index})}
+              >
+                {stringItem}
+              </li>
+            )
+          })}
+      </ul>
+    </div>
+  )
+}
+
 const renderSelect = (props, uiCallback) => {
   const renderSpy = jest.fn()
   const ui = <DropdownSelect renderSpy={renderSpy} {...props} />
@@ -94,52 +140,6 @@ const renderSelect = (props, uiCallback) => {
     keyDownOnMenu,
     tab,
   }
-}
-
-const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
-  const {
-    isOpen,
-    selectedItem,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getItemProps,
-  } = useSelect({items, ...props})
-  const {itemToString} = props.itemToString ? props : defaultProps
-
-  renderSpy()
-
-  return (
-    <div>
-      <label {...getLabelProps()}>Choose an element:</label>
-      <button
-        data-testid={dataTestIds.toggleButton}
-        {...getToggleButtonProps()}
-      >
-        {(selectedItem && selectedItem instanceof Object
-          ? itemToString(selectedItem)
-          : selectedItem) || 'Elements'}
-      </button>
-      <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
-        {isOpen &&
-          (props.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? itemToString(item) : item
-            return renderItem ? (
-              renderItem({index, item, getItemProps, dataTestIds, stringItem})
-            ) : (
-              <li
-                data-testid={dataTestIds.item(index)}
-                key={`${stringItem}${index}`}
-                {...getItemProps({item, index})}
-              >
-                {stringItem}
-              </li>
-            )
-          })}
-      </ul>
-    </div>
-  )
 }
 
 export {items, renderUseSelect, renderSelect, DropdownSelect}

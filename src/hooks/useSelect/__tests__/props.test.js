@@ -393,12 +393,8 @@ describe('props', () => {
 
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        blurMenu,
-        getItems,
-      } = renderSelect({isOpen: true})
+      const {clickOnToggleButton, keyDownOnMenu, blurMenu, getItems} =
+        renderSelect({isOpen: true})
       expect(getItems()).toHaveLength(items.length)
 
       clickOnToggleButton()
@@ -415,11 +411,8 @@ describe('props', () => {
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
       const selectedItem = items[2]
-      const {
-        toggleButton,
-        keyDownOnToggleButton,
-        clickOnItemAtIndex,
-      } = renderSelect({selectedItem, isOpen: true})
+      const {toggleButton, keyDownOnToggleButton, clickOnItemAtIndex} =
+        renderSelect({selectedItem, isOpen: true})
 
       expect(toggleButton).toHaveTextContent(items[2])
 
@@ -782,7 +775,8 @@ describe('props', () => {
 
       for (let index = 0; index < testCases.length; index++) {
         const {step, state, args, type} = testCases[index]
-        const previousState = testCases[index - 1]?.state ?? initialState
+        const previousState =
+          index > 0 ? testCases[index - 1].state : initialState
 
         step(args)
 
@@ -816,11 +810,8 @@ describe('props', () => {
     // https://github.com/downshift-js/downshift/issues/965
     test('is called only once on item selection', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        clickOnItemAtIndex,
-      } = renderSelect({stateReducer, initialIsOpen: true})
+      const {clickOnToggleButton, keyDownOnMenu, clickOnItemAtIndex} =
+        renderSelect({stateReducer, initialIsOpen: true})
 
       clickOnItemAtIndex(0)
 
