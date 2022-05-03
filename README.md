@@ -33,7 +33,7 @@ autocomplete, combobox or select dropdown components.</p>
 You need an autocomplete, a combobox or a select experience in your application
 and you want it to be accessible. You also want it to be simple and flexible to
 account for your use cases. Finally, it should follow the [ARIA][aria] design pattern
-for a [combobox][combobox-aria] or a [select][select-aria], depending on your
+for a [combobox](https://www.w3.org/TR/wai-aria-practices-1.1/examples/combobox/aria1.1pattern/listbox-combo.html) or a [select](https://www.w3.org/TR/wai-aria-practices/examples/combobox/combobox-select-only.html), depending on your
 use case.
 
 ## This solution
