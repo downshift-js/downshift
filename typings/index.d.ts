@@ -61,7 +61,7 @@ export interface DownshiftProps<Item> {
   highlightedIndex?: number | null
   inputValue?: string | null
   isOpen?: boolean
-  selectedItem?: Item | null
+  selectedItem?: Item | Item[] | null
   children?: ChildrenFunction<Item>
   id?: string
   inputId?: string
