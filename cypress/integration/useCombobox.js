@@ -1,10 +1,6 @@
 describe('useCombobox', () => {
   before(() => {
-    cy.visit('/')
-    cy.findByText(/^Tests$/).click()
-    cy.findByText(/^useCombobox$/, {
-      selector: '[href="/tests/use-combobox"]',
-    }).click()
+    cy.visit('/usecombobox')
   })
 
   it('should keep focus on the input when selecting by click', () => {

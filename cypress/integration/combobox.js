@@ -6,9 +6,7 @@ const bodyY = 500
 
 describe('combobox', () => {
   before(() => {
-    cy.visit('/')
-    cy.findByText(/^Tests$/).click()
-    cy.findByText(/^Combobox$/).click()
+    cy.visit('/combobox')
   })
 
   beforeEach(() => {
@@ -56,7 +54,7 @@ describe('combobox', () => {
       .type('{downarrow}{enter}') // open and select first item
       .should('have.value', 'Black')
       .get('body')
-      .click(bodyX, bodyY)
+      .click(bodyX, bodyY, {force: true})
       .findByTestId('combobox-input')
       .should('have.value', 'Black')
   })
@@ -76,12 +74,12 @@ describe('combobox', () => {
       .should('have.value', 'R')
       .click()
       .get('body')
-      .trigger('mouseup', bodyX, bodyY)
+      .trigger('mouseup', bodyX, bodyY, {force: true})
       .findByTestId('combobox-input')
       .should('have.value', 'R')
       .blur()
       .get('body')
-      .trigger('click', bodyX, bodyY)
+      .trigger('click', bodyX, bodyY, {force: true})
       .findByTestId('combobox-input')
       .should('have.value', 'Red')
   })
@@ -99,13 +97,13 @@ describe('combobox', () => {
 
   it('does not reset when tabbing from input to the toggle button', () => {
     cy.findByTestId('combobox-input').type('pu')
-    cy.findByTestId('toggle-button').focus()
+    cy.findByTestId('combobox-toggle-button').focus()
     cy.findByTestId('downshift-item-0').click()
     cy.findByTestId('combobox-input').should('have.value', 'Purple')
   })
 
   it('does not reset when tabbing from the toggle button to the input', () => {
-    cy.findByTestId('toggle-button').click()
+    cy.findByTestId('combobox-toggle-button').click()
     cy.findByTestId('combobox-input').focus()
     cy.findByTestId('downshift-item-0').click()
     cy.findByTestId('combobox-input').should('have.value', 'Black')
@@ -115,8 +113,8 @@ describe('combobox', () => {
     cy.findByTestId('combobox-input')
       .type('re')
       .get('body')
-      .trigger('touchstart', bodyX, bodyY)
-      .trigger('touchend', bodyX, bodyY)
+      .trigger('touchstart', bodyX, bodyY, {force: true})
+      .trigger('touchend', bodyX, bodyY, {force: true})
     cy.findByTestId('downshift-item-0', {timeout: 10}).should('not.exist')
   })
 
@@ -124,9 +122,9 @@ describe('combobox', () => {
     cy.findByTestId('combobox-input')
       .type('re')
       .get('body')
-      .trigger('touchstart', bodyX, bodyY)
-      .trigger('touchmove', bodyX, bodyY + 20)
-      .trigger('touchend', bodyX, bodyY + 20)
+      .trigger('touchstart', bodyX, bodyY, {force: true})
+      .trigger('touchmove', bodyX, bodyY + 20, {force: true})
+      .trigger('touchend', bodyX, bodyY + 20, {force: true})
     cy.findByTestId('downshift-item-0', {timeout: 10}).should('be.visible')
   })
 })

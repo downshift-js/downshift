@@ -1,8 +1,6 @@
 describe('useSelect', () => {
   before(() => {
-    cy.visit('/')
-    cy.findByText(/^Tests$/).click()
-    cy.findByText(/^useSelect$/, {selector: '[href="/tests/use-select"]'}).click()
+    cy.visit('/useselect')
   })
 
   it('can open and close a menu', () => {
