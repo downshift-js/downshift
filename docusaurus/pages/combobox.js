@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import Downshift from '../../src/downshift'
+import Downshift from '../../src'
 
 export default function ComboBox() {
   const items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']

@@ -1,6 +1,6 @@
 describe('useSelect', () => {
   before(() => {
-    cy.visit('/useselect')
+    cy.visit('/useSelect')
   })
 
   it('can open and close a menu', () => {

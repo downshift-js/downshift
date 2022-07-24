@@ -1,6 +1,6 @@
 describe('useCombobox', () => {
   before(() => {
-    cy.visit('/usecombobox')
+    cy.visit('/useCombobox')
   })
 
   it('should keep focus on the input when selecting by click', () => {
