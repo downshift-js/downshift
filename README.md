@@ -605,6 +605,8 @@ and is as follows:
 - `Downshift.stateChangeTypes.keyDownArrowDown`
 - `Downshift.stateChangeTypes.keyDownEscape`
 - `Downshift.stateChangeTypes.keyDownEnter`
+- `Downshift.stateChangeTypes.keyDownHome`
+- `Downshift.stateChangeTypes.keyDownEnd`
 - `Downshift.stateChangeTypes.clickItem`
 - `Downshift.stateChangeTypes.blurInput`
 - `Downshift.stateChangeTypes.changeInput`
