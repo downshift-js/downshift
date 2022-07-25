@@ -6,8 +6,6 @@ dist
 .DS_Store
 .next
 .eslintcache
-.docz
-storybook-static
 preact/
 
 cypress/videos
@@ -18,3 +16,18 @@ cypress/screenshots
 package-lock.json
 yarn.lock
 flow-coverage/
+
+# Production
+/build
+
+# Generated files
+.docusaurus
+.cache-loader
+
+# Misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
