@@ -2,11 +2,11 @@
 
 ## The problem
 
-You have a combobox or autocomplete dropdown in your application and you want it to
-be accessible and functional. For consistency reasons you want it to follow the
-[ARIA design pattern][combobox-aria] for a combobox. You also want this solution
-to be simple to use and flexible so you can tailor it further to your specific
-needs.
+You have a combobox or autocomplete dropdown in your application and you want it
+to be accessible and functional. For consistency reasons you want it to follow
+the [ARIA design pattern][combobox-aria] for a combobox. You also want this
+solution to be simple to use and flexible so you can tailor it further to your
+specific needs.
 
 ## This solution
 
@@ -71,6 +71,7 @@ between them, screen reader support, highlight by character keys etc.
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
   - [Customizing Handlers](#customizing-handlers)
+- [Examples](#examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -976,8 +977,9 @@ docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [combobox-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
-[sandbox-example]: https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useCombobox/basic-usage.js
+  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
+[sandbox-example]:
+  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useCombobox/basic-usage.js
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/stateChangeTypes.js
 [blog-post-prop-getters]:

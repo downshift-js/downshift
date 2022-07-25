@@ -32,9 +32,9 @@ autocomplete, combobox or select dropdown components.</p>
 
 You need an autocomplete, a combobox or a select experience in your application
 and you want it to be accessible. You also want it to be simple and flexible to
-account for your use cases. Finally, it should follow the [ARIA][aria] design pattern
-for a [combobox][combobox-aria] or a [select][select-aria], depending on your
-use case.
+account for your use cases. Finally, it should follow the [ARIA][aria] design
+pattern for a [combobox][combobox-aria] or a [select][select-aria], depending on
+your use case.
 
 ## This solution
 
@@ -1082,7 +1082,9 @@ platforms:
 
 If you're just learning downshift, review these in order:
 
-0.  [basic automplete with getRootProps](https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js) -    the same as example #1 but using the correct HTML structure as suggested by ARIA-WCAG.
+0.  [basic automplete with getRootProps](https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js) -
+    the same as example #1 but using the correct HTML structure as suggested by
+    ARIA-WCAG.
 1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
     very bare bones, not styled at all. Good place to start.
 2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
@@ -1427,7 +1429,8 @@ MIT
 [node]: https://nodejs.org
 [build-badge]:
   https://img.shields.io/github/workflow/status/downshift-js/downshift/validate?logo=github&style=flat-square
-[build]: https://github.com/downshift-js/downshift/actions?query=workflow%3Avalidate+branch%3Amaster
+[build]:
+  https://github.com/downshift-js/downshift/actions?query=workflow%3Avalidate+branch%3Amaster
 [coverage-badge]:
   https://img.shields.io/codecov/c/github/downshift-js/downshift.svg?style=flat-square
 [coverage]: https://codecov.io/github/downshift-js/downshift
@@ -1485,12 +1488,11 @@ MIT
 [multiple-selection-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
-[aria]:
-  https://www.w3.org/TR/wai-aria-practices/
+[aria]: https://www.w3.org/TR/wai-aria-practices/
 [combobox-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
+  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
 [select-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
 [docsite]: https://downshift-js.com/
 [code-sandbox-try-it-out]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js

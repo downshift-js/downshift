@@ -65,6 +65,7 @@ between them, screen reader support, highlight by character keys etc.
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
   - [Customizing Handlers](#customizing-handlers)
+- [Examples](#examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -876,7 +877,7 @@ docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [select-aria]:
-  https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html
+  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
 [sandbox-example]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useSelect/basic-usage.js
 [state-change-file]:
