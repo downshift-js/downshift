@@ -7,9 +7,8 @@ const customPreset = api => {
     ['no-side-effect-class-properties'],
     ...evaluatedPreset.plugins,
   ]
-  const presets = [...evaluatedPreset.presets]
   return {
-    presets,
+    presets: evaluatedPreset.presets,
     plugins,
   }
 }
