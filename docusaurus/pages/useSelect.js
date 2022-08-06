@@ -41,6 +41,7 @@ export default function DropdownSelect() {
         {...getToggleButtonProps()}
       >
         {selectedItem ?? 'Elements'}
+        {isOpen ? <>&#8593;</> : <>&#8595;</>}
       </button>
       <ul
         {...getMenuProps()}
