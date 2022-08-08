@@ -83,7 +83,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
             ...selectedItems.slice(0, selectedItemIndex),
             ...selectedItems.slice(selectedItemIndex + 1),
           ],
-          ...{activeIndex: newActiveIndex},
+          activeIndex: newActiveIndex,
         }
       }
       break
