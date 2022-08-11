@@ -225,10 +225,10 @@ function getDefaultValue(
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
 ) {
-  const defaultPropKey = `default${capitalizeString(propKey)}`
+  const defaultValue = props[`default${capitalizeString(propKey)}`]
 
-  if (defaultPropKey in props) {
-    return props[defaultPropKey]
+  if (defaultValue !== undefined) {
+    return defaultValue
   }
 
   return defaultStateValues[propKey]
@@ -239,15 +239,18 @@ function getInitialValue(
   propKey,
   defaultStateValues = dropdownDefaultStateValues,
 ) {
-  if (propKey in props) {
-    return props[propKey]
+  const value = props[propKey]
+
+  if (value !== undefined) {
+    return value
   }
 
-  const initialPropKey = `initial${capitalizeString(propKey)}`
+  const initialValue = props[`initial${capitalizeString(propKey)}`]
 
-  if (initialPropKey in props) {
-    return props[initialPropKey]
+  if (initialValue !== undefined) {
+    return initialValue
   }
+
   return getDefaultValue(props, propKey, defaultStateValues)
 }
 
