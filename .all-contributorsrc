@@ -1363,6 +1363,15 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "drewbrend",
+      "name": "Brendan Drew",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5375799?v=4",
+      "profile": "https://github.com/drewbrend",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
