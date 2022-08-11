@@ -1,4 +1,9 @@
-import {getItemIndex, defaultProps} from '../utils'
+import {
+  getItemIndex,
+  defaultProps,
+  getInitialValue,
+  getDefaultValue,
+} from '../utils'
 
 describe('utils', () => {
   describe('itemToString', () => {
@@ -24,5 +29,38 @@ describe('utils', () => {
       const index = getItemIndex(undefined, item, [{x: 1}, item, {x: 2}])
       expect(index).toBe(1)
     })
+  })
+
+  test('getInitialValue will not return undefined as initial value', () => {
+    const defaults = {bogusValue: 'hello'}
+    const value = getInitialValue(
+      {initialBogusValue: undefined},
+      'bogusValue',
+      defaults,
+    )
+
+    expect(value).toEqual(defaults.bogusValue)
+  })
+
+  test('getInitialValue will not return undefined as value', () => {
+    const defaults = {bogusValue: 'hello'}
+    const value = getInitialValue(
+      {bogusValue: undefined},
+      'bogusValue',
+      defaults,
+    )
+
+    expect(value).toEqual(defaults.bogusValue)
+  })
+
+  test('getDefaultValue will not return undefined as value', () => {
+    const defaults = {bogusValue: 'hello'}
+    const value = getDefaultValue(
+      {defaultBogusValue: undefined},
+      'bogusValue',
+      defaults,
+    )
+
+    expect(value).toEqual(defaults.bogusValue)
   })
 })
