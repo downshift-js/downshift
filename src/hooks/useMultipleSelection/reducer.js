@@ -71,18 +71,20 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       let newActiveIndex = activeIndex
       const selectedItemIndex = selectedItems.indexOf(selectedItem)
 
-      if (selectedItems.length === 1) {
-        newActiveIndex = -1
-      } else if (selectedItemIndex === selectedItems.length - 1) {
-        newActiveIndex = selectedItems.length - 2
-      }
+      if (selectedItemIndex >= 0) {
+        if (selectedItems.length === 1) {
+          newActiveIndex = -1
+        } else if (selectedItemIndex === selectedItems.length - 1) {
+          newActiveIndex = selectedItems.length - 2
+        }
 
-      changes = {
-        selectedItems: [
-          ...selectedItems.slice(0, selectedItemIndex),
-          ...selectedItems.slice(selectedItemIndex + 1),
-        ],
-        ...{activeIndex: newActiveIndex},
+        changes = {
+          selectedItems: [
+            ...selectedItems.slice(0, selectedItemIndex),
+            ...selectedItems.slice(selectedItemIndex + 1),
+          ],
+          activeIndex: newActiveIndex,
+        }
       }
       break
     }
