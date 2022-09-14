@@ -170,7 +170,7 @@ describe('getInputProps', () => {
         result.current.toggleMenu()
       })
       act(() => {
-        onKeyDown({key: 'Escape', preventDefault: noop})
+        onKeyDown({key: 'Escape', preventDefault: noop, stopPropagation: noop})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -228,7 +228,7 @@ describe('getInputProps', () => {
 
         inputRef({focus: noop})
         result.current.toggleMenu()
-        onBlur({key: 'Escape', preventDefault: noop})
+        onBlur({preventDefault: noop})
       })
 
       expect(userOnBlur).toHaveBeenCalledTimes(1)
@@ -769,6 +769,25 @@ describe('getInputProps', () => {
         keyDownOnInput('Escape')
 
         expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+      })
+
+      test('escape stops propagation when it closes the menu or clears the input', () => {
+        const {input} = renderCombobox({
+          initialIsOpen: true,
+          initialSelectedItem: items[0],
+        })
+        const keyDownEvents = [
+          createEvent.keyDown(input, {key: 'Escape'}),
+          createEvent.keyDown(input, {key: 'Escape'}),
+          createEvent.keyDown(input, {key: 'Escape'}),
+        ]
+
+        for (let index = 0; index < keyDownEvents.length; index++) {
+          fireEvent(input, keyDownEvents[index])
+          expect(keyDownEvents[index].defaultPrevented).toBe(
+            index !== keyDownEvents.length - 1,
+          )
+        }
       })
 
       test('enter it closes the menu and selects highlighted item', () => {

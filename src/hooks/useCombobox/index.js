@@ -190,7 +190,7 @@ function useCombobox(userProps = {}) {
           getItemNodeFromIndex,
         })
       },
-      Escape() {
+      Escape(event) {
         const latestState = latest.current.state
         if (
           latestState.isOpen ||
@@ -198,6 +198,8 @@ function useCombobox(userProps = {}) {
           latestState.selectedItem ||
           latestState.highlightedIndex > -1
         ) {
+          event.preventDefault()
+
           dispatch({
             type: stateChangeTypes.InputKeyDownEscape,
           })
