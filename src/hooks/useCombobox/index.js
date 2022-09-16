@@ -268,6 +268,7 @@ function useCombobox(userProps = {}) {
       onMouseMove,
       onClick,
       onPress,
+      disabled,
       ...rest
     } = {}) => {
       const {props: latestProps, state: latestState} = latest.current
@@ -291,6 +292,7 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
+          disabled
         })
       }
       const itemHandleClick = () => {
@@ -310,17 +312,18 @@ function useCombobox(userProps = {}) {
             itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
           }
         }),
+        disabled,
         role: 'option',
         'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
         id: elementIds.getItemId(itemIndex),
-        ...(!rest.disabled && {
-          onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
+        ...(!disabled && {
           [onSelectKey]: callAllEventHandlers(
             customClickHandler,
             itemHandleClick,
           ),
         }),
-        ...rest,
+          onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
+          ...rest,
       }
     },
     [dispatch, latest, shouldScrollRef, elementIds],

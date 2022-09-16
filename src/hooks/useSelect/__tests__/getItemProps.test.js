@@ -54,9 +54,8 @@ describe('getItemProps', () => {
         disabled: true,
       })
 
-      expect(itemProps.onMouseMove).toBeUndefined()
+      expect(itemProps.onMouseMove).toBeDefined()
       expect(itemProps.onClick).toBeUndefined()
-      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(itemProps.disabled).toBe(true)
     })
   })
@@ -202,6 +201,29 @@ describe('getItemProps', () => {
           defaultIds.getItemId(index),
         )
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
+      })
+
+      it('removes highlight from previous item even if current item is disabled', () => {
+        const disabledIndex = 1
+        const highlightedIndex = 2
+        const itemsWithDisabled = [...items].map((item, index) =>
+          index === disabledIndex ? {...item, disabled: true} : item,
+        )
+
+        const {menu, mouseMoveItemAtIndex} = renderSelect({
+          items: itemsWithDisabled,
+          isOpen: true,
+        })
+
+        mouseMoveItemAtIndex(highlightedIndex)
+
+        expect(menu).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(highlightedIndex),
+        )
+
+        mouseMoveItemAtIndex(disabledIndex)
+        expect(menu).not.toHaveAttribute('aria-activedescendant')
       })
     })
 

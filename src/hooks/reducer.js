@@ -12,7 +12,7 @@ export default function downshiftCommonReducer(
   switch (type) {
     case stateChangeTypes.ItemMouseMove:
       changes = {
-        highlightedIndex: action.index,
+        highlightedIndex: action.disabled ? -1 : action.index,
       }
 
       break

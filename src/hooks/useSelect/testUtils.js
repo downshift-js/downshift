@@ -131,7 +131,7 @@ const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
               <li
                 data-testid={dataTestIds.item(index)}
                 key={`${stringItem}${index}`}
-                {...getItemProps({item, index})}
+                {...getItemProps({item, index, disabled: item.disabled})}
               >
                 {stringItem}
               </li>
