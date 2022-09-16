@@ -479,6 +479,7 @@ function useSelect(userProps = {}) {
       onClick,
       refKey = 'ref',
       ref,
+      disabled,
       ...rest
     } = {}) => {
       const {state: latestState, props: latestProps} = latest.current
@@ -490,6 +491,7 @@ function useSelect(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
+          disabled
         })
       }
       const itemHandleClick = () => {
@@ -504,6 +506,7 @@ function useSelect(userProps = {}) {
         throw new Error('Pass either item or item index in getItemProps!')
       }
       const itemProps = {
+        disabled,
         role: 'option',
         'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
         id: elementIds.getItemId(itemIndex),
@@ -515,13 +518,14 @@ function useSelect(userProps = {}) {
         ...rest,
       }
 
-      if (!rest.disabled) {
-        itemProps.onMouseMove = callAllEventHandlers(
-          onMouseMove,
-          itemHandleMouseMove,
-        )
+      if (!disabled) {
         itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
       }
+      itemProps.onMouseMove = callAllEventHandlers(
+        onMouseMove,
+        itemHandleMouseMove,
+      )
+
 
       return itemProps
     },
