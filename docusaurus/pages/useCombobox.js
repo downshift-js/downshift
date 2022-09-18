@@ -49,7 +49,7 @@ export default function DropdownCombobox() {
       </label>
       <div {...getComboboxProps()}>
         <input
-          style={{padding: '4px'}}
+          style={{padding: '5px'}}
           {...getInputProps()}
           data-testid="combobox-input"
         />
