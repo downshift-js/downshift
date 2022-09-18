@@ -1,16 +1,11 @@
 import * as React from 'react'
-import {render, fireEvent, screen} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
-import {items} from '../testUtils'
+import {dataTestIds, items, user, getInput} from '../testUtils'
 import useCombobox from '.'
 
-const dataTestIds = {
-  toggleButton: 'toggle-button-id',
-  item: index => `item-id-${index}`,
-  input: 'input-id',
-}
+export * from '../testUtils'
 
 jest.mock('../../utils', () => {
   const utils = jest.requireActual('../../utils')
@@ -34,74 +29,25 @@ jest.mock('../utils', () => {
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
-const renderCombobox = (props, uiCallback) => {
+export async function changeInputValue(inputValue) {
+  await user.type(getInput(), inputValue)
+}
+
+export const renderCombobox = (props, uiCallback) => {
   const renderSpy = jest.fn()
   const ui = <DropdownCombobox renderSpy={renderSpy} {...props} />
   const utils = render(uiCallback ? uiCallback(ui) : ui)
   const rerender = newProps =>
     utils.rerender(<DropdownCombobox renderSpy={renderSpy} {...newProps} />)
-  const label = screen.getByText(/choose an element/i)
-  const menu = screen.getByRole('listbox')
-  const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
-  const input = screen.getByTestId(dataTestIds.input)
-  const combobox = screen.getByRole('combobox')
-  const getItemAtIndex = index => screen.getByTestId(dataTestIds.item(index))
-  const getItems = () => screen.queryAllByRole('option')
-  const clickOnItemAtIndex = index => {
-    // keeping fireEvent so we don't trigger input blur via user event
-    fireEvent.click(getItemAtIndex(index))
-  }
-  const clickOnToggleButton = () => {
-    userEvent.click(toggleButton)
-  }
-  const mouseMoveItemAtIndex = index => {
-    userEvent.hover(getItemAtIndex(index))
-  }
-  const getA11yStatusContainer = () => screen.queryByRole('status')
-  const mouseLeaveMenu = () => {
-    userEvent.unhover(menu)
-  }
-  const changeInputValue = inputValue => {
-    userEvent.type(input, inputValue)
-  }
-  const focusInput = () => {
-    fireEvent.focus(input)
-  }
-  const keyDownOnInput = (key, options = {}) => {
-    if (document.activeElement !== input) {
-      focusInput()
-    }
-
-    fireEvent.keyDown(input, {key, ...options})
-  }
-  const blurInput = () => {
-    fireEvent.blur(input)
-  }
 
   return {
     ...utils,
     renderSpy,
     rerender,
-    label,
-    menu,
-    toggleButton,
-    getItemAtIndex,
-    clickOnItemAtIndex,
-    mouseMoveItemAtIndex,
-    getItems,
-    clickOnToggleButton,
-    getA11yStatusContainer,
-    mouseLeaveMenu,
-    input,
-    combobox,
-    changeInputValue,
-    keyDownOnInput,
-    blurInput,
-    focusInput,
   }
 }
 
-const DropdownCombobox = ({renderSpy, renderItem, ...props}) => {
+function DropdownCombobox({renderSpy, renderItem, ...props}) {
   const {
     isOpen,
     getToggleButtonProps,
@@ -133,7 +79,7 @@ const DropdownCombobox = ({renderSpy, renderItem, ...props}) => {
             const stringItem =
               item instanceof Object ? itemToString(item) : item
             return renderItem ? (
-              renderItem({index, item, getItemProps, dataTestIds, stringItem})
+              renderItem({index, item, getItemProps, stringItem})
             ) : (
               <li
                 data-testid={dataTestIds.item(index)}
@@ -149,8 +95,6 @@ const DropdownCombobox = ({renderSpy, renderItem, ...props}) => {
   )
 }
 
-const renderUseCombobox = props => {
+export const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
-
-export {renderUseCombobox, dataTestIds, renderCombobox}

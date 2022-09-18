@@ -1,7 +1,19 @@
-/* eslint-disable no-console */
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {act} from '@testing-library/react'
-import {renderSelect, renderUseSelect} from '../testUtils'
+import {
+  clickOnItemAtIndex,
+  clickOnToggleButton,
+  getA11yStatusContainer,
+  getItems,
+  getLabel,
+  getMenu,
+  getToggleButton,
+  keyDownOnToggleButton,
+  renderSelect,
+  renderUseSelect,
+  stateChangeTestCases,
+  tab,
+} from '../testUtils'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {
   items,
@@ -20,38 +32,36 @@ describe('props', () => {
     )
   })
 
-  describe('id', () => {
-    test('if passed will override downshift default', () => {
-      const {toggleButton, menu, label} = renderSelect({
-        id: 'my-custom-little-id',
-      })
-      const elements = [toggleButton, menu, label]
+  test('id if passed will override downshift default', () => {
+    renderSelect({
+      id: 'my-custom-little-id',
+    })
+    const elements = [getToggleButton(), getMenu(), getLabel()]
 
-      elements.forEach(element => {
-        expect(element).toHaveAttribute(
-          'id',
-          expect.stringContaining('my-custom-little-id'),
-        )
-      })
+    elements.forEach(element => {
+      expect(element).toHaveAttribute(
+        'id',
+        expect.stringContaining('my-custom-little-id'),
+      )
     })
   })
 
   describe('items', () => {
     test('if passed as empty then menu will not open', () => {
-      const {getItems} = renderSelect({items: [], isOpen: true})
+      renderSelect({items: [], isOpen: true})
 
       expect(getItems()).toHaveLength(0)
     })
 
-    test('passed as objects should work with custom itemToString', () => {
+    test('passed as objects should work with custom itemToString', async () => {
       jest.useFakeTimers()
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+      renderSelect({
         items: [{str: 'aaa'}, {str: 'bbb'}],
         itemToString: item => item.str,
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -60,22 +70,20 @@ describe('props', () => {
     })
   })
 
-  describe('itemToString', () => {
-    test('should provide string version to a11y status message', () => {
-      jest.useFakeTimers()
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
-        itemToString: () => 'custom-item',
-        initialIsOpen: true,
-      })
-
-      clickOnItemAtIndex(0)
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        'custom-item has been selected.',
-      )
-      jest.useRealTimers()
+  test('itemToString should provide string version to a11y status message', async () => {
+    jest.useFakeTimers()
+    renderSelect({
+      itemToString: () => 'custom-item',
+      initialIsOpen: true,
     })
+
+    await clickOnItemAtIndex(0)
+    waitForDebouncedA11yStatusUpdate()
+
+    expect(getA11yStatusContainer()).toHaveTextContent(
+      'custom-item has been selected.',
+    )
+    jest.useRealTimers()
   })
 
   describe('getA11ySelectionMessage', () => {
@@ -83,13 +91,13 @@ describe('props', () => {
     beforeEach(jest.clearAllTimers)
     afterAll(jest.useRealTimers)
 
-    test('reports that an item has been selected', () => {
+    test('reports that an item has been selected', async () => {
       const itemIndex = 0
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(itemIndex)
+      await clickOnItemAtIndex(itemIndex)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -97,12 +105,12 @@ describe('props', () => {
       )
     })
 
-    test('is called with object that contains specific props', () => {
+    test('is called with object that contains specific props', async () => {
       const getA11ySelectionMessage = jest.fn()
       const inputValue = 'a'
       const isOpen = true
       const highlightedIndex = 0
-      const {clickOnItemAtIndex} = renderSelect({
+      renderSelect({
         getA11ySelectionMessage,
         inputValue,
         isOpen,
@@ -110,7 +118,7 @@ describe('props', () => {
         items,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
@@ -128,13 +136,13 @@ describe('props', () => {
       )
     })
 
-    test('is replaced with the user provided one', () => {
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderSelect({
+    test('is replaced with the user provided one', async () => {
+      renderSelect({
         getA11ySelectionMessage: () => 'custom message',
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(3)
+      await clickOnItemAtIndex(3)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
@@ -148,12 +156,12 @@ describe('props', () => {
     })
     afterAll(jest.useRealTimers)
 
-    test('reports that no results are available if items list is empty', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('reports that no results are available if items list is empty', async () => {
+      renderSelect({
         items: [],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -161,12 +169,12 @@ describe('props', () => {
       )
     })
 
-    test('reports that one result is available if one item is shown', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('reports that one result is available if one item is shown', async () => {
+      renderSelect({
         items: ['item1'],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -174,12 +182,12 @@ describe('props', () => {
       )
     })
 
-    test('reports the number of results available if more than one item are shown', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('reports the number of results available if more than one item are shown', async () => {
+      renderSelect({
         items: ['item1', 'item2'],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -187,50 +195,50 @@ describe('props', () => {
       )
     })
 
-    test('is empty on menu close', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('is empty on menu close', async () => {
+      renderSelect({
         items: ['item1', 'item2'],
         initialIsOpen: true,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is removed after 500ms as a cleanup', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('is removed after 500ms as a cleanup', async () => {
+      renderSelect({
         items: ['item1', 'item2'],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
       act(() => jest.advanceTimersByTime(500))
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is replaced with the user provided one', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
+    test('is replaced with the user provided one', async () => {
+      renderSelect({
         getA11yStatusMessage: () => 'custom message',
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with previousResultCount that gets updated correctly', () => {
+    test('is called with previousResultCount that gets updated correctly', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {clickOnToggleButton, keyDownOnMenu} = renderSelect({
+      renderSelect({
         getA11yStatusMessage,
         items: inputItems,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
@@ -242,7 +250,7 @@ describe('props', () => {
       )
 
       inputItems.pop()
-      keyDownOnMenu('ArrowDown')
+      await keyDownOnToggleButton('{ArrowDown}')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
@@ -254,19 +262,19 @@ describe('props', () => {
       )
     })
 
-    test('is called with object that contains specific props at toggle', () => {
+    test('is called with object that contains specific props at toggle', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputValue = 'a'
       const highlightedIndex = 1
       const initialSelectedItem = items[highlightedIndex]
-      const {clickOnToggleButton} = renderSelect({
+      renderSelect({
         getA11yStatusMessage,
         inputValue,
         initialSelectedItem,
         selectedItem: items[highlightedIndex],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
@@ -284,7 +292,7 @@ describe('props', () => {
       )
     })
 
-    test('is added to the document provided by the user as prop', () => {
+    test('is added to the document provided by the user as prop', async () => {
       const environment = {
         document: {
           getElementById: jest.fn(() => ({setAttribute: jest.fn(), style: {}})),
@@ -292,18 +300,18 @@ describe('props', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
-      const {clickOnToggleButton} = renderSelect({items: [], environment})
+      renderSelect({items: [], environment})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
 
-    test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
+    test('is called when isOpen, highlightedIndex, inputValue or items change', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {clickOnToggleButton, rerender, keyDownOnMenu} = renderSelect({
+      const {rerender} = renderSelect({
         getA11yStatusMessage,
         items,
       })
@@ -313,7 +321,7 @@ describe('props', () => {
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
 
       // should not be called when any other prop is changed.
-      rerender({getA11yStatusMessage, items, circularNavigation: true})
+      rerender({getA11yStatusMessage, items, id: 'hello'})
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
@@ -326,7 +334,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -334,7 +342,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
 
-      keyDownOnMenu('b')
+      await keyDownOnToggleButton('b')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -342,7 +350,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
 
-      keyDownOnMenu('ArrowUp')
+      await keyDownOnToggleButton('{ArrowUp}')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -352,140 +360,115 @@ describe('props', () => {
     })
   })
 
-  describe('highlightedIndex', () => {
-    test('controls the state property if passed', () => {
-      const highlightedIndex = 1
-      const {keyDownOnToggleButton, keyDownOnMenu, menu} = renderSelect({
-        isOpen: true,
-        highlightedIndex,
-      })
-
-      expect(menu).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
-
-      keyDownOnToggleButton('ArrowDown')
-      expect(menu).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
-
-      keyDownOnMenu('End')
-      expect(menu).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
-
-      keyDownOnMenu('ArrowUp')
-      expect(menu).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
-
-      keyDownOnMenu('c')
-      expect(menu).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(highlightedIndex),
-      )
+  test('highlightedIndex controls the state property if passed', async () => {
+    const highlightedIndex = 1
+    renderSelect({
+      isOpen: true,
+      highlightedIndex,
     })
+    const toggleButton = getToggleButton()
+    const keys = [
+      '{ArrowDown}',
+      '{End}',
+      '{ArrowUp}',
+      '{PageUp}',
+      '{PageDown}',
+      'c',
+    ]
+
+    expect(toggleButton).toHaveAttribute(
+      'aria-activedescendant',
+      defaultIds.getItemId(highlightedIndex),
+    )
+
+    for (const key of keys) {
+      // eslint-disable-next-line no-await-in-loop
+      await keyDownOnToggleButton(key)
+
+      expect(toggleButton).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(highlightedIndex),
+      )
+    }
   })
 
-  describe('isOpen', () => {
-    test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        blurMenu,
-        getItems,
-      } = renderSelect({isOpen: true})
-      expect(getItems()).toHaveLength(items.length)
+  test('controls the state property if passed', async () => {
+    renderSelect({isOpen: true})
+    expect(getItems()).toHaveLength(items.length)
+    await tab() // focus toggle button
 
-      clickOnToggleButton()
-      expect(getItems()).toHaveLength(items.length)
+    await clickOnToggleButton()
+    expect(getItems()).toHaveLength(items.length)
 
-      keyDownOnMenu('Escape')
-      expect(getItems()).toHaveLength(items.length)
+    await keyDownOnToggleButton('{Escape}')
+    expect(getItems()).toHaveLength(items.length)
 
-      blurMenu()
-      expect(getItems()).toHaveLength(items.length)
-    })
+    await tab()
+    expect(getItems()).toHaveLength(items.length)
   })
 
   describe('selectedItem', () => {
-    test('controls the state property if passed', () => {
+    test('controls the state property if passed', async () => {
       const selectedItem = items[2]
-      const {
-        toggleButton,
-        keyDownOnToggleButton,
-        clickOnItemAtIndex,
-      } = renderSelect({selectedItem, isOpen: true})
+      renderSelect({selectedItem, isOpen: true})
+      const toggleButton = getToggleButton()
 
       expect(toggleButton).toHaveTextContent(items[2])
 
-      keyDownOnToggleButton('ArrowDown')
-      keyDownOnToggleButton('Enter')
+      await keyDownOnToggleButton('{ArrowDown}')
+      await keyDownOnToggleButton('{Enter}')
 
       expect(toggleButton).toHaveTextContent(items[2])
 
-      clickOnItemAtIndex(4)
+      await clickOnItemAtIndex(4)
 
       expect(toggleButton).toHaveTextContent(items[2])
     })
 
-    test('highlightedIndex on open gets computed based on the selectedItem prop value', () => {
+    test('highlightedIndex on open gets computed based on the selectedItem prop value', async () => {
       const expectedHighlightedIndex = 2
       const selectedItem = items[expectedHighlightedIndex]
-      const {
-        clickOnToggleButton,
-        clickOnItemAtIndex,
-        keyDownOnToggleButton,
-        toggleButton,
-        menu,
-        keyDownOnMenu,
-      } = renderSelect({selectedItem})
+      renderSelect({selectedItem})
+      const toggleButton = getToggleButton()
 
-      clickOnToggleButton()
+      expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
 
-      expect(menu).toHaveAttribute(
+      await clickOnToggleButton()
+
+      expect(toggleButton).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      keyDownOnToggleButton('ArrowDown')
-      keyDownOnMenu('Enter')
+      await keyDownOnToggleButton('{ArrowDown}')
+      await keyDownOnToggleButton('{Enter}')
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
 
-      clickOnToggleButton()
-      clickOnItemAtIndex(3)
+      await clickOnToggleButton()
+      await clickOnItemAtIndex(3)
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
     })
 
-    test('highlightedIndex computed based on the selectedItem prop value in initial state as well', () => {
+    test('highlightedIndex computed based on the selectedItem prop value in initial state as well', async () => {
       const expectedHighlightedIndex = 2
       const selectedItem = items[expectedHighlightedIndex]
       // open dropdown in the initial state to check highlighted index.
-      const {
-        clickOnItemAtIndex,
-        clickOnToggleButton,
-        keyDownOnMenu,
-        toggleButton,
-        menu,
-      } = renderSelect({selectedItem, initialIsOpen: true})
+      renderSelect({selectedItem, initialIsOpen: true})
+      const toggleButton = getToggleButton()
 
-      expect(menu).toHaveAttribute(
+      expect(toggleButton).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(expectedHighlightedIndex),
       )
 
-      keyDownOnMenu('ArrowDown')
-      keyDownOnMenu('Enter')
+      await keyDownOnToggleButton('{ArrowDown}')
+      await keyDownOnToggleButton('{Enter}')
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
-      clickOnToggleButton()
-      clickOnItemAtIndex(3)
+      await clickOnToggleButton()
+      await clickOnItemAtIndex(3)
 
       expect(toggleButton).toHaveTextContent(items[expectedHighlightedIndex])
     })
@@ -575,216 +558,25 @@ describe('props', () => {
       )
     })
 
-    test('is called at each state change with the appropriate change type', () => {
+    test('is called at each state change with the appropriate change type', async () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const {
-        clickOnToggleButton,
-        blurMenu,
-        mouseLeaveMenu,
-        keyDownOnToggleButton,
-        keyDownOnMenu,
-        mouseMoveItemAtIndex,
-        clickOnItemAtIndex,
-      } = renderSelect({stateReducer})
+      renderSelect({stateReducer})
       const initialState = {
         isOpen: false,
         highlightedIndex: -1,
         selectedItem: null,
         inputValue: '',
       }
-      const testCases = [
-        {
-          step: clickOnToggleButton,
-          state: {
-            isOpen: true,
-            highlightedIndex: -1,
-            inputValue: '',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.ToggleButtonClick,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'c',
-          state: {
-            isOpen: true,
-            highlightedIndex: 3,
-            inputValue: 'c',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.MenuKeyDownCharacter,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'ArrowDown',
-          state: {
-            isOpen: true,
-            highlightedIndex: 4,
-            inputValue: 'c',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.MenuKeyDownArrowDown,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'ArrowUp',
-          state: {
-            isOpen: true,
-            highlightedIndex: 3,
-            inputValue: 'c',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.MenuKeyDownArrowUp,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'End',
-          state: {
-            isOpen: true,
-            highlightedIndex: items.length - 1,
-            inputValue: 'c',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.MenuKeyDownEnd,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'Home',
-          state: {
-            isOpen: true,
-            highlightedIndex: 0,
-            inputValue: 'c',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.MenuKeyDownHome,
-        },
-        {
-          step: keyDownOnMenu,
-          args: 'Enter',
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: 'c',
-            selectedItem: items[0],
-          },
-          type: stateChangeTypes.MenuKeyDownEnter,
-        },
-        {
-          step: keyDownOnToggleButton,
-          args: 'o',
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: 'co',
-            selectedItem: items[19],
-          },
-          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
-        },
-        {
-          step: keyDownOnToggleButton,
-          args: 'ArrowDown',
-          state: {
-            isOpen: true,
-            highlightedIndex: 20,
-            inputValue: 'co',
-            selectedItem: items[19],
-          },
-          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        },
-        {
-          step: clickOnItemAtIndex,
-          args: 10,
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.ItemClick,
-        },
-        {
-          step: keyDownOnToggleButton,
-          args: 'ArrowUp',
-          state: {
-            isOpen: true,
-            highlightedIndex: 9,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-        },
-        {
-          step: mouseMoveItemAtIndex,
-          args: 6,
-          state: {
-            isOpen: true,
-            highlightedIndex: 6,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.ItemMouseMove,
-        },
-        {
-          step: mouseLeaveMenu,
-          state: {
-            isOpen: true,
-            highlightedIndex: -1,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.MenuMouseLeave,
-        },
-        {
-          step: blurMenu,
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.MenuBlur,
-        },
-        {
-          step: keyDownOnToggleButton,
-          args: 'ArrowUp',
-          state: {
-            isOpen: true,
-            highlightedIndex: 9,
-            inputValue: 'co',
-            selectedItem: items[10],
-          },
-          type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-        },
-        {
-          step: keyDownOnMenu,
-          args: ' ',
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: 'co',
-            selectedItem: items[9],
-          },
-          type: stateChangeTypes.MenuKeyDownSpaceButton,
-        },
-        {
-          step: () => act(() => jest.runAllTimers()),
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: '',
-            selectedItem: items[9],
-          },
-          type: stateChangeTypes.FunctionSetInputValue,
-        },
-      ]
 
       expect(stateReducer).not.toHaveBeenCalled()
 
-      for (let index = 0; index < testCases.length; index++) {
-        const {step, state, args, type} = testCases[index]
-        const previousState = testCases[index - 1]?.state ?? initialState
+      for (let index = 0; index < stateChangeTestCases.length; index++) {
+        const {step, state, arg, type} = stateChangeTestCases[index]
+        const previousState =
+          stateChangeTestCases[index - 1]?.state ?? initialState
 
-        step(args)
+        // eslint-disable-next-line no-await-in-loop
+        await step(arg)
 
         expect(stateReducer).toHaveBeenCalledTimes(index + 1)
         expect(stateReducer).toHaveBeenLastCalledWith(
@@ -794,7 +586,7 @@ describe('props', () => {
       }
     })
 
-    test('receives state, changes and type', () => {
+    test('receives state, changes and type', async () => {
       const stateReducer = jest.fn((s, a) => {
         expect(a.type).not.toBeUndefined()
         expect(a.type).not.toBeNull()
@@ -807,39 +599,40 @@ describe('props', () => {
 
         return a.changes
       })
-      const {clickOnToggleButton} = renderSelect({stateReducer})
+      renderSelect({stateReducer})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
     })
 
     // should check that no blur state change occurs after item selection.
     // https://github.com/downshift-js/downshift/issues/965
-    test('is called only once on item selection', () => {
+    test('is called only once on item selection', async () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        clickOnItemAtIndex,
-      } = renderSelect({stateReducer, initialIsOpen: true})
 
-      clickOnItemAtIndex(0)
+      renderSelect({
+        stateReducer,
+        initialIsOpen: true,
+        initialHighlightedIndex: 0,
+      })
+
+      await clickOnItemAtIndex(0)
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
 
-      clickOnToggleButton()
-      keyDownOnMenu('ArrowDown')
-      keyDownOnMenu('Enter')
+      await clickOnToggleButton()
+      await keyDownOnToggleButton('{ArrowDown}')
+      await keyDownOnToggleButton('{Enter}')
 
       expect(stateReducer).toHaveBeenCalledTimes(4)
 
-      clickOnToggleButton()
-      keyDownOnMenu('ArrowDown')
-      keyDownOnMenu(' ')
+      await clickOnToggleButton()
+      await keyDownOnToggleButton('{ArrowDown}')
+      await keyDownOnToggleButton(' ')
 
       expect(stateReducer).toHaveBeenCalledTimes(7)
     })
 
-    test('changes are visible in onChange handlers', () => {
+    test('changes are visible in onChange handlers', async () => {
       const highlightedIndex = 2
       const selectedItem = {foo: 'bar'}
       const isOpen = true
@@ -852,7 +645,7 @@ describe('props', () => {
       const onHighlightedIndexChange = jest.fn()
       const onIsOpenChange = jest.fn()
       const onStateChange = jest.fn()
-      const {clickOnToggleButton} = renderSelect({
+      renderSelect({
         stateReducer,
         onStateChange,
         onSelectedItemChange,
@@ -860,7 +653,7 @@ describe('props', () => {
         onIsOpenChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -891,15 +684,15 @@ describe('props', () => {
   })
 
   describe('onSelectedItemChange', () => {
-    test('is called at selectedItem change', () => {
+    test('is called at selectedItem change', async () => {
       const onSelectedItemChange = jest.fn()
       const index = 2
-      const {clickOnItemAtIndex} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
         onSelectedItemChange,
       })
 
-      clickOnItemAtIndex(index)
+      await clickOnItemAtIndex(index)
 
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -909,24 +702,24 @@ describe('props', () => {
       )
     })
 
-    test('is not called at if selectedItem is the same', () => {
+    test('is not called at if selectedItem is the same', async () => {
       const index = 1
       const onSelectedItemChange = jest.fn()
-      const {clickOnItemAtIndex} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
         initialSelectedItem: items[index],
         onSelectedItemChange,
       })
 
-      clickOnItemAtIndex(index)
+      await clickOnItemAtIndex(index)
 
       expect(onSelectedItemChange).not.toHaveBeenCalled()
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let selectedItem = items[2]
       const selectionIndex = 3
-      const {clickOnItemAtIndex, toggleButton, rerender} = renderSelect({
+      const {rerender} = renderSelect({
         initialIsOpen: true,
         selectedItem,
         onSelectedItemChange: changes => {
@@ -934,10 +727,10 @@ describe('props', () => {
         },
       })
 
-      clickOnItemAtIndex(selectionIndex)
+      await clickOnItemAtIndex(selectionIndex)
       rerender({selectedItem})
 
-      expect(toggleButton).toHaveTextContent(items[selectionIndex])
+      expect(getToggleButton()).toHaveTextContent(items[selectionIndex])
     })
 
     test('can have downshift actions executed', () => {
@@ -957,14 +750,14 @@ describe('props', () => {
   })
 
   describe('onHighlightedIndexChange', () => {
-    test('is called at each highlightedIndex change', () => {
+    test('is called at each highlightedIndex change', async () => {
       const onHighlightedIndexChange = jest.fn()
-      const {keyDownOnToggleButton} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
         onHighlightedIndexChange,
       })
 
-      keyDownOnToggleButton('ArrowDown')
+      await keyDownOnToggleButton('{ArrowDown}')
 
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -974,32 +767,32 @@ describe('props', () => {
       )
     })
 
-    test('is not called if highlightedIndex is the same', () => {
+    test('is not called if highlightedIndex is the same', async () => {
       const onHighlightedIndexChange = jest.fn()
-      const {keyDownOnMenu} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
       })
 
-      keyDownOnMenu('ArrowUp')
+      await keyDownOnToggleButton('{ArrowUp}')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      keyDownOnMenu('Home')
+      await keyDownOnToggleButton('{Home}')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
 
-    test('is called on first open when initialSelectedItem is set', () => {
+    test('is called on first open when initialSelectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderSelect({
+      renderSelect({
         initialSelectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1009,15 +802,15 @@ describe('props', () => {
       )
     })
 
-    test('is called on first open when selectedItem is set', () => {
+    test('is called on first open when selectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderSelect({
+      renderSelect({
         selectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1027,15 +820,15 @@ describe('props', () => {
       )
     })
 
-    test('is called on first open when defaultSelectedItem is set', () => {
+    test('is called on first open when defaultSelectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderSelect({
+      renderSelect({
         defaultSelectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1045,9 +838,9 @@ describe('props', () => {
       )
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let highlightedIndex = 2
-      const {keyDownOnMenu, menu, rerender} = renderSelect({
+      const {rerender} = renderSelect({
         isOpen: true,
         highlightedIndex,
         onHighlightedIndexChange: changes => {
@@ -1055,10 +848,10 @@ describe('props', () => {
         },
       })
 
-      keyDownOnMenu('ArrowDown')
+      await keyDownOnToggleButton('{ArrowDown}')
       rerender({isOpen: true, highlightedIndex})
 
-      expect(menu).toHaveAttribute(
+      expect(getToggleButton()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(3),
       )
@@ -1084,45 +877,45 @@ describe('props', () => {
   })
 
   describe('onIsOpenChange', () => {
-    test('is called at each isOpen change', () => {
+    test('is called at each isOpen change', async () => {
       const onIsOpenChange = jest.fn()
-      const {keyDownOnMenu} = renderSelect({
+      renderSelect({
         initialIsOpen: true,
         onIsOpenChange,
       })
 
-      keyDownOnMenu('Escape')
+      await keyDownOnToggleButton('{Escape}')
 
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
           isOpen: false,
-          type: stateChangeTypes.MenuKeyDownEscape,
+          type: stateChangeTypes.ToggleButtonKeyDownEscape,
         }),
       )
     })
 
-    test('is not called at if isOpen is the same', () => {
+    test('is not called at if isOpen is the same', async () => {
       const onIsOpenChange = jest.fn()
-      const {clickOnItemAtIndex} = renderSelect({
+      renderSelect({
         defaultIsOpen: true,
         onIsOpenChange,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
 
       expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let isOpen = true
-      const {keyDownOnMenu, getItems, rerender} = renderSelect({
+      const {rerender} = renderSelect({
         isOpen,
         onIsOpenChange: changes => {
           isOpen = changes.isOpen
         },
       })
 
-      keyDownOnMenu('Escape')
+      await keyDownOnToggleButton('{Escape}')
       rerender({isOpen})
 
       expect(getItems()).toHaveLength(0)
@@ -1145,185 +938,47 @@ describe('props', () => {
   })
 
   describe('onStateChange', () => {
-    // eslint-disable-next-line max-statements
-    test('is called at each state property change but only with changed props', () => {
+    beforeEach(jest.useFakeTimers)
+    beforeEach(jest.clearAllTimers)
+    afterAll(jest.useRealTimers)
+    test('is called at each state property change but only with changed props', async () => {
+      jest.useFakeTimers()
       const onStateChange = jest.fn()
-      const {
-        clickOnToggleButton,
-        tab,
-        mouseLeaveMenu,
-        keyDownOnToggleButton,
-        keyDownOnMenu,
-        mouseMoveItemAtIndex,
-        clickOnItemAtIndex,
-      } = renderSelect({onStateChange, isOpen: true})
+      const initialState = {
+        isOpen: false,
+        highlightedIndex: -1,
+        selectedItem: null,
+        inputValue: '',
+      }
 
-      clickOnToggleButton()
+      renderSelect({onStateChange})
 
-      expect(onStateChange).toHaveBeenCalledTimes(1)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          type: stateChangeTypes.ToggleButtonClick,
-        }),
-      )
+      for (let index = 0; index < stateChangeTestCases.length; index++) {
+        const {step, state, arg, type} = stateChangeTestCases[index]
+        const previousState =
+          stateChangeTestCases[index - 1]?.state ?? initialState
+        const newState = Object.keys(state).reduce(
+          (acc, key) =>
+            state[key] === previousState[key]
+              ? acc
+              : {...acc, [key]: state[key]},
+          {},
+        )
 
-      keyDownOnMenu('c')
+        // eslint-disable-next-line no-await-in-loop
+        await step(arg)
 
-      expect(onStateChange).toHaveBeenCalledTimes(2)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          inputValue: 'c',
-          highlightedIndex: 3, // 4th item starts with C.
-          type: stateChangeTypes.MenuKeyDownCharacter,
-        }),
-      )
-
-      keyDownOnMenu('ArrowDown')
-
-      expect(onStateChange).toHaveBeenCalledTimes(3)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 4,
-          type: stateChangeTypes.MenuKeyDownArrowDown,
-        }),
-      )
-
-      keyDownOnMenu('ArrowUp')
-
-      expect(onStateChange).toHaveBeenCalledTimes(4)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 3,
-          type: stateChangeTypes.MenuKeyDownArrowUp,
-        }),
-      )
-
-      keyDownOnMenu('End')
-
-      expect(onStateChange).toHaveBeenCalledTimes(5)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: items.length - 1,
-          type: stateChangeTypes.MenuKeyDownEnd,
-        }),
-      )
-
-      keyDownOnMenu('Home')
-
-      expect(onStateChange).toHaveBeenCalledTimes(6)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 0,
-          type: stateChangeTypes.MenuKeyDownHome,
-        }),
-      )
-
-      keyDownOnMenu('Enter')
-
-      expect(onStateChange).toHaveBeenCalledTimes(7)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          selectedItem: items[0],
-          type: stateChangeTypes.MenuKeyDownEnter,
-        }),
-      )
-
-      mouseMoveItemAtIndex(3)
-
-      expect(onStateChange).toHaveBeenCalledTimes(8)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 3,
-          type: stateChangeTypes.ItemMouseMove,
-        }),
-      )
-
-      mouseLeaveMenu()
-
-      expect(onStateChange).toHaveBeenCalledTimes(9)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          type: stateChangeTypes.MenuMouseLeave,
-        }),
-      )
-
-      keyDownOnMenu('Escape')
-
-      expect(onStateChange).toHaveBeenCalledTimes(10)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          type: stateChangeTypes.MenuKeyDownEscape,
-        }),
-      )
-
-      keyDownOnToggleButton('ArrowDown')
-
-      expect(onStateChange).toHaveBeenCalledTimes(11)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 1,
-          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        }),
-      )
-
-      keyDownOnMenu(' ')
-
-      expect(onStateChange).toHaveBeenCalledTimes(12)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: -1,
-          selectedItem: items[1],
-          isOpen: false,
-          type: stateChangeTypes.MenuKeyDownSpaceButton,
-        }),
-      )
-
-      keyDownOnToggleButton('ArrowDown')
-
-      expect(onStateChange).toHaveBeenCalledTimes(13)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          highlightedIndex: 2,
-          type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-        }),
-      )
-
-      clickOnItemAtIndex(3)
-
-      expect(onStateChange).toHaveBeenCalledTimes(14)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          selectedItem: items[3],
-          isOpen: false,
-          highlightedIndex: -1,
-          type: stateChangeTypes.ItemClick,
-        }),
-      )
-
-      keyDownOnToggleButton('a')
-
-      expect(onStateChange).toHaveBeenCalledTimes(15)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          inputValue: 'ca',
-          selectedItem: items[5], // 5 item starts with CA.
-          type: stateChangeTypes.ToggleButtonKeyDownCharacter,
-        }),
-      )
-
-      tab()
-
-      expect(onStateChange).toHaveBeenCalledTimes(16)
-      expect(onStateChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          isOpen: false,
-          type: stateChangeTypes.MenuBlur,
-        }),
-      )
+        expect(onStateChange).toHaveBeenCalledTimes(index + 1)
+        expect(onStateChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            ...newState,
+            type,
+          }),
+        )
+      }
+      
+      jest.runAllTimers()
+      jest.useRealTimers()
     })
 
     test('can have downshift actions executed', () => {
@@ -1342,7 +997,7 @@ describe('props', () => {
     })
   })
 
-  it('that are uncontrolled should not become controlled', () => {
+  test('that are uncontrolled should not become controlled', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderSelect()
 
@@ -1353,7 +1008,7 @@ describe('props', () => {
     )
   })
 
-  it('that are controlled should not become uncontrolled', () => {
+  test('that are controlled should not become uncontrolled', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
     const {rerender} = renderSelect({highlightedIndex: 3})
 

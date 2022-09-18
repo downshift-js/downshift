@@ -1,7 +1,13 @@
 import {act, renderHook} from '@testing-library/react-hooks'
-import {renderMultipleCombobox, renderUseMultipleSelection} from '../testUtils'
-import {items} from '../../testUtils'
-// eslint-disable-next-line import/default
+import {
+  clickOnInput,
+  focusSelectedItemAtIndex,
+  getSelectedItemAtIndex,
+  getSelectedItems,
+  renderMultipleCombobox,
+  renderUseMultipleSelection,
+} from '../testUtils'
+import {getInput, items, keyDownOnInput} from '../../testUtils'
 import utils from '../../utils'
 import useMultipleSelection from '..'
 
@@ -101,138 +107,121 @@ describe('getDropdownProps', () => {
 
   describe('event handlers', () => {
     describe('on keydown', () => {
-      test('arrow left should make first selected item active', () => {
-        const {keyDownOnInput, getSelectedItemAtIndex} = renderMultipleCombobox(
-          {
-            multipleSelectionProps: {
-              initialSelectedItems: [items[0], items[1]],
-            },
+      test('arrow left should make first selected item active', async () => {
+        renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialSelectedItems: [items[0], items[1]],
           },
-        )
+        })
 
-        keyDownOnInput('ArrowLeft')
+        await keyDownOnInput('{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
       })
 
-      test('arrow left should not work if pressed with modifier keys', () => {
-        const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
+      test('arrow left should not work if pressed with modifier keys', async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
-        keyDownOnInput('ArrowLeft', {shiftKey: true})
+        await keyDownOnInput('{Shift>}{ArrowLeft}{/Shift}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('ArrowLeft', {altKey: true})
+        await keyDownOnInput('{Alt>}{ArrowLeft}{/Alt}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('ArrowLeft', {metaKey: true})
+        await keyDownOnInput('{Meta>}{ArrowLeft}{/Meta}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('ArrowLeft', {ctrlKey: true})
+        await keyDownOnInput('{Control>}{ArrowLeft}{/Control}')
 
         expect(getSelectedItems()).toHaveLength(2)
       })
 
-      test('backspace should remove the first selected item', () => {
-        const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
+      test('backspace should remove the first selected item', async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
-        keyDownOnInput('Backspace')
+        await keyDownOnInput('{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(1)
       })
 
-      test('backspace should not work if pressed with modifier keys', () => {
-        const {keyDownOnInput, getSelectedItems} = renderMultipleCombobox({
+      test('backspace should not work if pressed with modifier keys', async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
-        keyDownOnInput('Backspace', {shiftKey: true})
+        await keyDownOnInput('{Shift>}{Backspace}{/Shift}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('Backspace', {altKey: true})
+        await keyDownOnInput('{Alt>}{ArrowLeft}{/Alt}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('Backspace', {metaKey: true})
+        await keyDownOnInput('{Meta>}{ArrowLeft}{/Meta}')
 
         expect(getSelectedItems()).toHaveLength(2)
 
-        keyDownOnInput('Backspace', {ctrlKey: true})
+        await keyDownOnInput('{Control>}{ArrowLeft}{/Control}')
 
         expect(getSelectedItems()).toHaveLength(2)
       })
 
-      test('backspace should not work if pressed with cursor not on first position', () => {
-        const {
-          keyDownOnInput,
-          getSelectedItems,
-          input,
-        } = renderMultipleCombobox({
+      test('backspace should not work if pressed with cursor not on first position', async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
           },
           comboboxProps: {initialInputValue: 'test'},
         })
+        const input = getInput()
 
         input.selectionStart = 1
         input.selectionEnd = 1
-        keyDownOnInput('Backspace')
+        await keyDownOnInput('{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(2)
       })
 
-      test('backspace should not work if pressed with cursor highlighting text', () => {
-        const {
-          keyDownOnInput,
-          getSelectedItems,
-          input,
-        } = renderMultipleCombobox({
+      test('backspace should not work if pressed with cursor highlighting text', async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
           },
           comboboxProps: {initialInputValue: 'test'},
         })
+        const input = getInput()
 
         input.selectionStart = 0
         input.selectionEnd = 3
-        keyDownOnInput('Backspace')
+        await keyDownOnInput('{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(2)
       })
 
-      test("other than the ones supported don't affect anything", () => {
-        const {
-          keyDownOnInput,
-          getSelectedItems,
-          input,
-        } = renderMultipleCombobox({
+      test("other than the ones supported don't affect anything", async () => {
+        renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
           },
         })
 
-        keyDownOnInput('Alt')
-        keyDownOnInput('Control')
+        await keyDownOnInput('{Alt}')
+        await keyDownOnInput('{Control}')
 
         expect(getSelectedItems()).toHaveLength(2)
-        expect(input).toHaveFocus()
+        expect(getInput()).toHaveFocus()
       })
     })
 
-    test('on click it should remove active status from item if any', () => {
-      const {
-        keyDownOnInput,
-        getSelectedItemAtIndex,
-        clickOnInput,
-        focusSelectedItemAtIndex,
-      } = renderMultipleCombobox({
+    test('on click it should remove active status from item if any', async () => {
+      renderMultipleCombobox({
         multipleSelectionProps: {
           initialSelectedItems: [items[0], items[1]],
           initialActiveIndex: 1,
@@ -240,11 +229,11 @@ describe('getDropdownProps', () => {
       })
 
       focusSelectedItemAtIndex(1)
-      clickOnInput()
+      await clickOnInput()
 
       expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
 
-      keyDownOnInput('ArrowLeft')
+      await keyDownOnInput('{ArrowLeft}')
 
       expect(getSelectedItemAtIndex(1)).toHaveFocus()
       expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')

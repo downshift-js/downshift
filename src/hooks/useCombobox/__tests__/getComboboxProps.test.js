@@ -1,8 +1,7 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {renderUseCombobox} from '../testUtils'
-import {defaultIds, items} from '../../testUtils'
-import useCombobox from '..' // eslint-disable-next-line import/default
+import {renderUseCombobox, defaultIds, items} from '../testUtils'
+import useCombobox from '..'
 import utils from '../../utils'
 
 describe('getComboboxProps', () => {

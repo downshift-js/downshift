@@ -1,8 +1,7 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
-import {renderCombobox, renderUseCombobox} from '../testUtils'
-import {defaultIds, items} from '../../testUtils'
-// eslint-disable-next-line import/default
+import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
+import {defaultIds, items, mouseLeaveItemAtIndex, mouseMoveItemAtIndex} from '../../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
 
@@ -104,15 +103,17 @@ describe('getMenuProps', () => {
   describe('event handlers', () => {
     describe('on key down', () => {
       describe('on mouse leave', () => {
-        test('the highlightedIndex should be reset', () => {
-          const {mouseLeaveMenu, input} = renderCombobox({
+        test('the highlightedIndex should be reset', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
             initialIsOpen: true,
-            initialHighlightedIndex: 2,
+            initialHighlightedIndex,
           })
 
-          mouseLeaveMenu()
+          await mouseMoveItemAtIndex(initialHighlightedIndex)
+          await mouseLeaveItemAtIndex(initialHighlightedIndex)
 
-          expect(input).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
         })
       })
     })

@@ -1,7 +1,8 @@
 import React from 'react'
-import {act} from '@testing-library/react'
+import {screen, act} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
-const items = [
+export const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -30,7 +31,16 @@ const items = [
   'Oganesson',
 ]
 
-const defaultIds = {
+export const dataTestIds = {
+  toggleButton: 'toggle-button-id',
+  menu: 'menu-id',
+  item: index => `item-id-${index}`,
+  input: 'input-id',
+  selectedItemPrefix: 'selected-item-id',
+  selectedItem: index => `selected-item-id-${index}`,
+}
+
+export const defaultIds = {
   labelId: 'downshift-test-id-label',
   menuId: 'downshift-test-id-menu',
   getItemId: index => `downshift-test-id-item-${index}`,
@@ -38,14 +48,13 @@ const defaultIds = {
   inputId: 'downshift-test-id-input',
 }
 
-const waitForDebouncedA11yStatusUpdate = () =>
+export const waitForDebouncedA11yStatusUpdate = () =>
   act(() => jest.advanceTimersByTime(200))
 
-const MemoizedItem = React.memo(function Item({
+export const MemoizedItem = React.memo(function Item({
   index,
   item,
   getItemProps,
-  dataTestIds,
   stringItem,
   ...rest
 }) {
@@ -60,4 +69,55 @@ const MemoizedItem = React.memo(function Item({
   )
 })
 
-export {items, defaultIds, waitForDebouncedA11yStatusUpdate, MemoizedItem}
+export const user = userEvent.setup({delay: null})
+
+export function getLabel() {
+  return screen.getByText(/choose an element/i)
+}
+export function getMenu() {
+  return screen.getByRole('listbox')
+}
+export function getToggleButton() {
+  return screen.getByTestId(dataTestIds.toggleButton)
+}
+export function getItemAtIndex(index) {
+  return getItems()[index]
+}
+export function getItems() {
+  return screen.queryAllByRole('option')
+}
+export function getInput() {
+  return screen.getByRole('textbox')
+}
+export async function clickOnItemAtIndex(index) {
+  await user.click(getItemAtIndex(index))
+}
+export async function clickOnToggleButton() {
+  await user.click(getToggleButton())
+}
+export async function mouseMoveItemAtIndex(index) {
+  await user.hover(getItemAtIndex(index))
+}
+export async function mouseLeaveItemAtIndex(index) {
+  await user.unhover(getItemAtIndex(index))
+}
+export async function keyDownOnToggleButton(keys) {
+  if (document.activeElement !== getToggleButton()) {
+    getToggleButton().focus()
+  }
+
+  await user.keyboard(keys)
+}
+export async function keyDownOnInput(keys) {
+  if (document.activeElement !== getInput()) {
+    getInput().focus()
+  }
+
+  await user.keyboard(keys)
+}
+export function getA11yStatusContainer() {
+  return screen.queryByRole('status')
+}
+export async function tab(shiftKey = false) {
+  await user.tab({shift: shiftKey})
+}
