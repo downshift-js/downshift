@@ -242,22 +242,21 @@ export interface UseSelectState<Item> {
 }
 
 export enum UseSelectStateChangeTypes {
-  MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
-  MenuKeyDownArrowUp = '__menu_keydown_arrow_up__',
-  MenuKeyDownEscape = '__menu_keydown_escape__',
-  MenuKeyDownHome = '__menu_keydown_home__',
-  MenuKeyDownEnd = '__menu_keydown_end__',
-  MenuKeyDownEnter = '__menu_keydown_enter__',
-  MenuKeyDownSpaceButton = '__menu_keydown_space_button__',
-  MenuKeyDownCharacter = '__menu_keydown_character__',
-  MenuBlur = '__menu_blur__',
+  ToggleButtonClick = '__togglebutton_click__',
+  ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
+  ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
+  ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
+  ToggleButtonKeyDownEscape = '__togglebutton_keydown_escape__',
+  ToggleButtonKeyDownHome = '__togglebutton_keydown_home__',
+  ToggleButtonKeyDownEnd = '__togglebutton_keydown_end__',
+  ToggleButtonKeyDownEnter = '__togglebutton_keydown_enter__',
+  ToggleButtonKeyDownSpaceButton = '__togglebutton_keydown_space_button__',
+  ToggleButtonKeyDownPageUp = '__togglebutton_keydown_page_up__',
+  ToggleButtonKeyDownPageDown = '__togglebutton_keydown_page_down__',
+  ToggleButtonBlur = '__togglebutton_blur__',
   MenuMouseLeave = '__menu_mouse_leave__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
-  ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
-  ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
-  ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
-  ToggleButtonClick = '__togglebutton_click__',
   FunctionToggleMenu = '__function_toggle_menu__',
   FunctionOpenMenu = '__function_open_menu__',
   FunctionCloseMenu = '__function_close_menu__',
@@ -272,7 +271,6 @@ export interface UseSelectProps<Item> {
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -677,11 +675,10 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<
-  Item
-> &
-  UseMultipleSelectionPropGetters<Item> &
-  UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<Item> =
+  UseMultipleSelectionState<Item> &
+    UseMultipleSelectionPropGetters<Item> &
+    UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(

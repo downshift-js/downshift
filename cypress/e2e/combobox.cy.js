@@ -22,7 +22,7 @@ describe('combobox', () => {
   it('can arrow up to select last item', () => {
     cy.findByTestId('combobox-input')
       .type('{uparrow}{enter}') // open menu, last option is focused
-      .should('have.value', 'Purple')
+      .should('have.value', 'Skyblue')
   })
 
   it('can arrow down to select first item', () => {
@@ -46,7 +46,7 @@ describe('combobox', () => {
   it('can use end arrow to select last item', () => {
     cy.findByTestId('combobox-input')
       .type('{downarrow}{end}{enter}') // open to first, go to last by end.
-      .should('have.value', 'Purple')
+      .should('have.value', 'Skyblue')
   })
 
   it('resets the item on blur', () => {

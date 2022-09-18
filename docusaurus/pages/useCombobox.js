@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
 
 import {useCombobox} from '../../src'
-
-const items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
+import {colors} from '../utils'
 
 export default function DropdownCombobox() {
-  const [inputItems, setInputItems] = useState(items)
+  const [inputItems, setInputItems] = useState(colors)
   const {
     isOpen,
     getToggleButtonProps,
@@ -21,7 +20,7 @@ export default function DropdownCombobox() {
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
       setInputItems(
-        items.filter(item =>
+        colors.filter(item =>
           item.toLowerCase().startsWith(inputValue.toLowerCase()),
         ),
       )

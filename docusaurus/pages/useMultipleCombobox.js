@@ -1,8 +1,8 @@
 import React from 'react'
 
 import {useCombobox, useMultipleSelection} from '../../src'
+import {colors} from '../utils'
 
-const colors = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
 const initialSelectedItems = [colors[0], colors[1]]
 
 function getFilteredItems(selectedItems, inputValue) {
@@ -166,7 +166,7 @@ export default function DropdownMultipleCombobox() {
           </button>
           <button
             style={{padding: '4px 8px'}}
-            aria-label="toggle menu"
+            aria-label="clear selection"
             data-testid="clear-button"
             onClick={clearSelection}
           >

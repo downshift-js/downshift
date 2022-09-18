@@ -8,13 +8,12 @@ import {
 import {isReactNative} from '../is.macro'
 import {
   scrollIntoView,
-  getNextWrappingIndex,
   getState,
   generateId,
   debounce,
-  targetWithinDownshift,
   validateControlledUnchanged,
   noop,
+  targetWithinDownshift,
 } from '../utils'
 import setStatus from '../set-a11y-status'
 
@@ -214,7 +213,6 @@ const defaultProps = {
   stateReducer,
   getA11ySelectionMessage,
   scrollIntoView,
-  circularNavigation: false,
   environment:
     /* istanbul ignore next (ssr) */
     typeof window === 'undefined' ? {} : window,
@@ -271,7 +269,7 @@ function getInitialState(props) {
   }
 }
 
-function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
+function getHighlightedIndexOnOpen(props, state, offset) {
   const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
   const {selectedItem, highlightedIndex} = state
 
@@ -290,16 +288,7 @@ function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
     return defaultHighlightedIndex
   }
   if (selectedItem) {
-    if (offset === 0) {
-      return items.indexOf(selectedItem)
-    }
-    return getNextWrappingIndex(
-      offset,
-      items.indexOf(selectedItem),
-      items.length,
-      getItemNodeFromIndex,
-      false,
-    )
+    return items.indexOf(selectedItem)
   }
   if (offset === 0) {
     return -1
@@ -316,7 +305,7 @@ function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
  * @param {Function} handleBlur Handler on blur from mouse or touch.
  * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
-function useMouseAndTouchTracker(
+ function useMouseAndTouchTracker(
   isOpen,
   downshiftElementRefs,
   environment,

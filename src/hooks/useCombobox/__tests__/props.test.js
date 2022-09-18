@@ -1,13 +1,27 @@
 import React from 'react'
 import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
 import {act} from '@testing-library/react'
-import {renderCombobox, renderUseCombobox} from '../testUtils'
-import * as stateChangeTypes from '../stateChangeTypes'
 import {
+  renderCombobox,
+  renderUseCombobox,
   items,
   defaultIds,
   waitForDebouncedA11yStatusUpdate,
-} from '../../testUtils'
+  getToggleButton,
+  getMenu,
+  getLabel,
+  getInput,
+  getItems,
+  clickOnItemAtIndex,
+  getA11yStatusContainer,
+  keyDownOnInput,
+  clickOnToggleButton,
+  changeInputValue,
+  mouseMoveItemAtIndex,
+  mouseLeaveItemAtIndex,
+  tab,
+} from '../testUtils'
+import * as stateChangeTypes from '../stateChangeTypes'
 import useCombobox from '..'
 
 describe('props', () => {
@@ -22,10 +36,10 @@ describe('props', () => {
 
   describe('id', () => {
     test('if passed will override downshift default', () => {
-      const {toggleButton, menu, label, input} = renderCombobox({
+      renderCombobox({
         id: 'my-custom-little-id',
       })
-      const elements = [toggleButton, menu, label, input]
+      const elements = [getToggleButton(), getMenu(), getLabel(), getInput()]
 
       elements.forEach(element => {
         expect(element).toHaveAttribute(
@@ -38,20 +52,20 @@ describe('props', () => {
 
   describe('items', () => {
     test('if passed as empty then menu will not open', () => {
-      const {getItems} = renderCombobox({items: [], isOpen: true})
+      renderCombobox({items: [], isOpen: true})
 
       expect(getItems()).toHaveLength(0)
     })
 
-    test('passed as objects should work with custom itemToString', () => {
+    test('passed as objects should work with custom itemToString', async () => {
       jest.useFakeTimers()
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
+      renderCombobox({
         items: [{str: 'aaa'}, {str: 'bbb'}],
         itemToString: item => item.str,
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -61,14 +75,14 @@ describe('props', () => {
   })
 
   describe('itemToString', () => {
-    test('should provide string version to a11y status message', () => {
+    test('should provide string version to a11y status message', async () => {
       jest.useFakeTimers()
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
+      renderCombobox({
         itemToString: () => 'custom-item',
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -84,13 +98,13 @@ describe('props', () => {
     })
     afterAll(jest.useRealTimers)
 
-    test('reports that an item has been selected', () => {
+    test('reports that an item has been selected', async () => {
       const itemIndex = 0
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
       })
 
-      clickOnItemAtIndex(itemIndex)
+      await clickOnItemAtIndex(itemIndex)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -98,24 +112,24 @@ describe('props', () => {
       )
     })
 
-    test('reports nothing if item is removed', () => {
-      const {keyDownOnInput, getA11yStatusContainer} = renderCombobox({
+    test('reports nothing if item is removed', async () => {
+      renderCombobox({
         initialSelectedItem: items[0],
       })
 
-      keyDownOnInput('Escape')
+      await keyDownOnInput('{Escape}')
       waitForDebouncedA11yStatusUpdate()
       jest.runAllTimers()
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is called with object that contains specific props', () => {
+    test('is called with object that contains specific props', async () => {
       const getA11ySelectionMessage = jest.fn()
       const inputValue = 'a'
       const isOpen = true
       const highlightedIndex = 0
-      const {clickOnItemAtIndex} = renderCombobox({
+      renderCombobox({
         inputValue,
         isOpen,
         highlightedIndex,
@@ -123,7 +137,7 @@ describe('props', () => {
         getA11ySelectionMessage,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11ySelectionMessage).toHaveBeenCalledWith({
@@ -138,13 +152,13 @@ describe('props', () => {
       })
     })
 
-    test('is replaced with the user provided one', () => {
-      const {clickOnItemAtIndex, getA11yStatusContainer} = renderCombobox({
+    test('is replaced with the user provided one', async () => {
+      renderCombobox({
         isOpen: true,
         getA11ySelectionMessage: () => 'custom message',
       })
 
-      clickOnItemAtIndex(3)
+      await clickOnItemAtIndex(3)
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
@@ -158,12 +172,12 @@ describe('props', () => {
     })
     afterAll(jest.useRealTimers)
 
-    test('reports that no results are available if items list is empty', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
+    test('reports that no results are available if items list is empty', async () => {
+      renderCombobox({
         items: [],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -171,12 +185,12 @@ describe('props', () => {
       )
     })
 
-    test('reports that one result is available if one item is shown', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
+    test('reports that one result is available if one item is shown', async () => {
+      renderCombobox({
         items: ['bla'],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -184,12 +198,12 @@ describe('props', () => {
       )
     })
 
-    test('reports the number of results available if more than one item are shown', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
+    test('reports the number of results available if more than one item are shown', async () => {
+      renderCombobox({
         items: ['bla', 'blabla'],
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent(
@@ -197,48 +211,48 @@ describe('props', () => {
       )
     })
 
-    test('is empty on menu close', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
+    test('is empty on menu close', async () => {
+      renderCombobox({
         items: ['bla', 'blabla'],
         initialIsOpen: true,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is removed after 500ms as a cleanup', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox()
+    test('is removed after 500ms as a cleanup', async () => {
+      renderCombobox()
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
       act(() => jest.advanceTimersByTime(500))
 
       expect(getA11yStatusContainer()).toHaveTextContent('')
     })
 
-    test('is replaced with the user provided one', () => {
-      const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
+    test('is replaced with the user provided one', async () => {
+      renderCombobox({
         getA11yStatusMessage: () => 'custom message',
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
 
-    test('is called with previousResultCount that gets updated correctly', () => {
+    test('is called with previousResultCount that gets updated correctly', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {clickOnToggleButton, changeInputValue} = renderCombobox({
+      renderCombobox({
         getA11yStatusMessage,
         items: inputItems,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
@@ -250,7 +264,7 @@ describe('props', () => {
       )
 
       inputItems.pop()
-      changeInputValue('a')
+      await changeInputValue('a')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
@@ -262,19 +276,19 @@ describe('props', () => {
       )
     })
 
-    test('is called with object that contains specific props at toggle', () => {
+    test('is called with object that contains specific props at toggle', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputValue = 'a'
       const highlightedIndex = 1
       const initialSelectedItem = items[highlightedIndex]
-      const {clickOnToggleButton} = renderCombobox({
+      renderCombobox({
         inputValue,
         initialSelectedItem,
         items,
         getA11yStatusMessage,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith({
@@ -289,7 +303,7 @@ describe('props', () => {
       })
     })
 
-    test('is added to the document provided by the user as prop', () => {
+    test('is added to the document provided by the user as prop', async () => {
       const environment = {
         document: {
           getElementById: jest.fn(() => ({
@@ -300,23 +314,18 @@ describe('props', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
-      const {clickOnToggleButton} = renderCombobox({items: [], environment})
+      renderCombobox({items: [], environment})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
     })
 
-    test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
+    test('is called when isOpen, highlightedIndex, inputValue or items change', async () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {
-        clickOnToggleButton,
-        rerender,
-        keyDownOnInput,
-        changeInputValue,
-      } = renderCombobox({
+      const {rerender} = renderCombobox({
         getA11yStatusMessage,
         items,
       })
@@ -339,7 +348,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -347,7 +356,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
 
-      changeInputValue('b')
+      await changeInputValue('b')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -355,7 +364,7 @@ describe('props', () => {
       )
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
 
-      keyDownOnInput('ArrowDown')
+      await keyDownOnInput('{ArrowDown}')
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).toHaveBeenCalledWith(
@@ -365,55 +374,50 @@ describe('props', () => {
     })
   })
 
-  describe('highlightedIndex', () => {
-    test('controls the state property if passed', () => {
-      const highlightedIndex = 1
-      const expectedItemId = defaultIds.getItemId(highlightedIndex)
-      const {keyDownOnInput, input} = renderCombobox({
-        isOpen: true,
-        highlightedIndex,
-      })
-
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
-
-      keyDownOnInput('ArrowDown')
-
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
-
-      keyDownOnInput('End')
-
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
-
-      keyDownOnInput('ArrowUp')
-
-      expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+  test('highlightedIndex controls the state property if passed', async () => {
+    const highlightedIndex = 1
+    const expectedItemId = defaultIds.getItemId(highlightedIndex)
+    renderCombobox({
+      isOpen: true,
+      highlightedIndex,
     })
+    const input = getInput()
+
+    expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+
+    await keyDownOnInput('{ArrowDown}')
+
+    expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+
+    await keyDownOnInput('{End}')
+
+    expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
+
+    await keyDownOnInput('{ArrowUp}')
+
+    expect(input).toHaveAttribute('aria-activedescendant', expectedItemId)
   })
 
   describe('inputValue', () => {
-    test('controls the state property if passed', () => {
-      const {
-        keyDownOnInput,
-        input,
-        blurInput,
-        clickOnItemAtIndex,
-      } = renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
+    test('controls the state property if passed', async () => {
+      renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
+      const input = getInput()
 
-      keyDownOnInput('ArrowDown')
-      keyDownOnInput('Enter')
+      await keyDownOnInput('{ArrowDown}')
+      await keyDownOnInput('{Enter}')
 
       expect(input).toHaveValue('Dohn Joe')
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
 
       expect(input).toHaveValue('Dohn Joe')
 
-      keyDownOnInput('ArrowUp')
-      keyDownOnInput('Enter')
+      await keyDownOnInput('{ArrowUp}')
+      await keyDownOnInput('{Enter}')
 
       expect(input).toHaveValue('Dohn Joe')
 
-      blurInput()
+      await tab()
 
       expect(input).toHaveValue('Dohn Joe')
     })
@@ -421,10 +425,11 @@ describe('props', () => {
     test('is changed once a new selectedItem comes from props', () => {
       const initialSelectedItem = 'John Doe'
       const finalSelectedItem = 'John Wick'
-      const {rerender, input} = renderCombobox({
+      const {rerender} = renderCombobox({
         isOpen: true,
         selectedItem: initialSelectedItem,
       })
+      const input = getInput()
 
       expect(input).toHaveValue(initialSelectedItem)
 
@@ -434,68 +439,56 @@ describe('props', () => {
     })
   })
 
-  describe('isOpen', () => {
-    test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        getItems,
-        blurInput,
-        keyDownOnInput,
-      } = renderCombobox({isOpen: true})
+  test('isOpen controls the state property if passed', async () => {
+    renderCombobox({isOpen: true})
 
-      expect(getItems()).toHaveLength(items.length)
+    expect(getItems()).toHaveLength(items.length)
 
-      clickOnToggleButton()
+    await clickOnToggleButton()
 
-      expect(getItems()).toHaveLength(items.length)
+    expect(getItems()).toHaveLength(items.length)
 
-      keyDownOnInput('Escape')
+    await keyDownOnInput('{Escape}')
 
-      expect(getItems()).toHaveLength(items.length)
+    expect(getItems()).toHaveLength(items.length)
 
-      blurInput()
+    await tab()
 
-      expect(getItems()).toHaveLength(items.length)
-    })
+    expect(getItems()).toHaveLength(items.length)
   })
 
-  describe('selectedItem', () => {
-    test('controls the state property if passed', () => {
-      const selectedItem = items[2]
-      const {
-        keyDownOnInput,
-        input,
-        clickOnItemAtIndex,
-        clickOnToggleButton,
-      } = renderCombobox({
-        selectedItem,
-        initialIsOpen: true,
-      })
+  test('selectedItem controls the state property if passed', async () => {
+    const selectedItem = items[2]
 
-      expect(input).toHaveValue(selectedItem)
-
-      keyDownOnInput('ArrowDown')
-      keyDownOnInput('Enter')
-      clickOnToggleButton()
-
-      expect(input).toHaveValue(selectedItem)
-
-      keyDownOnInput('ArrowUp')
-      keyDownOnInput('Enter')
-      clickOnToggleButton()
-
-      expect(input).toHaveValue(selectedItem)
-
-      keyDownOnInput('Escape')
-      clickOnToggleButton()
-
-      expect(input).toHaveValue(selectedItem)
-
-      clickOnItemAtIndex(1)
-      clickOnToggleButton()
-
-      expect(input).toHaveValue(selectedItem)
+    renderCombobox({
+      selectedItem,
+      initialIsOpen: true,
     })
+    const input = getInput()
+
+    expect(input).toHaveValue(selectedItem)
+
+    await keyDownOnInput('{ArrowDown}')
+    await keyDownOnInput('{Enter}')
+    await clickOnToggleButton()
+
+    expect(input).toHaveValue(selectedItem)
+
+    await keyDownOnInput('{ArrowUp}')
+    await keyDownOnInput('{Enter}')
+    await clickOnToggleButton()
+
+    expect(input).toHaveValue(selectedItem)
+
+    await keyDownOnInput('{Escape}')
+    await clickOnToggleButton()
+
+    expect(input).toHaveValue(selectedItem)
+
+    await clickOnItemAtIndex(1)
+    await clickOnToggleButton()
+
+    expect(input).toHaveValue(selectedItem)
   })
 
   describe('stateReducer', () => {
@@ -582,17 +575,9 @@ describe('props', () => {
       )
     })
 
-    test('is called at each state change with the appropriate change type', () => {
+    test('is called at each state change with the appropriate change type', async () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const {
-        clickOnToggleButton,
-        changeInputValue,
-        clickOnItemAtIndex,
-        mouseLeaveMenu,
-        mouseMoveItemAtIndex,
-        keyDownOnInput,
-        blurInput,
-      } = renderCombobox({stateReducer})
+      renderCombobox({stateReducer})
       const initialState = {
         isOpen: false,
         highlightedIndex: -1,
@@ -622,7 +607,8 @@ describe('props', () => {
           type: stateChangeTypes.ItemMouseMove,
         },
         {
-          step: mouseLeaveMenu,
+          step: mouseLeaveItemAtIndex,
+          args: 2,
           state: {
             isOpen: true,
             highlightedIndex: -1,
@@ -632,7 +618,7 @@ describe('props', () => {
           type: stateChangeTypes.MenuMouseLeave,
         },
         {
-          step: blurInput,
+          step: tab,
           state: {
             isOpen: false,
             highlightedIndex: -1,
@@ -654,7 +640,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'ArrowDown',
+          args: '{ArrowDown}',
           state: {
             isOpen: true,
             highlightedIndex: 0,
@@ -665,7 +651,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'Enter',
+          args: '{Enter}',
           state: {
             isOpen: false,
             highlightedIndex: -1,
@@ -676,7 +662,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'Escape',
+          args: '{Escape}',
           state: {
             isOpen: false,
             highlightedIndex: -1,
@@ -687,7 +673,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'ArrowDown',
+          args: '{ArrowDown}',
           state: {
             isOpen: true,
             highlightedIndex: 0,
@@ -698,7 +684,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'ArrowUp',
+          args: '{ArrowUp}',
           state: {
             isOpen: true,
             highlightedIndex: items.length - 1,
@@ -709,7 +695,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'Home',
+          args: '{Home}',
           state: {
             isOpen: true,
             highlightedIndex: 0,
@@ -720,7 +706,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'End',
+          args: '{End}',
           state: {
             isOpen: true,
             highlightedIndex: items.length - 1,
@@ -728,6 +714,17 @@ describe('props', () => {
             selectedItem: null,
           },
           type: stateChangeTypes.InputKeyDownEnd,
+        },
+        {
+          step: mouseMoveItemAtIndex,
+          args: 3,
+          state: {
+            isOpen: true,
+            highlightedIndex: 3,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.ItemMouseMove,
         },
         {
           step: clickOnItemAtIndex,
@@ -742,10 +739,10 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'ArrowUp',
+          args: '{ArrowUp}',
           state: {
             isOpen: true,
-            highlightedIndex: 2,
+            highlightedIndex: 3,
             inputValue: items[3],
             selectedItem: items[3],
           },
@@ -753,7 +750,7 @@ describe('props', () => {
         },
         {
           step: keyDownOnInput,
-          args: 'Escape',
+          args: '{Escape}',
           state: {
             isOpen: false,
             highlightedIndex: -1,
@@ -770,7 +767,8 @@ describe('props', () => {
         const {step, state, args, type} = testCases[index]
         const previousState = testCases[index - 1]?.state ?? initialState
 
-        step(args)
+        // eslint-disable-next-line no-await-in-loop
+        await step(args)
 
         expect(stateReducer).toHaveBeenCalledTimes(index + 1)
         expect(stateReducer).toHaveBeenLastCalledWith(
@@ -780,21 +778,21 @@ describe('props', () => {
       }
     })
 
-    test('replaces prop values with user defined', () => {
+    test('replaces prop values with user defined', async () => {
       const inputValue = 'Robin Hood'
       const stateReducer = jest.fn((s, a) => {
         const changes = a.changes
         changes.inputValue = inputValue
         return changes
       })
-      const {clickOnToggleButton, input} = renderCombobox({stateReducer})
+      renderCombobox({stateReducer})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
-      expect(input).toHaveValue('Robin Hood')
+      expect(getInput()).toHaveValue('Robin Hood')
     })
 
-    test('receives state, changes and type', () => {
+    test('receives state, changes and type', async () => {
       const stateReducer = jest.fn((s, a) => {
         expect(a.type).not.toBeUndefined()
         expect(a.type).not.toBeNull()
@@ -807,12 +805,12 @@ describe('props', () => {
 
         return a.changes
       })
-      const {clickOnToggleButton} = renderCombobox({stateReducer})
+      renderCombobox({stateReducer})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
     })
 
-    test('changes are visible in onChange handlers', () => {
+    test('changes are visible in onChange handlers', async () => {
       const highlightedIndex = 2
       const selectedItem = {foo: 'bar'}
       const isOpen = true
@@ -828,7 +826,7 @@ describe('props', () => {
       const onHighlightedIndexChange = jest.fn()
       const onIsOpenChange = jest.fn()
       const onStateChange = jest.fn()
-      const {clickOnToggleButton} = renderCombobox({
+      renderCombobox({
         stateReducer,
         onStateChange,
         onSelectedItemChange,
@@ -837,7 +835,7 @@ describe('props', () => {
         onInputValueChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onInputValueChange).toHaveBeenCalledTimes(1)
       expect(onInputValueChange).toHaveBeenCalledWith(
@@ -874,14 +872,14 @@ describe('props', () => {
   })
 
   describe('onInputValueChange', () => {
-    test('is called at inputValue change', () => {
+    test('is called at inputValue change', async () => {
       const inputValue = 'test'
       const onInputValueChange = jest.fn()
-      const {changeInputValue} = renderCombobox({
+      renderCombobox({
         onInputValueChange,
       })
 
-      changeInputValue(inputValue)
+      await changeInputValue(inputValue)
 
       expect(onInputValueChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -890,33 +888,33 @@ describe('props', () => {
       )
     })
 
-    test('is not called at if inputValue is the same', () => {
+    test('is not called at if inputValue is the same', async () => {
       const inputValue = items[0]
       const onInputValueChange = jest.fn()
-      const {clickOnItemAtIndex} = renderCombobox({
+      renderCombobox({
         initialInputValue: inputValue,
         initialIsOpen: true,
         onInputValueChange,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
 
       expect(onInputValueChange).not.toHaveBeenCalled()
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let inputValue = 'nep'
-      const {changeInputValue, input, rerender} = renderCombobox({
+      const {rerender} = renderCombobox({
         inputValue,
         onSelectedItemChange: changes => {
           inputValue = changes.inputValue
         },
       })
 
-      changeInputValue('nept')
+      await changeInputValue('nept')
       rerender({inputValue})
 
-      expect(input).toHaveValue(inputValue)
+      expect(getInput()).toHaveValue(inputValue)
     })
 
     test('can have downshift actions executed', () => {
@@ -936,15 +934,15 @@ describe('props', () => {
   })
 
   describe('onSelectedItemChange', () => {
-    test('is called at selectedItem change', () => {
+    test('is called at selectedItem change', async () => {
       const itemIndex = 0
       const onSelectedItemChange = jest.fn()
-      const {clickOnItemAtIndex} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         onSelectedItemChange,
       })
 
-      clickOnItemAtIndex(itemIndex)
+      await clickOnItemAtIndex(itemIndex)
 
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -954,24 +952,24 @@ describe('props', () => {
       )
     })
 
-    test('is not called at if selectedItem is the same', () => {
+    test('is not called at if selectedItem is the same', async () => {
       const itemIndex = 0
       const onSelectedItemChange = jest.fn()
-      const {clickOnItemAtIndex} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         initialSelectedItem: items[itemIndex],
         onSelectedItemChange,
       })
 
-      clickOnItemAtIndex(itemIndex)
+      await clickOnItemAtIndex(itemIndex)
 
       expect(onSelectedItemChange).not.toHaveBeenCalled()
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let selectedItem = items[2]
       const selectionIndex = 3
-      const {clickOnItemAtIndex, input, rerender} = renderCombobox({
+      const {rerender} = renderCombobox({
         initialIsOpen: true,
         selectedItem,
         onSelectedItemChange: changes => {
@@ -979,21 +977,21 @@ describe('props', () => {
         },
       })
 
-      clickOnItemAtIndex(selectionIndex)
+      await clickOnItemAtIndex(selectionIndex)
       rerender({selectedItem})
 
-      expect(input).toHaveValue(items[selectionIndex])
+      expect(getInput()).toHaveValue(items[selectionIndex])
     })
 
-    test('works correctly with the corresponding control prop in strict mode', () => {
+    test('works correctly with the corresponding control prop in strict mode', async () => {
       const onSelectedItemChange = jest.fn()
       const itemIndex = 0
-      const {clickOnItemAtIndex} = renderCombobox(
+      renderCombobox(
         {selectedItem: null, initialIsOpen: true, onSelectedItemChange},
         ui => <React.StrictMode>{ui}</React.StrictMode>,
       )
 
-      clickOnItemAtIndex(itemIndex)
+      await clickOnItemAtIndex(itemIndex)
 
       expect(onSelectedItemChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1019,14 +1017,14 @@ describe('props', () => {
   })
 
   describe('onHighlightedIndexChange', () => {
-    test('is called at each highlightedIndex change', () => {
+    test('is called at each highlightedIndex change', async () => {
       const onHighlightedIndexChange = jest.fn()
-      const {keyDownOnInput} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         onHighlightedIndexChange,
       })
 
-      keyDownOnInput('ArrowDown')
+      await keyDownOnInput('{ArrowDown}')
 
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1036,37 +1034,37 @@ describe('props', () => {
       )
     })
 
-    test('is not called if highlightedIndex is the same', () => {
+    test('is not called if highlightedIndex is the same', async () => {
       const onHighlightedIndexChange = jest.fn()
-      const {keyDownOnInput, mouseMoveItemAtIndex} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
         circularNavigation: false,
       })
 
-      keyDownOnInput('ArrowUp')
+      await keyDownOnInput('{ArrowUp}')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      keyDownOnInput('Home')
+      await keyDownOnInput('{Home}')
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
-      mouseMoveItemAtIndex(0)
+      await mouseMoveItemAtIndex(0)
 
       expect(onHighlightedIndexChange).not.toHaveBeenCalled()
     })
 
-    test('is called on first open when initialSelectedItem is set', () => {
+    test('is called on first open when initialSelectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderCombobox({
+      renderCombobox({
         initialSelectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1076,15 +1074,15 @@ describe('props', () => {
       )
     })
 
-    test('is called on first open when selectedItem is set', () => {
+    test('is called on first open when selectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderCombobox({
+      renderCombobox({
         selectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1094,15 +1092,15 @@ describe('props', () => {
       )
     })
 
-    test('is called on first open when defaultSelectedItem is set', () => {
+    test('is called on first open when defaultSelectedItem is set', async () => {
       const index = 2
       const onHighlightedIndexChange = jest.fn()
-      const {clickOnToggleButton} = renderCombobox({
+      renderCombobox({
         defaultSelectedItem: items[index],
         onHighlightedIndexChange,
       })
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onHighlightedIndexChange).toHaveBeenCalledTimes(1)
       expect(onHighlightedIndexChange).toHaveBeenCalledWith(
@@ -1112,9 +1110,9 @@ describe('props', () => {
       )
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let highlightedIndex = 2
-      const {keyDownOnInput, input, rerender} = renderCombobox({
+      const {rerender} = renderCombobox({
         isOpen: true,
         highlightedIndex,
         onHighlightedIndexChange: changes => {
@@ -1122,10 +1120,10 @@ describe('props', () => {
         },
       })
 
-      keyDownOnInput('ArrowDown')
+      await keyDownOnInput('{ArrowDown}')
       rerender({highlightedIndex, isOpen: true})
 
-      expect(input).toHaveAttribute(
+      expect(getInput()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(3),
       )
@@ -1151,14 +1149,14 @@ describe('props', () => {
   })
 
   describe('onIsOpenChange', () => {
-    test('is called at each isOpen change', () => {
+    test('is called at each isOpen change', async () => {
       const onIsOpenChange = jest.fn()
-      const {keyDownOnInput} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         onIsOpenChange,
       })
 
-      keyDownOnInput('Escape')
+      await keyDownOnInput('{Escape}')
 
       expect(onIsOpenChange).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -1168,28 +1166,28 @@ describe('props', () => {
       )
     })
 
-    test('is not called at if isOpen is the same', () => {
+    test('is not called at if isOpen is the same', async () => {
       const onIsOpenChange = jest.fn()
-      const {clickOnItemAtIndex} = renderCombobox({
+      renderCombobox({
         defaultIsOpen: true,
         onIsOpenChange,
       })
 
-      clickOnItemAtIndex(0)
+      await clickOnItemAtIndex(0)
 
       expect(onIsOpenChange).not.toHaveBeenCalledWith()
     })
 
-    test('works correctly with the corresponding control prop', () => {
+    test('works correctly with the corresponding control prop', async () => {
       let isOpen = true
-      const {keyDownOnInput, getItems, rerender} = renderCombobox({
+      const {rerender} = renderCombobox({
         isOpen,
         onIsOpenChange: changes => {
           isOpen = changes.isOpen
         },
       })
 
-      keyDownOnInput('Escape')
+      await keyDownOnInput('{Escape}')
       rerender({isOpen})
 
       expect(getItems()).toHaveLength(0)
@@ -1212,19 +1210,11 @@ describe('props', () => {
   })
 
   describe('onStateChange', () => {
-    test('is called at each state property change', () => {
+    test('is called at each state property change', async () => {
       const onStateChange = jest.fn()
-      const {
-        clickOnToggleButton,
-        changeInputValue,
-        clickOnItemAtIndex,
-        mouseLeaveMenu,
-        mouseMoveItemAtIndex,
-        keyDownOnInput,
-        blurInput,
-      } = renderCombobox({onStateChange})
+      renderCombobox({onStateChange})
 
-      clickOnToggleButton()
+      await clickOnToggleButton()
 
       expect(onStateChange).toHaveBeenCalledTimes(1)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1234,7 +1224,7 @@ describe('props', () => {
         }),
       )
 
-      changeInputValue('t')
+      await changeInputValue('t')
 
       expect(onStateChange).toHaveBeenCalledTimes(2)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1244,17 +1234,17 @@ describe('props', () => {
         }),
       )
 
-      mouseMoveItemAtIndex(1)
+      await mouseMoveItemAtIndex(2)
 
       expect(onStateChange).toHaveBeenCalledTimes(3)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          highlightedIndex: 1,
+          highlightedIndex: 2,
           type: stateChangeTypes.ItemMouseMove,
         }),
       )
 
-      clickOnItemAtIndex(2)
+      await clickOnItemAtIndex(2)
 
       expect(onStateChange).toHaveBeenCalledTimes(4)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1266,17 +1256,17 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('ArrowDown')
+      await keyDownOnInput('{ArrowDown}')
 
       expect(onStateChange).toHaveBeenCalledTimes(5)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          highlightedIndex: 3,
+          highlightedIndex: 2,
           type: stateChangeTypes.InputKeyDownArrowDown,
         }),
       )
 
-      keyDownOnInput('End')
+      await keyDownOnInput('{End}')
 
       expect(onStateChange).toHaveBeenCalledTimes(6)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1286,7 +1276,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('Home')
+      await keyDownOnInput('{Home}')
 
       expect(onStateChange).toHaveBeenCalledTimes(7)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1296,7 +1286,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('Enter')
+      await keyDownOnInput('{Enter}')
 
       expect(onStateChange).toHaveBeenCalledTimes(8)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1308,7 +1298,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('Escape')
+      await keyDownOnInput('{Escape}')
 
       expect(onStateChange).toHaveBeenCalledTimes(9)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1319,7 +1309,7 @@ describe('props', () => {
         }),
       )
 
-      keyDownOnInput('ArrowUp')
+      await keyDownOnInput('{ArrowUp}')
 
       expect(onStateChange).toHaveBeenCalledTimes(10)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1330,7 +1320,8 @@ describe('props', () => {
         }),
       )
 
-      mouseLeaveMenu()
+      await mouseMoveItemAtIndex(25)
+      await mouseLeaveItemAtIndex(25)
 
       expect(onStateChange).toHaveBeenCalledTimes(11)
       expect(onStateChange).toHaveBeenLastCalledWith(
@@ -1340,7 +1331,7 @@ describe('props', () => {
         }),
       )
 
-      blurInput()
+      await tab()
 
       expect(onStateChange).toHaveBeenCalledTimes(12)
       expect(onStateChange).toHaveBeenLastCalledWith(
