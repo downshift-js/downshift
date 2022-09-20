@@ -149,7 +149,6 @@ class Downshift extends Component {
   inputId = this.props.inputId || `${this.id}-input`
   getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
 
-  input = null
   items = []
   // itemCount can be changed asynchronously
   // from within downshift (so it can't come from a prop)

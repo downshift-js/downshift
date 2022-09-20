@@ -311,11 +311,11 @@ describe('getToggleButtonProps', () => {
 
     describe('on keydown', () => {
       describe('character key', () => {
-        beforeEach(jest.useFakeTimers)
+        beforeEach(() => jest.useFakeTimers())
         afterEach(() => {
           reactAct(() => jest.runAllTimers())
         })
-        afterAll(jest.useRealTimers)
+        afterAll(() => jest.useRealTimers())
 
         const startsWithCharacter = (option, character) => {
           return option.toLowerCase().startsWith(character.toLowerCase())

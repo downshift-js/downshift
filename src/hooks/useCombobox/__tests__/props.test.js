@@ -78,11 +78,11 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      act(jest.runAllTimers)
+      act(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('reports that an item has been selected', () => {
       const itemIndex = 0
@@ -152,11 +152,11 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      act(jest.runAllTimers)
+      act(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('reports that no results are available if items list is empty', () => {
       const {clickOnToggleButton, getA11yStatusContainer} = renderCombobox({
@@ -311,15 +311,11 @@ describe('props', () => {
     test('is called when isOpen, highlightedIndex, inputValue or items change', () => {
       const getA11yStatusMessage = jest.fn()
       const inputItems = ['aaa', 'bbb']
-      const {
-        clickOnToggleButton,
-        rerender,
-        keyDownOnInput,
-        changeInputValue,
-      } = renderCombobox({
-        getA11yStatusMessage,
-        items,
-      })
+      const {clickOnToggleButton, rerender, keyDownOnInput, changeInputValue} =
+        renderCombobox({
+          getA11yStatusMessage,
+          items,
+        })
 
       waitForDebouncedA11yStatusUpdate()
 
@@ -392,12 +388,8 @@ describe('props', () => {
 
   describe('inputValue', () => {
     test('controls the state property if passed', () => {
-      const {
-        keyDownOnInput,
-        input,
-        blurInput,
-        clickOnItemAtIndex,
-      } = renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
+      const {keyDownOnInput, input, blurInput, clickOnItemAtIndex} =
+        renderCombobox({isOpen: true, inputValue: 'Dohn Joe'})
 
       keyDownOnInput('ArrowDown')
       keyDownOnInput('Enter')
@@ -436,12 +428,8 @@ describe('props', () => {
 
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        getItems,
-        blurInput,
-        keyDownOnInput,
-      } = renderCombobox({isOpen: true})
+      const {clickOnToggleButton, getItems, blurInput, keyDownOnInput} =
+        renderCombobox({isOpen: true})
 
       expect(getItems()).toHaveLength(items.length)
 
@@ -462,15 +450,11 @@ describe('props', () => {
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
       const selectedItem = items[2]
-      const {
-        keyDownOnInput,
-        input,
-        clickOnItemAtIndex,
-        clickOnToggleButton,
-      } = renderCombobox({
-        selectedItem,
-        initialIsOpen: true,
-      })
+      const {keyDownOnInput, input, clickOnItemAtIndex, clickOnToggleButton} =
+        renderCombobox({
+          selectedItem,
+          initialIsOpen: true,
+        })
 
       expect(input).toHaveValue(selectedItem)
 
@@ -499,11 +483,11 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       hooksAct(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('is called at each state change with the function change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)

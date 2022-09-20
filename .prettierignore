@@ -2,5 +2,3 @@ node_modules/
 coverage/
 dist/
 preact/
-package-lock.json
-package.json

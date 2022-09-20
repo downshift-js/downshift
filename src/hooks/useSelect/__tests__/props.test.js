@@ -79,9 +79,11 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    beforeEach(jest.useFakeTimers)
-    beforeEach(jest.clearAllTimers)
-    afterAll(jest.useRealTimers)
+    beforeEach(() => jest.useFakeTimers())
+    afterEach(() => {
+      act(() => jest.runAllTimers())
+    })
+    afterAll(() => jest.useRealTimers())
 
     test('reports that an item has been selected', () => {
       const itemIndex = 0
@@ -142,11 +144,11 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      act(jest.runAllTimers)
+      act(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('reports that no results are available if items list is empty', () => {
       const {clickOnToggleButton, getA11yStatusContainer} = renderSelect({
@@ -393,12 +395,8 @@ describe('props', () => {
 
   describe('isOpen', () => {
     test('controls the state property if passed', () => {
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        blurMenu,
-        getItems,
-      } = renderSelect({isOpen: true})
+      const {clickOnToggleButton, keyDownOnMenu, blurMenu, getItems} =
+        renderSelect({isOpen: true})
       expect(getItems()).toHaveLength(items.length)
 
       clickOnToggleButton()
@@ -415,11 +413,8 @@ describe('props', () => {
   describe('selectedItem', () => {
     test('controls the state property if passed', () => {
       const selectedItem = items[2]
-      const {
-        toggleButton,
-        keyDownOnToggleButton,
-        clickOnItemAtIndex,
-      } = renderSelect({selectedItem, isOpen: true})
+      const {toggleButton, keyDownOnToggleButton, clickOnItemAtIndex} =
+        renderSelect({selectedItem, isOpen: true})
 
       expect(toggleButton).toHaveTextContent(items[2])
 
@@ -492,11 +487,11 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       hooksAct(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('is called at each state change with the function change type', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
@@ -816,11 +811,8 @@ describe('props', () => {
     // https://github.com/downshift-js/downshift/issues/965
     test('is called only once on item selection', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
-      const {
-        clickOnToggleButton,
-        keyDownOnMenu,
-        clickOnItemAtIndex,
-      } = renderSelect({stateReducer, initialIsOpen: true})
+      const {clickOnToggleButton, keyDownOnMenu, clickOnItemAtIndex} =
+        renderSelect({stateReducer, initialIsOpen: true})
 
       clickOnItemAtIndex(0)
 

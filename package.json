@@ -66,57 +66,59 @@
     "react": ">=16.12.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.14.8",
+    "@babel/runtime": "^7.19.0",
     "compute-scroll-into-view": "^1.0.17",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "react-is": "^17.0.2",
-    "tslib": "^2.3.0"
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
-    "@babel/helpers": "^7.14.8",
-    "@docusaurus/core": "^2.0.1",
-    "@docusaurus/module-type-aliases": "^2.0.1",
-    "@docusaurus/preset-classic": "^2.0.1",
-    "@mdx-js/react": "^1.6.22",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-typescript": "^8.2.5",
-    "@testing-library/cypress": "^8.0.0",
-    "@testing-library/dom": "^8.1.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/preact": "^2.0.1",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/helpers": "^7.19.0",
+    "@cypress/webpack-preprocessor": "^5.12.2",
+    "@docusaurus/core": "^2.1.0",
+    "@docusaurus/module-type-aliases": "^2.1.0",
+    "@docusaurus/preset-classic": "^2.1.0",
+    "@mdx-js/react": "^2.1.3",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-typescript": "^8.5.0",
+    "@testing-library/cypress": "^8.0.3",
+    "@testing-library/dom": "^8.18.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/preact": "^3.2.2",
     "@testing-library/react": "^12.0.0",
-    "@testing-library/react-hooks": "^7.0.1",
+    "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^29.0.3",
     "@types/react": "^17.0.15",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-no-side-effect-class-properties": "0.0.7",
     "babel-preset-react-native": "^4.0.1",
     "buble": "^0.20.0",
-    "cpy-cli": "^3.1.1",
+    "cpy-cli": "^4.2.0",
     "cross-env": "^7.0.3",
-    "cypress": "^10.3.1",
+    "cypress": "^10.8.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-cypress": "^2.11.3",
-    "eslint-plugin-react": "7.24.0",
-    "flow-bin": "^0.156.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-react": "7.31.8",
+    "flow-bin": "^0.187.0",
     "flow-coverage-report": "^0.8.0",
-    "get-pkg-repo": "4.1.1",
-    "kcd-scripts": "^11.2.0",
-    "node-polyfill-webpack-plugin": "^2.0.0",
+    "get-pkg-repo": "5.0.0",
+    "kcd-scripts": "^12.3.0",
+    "node-polyfill-webpack-plugin": "^2.0.1",
     "npm-run-all": "^4.1.5",
-    "preact": "^10.5.14",
-    "prism-react-renderer": "^1.3.3",
+    "preact": "^10.11.0",
+    "prism-react-renderer": "^1.3.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-native": "^0.68.0",
     "react-test-renderer": "^17.0.2",
-    "serve": "^12.0.0",
-    "start-server-and-test": "^1.13.1",
-    "typescript": "^4.3.5"
+    "serve": "^14.0.1",
+    "start-server-and-test": "^1.14.0",
+    "typescript": "^4.8.3"
   },
   "eslintConfig": {
     "settings": {
@@ -143,6 +145,7 @@
     "rules": {
       "react/jsx-indent": "off",
       "react/prop-types": "off",
+      "react/jsx-no-leaked-render": "off",
       "max-lines-per-function": "off",
       "jsx-a11y/label-has-for": "off",
       "jsx-a11y/label-has-associated-control": "off",
@@ -154,12 +157,46 @@
     },
     "overrides": [
       {
+        "files": "**/*.js",
+        "parser": "@babel/eslint-parser",
+        "parserOptions": {
+          "ecmaVersion": 2020
+        }
+      },
+      {
+        "files": [
+          "src/__tests__/downshift.misc-with-utils-mocked.js",
+          "src/downshift.js"
+        ],
+        "rules": {
+          "no-invalid-this": "off"
+        }
+      },
+      {
         "files": [
           "cypress/**/*.js"
         ],
         "rules": {
           "testing-library/prefer-screen-queries": "off",
           "testing-library/await-async-query": "off"
+        }
+      },
+      {
+        "files": [
+          "src/**/__tests__/**/*.js",
+          "other/**/__tests__/**/*.js"
+        ],
+        "rules": {
+          "import/default": "off",
+          "jest/no-conditional-in-test": "off"
+        }
+      },
+      {
+        "files": [
+          "docusaurus/**/*.js"
+        ],
+        "rules": {
+          "import/default": "off"
         }
       }
     ]
