@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.14.8",
+    "@cypress/webpack-preprocessor": "^5.12.2",
     "@docusaurus/core": "^2.0.1",
     "@docusaurus/module-type-aliases": "^2.0.1",
     "@docusaurus/preset-classic": "^2.0.1",
