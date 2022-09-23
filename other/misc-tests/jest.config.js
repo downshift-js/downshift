@@ -12,7 +12,8 @@ module.exports = Object.assign(jestConfig, {
       return aliasMap
     },
     {
-      preact: require.resolve('preact'),
+      '@testing-library/preact': require.resolve('@testing-library/preact'),
+      'preact': require.resolve('preact'),
     },
   ),
 })
