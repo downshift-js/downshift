@@ -266,6 +266,7 @@ function useCombobox(userProps = {}) {
       refKey = 'ref',
       ref,
       onMouseMove,
+      onMouseDown,
       onClick,
       onPress,
       disabled,
@@ -292,7 +293,7 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
-          disabled
+          disabled,
         })
       }
       const itemHandleClick = () => {
@@ -300,11 +301,8 @@ function useCombobox(userProps = {}) {
           type: stateChangeTypes.ItemClick,
           index,
         })
-
-        if (inputRef.current) {
-          inputRef.current.focus()
-        }
       }
+      const itemHandleMouseDown = e => e.preventDefault()
 
       return {
         [refKey]: handleRefs(ref, itemNode => {
@@ -322,8 +320,9 @@ function useCombobox(userProps = {}) {
             itemHandleClick,
           ),
         }),
-          onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
-          ...rest,
+        onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
+        onMouseDown: callAllEventHandlers(onMouseDown, itemHandleMouseDown),
+        ...rest,
       }
     },
     [dispatch, latest, shouldScrollRef, elementIds],
