@@ -86,9 +86,6 @@ export function getItemAtIndex(index) {
 export function getItems() {
   return screen.queryAllByRole('option')
 }
-export function getInput() {
-  return screen.getByRole('textbox')
-}
 export async function clickOnItemAtIndex(index) {
   await user.click(getItemAtIndex(index))
 }
@@ -104,13 +101,6 @@ export async function mouseLeaveItemAtIndex(index) {
 export async function keyDownOnToggleButton(keys) {
   if (document.activeElement !== getToggleButton()) {
     getToggleButton().focus()
-  }
-
-  await user.keyboard(keys)
-}
-export async function keyDownOnInput(keys) {
-  if (document.activeElement !== getInput()) {
-    getInput().focus()
   }
 
   await user.keyboard(keys)

@@ -9,13 +9,11 @@ import {
   clickOnSelectedItemAtIndex,
   getSelectedItemAtIndex,
   clickOnInput,
-} from '../testUtils'
-import {
   getA11yStatusContainer,
   getInput,
   items,
   keyDownOnInput,
-} from '../../testUtils'
+} from '../testUtils'
 import useMultipleSelection from '..'
 
 jest.useFakeTimers()
@@ -671,7 +669,7 @@ describe('props', () => {
   })
 
   test('overrides navigation previos and next keys correctly', async () => {
-renderMultipleCombobox({
+    renderMultipleCombobox({
       multipleSelectionProps: {
         keyNavigationPrevious: 'ArrowUp',
         keyNavigationNext: 'ArrowDown',

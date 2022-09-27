@@ -6,8 +6,10 @@ import {
   getSelectedItems,
   renderMultipleCombobox,
   renderUseMultipleSelection,
+  getInput,
+  keyDownOnInput,
+  items,
 } from '../testUtils'
-import {getInput, items, keyDownOnInput} from '../../testUtils'
 import utils from '../../utils'
 import useMultipleSelection from '..'
 

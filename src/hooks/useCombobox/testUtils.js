@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import {defaultProps} from '../utils'
-import {dataTestIds, items, user, getInput} from '../testUtils'
+import {dataTestIds, items, user} from '../testUtils'
 import useCombobox from '.'
 
 export * from '../testUtils'
@@ -28,6 +28,18 @@ jest.mock('../utils', () => {
 
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
+
+export function getInput() {
+  return screen.getByRole('textbox')
+}
+
+export async function keyDownOnInput(keys) {
+  if (document.activeElement !== getInput()) {
+    getInput().focus()
+  }
+
+  await user.keyboard(keys)
+}
 
 export async function changeInputValue(inputValue) {
   await user.type(getInput(), inputValue)
