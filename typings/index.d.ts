@@ -202,7 +202,9 @@ export interface Actions<Item> {
 
 export type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
   PropGetters<Item> &
-  Actions<Item>
+  Actions<Item> & {
+    type: StateChangeTypes
+  }
 
 export type ChildrenFunction<Item> = (
   options: ControllerStateAndHelpers<Item>,

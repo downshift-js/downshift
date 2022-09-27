@@ -234,7 +234,9 @@ declare module downshift {
   }
   declare export type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
     PropGetters<Item> &
-    Actions<Item>
+    Actions<Item> & {
+      type: StateChangeTypes
+    }
   declare export type ChildrenFunction<Item> = (
     options: ControllerStateAndHelpers<Item>,
   ) => React.ReactNode
