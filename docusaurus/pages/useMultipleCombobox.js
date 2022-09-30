@@ -46,7 +46,6 @@ export default function DropdownMultipleCombobox() {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
     selectedItem,
@@ -150,7 +149,7 @@ export default function DropdownMultipleCombobox() {
             </span>
           )
         })}
-        <div {...getComboboxProps()}>
+        <div>
           <input
             style={{padding: '4px'}}
             {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}

@@ -5,7 +5,7 @@ import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
 export default function downshiftUseComboboxReducer(state, action) {
-  const {type, props, shiftKey} = action
+  const {type, props, altKey, shiftKey} = action
   let changes
 
   switch (type) {
@@ -30,26 +30,42 @@ export default function downshiftUseComboboxReducer(state, action) {
         }
       } else {
         changes = {
-          highlightedIndex: getHighlightedIndexOnOpen(
-            props,
-            state,
-            1,
-            action.getItemNodeFromIndex,
-          ),
+          highlightedIndex:
+            altKey && state.selectedItem == null
+              ? -1
+              : getHighlightedIndexOnOpen(
+                  props,
+                  state,
+                  1,
+                  action.getItemNodeFromIndex,
+                ),
           isOpen: props.items.length >= 0,
         }
       }
       break
     case stateChangeTypes.InputKeyDownArrowUp:
       if (state.isOpen) {
-        changes = {
-          highlightedIndex: getNextWrappingIndex(
-            shiftKey ? -5 : -1,
-            state.highlightedIndex,
-            props.items.length,
-            action.getItemNodeFromIndex,
-            props.circularNavigation,
-          ),
+        if (altKey) {
+          changes = {
+            isOpen: getDefaultValue(props, 'isOpen'),
+            highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+            ...(state.highlightedIndex >= 0 && {
+              selectedItem: props.items[state.highlightedIndex],
+              inputValue: props.itemToString(
+                props.items[state.highlightedIndex],
+              ),
+            }),
+          }
+        } else {
+          changes = {
+            highlightedIndex: getNextWrappingIndex(
+              shiftKey ? -5 : -1,
+              state.highlightedIndex,
+              props.items.length,
+              action.getItemNodeFromIndex,
+              props.circularNavigation,
+            ),
+          }
         }
       } else {
         changes = {
@@ -65,13 +81,12 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownEnter:
       changes = {
-        ...(state.isOpen &&
-          state.highlightedIndex >= 0 && {
-            selectedItem: props.items[state.highlightedIndex],
-            isOpen: getDefaultValue(props, 'isOpen'),
-            highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-            inputValue: props.itemToString(props.items[state.highlightedIndex]),
-          }),
+        isOpen: getDefaultValue(props, 'isOpen'),
+        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+          inputValue: props.itemToString(props.items[state.highlightedIndex]),
+        }),
       }
       break
     case stateChangeTypes.InputKeyDownEscape:
@@ -82,6 +97,28 @@ export default function downshiftUseComboboxReducer(state, action) {
           selectedItem: null,
           inputValue: '',
         }),
+      }
+      break
+    case stateChangeTypes.InputKeyDownPageUp:
+      changes = {
+        highlightedIndex: getNextWrappingIndex(
+          -10,
+          state.highlightedIndex,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
+      }
+      break
+    case stateChangeTypes.InputKeyDownPageDown:
+      changes = {
+        highlightedIndex: getNextWrappingIndex(
+          10,
+          state.highlightedIndex,
+          props.items.length,
+          action.getItemNodeFromIndex,
+          false,
+        ),
       }
       break
     case stateChangeTypes.InputKeyDownHome:
@@ -122,6 +159,12 @@ export default function downshiftUseComboboxReducer(state, action) {
         isOpen: true,
         highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
         inputValue: action.inputValue,
+      }
+      break
+    case stateChangeTypes.InputFocus:
+      changes = {
+        isOpen: true,
+        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
       }
       break
     case stateChangeTypes.FunctionSelectItem:

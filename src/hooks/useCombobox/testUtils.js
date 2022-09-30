@@ -30,12 +30,13 @@ beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
 export function getInput() {
-  return screen.getByRole('textbox')
+  return screen.getByRole('combobox')
 }
 
 export async function keyDownOnInput(keys) {
   if (document.activeElement !== getInput()) {
     getInput().focus()
+    await user.keyboard('{Escape}')
   }
 
   await user.keyboard(keys)
@@ -66,7 +67,6 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     getItemProps,
   } = useCombobox({items, ...props})
   const {itemToString} = props.itemToString ? props : defaultProps
@@ -76,7 +76,7 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+      <div>
         <input data-testid={dataTestIds.input} {...getInputProps()} />
         <button
           data-testid={dataTestIds.toggleButton}

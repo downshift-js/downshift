@@ -274,7 +274,7 @@ describe('getItemProps', () => {
         )
 
         await mouseMoveItemAtIndex(disabledIndex)
-        expect(input).not.toHaveAttribute('aria-activedescendant')
+        expect(input).toHaveAttribute('aria-activedescendant', '')
       })
     })
 

@@ -54,7 +54,6 @@ function useCombobox(userProps = {}) {
   const itemRefs = useRef({})
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
-  const comboboxRef = useRef(null)
   const isInitialMountRef = useRef(true)
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
@@ -124,7 +123,7 @@ function useCombobox(userProps = {}) {
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,
-    [comboboxRef, menuRef, toggleButtonRef],
+    [inputRef, menuRef, toggleButtonRef],
     environment,
     () => {
       dispatch({
@@ -135,7 +134,6 @@ function useCombobox(userProps = {}) {
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',
-    'getComboboxProps',
     'getMenuProps',
   )
   // Make initial ref false.
@@ -146,6 +144,8 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     if (!isOpen) {
       itemRefs.current = {}
+    } else if (document.activeElement !== inputRef.current) {
+      inputRef?.current?.focus()
     }
   }, [isOpen])
 
@@ -156,7 +156,7 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowDown,
-          shiftKey: event.shiftKey,
+          altKey: event.altKey,
           getItemNodeFromIndex,
         })
       },
@@ -164,7 +164,7 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowUp,
-          shiftKey: event.shiftKey,
+          altKey: event.altKey,
           getItemNodeFromIndex,
         })
       },
@@ -210,7 +210,6 @@ function useCombobox(userProps = {}) {
         // if closed or no highlighted index, do nothing.
         if (
           !latestState.isOpen ||
-          latestState.highlightedIndex < 0 ||
           event.which === 229 // if IME composing, wait for next Enter keydown event.
         ) {
           return
@@ -221,6 +220,26 @@ function useCombobox(userProps = {}) {
           type: stateChangeTypes.InputKeyDownEnter,
           getItemNodeFromIndex,
         })
+      },
+      PageUp(event) {
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
+
+          dispatch({
+            type: stateChangeTypes.InputKeyDownPageUp,
+            getItemNodeFromIndex,
+          })
+        }
+      },
+      PageDown(event) {
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
+
+          dispatch({
+            type: stateChangeTypes.InputKeyDownPageDown,
+            getItemNodeFromIndex,
+          })
+        }
       },
     }),
     [dispatch, latest, getItemNodeFromIndex],
@@ -330,20 +349,19 @@ function useCombobox(userProps = {}) {
 
   const getToggleButtonProps = useCallback(
     ({onClick, onPress, refKey = 'ref', ref, ...rest} = {}) => {
+      const latestState = latest.current.state
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
         })
-
-        if (!latest.current.state.isOpen && inputRef.current) {
-          inputRef.current.focus()
-        }
       }
 
       return {
         [refKey]: handleRefs(ref, toggleButtonNode => {
           toggleButtonRef.current = toggleButtonNode
         }),
+        'aria-controls': elementIds.menuId,
+        'aria-expanded': latestState.isOpen,
         id: elementIds.toggleButtonId,
         tabIndex: -1,
         ...(!rest.disabled && {
@@ -366,6 +384,7 @@ function useCombobox(userProps = {}) {
         onKeyDown,
         onChange,
         onInput,
+        onFocus,
         onBlur,
         onChangeText,
         refKey = 'ref',
@@ -403,6 +422,13 @@ function useCombobox(userProps = {}) {
           })
         }
       }
+      const inputHandleFocus = () => {
+        if (!latestState.isOpen) {
+          dispatch({
+            type: stateChangeTypes.InputFocus,
+          })
+        }
+      }
 
       /* istanbul ignore next (preact) */
       const onChangeKey = isPreact ? 'onInput' : 'onChange'
@@ -417,6 +443,7 @@ function useCombobox(userProps = {}) {
           ),
           onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
           onBlur: callAllEventHandlers(onBlur, inputHandleBlur),
+          onFocus: callAllEventHandlers(onFocus, inputHandleFocus),
         }
       }
 
@@ -440,19 +467,19 @@ function useCombobox(userProps = {}) {
         [refKey]: handleRefs(ref, inputNode => {
           inputRef.current = inputNode
         }),
-        id: elementIds.inputId,
-        'aria-autocomplete': 'list',
+        'aria-activedescendant':
+          latestState.isOpen && latestState.highlightedIndex > -1
+            ? elementIds.getItemId(latestState.highlightedIndex)
+            : '',
+        'aria-autocomplete': 'none',
         'aria-controls': elementIds.menuId,
-        ...(latestState.isOpen &&
-          latestState.highlightedIndex > -1 && {
-            'aria-activedescendant': elementIds.getItemId(
-              latestState.highlightedIndex,
-            ),
-          }),
+        'aria-expanded': latestState.isOpen,
         'aria-labelledby': elementIds.labelId,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
         // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
         autoComplete: 'off',
+        id: elementIds.inputId,
+        role: 'combobox',
         value: latestState.inputValue,
         ...eventHandlers,
         ...rest,
@@ -466,28 +493,6 @@ function useCombobox(userProps = {}) {
       setGetterPropCallInfo,
       elementIds,
     ],
-  )
-  const getComboboxProps = useCallback(
-    ({refKey = 'ref', ref, ...rest} = {}, {suppressRefError = false} = {}) => {
-      setGetterPropCallInfo(
-        'getComboboxProps',
-        suppressRefError,
-        refKey,
-        comboboxRef,
-      )
-
-      return {
-        [refKey]: handleRefs(ref, comboboxNode => {
-          comboboxRef.current = comboboxNode
-        }),
-        role: 'combobox',
-        'aria-haspopup': 'listbox',
-        'aria-owns': elementIds.menuId,
-        'aria-expanded': latest.current.state.isOpen,
-        ...rest,
-      }
-    },
-    [latest, setGetterPropCallInfo, elementIds],
   )
 
   // returns
@@ -545,7 +550,6 @@ function useCombobox(userProps = {}) {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     getToggleButtonProps,
     // actions.
     toggleMenu,

@@ -596,6 +596,26 @@ describe('props', () => {
           type: stateChangeTypes.InputFocus,
         },
         {
+          step: tab,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputBlur,
+        },
+        {
+          step: tab,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputFocus,
+        },
+        {
           step: keyDownOnInput,
           args: '{Enter}',
           state: {
@@ -604,7 +624,7 @@ describe('props', () => {
             inputValue: '',
             selectedItem: null,
           },
-          type: stateChangeTypes.InputFocus,
+          type: stateChangeTypes.InputKeyDownEnter,
         },
         {
           step: clickOnToggleButton,
@@ -637,16 +657,6 @@ describe('props', () => {
             selectedItem: null,
           },
           type: stateChangeTypes.MenuMouseLeave,
-        },
-        {
-          step: tab,
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: '',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.InputBlur,
         },
         {
           step: changeInputValue,

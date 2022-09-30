@@ -409,7 +409,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowUp}')
 
-          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
           expect(getItems()).toHaveLength(0)
         })
 
@@ -421,7 +421,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowUp}')
 
-          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
           expect(getItems()).toHaveLength(0)
         })
 
@@ -459,14 +459,6 @@ describe('getInputProps', () => {
 
           const input = getInput()
 
-          await keyDownOnInput('{ArrowUp}')
-
-          expect(input).toHaveAttribute(
-            'aria-activedescendant',
-            defaultIds.getItemId(initialHighlightedIndex),
-          )
-
-          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowUp}')
 
           expect(input).toHaveAttribute(
@@ -538,12 +530,12 @@ describe('getInputProps', () => {
             initialIsOpen: true,
             initialHighlightedIndex,
           })
-          const toggleButton = getInput()
+          const input = getInput()
 
           await keyDownOnInput('{Alt>}{ArrowUp}{/Alt}')
 
           expect(getItems()).toHaveLength(0)
-          expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
+          expect(input).toHaveValue(items[initialHighlightedIndex])
         })
 
         test('with Alt it opens the menu without any additional change', async () => {
@@ -589,7 +581,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowDown}')
 
-          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
           expect(getItems()).toHaveLength(0)
         })
 
@@ -601,7 +593,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowDown}')
 
-          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
           expect(getItems()).toHaveLength(0)
         })
 
@@ -638,15 +630,6 @@ describe('getInputProps', () => {
           })
           const input = getInput()
 
-          await keyDownOnInput('{ArrowDown}')
-
-          expect(input).toHaveAttribute(
-            'aria-activedescendant',
-            defaultIds.getItemId(initialHighlightedIndex),
-          )
-          expect(getItems()).toHaveLength(items.length)
-
-          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowDown}')
 
           expect(input).toHaveAttribute(
@@ -762,7 +745,7 @@ describe('getInputProps', () => {
         })
       })
 
-      test('end it highlights the last option number', async () => {
+      test('end highlights the last option number', async () => {
         renderCombobox({
           isOpen: true,
           initialHighlightedIndex: 2,
@@ -776,7 +759,7 @@ describe('getInputProps', () => {
         )
       })
 
-      test('end it prevents the default event and calls dispatch only when menu is open', () => {
+      test('end prevents the default event and calls dispatch only when menu is open', () => {
         const {rerender, renderSpy} = renderCombobox({isOpen: false})
         const input = getInput()
         const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
@@ -795,7 +778,7 @@ describe('getInputProps', () => {
         expect(renderSpy).toHaveBeenCalledTimes(1)
       })
 
-      test('home it highlights the first option number', async () => {
+      test('home highlights the first option number', async () => {
         renderCombobox({
           isOpen: true,
           initialHighlightedIndex: 2,
@@ -809,7 +792,7 @@ describe('getInputProps', () => {
         )
       })
 
-      test('home it prevents the default event calls dispatch only when menu is open', () => {
+      test('home prevents the default event calls dispatch only when menu is open', () => {
         const {rerender, renderSpy} = renderCombobox({isOpen: false})
         const input = getInput()
         const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
@@ -850,7 +833,6 @@ describe('getInputProps', () => {
         })
         const input = getInput()
 
-        input.focus()
         await keyDownOnInput('{Escape}')
 
         expect(getItems()).toHaveLength(0)
@@ -858,13 +840,15 @@ describe('getInputProps', () => {
         expect(input).toHaveFocus()
       })
 
-      test('escape it prevents the rerender when menu closed, no selectedItem and no inputValue', async () => {
+      test('escape prevents the rerender when menu is closed, no selectedItem and no inputValue', async () => {
         const {renderSpy, rerender} = renderCombobox({
           isOpen: false,
           inputValue: '',
         })
 
+        await keyDownOnInput('{Escape}') // focus input and close the menu.
         renderSpy.mockClear()
+        
         await keyDownOnInput('{Escape}')
 
         expect(renderSpy).toHaveBeenCalledTimes(0) // no re-render
@@ -902,7 +886,7 @@ describe('getInputProps', () => {
         }
       })
 
-      test('enter it closes the menu and selects highlighted item', async () => {
+      test('enter closes the menu and selects highlighted item', async () => {
         const initialHighlightedIndex = 2
         renderCombobox({
           initialIsOpen: true,
@@ -954,7 +938,7 @@ describe('getInputProps', () => {
 
         expect(input).toHaveValue(items[2])
         expect(getItems()).toHaveLength(0)
-        expect(input).not.toHaveAttribute('aria-activedescendant')
+        expect(input).toHaveAttribute('aria-activedescendant', '')
       })
 
       test('enter with a closed menu does nothing', async () => {
@@ -980,7 +964,7 @@ describe('getInputProps', () => {
         expect(getInput()).not.toHaveValue()
       })
 
-      test('enter with closed menu, no item highlighted or composing event, it will not rerender or prevent event default', () => {
+      test('enter with closed menu or composing event, it will not rerender or prevent event default', () => {
         const {renderSpy, rerender} = renderCombobox({
           isOpen: false,
           highlightedIndex: -1,
@@ -988,16 +972,6 @@ describe('getInputProps', () => {
         const input = getInput()
         let keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
 
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
-
-        expect(renderSpy).not.toHaveBeenCalled()
-        expect(keyDownEvent.defaultPrevented).toBe(false)
-
-        rerender({
-          isOpen: true,
-          highlightedIndex: -1,
-        })
         renderSpy.mockClear()
         fireEvent(input, keyDownEvent)
 
@@ -1040,21 +1014,6 @@ describe('getInputProps', () => {
 
         expect(getItems()).toHaveLength(0)
         expect(getInput()).toHaveValue(items[initialHighlightedIndex])
-      })
-
-      test('tab it prevents the rerender and does not call dispatch when menu is closed', async () => {
-        const {renderSpy, rerender} = renderCombobox({isOpen: false})
-
-        renderSpy.mockClear()
-        await tab()
-
-        expect(renderSpy).toHaveBeenCalledTimes(0)
-
-        rerender({isOpen: true})
-        renderSpy.mockClear()
-        await tab()
-
-        expect(renderSpy).toHaveBeenCalledTimes(1)
       })
 
       test('shift+tab it closes the menu', async () => {
@@ -1322,12 +1281,73 @@ describe('getInputProps', () => {
       })
     })
 
-    test('on focus it opens the menu', async () => {
-      renderCombobox()
+    describe('on focus', () => {
+      test('it opens the menu', async () => {
+        renderCombobox()
 
-      await tab()
+        await tab()
 
-      expect(getItems()).toHaveLength(items.length)
+        expect(getItems()).toHaveLength(items.length)
+      })
+
+      test('it opens the menu with selected option highlighted', async () => {
+        const selectedIndex = 4
+        renderCombobox({
+          initialSelectedItem: items[selectedIndex],
+        })
+
+        await tab()
+
+        expect(getInput()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(selectedIndex),
+        )
+      })
+
+      test('it opens the closed menu at initialHighlightedIndex, but on first focus only', async () => {
+        const initialHighlightedIndex = 2
+        renderCombobox({
+          initialHighlightedIndex,
+        })
+        const input = getInput()
+
+        await tab()
+
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(initialHighlightedIndex),
+        )
+
+        await keyDownOnInput('{Escape}')
+        await tab(true)
+        await tab()
+
+        expect(input).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('it opens the closed menu at defaultHighlightedIndex, on every arrow up', async () => {
+        const defaultHighlightedIndex = 3
+        renderCombobox({
+          defaultHighlightedIndex,
+        })
+        const input = getInput()
+
+        await tab()
+
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+
+        await keyDownOnInput('{Escape}')
+        await tab(true)
+        await tab()
+
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+      })
     })
   })
 
@@ -1342,9 +1362,8 @@ describe('getInputProps', () => {
 
     test('will be displayed if getInputProps is not called', () => {
       renderHook(() => {
-        const {getMenuProps, getComboboxProps} = useCombobox({items})
+        const {getMenuProps} = useCombobox({items})
         getMenuProps({}, {suppressRefError: true})
-        getComboboxProps({}, {suppressRefError: true})
       })
 
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(

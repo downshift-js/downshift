@@ -64,7 +64,7 @@ describe('getToggleButtonProps', () => {
 
       const toggleButtonProps = result.current.getToggleButtonProps()
 
-      expect(toggleButtonProps['aria-expanded']).toEqual(false)
+      expect(toggleButtonProps['aria-expanded']).toEqual(true)
     })
 
     test('omit event handlers when disabled', () => {
@@ -168,7 +168,7 @@ describe('getToggleButtonProps', () => {
 
         await clickOnToggleButton()
 
-        expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
       test('opens the closed menu with selected option highlighted', async () => {
@@ -201,7 +201,7 @@ describe('getToggleButtonProps', () => {
         await clickOnToggleButton()
         await clickOnToggleButton()
 
-        expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
       test('opens the closed menu at defaultHighlightedIndex, on every click', async () => {
