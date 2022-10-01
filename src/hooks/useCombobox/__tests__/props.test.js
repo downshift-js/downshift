@@ -335,7 +335,7 @@ describe('props', () => {
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
 
       // should not be called when any other prop is changed.
-      rerender({getA11yStatusMessage, items, circularNavigation: false})
+      rerender({getA11yStatusMessage, items})
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
@@ -1093,12 +1093,7 @@ describe('props', () => {
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
-        circularNavigation: false,
       })
-
-      await keyDownOnInput('{ArrowUp}')
-
-      expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
       await keyDownOnInput('{Home}')
 

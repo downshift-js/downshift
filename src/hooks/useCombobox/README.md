@@ -61,7 +61,6 @@ between them, screen reader support, highlight by character keys etc.
   - [inputId](#inputid)
   - [getItemId](#getitemid)
   - [environment](#environment)
-  - [circularNavigation](#circularnavigation)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
@@ -492,14 +491,6 @@ or a shadow-root. If the given context is lacking `document` and/or
 then you will need to pass in a custom object that is able to provide
 [access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177)
 for downshift.
-
-### circularNavigation
-
-> `boolean` | defaults to `true`
-
-Controls the circular keyboard navigation between items. If set to `true`, when
-first item is highlighted, the Arrow Up will move highlight to the last item,
-and viceversa using Arrow Down.
 
 ## stateChangeTypes
 

@@ -305,7 +305,7 @@ export interface UseSelectStateChangeOptions<Item>
 export interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
   getItemNodeFromIndex?: (index: number) => HTMLElement
-  shiftKey?: boolean
+  altKey?: boolean
   key?: string
   index?: number
   highlightedIndex?: number
@@ -428,7 +428,6 @@ export interface UseComboboxProps<Item> {
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -467,7 +466,7 @@ export interface UseComboboxStateChangeOptions<Item>
 
 export interface UseComboboxDispatchAction<Item> {
   type: UseComboboxStateChangeTypes
-  shiftKey?: boolean
+  altKey?: boolean
   getItemNodeFromIndex?: (index: number) => HTMLElement
   inputValue?: string
   index?: number

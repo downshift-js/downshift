@@ -39,7 +39,6 @@ const propTypes = {
   itemToString: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
-  circularNavigation: PropTypes.bool,
   highlightedIndex: PropTypes.number,
   defaultHighlightedIndex: PropTypes.number,
   initialHighlightedIndex: PropTypes.number,
@@ -123,7 +122,6 @@ if (process.env.NODE_ENV !== 'production') {
 const defaultProps = {
   ...defaultPropsCommon,
   getA11yStatusMessage,
-  circularNavigation: true,
 }
 
 export {validatePropTypes, useControlledReducer, getInitialState, defaultProps}

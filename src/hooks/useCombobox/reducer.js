@@ -5,7 +5,7 @@ import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
 export default function downshiftUseComboboxReducer(state, action) {
-  const {type, props, altKey, shiftKey} = action
+  const {type, props, altKey} = action
   let changes
 
   switch (type) {
@@ -21,11 +21,11 @@ export default function downshiftUseComboboxReducer(state, action) {
       if (state.isOpen) {
         changes = {
           highlightedIndex: getNextWrappingIndex(
-            shiftKey ? 5 : 1,
+            1,
             state.highlightedIndex,
             props.items.length,
             action.getItemNodeFromIndex,
-            props.circularNavigation,
+            true,
           ),
         }
       } else {
@@ -59,11 +59,11 @@ export default function downshiftUseComboboxReducer(state, action) {
         } else {
           changes = {
             highlightedIndex: getNextWrappingIndex(
-              shiftKey ? -5 : -1,
+              -1,
               state.highlightedIndex,
               props.items.length,
               action.getItemNodeFromIndex,
-              props.circularNavigation,
+              true,
             ),
           }
         }
