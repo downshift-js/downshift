@@ -73,7 +73,6 @@ const DropdownMultipleCombobox = ({
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
   } = useCombobox({
     items,
     ...comboboxProps,
@@ -95,7 +94,7 @@ const DropdownMultipleCombobox = ({
             {itemToString(selectedItem)}
           </span>
         ))}
-        <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+        <div data-testid={dataTestIds.combobox}>
           <input
             data-testid={dataTestIds.input}
             {...getInputProps(getDropdownProps())}

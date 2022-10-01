@@ -671,25 +671,25 @@ describe('props', () => {
   test('overrides navigation previos and next keys correctly', async () => {
     renderMultipleCombobox({
       multipleSelectionProps: {
-        keyNavigationPrevious: 'ArrowUp',
-        keyNavigationNext: 'ArrowDown',
+        keyNavigationPrevious: 'ArrowRight',
+        keyNavigationNext: 'ArrowLeft',
         initialSelectedItems: [items[0], items[1]],
       },
     })
 
-    await keyDownOnInput('{ArrowUp}')
+    await keyDownOnInput('{ArrowRight}')
 
     expect(getSelectedItemAtIndex(1)).toHaveFocus()
 
-    await keyDownOnSelectedItemAtIndex(1, '{ArrowUp}')
+    await keyDownOnSelectedItemAtIndex(1, '{ArrowRight}')
 
     expect(getSelectedItemAtIndex(0)).toHaveFocus()
 
-    await keyDownOnSelectedItemAtIndex(0, '{ArrowDown}')
+    await keyDownOnSelectedItemAtIndex(0, '{ArrowLeft}')
 
     expect(getSelectedItemAtIndex(1)).toHaveFocus()
 
-    await keyDownOnSelectedItemAtIndex(1, '{ArrowDown}')
+    await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
 
     expect(getInput()).toHaveFocus()
   })

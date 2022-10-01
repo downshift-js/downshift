@@ -36,7 +36,7 @@ export function getInput() {
 export async function keyDownOnInput(keys) {
   if (document.activeElement !== getInput()) {
     getInput().focus()
-    await user.keyboard('{Escape}')
+    await user.keyboard('{Escape}') // menu was opened because of focus, close it.
   }
 
   await user.keyboard(keys)
