@@ -1490,10 +1490,9 @@ MIT
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
 [aria]: https://www.w3.org/TR/wai-aria-practices/
-[combobox-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
+[combobox-aria]: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
 [select-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-select-only.html
 [docsite]: https://downshift-js.com/
 [code-sandbox-try-it-out]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
