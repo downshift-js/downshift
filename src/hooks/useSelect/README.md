@@ -28,7 +28,7 @@ between them, screen reader support, highlight by character keys etc.
 `useSelect` received some changes related to its API and how it works in version
 7, as a conequence of adapting it to the ARIA 1.2 select-only combobox pattern.
 If you were using _useSelect_ previous to 7.0.0, check the [migration
-guide][select-migration] and update if necessary.
+guide][migration-guide-v7] and update if necessary.
 
 ## Table of Contents
 
@@ -66,10 +66,17 @@ guide][select-migration] and update if necessary.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
+    - [`getLabelProps`](#getlabelprops)
+    - [`getMenuProps`](#getmenuprops)
+    - [`getItemProps`](#getitemprops)
+    - [`getToggleButtonProps`](#gettogglebuttonprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
+    - [Toggle Button](#toggle-button)
+    - [Menu](#menu)
+    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -870,8 +877,6 @@ It can be a great contributing opportunity to provide relevant use cases as
 docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
-[select-migration]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect/MIGRATION_V7.md
 [select-aria]:
   https://w3c.github.io/aria-practices/examples/combobox/combobox-select-only.html
 [sandbox-example]:
@@ -882,3 +887,5 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
+[migration-guide-v7]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#useselect

@@ -13,9 +13,8 @@ specific needs.
 `useCombobox` is a React hook that manages all the stateful logic needed to make
 the combobox functional and accessible. It returns a set of props that are meant
 to be called and their results destructured on the combobox's elements: its
-label, toggle button, input, combobox container, list and list items. The props
-are similar to the ones provided by vanilla `<Downshift>` to the children render
-prop.
+label, toggle button, input, list and list items. The props are similar to the
+ones provided by vanilla `<Downshift>` to the children render prop.
 
 These props are called getter props and their return values are destructured as
 a set of ARIA attributes and event listeners. Together with the action props and
@@ -23,6 +22,13 @@ state props, they create all the stateful logic needed for the combobox to
 implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
 between them, screen reader support, highlight by character keys etc.
+
+## Migration to v7
+
+`useCombobox` received some changes related to how it works in version 7, as a
+conequence of adapting it to the ARIA 1.2 combobox pattern. If you were using
+_useCombobox_ previous to 7.0.0, check the [migration guide][migration-guide-v7]
+and update if necessary.
 
 ## Table of Contents
 
@@ -65,10 +71,19 @@ between them, screen reader support, highlight by character keys etc.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
+    - [`getLabelProps`](#getlabelprops)
+    - [`getMenuProps`](#getmenuprops)
+    - [`getItemProps`](#getitemprops)
+    - [`getToggleButtonProps`](#gettogglebuttonprops)
+    - [`getInputProps`](#getinputprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
+    - [Toggle Button](#toggle-button)
+    - [Input](#input)
+    - [Menu](#menu)
+    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -94,7 +109,6 @@ function DropdownCombobox() {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
   } = useCombobox({
@@ -111,7 +125,7 @@ function DropdownCombobox() {
   return (
     <>
       <label {...getLabelProps()}>Choose an element:</label>
-      <div style={comboboxStyles} {...getComboboxProps()}>
+      <div style={comboboxStyles}>
         <input {...getInputProps()} />
         <button
           type="button"
@@ -508,8 +522,11 @@ The list of all possible values this `type` property can take is defined in
 - `useCombobox.stateChangeTypes.InputKeyDownEscape`
 - `useCombobox.stateChangeTypes.InputKeyDownHome`
 - `useCombobox.stateChangeTypes.InputKeyDownEnd`
+- `useCombobox.stateChangeTypes.InputKeyDownPageUp`
+- `useCombobox.stateChangeTypes.InputKeyDownPadeDown`
 - `useCombobox.stateChangeTypes.InputKeyDownEnter`
 - `useCombobox.stateChangeTypes.InputChange`
+- `useCombobox.stateChangeTypes.InputFocus`
 - `useCombobox.stateChangeTypes.InputBlur`
 - `useCombobox.stateChangeTypes.MenuMouseLeave`
 - `useCombobox.stateChangeTypes.ItemMouseMove`
@@ -599,14 +616,13 @@ props being overridden (or overriding the props returned). For example:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property               | type           | description                                                                                      |
-| ---------------------- | -------------- | ------------------------------------------------------------------------------------------------ |
-| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.                 |
-| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                         |
-| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                       |
-| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render.   |
-| `getInputProps`        | `function({})` | returns the props you should apply to the `input` element that you render.                       |
-| `getComboboxProps`     | `function({})` | returns the props you should apply to an element that wraps the `input` element that you render. |
+| property               | type           | description                                                                                    |
+| ---------------------- | -------------- | ---------------------------------------------------------------------------------------------- |
+| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.               |
+| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                       |
+| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                     |
+| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
+| `getInputProps`        | `function({})` | returns the props you should apply to the `input` element that you render.                     |
 
 #### `getLabelProps`
 
@@ -796,24 +812,6 @@ can provide the object `{suppressRefError : true}` as the second argument to
 sure that the ref is correctly forwarded otherwise `useCombobox` will
 unexpectedly fail.**
 
-#### `getComboboxProps`
-
-This method should be applied to the `input` wrapper element. It has similar
-return values to the `getRootProps` from vanilla `Downshift`, but renaming it as
-it's not a root element anymore. We are encouraging the correct `combobox` HTML
-structure as having the combobox wrapper as a root for the rest of the elements
-broke navigation and readings with assistive technologies. The wrapper should
-contain the `input` and the `toggleButton` and it should be on the same level
-with the `menu`.
-
-There are no required properties for this method.
-
-In some cases, you might want to completely bypass the `refKey` check. Then you
-can provide the object `{suppressRefError : true}` as the second argument to
-`getComboboxProps`. **Please use it with extreme care and only if you are
-absolutely sure that the ref is correctly forwarded otherwise `useCombobox` will
-unexpectedly fail.**
-
 ### actions
 
 These are functions you can call to change the state of the downshift
@@ -866,21 +864,28 @@ described below.
 
 #### Input
 
-- `ArrowDown`: Moves `highlightedIndex` one position down. If
-  `circularNavigation` is true, when reaching the last option, `ArrowDown` will
-  move `highlightedIndex` to first position. Otherwise it won't change anything.
-- `ArrowUp`: Moves `highlightedIndex` one position up. If `circularNavigation`
-  is true, when reaching the first option, `ArrowUp` will move
-  `highlightedIndex` to last position. Otherwise it won't change anything.
+- `ArrowDown`: Moves `highlightedIndex` one position down. When reaching the
+  last option, `ArrowDown` will move `highlightedIndex` to first position.
+- `ArrowUp`: Moves `highlightedIndex` one position up. When reaching the first
+  option, `ArrowUp` will move `highlightedIndex` to last position.
+- `Alt+ArrowDown`: If the menu is closed, it will open it, without highlighting
+  any item.
+- `Alt+ArrowUp`: If the menu is open, it will close it and will select the item
+  that was highlighted.
 - `CharacterKey`: Will change the `inputValue` according to the value visible in
   the `<input>`. `Backspace` or `Space` triggere the same event.
-- `End`: Moves `highlightedIndex` to last position.
-- `Home`: Moves `highlightedIndex` to first position.
+- `End`: If the menu is open, it will highlight the last item in the list.
+- `Home`: If the menu is open, it will highlight the first item in the list.
+- `PageUp`: If the menu is open, it will move the highlight the item 10
+  positions before the current selection.
+- `PageDown`: If the menu is open, it will move the highlight the item 10
+  positions after the current selection.
 - `Enter`: If there is a highlighted option, it will select it and close the
   menu.
 - `Escape`: It will close the menu if open. If the menu is closed, it will clear
   selection: the value in the `input` will become an empty string and the item
   stored as `selectedItem` will become `null`.
+- `Focus`: If the menu is closed, it will open it.
 - `Blur(Tab, Shift+Tab)`: It will close the menu and select the highlighted
   item, if any. The focus will move naturally to the next/previous element in
   the Tab order.
@@ -968,7 +973,7 @@ docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [combobox-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
+  https://w3c.github.io/aria-practices/examples/combobox/combobox-autocomplete-none.html
 [sandbox-example]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useCombobox/basic-usage.js
 [state-change-file]:
@@ -977,3 +982,5 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
+[migration-guide-v7]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#usecombobox

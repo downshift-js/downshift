@@ -54,11 +54,16 @@ such as when an item has been removed from selection.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
+    - [`getSelectedItemProps`](#getselecteditemprops)
+    - [`getDropdownProps`](#getdropdownprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
+    - [Dropdown - button or input](#dropdown---button-or-input)
+    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
+- [Examples](#examples)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -101,7 +106,6 @@ const DropdownMultipleCombobox = () => {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
     selectItem,
@@ -149,7 +153,7 @@ const DropdownMultipleCombobox = () => {
             </span>
           </span>
         ))}
-        <div style={comboboxStyles} {...getComboboxProps()}>
+        <div style={comboboxStyles}>
           <input
             {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
           />
@@ -460,16 +464,11 @@ You use the hook like so:
 import {useMultipleSelection} from 'downshift'
 import {items} from './utils'
 
-const {
-  getDropdownProps,
-  getSelectedItemProps,
-  selectedItems,
-  reset,
-  ...rest
-} = useMultipleSelection({
-  initialSelectedItems: [items[0], [items[1]]],
-  ...otherProps,
-})
+const {getDropdownProps, getSelectedItemProps, selectedItems, reset, ...rest} =
+  useMultipleSelection({
+    initialSelectedItems: [items[0], [items[1]]],
+    ...otherProps,
+  })
 
 return (
   <div>
