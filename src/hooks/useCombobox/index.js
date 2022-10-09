@@ -471,7 +471,7 @@ function useCombobox(userProps = {}) {
           latestState.isOpen && latestState.highlightedIndex > -1
             ? elementIds.getItemId(latestState.highlightedIndex)
             : '',
-        'aria-autocomplete': 'none',
+        'aria-autocomplete': 'list',
         'aria-controls': elementIds.menuId,
         'aria-expanded': latestState.isOpen,
         'aria-labelledby': elementIds.labelId,

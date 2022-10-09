@@ -49,7 +49,7 @@ describe('getInputProps', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-autocomplete']).toEqual('none')
+      expect(inputProps['aria-autocomplete']).toEqual('list')
     })
 
     test("assign 'off' to autoComplete", () => {
