@@ -886,4 +886,4 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
-[advanced-react-component-patterns-course]: https://egghead.io/lessons/react-support-a-state-change-handler-for-all-control-props
+[advanced-react-component-patterns-course]: https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
