@@ -180,8 +180,10 @@ function stateReducer(state, actionAndChanges) {
 ### HTML Attributes
 
 The biggest change is that the input wrapper element does not receive the
-combobox role attributes anymore. Every attribute that belonged to the wrapper
-element are now added on the input element. The changes are as follows:
+combobox role attributes anymore. Previously[deprecated-combobox-aria], the role
+of _combobox_, as well as other HTML attributes, had to be added on the input
+parent element. Some attributes that belonged to the wrapper element are now
+added on the input element. The changes are as follows:
 
 - getComboboxProps has been removed.
 - getInputProps additions:
@@ -197,11 +199,18 @@ As a result of the 1.2 pattern, there are a few event handling changes detailed
 below.
 
 - getInputProps additions:
+
   - _ArrowDown+Alt_: opens the menu without any item highlighted.
   - _ArrowUp+Alt_: closes the menu and selects the highlighted item.
   - _PageUp_: if menu is open, moves highlight by 10 positions to the start.
   - _PageDown_: if menu is open, moves highlight by 10 positions to the end.
   - _Focus_: if menu is closed, opens the menu.
+
+- getInputProps changes:
+  - _ArrowUp_: moves highlight one position up. _Shift_ modifier is not
+    supported anymore.
+  - _ArrowDown_: moves highlight one position down. _Shift_ modifier is not
+    supported anymore.
 
 ### stateChangeTypes
 
@@ -224,7 +233,7 @@ function stateReducer(state, actionAndChanges) {
     case useCombobox.stateChangeTypes.InputFocus:
       return {
         ...changes,
-        isOpen: false, // keep the menu open after selection.
+        isOpen: false, // keep the menu closed when input gets focused.
       }
     default:
       return changes
@@ -241,22 +250,23 @@ _stateReducer_:
 ```js
 function stateReducer(state, actionAndChanges) {
   const {changes, type} = actionAndChanges
+
   switch (type) {
-    case useCombobox.stateChangeTypes.ToggleButtonKeyDownArrowDown:
+    case useCombobox.stateChangeTypes.InputKeyDownArrowDown:
       if (state.highlightedIndex === items.length - 1) {
         return {...changes, highlightedIndex: state.highlightedIndex}
-      } else {
-        return changes
       }
-    case useCombobox.stateChangeTypes.ToggleButtonKeyDownArrowUp:
+      break
+    case useCombobox.stateChangeTypes.InputKeyDownArrowUp:
       if (state.highlightedIndex === 0) {
         return {...changes, highlightedIndex: state.highlightedIndex}
-      } else {
-        return changes
       }
+      break
     default:
       return changes
   }
+
+  return changes
 }
 ```
 
@@ -267,3 +277,5 @@ function stateReducer(state, actionAndChanges) {
   https://w3c.github.io/aria-practices/examples/combobox/combobox-autocomplete-both.html
 [deprecated-select-aria]:
   https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
+[deprecated-combobox-aria]:
+  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html

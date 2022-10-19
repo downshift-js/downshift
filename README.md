@@ -57,6 +57,13 @@ has been around for a while. It established a successful pattern for making
 components accessible and functional while giving developers complete freedom
 when building the UI.
 
+Both _useSelect_ and _useCombobox_ support he latest ARIA combobox patterns for
+W3C, which _Downshift_ does not. Consequently, we strongly recommend the you use
+the hooks. The hooks have been migrated to the ARIA 1.2 combobox pattern in the
+version 7 of _downshift_, and there is a [Migration Guide][migration-guide-v7] to
+explain the differences between the previous pattern and the new one, as well as
+guides to help out with the migration itself.
+
 The `README` on this page covers only the component while each hook has its own
 `README` page. You can navigate to the [hooks page][hooks-readme] or go directly
 to the hook you need by using the links in the list above.
@@ -1499,3 +1506,5 @@ MIT
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
 [code-sandbox-no-get-root-props]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/01-basic-autocomplete.js
+[migration-guide-v7]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md

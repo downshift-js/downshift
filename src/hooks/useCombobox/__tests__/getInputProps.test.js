@@ -45,7 +45,7 @@ describe('getInputProps', () => {
       expect(inputProps.id).toEqual(props.inputId)
     })
 
-    test("assign 'none' to 'aria-autocomplete'", () => {
+    test("assign 'list' to 'aria-autocomplete'", () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()
 
@@ -1325,7 +1325,7 @@ describe('getInputProps', () => {
         expect(input).toHaveAttribute('aria-activedescendant', '')
       })
 
-      test('it opens the closed menu at defaultHighlightedIndex, on every arrow up', async () => {
+      test('it opens the closed menu at defaultHighlightedIndex, on every focus', async () => {
         const defaultHighlightedIndex = 3
         renderCombobox({
           defaultHighlightedIndex,
