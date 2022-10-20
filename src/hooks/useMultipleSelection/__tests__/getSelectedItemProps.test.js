@@ -8,8 +8,10 @@ import {
   focusSelectedItemAtIndex,
   keyDownOnSelectedItemAtIndex,
   getSelectedItems,
+  getInput,
+  items,
+  tab,
 } from '../testUtils'
-import {getInput, items, tab} from '../../testUtils'
 
 describe('getSelectedItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -420,7 +422,7 @@ describe('getSelectedItemProps', () => {
       })
 
       test("other than the ones supported don't affect anything", async () => {
-renderMultipleCombobox({
+        renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 

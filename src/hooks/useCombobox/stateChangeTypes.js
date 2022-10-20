@@ -7,9 +7,12 @@ export const InputKeyDownArrowUp = productionEnum('__input_keydown_arrow_up__')
 export const InputKeyDownEscape = productionEnum('__input_keydown_escape__')
 export const InputKeyDownHome = productionEnum('__input_keydown_home__')
 export const InputKeyDownEnd = productionEnum('__input_keydown_end__')
+export const InputKeyDownPageUp = productionEnum('__input_keydown_page_up__')
+export const InputKeyDownPageDown = productionEnum('__input_keydown_page_down__')
 export const InputKeyDownEnter = productionEnum('__input_keydown_enter__')
 export const InputChange = productionEnum('__input_change__')
 export const InputBlur = productionEnum('__input_blur__')
+export const InputFocus = productionEnum('__input_focus__')
 
 export const MenuMouseLeave = productionEnum('__menu_mouse_leave__')
 

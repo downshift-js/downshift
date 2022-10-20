@@ -335,7 +335,7 @@ describe('props', () => {
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
 
       // should not be called when any other prop is changed.
-      rerender({getA11yStatusMessage, items, circularNavigation: false})
+      rerender({getA11yStatusMessage, items})
       waitForDebouncedA11yStatusUpdate()
 
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
@@ -586,6 +586,47 @@ describe('props', () => {
       }
       const testCases = [
         {
+          step: tab,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputFocus,
+        },
+        {
+          step: tab,
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputBlur,
+        },
+        {
+          step: tab,
+          state: {
+            isOpen: true,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputFocus,
+        },
+        {
+          step: keyDownOnInput,
+          args: '{Enter}',
+          state: {
+            isOpen: false,
+            highlightedIndex: -1,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownEnter,
+        },
+        {
           step: clickOnToggleButton,
           state: {
             isOpen: true,
@@ -616,16 +657,6 @@ describe('props', () => {
             selectedItem: null,
           },
           type: stateChangeTypes.MenuMouseLeave,
-        },
-        {
-          step: tab,
-          state: {
-            isOpen: false,
-            highlightedIndex: -1,
-            inputValue: '',
-            selectedItem: null,
-          },
-          type: stateChangeTypes.InputBlur,
         },
         {
           step: changeInputValue,
@@ -725,6 +756,28 @@ describe('props', () => {
             selectedItem: null,
           },
           type: stateChangeTypes.ItemMouseMove,
+        },
+        {
+          step: keyDownOnInput,
+          args: '{PageDown}',
+          state: {
+            isOpen: true,
+            highlightedIndex: 13,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownPageDown,
+        },
+        {
+          step: keyDownOnInput,
+          args: '{PageUp}',
+          state: {
+            isOpen: true,
+            highlightedIndex: 3,
+            inputValue: '',
+            selectedItem: null,
+          },
+          type: stateChangeTypes.InputKeyDownPageUp,
         },
         {
           step: clickOnItemAtIndex,
@@ -1040,12 +1093,7 @@ describe('props', () => {
         initialIsOpen: true,
         initialHighlightedIndex: 0,
         onHighlightedIndexChange,
-        circularNavigation: false,
       })
-
-      await keyDownOnInput('{ArrowUp}')
-
-      expect(onHighlightedIndexChange).not.toHaveBeenCalled()
 
       await keyDownOnInput('{Home}')
 

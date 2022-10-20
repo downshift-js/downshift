@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import {defaultProps} from '../utils'
-import {dataTestIds, items, user, getInput} from '../testUtils'
+import {dataTestIds, items, user} from '../testUtils'
 import useCombobox from '.'
 
 export * from '../testUtils'
@@ -29,6 +29,19 @@ jest.mock('../utils', () => {
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
+export function getInput() {
+  return screen.getByRole('combobox')
+}
+
+export async function keyDownOnInput(keys) {
+  if (document.activeElement !== getInput()) {
+    getInput().focus()
+    await user.keyboard('{Escape}') // menu was opened because of focus, close it.
+  }
+
+  await user.keyboard(keys)
+}
+
 export async function changeInputValue(inputValue) {
   await user.type(getInput(), inputValue)
 }
@@ -54,7 +67,6 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     getItemProps,
   } = useCombobox({items, ...props})
   const {itemToString} = props.itemToString ? props : defaultProps
@@ -64,7 +76,7 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+      <div>
         <input data-testid={dataTestIds.input} {...getInputProps()} />
         <button
           data-testid={dataTestIds.toggleButton}

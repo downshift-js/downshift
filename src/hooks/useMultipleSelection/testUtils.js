@@ -3,11 +3,13 @@ import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
 import {defaultProps} from '../utils'
-import {items, user, getInput, dataTestIds} from '../testUtils'
+import {items, user, dataTestIds} from '../testUtils'
 import useCombobox from '../useCombobox'
+import {getInput, keyDownOnInput} from '../useCombobox/testUtils'
 import useMultipleSelection from '.'
 
 export * from '../testUtils'
+export {getInput, keyDownOnInput}
 
 jest.mock('../../utils', () => {
   const utils = jest.requireActual('../../utils')
@@ -71,7 +73,6 @@ const DropdownMultipleCombobox = ({
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
   } = useCombobox({
     items,
     ...comboboxProps,
@@ -93,7 +94,7 @@ const DropdownMultipleCombobox = ({
             {itemToString(selectedItem)}
           </span>
         ))}
-        <div data-testid={dataTestIds.combobox} {...getComboboxProps()}>
+        <div data-testid={dataTestIds.combobox}>
           <input
             data-testid={dataTestIds.input}
             {...getInputProps(getDropdownProps())}

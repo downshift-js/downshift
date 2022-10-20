@@ -1,7 +1,12 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
-import {defaultIds, items, mouseLeaveItemAtIndex, mouseMoveItemAtIndex} from '../../testUtils'
+import {
+  defaultIds,
+  items,
+  mouseLeaveItemAtIndex,
+  mouseMoveItemAtIndex,
+} from '../../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
 
@@ -113,7 +118,7 @@ describe('getMenuProps', () => {
           await mouseMoveItemAtIndex(initialHighlightedIndex)
           await mouseLeaveItemAtIndex(initialHighlightedIndex)
 
-          expect(getInput()).not.toHaveAttribute('aria-activedescendant')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
         })
       })
     })
@@ -130,9 +135,8 @@ describe('getMenuProps', () => {
 
     test('will be displayed if getMenuProps is not called', () => {
       renderHook(() => {
-        const {getInputProps, getComboboxProps} = useCombobox({items})
+        const {getInputProps} = useCombobox({items})
         getInputProps({}, {suppressRefError: true})
-        getComboboxProps({}, {suppressRefError: true})
       })
 
       // eslint-disable-next-line no-console
@@ -144,12 +148,12 @@ describe('getMenuProps', () => {
     test('will not be displayed if getMenuProps is not called on subsequent renders', () => {
       let firstRender = true
       const {rerender} = renderHook(() => {
-        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+        const {getInputProps, getMenuProps} = useCombobox({
           items,
         })
-        getComboboxProps({}, {suppressRefError: true})
         getInputProps({}, {suppressRefError: true})
 
+        // eslint-disable-next-line jest/no-if
         if (firstRender) {
           firstRender = false
           getMenuProps({}, {suppressRefError: true})
@@ -164,12 +168,11 @@ describe('getMenuProps', () => {
 
     test('will be displayed if element ref is not set and suppressRefError is false', () => {
       renderHook(() => {
-        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+        const {getInputProps, getMenuProps} = useCombobox({
           items,
         })
 
         getInputProps({}, {suppressRefError: true})
-        getComboboxProps({}, {suppressRefError: true})
         getMenuProps()
       })
 
@@ -184,12 +187,11 @@ describe('getMenuProps', () => {
       const menuNode = {}
 
       renderHook(() => {
-        const {getInputProps, getMenuProps, getComboboxProps} = useCombobox({
+        const {getInputProps, getMenuProps} = useCombobox({
           items,
         })
 
         getInputProps({}, {suppressRefError: true})
-        getComboboxProps({}, {suppressRefError: true})
 
         const {ref} = getMenuProps({
           ref: refFn,

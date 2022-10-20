@@ -11,11 +11,10 @@ export default function DropdownCombobox() {
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
     selectedItem,
-    clearSelection,
+    selectItem,
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
@@ -46,7 +45,7 @@ export default function DropdownCombobox() {
       >
         Choose an element:
       </label>
-      <div {...getComboboxProps()}>
+      <div>
         <input
           style={{padding: '4px'}}
           {...getInputProps()}
@@ -64,7 +63,7 @@ export default function DropdownCombobox() {
           style={{padding: '4px 8px'}}
           aria-label="toggle menu"
           data-testid="clear-button"
-          onClick={clearSelection}
+          onClick={() => selectItem(null)}
         >
           &#10007;
         </button>
