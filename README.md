@@ -60,9 +60,8 @@ when building the UI.
 Both _useSelect_ and _useCombobox_ support he latest ARIA combobox patterns for
 W3C, which _Downshift_ does not. Consequently, we strongly recommend the you use
 the hooks. The hooks have been migrated to the ARIA 1.2 combobox pattern in the
-version 7 of _downshift_, and there is a [Migration Guide][migration-guide-v7] to
-explain the differences between the previous pattern and the new one, as well as
-guides to help out with the migration itself.
+version 7 of _downshift_. There is a [Migration Guide][migration-guide-v7] that
+documents the changes introduced in version 7.
 
 The `README` on this page covers only the component while each hook has its own
 `README` page. You can navigate to the [hooks page][hooks-readme] or go directly
