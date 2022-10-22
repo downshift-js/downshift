@@ -1,17 +1,16 @@
-/* eslint-disable max-statements */
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
   getItemIndex,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
-  useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
   useA11yMessageSetter,
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
+  useMouseAndTouchTracker,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -36,8 +35,6 @@ function useSelect(userProps = {}) {
     items,
     scrollIntoView,
     environment,
-    initialIsOpen,
-    defaultIsOpen,
     itemToString,
     getA11ySelectionMessage,
     getA11yStatusMessage,
@@ -55,8 +52,6 @@ function useSelect(userProps = {}) {
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const itemRefs = useRef({})
-  // used not to trigger menu blur action in some scenarios.
-  const shouldBlurRef = useRef(true)
   // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef(null)
   // prevent id re-generation between renders.
@@ -139,34 +134,6 @@ function useSelect(userProps = {}) {
     props,
     state,
   })
-  /* Controls the focus on the menu or the toggle button. */
-  useEffect(() => {
-    // Don't focus menu on first render.
-    if (isInitialMountRef.current) {
-      // Unless it was initialised as open.
-      if ((initialIsOpen || defaultIsOpen || isOpen) && menuRef.current) {
-        menuRef.current.focus()
-      }
-      return
-    }
-    // Focus menu on open.
-    if (isOpen) {
-      // istanbul ignore else
-      if (menuRef.current) {
-        menuRef.current.focus()
-      }
-      return
-    }
-    // Focus toggleButton on close, but not if it was closed with (Shift+)Tab.
-    if (environment.document.activeElement === menuRef.current) {
-      // istanbul ignore else
-      if (toggleButtonRef.current) {
-        shouldBlurRef.current = false
-        toggleButtonRef.current.focus()
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen])
   useEffect(() => {
     if (isInitialMountRef.current) {
       return
@@ -181,7 +148,7 @@ function useSelect(userProps = {}) {
     environment,
     () => {
       dispatch({
-        type: stateChangeTypes.MenuBlur,
+        type: stateChangeTypes.ToggleButtonBlur,
       })
     },
   )
@@ -209,7 +176,7 @@ function useSelect(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
           getItemNodeFromIndex,
-          shiftKey: event.shiftKey,
+          altKey: event.altKey,
         })
       },
       ArrowUp(event) {
@@ -218,37 +185,14 @@ function useSelect(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
           getItemNodeFromIndex,
-          shiftKey: event.shiftKey,
-        })
-      },
-    }),
-    [dispatch, getItemNodeFromIndex],
-  )
-  const menuKeyDownHandlers = useMemo(
-    () => ({
-      ArrowDown(event) {
-        event.preventDefault()
-
-        dispatch({
-          type: stateChangeTypes.MenuKeyDownArrowDown,
-          getItemNodeFromIndex,
-          shiftKey: event.shiftKey,
-        })
-      },
-      ArrowUp(event) {
-        event.preventDefault()
-
-        dispatch({
-          type: stateChangeTypes.MenuKeyDownArrowUp,
-          getItemNodeFromIndex,
-          shiftKey: event.shiftKey,
+          altKey: event.altKey,
         })
       },
       Home(event) {
         event.preventDefault()
 
         dispatch({
-          type: stateChangeTypes.MenuKeyDownHome,
+          type: stateChangeTypes.ToggleButtonKeyDownHome,
           getItemNodeFromIndex,
         })
       },
@@ -256,31 +200,57 @@ function useSelect(userProps = {}) {
         event.preventDefault()
 
         dispatch({
-          type: stateChangeTypes.MenuKeyDownEnd,
+          type: stateChangeTypes.ToggleButtonKeyDownEnd,
           getItemNodeFromIndex,
         })
       },
       Escape() {
-        dispatch({
-          type: stateChangeTypes.MenuKeyDownEscape,
-        })
+        if (latest.current.state.isOpen) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownEscape,
+          })
+        }
       },
       Enter(event) {
-        event.preventDefault()
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
 
-        dispatch({
-          type: stateChangeTypes.MenuKeyDownEnter,
-        })
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownEnter,
+          })
+        }
+      },
+      PageUp(event) {
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
+
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownPageUp,
+            getItemNodeFromIndex,
+          })
+        }
+      },
+      PageDown(event) {
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
+
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownPageDown,
+            getItemNodeFromIndex,
+          })
+        }
       },
       ' '(event) {
-        event.preventDefault()
+        if (latest.current.state.isOpen) {
+          event.preventDefault()
 
-        dispatch({
-          type: stateChangeTypes.MenuKeyDownSpaceButton,
-        })
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
+          })
+        }
       },
     }),
-    [dispatch, getItemNodeFromIndex],
+    [dispatch, getItemNodeFromIndex, latest],
   )
 
   // Action functions.
@@ -345,32 +315,6 @@ function useSelect(userProps = {}) {
       {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
-      const latestState = latest.current.state
-      const menuHandleKeyDown = event => {
-        const key = normalizeArrowKey(event)
-        if (key && menuKeyDownHandlers[key]) {
-          menuKeyDownHandlers[key](event)
-        } else if (isAcceptedCharacterKey(key)) {
-          dispatch({
-            type: stateChangeTypes.MenuKeyDownCharacter,
-            key,
-            getItemNodeFromIndex,
-          })
-        }
-      }
-      const menuHandleBlur = () => {
-        // if the blur was a result of selection, we don't trigger this action.
-        if (shouldBlurRef.current === false) {
-          shouldBlurRef.current = true
-          return
-        }
-
-        const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown
-        /* istanbul ignore else */
-        if (shouldBlur) {
-          dispatch({type: stateChangeTypes.MenuBlur})
-        }
-      }
       const menuHandleMouseLeave = () => {
         dispatch({
           type: stateChangeTypes.MenuMouseLeave,
@@ -387,37 +331,32 @@ function useSelect(userProps = {}) {
         role: 'listbox',
         'aria-labelledby': elementIds.labelId,
         tabIndex: -1,
-        ...(latestState.isOpen &&
-          latestState.highlightedIndex > -1 && {
-            'aria-activedescendant': elementIds.getItemId(
-              latestState.highlightedIndex,
-            ),
-          }),
         onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
-        onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
-        onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
         ...rest,
       }
     },
-    [
-      dispatch,
-      latest,
-      menuKeyDownHandlers,
-      mouseAndTouchTrackersRef,
-      setGetterPropCallInfo,
-      elementIds,
-      getItemNodeFromIndex,
-    ],
+    [dispatch, setGetterPropCallInfo, elementIds],
   )
   const getToggleButtonProps = useCallback(
     (
-      {onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+      {onBlur, onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
+      const latestState = latest.current.state
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
         })
+      }
+      const toggleButtonHandleBlur = () => {
+        if (
+          latestState.isOpen &&
+          !mouseAndTouchTrackersRef.current.isMouseDown
+        ) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonBlur,
+          })
+        }
       }
       const toggleButtonHandleKeyDown = event => {
         const key = normalizeArrowKey(event)
@@ -435,10 +374,18 @@ function useSelect(userProps = {}) {
         [refKey]: handleRefs(ref, toggleButtonNode => {
           toggleButtonRef.current = toggleButtonNode
         }),
-        id: elementIds.toggleButtonId,
-        'aria-haspopup': 'listbox',
+        'aria-activedescendant':
+          latestState.isOpen && latestState.highlightedIndex > -1
+            ? elementIds.getItemId(latestState.highlightedIndex)
+            : '',
+        'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
+        'aria-haspopup': 'listbox',
         'aria-labelledby': `${elementIds.labelId} ${elementIds.toggleButtonId}`,
+        id: elementIds.toggleButtonId,
+        role: 'combobox',
+        tabIndex: 0,
+        onBlur: callAllEventHandlers(onBlur, toggleButtonHandleBlur),
         ...rest,
       }
 
@@ -463,18 +410,19 @@ function useSelect(userProps = {}) {
       return toggleProps
     },
     [
-      dispatch,
       latest,
-      toggleButtonKeyDownHandlers,
-      setGetterPropCallInfo,
       elementIds,
+      setGetterPropCallInfo,
+      dispatch,
+      mouseAndTouchTrackersRef,
+      toggleButtonKeyDownHandlers,
       getItemNodeFromIndex,
     ],
   )
   const getItemProps = useCallback(
     ({
-      item,
-      index,
+      item: itemProp,
+      index: indexProp,
       onMouseMove,
       onClick,
       refKey = 'ref',
@@ -483,6 +431,9 @@ function useSelect(userProps = {}) {
       ...rest
     } = {}) => {
       const {state: latestState, props: latestProps} = latest.current
+      const item = itemProp ?? items[indexProp]
+      const index = getItemIndex(indexProp, item, latestProps.items)
+
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
           return
@@ -508,7 +459,7 @@ function useSelect(userProps = {}) {
       const itemProps = {
         disabled,
         role: 'option',
-        'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
+        'aria-selected': `${item === selectedItem}`,
         id: elementIds.getItemId(itemIndex),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
@@ -529,7 +480,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [dispatch, latest, shouldScrollRef, elementIds],
+    [latest, items, selectedItem, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

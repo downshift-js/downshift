@@ -23,6 +23,13 @@ implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
 between them, screen reader support, highlight by character keys etc.
 
+## Migration to v7
+
+`useSelect` received some changes related to its API and how it works in version
+7, as a conequence of adapting it to the ARIA 1.2 select-only combobox pattern.
+If you were using _useSelect_ previous to 7.0.0, check the [migration
+guide][migration-guide-v7] and update if necessary.
+
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -55,15 +62,21 @@ between them, screen reader support, highlight by character keys etc.
   - [toggleButtonId](#togglebuttonid)
   - [getItemId](#getitemid)
   - [environment](#environment)
-  - [circularNavigation](#circularnavigation)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
+    - [`getLabelProps`](#getlabelprops)
+    - [`getMenuProps`](#getmenuprops)
+    - [`getItemProps`](#getitemprops)
+    - [`getToggleButtonProps`](#gettogglebuttonprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
+    - [Toggle Button](#toggle-button)
+    - [Menu](#menu)
+    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -93,9 +106,7 @@ function DropdownSelect() {
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button type="button" {...getToggleButtonProps()}>
-        {selectedItem || 'Elements'}
-      </button>
+      <div {...getToggleButtonProps()}>{selectedItem || 'Elements'}</div>
       <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
           items.map((item, index) => (
@@ -423,14 +434,6 @@ then you will need to pass in a custom object that is able to provide
 [access to these properties](https://gist.github.com/Rendez/1dd55882e9b850dd3990feefc9d6e177)
 for downshift.
 
-### circularNavigation
-
-> `boolean` | defaults to `false`
-
-Controls the circular keyboard navigation between items. If set to `true`, when
-first item is highlighted, the Arrow Up will move highlight to the last item,
-and viceversa using Arrow Down.
-
 ## stateChangeTypes
 
 There are a few props that expose changes to state
@@ -442,22 +445,21 @@ object you get. This `type` corresponds to a `stateChangeTypes` property.
 The list of all possible values this `type` property can take is defined in
 [this file][state-change-file] and is as follows:
 
-- `useSelect.stateChangeTypes.MenuKeyDownArrowDown`
-- `useSelect.stateChangeTypes.MenuKeyDownArrowUp`
-- `useSelect.stateChangeTypes.MenuKeyDownEscape`
-- `useSelect.stateChangeTypes.MenuKeyDownHome`
-- `useSelect.stateChangeTypes.MenuKeyDownEnd`
-- `useSelect.stateChangeTypes.MenuKeyDownEnter`
-- `useSelect.stateChangeTypes.MenuKeyDownSpaceButton`
-- `useSelect.stateChangeTypes.MenuKeyDownCharacter`
-- `useSelect.stateChangeTypes.MenuBlur`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownEscape`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownHome`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownEnd`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownPageUp`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownPageDown`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownEnter`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton`
+- `useSelect.stateChangeTypes.ToggleButtonKeyDownCharacter`
+- `useSelect.stateChangeTypes.ToggleButtonBlur`
+- `useSelect.stateChangeTypes.ToggleButtonClick`
 - `useSelect.stateChangeTypes.MenuMouseLeave`
 - `useSelect.stateChangeTypes.ItemMouseMove`
 - `useSelect.stateChangeTypes.ItemClick`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownCharacter`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowDown`
-- `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`
-- `useSelect.stateChangeTypes.ToggleButtonClick`
 - `useSelect.stateChangeTypes.FunctionToggleMenu`
 - `useSelect.stateChangeTypes.FunctionOpenMenu`
 - `useSelect.stateChangeTypes.FunctionCloseMenu`
@@ -506,7 +508,7 @@ const {getToggleButtonProps, reset, ...rest} = useSelect({
 
 return (
   <div>
-    <button {...getToggleButtonProps()}>Options</button>
+    <div {...getToggleButtonProps()}>Options</div>
     {/* render the menu and items */}
     {/* render a button that resets the select to defaults */}
     <button
@@ -542,12 +544,12 @@ props being overridden (or overriding the props returned). For example:
 
 <!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
 
-| property               | type           | description                                                                                    |
-| ---------------------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| `getToggleButtonProps` | `function({})` | returns the props you should apply to any menu toggle button element you render.               |
-| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                       |
-| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                     |
-| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render. |
+| property               | type           | description                                                                                                                                     |
+| ---------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `getToggleButtonProps` | `function({})` | returns the props you should apply to the trigger element you render. Since it will receive the role of `combobox`, we chose a `<div>` element. |
+| `getItemProps`         | `function({})` | returns the props you should apply to any menu item elements you render.                                                                        |
+| `getLabelProps`        | `function({})` | returns the props you should apply to the `label` element that you render.                                                                      |
+| `getMenuProps`         | `function({})` | returns the props you should apply to the `ul` element (or root of your menu) that you render.                                                  |
 
 #### `getLabelProps`
 
@@ -678,8 +680,10 @@ Optional properties:
 
 #### `getToggleButtonProps`
 
-Call this and apply the returned props to a `button`. It allows you to toggle
-the `Menu` component.
+Call this and apply the returned props to a `div` element that will act as a
+triggering button. Since ARIA 1.2, the trigger element will reiceve a `combobox`
+role, so a `<button>` is not considered correct markup anymore. It allows you to
+toggle the `Menu` component.
 
 Optional properties:
 
@@ -754,56 +758,53 @@ described below.
 #### Toggle Button
 
 - `Click`: If the menu is not displayed, it will open it. Otherwise it will
-  close it. It will additionally move focus on the menu in order for screen
-  readers to correctly narrate which item is currently highlighted. If there is
-  already an item selected, the menu will be opened with that item already
-  highlighted.
-- `Enter`: Has the same effect as `Click`.
-- `Space`: Has the same effect as `Click`.
-- `CharacterKey`: Selects the option that starts with that key without opening
-  the dropdown list. For instance, typing `C` will select the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  select the option starting with that key combination, for instance typing
-  `CAL` will select `californium` if this option exists.
+  close it. If there is already an item selected, the menu will be opened with
+  that item already highlighted.
+- `Enter`: If the menu is closed, opens the menu. If the menu is opened and
+  there is an item highlighted, it will select that item.
+- `Space`: If the menu is closed, opens the menu. If the menu is opened and
+  there is an item highlighted, it will select that item. If the user has typed
+  character keys before pressing `Space`, the space character will concatenate
+  to the search query. This allows search for options such as `Republic of ..`.
+- `CharacterKey`: Opens the menu if closed and highlights the first option that
+  starts with that key. For instance, typing `C` will select the option that
+  starts with `C`. Pressing `C` again will move the highlight to the next item
+  that starts with `C`. Typing keys into rapid succession (in less than 500ms
+  each) will select the option starting with that key combination, for instance
+  typing `CAL` will select `californium` if this option exists.
 - `ArrowDown`: If the menu is closed, it will open it. If there is already an
-  item selected, it will open the menu with the next item (index-wise)
-  highlighted. Otherwise, it will open the menu with the first option
-  highlighted.
+  item selected, it will open the menu with the selected item highlighted.
+  Otherwise, it will open the menu with the first option highlighted. If the
+  menu is already open, it will highlight the next item.
 - `ArrowUp`: If the menu is closed, it will open it. If there is already an item
-  selected, it will open the menu with the previous item (index-wise)
-  highlighted. Otherwise, it will open the menu with the last option
-  highlighted.
+  selected, it will open the menu with the selected item highlighted. Otherwise,
+  it will open the menu with the last option highlighted. If the menu is already
+  open, it will highlight the previous item.
+- `Alt+ArrowDown`: If the menu is closed, it will open it, without highlighting
+  any item.
+- `Alt+ArrowUp`: If the menu is open, it will close it and will select the item
+  that was highlighted.
+- `End`: If the menu is closed, it will open it. It will also highlight the last
+  item in the list.
+- `Home`: If the menu is closed, it will open it. It will also highlight the
+  first item in the list.
+- `PageUp`: If the menu is open, it will move the highlight the item 10
+  positions before the current selection.
+- `PageDown`: If the menu is open, it will move the highlight the item 10
+  positions after the current selection.
+- `Escape`: It will close the menu without selecting anything and keeps focus to
+  the toggle button.
+- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu will select
+  the highlighted item if any. Focus is handled naturally (next / previous
+  elemenent in the tab order, body element if click outside.).
 
 #### Menu
 
-- `ArrowDown`: Moves `highlightedIndex` one position down. If
-  `circularNavigation` is true, when reaching the last option, `ArrowDown` will
-  move `highlightedIndex` to first position. Otherwise it won't change anything.
-- `ArrowUp`: Moves `highlightedIndex` one position up. If `circularNavigation`
-  is true, when reaching the first option, `ArrowUp` will move
-  `highlightedIndex` to last position. Otherwise it won't change anything.
-- `CharacterKey`: Moves `highlightedIndex` to the option that starts with that
-  key. For instance, typing `C` will move highlight to the option that starts
-  with `C`. Typing keys into rapid succession (in less than 500ms each) will
-  move `highlightedIndex` to the option starting with that key combination, for
-  instance typing `CAL` will move the highlight to `californium` if this option
-  exists.
-- `End`: Moves `highlightedIndex` to last position.
-- `Home`: Moves `highlightedIndex` to first position.
-- `Enter`: If there is a highlighted option, it will select it, close the menu
-  and move focus to the toggle button (unless `defaultIsOpen` is true).
-- `Escape`: It will close the menu without selecting anything and move focus to
-  the toggle button.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu and move
-  focus either to the toggle button (if `Shift+Tab`), next tabbable element (if
-  `Tab`) or whatever was clicked. It will not select the highlighted item
-  anymore, if any.
 - `MouseLeave`: Will clear the value of the `highlightedIndex` if it was set.
 
 #### Item
 
-- `Click`: It will select the item, close the menu and move focus to the toggle
-  button (unless `defaultIsOpen` is true).
+- `Click`: It will select the item and close the menu.
 - `MouseOver`: It will highlight the item.
 
 ### Customizing Handlers
@@ -877,7 +878,7 @@ docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [select-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
+  https://w3c.github.io/aria-practices/examples/combobox/combobox-select-only.html
 [sandbox-example]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useSelect/basic-usage.js
 [state-change-file]:
@@ -886,3 +887,5 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
+[migration-guide-v7]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#useselect

@@ -1,6 +1,5 @@
 import {getHighlightedIndexOnOpen, getDefaultValue} from './utils'
 
-/* eslint-disable complexity */
 export default function downshiftCommonReducer(
   state,
   action,
