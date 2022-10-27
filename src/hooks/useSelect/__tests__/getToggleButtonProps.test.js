@@ -1067,6 +1067,16 @@ describe('getToggleButtonProps', () => {
         expect(keyDownEvent.defaultPrevented).toBe(true)
       })
 
+      test('enter prevents the default event behavior with the menu closed', () => {
+        renderSelect()
+        const toggleButton = getToggleButton()
+        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Enter'})
+
+        fireEvent(toggleButton, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+      })
+
       test('space opens the menu without any item selected', async () => {
         renderSelect()
         const toggleButton = getToggleButton()
@@ -1111,8 +1121,18 @@ describe('getToggleButtonProps', () => {
         )
       })
 
-      test('space prevents the default event behavior', () => {
+      test('space prevents the default event behavior when select is open', () => {
         renderSelect({isOpen: true})
+        const toggleButton = getToggleButton()
+        const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
+
+        fireEvent(toggleButton, keyDownEvent)
+
+        expect(keyDownEvent.defaultPrevented).toBe(true)
+      })
+
+      test('space prevents the default event behavior when select is closed', () => {
+        renderSelect()
         const toggleButton = getToggleButton()
         const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
 

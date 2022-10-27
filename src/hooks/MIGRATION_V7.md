@@ -147,6 +147,8 @@ function stateReducer(state, actionAndChanges) {
 }
 ```
 
+> Another thing to mention is that, since ARIA 1.2 does not recommend a `<button>` element for the toggle button anymore, _Enter_ and _SpaceBar_ do not perform click events out of the box, when the menu is closed. Consequently, we are triggering these events manually. For backwards compatibility to pre v7, when menu is closed and toggle element receives _Enter_ or _SpaceBar_ key event, it will trigger a `useSelect.stateChangeTypes.ToggleButtonClick` type change.
+
 ### circularNavigation
 
 The prop _circularNavigation_ has been removed. Navigation inside the menu is

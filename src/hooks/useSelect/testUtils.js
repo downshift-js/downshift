@@ -72,14 +72,11 @@ export function DropdownSelect({renderSpy, renderItem, ...props}) {
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button
-        data-testid={dataTestIds.toggleButton}
-        {...getToggleButtonProps()}
-      >
+      <div data-testid={dataTestIds.toggleButton} {...getToggleButtonProps()}>
         {(selectedItem && selectedItem instanceof Object
           ? itemToString(selectedItem)
           : selectedItem) || 'Elements'}
-      </button>
+      </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
@@ -119,6 +116,50 @@ export function getItemIndexByCharacter(character, startIndex = 0) {
 }
 
 export const stateChangeTestCases = [
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Enter}',
+    state: {
+      isOpen: true,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Enter}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEnter,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: ' ',
+    state: {
+      isOpen: true,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Escape}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEscape,
+  },
   {
     step: keyDownOnToggleButton,
     arg: '{ArrowDown}',

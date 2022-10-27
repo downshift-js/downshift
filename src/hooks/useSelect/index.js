@@ -212,13 +212,13 @@ function useSelect(userProps = {}) {
         }
       },
       Enter(event) {
-        if (latest.current.state.isOpen) {
-          event.preventDefault()
+        event.preventDefault()
 
-          dispatch({
-            type: stateChangeTypes.ToggleButtonKeyDownEnter,
-          })
-        }
+        dispatch({
+          type: latest.current.state.isOpen
+            ? stateChangeTypes.ToggleButtonKeyDownEnter
+            : stateChangeTypes.ToggleButtonClick,
+        })
       },
       PageUp(event) {
         if (latest.current.state.isOpen) {
@@ -241,13 +241,13 @@ function useSelect(userProps = {}) {
         }
       },
       ' '(event) {
-        if (latest.current.state.isOpen) {
-          event.preventDefault()
+        event.preventDefault()
 
-          dispatch({
-            type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
-          })
-        }
+        dispatch({
+          type: latest.current.state.isOpen
+            ? stateChangeTypes.ToggleButtonKeyDownSpaceButton
+            : stateChangeTypes.ToggleButtonClick,
+        })
       },
     }),
     [dispatch, getItemNodeFromIndex, latest],
@@ -442,7 +442,7 @@ function useSelect(userProps = {}) {
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
-          disabled
+          disabled,
         })
       }
       const itemHandleClick = () => {
@@ -476,7 +476,6 @@ function useSelect(userProps = {}) {
         onMouseMove,
         itemHandleMouseMove,
       )
-
 
       return itemProps
     },
