@@ -4,9 +4,9 @@
 
 You have a combobox or autocomplete dropdown in your application and you want it
 to be accessible and functional. For consistency reasons you want it to follow
-the [ARIA design pattern][combobox-aria] for a combobox. You also want this
-solution to be simple to use and flexible so you can tailor it further to your
-specific needs.
+the [ARIA design pattern][combobox-aria-example] for a combobox. You also want
+this solution to be simple to use and flexible so you can tailor it further to
+your specific needs.
 
 ## This solution
 
@@ -22,6 +22,36 @@ state props, they create all the stateful logic needed for the combobox to
 implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
 between them, screen reader support, highlight by character keys etc.
+
+## Types of Autocomplete
+
+By default, our implementation and examples illustrate an autocomplete of type
+_list_. This involves performing your own items filtering logic as well as
+keeping the _aria_autocomplete_ value returned by the
+[getInputProps](#getinputprops).
+
+There are, in total, 3 types of autocomplete you can opt for, and these are as
+follows:
+
+- no autocomplete:
+  - [ARIA example][combobox-aria-example-none]
+  - use _aria-autocomplete="none"_ attribute to override the default value from
+    _getInputProps_.
+  - do not implement any filtering logic yourself, just render the listbox
+    items. Basically, take the [code example](#usage) below, remove the useState
+    with items, the onInputValueChange function, pass _colors_ as _items_ prop
+    and render the _colors_ if _isOpen_ is _true_.
+- list autocomplete:
+  - [ARIA example][combobox-aria-example]
+  - just use the [example provided below](#usage) or anything equivalent.
+  - filtering logic inside the menu is done by the _useCombobox_ consumer.
+- list and inline autocomplete:
+  - [ARIA example][combobox-aria-example-both]
+  - use _aria-autocomplete="both"_ attribute to override the default value from
+    _getInputProps_.
+  - filtering logic inside the menu is done by the _useCombobox_ consumer.
+  - inline autocomplete based on the highlighted item in the menu is also
+    performed by the consumer.
 
 ## Migration to v7
 
@@ -71,19 +101,10 @@ and update if necessary.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
-    - [`getLabelProps`](#getlabelprops)
-    - [`getMenuProps`](#getmenuprops)
-    - [`getItemProps`](#getitemprops)
-    - [`getToggleButtonProps`](#gettogglebuttonprops)
-    - [`getInputProps`](#getinputprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
-    - [Toggle Button](#toggle-button)
-    - [Input](#input)
-    - [Menu](#menu)
-    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -97,59 +118,116 @@ and update if necessary.
 import * as React from 'react'
 import {render} from 'react-dom'
 import {useCombobox} from 'downshift'
-// items = ['Neptunium', 'Plutonium', ...]
-import {items, menuStyles, comboboxStyles} from './utils'
+
+const colors = [
+  'Black',
+  'Red',
+  'Green',
+  'Blue',
+  'Orange',
+  'Purple',
+  'Pink',
+  'Orchid',
+  'Aqua',
+  'Lime',
+  'Gray',
+  'Brown',
+  'Teal',
+  'Skyblue',
+]
 
 function DropdownCombobox() {
-  const [inputItems, setInputItems] = useState(items)
+  const [inputItems, setInputItems] = React.useState(colors)
   const {
     isOpen,
-    selectedItem,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getInputProps,
     highlightedIndex,
     getItemProps,
+    selectedItem,
+    selectItem,
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
       setInputItems(
-        items.filter(item =>
+        colors.filter(item =>
           item.toLowerCase().startsWith(inputValue.toLowerCase()),
         ),
       )
     },
   })
-
   return (
-    <>
-      <label {...getLabelProps()}>Choose an element:</label>
-      <div style={comboboxStyles}>
-        <input {...getInputProps()} />
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'fit-content',
+        justifyContent: 'center',
+        marginTop: 100,
+        alignSelf: 'center',
+      }}
+    >
+      <label
+        style={{
+          fontWeight: 'bolder',
+          color: selectedItem ? selectedItem : 'black',
+        }}
+        {...getLabelProps()}
+      >
+        Choose an element:
+      </label>
+      <div>
+        <input
+          style={{padding: '4px'}}
+          {...getInputProps()}
+          data-testid="combobox-input"
+        />
         <button
-          type="button"
+          style={{padding: '4px 8px'}}
+          aria-label="toggle menu"
+          data-testid="combobox-toggle-button"
           {...getToggleButtonProps()}
-          aria-label={'toggle menu'}
         >
-          &#8595;
+          {isOpen ? <>&#8593;</> : <>&#8595;</>}
+        </button>
+        <button
+          style={{padding: '4px 8px'}}
+          aria-label="toggle menu"
+          data-testid="clear-button"
+          onClick={() => selectItem(null)}
+        >
+          &#10007;
         </button>
       </div>
-      <ul {...getMenuProps()} style={menuStyles}>
+      <ul
+        {...getMenuProps()}
+        style={{
+          listStyle: 'none',
+          width: '100%',
+          padding: '0',
+          margin: '4px 0 0 0',
+        }}
+      >
         {isOpen &&
           inputItems.map((item, index) => (
             <li
-              style={
-                highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
-              }
+              style={{
+                padding: '4px',
+                backgroundColor: highlightedIndex === index ? '#bde4ff' : null,
+              }}
               key={`${item}${index}`}
-              {...getItemProps({item, index})}
+              {...getItemProps({
+                item,
+                index,
+              })}
             >
               {item}
             </li>
           ))}
       </ul>
-    </>
+    </div>
   )
 }
 
@@ -972,8 +1050,12 @@ It can be a great contributing opportunity to provide relevant use cases as
 docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
-[combobox-aria]:
-  https://w3c.github.io/aria-practices/examples/combobox/combobox-autocomplete-none.html
+[combobox-aria-example]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
+[combobox-aria-example-none]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-none.html
+[combobox-aria-example-both]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-both.html
 [sandbox-example]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useCombobox/basic-usage.js
 [state-change-file]:

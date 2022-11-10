@@ -33,8 +33,8 @@ autocomplete, combobox or select dropdown components.</p>
 You need an autocomplete, a combobox or a select experience in your application
 and you want it to be accessible. You also want it to be simple and flexible to
 account for your use cases. Finally, it should follow the [ARIA][aria] design
-pattern for a [combobox][combobox-aria] or a [select][select-aria], depending on
-your use case.
+pattern for a [combobox][combobox-aria-example] or a
+[select][select-aria-example], depending on your use case.
 
 ## This solution
 
@@ -1496,10 +1496,10 @@ MIT
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
 [aria]: https://www.w3.org/TR/wai-aria-practices/
-[combobox-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
-[select-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
+[combobox-aria-example]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
+[select-aria-example]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-select-only.html
 [docsite]: https://downshift-js.com/
 [code-sandbox-try-it-out]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js

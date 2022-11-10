@@ -1,10 +1,10 @@
-import React, {useState} from 'react'
+import * as React from 'react'
 
 import {useCombobox} from '../../src'
 import {colors} from '../utils'
 
 export default function DropdownCombobox() {
-  const [inputItems, setInputItems] = useState(colors)
+  const [inputItems, setInputItems] = React.useState(colors)
   const {
     isOpen,
     getToggleButtonProps,

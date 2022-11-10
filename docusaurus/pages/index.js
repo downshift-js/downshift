@@ -17,6 +17,9 @@ export default function Docs() {
         <li>
           <a href="./useMultipleSelect">useMultipleSelect</a>
         </li>
+        <li>
+          <a href="./combobox">Downshift</a>
+        </li>
       </ul>
     </div>
   )

@@ -54,14 +54,10 @@ such as when an item has been removed from selection.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
-    - [`getSelectedItemProps`](#getselecteditemprops)
-    - [`getDropdownProps`](#getdropdownprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
-    - [Dropdown - button or input](#dropdown---button-or-input)
-    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -75,31 +71,61 @@ such as when an item has been removed from selection.
 import * as React from 'react'
 import {render} from 'react-dom'
 import {useCombobox, useMultipleSelection} from 'downshift'
-// items = ['Neptunium', 'Plutonium', ...]
-import {
-  items,
-  menuStyles,
-  comboboxWrapperStyles,
-  comboboxStyles,
-  selectedItemStyles,
-  selectedItemIconStyles,
-} from './utils'
 
-const DropdownMultipleCombobox = () => {
-  const [inputValue, setInputValue] = useState('')
-  const {
-    getSelectedItemProps,
-    getDropdownProps,
-    addSelectedItem,
-    removeSelectedItem,
-    selectedItems,
-  } = useMultipleSelection({initialSelectedItems: [items[0], items[1]]})
-  const getFilteredItems = items =>
-    items.filter(
-      item =>
-        selectedItems.indexOf(item) < 0 &&
-        item.toLowerCase().startsWith(inputValue.toLowerCase()),
-    )
+const colors = [
+  'Black',
+  'Red',
+  'Green',
+  'Blue',
+  'Orange',
+  'Purple',
+  'Pink',
+  'Orchid',
+  'Aqua',
+  'Lime',
+  'Gray',
+  'Brown',
+  'Teal',
+  'Skyblue',
+]
+
+const initialSelectedItems = [colors[0], colors[1]]
+
+function getFilteredItems(selectedItems, inputValue) {
+  const lowerCasedInputValue = inputValue.toLowerCase()
+
+  return colors.filter(
+    colour =>
+      !selectedItems.includes(colour) &&
+      colour.toLowerCase().startsWith(lowerCasedInputValue),
+  )
+}
+
+function DropdownMultipleCombobox() {
+  const [inputValue, setInputValue] = React.useState('')
+  const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems)
+  const items = React.useMemo(
+    () => getFilteredItems(selectedItems, inputValue),
+    [selectedItems, inputValue],
+  )
+
+  const {getSelectedItemProps, getDropdownProps, removeSelectedItem} =
+    useMultipleSelection({
+      selectedItems,
+      onStateChange({selectedItems: newSelectedItems, type}) {
+        switch (type) {
+          case useMultipleSelection.stateChangeTypes
+            .SelectedItemKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
+          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
+            setSelectedItems(newSelectedItems)
+            break
+          default:
+            break
+        }
+      },
+    })
   const {
     isOpen,
     getToggleButtonProps,
@@ -108,69 +134,153 @@ const DropdownMultipleCombobox = () => {
     getInputProps,
     highlightedIndex,
     getItemProps,
-    selectItem,
+    selectedItem,
+    clearSelection,
   } = useCombobox({
+    items,
     inputValue,
-    items: getFilteredItems(items),
-    onStateChange: ({inputValue, type, selectedItem}) => {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputChange:
-          setInputValue(inputValue)
+    selectedItem: null,
+    stateReducer(state, actionAndChanges) {
+      const {changes, type} = actionAndChanges
 
-          break
+      switch (type) {
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputBlur:
-          if (selectedItem) {
-            setInputValue('')
-            addSelectedItem(selectedItem)
-            selectItem(null)
+          return {
+            ...changes,
+            ...(changes.selectedItem && {isOpen: true, highlightedIndex: 0}),
           }
+        default:
+          return changes
+      }
+    },
+    onStateChange({
+      inputValue: newInputValue,
+      type,
+      selectedItem: newSelectedItem,
+    }) {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        case useCombobox.stateChangeTypes.ItemClick:
+          setSelectedItems([...selectedItems, newSelectedItem])
 
+          break
+        case useCombobox.stateChangeTypes.InputChange:
+          setInputValue(newInputValue)
           break
         default:
           break
       }
     },
   })
-
   return (
-    <div>
-      <label {...getLabelProps()}>Choose some elements:</label>
-      <div style={comboboxWrapperStyles}>
-        {selectedItems.map((selectedItem, index) => (
-          <span
-            style={selectedItemStyles}
-            key={`selected-item-${index}`}
-            {...getSelectedItemProps({selectedItem, index})}
-          >
-            {selectedItem}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'fit-content',
+        justifyContent: 'center',
+        marginTop: 100,
+        alignSelf: 'center',
+      }}
+    >
+      <label
+        style={{
+          fontWeight: 'bolder',
+          color: selectedItem ? selectedItem : 'black',
+        }}
+        {...getLabelProps()}
+      >
+        Choose an element:
+      </label>
+      <div
+        style={{
+          display: 'inline-flex',
+          gap: '8px',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          padding: '6px',
+        }}
+      >
+        {selectedItems.map(function renderSelectedItem(
+          selectedItemForRender,
+          index,
+        ) {
+          return (
             <span
-              style={selectedItemIconStyles}
-              onClick={() => removeSelectedItem(selectedItem)}
+              style={{
+                backgroundColor: 'lightgray',
+                paddingLeft: '4px',
+                paddingRight: '4px',
+                borderRadius: '6px',
+              }}
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({
+                selectedItem: selectedItemForRender,
+                index,
+              })}
             >
-              &#10005;
+              {selectedItemForRender}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <span
+                style={{padding: '4px', cursor: 'pointer'}}
+                onClick={e => {
+                  e.stopPropagation()
+                  removeSelectedItem(null)
+                }}
+              >
+                &#10005;
+              </span>
             </span>
-          </span>
-        ))}
-        <div style={comboboxStyles}>
+          )
+        })}
+        <div>
           <input
+            style={{padding: '4px'}}
             {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
+            data-testid="combobox-input"
           />
-          <button {...getToggleButtonProps()} aria-label={'toggle menu'}>
-            &#8595;
+          <button
+            style={{padding: '4px 8px'}}
+            aria-label="toggle menu"
+            data-testid="combobox-toggle-button"
+            {...getToggleButtonProps()}
+          >
+            {isOpen ? <>&#8593;</> : <>&#8595;</>}
+          </button>
+          <button
+            style={{padding: '4px 8px'}}
+            aria-label="clear selection"
+            data-testid="clear-button"
+            onClick={clearSelection}
+          >
+            &#10007;
           </button>
         </div>
       </div>
-      <ul {...getMenuProps()} style={menuMultipleStyles}>
+      <ul
+        {...getMenuProps()}
+        style={{
+          listStyle: 'none',
+          width: '100%',
+          padding: '0',
+          margin: '4px 0 0 0',
+        }}
+      >
         {isOpen &&
-          getFilteredItems(items).map((item, index) => (
+          items.map((item, index) => (
             <li
-              style={
-                highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
-              }
+              style={{
+                padding: '4px',
+                backgroundColor: highlightedIndex === index ? '#bde4ff' : null,
+              }}
               key={`${item}${index}`}
-              {...getItemProps({item, index})}
+              {...getItemProps({
+                item,
+                index,
+                'data-testid': `downshift-item-${index}`,
+              })}
             >
               {item}
             </li>
