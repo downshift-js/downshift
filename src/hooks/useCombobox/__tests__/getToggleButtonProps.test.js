@@ -1,7 +1,13 @@
-/* eslint-disable jest/no-disabled-tests */
 import {act} from '@testing-library/react-hooks'
-import {renderCombobox, renderUseCombobox} from '../testUtils'
-import {items, defaultIds} from '../../testUtils'
+import {
+  renderCombobox,
+  renderUseCombobox,
+  items,
+  defaultIds,
+  clickOnToggleButton,
+  getInput,
+  getItems,
+} from '../testUtils'
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -22,6 +28,45 @@ describe('getToggleButtonProps', () => {
       expect(toggleButtonProps.id).toEqual(props.toggleButtonId)
     })
 
+    test('assign tabindex of -1', () => {
+      const {result} = renderUseCombobox()
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(toggleButtonProps.tabIndex).toEqual(-1)
+    })
+
+    test('assign default value to aria-controls', () => {
+      const {result} = renderUseCombobox()
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(toggleButtonProps['aria-controls']).toEqual(`${defaultIds.menuId}`)
+    })
+
+    test('assign custom value passed by user to aria-controls', () => {
+      const props = {
+        menuId: 'my-custom-menu-id',
+      }
+      const {result} = renderUseCombobox(props)
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(toggleButtonProps['aria-controls']).toEqual(`${props.menuId}`)
+    })
+
+    test("assign 'false' value to aria-expanded when menu is closed", () => {
+      const {result} = renderUseCombobox({isOpen: false})
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(toggleButtonProps['aria-expanded']).toEqual(false)
+    })
+
+    test("assign 'true' value to aria-expanded when menu is open", () => {
+      const {result} = renderUseCombobox({isOpen: true})
+
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(toggleButtonProps['aria-expanded']).toEqual(true)
+    })
+
     test('omit event handlers when disabled', () => {
       const {result} = renderUseCombobox()
       const toggleButtonProps = result.current.getToggleButtonProps({
@@ -29,7 +74,6 @@ describe('getToggleButtonProps', () => {
       })
 
       expect(toggleButtonProps.onClick).toBeUndefined()
-      // eslint-disable-next-line jest-dom/prefer-enabled-disabled
       expect(toggleButtonProps.disabled).toBe(true)
     })
   })
@@ -81,100 +125,101 @@ describe('getToggleButtonProps', () => {
 
   describe('event handlers', () => {
     describe('on click', () => {
-      test('opens the closed menu', () => {
-        const {getItems, clickOnToggleButton} = renderCombobox()
+      test('opens the closed menu', async () => {
+        renderCombobox()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(items.length)
       })
 
-      test('closes the open menu', () => {
-        const {getItems, clickOnToggleButton} = renderCombobox({
+      test('closes the open menu', async () => {
+        renderCombobox({
           initialIsOpen: true,
         })
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(0)
       })
 
-      test('opens and closes menu at consecutive clicks', () => {
-        const {getItems, clickOnToggleButton} = renderCombobox()
+      test('opens and closes menu at consecutive clicks', async () => {
+        renderCombobox()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(items.length)
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(0)
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(items.length)
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(getItems()).toHaveLength(0)
       })
 
-      test('opens the closed menu without any option highlighted', () => {
-        const {input, clickOnToggleButton} = renderCombobox()
+      test('opens the closed menu without any option highlighted', async () => {
+        renderCombobox()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
-        expect(input).not.toHaveAttribute('aria-activedescendant')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
-      test('opens the closed menu with selected option highlighted', () => {
+      test('opens the closed menu with selected option highlighted', async () => {
         const selectedIndex = 3
-        const {input, clickOnToggleButton} = renderCombobox({
+        renderCombobox({
           initialSelectedItem: items[selectedIndex],
         })
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
-        expect(input).toHaveAttribute(
+        expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(selectedIndex),
         )
       })
 
-      test('opens the closed menu at initialHighlightedIndex, but on first click only', () => {
+      test('opens the closed menu at initialHighlightedIndex, but on first click only', async () => {
         const initialHighlightedIndex = 3
-        const {input, clickOnToggleButton} = renderCombobox({
+        renderCombobox({
           initialHighlightedIndex,
         })
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
-        expect(input).toHaveAttribute(
+        expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
 
-        clickOnToggleButton()
-        clickOnToggleButton()
+        await clickOnToggleButton()
+        await clickOnToggleButton()
 
-        expect(input).not.toHaveAttribute('aria-activedescendant')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
-      test('opens the closed menu at defaultHighlightedIndex, on every click', () => {
+      test('opens the closed menu at defaultHighlightedIndex, on every click', async () => {
         const defaultHighlightedIndex = 3
-        const {input, clickOnToggleButton} = renderCombobox({
+        renderCombobox({
           defaultHighlightedIndex,
         })
+        const input = getInput()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
 
-        clickOnToggleButton()
-        clickOnToggleButton()
+        await clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -182,21 +227,22 @@ describe('getToggleButtonProps', () => {
         )
       })
 
-      test('opens the closed menu at highlightedIndex from props, on every click', () => {
+      test('opens the closed menu at highlightedIndex from props, on every click', async () => {
         const highlightedIndex = 3
-        const {input, clickOnToggleButton} = renderCombobox({
+        renderCombobox({
           highlightedIndex,
         })
+        const input = getInput()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
 
-        clickOnToggleButton()
-        clickOnToggleButton()
+        await clickOnToggleButton()
+        await clickOnToggleButton()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -204,12 +250,12 @@ describe('getToggleButtonProps', () => {
         )
       })
 
-      test('opens the closed menu and sets focus on the input', () => {
-        const {clickOnToggleButton, input} = renderCombobox()
+      test('opens the closed menu and sets focus on the input', async () => {
+        renderCombobox()
 
-        clickOnToggleButton()
+        await clickOnToggleButton()
 
-        expect(input).toHaveFocus()
+        expect(getInput()).toHaveFocus()
       })
     })
   })

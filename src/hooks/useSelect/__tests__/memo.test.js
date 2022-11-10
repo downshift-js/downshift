@@ -1,6 +1,13 @@
 import React from 'react'
-import {renderUseSelect, renderSelect} from '../testUtils'
-import {items, defaultIds, MemoizedItem} from '../../testUtils'
+import {
+  renderUseSelect,
+  renderSelect,
+  keyDownOnToggleButton,
+  getToggleButton,
+  items,
+  defaultIds,
+  MemoizedItem,
+} from '../testUtils'
 
 test('functions are memoized', () => {
   const {result, rerender} = renderUseSelect()
@@ -10,7 +17,7 @@ test('functions are memoized', () => {
   expect(firstRenderResult).toEqual(secondRenderResult)
 })
 
-test('will skip disabled items after component rerenders and items are memoized', () => {
+test('will skip disabled items after component rerenders and items are memoized', async () => {
   function renderItem(props) {
     return (
       <MemoizedItem
@@ -21,16 +28,16 @@ test('will skip disabled items after component rerenders and items are memoized'
     )
   }
 
-  const {keyDownOnMenu, menu, rerender} = renderSelect({
+  const {rerender} = renderSelect({
     isOpen: true,
     initialHighlightedIndex: items.length - 1,
     renderItem,
   })
 
   rerender({renderItem, isOpen: true})
-  keyDownOnMenu('ArrowUp')
+  await keyDownOnToggleButton('{ArrowUp}')
 
-  expect(menu).toHaveAttribute(
+  expect(getToggleButton()).toHaveAttribute(
     'aria-activedescendant',
     defaultIds.getItemId(items.length - 3),
   )

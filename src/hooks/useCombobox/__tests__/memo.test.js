@@ -1,5 +1,10 @@
 import React from 'react'
-import {renderUseCombobox, renderCombobox} from '../testUtils'
+import {
+  renderUseCombobox,
+  renderCombobox,
+  getInput,
+  keyDownOnInput,
+} from '../testUtils'
 import {items, defaultIds, MemoizedItem} from '../../testUtils'
 
 test('functions are memoized', () => {
@@ -10,7 +15,7 @@ test('functions are memoized', () => {
   expect(firstRenderResult).toEqual(secondRenderResult)
 })
 
-test('will skip disabled items after component rerenders and items are memoized', () => {
+test('will skip disabled items after component rerenders and items are memoized', async () => {
   function renderItem(props) {
     return (
       <MemoizedItem
@@ -21,16 +26,16 @@ test('will skip disabled items after component rerenders and items are memoized'
     )
   }
 
-  const {keyDownOnInput, input, rerender} = renderCombobox({
+  const {rerender} = renderCombobox({
     isOpen: true,
     initialHighlightedIndex: items.length - 1,
     renderItem,
   })
 
   rerender({renderItem, isOpen: true})
-  keyDownOnInput('ArrowUp')
+  await keyDownOnInput('{ArrowUp}')
 
-  expect(input).toHaveAttribute(
+  expect(getInput()).toHaveAttribute(
     'aria-activedescendant',
     defaultIds.getItemId(items.length - 3),
   )

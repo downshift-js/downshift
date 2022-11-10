@@ -1,10 +1,21 @@
 import * as React from 'react'
-import {render, fireEvent, screen} from '@testing-library/react'
+import {render, act} from '@testing-library/react'
 import {renderHook} from '@testing-library/react-hooks'
-import userEvent from '@testing-library/user-event'
 import {defaultProps} from '../utils'
-import {items} from '../testUtils'
+import {
+  clickOnItemAtIndex,
+  clickOnToggleButton,
+  dataTestIds,
+  items,
+  keyDownOnToggleButton,
+  mouseLeaveItemAtIndex,
+  mouseMoveItemAtIndex,
+  tab,
+} from '../testUtils'
+import * as stateChangeTypes from './stateChangeTypes'
 import useSelect from '.'
+
+export * from '../testUtils'
 
 jest.mock('../../utils', () => {
   const utils = jest.requireActual('../../utils')
@@ -28,75 +39,24 @@ jest.mock('../utils', () => {
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
-const dataTestIds = {
-  toggleButton: 'toggle-button-id',
-  menu: 'menu-id',
-  item: index => `item-id-${index}`,
-}
-
-const renderUseSelect = props => {
+export function renderUseSelect(props) {
   return renderHook(() => useSelect({items, ...props}))
 }
-
-const renderSelect = (props, uiCallback) => {
+export function renderSelect(props, uiCallback) {
   const renderSpy = jest.fn()
   const ui = <DropdownSelect renderSpy={renderSpy} {...props} />
   const utils = render(uiCallback ? uiCallback(ui) : ui)
   const rerender = p =>
     utils.rerender(<DropdownSelect renderSpy={renderSpy} {...p} />)
-  const label = screen.getByText(/choose an element/i)
-  const menu = screen.getByRole('listbox')
-  const toggleButton = screen.getByTestId(dataTestIds.toggleButton)
-  const getItemAtIndex = index => screen.getByTestId(dataTestIds.item(index))
-  const getItems = () => screen.queryAllByRole('option')
-  const clickOnItemAtIndex = index => {
-    fireEvent.click(getItemAtIndex(index))
-  }
-  const clickOnToggleButton = () => {
-    fireEvent.click(toggleButton)
-  }
-  const mouseMoveItemAtIndex = index => {
-    fireEvent.mouseMove(getItemAtIndex(index))
-  }
-  const keyDownOnToggleButton = (key, options = {}) => {
-    fireEvent.keyDown(toggleButton, {key, ...options})
-  }
-  const keyDownOnMenu = (key, options = {}) => {
-    fireEvent.keyDown(menu, {key, ...options})
-  }
-  const blurMenu = () => {
-    fireEvent.blur(menu)
-  }
-  const getA11yStatusContainer = () => screen.queryByRole('status')
-  const mouseLeaveMenu = () => {
-    userEvent.unhover(menu)
-  }
-  const tab = (shiftKey = false) => {
-    userEvent.tab({shift: shiftKey})
-  }
 
   return {
     ...utils,
     renderSpy,
     rerender,
-    label,
-    menu,
-    toggleButton,
-    getItemAtIndex,
-    clickOnItemAtIndex,
-    mouseMoveItemAtIndex,
-    getItems,
-    keyDownOnToggleButton,
-    clickOnToggleButton,
-    blurMenu,
-    getA11yStatusContainer,
-    mouseLeaveMenu,
-    keyDownOnMenu,
-    tab,
   }
 }
 
-const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
+export function DropdownSelect({renderSpy, renderItem, ...props}) {
   const {
     isOpen,
     selectedItem,
@@ -105,28 +65,25 @@ const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
     getMenuProps,
     getItemProps,
   } = useSelect({items, ...props})
-  const {itemToString} = props.itemToString ? props : defaultProps
+  const itemToString = props?.itemToString ?? defaultProps.itemToString
 
   renderSpy()
 
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <button
-        data-testid={dataTestIds.toggleButton}
-        {...getToggleButtonProps()}
-      >
+      <div data-testid={dataTestIds.toggleButton} {...getToggleButtonProps()}>
         {(selectedItem && selectedItem instanceof Object
           ? itemToString(selectedItem)
           : selectedItem) || 'Elements'}
-      </button>
+      </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
         {isOpen &&
           (props.items || items).map((item, index) => {
             const stringItem =
               item instanceof Object ? itemToString(item) : item
             return renderItem ? (
-              renderItem({index, item, getItemProps, dataTestIds, stringItem})
+              renderItem({index, item, getItemProps, stringItem})
             ) : (
               <li
                 data-testid={dataTestIds.item(index)}
@@ -142,4 +99,254 @@ const DropdownSelect = ({renderSpy, renderItem, ...props}) => {
   )
 }
 
-export {items, renderUseSelect, renderSelect, DropdownSelect}
+/**
+ * Return the id of the item that strats with the caracter.
+ * @param {string} character The start of the item string.
+ * @param {number} startIndex The index to start searching.
+ * @returns number The index of the item.
+ */
+export function getItemIndexByCharacter(character, startIndex = 0) {
+  return (
+    items.slice(startIndex).findIndex(item => {
+      // console.log(item.toLowerCase(), character.toLowerCase(), item.toLowerCase().startsWith(character.toLowerCase()))
+
+      return item.toLowerCase().startsWith(character.toLowerCase())
+    }) + startIndex
+  )
+}
+
+export const stateChangeTestCases = [
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Enter}',
+    state: {
+      isOpen: true,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Enter}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEnter,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: ' ',
+    state: {
+      isOpen: true,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Escape}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEscape,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{ArrowDown}',
+    state: {
+      isOpen: true,
+      highlightedIndex: 0,
+      inputValue: '',
+      selectedItem: null,
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Enter}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[0],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEnter,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{End}',
+    state: {
+      isOpen: true,
+      highlightedIndex: items.length - 1,
+      inputValue: '',
+      selectedItem: items[0],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownEnd,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: ' ',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownSpaceButton,
+  },
+  {
+    step: clickOnToggleButton,
+    state: {
+      isOpen: true,
+      highlightedIndex: items.length - 1,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ToggleButtonClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{PageUp}',
+    state: {
+      isOpen: true,
+      highlightedIndex: items.length - 11,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownPageUp,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{PageDown}',
+    state: {
+      isOpen: true,
+      highlightedIndex: items.length - 1,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownPageDown,
+  },
+  {
+    step: mouseMoveItemAtIndex,
+    arg: items.length - 2,
+    state: {
+      isOpen: true,
+      highlightedIndex: items.length - 2,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ItemMouseMove,
+  },
+  {
+    step: mouseLeaveItemAtIndex,
+    arg: items.length - 2,
+    state: {
+      isOpen: true,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.MenuMouseLeave,
+  },
+  {
+    step: mouseMoveItemAtIndex,
+    arg: 2,
+    state: {
+      isOpen: true,
+      highlightedIndex: 2,
+      inputValue: '',
+      selectedItem: items[items.length - 1],
+    },
+    type: stateChangeTypes.ItemMouseMove,
+  },
+  {
+    step: clickOnItemAtIndex,
+    arg: 2,
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[2],
+    },
+    type: stateChangeTypes.ItemClick,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Alt>}{ArrowDown}{/Alt}',
+    state: {
+      isOpen: true,
+      highlightedIndex: 2,
+      inputValue: '',
+      selectedItem: items[2],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Alt>}{ArrowDown}{/Alt}',
+    state: {
+      isOpen: true,
+      highlightedIndex: 3,
+      inputValue: '',
+      selectedItem: items[2],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: '{Alt>}{ArrowUp}{/Alt}',
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[3],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
+  },
+  {
+    step: keyDownOnToggleButton,
+    arg: 'c',
+    state: {
+      isOpen: true,
+      highlightedIndex: 5,
+      inputValue: 'c',
+      selectedItem: items[3],
+    },
+    type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+  },
+  {
+    step: () =>
+      // just to have all steps async.
+      new Promise(resolve => {
+        act(() => jest.runAllTimers())
+        resolve()
+      }),
+    state: {
+      isOpen: true,
+      highlightedIndex: 5,
+      inputValue: '',
+      selectedItem: items[3],
+    },
+    type: stateChangeTypes.FunctionSetInputValue,
+  },
+  {
+    step: tab,
+    state: {
+      isOpen: false,
+      highlightedIndex: -1,
+      inputValue: '',
+      selectedItem: items[5],
+    },
+    type: stateChangeTypes.ToggleButtonBlur,
+  },
+]

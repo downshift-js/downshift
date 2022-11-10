@@ -1,10 +1,9 @@
 import * as React from 'react'
 
 import Downshift from '../../src'
+import {colors} from '../utils'
 
 export default function ComboBox() {
-  const items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
-
   return (
     <Downshift>
       {({
@@ -73,10 +72,10 @@ export default function ComboBox() {
           >
             {isOpen &&
               (inputValue
-                ? items.filter(i =>
+                ? colors.filter(i =>
                     i.toLowerCase().includes(inputValue.toLowerCase()),
                   )
-                : items
+                : colors
               ).map((item, index) => (
                 <li
                   style={{

@@ -170,7 +170,7 @@ export interface Actions<Item> {
     cb?: Callback,
   ) => void
   selectItem: (
-    item: Item,
+    item: Item | null,
     otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
   ) => void
@@ -242,22 +242,21 @@ export interface UseSelectState<Item> {
 }
 
 export enum UseSelectStateChangeTypes {
-  MenuKeyDownArrowDown = '__menu_keydown_arrow_down__',
-  MenuKeyDownArrowUp = '__menu_keydown_arrow_up__',
-  MenuKeyDownEscape = '__menu_keydown_escape__',
-  MenuKeyDownHome = '__menu_keydown_home__',
-  MenuKeyDownEnd = '__menu_keydown_end__',
-  MenuKeyDownEnter = '__menu_keydown_enter__',
-  MenuKeyDownSpaceButton = '__menu_keydown_space_button__',
-  MenuKeyDownCharacter = '__menu_keydown_character__',
-  MenuBlur = '__menu_blur__',
+  ToggleButtonClick = '__togglebutton_click__',
+  ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
+  ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
+  ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
+  ToggleButtonKeyDownEscape = '__togglebutton_keydown_escape__',
+  ToggleButtonKeyDownHome = '__togglebutton_keydown_home__',
+  ToggleButtonKeyDownEnd = '__togglebutton_keydown_end__',
+  ToggleButtonKeyDownEnter = '__togglebutton_keydown_enter__',
+  ToggleButtonKeyDownSpaceButton = '__togglebutton_keydown_space_button__',
+  ToggleButtonKeyDownPageUp = '__togglebutton_keydown_page_up__',
+  ToggleButtonKeyDownPageDown = '__togglebutton_keydown_page_down__',
+  ToggleButtonBlur = '__togglebutton_blur__',
   MenuMouseLeave = '__menu_mouse_leave__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
-  ToggleButtonKeyDownCharacter = '__togglebutton_keydown_character__',
-  ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
-  ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
-  ToggleButtonClick = '__togglebutton_click__',
   FunctionToggleMenu = '__function_toggle_menu__',
   FunctionOpenMenu = '__function_open_menu__',
   FunctionCloseMenu = '__function_close_menu__',
@@ -272,7 +271,6 @@ export interface UseSelectProps<Item> {
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -307,7 +305,7 @@ export interface UseSelectStateChangeOptions<Item>
 export interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
   getItemNodeFromIndex?: (index: number) => HTMLElement
-  shiftKey?: boolean
+  altKey?: boolean
   key?: string
   index?: number
   highlightedIndex?: number
@@ -352,7 +350,7 @@ export interface UseSelectActions<Item> {
   openMenu: () => void
   closeMenu: () => void
   toggleMenu: () => void
-  selectItem: (item: Item) => void
+  selectItem: (item: Item | null) => void
   setHighlightedIndex: (index: number) => void
 }
 
@@ -363,22 +361,21 @@ export type UseSelectReturnValue<Item> = UseSelectState<Item> &
 export interface UseSelectInterface {
   <Item>(props: UseSelectProps<Item>): UseSelectReturnValue<Item>
   stateChangeTypes: {
-    MenuKeyDownArrowDown: UseSelectStateChangeTypes.MenuKeyDownArrowDown
-    MenuKeyDownArrowUp: UseSelectStateChangeTypes.MenuKeyDownArrowUp
-    MenuKeyDownEscape: UseSelectStateChangeTypes.MenuKeyDownEscape
-    MenuKeyDownHome: UseSelectStateChangeTypes.MenuKeyDownHome
-    MenuKeyDownEnd: UseSelectStateChangeTypes.MenuKeyDownEnd
-    MenuKeyDownEnter: UseSelectStateChangeTypes.MenuKeyDownEnter
-    MenuKeyDownSpaceButton: UseSelectStateChangeTypes.MenuKeyDownSpaceButton
-    MenuKeyDownCharacter: UseSelectStateChangeTypes.MenuKeyDownCharacter
-    MenuBlur: UseSelectStateChangeTypes.MenuBlur
+    ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
+    ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
+    ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
+    ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
+    ToggleButtonKeyDownEscape: UseSelectStateChangeTypes.ToggleButtonKeyDownEscape
+    ToggleButtonKeyDownHome: UseSelectStateChangeTypes.ToggleButtonKeyDownHome
+    ToggleButtonKeyDownEnd: UseSelectStateChangeTypes.ToggleButtonKeyDownEnd
+    ToggleButtonKeyDownEnter: UseSelectStateChangeTypes.ToggleButtonKeyDownEnter
+    ToggleButtonKeyDownSpaceButton: UseSelectStateChangeTypes.ToggleButtonKeyDownSpaceButton
+    ToggleButtonKeyDownPageUp: UseSelectStateChangeTypes.ToggleButtonKeyDownPageUp
+    ToggleButtonKeyDownPageDown: UseSelectStateChangeTypes.ToggleButtonKeyDownPageDown
+    ToggleButtonBlur: UseSelectStateChangeTypes.ToggleButtonBlur
     MenuMouseLeave: UseSelectStateChangeTypes.MenuMouseLeave
     ItemMouseMove: UseSelectStateChangeTypes.ItemMouseMove
     ItemClick: UseSelectStateChangeTypes.ItemClick
-    ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
-    ToggleButtonKeyDownCharacter: UseSelectStateChangeTypes.ToggleButtonKeyDownCharacter
-    ToggleButtonKeyDownArrowDown: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowDown
-    ToggleButtonKeyDownArrowUp: UseSelectStateChangeTypes.ToggleButtonKeyDownArrowUp
     FunctionToggleMenu: UseSelectStateChangeTypes.FunctionToggleMenu
     FunctionOpenMenu: UseSelectStateChangeTypes.FunctionOpenMenu
     FunctionCloseMenu: UseSelectStateChangeTypes.FunctionCloseMenu
@@ -406,9 +403,12 @@ export enum UseComboboxStateChangeTypes {
   InputKeyDownEscape = '__input_keydown_escape__',
   InputKeyDownHome = '__input_keydown_home__',
   InputKeyDownEnd = '__input_keydown_end__',
+  InputKeyDownPageUp = '__input_keydown_page_up__',
+  InputKeyDownPageDown = '__input_keydown_page_down__',
   InputKeyDownEnter = '__input_keydown_enter__',
   InputChange = '__input_change__',
   InputBlur = '__input_blur__',
+  InputFocus = '__input_focus__',
   MenuMouseLeave = '__menu_mouse_leave__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
@@ -428,7 +428,6 @@ export interface UseComboboxProps<Item> {
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  circularNavigation?: boolean
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -467,7 +466,7 @@ export interface UseComboboxStateChangeOptions<Item>
 
 export interface UseComboboxDispatchAction<Item> {
   type: UseComboboxStateChangeTypes
-  shiftKey?: boolean
+  altKey?: boolean
   getItemNodeFromIndex?: (index: number) => HTMLElement
   inputValue?: string
   index?: number
@@ -499,9 +498,6 @@ export interface UseComboboxGetInputPropsOptions
   extends GetInputPropsOptions,
     GetPropsWithRefKey {}
 
-export interface UseComboboxGetComboboxPropsOptions
-  extends React.HTMLProps<HTMLDivElement> {}
-
 export interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: (
     options?: UseComboboxGetToggleButtonPropsOptions,
@@ -516,10 +512,6 @@ export interface UseComboboxPropGetters<Item> {
     options?: UseComboboxGetInputPropsOptions,
     otherOptions?: GetPropsCommonOptions,
   ) => any
-  getComboboxProps: (
-    options?: UseComboboxGetComboboxPropsOptions,
-    otherOptions?: GetPropsCommonOptions,
-  ) => any
 }
 
 export interface UseComboboxActions<Item> {
@@ -527,7 +519,7 @@ export interface UseComboboxActions<Item> {
   openMenu: () => void
   closeMenu: () => void
   toggleMenu: () => void
-  selectItem: (item: Item) => void
+  selectItem: (item: Item | null) => void
   setHighlightedIndex: (index: number) => void
   setInputValue: (inputValue: string) => void
 }
@@ -544,9 +536,12 @@ export interface UseComboboxInterface {
     InputKeyDownEscape: UseComboboxStateChangeTypes.InputKeyDownEscape
     InputKeyDownHome: UseComboboxStateChangeTypes.InputKeyDownHome
     InputKeyDownEnd: UseComboboxStateChangeTypes.InputKeyDownEnd
+    InputKeyDownPageDown: UseComboboxStateChangeTypes.InputKeyDownPageDown
+    InputKeyDownPageUp: UseComboboxStateChangeTypes.InputKeyDownPageUp
     InputKeyDownEnter: UseComboboxStateChangeTypes.InputKeyDownEnter
     InputChange: UseComboboxStateChangeTypes.InputChange
     InputBlur: UseComboboxStateChangeTypes.InputBlur
+    InputFocus: UseComboboxStateChangeTypes.InputFocus
     MenuMouseLeave: UseComboboxStateChangeTypes.MenuMouseLeave
     ItemMouseMove: UseComboboxStateChangeTypes.ItemMouseMove
     ItemClick: UseComboboxStateChangeTypes.ItemClick
@@ -677,11 +672,10 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<
-  Item
-> &
-  UseMultipleSelectionPropGetters<Item> &
-  UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<Item> =
+  UseMultipleSelectionState<Item> &
+    UseMultipleSelectionPropGetters<Item> &
+    UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(

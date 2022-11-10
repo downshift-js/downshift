@@ -1,8 +1,8 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useSelect, useMultipleSelection} from '../../src'
+import {colors} from '../utils'
 
-const colors = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
 const initialSelectedItems = [colors[0], colors[1]]
 
 function getFilteredItems(selectedItems) {
@@ -33,8 +33,8 @@ export default function DropdownMultipleSelect() {
     stateReducer: (state, actionAndChanges) => {
       const {changes, type} = actionAndChanges
       switch (type) {
-        case useSelect.stateChangeTypes.MenuKeyDownEnter:
-        case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
         case useSelect.stateChangeTypes.ItemClick:
           return {
             ...changes,
@@ -46,8 +46,8 @@ export default function DropdownMultipleSelect() {
     },
     onStateChange: ({type, selectedItem: newSelectedItem}) => {
       switch (type) {
-        case useSelect.stateChangeTypes.MenuKeyDownEnter:
-        case useSelect.stateChangeTypes.MenuKeyDownSpaceButton:
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
+        case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
         case useSelect.stateChangeTypes.ItemClick:
           if (newSelectedItem) {
             addSelectedItem(newSelectedItem)
@@ -122,15 +122,21 @@ export default function DropdownMultipleSelect() {
               </span>
             )
           })}
-          <button
-            style={{padding: '4px'}}
+          <div
+            style={{
+              padding: '4px',
+              textAlign: 'center',
+              border: '1px solid black',
+              backgroundColor: 'lightgray',
+              cursor: 'pointer',
+            }}
             type="button"
             {...getToggleButtonProps(
               getDropdownProps({preventKeyAction: isOpen}),
             )}
           >
             Pick some colors {isOpen ? <>&#8593;</> : <>&#8595;</>}
-          </button>
+          </div>
         </div>
       </div>
       <ul

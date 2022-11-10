@@ -1,27 +1,25 @@
-import React, {useState} from 'react'
+import * as React from 'react'
 
 import {useCombobox} from '../../src'
-
-const items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
+import {colors} from '../utils'
 
 export default function DropdownCombobox() {
-  const [inputItems, setInputItems] = useState(items)
+  const [inputItems, setInputItems] = React.useState(colors)
   const {
     isOpen,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
     highlightedIndex,
     getItemProps,
     selectedItem,
-    clearSelection,
+    selectItem,
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
       setInputItems(
-        items.filter(item =>
+        colors.filter(item =>
           item.toLowerCase().startsWith(inputValue.toLowerCase()),
         ),
       )
@@ -47,7 +45,7 @@ export default function DropdownCombobox() {
       >
         Choose an element:
       </label>
-      <div {...getComboboxProps()}>
+      <div>
         <input
           style={{padding: '4px'}}
           {...getInputProps()}
@@ -65,7 +63,7 @@ export default function DropdownCombobox() {
           style={{padding: '4px 8px'}}
           aria-label="toggle menu"
           data-testid="clear-button"
-          onClick={clearSelection}
+          onClick={() => selectItem(null)}
         >
           &#10007;
         </button>

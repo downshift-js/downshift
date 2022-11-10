@@ -33,8 +33,8 @@ autocomplete, combobox or select dropdown components.</p>
 You need an autocomplete, a combobox or a select experience in your application
 and you want it to be accessible. You also want it to be simple and flexible to
 account for your use cases. Finally, it should follow the [ARIA][aria] design
-pattern for a [combobox][combobox-aria] or a [select][select-aria], depending on
-your use case.
+pattern for a [combobox][combobox-aria-example] or a
+[select][select-aria-example], depending on your use case.
 
 ## This solution
 
@@ -56,6 +56,12 @@ form of a render prop. It served as inspiration for developing the hooks and it
 has been around for a while. It established a successful pattern for making
 components accessible and functional while giving developers complete freedom
 when building the UI.
+
+Both _useSelect_ and _useCombobox_ support he latest ARIA combobox patterns for
+W3C, which _Downshift_ does not. Consequently, we strongly recommend the you use
+the hooks. The hooks have been migrated to the ARIA 1.2 combobox pattern in the
+version 7 of _downshift_. There is a [Migration Guide][migration-guide-v7] that
+documents the changes introduced in version 7.
 
 The `README` on this page covers only the component while each hook has its own
 `README` page. You can navigate to the [hooks page][hooks-readme] or go directly
@@ -1490,12 +1496,14 @@ MIT
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
 [aria]: https://www.w3.org/TR/wai-aria-practices/
-[combobox-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/combobox/aria1.1pattern/listbox-combo.html
-[select-aria]:
-  https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
+[combobox-aria-example]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
+[select-aria-example]:
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-select-only.html
 [docsite]: https://downshift-js.com/
 [code-sandbox-try-it-out]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
 [code-sandbox-no-get-root-props]:
   https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/01-basic-autocomplete.js
+[migration-guide-v7]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md

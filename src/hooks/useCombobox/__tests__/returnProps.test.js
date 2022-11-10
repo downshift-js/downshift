@@ -19,7 +19,6 @@ describe('returnProps', () => {
       expect(result.current.getLabelProps).toBeInstanceOf(Function)
       expect(result.current.getToggleButtonProps).toBeInstanceOf(Function)
       expect(result.current.getInputProps).toBeInstanceOf(Function)
-      expect(result.current.getComboboxProps).toBeInstanceOf(Function)
     })
   })
 

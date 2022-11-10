@@ -1,8 +1,7 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useSelect} from '../../src'
-
-const items = ['Black', 'Red', 'Green', 'Blue', 'Orange', 'Purple']
+import {colors} from '../utils'
 
 export default function DropdownSelect() {
   const {
@@ -13,7 +12,7 @@ export default function DropdownSelect() {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({items})
+  } = useSelect({items: colors})
 
   return (
     <div
@@ -35,14 +34,19 @@ export default function DropdownSelect() {
       >
         Choose an element:
       </label>
-      <button
-        data-testid="select-toggle-button"
-        style={{padding: '4px'}}
+      <div
+        style={{
+          padding: '4px',
+          textAlign: 'center',
+          border: '1px solid black',
+          backgroundColor: 'lightgray',
+          cursor: 'pointer',
+        }}
         {...getToggleButtonProps()}
       >
         {selectedItem ?? 'Elements'}
         {isOpen ? <>&#8593;</> : <>&#8595;</>}
-      </button>
+      </div>
       <ul
         {...getMenuProps()}
         style={{
@@ -53,7 +57,7 @@ export default function DropdownSelect() {
         }}
       >
         {isOpen &&
-          items.map((item, index) => (
+          colors.map((item, index) => (
             <li
               style={{
                 padding: '4px',

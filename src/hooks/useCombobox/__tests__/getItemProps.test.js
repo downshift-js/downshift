@@ -1,6 +1,16 @@
 import {act} from '@testing-library/react-hooks'
-import {renderCombobox, renderUseCombobox} from '../testUtils'
-import {items, defaultIds} from '../../testUtils'
+import {
+  renderCombobox,
+  renderUseCombobox,
+  items,
+  defaultIds,
+  mouseMoveItemAtIndex,
+  getItemAtIndex,
+  getInput,
+  getItems,
+  clickOnItemAtIndex,
+  keyDownOnInput,
+} from '../testUtils'
 
 describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -186,37 +196,37 @@ describe('getItemProps', () => {
 
   describe('event handlers', () => {
     describe('on mouse over', () => {
-      test('it highlights the item', () => {
+      test('it highlights the item', async () => {
         const index = 1
-        const {input, mouseMoveItemAtIndex, getItemAtIndex} = renderCombobox({
+        renderCombobox({
           isOpen: true,
         })
 
-        mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(index)
 
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
-        expect(input).toHaveAttribute(
+        expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(index),
         )
       })
 
-      test('it removes highlight from the previously highlighted item', () => {
+      test('it removes highlight from the previously highlighted item', async () => {
         const index = 1
         const previousIndex = 2
-        const {input, mouseMoveItemAtIndex, getItemAtIndex} = renderCombobox({
+        renderCombobox({
           isOpen: true,
           initialHighlightedIndex: previousIndex,
         })
 
-        mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(index)
 
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
         expect(getItemAtIndex(previousIndex)).toHaveAttribute(
           'aria-selected',
           'false',
         )
-        expect(input).toHaveAttribute(
+        expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(index),
         )
@@ -226,70 +236,73 @@ describe('getItemProps', () => {
         )
       })
 
-      it('keeps highlight on multiple events', () => {
+      it('keeps highlight on multiple events', async () => {
         const index = 1
-        const {input, mouseMoveItemAtIndex, getItemAtIndex} = renderCombobox({
+        renderCombobox({
           isOpen: true,
         })
 
-        mouseMoveItemAtIndex(index)
-        mouseMoveItemAtIndex(index)
-        mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(index)
 
-        expect(input).toHaveAttribute(
+        expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(index),
         )
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
       })
 
-      it('removes highlight from previous item even if current item is disabled', () => {
+      it('removes highlight from previous item even if current item is disabled', async () => {
         const disabledIndex = 1
         const highlightedIndex = 2
         const itemsWithDisabled = [...items].map((item, index) =>
           index === disabledIndex ? {...item, disabled: true} : item,
         )
 
-        const {input, mouseMoveItemAtIndex} = renderCombobox({
+        renderCombobox({
           items: itemsWithDisabled,
           isOpen: true,
         })
+        const input = getInput()
 
-        mouseMoveItemAtIndex(highlightedIndex)
+        await mouseMoveItemAtIndex(highlightedIndex)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
 
-        mouseMoveItemAtIndex(disabledIndex)
-        expect(input).not.toHaveAttribute('aria-activedescendant')
+        await mouseMoveItemAtIndex(disabledIndex)
+        expect(input).toHaveAttribute('aria-activedescendant', '')
       })
     })
 
     describe('on click', () => {
-      test('it selects the item and keeps focus on the input', () => {
+      test('it selects the item and keeps focus on the input', async () => {
         const index = 1
-        const {input, getItems, clickOnItemAtIndex} = renderCombobox({
+        renderCombobox({
           initialIsOpen: true,
         })
+        const input = getInput()
 
-        clickOnItemAtIndex(index)
+        await clickOnItemAtIndex(index)
 
         expect(getItems()).toHaveLength(0)
         expect(input).toHaveValue(items[index])
         expect(input).toHaveFocus()
       })
 
-      test('it selects the item and resets to user defined defaults', () => {
+      test('it selects the item and resets to user defined defaults', async () => {
         const index = 1
         const defaultHighlightedIndex = 2
-        const {input, getItems, clickOnItemAtIndex} = renderCombobox({
+        renderCombobox({
           defaultIsOpen: true,
           defaultHighlightedIndex,
         })
+        const input = getInput()
 
-        clickOnItemAtIndex(index)
+        await clickOnItemAtIndex(index)
 
         expect(input).toHaveValue(items[index])
         expect(getItems()).toHaveLength(items.length)
@@ -302,14 +315,14 @@ describe('getItemProps', () => {
   })
 
   describe('scrolling', () => {
-    test('is performed by the menu to the item if highlighted and not 100% visible', () => {
+    test('is performed by the menu to the item if highlighted and not 100% visible', async () => {
       const scrollIntoView = jest.fn()
-      const {keyDownOnInput} = renderCombobox({
+      renderCombobox({
         initialIsOpen: true,
         scrollIntoView,
       })
 
-      keyDownOnInput('End')
+      await keyDownOnInput('{End}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })
