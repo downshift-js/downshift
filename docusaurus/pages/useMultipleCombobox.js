@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import {useCombobox, useMultipleSelection} from '../../src'
 import {colors} from '../utils'

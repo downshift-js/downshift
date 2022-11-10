@@ -66,17 +66,10 @@ guide][migration-guide-v7] and update if necessary.
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
-    - [`getLabelProps`](#getlabelprops)
-    - [`getMenuProps`](#getmenuprops)
-    - [`getItemProps`](#getitemprops)
-    - [`getToggleButtonProps`](#gettogglebuttonprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
-    - [Toggle Button](#toggle-button)
-    - [Menu](#menu)
-    - [Item](#item)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -90,8 +83,23 @@ guide][migration-guide-v7] and update if necessary.
 import * as React from 'react'
 import {render} from 'react-dom'
 import {useSelect} from 'downshift'
-// items = ['Neptunium', 'Plutonium', ...]
-import {items, menuStyles} from './utils'
+
+const colors = [
+  'Black',
+  'Red',
+  'Green',
+  'Blue',
+  'Orange',
+  'Purple',
+  'Pink',
+  'Orchid',
+  'Aqua',
+  'Lime',
+  'Gray',
+  'Brown',
+  'Teal',
+  'Skyblue',
+]
 
 function DropdownSelect() {
   const {
@@ -102,20 +110,62 @@ function DropdownSelect() {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({items})
+  } = useSelect({items: colors})
+
   return (
-    <div>
-      <label {...getLabelProps()}>Choose an element:</label>
-      <div {...getToggleButtonProps()}>{selectedItem || 'Elements'}</div>
-      <ul {...getMenuProps()} style={menuStyles}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'fit-content',
+        justifyContent: 'center',
+        marginTop: 100,
+        alignSelf: 'center',
+      }}
+    >
+      <label
+        style={{
+          fontWeight: 'bolder',
+          color: selectedItem ? selectedItem : 'black',
+        }}
+        {...getLabelProps()}
+      >
+        Choose an element:
+      </label>
+      <div
+        style={{
+          padding: '4px',
+          textAlign: 'center',
+          border: '1px solid black',
+          backgroundColor: 'lightgray',
+          cursor: 'pointer',
+        }}
+        {...getToggleButtonProps()}
+      >
+        {selectedItem ?? 'Elements'}
+        {isOpen ? <>&#8593;</> : <>&#8595;</>}
+      </div>
+      <ul
+        {...getMenuProps()}
+        style={{
+          listStyle: 'none',
+          width: '100%',
+          padding: '0',
+          margin: '4px 0 0 0',
+        }}
+      >
         {isOpen &&
-          items.map((item, index) => (
+          colors.map((item, index) => (
             <li
-              style={
-                highlightedIndex === index ? {backgroundColor: '#bde4ff'} : {}
-              }
+              style={{
+                padding: '4px',
+                backgroundColor: highlightedIndex === index ? '#bde4ff' : null,
+              }}
               key={`${item}${index}`}
-              {...getItemProps({item, index})}
+              {...getItemProps({
+                item,
+                index,
+              })}
             >
               {item}
             </li>

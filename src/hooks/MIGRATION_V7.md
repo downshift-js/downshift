@@ -147,7 +147,13 @@ function stateReducer(state, actionAndChanges) {
 }
 ```
 
-> Another thing to mention is that, since ARIA 1.2 does not recommend a `<button>` element for the toggle button anymore, _Enter_ and _SpaceBar_ do not perform click events out of the box, when the menu is closed. Consequently, we are triggering these events manually. For backwards compatibility to pre v7, when menu is closed and toggle element receives _Enter_ or _SpaceBar_ key event, it will trigger a `useSelect.stateChangeTypes.ToggleButtonClick` type change.
+> Another thing to mention is that, since ARIA 1.2 does not recommend a
+> `<button>` element for the toggle button anymore, _Enter_ and _SpaceBar_ do
+> not perform click events out of the box, when the menu is closed.
+> Consequently, we are triggering these events manually. For backwards
+> compatibility to pre v7, when menu is closed and toggle element receives
+> _Enter_ or _SpaceBar_ key event, it will trigger a
+> `useSelect.stateChangeTypes.ToggleButtonClick` type change.
 
 ### circularNavigation
 
@@ -276,7 +282,7 @@ function stateReducer(state, actionAndChanges) {
 [select-aria-example]:
   https://w3c.github.io/aria-practices/examples/combobox/combobox-select-only.html
 [combobox-aria-example]:
-  https://w3c.github.io/aria-practices/examples/combobox/combobox-autocomplete-both.html
+  https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
 [deprecated-select-aria]:
   https://www.w3.org/TR/2017/NOTE-wai-aria-practices-1.1-20171214/examples/listbox/listbox-collapsible.html
 [deprecated-combobox-aria]:
