@@ -5,5 +5,5 @@ needs of the developers who contributed them.
 
 Pull requests to improve them are welcome and appreciated. If you've never
 contributed to open source before, then you may find
-[this free video course](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github)
+[this free video course](https://app.egghead.io/playlists/how-to-contribute-to-an-open-source-project-on-github)
 helpful.
