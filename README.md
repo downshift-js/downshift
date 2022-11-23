@@ -203,7 +203,7 @@ render(
         <label {...getLabelProps()}>Enter a fruit</label>
         <div
           style={{display: 'inline-block'}}
-          {...getRootProps({}, {suppressRefError: true})}
+          {...getRootProps({refKey: 'ref'}, {suppressRefError: true})}
         >
           <input {...getInputProps()} />
         </div>
