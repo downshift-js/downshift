@@ -1,4 +1,5 @@
 import computeScrollIntoView from 'compute-scroll-into-view'
+import React from 'react'
 import {isPreact} from './is.macro'
 
 let idCounter = 0
@@ -136,6 +137,15 @@ function setIdCounter(num) {
  * Resets idCounter to 0. Used for SSR.
  */
 function resetIdCounter() {
+  // istanbul ignore next
+  if ('useId' in React) {
+    console.warn(
+      `It is not necessary to call resetIdCounter when using React 18+`,
+    )
+
+    return
+  }
+
   idCounter = 0
 }
 

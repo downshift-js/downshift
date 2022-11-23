@@ -1028,6 +1028,8 @@ const ui = (
 Allows reseting the internal id counter which is used to generate unique ids for
 Downshift component.
 
+**This is unnecessary if you are using React 18 or newer**
+
 You should never need to use this in the browser. Only if you are running an
 universal React app that is rendered on the server you should call
 [resetIdCounter](#resetidcounter) before every render so that the ids that get
