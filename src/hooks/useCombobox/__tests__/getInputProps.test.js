@@ -15,6 +15,7 @@ import {
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
   tab,
+  clickOnInput,
 } from '../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
@@ -145,7 +146,7 @@ describe('getInputProps', () => {
       expect(inputProps['aria-expanded']).toEqual(true)
     })
 
-    test("handlers are not called if it's disabled", () => {
+    test('handlers are not returned if input is disabled', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps({
         disabled: true,
@@ -154,7 +155,7 @@ describe('getInputProps', () => {
       expect(inputProps.onChange).toBeUndefined()
       expect(inputProps.onKeyDown).toBeUndefined()
       expect(inputProps.onBlur).toBeUndefined()
-      expect(inputProps.onFocus).toBeUndefined()
+      expect(inputProps.onClick).toBeUndefined()
       expect(inputProps.disabled).toBe(true)
     })
 
@@ -165,6 +166,16 @@ describe('getInputProps', () => {
 
       expect(inputProps['aria-labelledby']).toBeUndefined()
       expect(inputProps['aria-label']).toBe(ariaLabel)
+    })
+
+    test('handlers are not returned if input is not disabled', () => {
+      const {result} = renderUseCombobox()
+      const inputProps = result.current.getInputProps()
+
+      expect(inputProps.onChange).toBeDefined()
+      expect(inputProps.onKeyDown).toBeDefined()
+      expect(inputProps.onClick).toBeDefined()
+      expect(inputProps.onBlur).toBeDefined()
     })
   })
 
@@ -332,7 +343,7 @@ describe('getInputProps', () => {
 
       act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
-          onChange: userOnInput,
+          onInput: userOnInput,
         })
 
         inputRef({focus: noop})
@@ -352,7 +363,7 @@ describe('getInputProps', () => {
 
       act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
-          onChange: userOnInput,
+          onInput: userOnInput,
         })
 
         inputRef({focus: noop})
@@ -362,6 +373,42 @@ describe('getInputProps', () => {
 
       expect(userOnInput).toHaveBeenCalledTimes(1)
       expect(result.current.inputValue).toBe('')
+    })
+
+    test('event handler onClick is called along with downshift handler', () => {
+      const userOnClick = jest.fn()
+      const {result} = renderUseCombobox()
+
+      act(() => {
+        const {ref: inputRef, onClick} = result.current.getInputProps({
+          onClick: userOnClick,
+        })
+
+        inputRef({focus: noop})
+        onClick({})
+      })
+
+      expect(userOnClick).toHaveBeenCalledTimes(1)
+      expect(result.current.isOpen).toBe(true)
+    })
+
+    test("event handler onClick is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+      const userOnClick = jest.fn(event => {
+        event.preventDownshiftDefault = true
+      })
+      const {result} = renderUseCombobox()
+
+      act(() => {
+        const {ref: inputRef, onClick} = result.current.getInputProps({
+          onClick: userOnClick,
+        })
+
+        inputRef({focus: noop})
+        onClick({})
+      })
+
+      expect(userOnClick).toHaveBeenCalledTimes(1)
+      expect(result.current.isOpen).toBe(false)
     })
   })
 
@@ -498,13 +545,13 @@ describe('getInputProps', () => {
           const initialHighlightedIndex = 2
           renderCombobox({
             initialHighlightedIndex,
+            initialIsOpen: true,
           })
 
-          const input = getInput()
-
+          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowUp}')
 
-          expect(input).toHaveAttribute(
+          expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
@@ -725,12 +772,13 @@ describe('getInputProps', () => {
           const initialHighlightedIndex = 2
           renderCombobox({
             initialHighlightedIndex,
+            initialIsOpen: true,
           })
-          const input = getInput()
 
+          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowDown}')
 
-          expect(input).toHaveAttribute(
+          expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
@@ -1503,11 +1551,44 @@ describe('getInputProps', () => {
       })
     })
 
-    describe('on focus', () => {
+    // ToDo: Remvoe me!
+    test('on focus does nothing', async () => {
+      renderCombobox()
+
+      await tab()
+
+      expect(getItems()).toHaveLength(0)
+    })
+
+    describe('on click', () => {
       test('it opens the menu', async () => {
         renderCombobox()
 
-        await tab()
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(items.length)
+      })
+
+      test('it closes the open menu', async () => {
+        renderCombobox({initialIsOpen: true})
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(0)
+      })
+
+      test('toggles the menu', async () => {
+        renderCombobox()
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(items.length)
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(0)
+
+        await clickOnInput()
 
         expect(getItems()).toHaveLength(items.length)
       })
@@ -1518,7 +1599,7 @@ describe('getInputProps', () => {
           initialSelectedItem: items[selectedIndex],
         })
 
-        await tab()
+        await clickOnInput()
 
         expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
@@ -1526,44 +1607,42 @@ describe('getInputProps', () => {
         )
       })
 
-      test('it opens the closed menu at initialHighlightedIndex, but on first focus only', async () => {
+      test('it opens the closed menu at initialHighlightedIndex, but on first click only', async () => {
         const initialHighlightedIndex = 2
         renderCombobox({
           initialHighlightedIndex,
         })
         const input = getInput()
 
-        await tab()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
 
-        await keyDownOnInput('{Escape}')
-        await tab(true)
-        await tab()
+        await clickOnInput()
+        await clickOnInput()
 
         expect(input).toHaveAttribute('aria-activedescendant', '')
       })
 
-      test('it opens the closed menu at defaultHighlightedIndex, on every focus', async () => {
+      test('it opens the closed menu at defaultHighlightedIndex, on every click', async () => {
         const defaultHighlightedIndex = 3
         renderCombobox({
           defaultHighlightedIndex,
         })
         const input = getInput()
 
-        await tab()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
 
-        await keyDownOnInput('{Escape}')
-        await tab(true)
-        await tab()
+        await clickOnInput()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',

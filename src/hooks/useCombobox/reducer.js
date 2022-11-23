@@ -151,10 +151,12 @@ export default function downshiftUseComboboxReducer(state, action) {
         inputValue: action.inputValue,
       }
       break
-    case stateChangeTypes.InputFocus:
+    case stateChangeTypes.InputClick:
       changes = {
-        isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
+        isOpen: !state.isOpen,
+        highlightedIndex: state.isOpen
+          ? -1
+          : getHighlightedIndexOnOpen(props, state, 0),
       }
       break
     case stateChangeTypes.FunctionSelectItem:

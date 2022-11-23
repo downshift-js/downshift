@@ -12,7 +12,8 @@ export const InputKeyDownPageDown = productionEnum('__input_keydown_page_down__'
 export const InputKeyDownEnter = productionEnum('__input_keydown_enter__')
 export const InputChange = productionEnum('__input_change__')
 export const InputBlur = productionEnum('__input_blur__')
-export const InputFocus = productionEnum('__input_focus__')
+export const InputClick = productionEnum('__input_click__')
+export const InputFocus = productionEnum('__input_focus__') // ToDo: Remove me!
 
 export const MenuMouseLeave = productionEnum('__menu_mouse_leave__')
 
