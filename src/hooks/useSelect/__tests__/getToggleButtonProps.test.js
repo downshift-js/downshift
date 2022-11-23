@@ -28,22 +28,17 @@ describe('getToggleButtonProps', () => {
       const {result} = renderUseSelect()
       const toggleButtonProps = result.current.getToggleButtonProps()
 
-      expect(toggleButtonProps['aria-labelledby']).toEqual(
-        `${defaultIds.labelId} ${defaultIds.toggleButtonId}`,
-      )
+      expect(toggleButtonProps['aria-labelledby']).toEqual(defaultIds.labelId)
     })
 
     test('assign custom value passed by user to aria-labelledby', () => {
       const props = {
         labelId: 'my-custom-label-id',
-        toggleButtonId: 'my-custom-toggle-button-id',
       }
       const {result} = renderUseSelect(props)
       const toggleButtonProps = result.current.getToggleButtonProps()
 
-      expect(toggleButtonProps['aria-labelledby']).toEqual(
-        `${props.labelId} ${props.toggleButtonId}`,
-      )
+      expect(toggleButtonProps['aria-labelledby']).toEqual(props.labelId)
     })
 
     test('assign default value to id', () => {

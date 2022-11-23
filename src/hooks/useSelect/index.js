@@ -381,7 +381,7 @@ function useSelect(userProps = {}) {
         'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         'aria-haspopup': 'listbox',
-        'aria-labelledby': `${elementIds.labelId} ${elementIds.toggleButtonId}`,
+        'aria-labelledby': `${elementIds.labelId}`,
         id: elementIds.toggleButtonId,
         role: 'combobox',
         tabIndex: 0,
