@@ -105,7 +105,7 @@ type StateChangeFunction<Item> = (
 ) => Partial<StateChangeOptions<Item>>
 
 export interface GetRootPropsOptions {
-  refKey: string
+  refKey?: string
 }
 
 export interface GetInputPropsOptions
