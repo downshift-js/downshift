@@ -442,7 +442,7 @@ that are part of their starting string equivalent.
   property with the new value. This also has a `type` property which you can
   learn more about in the [`stateChangeTypes`](#statechangetypes) section. This
   property will be part of the actions that can trigger a `highlightedIndex`
-  change, for example `useCombobox.stateChangeTypes.MenuKeyDownArrowUp`.
+  change, for example `useCombobox.stateChangeTypes.InputKeyDownArrowUp`.
 
 ### onIsOpenChange
 

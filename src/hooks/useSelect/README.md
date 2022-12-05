@@ -249,7 +249,7 @@ function stateReducer(state, actionAndChanges) {
   const {type, changes} = actionAndChanges
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
   switch (type) {
-    case useSelect.stateChangeTypes.MenuKeyDownEnter:
+    case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
     case useSelect.stateChangeTypes.ItemClick:
       return {
         ...changes, // default Downshift new state changes on item selection.
@@ -371,7 +371,7 @@ that are part of their starting string equivalent.
   property with the new value. This also has a `type` property which you can
   learn more about in the [`stateChangeTypes`](#statechangetypes) section. This
   property will be part of the actions that can trigger a `highlightedIndex`
-  change, for example `useSelect.stateChangeTypes.MenuKeyDownArrowUp`.
+  change, for example `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`.
 
 ### onIsOpenChange
 
