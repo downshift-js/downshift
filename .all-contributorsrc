@@ -1372,9 +1372,19 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "jeanpan",
+      "name": "Jean Pan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1307026?v=4",
+      "profile": "https://github.com/jeanpan",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoHost": "https://github.com",
   "contributorsPerLine": 7,
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }
