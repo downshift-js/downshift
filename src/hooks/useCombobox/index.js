@@ -139,6 +139,10 @@ function useCombobox(userProps = {}) {
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
+
+    return () => {
+      isInitialMountRef.current = true
+    }
   }, [])
   // Reset itemRefs on close.
   useEffect(() => {

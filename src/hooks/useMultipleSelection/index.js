@@ -99,6 +99,10 @@ function useMultipleSelection(userProps = {}) {
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
+
+    return () => {
+      isInitialMountRef.current = true
+    }
   }, [])
 
   // Event handler functions.
