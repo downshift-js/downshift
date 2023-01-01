@@ -247,11 +247,22 @@ function useSelect(userProps = {}) {
       ' '(event) {
         event.preventDefault()
 
-        dispatch({
-          type: latest.current.state.isOpen
-            ? stateChangeTypes.ToggleButtonKeyDownSpaceButton
-            : stateChangeTypes.ToggleButtonClick,
-        })
+        const currentState = latest.current.state
+
+        if (!currentState.isOpen) {
+          dispatch({type: stateChangeTypes.ToggleButtonClick})
+          return
+        }
+
+        if (currentState.inputValue) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+            key: ' ',
+            getItemNodeFromIndex,
+          })
+        } else {
+          dispatch({type: stateChangeTypes.ToggleButtonKeyDownSpaceButton})
+        }
       },
     }),
     [dispatch, getItemNodeFromIndex, latest],

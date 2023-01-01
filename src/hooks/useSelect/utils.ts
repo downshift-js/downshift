@@ -14,14 +14,15 @@ export function getItemIndexByCharacterKey<Item>({
   const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
 
   for (let index = 0; index < items.length; index++) {
-    const offsetIndex = (index + highlightedIndex + 1) % items.length
+    // if we already have a search query in progress, we also consider the current highlighted item.
+    const offsetIndex =
+      (index + highlightedIndex + (keysSoFar.length < 2 ? 1 : 0)) % items.length
+
     const item = items[offsetIndex]
 
     if (
       item !== undefined &&
-      itemToString(item)
-        .toLowerCase()
-        .startsWith(lowerCasedKeysSoFar)
+      itemToString(item).toLowerCase().startsWith(lowerCasedKeysSoFar)
     ) {
       const element = getItemNodeFromIndex(offsetIndex)
 

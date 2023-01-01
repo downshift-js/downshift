@@ -463,7 +463,7 @@ describe('getToggleButtonProps', () => {
         })
 
         test('should highlight the first item that starts with the keys typed in rapid succession', async () => {
-          const chars = ['c', 'a']
+          const chars = ['m', 'e']
           const expectedItemId = defaultIds.getItemId(
             getItemIndexByCharacter(chars.join('')),
           )
@@ -473,6 +473,50 @@ describe('getToggleButtonProps', () => {
           reactAct(() => jest.advanceTimersByTime(200))
           await keyDownOnToggleButton(chars[1])
 
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            expectedItemId,
+          )
+          expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('should highlight the second item that starts with the keys typed in rapid succession, with first valid item initially highlighted', async () => {
+          const chars = ['m', 'e']
+          const firstValidItemIndex = getItemIndexByCharacter(chars.join(''))
+          const expectedItemId = defaultIds.getItemId(
+            getItemIndexByCharacter(chars.join(''), firstValidItemIndex + 1),
+          )
+          // Mendelevium is already highlighted before typing chars.
+          renderSelect({initialHighlightedIndex: firstValidItemIndex})
+
+          await keyDownOnToggleButton(chars[0])
+          reactAct(() => jest.advanceTimersByTime(200))
+          await keyDownOnToggleButton(chars[1])
+
+          // highlight should go on Meitnerium which is the second in the list.
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            expectedItemId,
+          )
+          expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('should highlight the first item that starts with the keys typed in rapid succession, with first valid item initially highlighted, but made invalid after third character', async () => {
+          const chars = ['m', 'e', 'n']
+          const firstValidItemIndex = getItemIndexByCharacter(chars.join(''))
+          const expectedItemId = defaultIds.getItemId(firstValidItemIndex)
+          // Mendelevium is already highlighted before typing chars.
+          renderSelect({initialHighlightedIndex: firstValidItemIndex})
+
+          await keyDownOnToggleButton(chars[0])
+          reactAct(() => jest.advanceTimersByTime(200))
+          await keyDownOnToggleButton(chars[1])
+          reactAct(() => jest.advanceTimersByTime(200))
+          // Meitnerium is highlighted right now, as we typed "me".
+          await keyDownOnToggleButton(chars[2])
+          reactAct(() => jest.advanceTimersByTime(200))
+
+          // now we go back to Mendelevium, since we also typed "n".
           expect(getToggleButton()).toHaveAttribute(
             'aria-activedescendant',
             expectedItemId,
@@ -492,12 +536,38 @@ describe('getToggleButtonProps', () => {
           await keyDownOnToggleButton(chars[1])
           reactAct(() => jest.runAllTimers())
           await keyDownOnToggleButton(chars[2])
+          reactAct(() => jest.advanceTimersByTime(200))
 
           expect(getToggleButton()).toHaveAttribute(
             'aria-activedescendant',
             expectedItemId,
           )
           expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('should account space character as search query', async () => {
+          const itemToSelectIndex = 3
+          const itemsWithSpaces = ['1 2 3', '4 3 2', '2 1 3', '1 2 4']
+          const itemToSelect = itemsWithSpaces[itemToSelectIndex]
+          const expectedItemId = defaultIds.getItemId(itemToSelectIndex)
+          renderSelect({items: itemsWithSpaces})
+
+          const toggleButton = getToggleButton()
+
+          // should highlight "1 2 3" until we pass the last character, "4".
+          for (let index = 0; index < itemToSelect.length; index++) {
+            // eslint-disable-next-line no-await-in-loop
+            await keyDownOnToggleButton(itemToSelect[index])
+
+            reactAct(() => jest.advanceTimersByTime(200))
+          }
+
+          expect(toggleButton).toHaveAttribute(
+            'aria-activedescendant',
+            expectedItemId,
+          )
+          expect(getItems()).toHaveLength(itemsWithSpaces.length)
+          expect(toggleButton).toHaveTextContent('Elements')
         })
 
         /* Here we just want to make sure the keys cleanup works. */
