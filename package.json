@@ -7,6 +7,7 @@
   "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
   "sideEffects": false,
+  "browserslist": [],
   "scripts": {
     "build": "npm run build:web --silent && npm run build:native --silent",
     "build:web": "kcd-scripts build --bundle --p-react --no-clean --size-snapshot",
