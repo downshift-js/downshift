@@ -6,7 +6,15 @@ module.exports = defineConfig({
     baseUrl: 'http://localhost:6006',
     video: false,
     setupNodeEvents(on) {
-      on('file:preprocessor', webpackPreprocessor())
+      on(
+        'file:preprocessor',
+        webpackPreprocessor({
+          webpackOptions: {
+            ...webpackPreprocessor.defaultOptions.webpackOptions,
+            target: 'web',
+          },
+        }),
+      )
     },
   },
 })
