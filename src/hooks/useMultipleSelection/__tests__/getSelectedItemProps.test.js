@@ -389,6 +389,22 @@ describe('getSelectedItemProps', () => {
         expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
       })
 
+      test('backspace and delete change nothing if there is no selected item focused', async () => {
+        renderMultipleCombobox({
+          multipleSelectionProps: {
+            initialSelectedItems: [items[0], items[1], items[2]],
+          },
+        })
+
+        await keyDownOnSelectedItemAtIndex(2, '{Backspace}')
+
+        expect(getSelectedItems()).toHaveLength(3)
+
+        await keyDownOnSelectedItemAtIndex(1, '{Delete}')
+
+        expect(getSelectedItems()).toHaveLength(3)
+      })
+
       test('navigation works correctly with both click and arrow keys', async () => {
         renderMultipleCombobox({
           multipleSelectionProps: {

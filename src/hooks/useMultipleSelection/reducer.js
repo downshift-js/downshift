@@ -29,6 +29,10 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       break
     case stateChangeTypes.SelectedItemKeyDownBackspace:
     case stateChangeTypes.SelectedItemKeyDownDelete: {
+      if (activeIndex < 0) {
+        break
+      }
+
       let newActiveIndex = activeIndex
 
       if (selectedItems.length === 1) {
@@ -47,6 +51,7 @@ export default function downshiftMultipleSelectionReducer(state, action) {
 
       break
     }
+
     case stateChangeTypes.DropdownKeyDownNavigationPrevious:
       changes = {
         activeIndex: selectedItems.length - 1,
@@ -71,21 +76,24 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       let newActiveIndex = activeIndex
       const selectedItemIndex = selectedItems.indexOf(selectedItem)
 
-      if (selectedItemIndex >= 0) {
-        if (selectedItems.length === 1) {
-          newActiveIndex = -1
-        } else if (selectedItemIndex === selectedItems.length - 1) {
-          newActiveIndex = selectedItems.length - 2
-        }
-
-        changes = {
-          selectedItems: [
-            ...selectedItems.slice(0, selectedItemIndex),
-            ...selectedItems.slice(selectedItemIndex + 1),
-          ],
-          activeIndex: newActiveIndex,
-        }
+      if (selectedItemIndex < 0) {
+        break
       }
+
+      if (selectedItems.length === 1) {
+        newActiveIndex = -1
+      } else if (selectedItemIndex === selectedItems.length - 1) {
+        newActiveIndex = selectedItems.length - 2
+      }
+
+      changes = {
+        selectedItems: [
+          ...selectedItems.slice(0, selectedItemIndex),
+          ...selectedItems.slice(selectedItemIndex + 1),
+        ],
+        activeIndex: newActiveIndex,
+      }
+
       break
     }
     case stateChangeTypes.FunctionSetSelectedItems: {
