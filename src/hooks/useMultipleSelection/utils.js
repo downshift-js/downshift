@@ -3,6 +3,7 @@ import {
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,
   defaultProps as defaultPropsCommon,
+  commonPropTypes,
 } from '../utils'
 import {noop} from '../../utils'
 
@@ -88,21 +89,18 @@ function isKeyDownOperationPermitted(event) {
  * @returns {string} The a11y message.
  */
 function getA11yRemovalMessage(selectionParameters) {
-  const {
-    removedSelectedItem,
-    itemToString: itemToStringLocal,
-  } = selectionParameters
+  const {removedSelectedItem, itemToString: itemToStringLocal} =
+    selectionParameters
 
   return `${itemToStringLocal(removedSelectedItem)} has been removed.`
 }
 
 const propTypes = {
+  ...commonPropTypes,
   selectedItems: PropTypes.array,
   initialSelectedItems: PropTypes.array,
   defaultSelectedItems: PropTypes.array,
-  itemToString: PropTypes.func,
   getA11yRemovalMessage: PropTypes.func,
-  stateReducer: PropTypes.func,
   activeIndex: PropTypes.number,
   initialActiveIndex: PropTypes.number,
   defaultActiveIndex: PropTypes.number,
@@ -110,15 +108,6 @@ const propTypes = {
   onSelectedItemsChange: PropTypes.func,
   keyNavigationNext: PropTypes.string,
   keyNavigationPrevious: PropTypes.string,
-  environment: PropTypes.shape({
-    addEventListener: PropTypes.func,
-    removeEventListener: PropTypes.func,
-    document: PropTypes.shape({
-      getElementById: PropTypes.func,
-      activeElement: PropTypes.any,
-      body: PropTypes.any,
-    }),
-  }),
 }
 
 export const defaultProps = {

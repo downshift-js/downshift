@@ -412,13 +412,14 @@ describe('props', () => {
     test('is added to the document provided by the user as prop', async () => {
       const environment = {
         document: {
-          getElementById: jest.fn(() => ({
-            setAttribute: jest.fn(),
-            style: {},
-          })),
+          getElementById: jest.fn(() => ({})),
+          createElement: jest.fn(),
+          activeElement: {},
+          body: {},
         },
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
+        Node,
       }
       renderCombobox({items: [], environment})
 

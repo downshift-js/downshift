@@ -7,6 +7,7 @@ import {
   noop,
 } from '../../utils'
 import {
+  commonDropdownPropTypes,
   defaultProps as defaultPropsCommon,
   getInitialState as getInitialStateCommon,
   useEnhancedReducer,
@@ -35,44 +36,15 @@ export function getInitialState(props) {
 }
 
 const propTypes = {
+  ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
-  itemToString: PropTypes.func,
   selectedItemChanged: PropTypes.func,
-  getA11yStatusMessage: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
-  highlightedIndex: PropTypes.number,
-  defaultHighlightedIndex: PropTypes.number,
-  initialHighlightedIndex: PropTypes.number,
-  isOpen: PropTypes.bool,
-  defaultIsOpen: PropTypes.bool,
-  initialIsOpen: PropTypes.bool,
-  selectedItem: PropTypes.any,
-  initialSelectedItem: PropTypes.any,
-  defaultSelectedItem: PropTypes.any,
   inputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
   initialInputValue: PropTypes.string,
-  id: PropTypes.string,
-  labelId: PropTypes.string,
-  menuId: PropTypes.string,
-  getItemId: PropTypes.func,
   inputId: PropTypes.string,
-  toggleButtonId: PropTypes.string,
-  stateReducer: PropTypes.func,
-  onSelectedItemChange: PropTypes.func,
-  onHighlightedIndexChange: PropTypes.func,
-  onStateChange: PropTypes.func,
-  onIsOpenChange: PropTypes.func,
   onInputValueChange: PropTypes.func,
-  environment: PropTypes.shape({
-    addEventListener: PropTypes.func,
-    removeEventListener: PropTypes.func,
-    document: PropTypes.shape({
-      getElementById: PropTypes.func,
-      activeElement: PropTypes.any,
-      body: PropTypes.any,
-    }),
-  }),
 }
 
 /**
@@ -113,7 +85,7 @@ export function useControlledReducer(reducer, initialState, props) {
       state.selectedItem === previousSelectedItemRef.current
         ? props.selectedItem
         : state.selectedItem
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.selectedItem, props.selectedItem])
 
   return [getState(state, props), dispatch]

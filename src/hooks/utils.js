@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react'
+import PropTypes from 'prop-types'
 import {isReactNative} from '../is.macro'
 import {
   scrollIntoView,
@@ -576,6 +577,48 @@ function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
   }
 }
 
+// Shared between all exports.
+const commonPropTypes = {
+  environment: PropTypes.shape({
+    addEventListener: PropTypes.func.isRequired,
+    removeEventListener: PropTypes.func.isRequired,
+    document: PropTypes.shape({
+      createElement: PropTypes.func.isRequired,
+      getElementById: PropTypes.func.isRequired,
+      activeElement: PropTypes.any.isRequired,
+      body: PropTypes.any.isRequired,
+    }).isRequired,
+    Node: PropTypes.func.isRequired,
+  }),
+  itemToString: PropTypes.func,
+  stateReducer: PropTypes.func,
+}
+
+// Shared between useSelect, useCombobox, Downshift.
+const commonDropdownPropTypes = {
+  ...commonPropTypes,
+  getA11yStatusMessage: PropTypes.func,
+  highlightedIndex: PropTypes.number,
+  defaultHighlightedIndex: PropTypes.number,
+  initialHighlightedIndex: PropTypes.number,
+  isOpen: PropTypes.bool,
+  defaultIsOpen: PropTypes.bool,
+  initialIsOpen: PropTypes.bool,
+  selectedItem: PropTypes.any,
+  initialSelectedItem: PropTypes.any,
+  defaultSelectedItem: PropTypes.any,
+  id: PropTypes.string,
+  labelId: PropTypes.string,
+  menuId: PropTypes.string,
+  getItemId: PropTypes.func,
+  toggleButtonId: PropTypes.string,
+  onSelectedItemChange: PropTypes.func,
+  onHighlightedIndexChange: PropTypes.func,
+  onStateChange: PropTypes.func,
+  onIsOpenChange: PropTypes.func,
+  scrollIntoView: PropTypes.func,
+}
+
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -595,4 +638,6 @@ export {
   getItemAndIndex,
   useElementIds,
   getChangesOnSelection,
+  commonDropdownPropTypes,
+  commonPropTypes,
 }
