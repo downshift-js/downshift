@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {useCombobox} from '../../src'
-import {colors} from '../utils'
+import {colors, containerStyles, menuStyles} from '../utils'
 
 export default function DropdownCombobox() {
   const [inputItems, setInputItems] = React.useState(colors)
@@ -26,16 +26,7 @@ export default function DropdownCombobox() {
     },
   })
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: 'fit-content',
-        justifyContent: 'center',
-        marginTop: 100,
-        alignSelf: 'center',
-      }}
-    >
+    <div style={containerStyles}>
       <label
         style={{
           fontWeight: 'bolder',
@@ -68,15 +59,7 @@ export default function DropdownCombobox() {
           &#10007;
         </button>
       </div>
-      <ul
-        {...getMenuProps()}
-        style={{
-          listStyle: 'none',
-          width: '100%',
-          padding: '0',
-          margin: '4px 0 0 0',
-        }}
-      >
+      <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
           inputItems.map((item, index) => (
             <li

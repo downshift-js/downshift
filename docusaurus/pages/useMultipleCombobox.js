@@ -1,7 +1,13 @@
 import * as React from 'react'
 
 import {useCombobox, useMultipleSelection} from '../../src'
-import {colors} from '../utils'
+import {
+  colors,
+  containerStyles,
+  menuStyles,
+  selectedItemsContainerSyles,
+  selectedItemStyles,
+} from '../utils'
 
 const initialSelectedItems = [colors[0], colors[1]]
 
@@ -89,16 +95,7 @@ export default function DropdownMultipleCombobox() {
     },
   })
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: 'fit-content',
-        justifyContent: 'center',
-        marginTop: 100,
-        alignSelf: 'center',
-      }}
-    >
+    <div style={containerStyles}>
       <label
         style={{
           fontWeight: 'bolder',
@@ -108,27 +105,14 @@ export default function DropdownMultipleCombobox() {
       >
         Choose an element:
       </label>
-      <div
-        style={{
-          display: 'inline-flex',
-          gap: '8px',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          padding: '6px',
-        }}
-      >
+      <div style={selectedItemsContainerSyles}>
         {selectedItems.map(function renderSelectedItem(
           selectedItemForRender,
           index,
         ) {
           return (
             <span
-              style={{
-                backgroundColor: 'lightgray',
-                paddingLeft: '4px',
-                paddingRight: '4px',
-                borderRadius: '6px',
-              }}
+              style={selectedItemStyles}
               key={`selected-item-${index}`}
               {...getSelectedItemProps({
                 selectedItem: selectedItemForRender,
@@ -173,15 +157,7 @@ export default function DropdownMultipleCombobox() {
           </button>
         </div>
       </div>
-      <ul
-        {...getMenuProps()}
-        style={{
-          listStyle: 'none',
-          width: '100%',
-          padding: '0',
-          margin: '4px 0 0 0',
-        }}
-      >
+      <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
           items.map((item, index) => (
             <li
