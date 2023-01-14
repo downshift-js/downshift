@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.8",
-    "compute-scroll-into-view": "^1.0.17",
+    "compute-scroll-into-view": "^2.0.4",
     "prop-types": "^15.7.2",
     "react-is": "^17.0.2",
     "tslib": "^2.3.0"

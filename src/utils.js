@@ -1,4 +1,4 @@
-import computeScrollIntoView from 'compute-scroll-into-view'
+import compute from 'compute-scroll-into-view'
 import {isPreact} from './is.macro'
 
 let idCounter = 0
@@ -27,7 +27,7 @@ function scrollIntoView(node, menuNode) {
     return
   }
 
-  const actions = computeScrollIntoView(node, {
+  const actions = compute(node, {
     boundary: menuNode,
     block: 'nearest',
     scrollMode: 'if-needed',
