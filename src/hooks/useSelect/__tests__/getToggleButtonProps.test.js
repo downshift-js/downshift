@@ -795,6 +795,23 @@ describe('getToggleButtonProps', () => {
             defaultIds.getItemId(items.length - 1),
           )
         })
+
+        test('skips disabled items', async () => {
+          renderSelect({
+            isItemDisabled(index) {
+              return index === 2
+            },
+            initialIsOpen: true,
+            initialHighlightedIndex: 3,
+          })
+
+          await keyDownOnToggleButton('{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
+        })
       })
 
       describe('arrow down', () => {
@@ -986,76 +1003,131 @@ describe('getToggleButtonProps', () => {
             defaultIds.getItemId(items.length - 1),
           )
         })
+
+        test('skips disabled items', async () => {
+          renderSelect({
+            isItemDisabled(index) {
+              return index === 2
+            },
+            initialIsOpen: true,
+            initialHighlightedIndex: 1,
+          })
+
+          await keyDownOnToggleButton('{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(3),
+          )
+        })
       })
 
-      test('end opens the menu and highlights the last option', async () => {
-        renderSelect()
+      describe('end', () => {
+        test('opens the menu and highlights the last option', async () => {
+          renderSelect()
 
-        await keyDownOnToggleButton('{End}')
+          await keyDownOnToggleButton('{End}')
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
-      })
-
-      test('end highlights the last option', async () => {
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex: 2,
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
 
-        await keyDownOnToggleButton('{End}')
+        test('highlights the last option', async () => {
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+          })
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
-      })
+          await keyDownOnToggleButton('{End}')
 
-      test('end prevents the default event behavior', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'End'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
-
-      test('home opens the menu and highlights the first option', async () => {
-        renderSelect()
-
-        await keyDownOnToggleButton('{Home}')
-
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
-      })
-
-      test('home highlights the first option', async () => {
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex: 2,
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
 
-        await keyDownOnToggleButton('{Home}')
+        test('prevents the default event behavior', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'End'})
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
+        test('highlights previous non-disabled option', async () => {
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex: 0,
+            isItemDisabled(index) {
+              return index === items.length - 1
+            },
+          })
+
+          await keyDownOnToggleButton('{End}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 2),
+          )
+        })
       })
 
-      test('home prevents the default event behavior', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Home'})
+      describe('home', () => {
+        test('opens the menu and highlights the first option', async () => {
+          renderSelect()
 
-        fireEvent(toggleButton, keyDownEvent)
+          await keyDownOnToggleButton('{Home}')
 
-        expect(keyDownEvent.defaultPrevented).toBe(true)
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('highlights the first option', async () => {
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+          })
+
+          await keyDownOnToggleButton('{Home}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('prevents the default event behavior', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Home'})
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
+        test('highlights next non-disabled option', async () => {
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+            isItemDisabled(index) {
+              return index === 0
+            },
+          })
+
+          await keyDownOnToggleButton('{Home}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
+        })
       })
 
       test('escape has the menu closed and keeps focus on the button', async () => {
@@ -1078,132 +1150,136 @@ describe('getToggleButtonProps', () => {
         expect(getToggleButton()).toHaveFocus()
       })
 
-      test('enter opens the menu without any item selected', async () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
+      describe('enter', () => {
+        test('opens the menu without any item selected', async () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
 
-        await keyDownOnToggleButton('{Enter}')
+          await keyDownOnToggleButton('{Enter}')
 
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
-        expect(toggleButton).toHaveFocus()
-      })
-
-      test('enter closes the menu and selects highlighted item', async () => {
-        const initialHighlightedIndex = 2
-        renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
+          expect(getItems()).toHaveLength(items.length)
+          expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+          expect(toggleButton).toHaveFocus()
         })
-        const toggleButton = getToggleButton()
 
-        await keyDownOnToggleButton('{Enter}')
+        test('closes the menu and selects highlighted item', async () => {
+          const initialHighlightedIndex = 2
+          renderSelect({
+            initialIsOpen: true,
+            initialHighlightedIndex,
+          })
+          const toggleButton = getToggleButton()
 
-        expect(getItems()).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
-        expect(toggleButton).toHaveFocus()
-      })
+          await keyDownOnToggleButton('{Enter}')
 
-      test('enter selects the highlighted item and resets to user defaults', async () => {
-        const defaultHighlightedIndex = 2
-        renderSelect({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
+          expect(getItems()).toHaveLength(0)
+          expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
+          expect(toggleButton).toHaveFocus()
         })
-        const toggleButton = getToggleButton()
 
-        await keyDownOnToggleButton('{Enter}')
+        test('selects the highlighted item and resets to user defaults', async () => {
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+          })
+          const toggleButton = getToggleButton()
 
-        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(defaultHighlightedIndex),
-        )
-      })
+          await keyDownOnToggleButton('{Enter}')
 
-      test('enter prevents the default event behavior with the menu open', () => {
-        renderSelect({isOpen: true})
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Enter'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
-
-      test('enter prevents the default event behavior with the menu closed', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Enter'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
-
-      test('space opens the menu without any item selected', async () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-
-        await keyDownOnToggleButton(' ')
-
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
-        expect(toggleButton).toHaveFocus()
-      })
-
-      test('space closes the menu and selects highlighted item', async () => {
-        const initialHighlightedIndex = 2
-        renderSelect({
-          initialIsOpen: true,
-          initialHighlightedIndex,
+          expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
+          expect(getItems()).toHaveLength(items.length)
+          expect(toggleButton).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
         })
-        const toggleButton = getToggleButton()
 
-        await keyDownOnToggleButton(' ')
+        test('prevents the default event behavior with the menu open', () => {
+          renderSelect({isOpen: true})
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Enter'})
 
-        expect(getItems()).toHaveLength(0)
-        expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
-        expect(toggleButton).toHaveFocus()
-      })
+          fireEvent(toggleButton, keyDownEvent)
 
-      test('space selects the highlighted item and resets to user defaults', async () => {
-        const defaultHighlightedIndex = 2
-        renderSelect({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
+          expect(keyDownEvent.defaultPrevented).toBe(true)
         })
-        const toggleButton = getToggleButton()
 
-        await keyDownOnToggleButton(' ')
+        test('prevents the default event behavior with the menu closed', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'Enter'})
 
-        expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
-        expect(getItems()).toHaveLength(items.length)
-        expect(toggleButton).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(defaultHighlightedIndex),
-        )
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
       })
 
-      test('space prevents the default event behavior when select is open', () => {
-        renderSelect({isOpen: true})
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
+      describe('space', () => {
+        test('opens the menu without any item selected', async () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
 
-        fireEvent(toggleButton, keyDownEvent)
+          await keyDownOnToggleButton(' ')
 
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
+          expect(getItems()).toHaveLength(items.length)
+          expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+          expect(toggleButton).toHaveFocus()
+        })
 
-      test('space prevents the default event behavior when select is closed', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
+        test('closes the menu and selects highlighted item', async () => {
+          const initialHighlightedIndex = 2
+          renderSelect({
+            initialIsOpen: true,
+            initialHighlightedIndex,
+          })
+          const toggleButton = getToggleButton()
 
-        fireEvent(toggleButton, keyDownEvent)
+          await keyDownOnToggleButton(' ')
 
-        expect(keyDownEvent.defaultPrevented).toBe(true)
+          expect(getItems()).toHaveLength(0)
+          expect(toggleButton).toHaveTextContent(items[initialHighlightedIndex])
+          expect(toggleButton).toHaveFocus()
+        })
+
+        test('selects the highlighted item and resets to user defaults', async () => {
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+          })
+          const toggleButton = getToggleButton()
+
+          await keyDownOnToggleButton(' ')
+
+          expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
+          expect(getItems()).toHaveLength(items.length)
+          expect(toggleButton).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('prevents the default event behavior when select is open', () => {
+          renderSelect({isOpen: true})
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
+        test('prevents the default event behavior when select is closed', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {key: ' '})
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
       })
 
       test('tab closes the menu and selects highlighted item', async () => {
@@ -1282,108 +1358,116 @@ describe('getToggleButtonProps', () => {
         expect(getItems()).toHaveLength(0)
       })
 
-      test('pageUp jumps highlight up by 10 options', async () => {
-        const initialHighlightedIndex = 12
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex,
+      describe('pageUp', () => {
+        test('jumps highlight up by 10 options', async () => {
+          const initialHighlightedIndex = 12
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
+
+          await keyDownOnToggleButton('{PageUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex - 10),
+          )
         })
 
-        await keyDownOnToggleButton('{PageUp}')
+        test('jumps highlight the first option if highlightedIndex is 10 or smaller', async () => {
+          const initialHighlightedIndex = 7
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(initialHighlightedIndex - 10),
-        )
-      })
+          await keyDownOnToggleButton('{PageUp}')
 
-      test('pageUp jumps highlight the first option if highlightedIndex is 10 or smaller', async () => {
-        const initialHighlightedIndex = 7
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex,
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
         })
 
-        await keyDownOnToggleButton('{PageUp}')
+        test('prevents the default event behavior with the menu open', () => {
+          renderSelect({isOpen: true})
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageUp',
+          })
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
-      })
+          fireEvent(toggleButton, keyDownEvent)
 
-      test('pageUp prevents the default event behavior with the menu open', () => {
-        renderSelect({isOpen: true})
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'PageUp'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
-
-      test('pageUp does not prevent the default event behavior with the menu closed', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'PageUp'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(false)
-      })
-
-      test('pageDown jumps highlight down by 10 options', async () => {
-        const initialHighlightedIndex = 12
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex,
+          expect(keyDownEvent.defaultPrevented).toBe(true)
         })
 
-        await keyDownOnToggleButton('{PageDown}')
+        test('does not prevent the default event behavior with the menu closed', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageUp',
+          })
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(initialHighlightedIndex + 10),
-        )
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+        })
       })
 
-      test('pageDown jumps highlight the last option if highlightedIndex is closer than 10 indeces to the end', async () => {
-        const initialHighlightedIndex = items.length - 5
-        renderSelect({
-          isOpen: true,
-          initialHighlightedIndex,
+      describe('pageDown', () => {
+        test('jumps highlight down by 10 options', async () => {
+          const initialHighlightedIndex = 12
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
+
+          await keyDownOnToggleButton('{PageDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex + 10),
+          )
         })
 
-        await keyDownOnToggleButton('{PageDown}')
+        test('jumps highlight the last option if highlightedIndex is closer than 10 indeces to the end', async () => {
+          const initialHighlightedIndex = items.length - 5
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-        expect(getToggleButton()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
-      })
+          await keyDownOnToggleButton('{PageDown}')
 
-      test('pageDown prevents the default event behavior with the menu open', () => {
-        renderSelect({isOpen: true})
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {
-          key: 'PageDown',
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
 
-        fireEvent(toggleButton, keyDownEvent)
+        test('prevents the default event behavior with the menu open', () => {
+          renderSelect({isOpen: true})
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageDown',
+          })
 
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
+          fireEvent(toggleButton, keyDownEvent)
 
-      test('pageDown does not prevent the default event behavior with the menu closed', () => {
-        renderSelect()
-        const toggleButton = getToggleButton()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {
-          key: 'PageDown',
+          expect(keyDownEvent.defaultPrevented).toBe(true)
         })
 
-        fireEvent(toggleButton, keyDownEvent)
+        test('does not prevent the default event behavior with the menu closed', () => {
+          renderSelect()
+          const toggleButton = getToggleButton()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageDown',
+          })
 
-        expect(keyDownEvent.defaultPrevented).toBe(false)
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+        })
       })
     })
 

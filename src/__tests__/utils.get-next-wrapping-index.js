@@ -170,6 +170,24 @@ test('should skip disabled and wrap to last if circular when reaching first', ()
   ).toEqual(2)
 })
 
+test('should skip disabled and wrap to second to last if circular when reaching first and last is disabled', () => {
+  const moveAmount = -1
+  const baseIndex = 1
+  const itemCount = 3
+  const getItemNodeFromIndex = index => ({hasAttribute: () => [0, 2].includes(index)})
+  const circular = true
+
+  expect(
+    getNextWrappingIndex(
+      moveAmount,
+      baseIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+    ),
+  ).toEqual(1)
+})
+
 test('should skip disabled and not wrap to last if circular when reaching first', () => {
   const moveAmount = -1
   const baseIndex = 1
@@ -206,6 +224,24 @@ test('should skip disabled and wrap to first if circular when reaching last', ()
   ).toEqual(0)
 })
 
+test('should skip disabled and wrap to second if circular when reaching last and first is disabled', () => {
+  const moveAmount = 1
+  const baseIndex = 1
+  const itemCount = 3
+  const getItemNodeFromIndex = index => ({hasAttribute: () => [0, 2].includes(index)})
+  const circular = true
+
+  expect(
+    getNextWrappingIndex(
+      moveAmount,
+      baseIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+    ),
+  ).toEqual(1)
+})
+
 test('should skip disabled and not wrap to first if circular when reaching last', () => {
   const moveAmount = 1
   const baseIndex = 1
@@ -226,6 +262,24 @@ test('should skip disabled and not wrap to first if circular when reaching last'
 
 test('should not select any if all disabled when arrow up', () => {
   const moveAmount = -1
+  const baseIndex = -1
+  const itemCount = 3
+  const getItemNodeFromIndex = () => ({hasAttribute: () => true})
+  const circular = true
+
+  expect(
+    getNextWrappingIndex(
+      moveAmount,
+      baseIndex,
+      itemCount,
+      getItemNodeFromIndex,
+      circular,
+    ),
+  ).toEqual(-1)
+})
+
+test('should not select any if all disabled when arrow down', () => {
+  const moveAmount = 1
   const baseIndex = -1
   const itemCount = 3
   const getItemNodeFromIndex = () => ({hasAttribute: () => true})

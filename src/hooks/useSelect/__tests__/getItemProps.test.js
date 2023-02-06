@@ -62,7 +62,7 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
-    test('omit event handlers when disabled', () => {
+    test('remove: omit event handlers when disabled', () => {
       const {result} = renderUseSelect()
       const itemProps = result.current.getItemProps({
         index: 0,
@@ -72,6 +72,21 @@ describe('getItemProps', () => {
       expect(itemProps.onMouseMove).toBeDefined()
       expect(itemProps.onClick).toBeUndefined()
       expect(itemProps.disabled).toBe(true)
+    })
+
+    test('omit event handlers when disabled', () => {
+      const {result} = renderUseSelect({
+        isItemDisabled(index) {
+          return index === 0
+        },
+      })
+      const itemProps = result.current.getItemProps({
+        index: 0,
+      })
+
+      expect(itemProps.onMouseMove).toBeDefined()
+      expect(itemProps.onClick).toBeUndefined()
+      expect(itemProps['aria-disabled']).toBe(true)
     })
   })
 
@@ -240,7 +255,7 @@ describe('getItemProps', () => {
         )
       })
 
-      it('removes highlight from previous item even if current item is disabled', async () => {
+      it('remove: removes highlight from previous item even if current item is disabled', async () => {
         const disabledIndex = 1
         const highlightedIndex = 2
         const itemsWithDisabled = [...items].map((item, index) =>
@@ -250,6 +265,28 @@ describe('getItemProps', () => {
         renderSelect({
           items: itemsWithDisabled,
           isOpen: true,
+        })
+        const toggleButton = getToggleButton()
+
+        await mouseMoveItemAtIndex(highlightedIndex)
+
+        expect(toggleButton).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(highlightedIndex),
+        )
+
+        await mouseMoveItemAtIndex(disabledIndex)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      it('removes highlight from previous item even if current item is disabled', async () => {
+        const disabledIndex = 1
+        const highlightedIndex = 2
+
+        renderSelect({
+          items,
+          isOpen: true,
+          isItemDisabled(index) {return index === disabledIndex}
         })
         const toggleButton = getToggleButton()
 
