@@ -1,6 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  getItemIndex,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
@@ -11,6 +10,7 @@ import {
   useControlPropsValidator,
   useElementIds,
   useMouseAndTouchTracker,
+  getItemAndIndex,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -442,12 +442,15 @@ function useSelect(userProps = {}) {
       onClick,
       refKey = 'ref',
       ref,
-      disabled,
       ...rest
     } = {}) => {
       const {state: latestState, props: latestProps} = latest.current
-      const item = itemProp ?? items[indexProp]
-      const index = getItemIndex(indexProp, item, latestProps.items)
+      const [item, index] = getItemAndIndex(
+        indexProp,
+        itemProp,
+        latestProps.items,
+      )
+      const disabled = latestProps.isItemDisabled(item)
 
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
@@ -467,20 +470,16 @@ function useSelect(userProps = {}) {
         })
       }
 
-      const itemIndex = getItemIndex(index, item, latestProps.items)
-      if (itemIndex < 0) {
-        throw new Error('Pass either item or item index in getItemProps!')
-      }
       const itemProps = {
-        disabled,
-        role: 'option',
-        'aria-selected': `${item === selectedItem}`,
-        id: elementIds.getItemId(itemIndex),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
+        'aria-disabled': disabled,
+        'aria-selected': `${item === selectedItem}`,
+        id: elementIds.getItemId(index),
+        role: 'option',
         ...rest,
       }
 
@@ -494,7 +493,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, items, selectedItem, elementIds, shouldScrollRef, dispatch],
+    [latest, selectedItem, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

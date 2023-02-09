@@ -62,21 +62,21 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
-    test('remove: omit event handlers when disabled', () => {
-      const {result} = renderUseSelect()
-      const itemProps = result.current.getItemProps({
-        index: 0,
-        disabled: true,
-      })
+    // test('remove: omit event handlers when disabled', () => {
+    //   const {result} = renderUseSelect()
+    //   const itemProps = result.current.getItemProps({
+    //     index: 0,
+    //     disabled: true,
+    //   })
 
-      expect(itemProps.onMouseMove).toBeDefined()
-      expect(itemProps.onClick).toBeUndefined()
-      expect(itemProps.disabled).toBe(true)
-    })
+    //   expect(itemProps.onMouseMove).toBeDefined()
+    //   expect(itemProps.onClick).toBeUndefined()
+    //   expect(itemProps.disabled).toBe(true)
+    // })
 
     test('omit event handlers when disabled', () => {
       const {result} = renderUseSelect({
-        isItemDisabled(index) {
+        isItemDisabled(_item, index) {
           return index === 0
         },
       })
@@ -286,7 +286,7 @@ describe('getItemProps', () => {
         renderSelect({
           items,
           isOpen: true,
-          isItemDisabled(index) {return index === disabledIndex}
+          isItemDisabled(_item, index) {return index === disabledIndex}
         })
         const toggleButton = getToggleButton()
 

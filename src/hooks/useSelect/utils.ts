@@ -103,6 +103,9 @@ function getA11yStatusMessage<Item>({
 export const defaultProps = {
   ...commonDefaultProps,
   getA11yStatusMessage,
+  isItemDisabled() {
+    return false
+  },
 }
 
 // eslint-disable-next-line import/no-mutable-exports

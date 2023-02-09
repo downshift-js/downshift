@@ -798,7 +798,7 @@ describe('getToggleButtonProps', () => {
 
         test('skips disabled items', async () => {
           renderSelect({
-            isItemDisabled(index) {
+            isItemDisabled(_item, index) {
               return index === 2
             },
             initialIsOpen: true,
@@ -1006,7 +1006,7 @@ describe('getToggleButtonProps', () => {
 
         test('skips disabled items', async () => {
           renderSelect({
-            isItemDisabled(index) {
+            isItemDisabled(_item, index) {
               return index === 2
             },
             initialIsOpen: true,
@@ -1062,7 +1062,7 @@ describe('getToggleButtonProps', () => {
           renderSelect({
             isOpen: true,
             initialHighlightedIndex: 0,
-            isItemDisabled(index) {
+            isItemDisabled(_item, index) {
               return index === items.length - 1
             },
           })
@@ -1116,7 +1116,7 @@ describe('getToggleButtonProps', () => {
           renderSelect({
             isOpen: true,
             initialHighlightedIndex: 2,
-            isItemDisabled(index) {
+            isItemDisabled(_item, index) {
               return index === 0
             },
           })

@@ -122,6 +122,24 @@ function getItemIndex(index, item, items) {
   return items.indexOf(item)
 }
 
+function getItemAndIndex(indexProp, itemProp, items) {
+  let item, index
+
+  if (itemProp === undefined) {
+    if (indexProp === undefined) {
+      throw new Error('Pass either item or item index in getItemProps!')
+    } 
+
+    item = items[indexProp]
+    index = indexProp
+  } else {
+    index = items.indexOf(itemProp)
+    item = itemProp
+  }
+
+  return [item, index]
+}
+
 function itemToString(item) {
   return item ? String(item) : ''
 }
@@ -305,7 +323,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
  * @param {Function} handleBlur Handler on blur from mouse or touch.
  * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
- function useMouseAndTouchTracker(
+function useMouseAndTouchTracker(
   isOpen,
   downshiftElementRefs,
   environment,
@@ -529,4 +547,5 @@ export {
   isAcceptedCharacterKey,
   getItemIndex,
   useElementIds,
+  getItemAndIndex
 }
