@@ -450,7 +450,7 @@ function useSelect(userProps = {}) {
         itemProp,
         latestProps.items,
       )
-      const disabled = latestProps.isItemDisabled(item)
+      const disabled = latestProps.isItemDisabled(item, index)
 
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
