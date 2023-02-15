@@ -1181,7 +1181,7 @@ describe('getInputProps', () => {
 
           expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
-            defaultIds.getItemId(0),
+            defaultIds.getItemId(items.length - 1),
           )
         })
 
@@ -1255,7 +1255,7 @@ describe('getInputProps', () => {
 
           expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
-            defaultIds.getItemId(items.length - 1),
+            defaultIds.getItemId(0),
           )
         })
 

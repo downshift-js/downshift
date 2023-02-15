@@ -441,9 +441,16 @@ function useSelect(userProps = {}) {
       onMouseMove,
       onClick,
       refKey = 'ref',
+      disabled: disabledProp,
       ref,
       ...rest
     } = {}) => {
+      if (disabledProp !== undefined) {
+        console.warn(
+          'Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useSelect.',
+        )
+      }
+
       const {state: latestState, props: latestProps} = latest.current
       const [item, index] = getItemAndIndex(
         indexProp,
@@ -477,7 +484,7 @@ function useSelect(userProps = {}) {
           }
         }),
         'aria-disabled': disabled,
-        'aria-selected': `${item === selectedItem}`,
+        'aria-selected': `${item === latestState.selectedItem}`,
         id: elementIds.getItemId(index),
         role: 'option',
         ...rest,
@@ -493,7 +500,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, selectedItem, elementIds, shouldScrollRef, dispatch],
+    [latest, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

@@ -122,6 +122,9 @@ if (process.env.NODE_ENV !== 'production') {
 const defaultProps = {
   ...defaultPropsCommon,
   getA11yStatusMessage,
+  isItemDisabled() {
+    return false
+  },
 }
 
 export {validatePropTypes, useControlledReducer, getInitialState, defaultProps}

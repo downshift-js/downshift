@@ -1,5 +1,5 @@
 import {getHighlightedIndexOnOpen, getDefaultValue} from '../utils'
-import {getNextWrappingIndex, getNextNonDisabledIndex} from '../../utils'
+import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
 import commonReducer from '../reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -20,12 +20,12 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputKeyDownArrowDown:
       if (state.isOpen) {
         changes = {
-          highlightedIndex: getNextWrappingIndex(
-            1,
+          highlightedIndex: getHighlightedIndex(
             state.highlightedIndex,
-            props.items.length,
-            action.getItemNodeFromIndex,
-            true,
+            1,
+            props.items,
+            props.isItemDisabled,
+            true
           ),
         }
       } else {
@@ -58,12 +58,12 @@ export default function downshiftUseComboboxReducer(state, action) {
           }
         } else {
           changes = {
-            highlightedIndex: getNextWrappingIndex(
-              -1,
+            highlightedIndex: getHighlightedIndex(
               state.highlightedIndex,
-              props.items.length,
-              action.getItemNodeFromIndex,
-              true,
+              -1,
+              props.items,
+              props.isItemDisabled,
+              true
             ),
           }
         }
@@ -101,45 +101,43 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownPageUp:
       changes = {
-        highlightedIndex: getNextWrappingIndex(
-          -10,
+        highlightedIndex: getHighlightedIndex(
           state.highlightedIndex,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
+          -10,
+          props.items,
+          props.isItemDisabled,
+          true
         ),
       }
       break
     case stateChangeTypes.InputKeyDownPageDown:
       changes = {
-        highlightedIndex: getNextWrappingIndex(
-          10,
+        highlightedIndex: getHighlightedIndex(
           state.highlightedIndex,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
+          10,
+          props.items,
+          props.isItemDisabled,
+          true
         ),
       }
       break
     case stateChangeTypes.InputKeyDownHome:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          1,
+        highlightedIndex: getNonDisabledIndex(
           0,
-          props.items.length,
-          action.getItemNodeFromIndex,
           false,
+          props.items,
+          props.isItemDisabled,
         ),
       }
       break
     case stateChangeTypes.InputKeyDownEnd:
       changes = {
-        highlightedIndex: getNextNonDisabledIndex(
-          -1,
+        highlightedIndex: getNonDisabledIndex(
           props.items.length - 1,
-          props.items.length,
-          action.getItemNodeFromIndex,
-          false,
+          true,
+          props.items,
+          props.isItemDisabled,
         ),
       }
       break

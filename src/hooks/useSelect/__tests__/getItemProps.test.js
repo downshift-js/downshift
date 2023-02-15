@@ -1,4 +1,4 @@
-import {act} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react-hooks'
 import {
   renderUseSelect,
   renderSelect,
@@ -11,6 +11,7 @@ import {
   clickOnToggleButton,
 } from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
+import useSelect from '..'
 
 describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -317,6 +318,27 @@ describe('getItemProps', () => {
       await keyDownOnToggleButton('{End}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('non production errors', () => {
+    beforeAll(() => {
+      jest.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterAll(() => {
+      jest.restoreAllMocks()
+    })
+
+    test('will be displayed if getInputProps is not called', () => {
+      renderHook(() => {
+        const {getItemProps} = useSelect({items})
+        getItemProps({disabled: true})
+      })
+
+      expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(
+        `Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useSelect.`,
+      )
     })
   })
 })

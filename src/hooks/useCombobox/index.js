@@ -3,7 +3,6 @@ import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
-  getItemIndex,
   useA11yMessageSetter,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
@@ -11,6 +10,7 @@ import {
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
+  getItemAndIndex,
 } from '../utils'
 import {
   getInitialState,
@@ -284,23 +284,30 @@ function useCombobox(userProps = {}) {
 
   const getItemProps = useCallback(
     ({
-      item,
-      index,
+      item: itemProp,
+      index: indexProp,
       refKey = 'ref',
       ref,
       onMouseMove,
       onMouseDown,
       onClick,
       onPress,
-      disabled,
+      disabled: disabledProp,
       ...rest
     } = {}) => {
-      const {props: latestProps, state: latestState} = latest.current
-      const itemIndex = getItemIndex(index, item, latestProps.items)
-      if (itemIndex < 0) {
-        throw new Error('Pass either item or item index in getItemProps!')
+      if (disabledProp !== undefined) {
+        console.warn(
+          'Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useCombobox.',
+        )
       }
 
+      const {props: latestProps, state: latestState} = latest.current
+      const [item, index] = getItemAndIndex(
+        indexProp,
+        itemProp,
+        latestProps.items,
+      )
+      const disabled = latestProps.isItemDisabled(item, index)
       const onSelectKey = isReactNative
         ? /* istanbul ignore next (react-native) */ 'onPress'
         : 'onClick'
@@ -330,13 +337,13 @@ function useCombobox(userProps = {}) {
       return {
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
-        disabled,
+        'aria-disabled': disabled,
+        'aria-selected': `${index === latestState.highlightedIndex}`,
+        id: elementIds.getItemId(index),
         role: 'option',
-        'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
-        id: elementIds.getItemId(itemIndex),
         ...(!disabled && {
           [onSelectKey]: callAllEventHandlers(
             customClickHandler,
