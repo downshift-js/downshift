@@ -17,22 +17,20 @@ test('functions are memoized', () => {
 
 test('will skip disabled items after component rerenders and items are memoized', async () => {
   function renderItem(props) {
-    return (
-      <MemoizedItem
-        key={props.index}
-        disabled={props.index === items.length - 2}
-        {...props}
-      />
-    )
+    return <MemoizedItem key={props.index} {...props} />
+  }
+  function isItemDisabled(_item, index) {
+    return index === items.length - 2
   }
 
   const {rerender} = renderCombobox({
+    isItemDisabled,
     isOpen: true,
     initialHighlightedIndex: items.length - 1,
     renderItem,
   })
 
-  rerender({renderItem, isOpen: true})
+  rerender({renderItem, isOpen: true, isItemDisabled})
   await keyDownOnInput('{ArrowUp}')
 
   expect(getInput()).toHaveAttribute(

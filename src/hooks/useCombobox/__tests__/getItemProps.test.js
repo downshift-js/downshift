@@ -58,7 +58,7 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
-    test("handlers are not called if it's disabled", () => {
+    test("delete: handlers are not called if it's disabled", () => {
       const {result} = renderUseCombobox()
       const itemProps = result.current.getItemProps({
         disabled: true,
@@ -69,6 +69,22 @@ describe('getItemProps', () => {
       expect(itemProps.onMouseMove).toBeDefined()
       expect(itemProps.onMouseDown).toBeDefined()
       expect(itemProps.disabled).toBe(true)
+    })
+
+    test("click handler is not called if it's disabled", () => {
+      const {result} = renderUseCombobox({
+        isItemDisabled(_item, index) {
+          return index === 0
+        },
+      })
+      const itemProps = result.current.getItemProps({
+        index: 0,
+      })
+
+      expect(itemProps.onClick).toBeUndefined()
+      expect(itemProps.onMouseMove).toBeDefined()
+      expect(itemProps.onMouseDown).toBeDefined()
+      expect(itemProps['aria-disabled']).toBe(true)
     })
   })
 
@@ -253,7 +269,7 @@ describe('getItemProps', () => {
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
       })
 
-      it('removes highlight from previous item even if current item is disabled', async () => {
+      it('delete: removes highlight from previous item even if current item is disabled', async () => {
         const disabledIndex = 1
         const highlightedIndex = 2
         const itemsWithDisabled = [...items].map((item, index) =>
@@ -263,6 +279,30 @@ describe('getItemProps', () => {
         renderCombobox({
           items: itemsWithDisabled,
           isOpen: true,
+        })
+        const input = getInput()
+
+        await mouseMoveItemAtIndex(highlightedIndex)
+
+        expect(input).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(highlightedIndex),
+        )
+
+        await mouseMoveItemAtIndex(disabledIndex)
+        expect(input).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      it('removes highlight from previous item even if current item is disabled', async () => {
+        const disabledIndex = 1
+        const highlightedIndex = 2
+
+        renderCombobox({
+          items,
+          isOpen: true,
+          isItemDisabled(_item, index) {
+            return index === disabledIndex
+          },
         })
         const input = getInput()
 

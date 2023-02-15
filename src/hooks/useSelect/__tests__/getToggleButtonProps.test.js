@@ -1374,6 +1374,24 @@ describe('getToggleButtonProps', () => {
           )
         })
 
+        test('skips the disabled option to the previous non-disabled one', async () => {
+          const initialHighlightedIndex = 12
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+            isItemDisabled(_item, index) {
+              return index === 2
+            },
+          })
+
+          await keyDownOnToggleButton('{PageUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
+        })
+
         test('jumps highlight the first option if highlightedIndex is 10 or smaller', async () => {
           const initialHighlightedIndex = 7
           renderSelect({
@@ -1427,6 +1445,24 @@ describe('getToggleButtonProps', () => {
           expect(getToggleButton()).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(initialHighlightedIndex + 10),
+          )
+        })
+
+        test('skips the disabled option to the next non-disabled one', async () => {
+          const initialHighlightedIndex = 2
+          renderSelect({
+            isOpen: true,
+            initialHighlightedIndex,
+            isItemDisabled(_item, index) {
+              return index === 12
+            },
+          })
+
+          await keyDownOnToggleButton('{PageDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(13),
           )
         })
 
