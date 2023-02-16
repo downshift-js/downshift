@@ -179,7 +179,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-          getItemNodeFromIndex,
           altKey: event.altKey,
         })
       },
@@ -188,7 +187,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-          getItemNodeFromIndex,
           altKey: event.altKey,
         })
       },
@@ -197,7 +195,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownHome,
-          getItemNodeFromIndex,
         })
       },
       End(event) {
@@ -205,7 +202,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownEnd,
-          getItemNodeFromIndex,
         })
       },
       Escape() {
@@ -230,7 +226,6 @@ function useSelect(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownPageUp,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -240,7 +235,6 @@ function useSelect(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownPageDown,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -258,14 +252,13 @@ function useSelect(userProps = {}) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
             key: ' ',
-            getItemNodeFromIndex,
           })
         } else {
           dispatch({type: stateChangeTypes.ToggleButtonKeyDownSpaceButton})
         }
       },
     }),
-    [dispatch, getItemNodeFromIndex, latest],
+    [dispatch, latest],
   )
 
   // Action functions.
@@ -381,7 +374,6 @@ function useSelect(userProps = {}) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
             key,
-            getItemNodeFromIndex,
           })
         }
       }
@@ -431,7 +423,6 @@ function useSelect(userProps = {}) {
       dispatch,
       mouseAndTouchTrackersRef,
       toggleButtonKeyDownHandlers,
-      getItemNodeFromIndex,
     ],
   )
   const getItemProps = useCallback(

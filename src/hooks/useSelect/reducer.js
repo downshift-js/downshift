@@ -31,7 +31,7 @@ export default function downshiftSelectReducer(state, action) {
           highlightedIndex: prevHighlightedIndex,
           items: props.items,
           itemToString: props.itemToString,
-          getItemNodeFromIndex: action.getItemNodeFromIndex,
+          isItemDisabled: props.isItemDisabled,
         })
 
         changes = {

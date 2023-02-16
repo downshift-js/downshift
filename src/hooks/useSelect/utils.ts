@@ -9,7 +9,7 @@ export function getItemIndexByCharacterKey<Item>({
   highlightedIndex,
   items,
   itemToString,
-  getItemNodeFromIndex,
+  isItemDisabled,
 }: GetItemIndexByCharacterKeyOptions<Item>) {
   const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
 
@@ -22,13 +22,10 @@ export function getItemIndexByCharacterKey<Item>({
 
     if (
       item !== undefined &&
-      itemToString(item).toLowerCase().startsWith(lowerCasedKeysSoFar)
+      itemToString(item).toLowerCase().startsWith(lowerCasedKeysSoFar) &&
+      !isItemDisabled(item, offsetIndex)
     ) {
-      const element = getItemNodeFromIndex(offsetIndex)
-
-      if (!element?.hasAttribute('disabled')) {
-        return offsetIndex
-      }
+      return offsetIndex
     }
   }
 

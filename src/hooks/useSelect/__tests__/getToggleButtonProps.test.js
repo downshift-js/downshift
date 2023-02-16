@@ -609,6 +609,27 @@ describe('getToggleButtonProps', () => {
 
           expect(consoleErrorSpy).not.toHaveBeenCalled()
         })
+
+        test('should skip disabled items', async () => {
+          const char = 'c'
+          const firstMatchIndex = getItemIndexByCharacter(char)
+          const expectedItemId = defaultIds.getItemId(
+            getItemIndexByCharacter(char, firstMatchIndex + 1),
+          )
+          renderSelect({
+            isItemDisabled(_item, index) {
+              return index === firstMatchIndex
+            },
+          })
+
+          await keyDownOnToggleButton(char)
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            expectedItemId,
+          )
+          expect(getItems()).toHaveLength(items.length)
+        })
       })
 
       describe('arrow up', () => {

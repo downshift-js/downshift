@@ -161,7 +161,6 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowDown,
           altKey: event.altKey,
-          getItemNodeFromIndex,
         })
       },
       ArrowUp(event) {
@@ -169,7 +168,6 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowUp,
           altKey: event.altKey,
-          getItemNodeFromIndex,
         })
       },
       Home(event) {
@@ -180,7 +178,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownHome,
-          getItemNodeFromIndex,
         })
       },
       End(event) {
@@ -191,7 +188,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnd,
-          getItemNodeFromIndex,
         })
       },
       Escape(event) {
@@ -222,7 +218,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnter,
-          getItemNodeFromIndex,
         })
       },
       PageUp(event) {
@@ -231,7 +226,6 @@ function useCombobox(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.InputKeyDownPageUp,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -241,12 +235,11 @@ function useCombobox(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.InputKeyDownPageDown,
-            getItemNodeFromIndex,
           })
         }
       },
     }),
-    [dispatch, latest, getItemNodeFromIndex],
+    [dispatch, latest],
   )
 
   // Getter props.

@@ -25,7 +25,7 @@ export default function downshiftUseComboboxReducer(state, action) {
             1,
             props.items,
             props.isItemDisabled,
-            true
+            true,
           ),
         }
       } else {
@@ -33,12 +33,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           highlightedIndex:
             altKey && state.selectedItem == null
               ? -1
-              : getHighlightedIndexOnOpen(
-                  props,
-                  state,
-                  1,
-                  action.getItemNodeFromIndex,
-                ),
+              : getHighlightedIndexOnOpen(props, state, 1),
           isOpen: props.items.length >= 0,
         }
       }
@@ -63,18 +58,13 @@ export default function downshiftUseComboboxReducer(state, action) {
               -1,
               props.items,
               props.isItemDisabled,
-              true
+              true,
             ),
           }
         }
       } else {
         changes = {
-          highlightedIndex: getHighlightedIndexOnOpen(
-            props,
-            state,
-            -1,
-            action.getItemNodeFromIndex,
-          ),
+          highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
           isOpen: props.items.length >= 0,
         }
       }
@@ -106,7 +96,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           -10,
           props.items,
           props.isItemDisabled,
-          true
+          true,
         ),
       }
       break
@@ -117,7 +107,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           10,
           props.items,
           props.isItemDisabled,
-          true
+          true,
         ),
       }
       break
