@@ -34,6 +34,7 @@ export function getItemIndexByCharacterKey<Item>({
 
 const propTypes = {
   items: PropTypes.array.isRequired,
+  isItemDisabled: PropTypes.func,
   itemToString: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
