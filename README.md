@@ -57,7 +57,7 @@ has been around for a while. It established a successful pattern for making
 components accessible and functional while giving developers complete freedom
 when building the UI.
 
-Both _useSelect_ and _useCombobox_ support he latest ARIA combobox patterns for
+Both _useSelect_ and _useCombobox_ support the latest ARIA combobox patterns for
 W3C, which _Downshift_ does not. Consequently, we strongly recommend the you use
 the hooks. The hooks have been migrated to the ARIA 1.2 combobox pattern in the
 version 7 of _downshift_. There is a [Migration Guide][migration-guide-v7] that
