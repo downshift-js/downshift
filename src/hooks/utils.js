@@ -305,7 +305,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
  * @param {Function} handleBlur Handler on blur from mouse or touch.
  * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
- function useMouseAndTouchTracker(
+function useMouseAndTouchTracker(
   isOpen,
   downshiftElementRefs,
   environment,
@@ -317,6 +317,11 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   })
 
   useEffect(() => {
+    /* istanbul ignore if (react-native) */
+    if (isReactNative) {
+      return
+    }
+
     // The same strategy for checking if a click occurred inside or outside downsift
     // as in downshift.js.
     const onMouseDown = () => {
@@ -362,6 +367,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
     environment.addEventListener('touchmove', onTouchMove)
     environment.addEventListener('touchend', onTouchEnd)
 
+    // eslint-disable-next-line consistent-return
     return function cleanup() {
       environment.removeEventListener('mousedown', onMouseDown)
       environment.removeEventListener('mouseup', onMouseUp)
