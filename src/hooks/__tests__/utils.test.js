@@ -1,8 +1,10 @@
+import {renderHook} from '@testing-library/react-hooks'
 import {
   getItemIndex,
   defaultProps,
   getInitialValue,
   getDefaultValue,
+  useMouseAndTouchTracker,
 } from '../utils'
 
 describe('utils', () => {
@@ -62,5 +64,78 @@ describe('utils', () => {
     )
 
     expect(value).toEqual(defaults.bogusValue)
+  })
+
+  describe('useMouseAndTouchTracker', () => {
+    test('renders without error', () => {
+      expect(() => {
+        renderHook(() =>
+          useMouseAndTouchTracker(false, [], undefined, jest.fn()),
+        )
+      }).not.toThrowError()
+    })
+
+    test('adds and removes listeners to environment', () => {
+      const environment = {
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      }
+
+      const {unmount, result} = renderHook(() =>
+        useMouseAndTouchTracker(false, [], environment, jest.fn()),
+      )
+
+      expect(environment.addEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'mousedown',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'mouseup',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchstart',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchmove',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchend',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).not.toHaveBeenCalled()
+
+      unmount()
+
+      expect(environment.addEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'mousedown',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'mouseup',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchstart',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchmove',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchend',
+        expect.any(Function),
+      )
+
+      expect(result.current).toEqual({
+        current: {isMouseDown: false, isTouchMove: false},
+      })
+    })
   })
 })

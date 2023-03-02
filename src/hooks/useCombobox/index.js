@@ -148,10 +148,10 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     if (!isOpen) {
       itemRefs.current = {}
-    } else if (document.activeElement !== inputRef.current) {
+    } else if (environment.document?.activeElement !== inputRef.current) {
       inputRef?.current?.focus()
     }
-  }, [isOpen])
+  }, [isOpen, environment])
 
   /* Event handler functions */
   const inputKeyDownHandlers = useMemo(

@@ -317,12 +317,11 @@ function useMouseAndTouchTracker(
   })
 
   useEffect(() => {
-    /* istanbul ignore if (react-native) */
-    if (isReactNative) {
+    if (environment?.addEventListener == null) {
       return
     }
 
-    // The same strategy for checking if a click occurred inside or outside downsift
+    // The same strategy for checking if a click occurred inside or outside downshift
     // as in downshift.js.
     const onMouseDown = () => {
       mouseAndTouchTrackersRef.current.isMouseDown = true
