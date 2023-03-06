@@ -18,6 +18,7 @@ import {
   debounce,
   normalizeArrowKey,
 } from '../../utils'
+import {isReactNative} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {validatePropTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -354,7 +355,7 @@ function useSelect(userProps = {}) {
   )
   const getToggleButtonProps = useCallback(
     (
-      {onBlur, onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+      {onBlur, onClick, onPress, onKeyDown, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
       const latestState = latest.current.state
@@ -405,14 +406,22 @@ function useSelect(userProps = {}) {
       }
 
       if (!rest.disabled) {
-        toggleProps.onClick = callAllEventHandlers(
-          onClick,
-          toggleButtonHandleClick,
-        )
-        toggleProps.onKeyDown = callAllEventHandlers(
-          onKeyDown,
-          toggleButtonHandleKeyDown,
-        )
+        /* istanbul ignore if (react-native) */
+        if (isReactNative) {
+          toggleProps.onPress = callAllEventHandlers(
+            onPress,
+            toggleButtonHandleClick,
+          )
+        } else {
+          toggleProps.onClick = callAllEventHandlers(
+            onClick,
+            toggleButtonHandleClick,
+          )
+          toggleProps.onKeyDown = callAllEventHandlers(
+            onKeyDown,
+            toggleButtonHandleKeyDown,
+          )
+        }
       }
 
       setGetterPropCallInfo(
@@ -440,6 +449,7 @@ function useSelect(userProps = {}) {
       index: indexProp,
       onMouseMove,
       onClick,
+      onPress,
       refKey = 'ref',
       ref,
       disabled,
@@ -485,8 +495,14 @@ function useSelect(userProps = {}) {
       }
 
       if (!disabled) {
-        itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+        /* istanbul ignore next (react-native) */
+        if (isReactNative) {
+          itemProps.onPress = callAllEventHandlers(onPress, itemHandleClick)
+        } else {
+          itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+        }
       }
+
       itemProps.onMouseMove = callAllEventHandlers(
         onMouseMove,
         itemHandleMouseMove,
