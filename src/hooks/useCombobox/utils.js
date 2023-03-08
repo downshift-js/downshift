@@ -105,7 +105,7 @@ function useControlledReducer(reducer, initialState, props) {
           ? props.selectedItem
           : state.selectedItem
     }
-  })
+  }, [props.selectedItem, state.selectedItem])
 
   return [getState(state, props), dispatch]
 }
