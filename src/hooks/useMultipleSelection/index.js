@@ -1,4 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
+import {isReactNative} from '../../is.macro'
 import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {
@@ -53,7 +54,7 @@ function useMultipleSelection(userProps = {}) {
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (isInitialMountRef.current) {
+    if (isInitialMountRef.current || isReactNative) {
       return
     }
 
