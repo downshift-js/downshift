@@ -383,6 +383,14 @@ reset or when an item is selected.
 Pass a string that sets the content of the input when downshift is reset or when
 an item is selected.
 
+### selectedItemChanged
+
+> `function(prevItem: any, item: any)` | defaults to:
+> `(prevItem, item) => (prevItem !== item)`
+
+Used to determine if the new `selectedItem` has changed compared to the previous
+`selectedItem` and properly update Downshift's internal state.
+
 ### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English

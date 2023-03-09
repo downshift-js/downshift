@@ -37,6 +37,7 @@ function getInitialState(props) {
 const propTypes = {
   items: PropTypes.array.isRequired,
   itemToString: PropTypes.func,
+  selectedItemChanged: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
   highlightedIndex: PropTypes.number,
@@ -92,20 +93,28 @@ function useControlledReducer(reducer, initialState, props) {
 
   // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
   useEffect(() => {
-    if (isControlledProp(props, 'selectedItem')) {
-      if (previousSelectedItemRef.current !== props.selectedItem) {
-        dispatch({
-          type: ControlledPropUpdatedSelectedItem,
-          inputValue: props.itemToString(props.selectedItem),
-        })
-      }
-
-      previousSelectedItemRef.current =
-        state.selectedItem === previousSelectedItemRef.current
-          ? props.selectedItem
-          : state.selectedItem
+    if (!isControlledProp(props, 'selectedItem')) {
+      return
     }
-  }, [props.selectedItem, state.selectedItem])
+
+    if (
+      props.selectedItemChanged(
+        previousSelectedItemRef.current,
+        props.selectedItem,
+      )
+    ) {
+      dispatch({
+        type: ControlledPropUpdatedSelectedItem,
+        inputValue: props.itemToString(props.selectedItem),
+      })
+    }
+
+    previousSelectedItemRef.current =
+      state.selectedItem === previousSelectedItemRef.current
+        ? props.selectedItem
+        : state.selectedItem
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.selectedItem, props.selectedItem])
 
   return [getState(state, props), dispatch]
 }
@@ -121,6 +130,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const defaultProps = {
   ...defaultPropsCommon,
+  selectedItemChanged: (prevItem, item) => prevItem !== item,
   getA11yStatusMessage,
 }
 
