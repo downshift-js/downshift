@@ -426,6 +426,7 @@ export enum UseComboboxStateChangeTypes {
 export interface UseComboboxProps<Item> {
   items: Item[]
   itemToString?: (item: Item | null) => string
+  selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   highlightedIndex?: number
