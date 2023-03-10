@@ -4,10 +4,10 @@ import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {
   useControlledReducer,
-  getItemIndex,
   useGetterPropsCalledChecker,
   useLatestRef,
   useControlPropsValidator,
+  getItemAndIndex,
 } from '../utils'
 import {
   getInitialState,
@@ -159,21 +159,18 @@ function useMultipleSelection(userProps = {}) {
       ref,
       onClick,
       onKeyDown,
-      selectedItem,
-      index,
+      selectedItem: selectedItemProp,
+      index: indexProp,
       ...rest
     } = {}) => {
       const {state: latestState} = latest.current
-      const itemIndex = getItemIndex(
-        index,
-        selectedItem,
+      const [, index] = getItemAndIndex(
+        selectedItemProp,
+        indexProp,
         latestState.selectedItems,
+        'Pass either item or index to getSelectedItemProps!',
       )
-      if (itemIndex < 0) {
-        throw new Error(
-          'Pass either selectedItem or index in getSelectedItemProps!',
-        )
-      }
+      const isFocusable = index > -1 && index === latestState.activeIndex
 
       const selectedItemHandleClick = () => {
         dispatch({
@@ -194,7 +191,7 @@ function useMultipleSelection(userProps = {}) {
             selectedItemRefs.current.push(selectedItemNode)
           }
         }),
-        tabIndex: index === latestState.activeIndex ? 0 : -1,
+        tabIndex: isFocusable ? 0 : -1,
         onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
         onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
         ...rest,

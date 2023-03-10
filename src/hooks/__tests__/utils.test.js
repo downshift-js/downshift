@@ -1,10 +1,10 @@
 import {renderHook} from '@testing-library/react-hooks'
 import {
-  getItemIndex,
   defaultProps,
   getInitialValue,
   getDefaultValue,
   useMouseAndTouchTracker,
+  getItemAndIndex,
 } from '../utils'
 
 describe('utils', () => {
@@ -15,21 +15,35 @@ describe('utils', () => {
     })
   })
 
-  describe('getItemIndex', () => {
-    test('returns -1 if no items', () => {
-      const index = getItemIndex(undefined, {}, [])
-      expect(index).toBe(-1)
+  describe('getItemAndIndex', () => {
+    test('returns arguments if passed as defined', () => {
+      expect(getItemAndIndex({}, 5, [])).toEqual([{}, 5])
     })
 
-    test('returns index if passed', () => {
-      const index = getItemIndex(5, {}, [])
-      expect(index).toBe(5)
+    test('throws an error when item and index are not passed', () => {
+      const errorMessage = 'Pass either item or index to the item getter prop!'
+
+      expect(() =>
+        getItemAndIndex(undefined, undefined, [1, 2, 3], errorMessage),
+      ).toThrowError(errorMessage)
     })
 
-    test('returns index of item', () => {
+    test('returns index if item is passed', () => {
+      const item = {}
+
+      expect(getItemAndIndex(item, undefined, [{x: 1}, item, {x: 2}])).toEqual([
+        item,
+        1,
+      ])
+    })
+
+    test('returns item if index is passed', () => {
+      const index = 2
       const item = {x: 2}
-      const index = getItemIndex(undefined, item, [{x: 1}, item, {x: 2}])
-      expect(index).toBe(1)
+      expect(getItemAndIndex(undefined, 2, [{x: 1}, {x: 3}, item])).toEqual([
+        item,
+        index,
+      ])
     })
   })
 

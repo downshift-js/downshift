@@ -3,7 +3,6 @@ import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
-  getItemIndex,
   useA11yMessageSetter,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
@@ -11,6 +10,7 @@ import {
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
+  getItemAndIndex,
 } from '../utils'
 import {
   getInitialState,
@@ -284,8 +284,8 @@ function useCombobox(userProps = {}) {
 
   const getItemProps = useCallback(
     ({
-      item,
-      index,
+      item: itemProp,
+      index: indexProp,
       refKey = 'ref',
       ref,
       onMouseMove,
@@ -296,10 +296,12 @@ function useCombobox(userProps = {}) {
       ...rest
     } = {}) => {
       const {props: latestProps, state: latestState} = latest.current
-      const itemIndex = getItemIndex(index, item, latestProps.items)
-      if (itemIndex < 0) {
-        throw new Error('Pass either item or item index in getItemProps!')
-      }
+      const [, index] = getItemAndIndex(
+        itemProp,
+        indexProp,
+        latestProps.items,
+        'Pass either item or index to getItemProps!',
+      )
 
       const onSelectKey = isReactNative
         ? /* istanbul ignore next (react-native) */ 'onPress'
@@ -330,13 +332,13 @@ function useCombobox(userProps = {}) {
       return {
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
         disabled,
         role: 'option',
-        'aria-selected': `${itemIndex === latestState.highlightedIndex}`,
-        id: elementIds.getItemId(itemIndex),
+        'aria-selected': `${index === latestState.highlightedIndex}`,
+        id: elementIds.getItemId(index),
         ...(!disabled && {
           [onSelectKey]: callAllEventHandlers(
             customClickHandler,

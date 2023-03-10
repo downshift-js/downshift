@@ -1,6 +1,6 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  getItemIndex,
+  getItemAndIndex,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
@@ -456,8 +456,12 @@ function useSelect(userProps = {}) {
       ...rest
     } = {}) => {
       const {state: latestState, props: latestProps} = latest.current
-      const item = itemProp ?? items[indexProp]
-      const index = getItemIndex(indexProp, item, latestProps.items)
+      const [item, index] = getItemAndIndex(
+        itemProp,
+        indexProp,
+        latestProps.items,
+        'Pass either item or index to getItemProps!',
+      )
 
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
@@ -477,18 +481,14 @@ function useSelect(userProps = {}) {
         })
       }
 
-      const itemIndex = getItemIndex(index, item, latestProps.items)
-      if (itemIndex < 0) {
-        throw new Error('Pass either item or item index in getItemProps!')
-      }
       const itemProps = {
         disabled,
         role: 'option',
         'aria-selected': `${item === selectedItem}`,
-        id: elementIds.getItemId(itemIndex),
+        id: elementIds.getItemId(index),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
         ...rest,
@@ -510,7 +510,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, items, selectedItem, elementIds, shouldScrollRef, dispatch],
+    [latest, selectedItem, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

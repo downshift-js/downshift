@@ -112,14 +112,22 @@ function useElementIds({
   return elementIdsRef.current
 }
 
-function getItemIndex(index, item, items) {
-  if (index !== undefined) {
-    return index
+function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
+  let item, index
+
+  if (itemProp === undefined) {
+    if (indexProp === undefined) {
+      throw new Error(errorMessage)
+    }
+
+    item = items[indexProp]
+    index = indexProp
+  } else {
+    index = indexProp === undefined ? items.indexOf(itemProp) : indexProp
+    item = itemProp
   }
-  if (items.length === 0) {
-    return -1
-  }
-  return items.indexOf(item)
+
+  return [item, index]
 }
 
 function itemToString(item) {
@@ -532,6 +540,6 @@ export {
   useLatestRef,
   capitalizeString,
   isAcceptedCharacterKey,
-  getItemIndex,
+  getItemAndIndex,
   useElementIds,
 }
