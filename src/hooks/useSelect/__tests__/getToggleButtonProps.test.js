@@ -18,7 +18,12 @@ import {
   tab,
 } from '../testUtils'
 import utils from '../../utils'
-import {items, defaultIds} from '../../testUtils'
+import {
+  items,
+  defaultIds,
+  mouseMoveItemAtIndex,
+  mouseLeaveItemAtIndex,
+} from '../../testUtils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
 
@@ -795,6 +800,61 @@ describe('getToggleButtonProps', () => {
             defaultIds.getItemId(items.length - 1),
           )
         })
+
+        test('with Alt selects highlighted item and resets to user defaults', async () => {
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+          })
+          const toggleButton = getToggleButton()
+
+          await keyDownOnToggleButton('{Alt>}{ArrowUp}{/Alt}')
+
+          expect(toggleButton).toHaveTextContent(items[defaultHighlightedIndex])
+          expect(getItems()).toHaveLength(items.length)
+          expect(toggleButton).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('with Alt closes the menu without resetting to user defaults if no item is highlighted', async () => {
+          const defaultHighlightedIndex = 2
+          const initialSelectedItem = items[0]
+          renderSelect({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+          })
+          const toggleButton = getToggleButton()
+
+          await mouseMoveItemAtIndex(defaultHighlightedIndex)
+          await mouseLeaveItemAtIndex(defaultHighlightedIndex)
+          await keyDownOnToggleButton('{Alt>}{ArrowUp}{/Alt}')
+
+          expect(toggleButton).toHaveTextContent(initialSelectedItem)
+          expect(getItems()).toHaveLength(0)
+          expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+        })
+
+        test('with Alt closes the menu without resetting to user defaults if the list is empty', async () => {
+          const defaultHighlightedIndex = 2
+          const initialSelectedItem = items[0]
+          renderSelect({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+            items: [],
+          })
+          const toggleButton = getToggleButton()
+
+          await keyDownOnToggleButton('{Alt>}{ArrowUp}{/Alt}')
+
+          expect(toggleButton).toHaveTextContent(initialSelectedItem)
+          expect(getItems()).toHaveLength(0)
+          expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+        })
       })
 
       describe('arrow down', () => {
@@ -1122,6 +1182,43 @@ describe('getToggleButtonProps', () => {
         )
       })
 
+      test('enter closes the menu without resetting to user defaults if no item is highlighted', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+        renderSelect({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+          initialSelectedItem,
+        })
+        const toggleButton = getToggleButton()
+
+        await mouseMoveItemAtIndex(defaultHighlightedIndex)
+        await mouseLeaveItemAtIndex(defaultHighlightedIndex)
+        await keyDownOnToggleButton('{Enter}')
+
+        expect(toggleButton).toHaveTextContent(initialSelectedItem)
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('enter closes the menu without resetting to user defaults if the list is empty', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+        renderSelect({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+          initialSelectedItem,
+          items: [],
+        })
+        const toggleButton = getToggleButton()
+
+        await keyDownOnToggleButton('{Enter}')
+
+        expect(toggleButton).toHaveTextContent(initialSelectedItem)
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
       test('enter prevents the default event behavior with the menu open', () => {
         renderSelect({isOpen: true})
         const toggleButton = getToggleButton()
@@ -1186,6 +1283,43 @@ describe('getToggleButtonProps', () => {
         )
       })
 
+      test('space closes the menu without resetting to user defaults if no item is highlighted', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+        renderSelect({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+          initialSelectedItem,
+        })
+        const toggleButton = getToggleButton()
+
+        await mouseMoveItemAtIndex(defaultHighlightedIndex)
+        await mouseLeaveItemAtIndex(defaultHighlightedIndex)
+        await keyDownOnToggleButton(' ')
+
+        expect(toggleButton).toHaveTextContent(initialSelectedItem)
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('space closes the menu without resetting to user defaults if the list is empty', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+        renderSelect({
+          defaultHighlightedIndex,
+          defaultIsOpen: true,
+          initialSelectedItem,
+          items: [],
+        })
+        const toggleButton = getToggleButton()
+
+        await keyDownOnToggleButton(' ')
+
+        expect(toggleButton).toHaveTextContent(initialSelectedItem)
+        expect(getItems()).toHaveLength(0)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
       test('space prevents the default event behavior when select is open', () => {
         renderSelect({isOpen: true})
         const toggleButton = getToggleButton()
@@ -1236,6 +1370,63 @@ describe('getToggleButtonProps', () => {
           items[initialHighlightedIndex],
         )
         expect(screen.getByTestId(secondFocusableItemTestId)).toHaveFocus()
+      })
+
+      test('tab closes the menu if there is no highlighted item', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+
+        renderSelect(
+          {
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+          },
+          ui => {
+            return (
+              <>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
+        )
+
+        await tab()
+        await mouseMoveItemAtIndex(defaultHighlightedIndex)
+        await mouseLeaveItemAtIndex(defaultHighlightedIndex)
+        await tab()
+
+        expect(getItems()).toHaveLength(0)
+        expect(getToggleButton()).toHaveTextContent(initialSelectedItem)
+      })
+
+      test('tab closes the menu if there is no items', async () => {
+        const defaultHighlightedIndex = 2
+        const initialSelectedItem = items[0]
+
+        renderSelect(
+          {
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+            items: [],
+          },
+          ui => {
+            return (
+              <>
+                {ui}
+                <div tabIndex={0}>Second element</div>
+              </>
+            )
+          },
+        )
+
+        await tab()
+        await tab()
+
+        expect(getItems()).toHaveLength(0)
+        expect(getToggleButton()).toHaveTextContent(initialSelectedItem)
       })
 
       test('shift+tab closes the menu and selects highlighted item', async () => {

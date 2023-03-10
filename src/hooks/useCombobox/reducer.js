@@ -1,4 +1,8 @@
-import {getHighlightedIndexOnOpen, getDefaultValue} from '../utils'
+import {
+  getHighlightedIndexOnOpen,
+  getDefaultValue,
+  getChangesOnSelection,
+} from '../utils'
 import {getNextWrappingIndex, getNextNonDisabledIndex} from '../../utils'
 import commonReducer from '../reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -46,16 +50,7 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputKeyDownArrowUp:
       if (state.isOpen) {
         if (altKey) {
-          changes = {
-            isOpen: getDefaultValue(props, 'isOpen'),
-            highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-            ...(state.highlightedIndex >= 0 && {
-              selectedItem: props.items[state.highlightedIndex],
-              inputValue: props.itemToString(
-                props.items[state.highlightedIndex],
-              ),
-            }),
-          }
+          changes = getChangesOnSelection(props, state.highlightedIndex)
         } else {
           changes = {
             highlightedIndex: getNextWrappingIndex(
@@ -80,14 +75,8 @@ export default function downshiftUseComboboxReducer(state, action) {
       }
       break
     case stateChangeTypes.InputKeyDownEnter:
-      changes = {
-        isOpen: getDefaultValue(props, 'isOpen'),
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-        ...(state.highlightedIndex >= 0 && {
-          selectedItem: props.items[state.highlightedIndex],
-          inputValue: props.itemToString(props.items[state.highlightedIndex]),
-        }),
-      }
+      changes = getChangesOnSelection(props, state.highlightedIndex)
+
       break
     case stateChangeTypes.InputKeyDownEscape:
       changes = {
@@ -148,6 +137,7 @@ export default function downshiftUseComboboxReducer(state, action) {
         isOpen: false,
         highlightedIndex: -1,
         ...(state.highlightedIndex >= 0 &&
+          props.items?.length &&
           action.selectItem && {
             selectedItem: props.items[state.highlightedIndex],
             inputValue: props.itemToString(props.items[state.highlightedIndex]),

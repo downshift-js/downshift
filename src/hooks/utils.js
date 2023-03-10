@@ -305,7 +305,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
  * @param {Function} handleBlur Handler on blur from mouse or touch.
  * @returns {Object} Ref containing whether mouseDown or touchMove event is happening
  */
- function useMouseAndTouchTracker(
+function useMouseAndTouchTracker(
   isOpen,
   downshiftElementRefs,
   environment,
@@ -511,6 +511,31 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+/**
+ * Handles selection on Enter / Alt + ArrowUp. Closes the menu and resets the highlighted index, unless there is a highlighted.
+ * In that case, selects the item and resets to defaults for open state and highlighted idex.
+ * @param {Object} props The useCombobox props.
+ * @param {number} highlightedIndex The index from the state.
+ * @param {boolean} inputValue Also return the input value for state.
+ * @returns The changes for the state.
+ */
+function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
+  const shouldSelect = props.items?.length && highlightedIndex >= 0
+
+  return {
+    isOpen: false,
+    highlightedIndex: -1,
+    ...(shouldSelect && {
+      selectedItem: props.items[highlightedIndex],
+      isOpen: getDefaultValue(props, 'isOpen'),
+      highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+      ...(inputValue && {
+        inputValue: props.itemToString(props.items[highlightedIndex]),
+      }),
+    }),
+  }
+}
+
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -529,4 +554,5 @@ export {
   isAcceptedCharacterKey,
   getItemIndex,
   useElementIds,
+  getChangesOnSelection,
 }

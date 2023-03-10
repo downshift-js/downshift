@@ -950,7 +950,7 @@ described below.
 - `Alt+ArrowUp`: If the menu is open, it will close it and will select the item
   that was highlighted.
 - `CharacterKey`: Will change the `inputValue` according to the value visible in
-  the `<input>`. `Backspace` or `Space` triggere the same event.
+  the `<input>`. `Backspace` or `Space` trigger the same event.
 - `End`: If the menu is open, it will highlight the last item in the list.
 - `Home`: If the menu is open, it will highlight the first item in the list.
 - `PageUp`: If the menu is open, it will move the highlight the item 10

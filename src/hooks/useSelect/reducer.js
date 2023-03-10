@@ -1,5 +1,9 @@
 import {getNextWrappingIndex, getNextNonDisabledIndex} from '../../utils'
-import {getHighlightedIndexOnOpen, getDefaultValue} from '../utils'
+import {
+  getHighlightedIndexOnOpen,
+  getDefaultValue,
+  getChangesOnSelection,
+} from '../utils'
 import commonReducer from '../reducer'
 import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -64,13 +68,7 @@ export default function downshiftSelectReducer(state, action) {
       break
     case stateChangeTypes.ToggleButtonKeyDownArrowUp:
       if (state.isOpen && altKey) {
-        changes = {
-          isOpen: getDefaultValue(props, 'isOpen'),
-          highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-          ...(state.highlightedIndex >= 0 && {
-            selectedItem: props.items[state.highlightedIndex],
-          }),
-        }
+        changes = getChangesOnSelection(props, state.highlightedIndex, false)
       } else {
         const highlightedIndex = state.isOpen
           ? getNextWrappingIndex(
@@ -91,13 +89,7 @@ export default function downshiftSelectReducer(state, action) {
     // only triggered when menu is open.
     case stateChangeTypes.ToggleButtonKeyDownEnter:
     case stateChangeTypes.ToggleButtonKeyDownSpaceButton:
-      changes = {
-        isOpen: getDefaultValue(props, 'isOpen'),
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
-        ...(state.highlightedIndex >= 0 && {
-          selectedItem: props.items[state.highlightedIndex],
-        }),
-      }
+      changes = getChangesOnSelection(props, state.highlightedIndex, false)
 
       break
     case stateChangeTypes.ToggleButtonKeyDownHome:
@@ -159,9 +151,10 @@ export default function downshiftSelectReducer(state, action) {
       changes = {
         isOpen: false,
         highlightedIndex: -1,
-        ...(state.highlightedIndex >= 0 && {
-          selectedItem: props.items[state.highlightedIndex],
-        }),
+        ...(state.highlightedIndex >= 0 &&
+          props.items?.length && {
+            selectedItem: props.items[state.highlightedIndex],
+          }),
       }
 
       break

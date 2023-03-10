@@ -13,7 +13,7 @@ import {
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
-function getInitialState(props) {
+export function getInitialState(props) {
   const initialState = getInitialStateCommon(props)
   const {selectedItem} = initialState
   let {inputValue} = initialState
@@ -86,7 +86,7 @@ const propTypes = {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useControlledReducer(reducer, initialState, props) {
+export function useControlledReducer(reducer, initialState, props) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
@@ -111,7 +111,7 @@ function useControlledReducer(reducer, initialState, props) {
 }
 
 // eslint-disable-next-line import/no-mutable-exports
-let validatePropTypes = noop
+export let validatePropTypes = noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   validatePropTypes = (options, caller) => {
@@ -119,9 +119,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const defaultProps = {
+export const defaultProps = {
   ...defaultPropsCommon,
   getA11yStatusMessage,
 }
-
-export {validatePropTypes, useControlledReducer, getInitialState, defaultProps}
