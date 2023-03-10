@@ -18,7 +18,7 @@ describe('getSelectedItemProps', () => {
     const {result} = renderUseMultipleSelection()
 
     expect(result.current.getSelectedItemProps).toThrowError(
-      'Pass either selectedItem or index in getSelectedItemProps!',
+      'Pass either item or index to getSelectedItemProps!',
     )
   })
 
