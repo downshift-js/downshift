@@ -505,7 +505,7 @@ class Downshift extends Component {
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
-      'aria-owns': isOpen ? this.menuId : null,
+      'aria-owns': isOpen ? this.menuId : undefined,
       'aria-labelledby': this.labelId,
       ...rest,
     }

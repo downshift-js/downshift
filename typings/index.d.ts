@@ -107,6 +107,15 @@ type StateChangeFunction<Item> = (
 
 export interface GetRootPropsOptions {
   refKey?: string
+  ref?: React.RefObject
+}
+
+export interface GetRootPropsReturnValue {
+  role: string
+  'aria-expanded': boolean
+  'aria-haspopup': 'listbox'
+  'aria-labelledby': string
+  'aria-owns': string | undefined
 }
 
 export interface GetInputPropsOptions
@@ -116,6 +125,11 @@ export interface GetInputPropsOptions
 
 export interface GetLabelPropsOptions
   extends React.HTMLProps<HTMLLabelElement> {}
+
+export interface GetLabelPropsReturnValue {
+  htmlFor: string
+  id: string
+}
 
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
@@ -145,12 +159,14 @@ export interface GetItemPropsOptions<Item>
 }
 
 export interface PropGetters<Item> {
-  getRootProps: (
-    options?: GetRootPropsOptions,
+  getRootProps: <Options>(
+    options?: Options & GetRootPropsOptions,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
+  ) => Options & GetRootPropsReturnValue
   getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
-  getLabelProps: (options?: GetLabelPropsOptions) => any
+  getLabelProps: <Options>(
+    options?: Options & GetLabelPropsOptions,
+  ) => GetLabelPropsReturnValue & Options
   getMenuProps: (
     options?: GetMenuPropsOptions,
     otherOptions?: GetPropsCommonOptions,
