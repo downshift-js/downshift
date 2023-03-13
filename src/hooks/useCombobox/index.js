@@ -416,7 +416,7 @@ function useCombobox(userProps = {}) {
             : event.target.value,
         })
       }
-      const inputHandleBlur = () => {
+      const inputHandleBlur = event => {
         /* istanbul ignore else */
         if (
           latestState.isOpen &&
@@ -424,7 +424,7 @@ function useCombobox(userProps = {}) {
         ) {
           dispatch({
             type: stateChangeTypes.InputBlur,
-            selectItem: true,
+            selectItem: event.relatedTarget !== null,
           })
         }
       }

@@ -1460,6 +1460,38 @@ describe('getInputProps', () => {
           }),
         )
       })
+
+      test('the open menu will be closed and highlighted item will not be selected if the blur event related target is null', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        const {container} = renderCombobox({
+          isOpen: true,
+          highlightedIndex: 0,
+          stateReducer,
+        })
+        const input = getInput()
+        document.body.appendChild(container)
+
+        fireEvent.blur(input, {relatedTarget: null})
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
+        )
+      })
     })
 
     describe('on focus', () => {
