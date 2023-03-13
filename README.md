@@ -300,7 +300,7 @@ how the component interacts with user updates without having to use
 that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
-- `changes`: These are the properties that are about to change. This also has a
+- `actionAndChanges`: An object that contains a `changes` property that are the changes about to happen. It also has a
   `type` property which you can learn more about in the
   [`stateChangeTypes`](#statechangetypes) section.
 
@@ -309,9 +309,11 @@ const ui = (
   <Downshift stateReducer={stateReducer}>{/* your callback */}</Downshift>
 )
 
-function stateReducer(state, changes) {
+function stateReducer(state, actionAndChanges) {
   // this prevents the menu from being closed when the user
   // selects an item with a keyboard or mouse
+  const {type, changes} = actionAndChanges;
+  
   switch (changes.type) {
     case Downshift.stateChangeTypes.keyDownEnter:
     case Downshift.stateChangeTypes.clickItem:
