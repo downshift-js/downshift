@@ -1,6 +1,9 @@
 import * as React from 'react'
+import * as ReactNative from 'react-native'
 
 type Callback = () => void
+
+type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
 
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
@@ -136,6 +139,18 @@ export interface GetToggleButtonPropsOptions
   disabled?: boolean
 }
 
+interface GetToggleButtonPropsReturnValue {
+  type: 'button'
+  role: 'button'
+  'aria-label': 'close menu' | 'open menu'
+  'aria-haspopup': true
+  'data-toggle': true
+  onPress?: (event: ReactNative.GestureResponderEvent) => void
+  onClick?: React.MouseEventHandler
+  onKeyDown?: React.KeyboardEventHandler
+  onKeyUp?: React.KeyboardEventHandler
+  onBlur?: React.FocusEventHandler
+}
 export interface GetMenuPropsOptions
   extends React.HTMLProps<HTMLElement>,
     GetPropsWithRefKey {
@@ -160,13 +175,15 @@ export interface GetItemPropsOptions<Item>
 
 export interface PropGetters<Item> {
   getRootProps: <Options>(
-    options?: Options & GetRootPropsOptions,
+    options?: Overwrite<GetRootPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => Options & GetRootPropsReturnValue
-  getToggleButtonProps: (options?: GetToggleButtonPropsOptions) => any
+  ) => Overwrite<GetRootPropsReturnValue, Options>
+  getToggleButtonProps: <Options>(
+    options?: Overwrite<GetToggleButtonPropsOptions, Options>,
+  ) => Overwrite<GetToggleButtonPropsReturnValue, Options>
   getLabelProps: <Options>(
-    options?: Options & GetLabelPropsOptions,
-  ) => GetLabelPropsReturnValue & Options
+    options?: Overwrite<GetLabelPropsOptions, Options>,
+  ) => Overwrite<GetLabelPropsReturnValue, Options>
   getMenuProps: (
     options?: GetMenuPropsOptions,
     otherOptions?: GetPropsCommonOptions,
