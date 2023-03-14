@@ -1390,6 +1390,16 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "aliceHendicott",
+      "name": "Alice Hendicott",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40346716?v=4",
+      "profile": "https://github.com/aliceHendicott",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
