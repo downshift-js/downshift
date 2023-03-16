@@ -114,16 +114,32 @@ export interface GetRootPropsOptions {
 }
 
 export interface GetRootPropsReturnValue {
-  role: string
   'aria-expanded': boolean
   'aria-haspopup': 'listbox'
   'aria-labelledby': string
   'aria-owns': string | undefined
+  ref?: React.RefObject
+  role: 'combobox'
 }
 
 export interface GetInputPropsOptions
   extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
+}
+
+export interface GetInputPropsReturnValue {
+  'aria-autocomplete': 'list'
+  'aria-activedescendant': string | undefined
+  'aria-controls': string | undefined
+  'aria-labelledby': string
+  autoComplete: 'off'
+  value: string
+  id: string
+  onChange?: React.ChangeEventHandler
+  onChangeText?: React.ChangeEventHandler
+  onInput?: React.FormEventHandler
+  onKeyDown?: React.KeyboardEventHandler
+  onBlur?: React.FocusEventHandler
 }
 
 export interface GetLabelPropsOptions
@@ -157,6 +173,13 @@ export interface GetMenuPropsOptions
   ['aria-label']?: string
 }
 
+export interface GetMenuPropsReturnValue {
+  ref?: React.RefObject
+  role: 'listbox'
+  'aria-labelledby': string | undefined
+  id: string
+}
+
 export interface GetPropsCommonOptions {
   suppressRefError?: boolean
 }
@@ -173,6 +196,16 @@ export interface GetItemPropsOptions<Item>
   disabled?: boolean
 }
 
+export interface GetItemPropsReturnValue {
+  'aria-selected': boolean
+  id: string
+  role: 'option'
+  onClick?: React.MouseEventHandler
+  onMouseDown?: React.MouseEventHandler
+  onMouseMove?: React.MouseEventHandler
+  onPress?: React.MouseEventHandler
+}
+
 export interface PropGetters<Item> {
   getRootProps: <Options>(
     options?: Overwrite<GetRootPropsOptions, Options>,
@@ -184,12 +217,16 @@ export interface PropGetters<Item> {
   getLabelProps: <Options>(
     options?: Overwrite<GetLabelPropsOptions, Options>,
   ) => Overwrite<GetLabelPropsReturnValue, Options>
-  getMenuProps: (
-    options?: GetMenuPropsOptions,
+  getMenuProps: <Options>(
+    options?: Overwrite<GetMenuPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
-  getInputProps: <T>(options?: T) => T & GetInputPropsOptions
-  getItemProps: (options: GetItemPropsOptions<Item>) => any
+  ) => Overwrite<GetMenuPropsReturnValue, Options>
+  getInputProps: <Options>(
+    options?: Overwrite<GetInputPropsOptions, Options>,
+  ) => Overwrite<GetInputPropsReturnValue, Options>
+  getItemProps: <Options>(
+    options: Overwrite<GetItemPropsOptions<Item>, Options>,
+  ) => Overwrite<GetItemPropsReturnValue<Item>, Options>
 }
 
 export interface Actions<Item> {
