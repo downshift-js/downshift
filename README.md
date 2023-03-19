@@ -747,6 +747,12 @@ Optional properties:
   from `getInputProps` and a `disabled` prop will be returned (effectively
   disabling the input).
 
+- `aria-label`: By default the menu will add an `aria-labelledby` that refers to
+  the `<label>` rendered with `getLabelProps`. However, if you provide
+  `aria-label` to give a more specific label that describes the options
+  available, then `aria-labelledby` will not be provided and screen readers can
+  use your `aria-label` instead.
+
 #### `getLabelProps`
 
 This method should be applied to the `label` you render. It is useful for

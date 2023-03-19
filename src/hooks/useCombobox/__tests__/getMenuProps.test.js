@@ -52,6 +52,15 @@ describe('getMenuProps', () => {
 
       expect(menuProps.role).toEqual('listbox')
     })
+
+    test("do not assign 'aria-labelledby' if it has aria-label", () => {
+      const ariaLabel = 'not so fast'
+      const {result} = renderUseCombobox()
+      const menuProps = result.current.getMenuProps({'aria-label': ariaLabel})
+
+      expect(menuProps['aria-labelledby']).toBeUndefined()
+      expect(menuProps['aria-label']).toBe(ariaLabel)
+    })
   })
 
   describe('user props', () => {

@@ -753,6 +753,12 @@ Optional properties:
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
 
+- `aria-label`: By default the toggle element will add an `aria-labelledby` that
+  refers to the `<label>` rendered with `getLabelProps`. However, if you provide
+  `aria-label` to give a more specific label that describes the options
+  available, then `aria-labelledby` will not be provided and screen readers can
+  use your `aria-label` instead.
+
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
 `getToggleButtonProps`. **Please use it with extreme care and only if you are

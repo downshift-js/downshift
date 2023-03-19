@@ -127,6 +127,15 @@ describe('getToggleButtonProps', () => {
 
       expect(toggleButtonProps['aria-activedescendant']).toEqual('')
     })
+
+    test("do not assign 'aria-labelledby' if it has aria-label", () => {
+      const ariaLabel = 'not so fast'
+      const {result} = renderUseSelect()
+      const menuProps = result.current.getToggleButtonProps({'aria-label': ariaLabel})
+
+      expect(menuProps['aria-labelledby']).toBeUndefined()
+      expect(menuProps['aria-label']).toBe(ariaLabel)
+    })
   })
 
   describe('user props', () => {

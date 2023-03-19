@@ -157,6 +157,15 @@ describe('getInputProps', () => {
       expect(inputProps.onFocus).toBeUndefined()
       expect(inputProps.disabled).toBe(true)
     })
+
+    test("do not assign 'aria-labelledby' if it has aria-label", () => {
+      const ariaLabel = 'not so fast'
+      const {result} = renderUseCombobox()
+      const inputProps = result.current.getInputProps({'aria-label': ariaLabel})
+
+      expect(inputProps['aria-labelledby']).toBeUndefined()
+      expect(inputProps['aria-label']).toBe(ariaLabel)
+    })
   })
 
   describe('user props', () => {

@@ -53,11 +53,13 @@ describe('getMenuProps', () => {
       expect(menuProps.role).toEqual('listbox')
     })
 
-    test("assign '-1' to tabindex", () => {
+    test("do not assign 'aria-labelledby' if it has aria-label", () => {
+      const ariaLabel = 'not so fast'
       const {result} = renderUseSelect()
-      const menuProps = result.current.getMenuProps()
+      const menuProps = result.current.getMenuProps({'aria-label': ariaLabel})
 
-      expect(menuProps.tabIndex).toEqual(-1)
+      expect(menuProps['aria-labelledby']).toBeUndefined()
+      expect(menuProps['aria-label']).toBe(ariaLabel)
     })
   })
 
