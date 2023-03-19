@@ -152,8 +152,8 @@ export interface GetLabelPropsReturnValue {
 
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
-  disabled?: boolean
-}
+    disabled?: boolean
+  }
 
 interface GetToggleButtonPropsReturnValue {
   type: 'button'
@@ -393,27 +393,58 @@ export interface UseSelectGetMenuPropsOptions
   extends GetPropsWithRefKey,
     GetMenuPropsOptions {}
 
+export interface UseSelectGetMenuReturnValue extends GetMenuPropsReturnValue {
+  onMouseLeave: React.MouseEventHandler
+}
+
 export interface UseSelectGetToggleButtonPropsOptions
   extends GetPropsWithRefKey,
-    GetToggleButtonPropsOptions {}
+    React.HTMLProps<HTMLElement> {}
+
+export interface UseSelectGetToggleButtonReturnValue
+  extends Pick<
+    GetToggleButtonPropsReturnValue,
+    'onBlur' | 'onClick' | 'onPress' | 'onKeyDown'
+  > {
+  ref?: React.RefObject
+  'aria-activedescendant': string | undefined
+  'aria-controls': string
+  'aria-expanded': boolean
+  'aria-haspopup': 'listbox'
+  'aria-labelledby': string | undefined
+  id: string
+  role: 'combobox'
+  tabIndex: 0
+}
 
 export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
+export interface UseSelectGetLabelPropsReturnValue
+  extends GetLabelPropsReturnValue {}
 
 export interface UseSelectGetItemPropsOptions<Item>
   extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
     GetPropsWithRefKey {}
 
+export interface UseSelectGetItemPropsReturnValue
+  extends Exclude<GetItemPropsReturnValue, 'onMouseDown'> {
+  ref?: React.RefObject
+}
+
 export interface UseSelectPropGetters<Item> {
-  getToggleButtonProps: (
-    options?: UseSelectGetToggleButtonPropsOptions,
+  getToggleButtonProps: <Options>(
+    options?: Overwrite<UseSelectGetToggleButtonPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
-  getLabelProps: (options?: UseSelectGetLabelPropsOptions) => any
-  getMenuProps: (
-    options?: UseSelectGetMenuPropsOptions,
+  ) => Overwrite<UseSelectGetToggleButtonReturnValue, Options>
+  getLabelProps: <Options>(
+    options?: Overwrite<UseSelectGetLabelPropsOptions, Options>,
+  ) => Overwrite<UseSelectGetLabelPropsReturnValue, Options>
+  getMenuProps: <Options>(
+    options?: Overwrite<UseSelectGetMenuPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
-  getItemProps: (options: UseSelectGetItemPropsOptions<Item>) => any
+  ) => Overwrite<UseSelectGetMenuReturnValue, Options>
+  getItemProps: <Options>(
+    options: Overwrite<UseSelectGetItemPropsOptions<Item>, Overwrite>,
+  ) => Overwrite<UseSelectGetItemPropsReturnValue, Options>
 }
 
 export interface UseSelectActions<Item> {
