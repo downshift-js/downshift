@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {isPreact, isReactNative} from '../../is.macro'
+import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
   useA11yMessageSetter,
@@ -303,7 +303,7 @@ function useCombobox(userProps = {}) {
         'Pass either item or index to getItemProps!',
       )
 
-      const onSelectKey = isReactNative
+      const onSelectKey = isReactNative || isReactNativeWeb
         ? /* istanbul ignore next (react-native) */ 'onPress'
         : 'onClick'
       const customClickHandler = isReactNative
@@ -371,7 +371,7 @@ function useCombobox(userProps = {}) {
         id: elementIds.toggleButtonId,
         tabIndex: -1,
         ...(!rest.disabled && {
-          ...(isReactNative
+          ...(isReactNative || isReactNativeWeb
             ? /* istanbul ignore next (react-native) */ {
                 onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
               }
@@ -411,7 +411,7 @@ function useCombobox(userProps = {}) {
       const inputHandleChange = event => {
         dispatch({
           type: stateChangeTypes.InputChange,
-          inputValue: isReactNative
+          inputValue: isReactNative || isReactNativeWeb
             ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
             : event.target.value,
         })
