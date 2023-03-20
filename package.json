@@ -9,9 +9,10 @@
   "sideEffects": false,
   "browserslist": [],
   "scripts": {
-    "build": "npm run build:web --silent && npm run build:native --silent",
+    "build": "npm run build:web --silent && npm run build:native --silent && npm run build:nativeWeb --silent",
     "build:web": "kcd-scripts build --bundle --p-react --no-clean --size-snapshot",
     "build:native": "cross-env BUILD_REACT_NATIVE=true BUILD_FILENAME_SUFFIX=.native kcd-scripts build --bundle cjs --no-clean",
+    "build:nativeWeb": "cross-env BUILD_REACT_NATIVE_WEB=true BUILD_FILENAME_SUFFIX=.nativeweb kcd-scripts build --bundle cjs --no-clean",
     "lint": "kcd-scripts lint",
     "test": "kcd-scripts test",
     "test:cover": "kcd-scripts test --coverage",

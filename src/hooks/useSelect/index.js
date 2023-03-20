@@ -18,7 +18,7 @@ import {
   debounce,
   normalizeArrowKey,
 } from '../../utils'
-import {isReactNative} from '../../is.macro'
+import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {validatePropTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -407,7 +407,7 @@ function useSelect(userProps = {}) {
 
       if (!rest.disabled) {
         /* istanbul ignore if (react-native) */
-        if (isReactNative) {
+        if (isReactNative || isReactNativeWeb) {
           toggleProps.onPress = callAllEventHandlers(
             onPress,
             toggleButtonHandleClick,
@@ -496,7 +496,7 @@ function useSelect(userProps = {}) {
 
       if (!disabled) {
         /* istanbul ignore next (react-native) */
-        if (isReactNative) {
+        if (isReactNative || isReactNativeWeb) {
           itemProps.onPress = callAllEventHandlers(onPress, itemHandleClick)
         } else {
           itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
