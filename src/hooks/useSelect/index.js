@@ -345,8 +345,8 @@ function useSelect(userProps = {}) {
         }),
         id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby': elementIds.labelId,
-        tabIndex: -1,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
         ...rest,
       }
@@ -397,7 +397,8 @@ function useSelect(userProps = {}) {
         'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         'aria-haspopup': 'listbox',
-        'aria-labelledby': `${elementIds.labelId}`,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         id: elementIds.toggleButtonId,
         role: 'combobox',
         tabIndex: 0,

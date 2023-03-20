@@ -826,7 +826,7 @@ class Downshift extends Component {
           ? this.getItemId(highlightedIndex)
           : null,
       'aria-controls': isOpen ? this.menuId : null,
-      'aria-labelledby': this.labelId,
+      'aria-labelledby': rest && rest['aria-label'] ? undefined : this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
       autoComplete: 'off',

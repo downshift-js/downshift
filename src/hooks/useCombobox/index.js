@@ -270,7 +270,8 @@ function useCombobox(userProps = {}) {
         }),
         id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby': elementIds.labelId,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         onMouseLeave: callAllEventHandlers(onMouseLeave, () => {
           dispatch({
             type: stateChangeTypes.MenuMouseLeave,
@@ -480,7 +481,8 @@ function useCombobox(userProps = {}) {
         'aria-autocomplete': 'list',
         'aria-controls': elementIds.menuId,
         'aria-expanded': latestState.isOpen,
-        'aria-labelledby': elementIds.labelId,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
         // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
         autoComplete: 'off',

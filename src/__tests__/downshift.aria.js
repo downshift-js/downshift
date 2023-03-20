@@ -24,7 +24,7 @@ test('can override the ids', () => {
   expect(container.firstChild).toMatchSnapshot()
 })
 
-test('if aria-label is provided to the menu then aria-labelledby is not applied to the label', () => {
+test('if aria-label is provided to the menu then aria-labelledby is not applied to the menu', () => {
   const customLabel = 'custom menu label'
   const {menu} = renderDownshift({
     menuProps: {'aria-label': customLabel},
@@ -33,7 +33,16 @@ test('if aria-label is provided to the menu then aria-labelledby is not applied 
   expect(menu).toHaveAttribute('aria-label', customLabel)
 })
 
-function renderDownshift({renderFn, props, menuProps} = {}) {
+test('if aria-label is provided to the input then aria-labelledby is not applied to the input', () => {
+  const customLabel = 'custom menu label'
+  const {input} = renderDownshift({
+    inputProps: {'aria-label': customLabel},
+  })
+  expect(input).not.toHaveAttribute('aria-labelledby')
+  expect(input).toHaveAttribute('aria-label', customLabel)
+})
+
+function renderDownshift({renderFn, props, menuProps, inputProps} = {}) {
   function defaultRenderFn({
     getInputProps,
     getToggleButtonProps,
@@ -46,7 +55,7 @@ function renderDownshift({renderFn, props, menuProps} = {}) {
         <label data-testid="label" {...getLabelProps()}>
           label
         </label>
-        <input data-testid="input" {...getInputProps()} />
+        <input data-testid="input" {...getInputProps(inputProps)} />
         <button data-testid="button" {...getToggleButtonProps()} />
         <ul data-testid="menu" {...getMenuProps(menuProps)}>
           <li data-testid="item-0" {...getItemProps({item: 'item', index: 0})}>
