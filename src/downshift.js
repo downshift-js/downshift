@@ -833,7 +833,7 @@ class Downshift extends Component {
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
-          : null,
+          : undefined,
       'aria-controls': isOpen ? this.menuId : undefined,
       'aria-labelledby': rest && rest['aria-label'] ? undefined : this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
