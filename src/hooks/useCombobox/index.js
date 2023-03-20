@@ -481,7 +481,7 @@ function useCombobox(userProps = {}) {
         'aria-controls': elementIds.menuId,
         'aria-expanded': latestState.isOpen,
         'aria-labelledby':
-          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
+          rest && rest['aria-label'] ? undefined : elementIds.labelId,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
         // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
         autoComplete: 'off',

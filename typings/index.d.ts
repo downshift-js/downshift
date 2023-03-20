@@ -131,7 +131,7 @@ export interface GetInputPropsReturnValue {
   'aria-autocomplete': 'list'
   'aria-activedescendant': string | undefined
   'aria-controls': string | undefined
-  'aria-labelledby': string
+  'aria-labelledby': string | undefined
   autoComplete: 'off'
   value: string
   id: string
@@ -152,8 +152,8 @@ export interface GetLabelPropsReturnValue {
 
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
-    disabled?: boolean
-  }
+  disabled?: boolean
+}
 
 interface GetToggleButtonPropsReturnValue {
   type: 'button'
@@ -407,7 +407,7 @@ export interface UseSelectGetToggleButtonReturnValue
     'onBlur' | 'onClick' | 'onPress' | 'onKeyDown'
   > {
   ref?: React.RefObject
-  'aria-activedescendant': string | undefined
+  'aria-activedescendant': string
   'aria-controls': string
   'aria-expanded': boolean
   'aria-haspopup': 'listbox'
@@ -427,6 +427,7 @@ export interface UseSelectGetItemPropsOptions<Item>
 
 export interface UseSelectGetItemPropsReturnValue
   extends Exclude<GetItemPropsReturnValue, 'onMouseDown'> {
+  'aria-disabled': boolean
   ref?: React.RefObject
 }
 
@@ -587,34 +588,68 @@ export interface UseComboboxGetMenuPropsOptions
   extends GetPropsWithRefKey,
     GetMenuPropsOptions {}
 
+export interface UseComboboxGetMenuPropsReturnValue
+  extends UseSelectGetMenuReturnValue {}
+
 export interface UseComboboxGetToggleButtonPropsOptions
   extends GetPropsWithRefKey,
     GetToggleButtonPropsOptions {}
 
+export interface UseComboboxGetToggleButtonPropsReturnValue {
+  ref?: React.RefObject
+  'aria-controls': string
+  'aria-expanded': boolean
+  id: string
+  tabIndex: -1
+  onPress?: (event: ReactNative.GestureResponderEvent) => void
+  onClick?: React.MouseEventHandler
+}
+
 export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
+
+export interface UseComboboxGetLabelPropsReturnValue
+  extends GetLabelPropsReturnValue {}
 
 export interface UseComboboxGetItemPropsOptions<Item>
   extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
     GetPropsWithRefKey {}
 
+export interface UseComboboxGetItemPropsReturnValue
+  extends GetItemPropsReturnValue {
+  'aria-disabled': boolean
+  ref?: React.RefObject
+}
+
 export interface UseComboboxGetInputPropsOptions
   extends GetInputPropsOptions,
     GetPropsWithRefKey {}
 
+export interface UseComboboxGetInputPropsReturnValue
+  extends GetInputPropsReturnValue {
+  'aria-activedescendant': string
+  'aria-controls': string
+  'aria-expanded': boolean
+  role: 'combobox'
+  onClick: React.MouseEventHandler
+}
 export interface UseComboboxPropGetters<Item> {
-  getToggleButtonProps: (
-    options?: UseComboboxGetToggleButtonPropsOptions,
-  ) => any
-  getLabelProps: (options?: UseComboboxGetLabelPropsOptions) => any
-  getMenuProps: (
-    options?: UseComboboxGetMenuPropsOptions,
+  getToggleButtonProps: <Options>(
+    options?: Overwrite<UseComboboxGetToggleButtonPropsOptions, Options>,
+  ) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
+  getLabelProps: <Options>(
+    options?: Overwrite<UseComboboxGetLabelPropsOptions, Options>,
+  ) => Overwrite<UseComboboxGetLabelPropsReturnValue, Options>
+  getMenuProps: <Options>(
+    options?: Overwrite<UseComboboxGetMenuPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
-  getItemProps: (options: UseComboboxGetItemPropsOptions<Item>) => any
-  getInputProps: (
-    options?: UseComboboxGetInputPropsOptions,
+  ) => Overwrite<UseComboboxGetMenuPropsReturnValue, Options>
+  getItemProps: <Options>(
+    options: Overwrite<UseComboboxGetItemPropsOptions<Item>, Options>,
+  ) => Overwrite<UseComboboxGetItemPropsReturnValue, Options>
+  getInputProps: <Options>(
+    options?: Overwrite<UseComboboxGetInputPropsOptions, Options>,
     otherOptions?: GetPropsCommonOptions,
-  ) => any
+  ) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
 }
 
 export interface UseComboboxActions<Item> {
