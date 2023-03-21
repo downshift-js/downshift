@@ -70,6 +70,15 @@ to the hook you need by using the links in the list above.
 For examples on how to use the hooks or the Downshift component, check out our
 [docsite][docsite]!
 
+**🚨 Use the Downshift hooks 🚨**
+
+If you are new to the library, consider the _useSelect_ and _useCombobox_ hooks
+as the first option. As mentioned above, the hooks benefit from the updated ARIA
+patterns and are actively maintained and improved. If there are use cases that
+are supported by the _Downshift_ component and not by the hooks, please create
+an issue in our repo. The _Downshift_ component is going to be removed
+completely once the hooks become mature.
+
 ### Downshift
 
 This is a component that controls user interactions and state for you so you can
