@@ -36,7 +36,16 @@ const config = {
       }),
     ],
   ],
-  plugins: [require.resolve('./docusaurus/plugins/webpack5polyfills.js')],
+  plugins: [
+    // @ts-ignore
+    () => ({
+      name: 'configure-webpack-target',
+      configureWebpack(webpackConfig, isServer) {
+        webpackConfig.target = isServer ? 'node' : 'web'
+      },
+    }),
+    require.resolve('./docusaurus/plugins/webpack5polyfills.js'),
+  ],
 }
 
 module.exports = config

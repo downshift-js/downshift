@@ -3,6 +3,7 @@ const {createMacro, MacroError} = require('babel-plugin-macros')
 const importToEnvVar = {
   isPreact: 'BUILD_PREACT',
   isReactNative: 'BUILD_REACT_NATIVE',
+  isReactNativeWeb: 'BUILD_REACT_NATIVE_WEB',
 }
 
 const arrToStr = arr => arr.join(', ')

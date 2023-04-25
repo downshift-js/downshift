@@ -569,16 +569,18 @@ describe('props', () => {
     })
 
     test('can have downshift actions executed', () => {
+      const initialActiveIndex = 3
       const {result} = renderUseMultipleSelection({
         onSelectedItemsChange: () => {
           result.current.setActiveIndex(1)
         },
         initialSelectedItems: items,
+        initialActiveIndex,
       })
 
       act(() => {
         result.current
-          .getSelectedItemProps({index: 3})
+          .getSelectedItemProps({index: initialActiveIndex})
           .onKeyDown({key: 'Backspace'})
       })
 

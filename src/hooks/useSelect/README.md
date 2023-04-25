@@ -249,7 +249,7 @@ function stateReducer(state, actionAndChanges) {
   const {type, changes} = actionAndChanges
   // this prevents the menu from being closed when the user selects an item with 'Enter' or mouse
   switch (type) {
-    case useSelect.stateChangeTypes.MenuKeyDownEnter:
+    case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
     case useSelect.stateChangeTypes.ItemClick:
       return {
         ...changes, // default Downshift new state changes on item selection.
@@ -363,16 +363,15 @@ properties:
 
 Called each time the highlighted item was changed. Items can be highlighted
 while hovering the mouse over them or by keyboard keys such as Up Arrow, Down
-Arrow, Home and End. Arrow keys can be combined with Shift to move by a step of
-5 positions instead of 1. Items can also be highlighted by hitting character
-keys that are part of their starting string equivalent.
+Arrow, Home and End. Items can also be highlighted by hitting character keys
+that are part of their starting string equivalent.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This object is guaranteed to contain the `highlightedIndex`
   property with the new value. This also has a `type` property which you can
   learn more about in the [`stateChangeTypes`](#statechangetypes) section. This
   property will be part of the actions that can trigger a `highlightedIndex`
-  change, for example `useSelect.stateChangeTypes.MenuKeyDownArrowUp`.
+  change, for example `useSelect.stateChangeTypes.ToggleButtonKeyDownArrowUp`.
 
 ### onIsOpenChange
 
@@ -540,8 +539,8 @@ that state from other components, `redux`, `react-router`, or anywhere else.
 
 > Note: This is very similar to how normal controlled components work elsewhere
 > in react (like `<input />`). If you want to learn more about this concept, you
-> can learn about that from this the
-> [Advanced React Component Patterns course][advanced-react-component-patterns-course]
+> can learn about that from the [Advanced React Component Patterns
+> course][advanced-react-component-patterns-course]
 
 ## Returned props
 
@@ -754,6 +753,12 @@ Optional properties:
   primitive component like `<div>`, there is no need to specify this property.
   It defaults to `ref`.
 
+- `aria-label`: By default the toggle element will add an `aria-labelledby` that
+  refers to the `<label>` rendered with `getLabelProps`. However, if you provide
+  `aria-label` to give a more specific label that describes the options
+  available, then `aria-labelledby` will not be provided and screen readers can
+  use your `aria-label` instead.
+
 In some cases, you might want to completely bypass the `refKey` check. Then you
 can provide the object `{suppressRefError : true}` as the second argument to
 `getToggleButtonProps`. **Please use it with extreme care and only if you are
@@ -937,6 +942,7 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
-[advanced-react-component-patterns-course]: https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
+[advanced-react-component-patterns-course]:
+  https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#useselect

@@ -139,14 +139,22 @@ const useElementIds =
         return elementIdsRef.current
       }
 
-function getItemIndex(index, item, items) {
-  if (index !== undefined) {
-    return index
+function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
+  let item, index
+
+  if (itemProp === undefined) {
+    if (indexProp === undefined) {
+      throw new Error(errorMessage)
+    }
+
+    item = items[indexProp]
+    index = indexProp
+  } else {
+    index = indexProp === undefined ? items.indexOf(itemProp) : indexProp
+    item = itemProp
   }
-  if (items.length === 0) {
-    return -1
-  }
-  return items.indexOf(item)
+
+  return [item, index]
 }
 
 function itemToString(item) {
@@ -344,7 +352,11 @@ function useMouseAndTouchTracker(
   })
 
   useEffect(() => {
-    // The same strategy for checking if a click occurred inside or outside downsift
+    if (environment?.addEventListener == null) {
+      return
+    }
+
+    // The same strategy for checking if a click occurred inside or outside downshift
     // as in downshift.js.
     const onMouseDown = () => {
       mouseAndTouchTrackersRef.current.isMouseDown = true
@@ -389,6 +401,7 @@ function useMouseAndTouchTracker(
     environment.addEventListener('touchmove', onTouchMove)
     environment.addEventListener('touchend', onTouchEnd)
 
+    // eslint-disable-next-line consistent-return
     return function cleanup() {
       environment.removeEventListener('mousedown', onMouseDown)
       environment.removeEventListener('mouseup', onMouseUp)
@@ -538,6 +551,31 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
+/**
+ * Handles selection on Enter / Alt + ArrowUp. Closes the menu and resets the highlighted index, unless there is a highlighted.
+ * In that case, selects the item and resets to defaults for open state and highlighted idex.
+ * @param {Object} props The useCombobox props.
+ * @param {number} highlightedIndex The index from the state.
+ * @param {boolean} inputValue Also return the input value for state.
+ * @returns The changes for the state.
+ */
+function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
+  const shouldSelect = props.items?.length && highlightedIndex >= 0
+
+  return {
+    isOpen: false,
+    highlightedIndex: -1,
+    ...(shouldSelect && {
+      selectedItem: props.items[highlightedIndex],
+      isOpen: getDefaultValue(props, 'isOpen'),
+      highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+      ...(inputValue && {
+        inputValue: props.itemToString(props.items[highlightedIndex]),
+      }),
+    }),
+  }
+}
+
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -554,6 +592,7 @@ export {
   useLatestRef,
   capitalizeString,
   isAcceptedCharacterKey,
-  getItemIndex,
+  getItemAndIndex,
   useElementIds,
+  getChangesOnSelection,
 }

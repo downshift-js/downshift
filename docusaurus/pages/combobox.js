@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import Downshift from '../../src'
-import {colors} from '../utils'
+import {colors, containerStyles, menuStyles} from '../utils'
 
 export default function ComboBox() {
   return (
@@ -19,16 +19,7 @@ export default function ComboBox() {
         getRootProps,
         clearSelection,
       }) => (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: 'fit-content',
-            justifyContent: 'center',
-            marginTop: 100,
-            alignSelf: 'center',
-          }}
-        >
+        <div style={containerStyles}>
           <label
             style={{
               fontWeight: 'bolder',
@@ -61,15 +52,7 @@ export default function ComboBox() {
               &#10007;
             </button>
           </div>
-          <ul
-            {...getMenuProps()}
-            style={{
-              listStyle: 'none',
-              width: '100%',
-              padding: '0',
-              margin: '4px 0 0 0',
-            }}
-          >
+          <ul {...getMenuProps()} style={menuStyles}>
             {isOpen &&
               (inputValue
                 ? colors.filter(i =>

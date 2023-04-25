@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types'
 import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
-import {isPreact, isReactNative} from './is.macro'
+import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
 import setA11yStatus from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
@@ -682,17 +682,21 @@ class Downshift extends Component {
     ...rest
   } = {}) => {
     const {isOpen} = this.getState()
-    const enabledEventHandlers = isReactNative
-      ? /* istanbul ignore next (react-native) */
-        {
-          onPress: callAllEventHandlers(onPress, this.buttonHandleClick),
-        }
-      : {
-          onClick: callAllEventHandlers(onClick, this.buttonHandleClick),
-          onKeyDown: callAllEventHandlers(onKeyDown, this.buttonHandleKeyDown),
-          onKeyUp: callAllEventHandlers(onKeyUp, this.buttonHandleKeyUp),
-          onBlur: callAllEventHandlers(onBlur, this.buttonHandleBlur),
-        }
+    const enabledEventHandlers =
+      isReactNative || isReactNativeWeb
+        ? /* istanbul ignore next (react-native) */
+          {
+            onPress: callAllEventHandlers(onPress, this.buttonHandleClick),
+          }
+        : {
+            onClick: callAllEventHandlers(onClick, this.buttonHandleClick),
+            onKeyDown: callAllEventHandlers(
+              onKeyDown,
+              this.buttonHandleKeyDown,
+            ),
+            onKeyUp: callAllEventHandlers(onKeyUp, this.buttonHandleKeyUp),
+            onBlur: callAllEventHandlers(onBlur, this.buttonHandleBlur),
+          }
     const eventHandlers = rest.disabled ? {} : enabledEventHandlers
     return {
       type: 'button',
@@ -822,7 +826,7 @@ class Downshift extends Component {
           ? this.getItemId(highlightedIndex)
           : null,
       'aria-controls': isOpen ? this.menuId : null,
-      'aria-labelledby': this.labelId,
+      'aria-labelledby': rest && rest['aria-label'] ? undefined : this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
       autoComplete: 'off',
@@ -844,7 +848,7 @@ class Downshift extends Component {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative
+      inputValue: isReactNative || isReactNativeWeb
         ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
         : event.target.value,
       highlightedIndex: this.props.defaultHighlightedIndex,
@@ -912,7 +916,7 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative
+    const onSelectKey = isReactNative || isReactNativeWeb
       ? /* istanbul ignore next (react-native) */ 'onPress'
       : 'onClick'
     const customClickHandler = isReactNative

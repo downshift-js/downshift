@@ -1351,7 +1351,9 @@
       "profile": "http://theredcircuit.com",
       "contributions": [
         "code",
-        "bug"
+        "bug",
+        "ideas",
+        "research"
       ]
     },
     {
@@ -1372,9 +1374,38 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "jeanpan",
+      "name": "Jean Pan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1307026?v=4",
+      "profile": "https://github.com/jeanpan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tjenkinson",
+      "name": "Tom Jenkinson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3259993?v=4",
+      "profile": "https://tjenkinson.me",
+      "contributions": [
+        "infra"
+      ]
+    },
+    {
+      "login": "aliceHendicott",
+      "name": "Alice Hendicott",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40346716?v=4",
+      "profile": "https://github.com/aliceHendicott",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
   "contributorsPerLine": 7,
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "angular"
 }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {useSelect} from '../../src'
-import {colors} from '../utils'
+import {colors, containerStyles, menuStyles} from '../utils'
 
 export default function DropdownSelect() {
   const {
@@ -15,16 +15,7 @@ export default function DropdownSelect() {
   } = useSelect({items: colors})
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: 'fit-content',
-        justifyContent: 'center',
-        marginTop: 100,
-        alignSelf: 'center',
-      }}
-    >
+    <div style={containerStyles}>
       <label
         style={{
           fontWeight: 'bolder',
@@ -47,15 +38,7 @@ export default function DropdownSelect() {
         {selectedItem ?? 'Elements'}
         {isOpen ? <>&#8593;</> : <>&#8595;</>}
       </div>
-      <ul
-        {...getMenuProps()}
-        style={{
-          listStyle: 'none',
-          width: '100%',
-          padding: '0',
-          margin: '4px 0 0 0',
-        }}
-      >
+      <ul {...getMenuProps()} style={menuStyles}>
         {isOpen &&
           colors.map((item, index) => (
             <li

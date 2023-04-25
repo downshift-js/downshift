@@ -28,7 +28,7 @@ function scrollIntoView(node, menuNode) {
     return
   }
 
-  const actions = computeScrollIntoView(node, {
+  const actions = compute(node, {
     boundary: menuNode,
     block: 'nearest',
     scrollMode: 'if-needed',

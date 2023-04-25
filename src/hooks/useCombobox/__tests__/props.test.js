@@ -91,6 +91,111 @@ describe('props', () => {
     })
   })
 
+  describe('selectedItemChanged', () => {
+    test('props update of selectedItem will update inputValue state with default selectedItemChanged referential equality check', () => {
+      const selectedItem = {id: 1, value: 'wow'}
+      const newSelectedItem = {id: 1, value: 'not wow'}
+      function itemToString(item) {
+        return item.value
+      }
+      const stateReducer = jest
+        .fn()
+        .mockImplementation((_state, {changes}) => changes)
+
+      const {rerender} = renderCombobox({
+        stateReducer,
+        itemToString,
+        selectedItem,
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenCalledWith(
+        {
+          inputValue: itemToString(selectedItem),
+          selectedItem,
+          highlightedIndex: -1,
+          isOpen: false,
+        },
+        expect.objectContaining({
+          type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+          changes: {
+            inputValue: itemToString(selectedItem),
+            selectedItem,
+            highlightedIndex: -1,
+            isOpen: false,
+          },
+        }),
+      )
+
+      stateReducer.mockClear()
+      rerender({
+        stateReducer,
+        selectedItem: newSelectedItem,
+        itemToString
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenCalledWith(
+        {
+          inputValue: itemToString(selectedItem),
+          selectedItem: newSelectedItem,
+          highlightedIndex: -1,
+          isOpen: false,
+        },
+        expect.objectContaining({
+          changes: {
+            inputValue: itemToString(newSelectedItem),
+            selectedItem: newSelectedItem,
+            highlightedIndex: -1,
+            isOpen: false,
+          },
+          type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+        }),
+      )
+      expect(getInput()).toHaveValue(itemToString(newSelectedItem))
+    })
+
+    test('props update of selectedItem will not update inputValue state', () => {
+      const selectedItem = {id: 1, value: 'wow'}
+      const newSelectedItem = {id: 1, value: 'not wow'}
+      function itemToString(item) {
+        return item.value
+      }
+      const selectedItemChanged = jest.fn().mockReturnValue((prev, next) => prev.id !== next.id)
+      const stateReducer = jest
+        .fn()
+        .mockImplementation((_state, {changes}) => changes)
+
+      const {rerender} = renderCombobox({
+        selectedItemChanged,
+        stateReducer,
+        selectedItem,
+        itemToString
+      })
+
+      expect(getInput()).toHaveValue(itemToString(selectedItem))
+      expect(selectedItemChanged).toHaveBeenCalledTimes(1)
+      expect(selectedItemChanged).toHaveBeenCalledWith(undefined, selectedItem)
+
+      stateReducer.mockReset()
+      selectedItemChanged.mockReset()
+      rerender({
+        stateReducer,
+        itemToString,
+        selectedItem: newSelectedItem,
+        selectedItemChanged,
+      })
+
+      expect(selectedItemChanged).toHaveBeenCalledTimes(1)
+      expect(selectedItemChanged).toHaveBeenCalledWith(
+        selectedItem,
+        newSelectedItem,
+      )
+      expect(stateReducer).not.toHaveBeenCalled()
+      expect(getInput()).toHaveValue(itemToString(selectedItem))
+    })
+  })
+
   describe('getA11ySelectionMessage', () => {
     beforeEach(jest.useFakeTimers)
     afterEach(() => {

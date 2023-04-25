@@ -1,6 +1,6 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  getItemIndex,
+  getItemAndIndex,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
@@ -18,6 +18,7 @@ import {
   debounce,
   normalizeArrowKey,
 } from '../../utils'
+import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {validatePropTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -159,6 +160,10 @@ function useSelect(userProps = {}) {
   // Make initial ref false.
   useEffect(() => {
     isInitialMountRef.current = false
+
+    return () => {
+      isInitialMountRef.current = true
+    }
   }, [])
   // Reset itemRefs on close.
   useEffect(() => {
@@ -243,11 +248,22 @@ function useSelect(userProps = {}) {
       ' '(event) {
         event.preventDefault()
 
-        dispatch({
-          type: latest.current.state.isOpen
-            ? stateChangeTypes.ToggleButtonKeyDownSpaceButton
-            : stateChangeTypes.ToggleButtonClick,
-        })
+        const currentState = latest.current.state
+
+        if (!currentState.isOpen) {
+          dispatch({type: stateChangeTypes.ToggleButtonClick})
+          return
+        }
+
+        if (currentState.inputValue) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonKeyDownCharacter,
+            key: ' ',
+            getItemNodeFromIndex,
+          })
+        } else {
+          dispatch({type: stateChangeTypes.ToggleButtonKeyDownSpaceButton})
+        }
       },
     }),
     [dispatch, getItemNodeFromIndex, latest],
@@ -329,8 +345,8 @@ function useSelect(userProps = {}) {
         }),
         id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby': elementIds.labelId,
-        tabIndex: -1,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
         ...rest,
       }
@@ -339,7 +355,7 @@ function useSelect(userProps = {}) {
   )
   const getToggleButtonProps = useCallback(
     (
-      {onBlur, onClick, onKeyDown, refKey = 'ref', ref, ...rest} = {},
+      {onBlur, onClick, onPress, onKeyDown, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
       const latestState = latest.current.state
@@ -381,7 +397,8 @@ function useSelect(userProps = {}) {
         'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         'aria-haspopup': 'listbox',
-        'aria-labelledby': `${elementIds.labelId}`,
+        'aria-labelledby':
+          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
         id: elementIds.toggleButtonId,
         role: 'combobox',
         tabIndex: 0,
@@ -390,14 +407,22 @@ function useSelect(userProps = {}) {
       }
 
       if (!rest.disabled) {
-        toggleProps.onClick = callAllEventHandlers(
-          onClick,
-          toggleButtonHandleClick,
-        )
-        toggleProps.onKeyDown = callAllEventHandlers(
-          onKeyDown,
-          toggleButtonHandleKeyDown,
-        )
+        /* istanbul ignore if (react-native) */
+        if (isReactNative || isReactNativeWeb) {
+          toggleProps.onPress = callAllEventHandlers(
+            onPress,
+            toggleButtonHandleClick,
+          )
+        } else {
+          toggleProps.onClick = callAllEventHandlers(
+            onClick,
+            toggleButtonHandleClick,
+          )
+          toggleProps.onKeyDown = callAllEventHandlers(
+            onKeyDown,
+            toggleButtonHandleKeyDown,
+          )
+        }
       }
 
       setGetterPropCallInfo(
@@ -425,14 +450,19 @@ function useSelect(userProps = {}) {
       index: indexProp,
       onMouseMove,
       onClick,
+      onPress,
       refKey = 'ref',
       ref,
       disabled,
       ...rest
     } = {}) => {
       const {state: latestState, props: latestProps} = latest.current
-      const item = itemProp ?? items[indexProp]
-      const index = getItemIndex(indexProp, item, latestProps.items)
+      const [item, index] = getItemAndIndex(
+        itemProp,
+        indexProp,
+        latestProps.items,
+        'Pass either item or index to getItemProps!',
+      )
 
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
@@ -452,26 +482,28 @@ function useSelect(userProps = {}) {
         })
       }
 
-      const itemIndex = getItemIndex(index, item, latestProps.items)
-      if (itemIndex < 0) {
-        throw new Error('Pass either item or item index in getItemProps!')
-      }
       const itemProps = {
         disabled,
         role: 'option',
         'aria-selected': `${item === selectedItem}`,
-        id: elementIds.getItemId(itemIndex),
+        id: elementIds.getItemId(index),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(itemIndex)] = itemNode
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
         ...rest,
       }
 
       if (!disabled) {
-        itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+        /* istanbul ignore next (react-native) */
+        if (isReactNative || isReactNativeWeb) {
+          itemProps.onPress = callAllEventHandlers(onPress, itemHandleClick)
+        } else {
+          itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+        }
       }
+
       itemProps.onMouseMove = callAllEventHandlers(
         onMouseMove,
         itemHandleMouseMove,
@@ -479,7 +511,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, items, selectedItem, elementIds, shouldScrollRef, dispatch],
+    [latest, selectedItem, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

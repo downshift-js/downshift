@@ -13,7 +13,7 @@ import {
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
-function getInitialState(props) {
+export function getInitialState(props) {
   const initialState = getInitialStateCommon(props)
   const {selectedItem} = initialState
   let {inputValue} = initialState
@@ -37,6 +37,7 @@ function getInitialState(props) {
 const propTypes = {
   items: PropTypes.array.isRequired,
   itemToString: PropTypes.func,
+  selectedItemChanged: PropTypes.func,
   getA11yStatusMessage: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
   highlightedIndex: PropTypes.number,
@@ -86,32 +87,40 @@ const propTypes = {
  * @param {Object} props The hook props.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useControlledReducer(reducer, initialState, props) {
+export function useControlledReducer(reducer, initialState, props) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
   // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
   useEffect(() => {
-    if (isControlledProp(props, 'selectedItem')) {
-      if (previousSelectedItemRef.current !== props.selectedItem) {
-        dispatch({
-          type: ControlledPropUpdatedSelectedItem,
-          inputValue: props.itemToString(props.selectedItem),
-        })
-      }
-
-      previousSelectedItemRef.current =
-        state.selectedItem === previousSelectedItemRef.current
-          ? props.selectedItem
-          : state.selectedItem
+    if (!isControlledProp(props, 'selectedItem')) {
+      return
     }
-  })
+
+    if (
+      props.selectedItemChanged(
+        previousSelectedItemRef.current,
+        props.selectedItem,
+      )
+    ) {
+      dispatch({
+        type: ControlledPropUpdatedSelectedItem,
+        inputValue: props.itemToString(props.selectedItem),
+      })
+    }
+
+    previousSelectedItemRef.current =
+      state.selectedItem === previousSelectedItemRef.current
+        ? props.selectedItem
+        : state.selectedItem
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.selectedItem, props.selectedItem])
 
   return [getState(state, props), dispatch]
 }
 
 // eslint-disable-next-line import/no-mutable-exports
-let validatePropTypes = noop
+export let validatePropTypes = noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   validatePropTypes = (options, caller) => {
@@ -119,9 +128,8 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const defaultProps = {
+export const defaultProps = {
   ...defaultPropsCommon,
+  selectedItemChanged: (prevItem, item) => prevItem !== item,
   getA11yStatusMessage,
 }
-
-export {validatePropTypes, useControlledReducer, getInitialState, defaultProps}

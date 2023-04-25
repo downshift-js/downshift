@@ -1,8 +1,10 @@
+import {renderHook} from '@testing-library/react-hooks'
 import {
-  getItemIndex,
   defaultProps,
   getInitialValue,
   getDefaultValue,
+  useMouseAndTouchTracker,
+  getItemAndIndex,
 } from '../utils'
 
 describe('utils', () => {
@@ -13,21 +15,35 @@ describe('utils', () => {
     })
   })
 
-  describe('getItemIndex', () => {
-    test('returns -1 if no items', () => {
-      const index = getItemIndex(undefined, {}, [])
-      expect(index).toBe(-1)
+  describe('getItemAndIndex', () => {
+    test('returns arguments if passed as defined', () => {
+      expect(getItemAndIndex({}, 5, [])).toEqual([{}, 5])
     })
 
-    test('returns index if passed', () => {
-      const index = getItemIndex(5, {}, [])
-      expect(index).toBe(5)
+    test('throws an error when item and index are not passed', () => {
+      const errorMessage = 'Pass either item or index to the item getter prop!'
+
+      expect(() =>
+        getItemAndIndex(undefined, undefined, [1, 2, 3], errorMessage),
+      ).toThrowError(errorMessage)
     })
 
-    test('returns index of item', () => {
+    test('returns index if item is passed', () => {
+      const item = {}
+
+      expect(getItemAndIndex(item, undefined, [{x: 1}, item, {x: 2}])).toEqual([
+        item,
+        1,
+      ])
+    })
+
+    test('returns item if index is passed', () => {
+      const index = 2
       const item = {x: 2}
-      const index = getItemIndex(undefined, item, [{x: 1}, item, {x: 2}])
-      expect(index).toBe(1)
+      expect(getItemAndIndex(undefined, 2, [{x: 1}, {x: 3}, item])).toEqual([
+        item,
+        index,
+      ])
     })
   })
 
@@ -62,5 +78,78 @@ describe('utils', () => {
     )
 
     expect(value).toEqual(defaults.bogusValue)
+  })
+
+  describe('useMouseAndTouchTracker', () => {
+    test('renders without error', () => {
+      expect(() => {
+        renderHook(() =>
+          useMouseAndTouchTracker(false, [], undefined, jest.fn()),
+        )
+      }).not.toThrowError()
+    })
+
+    test('adds and removes listeners to environment', () => {
+      const environment = {
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      }
+
+      const {unmount, result} = renderHook(() =>
+        useMouseAndTouchTracker(false, [], environment, jest.fn()),
+      )
+
+      expect(environment.addEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'mousedown',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'mouseup',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchstart',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchmove',
+        expect.any(Function),
+      )
+      expect(environment.addEventListener).toHaveBeenCalledWith(
+        'touchend',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).not.toHaveBeenCalled()
+
+      unmount()
+
+      expect(environment.addEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'mousedown',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'mouseup',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchstart',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchmove',
+        expect.any(Function),
+      )
+      expect(environment.removeEventListener).toHaveBeenCalledWith(
+        'touchend',
+        expect.any(Function),
+      )
+
+      expect(result.current).toEqual({
+        current: {isMouseDown: false, isTouchMove: false},
+      })
+    })
   })
 })
