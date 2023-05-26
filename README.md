@@ -1507,7 +1507,7 @@ MIT
 [react-training]: https://reacttraining.com/
 [advanced-react]: https://courses.reacttraining.com/courses/enrolled/200086
 [use-a-render-prop]:
-  https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
+  https://medium.com/@mjackson/use-a-render-prop-50de598f11ce
 [semver]: http://semver.org/
 [hooks-readme]: https://github.com/downshift-js/downshift/blob/master/src/hooks
 [useselect-readme]:
