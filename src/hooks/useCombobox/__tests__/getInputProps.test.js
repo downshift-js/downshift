@@ -168,7 +168,7 @@ describe('getInputProps', () => {
       expect(inputProps['aria-label']).toBe(ariaLabel)
     })
 
-    test('handlers are not returned if input is not disabled', () => {
+    test('handlers are returned if input is not disabled', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()
 
@@ -1551,7 +1551,6 @@ describe('getInputProps', () => {
       })
     })
 
-    // ToDo: Remvoe me!
     test('on focus does nothing', async () => {
       renderCombobox()
 

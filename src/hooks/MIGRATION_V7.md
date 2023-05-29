@@ -29,11 +29,11 @@ detailed below.
 
 ### Focus
 
-Since ARIA 1.2, focus stays on the trigger element at all times.
-(Previously)[deprecated-select-aria], it toggled between the trigger and the
-menu depending on the open state of the _select_ element. If any of your custom
-implementation involved the focus on the menu element, please change it as the
-focus stays on the trigger even when the menu is open.
+Since [ARIA 1.2](select-aria-example), focus stays on the trigger element at all
+times. (Previously)[deprecated-select-aria], it toggled between the trigger and
+the menu depending on the open state of the _select_ element. If any of your
+custom implementation involved the focus on the menu element, please change it
+as the focus stays on the trigger even when the menu is open.
 
 ### HTML Attributes
 
@@ -187,11 +187,12 @@ function stateReducer(state, actionAndChanges) {
 
 ### HTML Attributes
 
-The biggest change is that the input wrapper element does not receive the
-combobox role attributes anymore. Previously[deprecated-combobox-aria], the role
-of _combobox_, as well as other HTML attributes, had to be added on the input
-parent element. Some attributes that belonged to the wrapper element are now
-added on the input element. The changes are as follows:
+The biggest change in [ARIA 1.2](combobox-aria-example) is that the input
+wrapper element does not receive the combobox role attributes anymore.
+Previously[deprecated-combobox-aria], the role of _combobox_, as well as other
+HTML attributes, had to be added on the input parent element. Some attributes
+that belonged to the wrapper element are now added on the input element. The
+changes are as follows:
 
 - getComboboxProps has been removed.
 - getInputProps additions:
@@ -212,12 +213,7 @@ below.
   - _ArrowUp+Alt_: closes the menu and selects the highlighted item.
   - _PageUp_: if menu is open, moves highlight by 10 positions to the start.
   - _PageDown_: if menu is open, moves highlight by 10 positions to the end.
-  - _Click_: if menu is closed, opens the menu. If menu is open, closes the
-    menu. Acts as a toggle.
-  - _Focus_: **deprecated** does nothing starting **7.1**. It will not open the
-    menu anymore. The 7.0 behaviour of opening the menu on focus was a wrong
-    interpretation of the ARIA 1.2 pattern. It was removed in 7.1 in favour of
-    the input click toggling the menu.
+  - _Focus_: if menu is closed, opens the menu.
 
 - getInputProps changes:
   - _ArrowUp_: moves highlight one position up. _Shift_ modifier is not
@@ -233,25 +229,20 @@ following additions:
 
 - InputKeyDownPageUp
 - InputKeyDownPageDown
-- InputClick
-- InputFocus **deprecated** state change is not triggered anymore, starting with
-  **7.1**. It will removed in a subsequent release. Kept it for now in the code
-  to not deliver a breaking change shortly after version 7, but it will not be
-  received by `stateReducer` since it does not change the state anymore.
+- InputFocus
 
 You don't need to change your reducer if you want to keep the 1.2 functionality
-provided by default. However, if you want, for example, to keep the menu open
-state when the input gets clicked, and override the 1.2 behaviour of menu toggle
-on input click, you can do the following:
+provided by default. However, if you want to keep the menu closed when the input
+gets focus, you can do:
 
 ```js
 function stateReducer(state, actionAndChanges) {
   const {changes, type} = actionAndChanges
   switch (type) {
-    case useCombobox.stateChangeTypes.InputClick:
+    case useCombobox.stateChangeTypes.InputFocus:
       return {
         ...changes,
-        isOpen: state.isOpen, // do not toggle the menu when input is clicked.
+        isOpen: state.isOpen, // keep the menu closed when input gets focused.
       }
     default:
       return changes

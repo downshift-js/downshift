@@ -449,7 +449,7 @@ function useCombobox(userProps = {}) {
           ),
           onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
           onBlur: callAllEventHandlers(onBlur, inputHandleBlur),
-          onClick: callAllEventHandlers(onClick, inputHandleClick), // ToDo: Remove me!
+          onClick: callAllEventHandlers(onClick, inputHandleClick),
         }
       }
 
