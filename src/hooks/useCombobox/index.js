@@ -392,9 +392,9 @@ function useCombobox(userProps = {}) {
         onKeyDown,
         onChange,
         onInput,
-        onFocus,
         onBlur,
         onChangeText,
+        onClick,
         refKey = 'ref',
         ref,
         ...rest
@@ -435,12 +435,11 @@ function useCombobox(userProps = {}) {
           })
         }
       }
-      const inputHandleFocus = () => {
-        if (!latestState.isOpen) {
-          dispatch({
-            type: stateChangeTypes.InputFocus,
-          })
-        }
+
+      const inputHandleClick = () => {
+        dispatch({
+          type: stateChangeTypes.InputClick,
+        })
       }
 
       /* istanbul ignore next (preact) */
@@ -456,7 +455,7 @@ function useCombobox(userProps = {}) {
           ),
           onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
           onBlur: callAllEventHandlers(onBlur, inputHandleBlur),
-          onFocus: callAllEventHandlers(onFocus, inputHandleFocus),
+          onClick: callAllEventHandlers(onClick, inputHandleClick),
         }
       }
 

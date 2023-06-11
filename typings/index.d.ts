@@ -408,7 +408,7 @@ export enum UseComboboxStateChangeTypes {
   InputKeyDownEnter = '__input_keydown_enter__',
   InputChange = '__input_change__',
   InputBlur = '__input_blur__',
-  InputFocus = '__input_focus__',
+  InputClick = '__input_click__',
   MenuMouseLeave = '__menu_mouse_leave__',
   ItemMouseMove = '__item_mouse_move__',
   ItemClick = '__item_click__',
@@ -542,7 +542,7 @@ export interface UseComboboxInterface {
     InputKeyDownEnter: UseComboboxStateChangeTypes.InputKeyDownEnter
     InputChange: UseComboboxStateChangeTypes.InputChange
     InputBlur: UseComboboxStateChangeTypes.InputBlur
-    InputFocus: UseComboboxStateChangeTypes.InputFocus
+    InputClick: UseComboboxStateChangeTypes.InputClick
     MenuMouseLeave: UseComboboxStateChangeTypes.MenuMouseLeave
     ItemMouseMove: UseComboboxStateChangeTypes.ItemMouseMove
     ItemClick: UseComboboxStateChangeTypes.ItemClick

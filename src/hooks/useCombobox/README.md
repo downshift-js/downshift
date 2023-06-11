@@ -611,7 +611,7 @@ The list of all possible values this `type` property can take is defined in
 - `useCombobox.stateChangeTypes.InputKeyDownPadeDown`
 - `useCombobox.stateChangeTypes.InputKeyDownEnter`
 - `useCombobox.stateChangeTypes.InputChange`
-- `useCombobox.stateChangeTypes.InputFocus`
+- `useCombobox.stateChangeTypes.InputClick`
 - `useCombobox.stateChangeTypes.InputBlur`
 - `useCombobox.stateChangeTypes.MenuMouseLeave`
 - `useCombobox.stateChangeTypes.ItemMouseMove`
@@ -891,8 +891,8 @@ Optional properties:
   However, if you are just rendering a primitive component like `<div>`, there
   is no need to specify this property. It defaults to `ref`.
 
-- `aria-label`: By default the input will add an `aria-labelledby` that refers to
-  the `<label>` rendered with `getLabelProps`. However, if you provide
+- `aria-label`: By default the input will add an `aria-labelledby` that refers
+  to the `<label>` rendered with `getLabelProps`. However, if you provide
   `aria-label` to give a more specific label that describes the options
   available, then `aria-labelledby` will not be provided and screen readers can
   use your `aria-label` instead.
@@ -976,7 +976,8 @@ described below.
 - `Escape`: It will close the menu if open. If the menu is closed, it will clear
   selection: the value in the `input` will become an empty string and the item
   stored as `selectedItem` will become `null`.
-- `Focus`: If the menu is closed, it will open it.
+- `Click`: If the menu is closed, it will open it. If the menu is open, it will
+  close it.
 - `Blur(Tab, Shift+Tab)`: It will close the menu and select the highlighted
   item, if any. The focus will move naturally to the next/previous element in
   the Tab order.

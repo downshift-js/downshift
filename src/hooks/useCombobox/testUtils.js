@@ -36,14 +36,21 @@ export function getInput() {
 export async function keyDownOnInput(keys) {
   if (document.activeElement !== getInput()) {
     getInput().focus()
-    await user.keyboard('{Escape}') // menu was opened because of focus, close it.
   }
 
   await user.keyboard(keys)
 }
 
 export async function changeInputValue(inputValue) {
-  await user.type(getInput(), inputValue)
+  if (document.activeElement !== getInput()) {
+    getInput().focus()
+  }
+
+  await user.keyboard(inputValue)
+}
+
+export async function clickOnInput() {
+  await user.click(getInput())
 }
 
 export const renderCombobox = (props, uiCallback) => {

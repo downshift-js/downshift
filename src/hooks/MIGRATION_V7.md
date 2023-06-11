@@ -29,11 +29,11 @@ detailed below.
 
 ### Focus
 
-Since ARIA 1.2, focus stays on the trigger element at all times.
-(Previously)[deprecated-select-aria], it toggled between the trigger and the
-menu depending on the open state of the _select_ element. If any of your custom
-implementation involved the focus on the menu element, please change it as the
-focus stays on the trigger even when the menu is open.
+Since [ARIA 1.2](select-aria-example), focus stays on the trigger element at all
+times. (Previously)[deprecated-select-aria], it toggled between the trigger and
+the menu depending on the open state of the _select_ element. If any of your
+custom implementation involved the focus on the menu element, please change it
+as the focus stays on the trigger even when the menu is open.
 
 ### HTML Attributes
 
@@ -187,11 +187,12 @@ function stateReducer(state, actionAndChanges) {
 
 ### HTML Attributes
 
-The biggest change is that the input wrapper element does not receive the
-combobox role attributes anymore. Previously[deprecated-combobox-aria], the role
-of _combobox_, as well as other HTML attributes, had to be added on the input
-parent element. Some attributes that belonged to the wrapper element are now
-added on the input element. The changes are as follows:
+The biggest change in [ARIA 1.2](combobox-aria-example) is that the input
+wrapper element does not receive the combobox role attributes anymore.
+Previously[deprecated-combobox-aria], the role of _combobox_, as well as other
+HTML attributes, had to be added on the input parent element. Some attributes
+that belonged to the wrapper element are now added on the input element. The
+changes are as follows:
 
 - getComboboxProps has been removed.
 - getInputProps additions:
@@ -241,7 +242,7 @@ function stateReducer(state, actionAndChanges) {
     case useCombobox.stateChangeTypes.InputFocus:
       return {
         ...changes,
-        isOpen: false, // keep the menu closed when input gets focused.
+        isOpen: state.isOpen, // keep the menu closed when input gets focused.
       }
     default:
       return changes
