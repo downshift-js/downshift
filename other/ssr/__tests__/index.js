@@ -2,6 +2,8 @@ import * as React from 'react'
 import * as ReactDOMServer from 'react-dom/server'
 import Downshift, {resetIdCounter} from '../../../src'
 
+// something to commit
+
 test('does not throw an error when server rendering', () => {
   expect(() => {
     ReactDOMServer.renderToString(
