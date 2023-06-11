@@ -21,20 +21,20 @@ hooks and are detailed below.
 
 ### Click
 
-[ARIA 1.2](combobox-aria-example) recommends to toggle the combobox open state
-when clicking on the input. Previously, in v7, the menu was opened on receiving
-focus, from both mouse and keyboard. Starting with v8, focus will not trigger
-any state change. Only the click event will be handled and will trigger a menu
-toggle. Consequently:
+[ARIA 1.2](combobox-aria-example) recommends to toggle the menu open state at
+input click. Previously, in v7, the menu was opened on receiving focus, from
+both mouse and keyboard. Starting with v8, input focus will not trigger any
+state change anymore. Only the input click event will be handled and will
+trigger a menu toggle. Consequently:
 
 - getInputProps **will not** return any _Focus_ event handler.
 - getInputProps **will** return a _Click_ event handler.
 - `useCombobox.stateChangeTypes.InputFocus` has been removed.
 - `useCombobox.stateChangeTypes.InputClick` has been added instead.
 
-We recommend having this behaviour as it's part of the official ARIA combobox
-1.2 spec, but if you wish to avoid it and do not toggle the menu on click, use
-the stateReducer:
+We recommend having the default toggle on input click behaviour as it's part of
+the official ARIA combobox 1.2 spec, but if you wish to override it and not
+toggle the menu on click, use the stateReducer:
 
 ```js
 function stateReducer(state, actionAndChanges) {
@@ -51,9 +51,10 @@ function stateReducer(state, actionAndChanges) {
 }
 ```
 
-If you want to keep the v7 behaviour and open the menu on focus, keep the
+If you want to return to the v7 behaviour and open the menu on focus, keep the
 reducer above so you remove the toggle behaviour, and call the _openMenu_
-imperative method in a _onFocus_ function passed to _getInputProps_:
+imperative function, returned by useCombobox, in a _onFocus_ handler passed to
+_getInputProps_:
 
 ```js
 <input
@@ -66,10 +67,9 @@ imperative method in a _onFocus_ function passed to _getInputProps_:
 ```
 
 Consider to use the default 1.2 ARIA behaviour provided by default in order to
-align your widget to the original spec. This behaviour consistency improves the
-user experience, since all comboboxes, including yours, will behave the same,
-and users will not waste trying to understand custom behaviours on a widget that
-should behave consistently across all ecosystems.
+align your widget to the accessibility official spec. This behaviour consistency
+improves the user experience, since all comboboxes should behave the same and
+there won't be need for any additional guess work done by your users.
 
 [combobox-aria-example]:
   https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
