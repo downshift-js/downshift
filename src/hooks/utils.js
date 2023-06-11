@@ -1,4 +1,4 @@
-import {
+import React, {
   useRef,
   useCallback,
   useReducer,
@@ -93,24 +93,51 @@ const useIsomorphicLayoutEffect =
     ? useLayoutEffect
     : useEffect
 
-function useElementIds({
-  id = `downshift-${generateId()}`,
-  labelId,
-  menuId,
-  getItemId,
-  toggleButtonId,
-  inputId,
-}) {
-  const elementIdsRef = useRef({
-    labelId: labelId || `${id}-label`,
-    menuId: menuId || `${id}-menu`,
-    getItemId: getItemId || (index => `${id}-item-${index}`),
-    toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-    inputId: inputId || `${id}-input`,
-  })
+// istanbul ignore next
+const useElementIds =
+  'useId' in React // Avoid conditional useId call
+    ? function useElementIds({
+        id,
+        labelId,
+        menuId,
+        getItemId,
+        toggleButtonId,
+        inputId,
+      }) {
+        // Avoid conditional useId call
+        const reactId = `downshift-${React.useId()}`
+        if (!id) {
+          id = reactId
+        }
 
-  return elementIdsRef.current
-}
+        const elementIdsRef = useRef({
+          labelId: labelId || `${id}-label`,
+          menuId: menuId || `${id}-menu`,
+          getItemId: getItemId || (index => `${id}-item-${index}`),
+          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+          inputId: inputId || `${id}-input`,
+        })
+
+        return elementIdsRef.current
+      }
+    : function useElementIds({
+        id = `downshift-${generateId()}`,
+        labelId,
+        menuId,
+        getItemId,
+        toggleButtonId,
+        inputId,
+      }) {
+        const elementIdsRef = useRef({
+          labelId: labelId || `${id}-label`,
+          menuId: menuId || `${id}-menu`,
+          getItemId: getItemId || (index => `${id}-item-${index}`),
+          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+          inputId: inputId || `${id}-input`,
+        })
+
+        return elementIdsRef.current
+      }
 
 function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
   let item, index
