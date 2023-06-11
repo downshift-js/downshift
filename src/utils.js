@@ -1,4 +1,4 @@
-import computeScrollIntoView from 'compute-scroll-into-view'
+import compute from 'compute-scroll-into-view'
 import React from 'react'
 import {isPreact} from './is.macro'
 
