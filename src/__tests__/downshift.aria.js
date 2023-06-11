@@ -4,7 +4,7 @@ import Downshift from '../'
 import {resetIdCounter} from '../utils'
 
 beforeEach(() => {
-  resetIdCounter()
+  if (!('useId' in React)) resetIdCounter()
 })
 
 test('basic snapshot', () => {
