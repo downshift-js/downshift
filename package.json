@@ -76,6 +76,7 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.14.8",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@cypress/webpack-preprocessor": "^5.14.0",
     "@docusaurus/core": "^2.0.1",
