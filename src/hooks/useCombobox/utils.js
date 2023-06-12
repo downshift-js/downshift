@@ -38,6 +38,7 @@ export function getInitialState(props) {
 const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
+  isItemDisabled: PropTypes.func,
   selectedItemChanged: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
   inputValue: PropTypes.string,
@@ -104,4 +105,7 @@ export const defaultProps = {
   ...defaultPropsCommon,
   selectedItemChanged: (prevItem, item) => prevItem !== item,
   getA11yStatusMessage,
+  isItemDisabled() {
+    return false
+  },
 }

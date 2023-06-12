@@ -1,4 +1,4 @@
-import {act} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react-hooks'
 import {
   renderUseSelect,
   renderSelect,
@@ -11,6 +11,7 @@ import {
   clickOnToggleButton,
 } from '../testUtils'
 import {items, defaultIds} from '../../testUtils'
+import useSelect from '..'
 
 describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -62,16 +63,19 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
-    test('omit event handlers when disabled', () => {
-      const {result} = renderUseSelect()
+    test('omit click handler when disabled', () => {
+      const {result} = renderUseSelect({
+        isItemDisabled(_item, index) {
+          return index === 0
+        },
+      })
       const itemProps = result.current.getItemProps({
         index: 0,
-        disabled: true,
       })
 
       expect(itemProps.onMouseMove).toBeDefined()
       expect(itemProps.onClick).toBeUndefined()
-      expect(itemProps.disabled).toBe(true)
+      expect(itemProps['aria-disabled']).toBe(true)
     })
   })
 
@@ -243,13 +247,13 @@ describe('getItemProps', () => {
       it('removes highlight from previous item even if current item is disabled', async () => {
         const disabledIndex = 1
         const highlightedIndex = 2
-        const itemsWithDisabled = [...items].map((item, index) =>
-          index === disabledIndex ? {...item, disabled: true} : item,
-        )
 
         renderSelect({
-          items: itemsWithDisabled,
+          items,
           isOpen: true,
+          isItemDisabled(_item, index) {
+            return index === disabledIndex
+          },
         })
         const toggleButton = getToggleButton()
 
@@ -314,6 +318,27 @@ describe('getItemProps', () => {
       await keyDownOnToggleButton('{End}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('non production errors', () => {
+    beforeAll(() => {
+      jest.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterAll(() => {
+      jest.restoreAllMocks()
+    })
+
+    test('will be displayed if getInputProps is not called', () => {
+      renderHook(() => {
+        const {getItemProps} = useSelect({items})
+        getItemProps({disabled: true})
+      })
+
+      expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(
+        `Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useSelect.`,
+      )
     })
   })
 })

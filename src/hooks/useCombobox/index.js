@@ -161,7 +161,6 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowDown,
           altKey: event.altKey,
-          getItemNodeFromIndex,
         })
       },
       ArrowUp(event) {
@@ -169,7 +168,6 @@ function useCombobox(userProps = {}) {
         dispatch({
           type: stateChangeTypes.InputKeyDownArrowUp,
           altKey: event.altKey,
-          getItemNodeFromIndex,
         })
       },
       Home(event) {
@@ -180,7 +178,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownHome,
-          getItemNodeFromIndex,
         })
       },
       End(event) {
@@ -191,7 +188,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnd,
-          getItemNodeFromIndex,
         })
       },
       Escape(event) {
@@ -222,7 +218,6 @@ function useCombobox(userProps = {}) {
         event.preventDefault()
         dispatch({
           type: stateChangeTypes.InputKeyDownEnter,
-          getItemNodeFromIndex,
         })
       },
       PageUp(event) {
@@ -231,7 +226,6 @@ function useCombobox(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.InputKeyDownPageUp,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -241,12 +235,11 @@ function useCombobox(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.InputKeyDownPageDown,
-            getItemNodeFromIndex,
           })
         }
       },
     }),
-    [dispatch, latest, getItemNodeFromIndex],
+    [dispatch, latest],
   )
 
   // Getter props.
@@ -293,18 +286,24 @@ function useCombobox(userProps = {}) {
       onMouseDown,
       onClick,
       onPress,
-      disabled,
+      disabled: disabledProp,
       ...rest
     } = {}) => {
+      if (disabledProp !== undefined) {
+        console.warn(
+          'Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useCombobox.',
+        )
+      }
+
       const {props: latestProps, state: latestState} = latest.current
-      const [, index] = getItemAndIndex(
+      const [item, index] = getItemAndIndex(
         itemProp,
         indexProp,
         latestProps.items,
         'Pass either item or index to getItemProps!',
       )
-
-      const onSelectKey = isReactNative || isReactNativeWeb
+      const disabled = latestProps.isItemDisabled(item, index)
+      const onSelectKey = isReactNative
         ? /* istanbul ignore next (react-native) */ 'onPress'
         : 'onClick'
       const customClickHandler = isReactNative
@@ -336,10 +335,10 @@ function useCombobox(userProps = {}) {
             itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
-        disabled,
-        role: 'option',
+        'aria-disabled': disabled,
         'aria-selected': `${index === latestState.highlightedIndex}`,
         id: elementIds.getItemId(index),
+        role: 'option',
         ...(!disabled && {
           [onSelectKey]: callAllEventHandlers(
             customClickHandler,
@@ -412,9 +411,10 @@ function useCombobox(userProps = {}) {
       const inputHandleChange = event => {
         dispatch({
           type: stateChangeTypes.InputChange,
-          inputValue: isReactNative || isReactNativeWeb
-            ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
-            : event.target.value,
+          inputValue:
+            isReactNative || isReactNativeWeb
+              ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
+              : event.target.value,
         })
       }
       const inputHandleBlur = event => {

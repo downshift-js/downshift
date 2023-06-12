@@ -311,106 +311,96 @@ function isPlainObject(obj) {
 }
 
 /**
- * Returns the new index in the list, in a circular way. If next value is out of bonds from the total,
- * it will wrap to either 0 or itemCount - 1.
+ * Returns the next non-disabled highlightedIndex value.
  *
- * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
- * @param {number} baseIndex The initial position to move from.
- * @param {number} itemCount The total number of items.
- * @param {Function} getItemNodeFromIndex Used to check if item is disabled.
- * @param {boolean} circular Specify if navigation is circular. Default is true.
- * @returns {number} The new index after the move.
+ * @param {number} start The current highlightedIndex.
+ * @param {number} offset The offset from the current highlightedIndex to start searching.
+ * @param {unknown[]} items The items array.
+ * @param {(item: unknown, index: number) => boolean} isItemDisabled Function that tells if an item is disabled or not.
+ * @param {boolean?} circular If the search reaches the end, if it can search again starting from the other end.
+ * @returns {number} The next highlightedIndex.
  */
-function getNextWrappingIndex(
-  moveAmount,
-  baseIndex,
-  itemCount,
-  getItemNodeFromIndex,
-  circular = true,
+function getHighlightedIndex(
+  start,
+  offset,
+  items,
+  isItemDisabled,
+  circular = false,
 ) {
-  if (itemCount === 0) {
+  const count = items.length
+  if (count === 0) {
     return -1
   }
 
-  const itemsLastIndex = itemCount - 1
+  const itemsLastIndex = count - 1
 
-  if (
-    typeof baseIndex !== 'number' ||
-    baseIndex < 0 ||
-    baseIndex >= itemCount
-  ) {
-    baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1
+  if (typeof start !== 'number' || start < 0 || start > itemsLastIndex) {
+    start = offset > 0 ? -1 : itemsLastIndex + 1
   }
 
-  let newIndex = baseIndex + moveAmount
+  let current = start + offset
 
-  if (newIndex < 0) {
-    newIndex = circular ? itemsLastIndex : 0
-  } else if (newIndex > itemsLastIndex) {
-    newIndex = circular ? 0 : itemsLastIndex
+  if (current < 0) {
+    current = circular ? itemsLastIndex : 0
+  } else if (current > itemsLastIndex) {
+    current = circular ? 0 : itemsLastIndex
   }
 
-  const nonDisabledNewIndex = getNextNonDisabledIndex(
-    moveAmount,
-    newIndex,
-    itemCount,
-    getItemNodeFromIndex,
+  const highlightedIndex = getNonDisabledIndex(
+    current,
+    offset < 0,
+    items,
+    isItemDisabled,
     circular,
   )
 
-  if (nonDisabledNewIndex === -1) {
-    return baseIndex >= itemCount ? -1 : baseIndex
+  if (highlightedIndex === -1) {
+    return start >= count ? -1 : start
   }
 
-  return nonDisabledNewIndex
+  return highlightedIndex
 }
 
 /**
- * Returns the next index in the list of an item that is not disabled.
+ * Returns the next non-disabled highlightedIndex value.
  *
- * @param {number} moveAmount Number of positions to move. Negative to move backwards, positive forwards.
- * @param {number} baseIndex The initial position to move from.
- * @param {number} itemCount The total number of items.
- * @param {Function} getItemNodeFromIndex Used to check if item is disabled.
- * @param {boolean} circular Specify if navigation is circular. Default is true.
- * @returns {number} The new index. Returns baseIndex if item is not disabled. Returns next non-disabled item otherwise. If no non-disabled found it will return -1.
+ * @param {number} start The current highlightedIndex.
+ * @param {boolean} backwards If true, it will search backwards from the start.
+ * @param {unknown[]} items The items array.
+ * @param {(item: unknown, index: number) => boolean} isItemDisabled Function that tells if an item is disabled or not.
+ * @param {boolean} circular If the search reaches the end, if it can search again starting from the other end.
+ * @returns {number} The next non-disabled index.
  */
-function getNextNonDisabledIndex(
-  moveAmount,
-  baseIndex,
-  itemCount,
-  getItemNodeFromIndex,
-  circular,
+function getNonDisabledIndex(
+  start,
+  backwards,
+  items,
+  isItemDisabled,
+  circular = false,
 ) {
-  const currentElementNode = getItemNodeFromIndex(baseIndex)
-  if (!currentElementNode || !currentElementNode.hasAttribute('disabled')) {
-    return baseIndex
-  }
+  const count = items.length
 
-  if (moveAmount > 0) {
-    for (let index = baseIndex + 1; index < itemCount; index++) {
-      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+  if (backwards) {
+    for (let index = start; index >= 0; index--) {
+      if (!isItemDisabled(items[index], index)) {
         return index
       }
     }
   } else {
-    for (let index = baseIndex - 1; index >= 0; index--) {
-      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+    for (let index = start; index < count; index++) {
+      if (!isItemDisabled(items[index], index)) {
         return index
       }
     }
   }
 
   if (circular) {
-    return moveAmount > 0
-      ? getNextNonDisabledIndex(1, 0, itemCount, getItemNodeFromIndex, false)
-      : getNextNonDisabledIndex(
-          -1,
-          itemCount - 1,
-          itemCount,
-          getItemNodeFromIndex,
-          false,
-        )
+    return getNonDisabledIndex(
+      backwards ? count - 1 : 0,
+      backwards,
+      items,
+      isItemDisabled,
+    )
   }
 
   return -1
@@ -492,10 +482,10 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-  getNextWrappingIndex,
-  getNextNonDisabledIndex,
   targetWithinDownshift,
   getState,
   isControlledProp,
   validateControlledUnchanged,
+  getHighlightedIndex,
+  getNonDisabledIndex,
 }

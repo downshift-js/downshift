@@ -269,6 +269,7 @@ export enum UseSelectStateChangeTypes {
 
 export interface UseSelectProps<Item> {
   items: Item[]
+  isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
@@ -305,7 +306,6 @@ export interface UseSelectStateChangeOptions<Item>
 
 export interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
-  getItemNodeFromIndex?: (index: number) => HTMLElement
   altKey?: boolean
   key?: string
   index?: number
@@ -330,7 +330,7 @@ export interface UseSelectGetToggleButtonPropsOptions
 export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
 
 export interface UseSelectGetItemPropsOptions<Item>
-  extends GetItemPropsOptions<Item>,
+  extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
     GetPropsWithRefKey {}
 
 export interface UseSelectPropGetters<Item> {
@@ -426,6 +426,7 @@ export enum UseComboboxStateChangeTypes {
 
 export interface UseComboboxProps<Item> {
   items: Item[]
+  isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
@@ -469,7 +470,6 @@ export interface UseComboboxStateChangeOptions<Item>
 export interface UseComboboxDispatchAction<Item> {
   type: UseComboboxStateChangeTypes
   altKey?: boolean
-  getItemNodeFromIndex?: (index: number) => HTMLElement
   inputValue?: string
   index?: number
   highlightedIndex?: number
@@ -493,7 +493,7 @@ export interface UseComboboxGetToggleButtonPropsOptions
 export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
 
 export interface UseComboboxGetItemPropsOptions<Item>
-  extends GetItemPropsOptions<Item>,
+  extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
     GetPropsWithRefKey {}
 
 export interface UseComboboxGetInputPropsOptions
