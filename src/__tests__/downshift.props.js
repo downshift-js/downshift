@@ -84,8 +84,12 @@ test('uses given environment', () => {
   const environment = {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
+    Node,
     document: {
       getElementById: jest.fn(() => document.createElement('div')),
+      createElement: jest.fn(),
+      body: {},
+      activeElement: {},
     },
   }
   const {unmount, setHighlightedIndex} = setup({environment})

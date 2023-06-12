@@ -115,6 +115,31 @@ describe('props', () => {
 
       expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
+
+    test('is added to the document provided by the user as prop', async () => {
+      const environment = {
+        document: {
+          getElementById: jest.fn(() => ({})),
+          createElement: jest.fn(),
+          activeElement: {},
+          body: {},
+        },
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        Node,
+      }
+      renderMultipleCombobox({
+        multipleSelectionProps: {
+          initialSelectedItems: [items[0], items[1]],
+          initialActiveIndex: 0,
+          environment,
+        },
+      })
+
+      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+
+      expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
+    })
   })
 
   describe('activeIndex', () => {
