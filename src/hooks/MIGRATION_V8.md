@@ -9,17 +9,51 @@ hooks and are detailed below.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [useSelect](#useselect)
-- [useCombobox](#usecombobox)
-  - [Click](#click)
+- [isItemDisabled](#isitemdisabled)
+  - [useCombobox input click](#usecombobox-input-click)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## useSelect
+## isItemDisabled
 
-## useCombobox
+Both `useCombobox` and `useSelect` now support the `isItemDisabled` function.
+This new API is used to mark menu items as disabled, and as such remove the from
+the navigation and prevent them from being selected. The old API required
+passing the `disabled` prop to the `getItemProps` function. This old API has
+been removed and you will receive a console warning if you are trying to use the
+`disabled` prop in getItemProps.
 
-### Click
+Example of API migration:
+
+Old:
+
+```jsx
+const items = [{value: 'item1'}, {value: 'item2'}]
+
+const {getInputProps, ...rest} = useCombobox({items})
+
+return (
+  // ... rest
+  <li {...getItemProps({item, disabled: item.value === 'item2'})}>
+)
+```
+
+New:
+
+```jsx
+const items = [{value: 'item1'}, {value: 'item2'}]
+
+const {getInputProps, ...rest} = useCombobox({items, isItemDisabled(item, _index) { return item.value === 'item2' }})
+
+return (
+  // ... rest
+  <li {...getItemProps({item})}>
+)
+```
+
+The API for Downshift remains unchange.
+
+### useCombobox input click
 
 [ARIA 1.2](combobox-aria-example) recommends to toggle the menu open state at
 input click. Previously, in v7, the menu was opened on receiving focus, from
