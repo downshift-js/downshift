@@ -1,6 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  getItemAndIndex,
   isAcceptedCharacterKey,
   useControlledReducer,
   getInitialState,
@@ -11,6 +10,7 @@ import {
   useControlPropsValidator,
   useElementIds,
   useMouseAndTouchTracker,
+  getItemAndIndex,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -180,7 +180,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowDown,
-          getItemNodeFromIndex,
           altKey: event.altKey,
         })
       },
@@ -189,7 +188,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownArrowUp,
-          getItemNodeFromIndex,
           altKey: event.altKey,
         })
       },
@@ -198,7 +196,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownHome,
-          getItemNodeFromIndex,
         })
       },
       End(event) {
@@ -206,7 +203,6 @@ function useSelect(userProps = {}) {
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownEnd,
-          getItemNodeFromIndex,
         })
       },
       Escape() {
@@ -231,7 +227,6 @@ function useSelect(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownPageUp,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -241,7 +236,6 @@ function useSelect(userProps = {}) {
 
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownPageDown,
-            getItemNodeFromIndex,
           })
         }
       },
@@ -259,14 +253,13 @@ function useSelect(userProps = {}) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
             key: ' ',
-            getItemNodeFromIndex,
           })
         } else {
           dispatch({type: stateChangeTypes.ToggleButtonKeyDownSpaceButton})
         }
       },
     }),
-    [dispatch, getItemNodeFromIndex, latest],
+    [dispatch, latest],
   )
 
   // Action functions.
@@ -382,7 +375,6 @@ function useSelect(userProps = {}) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
             key,
-            getItemNodeFromIndex,
           })
         }
       }
@@ -441,7 +433,6 @@ function useSelect(userProps = {}) {
       dispatch,
       mouseAndTouchTrackersRef,
       toggleButtonKeyDownHandlers,
-      getItemNodeFromIndex,
     ],
   )
   const getItemProps = useCallback(
@@ -452,10 +443,16 @@ function useSelect(userProps = {}) {
       onClick,
       onPress,
       refKey = 'ref',
+      disabled: disabledProp,
       ref,
-      disabled,
       ...rest
     } = {}) => {
+      if (disabledProp !== undefined) {
+        console.warn(
+          'Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useSelect.',
+        )
+      }
+
       const {state: latestState, props: latestProps} = latest.current
       const [item, index] = getItemAndIndex(
         itemProp,
@@ -463,6 +460,7 @@ function useSelect(userProps = {}) {
         latestProps.items,
         'Pass either item or index to getItemProps!',
       )
+      const disabled = latestProps.isItemDisabled(item, index)
 
       const itemHandleMouseMove = () => {
         if (index === latestState.highlightedIndex) {
@@ -483,15 +481,15 @@ function useSelect(userProps = {}) {
       }
 
       const itemProps = {
-        disabled,
-        role: 'option',
-        'aria-selected': `${item === selectedItem}`,
-        id: elementIds.getItemId(index),
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
             itemRefs.current[elementIds.getItemId(index)] = itemNode
           }
         }),
+        'aria-disabled': disabled,
+        'aria-selected': `${item === latestState.selectedItem}`,
+        id: elementIds.getItemId(index),
+        role: 'option',
         ...rest,
       }
 
@@ -511,7 +509,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, selectedItem, elementIds, shouldScrollRef, dispatch],
+    [latest, elementIds, shouldScrollRef, dispatch],
   )
 
   return {

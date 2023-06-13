@@ -23,11 +23,11 @@ import {
   requiredProp,
   scrollIntoView,
   unwrapArray,
-  getNextWrappingIndex,
-  getNextNonDisabledIndex,
   getState,
   isControlledProp,
   validateControlledUnchanged,
+  getHighlightedIndex,
+  getNonDisabledIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -226,6 +226,12 @@ class Downshift extends Component {
     return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
+  isItemDisabled = (_item, index) => {
+    const currentElementNode = this.getItemNodeFromIndex(index)
+
+    return currentElementNode && currentElementNode.hasAttribute('disabled')
+  }
+
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
     otherStateToSet = {},
@@ -246,11 +252,12 @@ class Downshift extends Component {
     const itemCount = this.getItemCount()
     const {highlightedIndex} = this.getState()
     if (itemCount > 0) {
-      const nextHighlightedIndex = getNextWrappingIndex(
-        amount,
+      const nextHighlightedIndex = getHighlightedIndex(
         highlightedIndex,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
+        amount,
+        {length: itemCount},
+        this.isItemDisabled,
+        true,
       )
       this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
     }
@@ -525,11 +532,12 @@ class Downshift extends Component {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
               const {highlightedIndex} = this.getState()
-              const nextHighlightedIndex = getNextWrappingIndex(
-                1,
+              const nextHighlightedIndex = getHighlightedIndex(
                 highlightedIndex,
-                itemCount,
-                index => this.getItemNodeFromIndex(index),
+                1,
+                {length: itemCount},
+                this.isItemDisabled,
+                true,
               )
 
               this.setHighlightedIndex(nextHighlightedIndex, {
@@ -559,11 +567,12 @@ class Downshift extends Component {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
               const {highlightedIndex} = this.getState()
-              const nextHighlightedIndex = getNextWrappingIndex(
-                -1,
+              const nextHighlightedIndex = getHighlightedIndex(
                 highlightedIndex,
-                itemCount,
-                index => this.getItemNodeFromIndex(index),
+                -1,
+                {length: itemCount},
+                this.isItemDisabled,
+                true,
               )
 
               this.setHighlightedIndex(nextHighlightedIndex, {
@@ -632,12 +641,11 @@ class Downshift extends Component {
       }
 
       // get next non-disabled starting downwards from 0 if that's disabled.
-      const newHighlightedIndex = getNextNonDisabledIndex(
-        1,
+      const newHighlightedIndex = getNonDisabledIndex(
         0,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
         false,
+        {length: itemCount},
+        this.isItemDisabled,
       )
 
       this.setHighlightedIndex(newHighlightedIndex, {
@@ -661,12 +669,11 @@ class Downshift extends Component {
       }
 
       // get next non-disabled starting upwards from last index if that's disabled.
-      const newHighlightedIndex = getNextNonDisabledIndex(
-        -1,
+      const newHighlightedIndex = getNonDisabledIndex(
         itemCount - 1,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
-        false,
+        true,
+        {length: itemCount},
+        this.isItemDisabled,
       )
 
       this.setHighlightedIndex(newHighlightedIndex, {
@@ -850,9 +857,10 @@ class Downshift extends Component {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative || isReactNativeWeb
-        ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
-        : event.target.value,
+      inputValue:
+        isReactNative || isReactNativeWeb
+          ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
+          : event.target.value,
       highlightedIndex: this.props.defaultHighlightedIndex,
     })
   }
@@ -918,9 +926,10 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative || isReactNativeWeb
-      ? /* istanbul ignore next (react-native) */ 'onPress'
-      : 'onClick'
+    const onSelectKey =
+      isReactNative || isReactNativeWeb
+        ? /* istanbul ignore next (react-native) */ 'onPress'
+        : 'onClick'
     const customClickHandler = isReactNative
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick

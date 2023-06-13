@@ -1,4 +1,4 @@
-import {act} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react-hooks'
 import {
   renderCombobox,
   renderUseCombobox,
@@ -11,6 +11,7 @@ import {
   clickOnItemAtIndex,
   keyDownOnInput,
 } from '../testUtils'
+import useCombobox from '..'
 
 describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -58,17 +59,20 @@ describe('getItemProps', () => {
       expect(itemProps['aria-selected']).toEqual('false')
     })
 
-    test("handlers are not called if it's disabled", () => {
-      const {result} = renderUseCombobox()
+    test("click handler is not called if it's disabled", () => {
+      const {result} = renderUseCombobox({
+        isItemDisabled(_item, index) {
+          return index === 0
+        },
+      })
       const itemProps = result.current.getItemProps({
-        disabled: true,
         index: 0,
       })
 
       expect(itemProps.onClick).toBeUndefined()
       expect(itemProps.onMouseMove).toBeDefined()
       expect(itemProps.onMouseDown).toBeDefined()
-      expect(itemProps.disabled).toBe(true)
+      expect(itemProps['aria-disabled']).toBe(true)
     })
   })
 
@@ -256,13 +260,13 @@ describe('getItemProps', () => {
       it('removes highlight from previous item even if current item is disabled', async () => {
         const disabledIndex = 1
         const highlightedIndex = 2
-        const itemsWithDisabled = [...items].map((item, index) =>
-          index === disabledIndex ? {...item, disabled: true} : item,
-        )
 
         renderCombobox({
-          items: itemsWithDisabled,
+          items,
           isOpen: true,
+          isItemDisabled(_item, index) {
+            return index === disabledIndex
+          },
         })
         const input = getInput()
 
@@ -325,6 +329,27 @@ describe('getItemProps', () => {
       await keyDownOnInput('{End}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('non production errors', () => {
+    beforeAll(() => {
+      jest.spyOn(console, 'warn').mockImplementation(() => {})
+    })
+
+    afterAll(() => {
+      jest.restoreAllMocks()
+    })
+
+    test('will be displayed if getInputProps is not called', () => {
+      renderHook(() => {
+        const {getItemProps} = useCombobox({items})
+        getItemProps({disabled: true})
+      })
+
+      expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(
+        `Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useCombobox.`,
+      )
     })
   })
 })

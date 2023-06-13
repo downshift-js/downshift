@@ -4,7 +4,7 @@ import reducer from '../reducer'
 describe('getItemIndexByCharacterKey', () => {
   const items = ['a', 'b', 'aba', 'aab', 'bab']
   const itemToString = jest.fn().mockImplementation(item => item)
-  const getItemNodeFromIndex = jest.fn()
+  const isItemDisabled = jest.fn().mockReturnValue(false)
 
   test('returns to check from start if from highlightedIndex does not find anything', () => {
     const index = getItemIndexByCharacterKey({
@@ -12,7 +12,7 @@ describe('getItemIndexByCharacterKey', () => {
       highlightedIndex: 3,
       items,
       itemToString,
-      getItemNodeFromIndex,
+      isItemDisabled,
     })
     expect(index).toBe(0)
   })
@@ -23,7 +23,7 @@ describe('getItemIndexByCharacterKey', () => {
       highlightedIndex: 2,
       items,
       itemToString,
-      getItemNodeFromIndex,
+      isItemDisabled,
     })
     expect(index).toBe(2)
   })
@@ -34,7 +34,7 @@ describe('getItemIndexByCharacterKey', () => {
       highlightedIndex: 2,
       items,
       itemToString,
-      getItemNodeFromIndex,
+      isItemDisabled,
     })
     expect(index).toBe(3)
   })
@@ -49,9 +49,9 @@ describe('getItemIndexByCharacterKey', () => {
         highlightedIndex,
         items,
         itemToString,
-        getItemNodeFromIndex: jest
+        isItemDisabled: jest
           .fn()
-          .mockImplementation(index => ({hasAttribute: () => index === 1})),
+          .mockImplementation((_item, index) => index === 1),
       }),
     ).toEqual(4)
   })
