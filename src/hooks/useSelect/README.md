@@ -42,6 +42,7 @@ guide][migration-guide-v7] and update if necessary.
   - [onSelectedItemChange](#onselecteditemchange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
+  - [isItemDisabled](#isitemdisabled)
   - [initialSelectedItem](#initialselecteditem)
   - [initialIsOpen](#initialisopen)
   - [initialHighlightedIndex](#initialhighlightedindex)
@@ -271,6 +272,14 @@ function stateReducer(state, actionAndChanges) {
 > return the state changes you want to have happen.
 
 ## Advanced Props
+
+### isItemDisabled
+
+> `function(item: any, index: number)` | defaults to: `(_item, _index) => false`
+
+If an item needs to be marked as disabled, this function needs to return `true`
+for that item. Disabled items will be skipped from keyboard navigation, will not
+be selected and will be marked as disabled for screen readers.
 
 ### initialSelectedItem
 
@@ -710,10 +719,6 @@ required to pass either `item` or `index` to `getItemProps`.
   windowing library like `react-virtualized`.
 
 Optional properties:
-
-- `disabled`: If this is set to `true`, then all of the downshift item event
-  handlers will be omitted. Items will not be highlighted when hovered, and
-  items will not be selected when clicked.
 
 - `ref`: if you need to access the item element via a ref object, you'd call the
   function like this: `getItemProps({ref: yourItemRef})`. As a result, the item
