@@ -3,8 +3,6 @@ import * as ReactNative from 'react-native'
 
 type Callback = () => void
 
-type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
-
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
@@ -208,25 +206,25 @@ export interface GetItemPropsReturnValue {
 
 export interface PropGetters<Item> {
   getRootProps: <Options>(
-    options?: Overwrite<GetRootPropsOptions, Options>,
+    options?: GetRootPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<GetRootPropsReturnValue, Options>
+  ) => GetRootPropsReturnValue & Options
   getToggleButtonProps: <Options>(
-    options?: Overwrite<GetToggleButtonPropsOptions, Options>,
-  ) => Overwrite<GetToggleButtonPropsReturnValue, Options>
+    options?: GetToggleButtonPropsOptions & Options,
+  ) => GetToggleButtonPropsReturnValue & Options
   getLabelProps: <Options>(
-    options?: Overwrite<GetLabelPropsOptions, Options>,
-  ) => Overwrite<GetLabelPropsReturnValue, Options>
+    options?: GetLabelPropsOptions & Options,
+  ) => GetLabelPropsReturnValue & Options
   getMenuProps: <Options>(
-    options?: Overwrite<GetMenuPropsOptions, Options>,
+    options?: GetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<GetMenuPropsReturnValue, Options>
+  ) => GetMenuPropsReturnValue & Options
   getInputProps: <Options>(
-    options?: Overwrite<GetInputPropsOptions, Options>,
-  ) => Overwrite<GetInputPropsReturnValue, Options>
+    options?: GetInputPropsOptions & Options,
+  ) => GetInputPropsReturnValue & Options
   getItemProps: <Options>(
-    options: Overwrite<GetItemPropsOptions<Item>, Options>,
-  ) => Overwrite<GetItemPropsReturnValue<Item>, Options>
+    options: GetItemPropsOptions<Item> & Options,
+  ) => GetItemPropsReturnValue<Item> & Options
 }
 
 export interface Actions<Item> {
@@ -433,19 +431,19 @@ export interface UseSelectGetItemPropsReturnValue
 
 export interface UseSelectPropGetters<Item> {
   getToggleButtonProps: <Options>(
-    options?: Overwrite<UseSelectGetToggleButtonPropsOptions, Options>,
+    options?: UseSelectGetToggleButtonPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseSelectGetToggleButtonReturnValue, Options>
+  ) => UseSelectGetToggleButtonReturnValue & Options
   getLabelProps: <Options>(
-    options?: Overwrite<UseSelectGetLabelPropsOptions, Options>,
-  ) => Overwrite<UseSelectGetLabelPropsReturnValue, Options>
+    options?: UseSelectGetLabelPropsOptions & Options,
+  ) => UseSelectGetLabelPropsReturnValue & Options
   getMenuProps: <Options>(
-    options?: Overwrite<UseSelectGetMenuPropsOptions, Options>,
+    options?: UseSelectGetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseSelectGetMenuReturnValue, Options>
+  ) => UseSelectGetMenuReturnValue & Options
   getItemProps: <Options>(
-    options: Overwrite<UseSelectGetItemPropsOptions<Item>, Overwrite>,
-  ) => Overwrite<UseSelectGetItemPropsReturnValue, Options>
+    options: UseSelectGetItemPropsOptions<Item> & Options,
+  ) => UseSelectGetItemPropsReturnValue & Options
 }
 
 export interface UseSelectActions<Item> {
@@ -634,22 +632,22 @@ export interface UseComboboxGetInputPropsReturnValue
 }
 export interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: <Options>(
-    options?: Overwrite<UseComboboxGetToggleButtonPropsOptions, Options>,
-  ) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
+    options?: UseComboboxGetToggleButtonPropsOptions & Options,
+  ) => UseComboboxGetToggleButtonPropsReturnValue & Options
   getLabelProps: <Options>(
-    options?: Overwrite<UseComboboxGetLabelPropsOptions, Options>,
-  ) => Overwrite<UseComboboxGetLabelPropsReturnValue, Options>
+    options?: UseComboboxGetLabelPropsOptions & Options,
+  ) => UseComboboxGetLabelPropsReturnValue & Options
   getMenuProps: <Options>(
-    options?: Overwrite<UseComboboxGetMenuPropsOptions, Options>,
+    options?: UseComboboxGetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseComboboxGetMenuPropsReturnValue, Options>
+  ) => UseComboboxGetMenuPropsReturnValue & Options
   getItemProps: <Options>(
-    options: Overwrite<UseComboboxGetItemPropsOptions<Item>, Options>,
-  ) => Overwrite<UseComboboxGetItemPropsReturnValue, Options>
+    options: UseComboboxGetItemPropsOptions<Item> & Options,
+  ) => UseComboboxGetItemPropsReturnValue & Options
   getInputProps: <Options>(
-    options?: Overwrite<UseComboboxGetInputPropsOptions, Options>,
+    options?: UseComboboxGetInputPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
+  ) => UseComboboxGetInputPropsReturnValue & Options
 }
 
 export interface UseComboboxActions<Item> {
@@ -776,30 +774,33 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
   selectedItem: Item
 }
 
-export interface UseMultipleSelectionComboboxGetDropdownProps
-  extends GetInputPropsOptions,
-    GetPropsWithRefKey {
-  preventKeyAction?: boolean
+export interface UseMultipleSelectionGetSelectedItemPropsReturnValue {
+  ref?: React.RefObject
+  tabIndex: 0 | -1
+  onClick: React.MouseEventHandler
+  onKeyDown: React.KeyboardEventHandler
 }
 
-export interface UseMultipleSelectionSelectGetDropdownProps
-  extends GetToggleButtonPropsOptions,
-    GetPropsWithRefKey {
-  preventKeyAction?: boolean
-}
+export type UseMultipleSelectionGetDropdownPropsOptions = GetInputPropsOptions &
+  GetToggleButtonPropsOptions &
+  GetPropsWithRefKey & {
+    preventKeyAction?: boolean
+  }
 
-export type UseMultipleSelectionGetDropdownProps =
-  | UseMultipleSelectionSelectGetDropdownProps
-  | UseMultipleSelectionComboboxGetDropdownProps
+export interface UseMultipleSelectionGetDropdownPropsReturnValue {
+  ref?: React.RefObject
+  onClick?: React.MouseEventHandler
+  onKeyDown?: React.KeyboardEventHandler
+}
 
 export interface UseMultipleSelectionPropGetters<Item> {
-  getDropdownProps: (
-    options?: UseMultipleSelectionGetDropdownProps,
+  getDropdownProps: <Options>(
+    options?: UseMultipleSelectionGetDropdownPropsOptions & Options,
     extraOptions?: GetPropsCommonOptions,
-  ) => any
-  getSelectedItemProps: (
-    options: UseMultipleSelectionGetSelectedItemPropsOptions<Item>,
-  ) => any
+  ) => UseMultipleSelectionGetDropdownPropsReturnValue & Options
+  getSelectedItemProps: <Options>(
+    options: UseMultipleSelectionGetSelectedItemPropsOptions<Item> & Options,
+  ) => UseMultipleSelectionGetSelectedItemPropsReturnValue & Options
 }
 
 export interface UseMultipleSelectionActions<Item> {
