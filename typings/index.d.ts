@@ -3,6 +3,8 @@ import * as ReactNative from 'react-native'
 
 type Callback = () => void
 
+type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
+
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
@@ -131,13 +133,13 @@ export interface GetInputPropsReturnValue {
   'aria-controls': string | undefined
   'aria-labelledby': string | undefined
   autoComplete: 'off'
-  value: string
   id: string
   onChange?: React.ChangeEventHandler
   onChangeText?: React.ChangeEventHandler
   onInput?: React.FormEventHandler
   onKeyDown?: React.KeyboardEventHandler
   onBlur?: React.FocusEventHandler
+  value: string
 }
 
 export interface GetLabelPropsOptions
@@ -154,8 +156,6 @@ export interface GetToggleButtonPropsOptions
 }
 
 interface GetToggleButtonPropsReturnValue {
-  type: 'button'
-  role: 'button'
   'aria-label': 'close menu' | 'open menu'
   'aria-haspopup': true
   'data-toggle': true
@@ -164,6 +164,8 @@ interface GetToggleButtonPropsReturnValue {
   onKeyDown?: React.KeyboardEventHandler
   onKeyUp?: React.KeyboardEventHandler
   onBlur?: React.FocusEventHandler
+  role: 'button'
+  type: 'button'
 }
 export interface GetMenuPropsOptions
   extends React.HTMLProps<HTMLElement>,
@@ -172,9 +174,9 @@ export interface GetMenuPropsOptions
 }
 
 export interface GetMenuPropsReturnValue {
+  'aria-labelledby': string | undefined
   ref?: React.RefObject
   role: 'listbox'
-  'aria-labelledby': string | undefined
   id: string
 }
 
@@ -197,34 +199,34 @@ export interface GetItemPropsOptions<Item>
 export interface GetItemPropsReturnValue {
   'aria-selected': boolean
   id: string
-  role: 'option'
   onClick?: React.MouseEventHandler
   onMouseDown?: React.MouseEventHandler
   onMouseMove?: React.MouseEventHandler
   onPress?: React.MouseEventHandler
+  role: 'option'
 }
 
 export interface PropGetters<Item> {
   getRootProps: <Options>(
     options?: GetRootPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => GetRootPropsReturnValue & Options
+  ) => Overwrite<GetRootPropsReturnValue, Options>
   getToggleButtonProps: <Options>(
     options?: GetToggleButtonPropsOptions & Options,
-  ) => GetToggleButtonPropsReturnValue & Options
+  ) => Overwrite<GetToggleButtonPropsReturnValue, Options>
   getLabelProps: <Options>(
     options?: GetLabelPropsOptions & Options,
-  ) => GetLabelPropsReturnValue & Options
+  ) => Overwrite<GetLabelPropsReturnValue, Options>
   getMenuProps: <Options>(
     options?: GetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => GetMenuPropsReturnValue & Options
+  ) => Overwrite<GetMenuPropsReturnValue, Options>
   getInputProps: <Options>(
     options?: GetInputPropsOptions & Options,
-  ) => GetInputPropsReturnValue & Options
+  ) => Overwrite<GetInputPropsReturnValue, Options>
   getItemProps: <Options>(
     options: GetItemPropsOptions<Item> & Options,
-  ) => GetItemPropsReturnValue<Item> & Options
+  ) => Omit<Overwrite<GetItemPropsReturnValue, Options>, 'index' | 'item'>
 }
 
 export interface Actions<Item> {
@@ -404,13 +406,13 @@ export interface UseSelectGetToggleButtonReturnValue
     GetToggleButtonPropsReturnValue,
     'onBlur' | 'onClick' | 'onPress' | 'onKeyDown'
   > {
-  ref?: React.RefObject
   'aria-activedescendant': string
   'aria-controls': string
   'aria-expanded': boolean
   'aria-haspopup': 'listbox'
   'aria-labelledby': string | undefined
   id: string
+  ref?: React.RefObject
   role: 'combobox'
   tabIndex: 0
 }
@@ -424,7 +426,7 @@ export interface UseSelectGetItemPropsOptions<Item>
     GetPropsWithRefKey {}
 
 export interface UseSelectGetItemPropsReturnValue
-  extends Exclude<GetItemPropsReturnValue, 'onMouseDown'> {
+  extends Omit<GetItemPropsReturnValue, 'onMouseDown'> {
   'aria-disabled': boolean
   ref?: React.RefObject
 }
@@ -433,17 +435,20 @@ export interface UseSelectPropGetters<Item> {
   getToggleButtonProps: <Options>(
     options?: UseSelectGetToggleButtonPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => UseSelectGetToggleButtonReturnValue & Options
+  ) => Overwrite<UseSelectGetToggleButtonReturnValue, Options>
   getLabelProps: <Options>(
     options?: UseSelectGetLabelPropsOptions & Options,
-  ) => UseSelectGetLabelPropsReturnValue & Options
+  ) => Overwrite<UseSelectGetLabelPropsReturnValue, Options>
   getMenuProps: <Options>(
     options?: UseSelectGetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => UseSelectGetMenuReturnValue & Options
+  ) => Overwrite<UseSelectGetMenuReturnValue, Options>
   getItemProps: <Options>(
     options: UseSelectGetItemPropsOptions<Item> & Options,
-  ) => UseSelectGetItemPropsReturnValue & Options
+  ) => Omit<
+    Overwrite<UseSelectGetItemPropsReturnValue, Options>,
+    'index' | 'item'
+  >
 }
 
 export interface UseSelectActions<Item> {
@@ -594,13 +599,13 @@ export interface UseComboboxGetToggleButtonPropsOptions
     GetToggleButtonPropsOptions {}
 
 export interface UseComboboxGetToggleButtonPropsReturnValue {
-  ref?: React.RefObject
   'aria-controls': string
   'aria-expanded': boolean
   id: string
-  tabIndex: -1
   onPress?: (event: ReactNative.GestureResponderEvent) => void
   onClick?: React.MouseEventHandler
+  ref?: React.RefObject
+  tabIndex: -1
 }
 
 export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
@@ -633,21 +638,24 @@ export interface UseComboboxGetInputPropsReturnValue
 export interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: <Options>(
     options?: UseComboboxGetToggleButtonPropsOptions & Options,
-  ) => UseComboboxGetToggleButtonPropsReturnValue & Options
+  ) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
   getLabelProps: <Options>(
     options?: UseComboboxGetLabelPropsOptions & Options,
-  ) => UseComboboxGetLabelPropsReturnValue & Options
+  ) => Overwrite<UseComboboxGetLabelPropsReturnValue, Options>
   getMenuProps: <Options>(
     options?: UseComboboxGetMenuPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => UseComboboxGetMenuPropsReturnValue & Options
+  ) => Overwrite<UseComboboxGetMenuPropsReturnValue, Options>
   getItemProps: <Options>(
     options: UseComboboxGetItemPropsOptions<Item> & Options,
-  ) => UseComboboxGetItemPropsReturnValue & Options
+  ) => Omit<
+    Overwrite<UseComboboxGetItemPropsReturnValue, Options>,
+    'index' | 'item'
+  >
   getInputProps: <Options>(
     options?: UseComboboxGetInputPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
-  ) => UseComboboxGetInputPropsReturnValue & Options
+  ) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
 }
 
 export interface UseComboboxActions<Item> {
@@ -774,20 +782,19 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
   selectedItem: Item
 }
 
-export interface UseMultipleSelectionGetSelectedItemPropsReturnValue {
+export interface UseMultipleSelectionGetSelectedItemReturnValue {
   ref?: React.RefObject
   tabIndex: 0 | -1
   onClick: React.MouseEventHandler
   onKeyDown: React.KeyboardEventHandler
 }
 
-export type UseMultipleSelectionGetDropdownPropsOptions = GetInputPropsOptions &
-  GetToggleButtonPropsOptions &
-  GetPropsWithRefKey & {
-    preventKeyAction?: boolean
-  }
+export interface UseMultipleSelectionGetDropdownPropsOptions
+  extends React.HTMLProps<HTMLElement> {
+  preventKeyAction?: boolean
+}
 
-export interface UseMultipleSelectionGetDropdownPropsReturnValue {
+export interface UseMultipleSelectionGetDropdownReturnValue {
   ref?: React.RefObject
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
@@ -797,10 +804,16 @@ export interface UseMultipleSelectionPropGetters<Item> {
   getDropdownProps: <Options>(
     options?: UseMultipleSelectionGetDropdownPropsOptions & Options,
     extraOptions?: GetPropsCommonOptions,
-  ) => UseMultipleSelectionGetDropdownPropsReturnValue & Options
+  ) => Omit<
+    Overwrite<UseMultipleSelectionGetDropdownReturnValue, Options>,
+    'preventKeyAction'
+  >
   getSelectedItemProps: <Options>(
     options: UseMultipleSelectionGetSelectedItemPropsOptions<Item> & Options,
-  ) => UseMultipleSelectionGetSelectedItemPropsReturnValue & Options
+  ) => Omit<
+    Overwrite<UseMultipleSelectionGetSelectedItemReturnValue, Options>,
+    'index' | 'selectedItem'
+  >
 }
 
 export interface UseMultipleSelectionActions<Item> {
