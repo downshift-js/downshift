@@ -505,7 +505,7 @@ class Downshift extends Component {
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
-      'aria-owns': isOpen ? this.menuId : null,
+      'aria-owns': isOpen ? this.menuId : undefined,
       'aria-labelledby': this.labelId,
       ...rest,
     }
@@ -833,8 +833,8 @@ class Downshift extends Component {
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
-          : null,
-      'aria-controls': isOpen ? this.menuId : null,
+          : undefined,
+      'aria-controls': isOpen ? this.menuId : undefined,
       'aria-labelledby': rest && rest['aria-label'] ? undefined : this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
@@ -900,7 +900,8 @@ class Downshift extends Component {
     return {
       [refKey]: handleRefs(ref, this.menuRef),
       role: 'listbox',
-      'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
+      'aria-labelledby':
+        props && props['aria-label'] ? undefined : this.labelId,
       id: this.menuId,
       ...props,
     }

@@ -31,43 +31,55 @@ export default class App extends React.Component<Props, State> {
           getToggleButtonProps,
           getInputProps,
           getItemProps,
+          getLabelProps,
+          getRootProps,
+          getMenuProps,
           isOpen,
           inputValue,
           selectedItem,
           highlightedIndex,
-        }) => (
-          <div>
-            <input
-              {...getInputProps({
-                placeholder: 'Favorite color ?',
-              })}
-            />
-            <button {...getToggleButtonProps()} />
-            {isOpen ? (
-              <div style={{border: '1px solid #ccc'}}>
-                {items
-                  .filter(
-                    i =>
-                      !inputValue ||
-                      i.toLowerCase().includes(inputValue.toLowerCase()),
-                  )
-                  .map((item, index: number) => (
-                    <div
-                      {...getItemProps({item, index})}
-                      key={item}
-                      style={{
-                        backgroundColor:
-                          highlightedIndex === index ? 'gray' : 'white',
-                        fontWeight: selectedItem === item ? 'bold' : 'normal',
-                      }}
-                    >
-                      {item}
-                    </div>
-                  ))}
-              </div>
-            ) : null}
-          </div>
-        )}
+        }) => {
+          return (
+            <div>
+              <div {...getRootProps({}, {})}></div>
+              <label
+                {...getLabelProps()}
+              >
+                Hello:
+              </label>
+              <label {...getLabelProps()}>Hello:</label>
+              <input
+                {...getInputProps({
+                  placeholder: 'Favorite color ?',
+                })}
+              />
+              <button {...getToggleButtonProps()} />
+              {isOpen ? (
+                <div style={{border: '1px solid #ccc'}} {...getMenuProps()}>
+                  {items
+                    .filter(
+                      i =>
+                        !inputValue ||
+                        i.toLowerCase().includes(inputValue.toLowerCase()),
+                    )
+                    .map((item, index: number) => (
+                      <div
+                        {...getItemProps({item, index})}
+                        key={item}
+                        style={{
+                          backgroundColor:
+                            highlightedIndex === index ? 'gray' : 'white',
+                          fontWeight: selectedItem === item ? 'bold' : 'normal',
+                        }}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                </div>
+              ) : null}
+            </div>
+          )
+        }}
       </Downshift>
     )
   }
