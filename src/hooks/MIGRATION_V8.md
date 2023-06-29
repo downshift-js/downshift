@@ -114,5 +114,16 @@ whatever else the user passes as arguments. The type changes are done in
 [this PR](https://github.com/downshift-js/downshift/pull/1482), make sure you
 adapt your TS code, if applicable.
 
+Also, in the `Downshift` component, the return values for some getter prop
+values have changed from `null` to `undefined`, since that is what HTML elements
+expect (value or undefined). These values are also reflected in the TS types.
+
+- getRootProps: 'aria-owns': isOpen ? this.menuId : ~~null~~undefined,
+- getInputProps:
+  - 'aria-controls': isOpen ? this.menuId : ~~null~~undefined
+  - 'aria-activedescendant': isOpen && typeof highlightedIndex === 'number' &&
+    highlightedIndex >= 0 ? this.getItemId(highlightedIndex) : ~~null~~undefined
+- getMenuProps: props && props['aria-label'] ? ~~null~~undefined : this.labelId,
+
 [combobox-aria-example]:
   https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
