@@ -10,7 +10,7 @@ hooks and are detailed below.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [isItemDisabled](#isitemdisabled)
-  - [useCombobox input click](#usecombobox-input-click)
+- [useCombobox input click](#usecombobox-input-click)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -53,7 +53,7 @@ return (
 
 The API for Downshift remains unchange.
 
-### useCombobox input click
+## useCombobox input click
 
 [ARIA 1.2](combobox-aria-example) recommends to toggle the menu open state at
 input click. Previously, in v7, the menu was opened on receiving focus, from
@@ -104,6 +104,15 @@ Consider to use the default 1.2 ARIA behaviour provided by default in order to
 align your widget to the accessibility official spec. This behaviour consistency
 improves the user experience, since all comboboxes should behave the same and
 there won't be need for any additional guess work done by your users.
+
+## Getter props return value types
+
+Previously, the return value from the getter props returned by both Downshift
+and the hooks was `any`. In v8 we improved the types in order to reflect what is
+actually returned: the default values return by the getter prop function and
+whatever else the user passes as arguments. The type changes are done in
+[this PR](https://github.com/downshift-js/downshift/pull/1482), make sure you
+adapt your TS code, if applicable.
 
 [combobox-aria-example]:
   https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
