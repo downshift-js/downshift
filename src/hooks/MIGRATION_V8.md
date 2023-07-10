@@ -53,6 +53,8 @@ return (
 
 The API for Downshift remains unchange.
 
+Related PR: https://github.com/downshift-js/downshift/pull/1510
+
 ## useCombobox input click
 
 [ARIA 1.2](combobox-aria-example) recommends to toggle the menu open state at
@@ -105,6 +107,8 @@ align your widget to the accessibility official spec. This behaviour consistency
 improves the user experience, since all comboboxes should behave the same and
 there won't be need for any additional guess work done by your users.
 
+Related PR: https://github.com/downshift-js/downshift/pull/1440
+
 ## Getter props return value types
 
 Previously, the return value from the getter props returned by both Downshift
@@ -124,6 +128,17 @@ expect (value or undefined). These values are also reflected in the TS types.
   - 'aria-activedescendant': isOpen && typeof highlightedIndex === 'number' &&
     highlightedIndex >= 0 ? this.getItemId(highlightedIndex) : ~~null~~undefined
 - getMenuProps: props && props['aria-label'] ? ~~null~~undefined : this.labelId,
+
+Related PR: https://github.com/downshift-js/downshift/pull/1482
+
+## environment propTypes
+
+The `environment` prop is useful when you are using downshift in a context
+different than regular DOM. Its TS type has been updated to contain `Node` and
+the propTypes have also been updated to reflect the properties which are
+required by downshift from `environment`.
+
+Related PR: https://github.com/downshift-js/downshift/pull/1463
 
 [combobox-aria-example]:
   https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-autocomplete-list.html
