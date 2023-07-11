@@ -1353,7 +1353,7 @@ describe('getInputProps', () => {
     })
 
     describe('on blur', () => {
-      test('the open menu will be closed and highlighted item will be selected', async () => {
+      test('by tab the open menu will be closed and highlighted item will be selected', async () => {
         const initialHighlightedIndex = 2
         renderCombobox({
           initialIsOpen: true,
@@ -1366,7 +1366,7 @@ describe('getInputProps', () => {
         expect(getInput()).toHaveValue(items[initialHighlightedIndex])
       })
 
-      test('the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', async () => {
+      test('by tab the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', async () => {
         const initialHighlightedIndex = 2
         renderCombobox({
           initialIsOpen: true,
@@ -1381,7 +1381,7 @@ describe('getInputProps', () => {
         expect(getInput()).toHaveValue('')
       })
 
-      test('the value in the input will stay the same', async () => {
+      test('by tab the value in the input will stay the same', async () => {
         const inputValue = 'test me'
         renderCombobox({
           initialIsOpen: true,
@@ -1470,17 +1470,51 @@ describe('getInputProps', () => {
         )
       })
 
-      test('the open menu will be closed and highlighted item will not be selected if the blur event related target is null', () => {
+      test('from the last element in the tab order, the open menu will be closed and highlighted item will be selected', () => {
         const stateReducer = jest.fn().mockImplementation(s => s)
-        const {container} = renderCombobox({
+        renderCombobox({
+          isOpen: true,
+          highlightedIndex: 0,
+          stateReducer,
+        })
+
+        // tab from the last element in the tab order ends up on the body.
+        const body = {}
+        const actualBody = document.body
+        global.document = {...document, activeElement: body, body}
+        fireEvent.blur(getInput(), {relatedTarget: null}) // and also has relatedTarget: null, like when blur is performed by tab change
+
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer).toHaveBeenCalledWith(
+          {
+            highlightedIndex: 0,
+            inputValue: '',
+            isOpen: true,
+            selectedItem: null,
+          },
+          expect.objectContaining({
+            type: stateChangeTypes.InputBlur,
+            changes: {
+              highlightedIndex: -1,
+              inputValue: '',
+              isOpen: false,
+              selectedItem: null,
+            },
+          }),
+        )
+        global.document = {...document, body: actualBody}
+      })
+
+      test('by tab change the open menu will be closed and highlighted item will not be selected', () => {
+        const stateReducer = jest.fn().mockImplementation(s => s)
+        renderCombobox({
           isOpen: true,
           highlightedIndex: 0,
           stateReducer,
         })
         const input = getInput()
-        document.body.appendChild(container)
 
-        fireEvent.blur(input, {relatedTarget: null})
+        fireEvent.blur(input, {relatedTarget: null}) // to simulate blur by tab change
 
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
