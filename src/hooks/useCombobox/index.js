@@ -304,9 +304,10 @@ function useCombobox(userProps = {}) {
         'Pass either item or index to getItemProps!',
       )
 
-      const onSelectKey = isReactNative || isReactNativeWeb
-        ? /* istanbul ignore next (react-native) */ 'onPress'
-        : 'onClick'
+      const onSelectKey =
+        isReactNative || isReactNativeWeb
+          ? /* istanbul ignore next (react-native) */ 'onPress'
+          : 'onClick'
       const customClickHandler = isReactNative
         ? /* istanbul ignore next (react-native) */ onPress
         : onClick
@@ -412,9 +413,10 @@ function useCombobox(userProps = {}) {
       const inputHandleChange = event => {
         dispatch({
           type: stateChangeTypes.InputChange,
-          inputValue: isReactNative || isReactNativeWeb
-            ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
-            : event.target.value,
+          inputValue:
+            isReactNative || isReactNativeWeb
+              ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
+              : event.target.value,
         })
       }
       const inputHandleBlur = event => {
@@ -423,9 +425,13 @@ function useCombobox(userProps = {}) {
           latestState.isOpen &&
           !mouseAndTouchTrackersRef.current.isMouseDown
         ) {
+          const isBlurByTabChange =
+            event.relatedTarget === null &&
+            environment.document.activeElement !== environment.document.body
+
           dispatch({
             type: stateChangeTypes.InputBlur,
-            selectItem: event.relatedTarget !== null,
+            selectItem: !isBlurByTabChange,
           })
         }
       }
