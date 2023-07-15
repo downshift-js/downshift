@@ -2,8 +2,6 @@ import * as React from 'react'
 import * as ReactDOMServer from 'react-dom/server'
 import Downshift, {resetIdCounter} from '../../../src'
 
-// something to commit
-
 test('does not throw an error when server rendering', () => {
   expect(() => {
     ReactDOMServer.renderToString(
@@ -19,25 +17,27 @@ test('does not throw an error when server rendering', () => {
   }).not.toThrow()
 })
 
-test('resets idCounter', () => {
-  const getRenderedString = () => {
-    resetIdCounter()
-    return ReactDOMServer.renderToString(
-      <Downshift id="my-autocomplete-component">
-        {({getInputProps, getLabelProps}) => (
-          <div>
-            <label {...getLabelProps()} />
-            <input {...getInputProps()} />
-          </div>
-        )}
-      </Downshift>,
-    )
-  }
+if (!('useId' in React)) {
+  test('resets idCounter', () => {
+    const getRenderedString = () => {
+      resetIdCounter()
+      return ReactDOMServer.renderToString(
+        <Downshift id="my-autocomplete-component">
+          {({getInputProps, getLabelProps}) => (
+            <div>
+              <label {...getLabelProps()} />
+              <input {...getInputProps()} />
+            </div>
+          )}
+        </Downshift>,
+      )
+    }
 
-  const firstRun = getRenderedString()
-  const secondRun = getRenderedString()
+    const firstRun = getRenderedString()
+    const secondRun = getRenderedString()
 
-  expect(firstRun).toBe(secondRun)
-})
+    expect(firstRun).toBe(secondRun)
+  })
+}
 
 /* eslint jsx-a11y/label-has-for:0 */

@@ -1,10 +1,11 @@
-import {
+import React, {
   useRef,
   useCallback,
   useReducer,
   useEffect,
   useLayoutEffect,
 } from 'react'
+import PropTypes from 'prop-types'
 import {isReactNative} from '../is.macro'
 import {
   scrollIntoView,
@@ -93,24 +94,51 @@ const useIsomorphicLayoutEffect =
     ? useLayoutEffect
     : useEffect
 
-function useElementIds({
-  id = `downshift-${generateId()}`,
-  labelId,
-  menuId,
-  getItemId,
-  toggleButtonId,
-  inputId,
-}) {
-  const elementIdsRef = useRef({
-    labelId: labelId || `${id}-label`,
-    menuId: menuId || `${id}-menu`,
-    getItemId: getItemId || (index => `${id}-item-${index}`),
-    toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-    inputId: inputId || `${id}-input`,
-  })
+// istanbul ignore next
+const useElementIds =
+  'useId' in React // Avoid conditional useId call
+    ? function useElementIds({
+        id,
+        labelId,
+        menuId,
+        getItemId,
+        toggleButtonId,
+        inputId,
+      }) {
+        // Avoid conditional useId call
+        const reactId = `downshift-${React.useId()}`
+        if (!id) {
+          id = reactId
+        }
 
-  return elementIdsRef.current
-}
+        const elementIdsRef = useRef({
+          labelId: labelId || `${id}-label`,
+          menuId: menuId || `${id}-menu`,
+          getItemId: getItemId || (index => `${id}-item-${index}`),
+          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+          inputId: inputId || `${id}-input`,
+        })
+
+        return elementIdsRef.current
+      }
+    : function useElementIds({
+        id = `downshift-${generateId()}`,
+        labelId,
+        menuId,
+        getItemId,
+        toggleButtonId,
+        inputId,
+      }) {
+        const elementIdsRef = useRef({
+          labelId: labelId || `${id}-label`,
+          menuId: menuId || `${id}-menu`,
+          getItemId: getItemId || (index => `${id}-item-${index}`),
+          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+          inputId: inputId || `${id}-input`,
+        })
+
+        return elementIdsRef.current
+      }
 
 function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
   let item, index
@@ -549,6 +577,48 @@ function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
   }
 }
 
+// Shared between all exports.
+const commonPropTypes = {
+  environment: PropTypes.shape({
+    addEventListener: PropTypes.func.isRequired,
+    removeEventListener: PropTypes.func.isRequired,
+    document: PropTypes.shape({
+      createElement: PropTypes.func.isRequired,
+      getElementById: PropTypes.func.isRequired,
+      activeElement: PropTypes.any.isRequired,
+      body: PropTypes.any.isRequired,
+    }).isRequired,
+    Node: PropTypes.func.isRequired,
+  }),
+  itemToString: PropTypes.func,
+  stateReducer: PropTypes.func,
+}
+
+// Shared between useSelect, useCombobox, Downshift.
+const commonDropdownPropTypes = {
+  ...commonPropTypes,
+  getA11yStatusMessage: PropTypes.func,
+  highlightedIndex: PropTypes.number,
+  defaultHighlightedIndex: PropTypes.number,
+  initialHighlightedIndex: PropTypes.number,
+  isOpen: PropTypes.bool,
+  defaultIsOpen: PropTypes.bool,
+  initialIsOpen: PropTypes.bool,
+  selectedItem: PropTypes.any,
+  initialSelectedItem: PropTypes.any,
+  defaultSelectedItem: PropTypes.any,
+  id: PropTypes.string,
+  labelId: PropTypes.string,
+  menuId: PropTypes.string,
+  getItemId: PropTypes.func,
+  toggleButtonId: PropTypes.string,
+  onSelectedItemChange: PropTypes.func,
+  onHighlightedIndexChange: PropTypes.func,
+  onStateChange: PropTypes.func,
+  onIsOpenChange: PropTypes.func,
+  scrollIntoView: PropTypes.func,
+}
+
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -568,4 +638,6 @@ export {
   getItemAndIndex,
   useElementIds,
   getChangesOnSelection,
+  commonDropdownPropTypes,
+  commonPropTypes,
 }

@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types'
-import {defaultProps as commonDefaultProps} from '../utils'
+import {
+  commonDropdownPropTypes,
+  defaultProps as commonDefaultProps,
+} from '../utils'
 import {noop} from '../../utils'
 import {A11yStatusMessageOptions} from '../../types'
 import {GetItemIndexByCharacterKeyOptions} from './types'
@@ -9,7 +12,7 @@ export function getItemIndexByCharacterKey<Item>({
   highlightedIndex,
   items,
   itemToString,
-  getItemNodeFromIndex,
+  isItemDisabled,
 }: GetItemIndexByCharacterKeyOptions<Item>) {
   const lowerCasedKeysSoFar = keysSoFar.toLowerCase()
 
@@ -22,52 +25,22 @@ export function getItemIndexByCharacterKey<Item>({
 
     if (
       item !== undefined &&
-      itemToString(item).toLowerCase().startsWith(lowerCasedKeysSoFar)
+      itemToString(item).toLowerCase().startsWith(lowerCasedKeysSoFar) &&
+      !isItemDisabled(item, offsetIndex)
     ) {
-      const element = getItemNodeFromIndex(offsetIndex)
-
-      if (!element?.hasAttribute('disabled')) {
-        return offsetIndex
-      }
+      return offsetIndex
     }
   }
 
   return highlightedIndex
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const propTypes = {
+  ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
-  itemToString: PropTypes.func,
-  getA11yStatusMessage: PropTypes.func,
+  isItemDisabled: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
-  highlightedIndex: PropTypes.number,
-  defaultHighlightedIndex: PropTypes.number,
-  initialHighlightedIndex: PropTypes.number,
-  isOpen: PropTypes.bool,
-  defaultIsOpen: PropTypes.bool,
-  initialIsOpen: PropTypes.bool,
-  selectedItem: PropTypes.any,
-  initialSelectedItem: PropTypes.any,
-  defaultSelectedItem: PropTypes.any,
-  id: PropTypes.string,
-  labelId: PropTypes.string,
-  menuId: PropTypes.string,
-  getItemId: PropTypes.func,
-  toggleButtonId: PropTypes.string,
-  stateReducer: PropTypes.func,
-  onSelectedItemChange: PropTypes.func,
-  onHighlightedIndexChange: PropTypes.func,
-  onStateChange: PropTypes.func,
-  onIsOpenChange: PropTypes.func,
-  environment: PropTypes.shape({
-    addEventListener: PropTypes.func,
-    removeEventListener: PropTypes.func,
-    document: PropTypes.shape({
-      getElementById: PropTypes.func,
-      activeElement: PropTypes.any,
-      body: PropTypes.any,
-    }),
-  }),
 }
 
 /**
@@ -103,6 +76,9 @@ function getA11yStatusMessage<Item>({
 export const defaultProps = {
   ...commonDefaultProps,
   getA11yStatusMessage,
+  isItemDisabled() {
+    return false
+  },
 }
 
 // eslint-disable-next-line import/no-mutable-exports

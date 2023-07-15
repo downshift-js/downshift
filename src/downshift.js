@@ -23,11 +23,11 @@ import {
   requiredProp,
   scrollIntoView,
   unwrapArray,
-  getNextWrappingIndex,
-  getNextNonDisabledIndex,
   getState,
   isControlledProp,
   validateControlledUnchanged,
+  getHighlightedIndex,
+  getNonDisabledIndex,
 } from './utils'
 
 class Downshift extends Component {
@@ -52,13 +52,15 @@ class Downshift extends Component {
     itemCount: PropTypes.number,
     id: PropTypes.string,
     environment: PropTypes.shape({
-      addEventListener: PropTypes.func,
-      removeEventListener: PropTypes.func,
+      addEventListener: PropTypes.func.isRequired,
+      removeEventListener: PropTypes.func.isRequired,
       document: PropTypes.shape({
-        getElementById: PropTypes.func,
-        activeElement: PropTypes.any,
-        body: PropTypes.any,
-      }),
+        createElement: PropTypes.func.isRequired,
+        getElementById: PropTypes.func.isRequired,
+        activeElement: PropTypes.any.isRequired,
+        body: PropTypes.any.isRequired,
+      }).isRequired,
+      Node: PropTypes.func.isRequired,
     }),
     suppressRefError: PropTypes.bool,
     scrollIntoView: PropTypes.func,
@@ -224,6 +226,12 @@ class Downshift extends Component {
     return this.props.environment.document.getElementById(this.getItemId(index))
   }
 
+  isItemDisabled = (_item, index) => {
+    const currentElementNode = this.getItemNodeFromIndex(index)
+
+    return currentElementNode && currentElementNode.hasAttribute('disabled')
+  }
+
   setHighlightedIndex = (
     highlightedIndex = this.props.defaultHighlightedIndex,
     otherStateToSet = {},
@@ -244,11 +252,12 @@ class Downshift extends Component {
     const itemCount = this.getItemCount()
     const {highlightedIndex} = this.getState()
     if (itemCount > 0) {
-      const nextHighlightedIndex = getNextWrappingIndex(
-        amount,
+      const nextHighlightedIndex = getHighlightedIndex(
         highlightedIndex,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
+        amount,
+        {length: itemCount},
+        this.isItemDisabled,
+        true,
       )
       this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet)
     }
@@ -496,7 +505,7 @@ class Downshift extends Component {
       role: 'combobox',
       'aria-expanded': isOpen,
       'aria-haspopup': 'listbox',
-      'aria-owns': isOpen ? this.menuId : null,
+      'aria-owns': isOpen ? this.menuId : undefined,
       'aria-labelledby': this.labelId,
       ...rest,
     }
@@ -523,11 +532,12 @@ class Downshift extends Component {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
               const {highlightedIndex} = this.getState()
-              const nextHighlightedIndex = getNextWrappingIndex(
-                1,
+              const nextHighlightedIndex = getHighlightedIndex(
                 highlightedIndex,
-                itemCount,
-                index => this.getItemNodeFromIndex(index),
+                1,
+                {length: itemCount},
+                this.isItemDisabled,
+                true,
               )
 
               this.setHighlightedIndex(nextHighlightedIndex, {
@@ -557,11 +567,12 @@ class Downshift extends Component {
             const itemCount = this.getItemCount()
             if (itemCount > 0) {
               const {highlightedIndex} = this.getState()
-              const nextHighlightedIndex = getNextWrappingIndex(
-                -1,
+              const nextHighlightedIndex = getHighlightedIndex(
                 highlightedIndex,
-                itemCount,
-                index => this.getItemNodeFromIndex(index),
+                -1,
+                {length: itemCount},
+                this.isItemDisabled,
+                true,
               )
 
               this.setHighlightedIndex(nextHighlightedIndex, {
@@ -630,12 +641,11 @@ class Downshift extends Component {
       }
 
       // get next non-disabled starting downwards from 0 if that's disabled.
-      const newHighlightedIndex = getNextNonDisabledIndex(
-        1,
+      const newHighlightedIndex = getNonDisabledIndex(
         0,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
         false,
+        {length: itemCount},
+        this.isItemDisabled,
       )
 
       this.setHighlightedIndex(newHighlightedIndex, {
@@ -659,12 +669,11 @@ class Downshift extends Component {
       }
 
       // get next non-disabled starting upwards from last index if that's disabled.
-      const newHighlightedIndex = getNextNonDisabledIndex(
-        -1,
+      const newHighlightedIndex = getNonDisabledIndex(
         itemCount - 1,
-        itemCount,
-        index => this.getItemNodeFromIndex(index),
-        false,
+        true,
+        {length: itemCount},
+        this.isItemDisabled,
       )
 
       this.setHighlightedIndex(newHighlightedIndex, {
@@ -824,8 +833,8 @@ class Downshift extends Component {
       'aria-activedescendant':
         isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0
           ? this.getItemId(highlightedIndex)
-          : null,
-      'aria-controls': isOpen ? this.menuId : null,
+          : undefined,
+      'aria-controls': isOpen ? this.menuId : undefined,
       'aria-labelledby': rest && rest['aria-label'] ? undefined : this.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
@@ -848,9 +857,10 @@ class Downshift extends Component {
     this.internalSetState({
       type: stateChangeTypes.changeInput,
       isOpen: true,
-      inputValue: isReactNative || isReactNativeWeb
-        ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
-        : event.target.value,
+      inputValue:
+        isReactNative || isReactNativeWeb
+          ? /* istanbul ignore next (react-native) */ event.nativeEvent.text
+          : event.target.value,
       highlightedIndex: this.props.defaultHighlightedIndex,
     })
   }
@@ -890,7 +900,8 @@ class Downshift extends Component {
     return {
       [refKey]: handleRefs(ref, this.menuRef),
       role: 'listbox',
-      'aria-labelledby': props && props['aria-label'] ? null : this.labelId,
+      'aria-labelledby':
+        props && props['aria-label'] ? undefined : this.labelId,
       id: this.menuId,
       ...props,
     }
@@ -916,9 +927,10 @@ class Downshift extends Component {
       this.items[index] = item
     }
 
-    const onSelectKey = isReactNative || isReactNativeWeb
-      ? /* istanbul ignore next (react-native) */ 'onPress'
-      : 'onClick'
+    const onSelectKey =
+      isReactNative || isReactNativeWeb
+        ? /* istanbul ignore next (react-native) */ 'onPress'
+        : 'onClick'
     const customClickHandler = isReactNative
       ? /* istanbul ignore next (react-native) */ onPress
       : onClick

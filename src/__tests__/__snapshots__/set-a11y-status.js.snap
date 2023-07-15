@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`creates new status div if there is none 1`] = `
+Array [
+  Array [
+    id,
+    a11y-status-message,
+  ],
+  Array [
+    role,
+    status,
+  ],
+  Array [
+    aria-live,
+    polite,
+  ],
+  Array [
+    aria-relevant,
+    additions text,
+  ],
+]
+`;
+
 exports[`does add anything for an empty string 1`] = `
 <div
   aria-live=polite

@@ -15,6 +15,7 @@ import {
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
   tab,
+  clickOnInput,
 } from '../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
@@ -145,7 +146,7 @@ describe('getInputProps', () => {
       expect(inputProps['aria-expanded']).toEqual(true)
     })
 
-    test("handlers are not called if it's disabled", () => {
+    test('handlers are not returned if input is disabled', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps({
         disabled: true,
@@ -154,7 +155,7 @@ describe('getInputProps', () => {
       expect(inputProps.onChange).toBeUndefined()
       expect(inputProps.onKeyDown).toBeUndefined()
       expect(inputProps.onBlur).toBeUndefined()
-      expect(inputProps.onFocus).toBeUndefined()
+      expect(inputProps.onClick).toBeUndefined()
       expect(inputProps.disabled).toBe(true)
     })
 
@@ -165,6 +166,16 @@ describe('getInputProps', () => {
 
       expect(inputProps['aria-labelledby']).toBeUndefined()
       expect(inputProps['aria-label']).toBe(ariaLabel)
+    })
+
+    test('handlers are returned if input is not disabled', () => {
+      const {result} = renderUseCombobox()
+      const inputProps = result.current.getInputProps()
+
+      expect(inputProps.onChange).toBeDefined()
+      expect(inputProps.onKeyDown).toBeDefined()
+      expect(inputProps.onClick).toBeDefined()
+      expect(inputProps.onBlur).toBeDefined()
     })
   })
 
@@ -332,7 +343,7 @@ describe('getInputProps', () => {
 
       act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
-          onChange: userOnInput,
+          onInput: userOnInput,
         })
 
         inputRef({focus: noop})
@@ -352,7 +363,7 @@ describe('getInputProps', () => {
 
       act(() => {
         const {ref: inputRef, onChange} = result.current.getInputProps({
-          onChange: userOnInput,
+          onInput: userOnInput,
         })
 
         inputRef({focus: noop})
@@ -362,6 +373,42 @@ describe('getInputProps', () => {
 
       expect(userOnInput).toHaveBeenCalledTimes(1)
       expect(result.current.inputValue).toBe('')
+    })
+
+    test('event handler onClick is called along with downshift handler', () => {
+      const userOnClick = jest.fn()
+      const {result} = renderUseCombobox()
+
+      act(() => {
+        const {ref: inputRef, onClick} = result.current.getInputProps({
+          onClick: userOnClick,
+        })
+
+        inputRef({focus: noop})
+        onClick({})
+      })
+
+      expect(userOnClick).toHaveBeenCalledTimes(1)
+      expect(result.current.isOpen).toBe(true)
+    })
+
+    test("event handler onClick is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+      const userOnClick = jest.fn(event => {
+        event.preventDownshiftDefault = true
+      })
+      const {result} = renderUseCombobox()
+
+      act(() => {
+        const {ref: inputRef, onClick} = result.current.getInputProps({
+          onClick: userOnClick,
+        })
+
+        inputRef({focus: noop})
+        onClick({})
+      })
+
+      expect(userOnClick).toHaveBeenCalledTimes(1)
+      expect(result.current.isOpen).toBe(false)
     })
   })
 
@@ -498,13 +545,13 @@ describe('getInputProps', () => {
           const initialHighlightedIndex = 2
           renderCombobox({
             initialHighlightedIndex,
+            initialIsOpen: true,
           })
 
-          const input = getInput()
-
+          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowUp}')
 
-          expect(input).toHaveAttribute(
+          expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
@@ -661,6 +708,23 @@ describe('getInputProps', () => {
             defaultIds.getItemId(items.length - 1),
           )
         })
+
+        test('skips disabled items', async () => {
+          renderCombobox({
+            isItemDisabled(_item, index) {
+              return index === 2
+            },
+            initialIsOpen: true,
+            initialHighlightedIndex: 3,
+          })
+
+          await keyDownOnInput('{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
+        })
       })
 
       describe('arrow down', () => {
@@ -725,12 +789,13 @@ describe('getInputProps', () => {
           const initialHighlightedIndex = 2
           renderCombobox({
             initialHighlightedIndex,
+            initialIsOpen: true,
           })
-          const input = getInput()
 
+          await keyDownOnInput('{Escape}')
           await keyDownOnInput('{ArrowDown}')
 
-          expect(input).toHaveAttribute(
+          expect(getInput()).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
@@ -841,294 +906,356 @@ describe('getInputProps', () => {
             defaultIds.getItemId(0),
           )
         })
-      })
 
-      test('end highlights the last option number', async () => {
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex: 2,
-        })
+        test('skips disabled items', async () => {
+          renderCombobox({
+            isItemDisabled(_item, index) {
+              return index === 2
+            },
+            initialIsOpen: true,
+            initialHighlightedIndex: 1,
+          })
 
-        await keyDownOnInput('{End}')
+          await keyDownOnInput('{ArrowDown}')
 
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
-      })
-
-      test('end prevents the default event and calls dispatch only when menu is open', () => {
-        const {rerender, renderSpy} = renderCombobox({isOpen: false})
-        const input = getInput()
-        const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
-
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(false)
-        expect(renderSpy).not.toHaveBeenCalled()
-
-        rerender({isOpen: true})
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-        expect(renderSpy).toHaveBeenCalledTimes(1)
-      })
-
-      test('home highlights the first option number', async () => {
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex: 2,
-        })
-
-        await keyDownOnInput('{Home}')
-
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
-      })
-
-      test('home prevents the default event calls dispatch only when menu is open', () => {
-        const {rerender, renderSpy} = renderCombobox({isOpen: false})
-        const input = getInput()
-        const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
-
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(false)
-        expect(renderSpy).not.toHaveBeenCalled()
-
-        rerender({isOpen: true})
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
-      })
-
-      test('escape with menu open has the menu closed and focused kept on input', async () => {
-        renderCombobox({
-          initialIsOpen: true,
-          initialHighlightedIndex: 2,
-          initialSelectedItem: items[0],
-        })
-        const input = getInput()
-
-        await keyDownOnInput('{Escape}')
-
-        expect(getItems()).toHaveLength(0)
-        expect(input).toHaveValue(items[0])
-        expect(input).toHaveFocus()
-      })
-
-      test('escape with closed menu has item removed and focused kept on input', async () => {
-        renderCombobox({
-          initialHighlightedIndex: 2,
-          initialSelectedItem: items[0],
-        })
-        const input = getInput()
-
-        await keyDownOnInput('{Escape}')
-
-        expect(getItems()).toHaveLength(0)
-        expect(input).toHaveValue('')
-        expect(input).toHaveFocus()
-      })
-
-      test('escape prevents the rerender when menu is closed, no selectedItem and no inputValue', async () => {
-        const {renderSpy, rerender} = renderCombobox({
-          isOpen: false,
-          inputValue: '',
-        })
-
-        await keyDownOnInput('{Escape}') // focus input and close the menu.
-        renderSpy.mockClear()
-
-        await keyDownOnInput('{Escape}')
-
-        expect(renderSpy).toHaveBeenCalledTimes(0) // no re-render
-
-        rerender({isOpen: true, inputValue: ''})
-        renderSpy.mockClear() // reset rerender and initial render
-        await keyDownOnInput('{Escape}')
-
-        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
-
-        rerender({isOpen: false, inputValue: 'still'})
-        renderSpy.mockClear() // reset rerender and initial render
-        await keyDownOnInput('{Escape}')
-
-        expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
-      })
-
-      test('escape stops propagation when it closes the menu or clears the input', () => {
-        renderCombobox({
-          initialIsOpen: true,
-          initialSelectedItem: items[0],
-        })
-        const input = getInput()
-        const keyDownEvents = [
-          createEvent.keyDown(input, {key: 'Escape'}),
-          createEvent.keyDown(input, {key: 'Escape'}),
-          createEvent.keyDown(input, {key: 'Escape'}),
-        ]
-
-        for (let index = 0; index < keyDownEvents.length; index++) {
-          fireEvent(input, keyDownEvents[index])
-          expect(keyDownEvents[index].defaultPrevented).toBe(
-            index !== keyDownEvents.length - 1,
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(3),
           )
-        }
+        })
       })
 
-      test('enter closes the menu and selects highlighted item', async () => {
-        const initialHighlightedIndex = 2
-        renderCombobox({
-          initialIsOpen: true,
-          initialHighlightedIndex,
+      describe('end', () => {
+        test('highlights the last option number', async () => {
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+          })
+
+          await keyDownOnInput('{End}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
 
-        await keyDownOnInput('{Enter}')
+        test('prevents the default event and calls dispatch only when menu is open', () => {
+          const {rerender, renderSpy} = renderCombobox({isOpen: false})
+          const input = getInput()
+          const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
 
-        expect(getItems()).toHaveLength(0)
-        expect(getInput()).toHaveValue(items[initialHighlightedIndex])
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+          expect(renderSpy).not.toHaveBeenCalled()
+
+          rerender({isOpen: true})
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+          expect(renderSpy).toHaveBeenCalledTimes(1)
+        })
+
+        test('highlights previous non-disabled option', async () => {
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex: 0,
+            isItemDisabled(_item, index) {
+              return index === items.length - 1
+            },
+          })
+
+          await keyDownOnInput('{End}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 2),
+          )
+        })
       })
 
-      test('enter selects highlighted item and resets to user defaults', async () => {
-        const defaultHighlightedIndex = 2
-        renderCombobox({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
+      describe('home', () => {
+        test('home highlights the first option number', async () => {
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+          })
+
+          await keyDownOnInput('{Home}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
         })
-        const input = getInput()
 
-        await keyDownOnInput('{Enter}')
+        test('home prevents the default event calls dispatch only when menu is open', () => {
+          const {rerender, renderSpy} = renderCombobox({isOpen: false})
+          const input = getInput()
+          const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
 
-        expect(input).toHaveValue(items[defaultHighlightedIndex])
-        expect(getItems()).toHaveLength(items.length)
-        expect(input).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(defaultHighlightedIndex),
-        )
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+          expect(renderSpy).not.toHaveBeenCalled()
+
+          rerender({isOpen: true})
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+          expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+        })
+
+        test('highlights next non-disabled option', async () => {
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex: 2,
+            isItemDisabled(_item, index) {
+              return index === 0
+            },
+          })
+
+          await keyDownOnInput('{Home}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
+        })
       })
 
-      test('enter closes the menu without resetting to user defaults if no item is highlighted', async () => {
-        const defaultHighlightedIndex = 2
-        const initialSelectedItem = items[0]
-        renderCombobox({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
-          initialSelectedItem,
+      describe('escape', () => {
+        test('with menu open has the menu closed and focused kept on input', async () => {
+          renderCombobox({
+            initialIsOpen: true,
+            initialHighlightedIndex: 2,
+            initialSelectedItem: items[0],
+          })
+          const input = getInput()
+
+          await keyDownOnInput('{Escape}')
+
+          expect(getItems()).toHaveLength(0)
+          expect(input).toHaveValue(items[0])
+          expect(input).toHaveFocus()
         })
-        const input = getInput()
 
-        await mouseMoveItemAtIndex(defaultHighlightedIndex)
-        await mouseLeaveItemAtIndex(defaultHighlightedIndex)
-        await keyDownOnInput('{Enter}')
+        test('with closed menu has item removed and focused kept on input', async () => {
+          renderCombobox({
+            initialHighlightedIndex: 2,
+            initialSelectedItem: items[0],
+          })
+          const input = getInput()
 
-        expect(input).toHaveValue(initialSelectedItem)
-        expect(getItems()).toHaveLength(0)
-        expect(input).toHaveAttribute('aria-activedescendant', '')
+          await keyDownOnInput('{Escape}')
+
+          expect(getItems()).toHaveLength(0)
+          expect(input).toHaveValue('')
+          expect(input).toHaveFocus()
+        })
+
+        test('prevents the rerender when menu is closed, no selectedItem and no inputValue', async () => {
+          const {renderSpy, rerender} = renderCombobox({
+            isOpen: false,
+            inputValue: '',
+          })
+
+          await keyDownOnInput('{Escape}') // focus input and close the menu.
+          renderSpy.mockClear()
+
+          await keyDownOnInput('{Escape}')
+
+          expect(renderSpy).toHaveBeenCalledTimes(0) // no re-render
+
+          rerender({isOpen: true, inputValue: ''})
+          renderSpy.mockClear() // reset rerender and initial render
+          await keyDownOnInput('{Escape}')
+
+          expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+
+          rerender({isOpen: false, inputValue: 'still'})
+          renderSpy.mockClear() // reset rerender and initial render
+          await keyDownOnInput('{Escape}')
+
+          expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+        })
+
+        test('stops propagation when it closes the menu or clears the input', () => {
+          renderCombobox({
+            initialIsOpen: true,
+            initialSelectedItem: items[0],
+          })
+          const input = getInput()
+          const keyDownEvents = [
+            createEvent.keyDown(input, {key: 'Escape'}),
+            createEvent.keyDown(input, {key: 'Escape'}),
+            createEvent.keyDown(input, {key: 'Escape'}),
+          ]
+
+          for (let index = 0; index < keyDownEvents.length; index++) {
+            fireEvent(input, keyDownEvents[index])
+            expect(keyDownEvents[index].defaultPrevented).toBe(
+              index !== keyDownEvents.length - 1,
+            )
+          }
+        })
       })
 
-      test('enter closes the menu without resetting to user defaults if the list is empty', async () => {
-        const defaultHighlightedIndex = 2
-        const initialSelectedItem = items[0]
-        renderCombobox({
-          defaultHighlightedIndex,
-          defaultIsOpen: true,
-          initialSelectedItem,
-          items: [],
-        })
-        const input = getInput()
+      describe('enter', () => {
+        test('closes the menu and selects highlighted item', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
+            initialIsOpen: true,
+            initialHighlightedIndex,
+          })
 
-        await keyDownOnInput('{Enter}')
+          await keyDownOnInput('{Enter}')
 
-        expect(input).toHaveValue(initialSelectedItem)
-        expect(getItems()).toHaveLength(0)
-        expect(input).toHaveAttribute('aria-activedescendant', '')
-      })
-
-      test('enter while IME composing will not select highlighted item', async () => {
-        const initialHighlightedIndex = 2
-        renderCombobox({
-          initialHighlightedIndex,
-          initialIsOpen: true,
-        })
-        const input = getInput()
-
-        fireEvent.keyDown(getInput(), {key: 'Enter', keyCode: 229})
-
-        expect(input).toHaveValue('')
-        expect(getItems()).toHaveLength(items.length)
-        expect(input).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(initialHighlightedIndex),
-        )
-
-        await keyDownOnInput('{Enter}')
-
-        expect(input).toHaveValue(items[2])
-        expect(getItems()).toHaveLength(0)
-        expect(input).toHaveAttribute('aria-activedescendant', '')
-      })
-
-      test('enter with a closed menu does nothing', async () => {
-        renderCombobox({
-          initialHighlightedIndex: 2,
-          initialIsOpen: false,
+          expect(getItems()).toHaveLength(0)
+          expect(getInput()).toHaveValue(items[initialHighlightedIndex])
         })
 
-        await keyDownOnInput('{Enter}')
+        test('selects highlighted item and resets to user defaults', async () => {
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+          })
+          const input = getInput()
 
-        expect(getItems()).toHaveLength(0)
-        expect(getInput()).not.toHaveValue()
-      })
+          await keyDownOnInput('{Enter}')
 
-      test('enter with an open menu closes the menu without a highlightedIndex', async () => {
-        renderCombobox({
-          initialIsOpen: true,
+          expect(input).toHaveValue(items[defaultHighlightedIndex])
+          expect(getItems()).toHaveLength(items.length)
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
         })
 
-        await keyDownOnInput('{Enter}')
+        test('closes the menu without resetting to user defaults if no item is highlighted', async () => {
+          const defaultHighlightedIndex = 2
+          const initialSelectedItem = items[0]
+          renderCombobox({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+          })
+          const input = getInput()
 
-        expect(getItems()).toHaveLength(0)
-        expect(getInput()).not.toHaveValue()
-      })
+          await mouseMoveItemAtIndex(defaultHighlightedIndex)
+          await mouseLeaveItemAtIndex(defaultHighlightedIndex)
+          await keyDownOnInput('{Enter}')
 
-      test('enter with closed menu or composing event, it will not rerender or prevent event default', () => {
-        const {renderSpy, rerender} = renderCombobox({
-          isOpen: false,
-          highlightedIndex: -1,
+          expect(input).toHaveValue(initialSelectedItem)
+          expect(getItems()).toHaveLength(0)
+          expect(input).toHaveAttribute('aria-activedescendant', '')
         })
-        const input = getInput()
-        let keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
 
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
+        test('closes the menu without resetting to user defaults if the list is empty', async () => {
+          const defaultHighlightedIndex = 2
+          const initialSelectedItem = items[0]
+          renderCombobox({
+            defaultHighlightedIndex,
+            defaultIsOpen: true,
+            initialSelectedItem,
+            items: [],
+          })
+          const input = getInput()
 
-        expect(renderSpy).not.toHaveBeenCalled()
-        expect(keyDownEvent.defaultPrevented).toBe(false)
+          await keyDownOnInput('{Enter}')
 
-        keyDownEvent = createEvent.keyDown(input, {key: 'Enter', keyCode: 229})
-        rerender({
-          isOpen: true,
-          highlightedIndex: 2,
+          expect(input).toHaveValue(initialSelectedItem)
+          expect(getItems()).toHaveLength(0)
+          expect(input).toHaveAttribute('aria-activedescendant', '')
         })
-        renderSpy.mockClear()
-        fireEvent(input, keyDownEvent)
 
-        expect(renderSpy).not.toHaveBeenCalled()
-        expect(keyDownEvent.defaultPrevented).toBe(false)
+        test('while IME composing will not select highlighted item', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            initialIsOpen: true,
+          })
+          const input = getInput()
 
-        keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
-        fireEvent(input, keyDownEvent)
+          fireEvent.keyDown(getInput(), {key: 'Enter', keyCode: 229})
 
-        expect(renderSpy).toHaveBeenCalledTimes(1)
-        expect(keyDownEvent.defaultPrevented).toBe(true)
+          expect(input).toHaveValue('')
+          expect(getItems()).toHaveLength(items.length)
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex),
+          )
+
+          await keyDownOnInput('{Enter}')
+
+          expect(input).toHaveValue(items[2])
+          expect(getItems()).toHaveLength(0)
+          expect(input).toHaveAttribute('aria-activedescendant', '')
+        })
+
+        test('with a closed menu does nothing', async () => {
+          renderCombobox({
+            initialHighlightedIndex: 2,
+            initialIsOpen: false,
+          })
+
+          await keyDownOnInput('{Enter}')
+
+          expect(getItems()).toHaveLength(0)
+          expect(getInput()).not.toHaveValue()
+        })
+
+        test('with an open menu closes the menu without a highlightedIndex', async () => {
+          renderCombobox({
+            initialIsOpen: true,
+          })
+
+          await keyDownOnInput('{Enter}')
+
+          expect(getItems()).toHaveLength(0)
+          expect(getInput()).not.toHaveValue()
+        })
+
+        test('with closed menu or composing event, it will not rerender or prevent event default', () => {
+          const {renderSpy, rerender} = renderCombobox({
+            isOpen: false,
+            highlightedIndex: -1,
+          })
+          const input = getInput()
+          let keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
+
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(renderSpy).not.toHaveBeenCalled()
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+
+          keyDownEvent = createEvent.keyDown(input, {
+            key: 'Enter',
+            keyCode: 229,
+          })
+          rerender({
+            isOpen: true,
+            highlightedIndex: 2,
+          })
+          renderSpy.mockClear()
+          fireEvent(input, keyDownEvent)
+
+          expect(renderSpy).not.toHaveBeenCalled()
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+
+          keyDownEvent = createEvent.keyDown(input, {key: 'Enter'})
+          fireEvent(input, keyDownEvent)
+
+          expect(renderSpy).toHaveBeenCalledTimes(1)
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
       })
 
       test('tab it closes the menu and selects highlighted item', async () => {
@@ -1247,108 +1374,152 @@ describe('getInputProps', () => {
         expect(getItems()).toHaveLength(items.length)
       })
 
-      test('pageUp jumps highlight up by 10 options', async () => {
-        const initialHighlightedIndex = 12
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex,
+      describe('pageUp', () => {
+        test('pageUp jumps highlight up by 10 options', async () => {
+          const initialHighlightedIndex = 12
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
+
+          await keyDownOnInput('{PageUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex - 10),
+          )
         })
 
-        await keyDownOnInput('{PageUp}')
+        test('skips the disabled option to the previous non-disabled one', async () => {
+          const initialHighlightedIndex = 12
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+            isItemDisabled(_item, index) {
+              return index === 2
+            },
+          })
 
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(initialHighlightedIndex - 10),
-        )
-      })
+          await keyDownOnInput('{PageUp}')
 
-      test('pageUp jumps highlight the first option if highlightedIndex is 10 or smaller', async () => {
-        const initialHighlightedIndex = 7
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex,
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(1),
+          )
         })
 
-        await keyDownOnInput('{PageUp}')
+        test('jumps highlight the first option if highlightedIndex is 10 or smaller', async () => {
+          const initialHighlightedIndex = 7
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(0),
-        )
-      })
+          await keyDownOnInput('{PageUp}')
 
-      test('pageUp prevents the default event behavior with the menu open', () => {
-        renderCombobox({isOpen: true})
-        const toggleButton = getInput()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'PageUp'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
-
-      test('pageUp does not prevent the default event behavior with the menu closed', () => {
-        renderCombobox()
-        const toggleButton = getInput()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {key: 'PageUp'})
-
-        fireEvent(toggleButton, keyDownEvent)
-
-        expect(keyDownEvent.defaultPrevented).toBe(false)
-      })
-
-      test('pageDown jumps highlight down by 10 options', async () => {
-        const initialHighlightedIndex = 12
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex,
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
         })
 
-        await keyDownOnInput('{PageDown}')
+        test('prevents the default event behavior with the menu open', () => {
+          renderCombobox({isOpen: true})
+          const toggleButton = getInput()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageUp',
+          })
 
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(initialHighlightedIndex + 10),
-        )
-      })
+          fireEvent(toggleButton, keyDownEvent)
 
-      test('pageDown jumps highlight the last option if highlightedIndex is closer than 10 indeces to the end', async () => {
-        const initialHighlightedIndex = items.length - 5
-        renderCombobox({
-          isOpen: true,
-          initialHighlightedIndex,
+          expect(keyDownEvent.defaultPrevented).toBe(true)
         })
 
-        await keyDownOnInput('{PageDown}')
+        test('does not prevent the default event behavior with the menu closed', () => {
+          renderCombobox()
+          const toggleButton = getInput()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageUp',
+          })
 
-        expect(getInput()).toHaveAttribute(
-          'aria-activedescendant',
-          defaultIds.getItemId(items.length - 1),
-        )
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+        })
       })
 
-      test('pageDown prevents the default event behavior with the menu open', () => {
-        renderCombobox({isOpen: true})
-        const toggleButton = getInput()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {
-          key: 'PageDown',
+      describe('pageDown', () => {
+        test('pageDown jumps highlight down by 10 options', async () => {
+          const initialHighlightedIndex = 12
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
+
+          await keyDownOnInput('{PageDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(initialHighlightedIndex + 10),
+          )
         })
 
-        fireEvent(toggleButton, keyDownEvent)
+        test('skips the disabled option to the next non-disabled one', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+            isItemDisabled(_item, index) {
+              return index === 12
+            },
+          })
 
-        expect(keyDownEvent.defaultPrevented).toBe(true)
-      })
+          await keyDownOnInput('{PageDown}')
 
-      test('pageDown does not prevent the default event behavior with the menu closed', () => {
-        renderCombobox()
-        const toggleButton = getInput()
-        const keyDownEvent = createEvent.keyDown(toggleButton, {
-          key: 'PageDown',
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(13),
+          )
         })
 
-        fireEvent(toggleButton, keyDownEvent)
+        test('pageDown jumps highlight the last option if highlightedIndex is closer than 10 indeces to the end', async () => {
+          const initialHighlightedIndex = items.length - 5
+          renderCombobox({
+            isOpen: true,
+            initialHighlightedIndex,
+          })
 
-        expect(keyDownEvent.defaultPrevented).toBe(false)
+          await keyDownOnInput('{PageDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('pageDown prevents the default event behavior with the menu open', () => {
+          renderCombobox({isOpen: true})
+          const toggleButton = getInput()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageDown',
+          })
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(true)
+        })
+
+        test('pageDown does not prevent the default event behavior with the menu closed', () => {
+          renderCombobox()
+          const toggleButton = getInput()
+          const keyDownEvent = createEvent.keyDown(toggleButton, {
+            key: 'PageDown',
+          })
+
+          fireEvent(toggleButton, keyDownEvent)
+
+          expect(keyDownEvent.defaultPrevented).toBe(false)
+        })
       })
     })
 
@@ -1537,11 +1708,43 @@ describe('getInputProps', () => {
       })
     })
 
-    describe('on focus', () => {
+    test('on focus does nothing', async () => {
+      renderCombobox()
+
+      await tab()
+
+      expect(getItems()).toHaveLength(0)
+    })
+
+    describe('on click', () => {
       test('it opens the menu', async () => {
         renderCombobox()
 
-        await tab()
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(items.length)
+      })
+
+      test('it closes the open menu', async () => {
+        renderCombobox({initialIsOpen: true})
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(0)
+      })
+
+      test('toggles the menu', async () => {
+        renderCombobox()
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(items.length)
+
+        await clickOnInput()
+
+        expect(getItems()).toHaveLength(0)
+
+        await clickOnInput()
 
         expect(getItems()).toHaveLength(items.length)
       })
@@ -1552,7 +1755,7 @@ describe('getInputProps', () => {
           initialSelectedItem: items[selectedIndex],
         })
 
-        await tab()
+        await clickOnInput()
 
         expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
@@ -1560,44 +1763,42 @@ describe('getInputProps', () => {
         )
       })
 
-      test('it opens the closed menu at initialHighlightedIndex, but on first focus only', async () => {
+      test('it opens the closed menu at initialHighlightedIndex, but on first click only', async () => {
         const initialHighlightedIndex = 2
         renderCombobox({
           initialHighlightedIndex,
         })
         const input = getInput()
 
-        await tab()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
 
-        await keyDownOnInput('{Escape}')
-        await tab(true)
-        await tab()
+        await clickOnInput()
+        await clickOnInput()
 
         expect(input).toHaveAttribute('aria-activedescendant', '')
       })
 
-      test('it opens the closed menu at defaultHighlightedIndex, on every focus', async () => {
+      test('it opens the closed menu at defaultHighlightedIndex, on every click', async () => {
         const defaultHighlightedIndex = 3
         renderCombobox({
           defaultHighlightedIndex,
         })
         const input = getInput()
 
-        await tab()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
 
-        await keyDownOnInput('{Escape}')
-        await tab(true)
-        await tab()
+        await clickOnInput()
+        await clickOnInput()
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
