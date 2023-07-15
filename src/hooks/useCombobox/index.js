@@ -500,12 +500,13 @@ function useCombobox(userProps = {}) {
       }
     },
     [
-      dispatch,
-      inputKeyDownHandlers,
-      latest,
-      mouseAndTouchTrackersRef,
       setGetterPropCallInfo,
+      latest,
       elementIds,
+      inputKeyDownHandlers,
+      dispatch,
+      mouseAndTouchTrackersRef,
+      environment
     ],
   )
 
