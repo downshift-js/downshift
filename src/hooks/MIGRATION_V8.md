@@ -11,6 +11,8 @@ hooks and are detailed below.
 
 - [isItemDisabled](#isitemdisabled)
 - [useCombobox input click](#usecombobox-input-click)
+- [Getter props return value types](#getter-props-return-value-types)
+- [environment propTypes](#environment-proptypes)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
