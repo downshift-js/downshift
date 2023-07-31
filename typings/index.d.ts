@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as ReactNative from 'react-native'
 
 type Callback = () => void
 
@@ -159,7 +158,7 @@ interface GetToggleButtonPropsReturnValue {
   'aria-label': 'close menu' | 'open menu'
   'aria-haspopup': true
   'data-toggle': true
-  onPress?: (event: ReactNative.GestureResponderEvent) => void
+  onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
   onKeyUp?: React.KeyboardEventHandler
@@ -602,7 +601,7 @@ export interface UseComboboxGetToggleButtonPropsReturnValue {
   'aria-controls': string
   'aria-expanded': boolean
   id: string
-  onPress?: (event: ReactNative.GestureResponderEvent) => void
+  onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
   ref?: React.RefObject
   tabIndex: -1
