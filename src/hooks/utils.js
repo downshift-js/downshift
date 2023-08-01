@@ -619,18 +619,6 @@ const commonDropdownPropTypes = {
   scrollIntoView: PropTypes.func,
 }
 
-function getFocusOnOpenValue(initialIsOpen, defaultIsOpen, isOpenProp) {
-  if (isOpenProp !== undefined) {
-    return isOpenProp
-  }
-
-  if (initialIsOpen !== undefined) {
-    return initialIsOpen
-  }
-
-  return !!defaultIsOpen
-}
-
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -652,5 +640,4 @@ export {
   getChangesOnSelection,
   commonDropdownPropTypes,
   commonPropTypes,
-  getFocusOnOpenValue
 }
