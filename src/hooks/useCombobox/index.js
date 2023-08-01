@@ -11,6 +11,7 @@ import {
   useControlPropsValidator,
   useElementIds,
   getItemAndIndex,
+  getFocusOnOpenValue,
 } from '../utils'
 import {
   getInitialState,
@@ -106,7 +107,7 @@ function useCombobox(userProps = {}) {
   })
   // Focus the input on first render if required.
   useEffect(() => {
-    const focusOnOpen = initialIsOpen || defaultIsOpen || isOpen
+    const focusOnOpen = getFocusOnOpenValue(initialIsOpen, defaultIsOpen, isOpen)
 
     if (focusOnOpen && inputRef.current) {
       inputRef.current.focus()
