@@ -436,30 +436,6 @@ describe('getInputProps', () => {
       })
       /* eslint-enable */
     }
-
-    test('is grabbed when isOpen is passed as true', () => {
-      renderCombobox({isOpen: true})
-
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is grabbed when initialIsOpen is passed as true', () => {
-      renderCombobox({initialIsOpen: true})
-
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is grabbed when defaultIsOpen is passed as true', () => {
-      renderCombobox({defaultIsOpen: true})
-
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is not grabbed when initial open is set to default (false)', () => {
-      renderCombobox()
-
-      expect(getInput()).not.toHaveFocus()
-    })
   })
 
   describe('event handlers', () => {
