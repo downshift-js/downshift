@@ -16,6 +16,7 @@ import {
   mouseMoveItemAtIndex,
   tab,
   clickOnInput,
+  initialFocusAndOpenTestCases,
 } from '../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
@@ -413,29 +414,28 @@ describe('getInputProps', () => {
   })
 
   describe('initial focus', () => {
-    test('is grabbed when isOpen is passed as true', () => {
-      renderCombobox({isOpen: true})
+    for (const [
+      initialIsOpen,
+      defaultIsOpen,
+      isOpen,
+      status,
+    ] of initialFocusAndOpenTestCases) {
+      /* eslint-disable */
+      test(`is ${
+        status ? '' : 'not '
+      }grabbed when initialIsOpen: ${initialIsOpen}, defaultIsOpen: ${defaultIsOpen} and props.isOpen: ${isOpen}`, () => {
+        renderCombobox({isOpen, defaultIsOpen, initialIsOpen})
 
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is grabbed when initialIsOpen is passed as true', () => {
-      renderCombobox({initialIsOpen: true})
-
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is grabbed when defaultIsOpen is passed as true', () => {
-      renderCombobox({defaultIsOpen: true})
-
-      expect(getInput()).toHaveFocus()
-    })
-
-    test('is not grabbed when initial open is set to default (false)', () => {
-      renderCombobox()
-
-      expect(getInput()).not.toHaveFocus()
-    })
+        if (status) {
+          expect(getInput()).toHaveFocus()
+          expect(getItems()).toHaveLength(items.length)
+        } else {
+          expect(getInput()).not.toHaveFocus()
+          expect(getItems()).toHaveLength(0)
+        }
+      })
+      /* eslint-enable */
+    }
   })
 
   describe('event handlers', () => {

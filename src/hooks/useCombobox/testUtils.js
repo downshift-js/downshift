@@ -117,3 +117,26 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
 export const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
+
+// format is: [initialIsOpen, defaultIsOpen, props.isOpen, menu is open && input is focused]
+export const initialFocusAndOpenTestCases = [
+  [undefined, undefined, undefined, false],
+  [undefined, undefined, true, true],
+  [true, true, true, true],
+  [true, false, true, true],
+  [false, true, true, true],
+  [false, false, true, true],
+  [undefined, undefined, false, false],
+  [true, true, false, false],
+  [true, false, false, false],
+  [false, true, false, false],
+  [false, false, false, false],
+  [false, undefined, undefined, false],
+  [false, false, undefined, false],
+  [false, true, undefined, false],
+  [true, undefined, undefined, true],
+  [true, false, undefined, true],
+  [true, true, undefined, true],
+  [undefined, false, undefined, false],
+  [undefined, true, undefined, true],
+]
