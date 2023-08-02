@@ -11,6 +11,7 @@ import {
   useElementIds,
   useMouseAndTouchTracker,
   getItemAndIndex,
+  getInitialValue,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -142,6 +143,15 @@ function useSelect(userProps = {}) {
 
     previousResultCountRef.current = items.length
   })
+  // Focus the toggle button on first render if required.
+  useEffect(() => {
+    const focusOnOpen = getInitialValue(props, 'isOpen')
+
+    if (focusOnOpen && toggleButtonRef.current) {
+      toggleButtonRef.current.focus()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
     isOpen,

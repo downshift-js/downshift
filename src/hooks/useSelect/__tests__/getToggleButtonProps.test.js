@@ -26,6 +26,7 @@ import {
 } from '../../testUtils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
+import { initialFocusAndOpenTestCases } from '../../useCombobox/testUtils'
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -254,6 +255,31 @@ describe('getToggleButtonProps', () => {
       expect(userOnBlur).toHaveBeenCalledTimes(1)
       expect(result.current.isOpen).toBe(true)
     })
+  })
+
+  describe('initial focus', () => {
+    for (const [
+      initialIsOpen,
+      defaultIsOpen,
+      isOpen,
+      status,
+    ] of initialFocusAndOpenTestCases) {
+      /* eslint-disable */
+      test(`is ${
+        status ? '' : 'not '
+      }grabbed when initialIsOpen: ${initialIsOpen}, defaultIsOpen: ${defaultIsOpen} and props.isOpen: ${isOpen}`, () => {
+        renderSelect({isOpen, defaultIsOpen, initialIsOpen})
+
+        if (status) {
+          expect(getToggleButton()).toHaveFocus()
+          expect(getItems()).toHaveLength(items.length)
+        } else {
+          expect(getToggleButton()).not.toHaveFocus()
+          expect(getItems()).toHaveLength(0)
+        }
+      })
+      /* eslint-enable */
+    }
   })
 
   describe('event handlers', () => {
@@ -1429,11 +1455,7 @@ describe('getToggleButtonProps', () => {
           )
         })
 
-        // focus the toggle button in 2 tabs
-        await tab()
-        await tab()
-
-        // now blur
+        // focus is already on the toggle button, tab should blur
         await tab()
 
         expect(getItems()).toHaveLength(0)
@@ -1463,7 +1485,6 @@ describe('getToggleButtonProps', () => {
           },
         )
 
-        await tab()
         await mouseMoveItemAtIndex(defaultHighlightedIndex)
         await mouseLeaveItemAtIndex(defaultHighlightedIndex)
         await tab()
@@ -1518,11 +1539,7 @@ describe('getToggleButtonProps', () => {
           )
         })
 
-        // focus the toggle button in 2 tabs
-        await tab()
-        await tab()
-
-        // now blur
+        // focus is already on the toggle button, tab should blur
         await tab(true)
 
         expect(getItems()).toHaveLength(0)
