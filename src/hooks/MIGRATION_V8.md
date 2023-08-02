@@ -117,7 +117,8 @@ Previously, the return value from the getter props returned by both Downshift
 and the hooks was `any`. In v8 we improved the types in order to reflect what is
 actually returned: the default values return by the getter prop function and
 whatever else the user passes as arguments. The type changes are done in
-[this PR](https://github.com/downshift-js/downshift/pull/1482), make sure you
+[this PR](https://github.com/downshift-js/downshift/pull/1482) and the
+[8.0.2 PR](https://github.com/downshift-js/downshift/pull/1524). Make sure you
 adapt your TS code, if applicable.
 
 Also, in the `Downshift` component, the return values for some getter prop
