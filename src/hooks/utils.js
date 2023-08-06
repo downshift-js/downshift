@@ -245,6 +245,7 @@ function useControlledReducer(reducer, initialState, props) {
 }
 
 const defaultProps = {
+  itemToKey: item => item,
   itemToString,
   stateReducer,
   getA11ySelectionMessage,
@@ -297,7 +298,9 @@ function getInitialState(props) {
   return {
     highlightedIndex:
       highlightedIndex < 0 && selectedItem && isOpen
-        ? props.items.indexOf(selectedItem)
+        ? props.items.findIndex(
+            item => props.itemToKey(item) === props.itemToKey(selectedItem),
+          )
         : highlightedIndex,
     isOpen,
     selectedItem,
@@ -306,7 +309,8 @@ function getInitialState(props) {
 }
 
 function getHighlightedIndexOnOpen(props, state, offset) {
-  const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
+  const {items, initialHighlightedIndex, defaultHighlightedIndex, itemToKey} =
+    props
   const {selectedItem, highlightedIndex} = state
 
   if (items.length === 0) {
@@ -324,7 +328,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
     return defaultHighlightedIndex
   }
   if (selectedItem) {
-    return items.indexOf(selectedItem)
+    return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
   }
   if (offset === 0) {
     return -1
@@ -591,6 +595,7 @@ const commonPropTypes = {
     Node: PropTypes.func.isRequired,
   }),
   itemToString: PropTypes.func,
+  itemToKey: PropTypes.func,
   stateReducer: PropTypes.func,
 }
 

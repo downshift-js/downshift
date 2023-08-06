@@ -82,6 +82,7 @@ and update if necessary.
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [defaultInputValue](#defaultinputvalue)
   - [selectedItemChanged](#selecteditemchanged)
+  - [itemToKey](#itemtokey)
   - [getA11yStatusMessage](#geta11ystatusmessage)
   - [getA11ySelectionMessage](#geta11yselectionmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
@@ -398,8 +399,22 @@ an item is selected.
 > `function(prevItem: any, item: any)` | defaults to:
 > `(prevItem, item) => (prevItem !== item)`
 
-Used to determine if the new `selectedItem` has changed compared to the previous
-`selectedItem` and properly update Downshift's internal state.
+### itemToKey
+
+> `function(item: any)` | defaults to: `item => item`
+
+Used to determine the uniqueness of an item when searching for the item or
+comparing the item with another. Returns the item itself, by default, so the
+comparing/searching is done internally via referential equality.
+
+If using items as objects and their reference will change during use, you can
+use the function to generate a unique key for each item, such as an `id` prop.
+
+```js
+function itemToKey(item) {
+  return item.id
+}
+```
 
 ### getA11yStatusMessage
 

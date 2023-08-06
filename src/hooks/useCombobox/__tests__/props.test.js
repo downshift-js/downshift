@@ -92,8 +92,13 @@ describe('props', () => {
     })
   })
 
-  describe('selectedItemChanged', () => {
-    test('props update of selectedItem will update inputValue state with default selectedItemChanged referential equality check', () => {
+  describe('itemToKey', () => {
+    const itemsAsObjects = items.reduce(
+      (acc, item) => [...acc, {value: item, id: item}],
+      [],
+    )
+
+    test('if not passed, the inputValue will get updated when new controlled selectedItem is not referentially equal to the previous one', () => {
       const selectedItem = {id: 1, value: 'wow'}
       const newSelectedItem = {id: 1, value: 'not wow'}
       function itemToString(item) {
@@ -132,7 +137,7 @@ describe('props', () => {
       rerender({
         stateReducer,
         selectedItem: newSelectedItem,
-        itemToString
+        itemToString,
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
@@ -156,44 +161,135 @@ describe('props', () => {
       expect(getInput()).toHaveValue(itemToString(newSelectedItem))
     })
 
-    test('props update of selectedItem will not update inputValue state', () => {
+    test('if passed, the inputValue will not get updated when new controlled selectedItem is equal to the previous one', () => {
       const selectedItem = {id: 1, value: 'wow'}
       const newSelectedItem = {id: 1, value: 'not wow'}
       function itemToString(item) {
         return item.value
       }
-      const selectedItemChanged = jest.fn().mockReturnValue((prev, next) => prev.id !== next.id)
+      const itemToKey = jest.fn().mockReturnValue(item => item.id)
       const stateReducer = jest
         .fn()
         .mockImplementation((_state, {changes}) => changes)
 
       const {rerender} = renderCombobox({
-        selectedItemChanged,
+        itemToKey,
         stateReducer,
         selectedItem,
-        itemToString
+        itemToString,
       })
 
       expect(getInput()).toHaveValue(itemToString(selectedItem))
-      expect(selectedItemChanged).toHaveBeenCalledTimes(1)
-      expect(selectedItemChanged).toHaveBeenCalledWith(undefined, selectedItem)
+      expect(itemToKey).toHaveBeenCalledTimes(2)
+      expect(itemToKey).toHaveBeenNthCalledWith(1, undefined)
+      expect(itemToKey).toHaveBeenNthCalledWith(2, selectedItem)
 
       stateReducer.mockReset()
-      selectedItemChanged.mockReset()
+      itemToKey.mockReset()
       rerender({
         stateReducer,
         itemToString,
         selectedItem: newSelectedItem,
-        selectedItemChanged,
+        itemToKey,
       })
 
-      expect(selectedItemChanged).toHaveBeenCalledTimes(1)
-      expect(selectedItemChanged).toHaveBeenCalledWith(
-        selectedItem,
-        newSelectedItem,
-      )
+      expect(itemToKey).toHaveBeenCalledTimes(2)
+      expect(itemToKey).toHaveBeenNthCalledWith(1, selectedItem)
+      expect(itemToKey).toHaveBeenNthCalledWith(2, newSelectedItem)
       expect(stateReducer).not.toHaveBeenCalled()
       expect(getInput()).toHaveValue(itemToString(selectedItem))
+    })
+
+    test('if passed, the initial highlightedIndex will have the value of the selectedItem index', () => {
+      const itemIndex = 0
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+
+      renderCombobox({
+        itemToKey,
+        selectedItem,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      expect(itemToKey).toHaveBeenCalledTimes(4) // 2x in getInitialState, 2x in useControlledReducer.
+      expect(itemToKey).toHaveBeenNthCalledWith(1, itemsAsObjects[0])
+      expect(itemToKey).toHaveBeenNthCalledWith(2, selectedItem)
+      expect(itemToKey).toHaveBeenNthCalledWith(3, undefined)
+      expect(itemToKey).toHaveBeenNthCalledWith(4, selectedItem)
+      expect(getInput()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(itemIndex),
+      )
+    })
+
+    test('if not passed, the initial highlightedIndex will not have the value of the selectedItem index if not referentially equal to any item', () => {
+      const itemIndex = 0
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+
+      renderCombobox({
+        selectedItem,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+    })
+
+    test('if passed, the highlightedIndex on open will have the value of the selectedItem index', async () => {
+      const itemIndex = 0
+      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemsAsObjectsCopy = itemsAsObjects.reduce(
+        (acc, item) => [...acc, {...item}],
+        [],
+      )
+      const selectedItem = itemsAsObjects[itemIndex]
+
+      const {rerender} = renderCombobox({
+        itemToKey,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      await clickOnItemAtIndex(itemIndex)
+
+      rerender({itemToKey, items: itemsAsObjectsCopy, selectedItem})
+      await clickOnInput()
+
+      expect(itemToKey).toHaveBeenCalledTimes(4) // 2x in getHighlightedIndexOnOpen, 2x in useControlledReducer.
+      expect(itemToKey).toHaveBeenNthCalledWith(1, undefined)
+      expect(itemToKey).toHaveBeenNthCalledWith(
+        2,
+        itemsAsObjectsCopy[itemIndex],
+      )
+      expect(itemToKey).toHaveBeenNthCalledWith(3, selectedItem)
+      expect(itemToKey).toHaveBeenNthCalledWith(
+        4,
+        itemsAsObjectsCopy[itemIndex],
+      )
+      expect(getInput()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(itemIndex),
+      )
+    })
+
+    test('if not passed, the highlightedIndex on open will not have the value of the selectedItem index if not referentially equal to any item', async () => {
+      const itemIndex = 0
+      const itemsAsObjectsCopy = itemsAsObjects.reduce(
+        (acc, item) => [...acc, {...item}],
+        [],
+      )
+
+      const {rerender} = renderCombobox({
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      await clickOnItemAtIndex(itemIndex)
+
+      rerender({items: itemsAsObjectsCopy})
+
+      expect(getInput()).toHaveAttribute('aria-activedescendant', '')
     })
   })
 

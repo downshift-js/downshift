@@ -39,7 +39,6 @@ const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
-  selectedItemChanged: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
   inputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
@@ -64,17 +63,14 @@ export function useControlledReducer(reducer, initialState, props) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
 
-  // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
   useEffect(() => {
     if (!isControlledProp(props, 'selectedItem')) {
       return
     }
 
     if (
-      props.selectedItemChanged(
-        previousSelectedItemRef.current,
-        props.selectedItem,
-      )
+      props.itemToKey(previousSelectedItemRef.current) !==
+      props.itemToKey(props.selectedItem)
     ) {
       dispatch({
         type: ControlledPropUpdatedSelectedItem,
@@ -103,7 +99,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const defaultProps = {
   ...defaultPropsCommon,
-  selectedItemChanged: (prevItem, item) => prevItem !== item,
   getA11yStatusMessage,
   isItemDisabled() {
     return false
