@@ -86,6 +86,94 @@ describe('props', () => {
     jest.useRealTimers()
   })
 
+  describe('itemToKey', () => {
+    const itemsAsObjects = items.reduce(
+      (acc, item) => [...acc, {value: item, id: item}],
+      [],
+    )
+
+    test('if passed, the initial highlightedIndex will have the value of the selectedItem index', () => {
+      const itemIndex = 0
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+
+      renderSelect({
+        itemToKey,
+        selectedItem,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getInitialState.
+      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[0])
+      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
+      expect(getToggleButton()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(itemIndex),
+      )
+    })
+
+    test('if not passed, the initial highlightedIndex will not have the value of the selectedItem index if not referentially equal to any item', () => {
+      const itemIndex = 0
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+
+      renderSelect({
+        selectedItem,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+    })
+
+    test('if passed, the highlightedIndex on open will have the value of the selectedItem index', async () => {
+      const itemIndex = 0
+      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemsAsObjectsCopy = itemsAsObjects.reduce(
+        (acc, item) => [...acc, {...item}],
+        [],
+      )
+
+      const {rerender} = renderSelect({
+        itemToKey,
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      await clickOnItemAtIndex(itemIndex)
+
+      rerender({itemToKey, items: itemsAsObjectsCopy})
+      await clickOnToggleButton()
+
+      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getHighlightedIndexOnOpen.
+      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[itemIndex])
+      expect(itemToKey.mock.calls[1][0]).toBe(itemsAsObjectsCopy[itemIndex])
+      expect(getToggleButton()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(itemIndex),
+      )
+    })
+
+    test('if not passed, the highlightedIndex on open will not have the value of the selectedItem index if not referentially equal to any item', async () => {
+      const itemIndex = 0
+      const itemsAsObjectsCopy = itemsAsObjects.reduce(
+        (acc, item) => [...acc, {...item}],
+        [],
+      )
+
+      const {rerender} = renderSelect({
+        initialIsOpen: true,
+        items: itemsAsObjects,
+      })
+
+      await clickOnItemAtIndex(itemIndex)
+
+      rerender({items: itemsAsObjectsCopy})
+
+      expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+    })
+  })
+
   describe('getA11ySelectionMessage', () => {
     beforeEach(jest.useFakeTimers)
     beforeEach(jest.clearAllTimers)

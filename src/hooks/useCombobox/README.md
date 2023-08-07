@@ -81,7 +81,6 @@ and update if necessary.
   - [defaultIsOpen](#defaultisopen)
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [defaultInputValue](#defaultinputvalue)
-  - [selectedItemChanged](#selecteditemchanged)
   - [itemToKey](#itemtokey)
   - [getA11yStatusMessage](#geta11ystatusmessage)
   - [getA11ySelectionMessage](#geta11yselectionmessage)
@@ -393,11 +392,6 @@ reset or when an item is selected.
 
 Pass a string that sets the content of the input when downshift is reset or when
 an item is selected.
-
-### selectedItemChanged
-
-> `function(prevItem: any, item: any)` | defaults to:
-> `(prevItem, item) => (prevItem !== item)`
 
 ### itemToKey
 

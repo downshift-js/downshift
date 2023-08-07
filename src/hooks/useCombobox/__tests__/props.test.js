@@ -181,8 +181,8 @@ describe('props', () => {
 
       expect(getInput()).toHaveValue(itemToString(selectedItem))
       expect(itemToKey).toHaveBeenCalledTimes(2)
-      expect(itemToKey).toHaveBeenNthCalledWith(1, undefined)
-      expect(itemToKey).toHaveBeenNthCalledWith(2, selectedItem)
+      expect(itemToKey.mock.calls[0][0]).toBe(undefined)
+      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
 
       stateReducer.mockReset()
       itemToKey.mockReset()
@@ -194,8 +194,8 @@ describe('props', () => {
       })
 
       expect(itemToKey).toHaveBeenCalledTimes(2)
-      expect(itemToKey).toHaveBeenNthCalledWith(1, selectedItem)
-      expect(itemToKey).toHaveBeenNthCalledWith(2, newSelectedItem)
+      expect(itemToKey.mock.calls[0][0]).toBe(selectedItem)
+      expect(itemToKey.mock.calls[1][0]).toBe(newSelectedItem)
       expect(stateReducer).not.toHaveBeenCalled()
       expect(getInput()).toHaveValue(itemToString(selectedItem))
     })
@@ -213,10 +213,10 @@ describe('props', () => {
       })
 
       expect(itemToKey).toHaveBeenCalledTimes(4) // 2x in getInitialState, 2x in useControlledReducer.
-      expect(itemToKey).toHaveBeenNthCalledWith(1, itemsAsObjects[0])
-      expect(itemToKey).toHaveBeenNthCalledWith(2, selectedItem)
-      expect(itemToKey).toHaveBeenNthCalledWith(3, undefined)
-      expect(itemToKey).toHaveBeenNthCalledWith(4, selectedItem)
+      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[0])
+      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
+      expect(itemToKey.mock.calls[2][0]).toBe(undefined)
+      expect(itemToKey.mock.calls[3][0]).toBe(selectedItem)
       expect(getInput()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
@@ -243,7 +243,6 @@ describe('props', () => {
         (acc, item) => [...acc, {...item}],
         [],
       )
-      const selectedItem = itemsAsObjects[itemIndex]
 
       const {rerender} = renderCombobox({
         itemToKey,
@@ -253,20 +252,12 @@ describe('props', () => {
 
       await clickOnItemAtIndex(itemIndex)
 
-      rerender({itemToKey, items: itemsAsObjectsCopy, selectedItem})
+      rerender({itemToKey, items: itemsAsObjectsCopy})
       await clickOnInput()
 
-      expect(itemToKey).toHaveBeenCalledTimes(4) // 2x in getHighlightedIndexOnOpen, 2x in useControlledReducer.
-      expect(itemToKey).toHaveBeenNthCalledWith(1, undefined)
-      expect(itemToKey).toHaveBeenNthCalledWith(
-        2,
-        itemsAsObjectsCopy[itemIndex],
-      )
-      expect(itemToKey).toHaveBeenNthCalledWith(3, selectedItem)
-      expect(itemToKey).toHaveBeenNthCalledWith(
-        4,
-        itemsAsObjectsCopy[itemIndex],
-      )
+      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getHighlightedIndexOnOpen.
+      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[itemIndex])
+      expect(itemToKey.mock.calls[1][0]).toBe(itemsAsObjectsCopy[itemIndex])
       expect(getInput()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
