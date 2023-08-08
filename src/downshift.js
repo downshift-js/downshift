@@ -51,17 +51,21 @@ class Downshift extends Component {
     stateReducer: PropTypes.func,
     itemCount: PropTypes.number,
     id: PropTypes.string,
-    environment: PropTypes.shape({
-      addEventListener: PropTypes.func,
-      removeEventListener: PropTypes.func,
-      document: PropTypes.shape({
-        createElement: PropTypes.func.isRequired,
-        getElementById: PropTypes.func.isRequired,
-        activeElement: PropTypes.any.isRequired,
-        body: PropTypes.any.isRequired,
+    // `environment` defaults to an empty object, but if provided it should have a specific shape
+    environment: PropTypes.oneOfType([
+      PropTypes.shape({
+        addEventListener: PropTypes.func.isRequired,
+        removeEventListener: PropTypes.func.isRequired,
+        document: PropTypes.shape({
+          createElement: PropTypes.func.isRequired,
+          getElementById: PropTypes.func.isRequired,
+          activeElement: PropTypes.any.isRequired,
+          body: PropTypes.any.isRequired,
+        }).isRequired,
+        Node: PropTypes.func.isRequired,
       }),
-      Node: PropTypes.func,
-    }),
+      PropTypes.shape({}),
+    ]),
     suppressRefError: PropTypes.bool,
     scrollIntoView: PropTypes.func,
     // things we keep in state for uncontrolled components

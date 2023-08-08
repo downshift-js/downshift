@@ -70,7 +70,8 @@ export interface DownshiftProps<Item> {
   labelId?: string
   menuId?: string
   getItemId?: (index?: number) => string
-  environment?: Environment
+  // `environment` defaults to an empty object, but if provided it should be an `Environment`
+  environment?: Environment | Record<string, never>
   onOuterClick?: (stateAndHelpers: ControllerStateAndHelpers<Item>) => void
   scrollIntoView?: (node: HTMLElement, menuNode: HTMLElement) => void
   onUserAction?: (
