@@ -419,10 +419,7 @@ function useCombobox(userProps = {}) {
       }
       const inputHandleBlur = event => {
         /* istanbul ignore else */
-        if (
-          latestState.isOpen &&
-          !mouseAndTouchTrackersRef.current.isMouseDown
-        ) {
+        if (!mouseAndTouchTrackersRef.current.isMouseDown) {
           const isBlurByTabChange =
             event.relatedTarget === null &&
             environment.document.activeElement !== environment.document.body
