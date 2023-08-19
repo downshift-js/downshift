@@ -28,7 +28,10 @@ export default function downshiftSelectReducer(state, action) {
         const inputValue = `${state.inputValue}${lowercasedKey}`
         const prevHighlightedIndex =
           !state.isOpen && state.selectedItem
-            ? props.items.indexOf(state.selectedItem)
+            ? props.items.findIndex(
+                item =>
+                  props.itemToKey(item) === props.itemToKey(state.selectedItem),
+              )
             : state.highlightedIndex
         const highlightedIndex = getItemIndexByCharacterKey({
           keysSoFar: inputValue,

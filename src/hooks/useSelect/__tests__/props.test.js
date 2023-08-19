@@ -93,9 +93,9 @@ describe('props', () => {
     )
 
     test('if passed, the initial highlightedIndex will have the value of the selectedItem index', () => {
-      const itemIndex = 0
+      const itemIndex = 3
       const selectedItem = {...itemsAsObjects[itemIndex]}
-      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
 
       renderSelect({
         itemToKey,
@@ -104,9 +104,7 @@ describe('props', () => {
         items: itemsAsObjects,
       })
 
-      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getInitialState.
-      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[0])
-      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
+      expect(itemToKey).toHaveBeenCalledTimes(8) // 2x(index+1) in getInitialState.
       expect(getToggleButton()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
@@ -114,7 +112,7 @@ describe('props', () => {
     })
 
     test('if not passed, the initial highlightedIndex will not have the value of the selectedItem index if not referentially equal to any item', () => {
-      const itemIndex = 0
+      const itemIndex = 3
       const selectedItem = {...itemsAsObjects[itemIndex]}
 
       renderSelect({
@@ -127,8 +125,8 @@ describe('props', () => {
     })
 
     test('if passed, the highlightedIndex on open will have the value of the selectedItem index', async () => {
-      const itemIndex = 0
-      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemIndex = 2
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
       const itemsAsObjectsCopy = itemsAsObjects.reduce(
         (acc, item) => [...acc, {...item}],
         [],
@@ -145,9 +143,7 @@ describe('props', () => {
       rerender({itemToKey, items: itemsAsObjectsCopy})
       await clickOnToggleButton()
 
-      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getHighlightedIndexOnOpen.
-      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[itemIndex])
-      expect(itemToKey.mock.calls[1][0]).toBe(itemsAsObjectsCopy[itemIndex])
+      expect(itemToKey).toHaveBeenCalledTimes(6) // 2x(index+1) in getInitialState.
       expect(getToggleButton()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
@@ -171,6 +167,51 @@ describe('props', () => {
       rerender({items: itemsAsObjectsCopy})
 
       expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+    })
+
+    test('if passed, the highlightedIndex on character key open will be computed starting from the selected item', async () => {
+      const itemIndex = 3 // Curium
+      const nextItemIndex = 5 // Californium
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
+
+      renderSelect({
+        itemToKey,
+        selectedItem,
+        items: itemsAsObjects,
+        itemToString(item) {
+          return item.value
+        },
+      })
+
+      await keyDownOnToggleButton('c')
+
+      expect(itemToKey).toHaveBeenCalledTimes(8) // 2x(index+1) in getInitialState.
+      expect(getToggleButton()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(nextItemIndex),
+      )
+    })
+
+    test('if not passed, the highlightedIndex on character key open will be computed starting from 0, as the selected item is not referentially equal to anything', async () => {
+      const itemIndex = 3 // Curium
+      const nextItemIndex = itemIndex // The same, as selectedItem is not referentially equal to the new item. 
+      const selectedItem = {...itemsAsObjects[itemIndex]}
+
+      renderSelect({
+        selectedItem,
+        items: itemsAsObjects,
+        itemToString(item) {
+          return item.value
+        },
+      })
+
+      await keyDownOnToggleButton('c')
+
+      expect(getToggleButton()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(nextItemIndex),
+      )
     })
   })
 

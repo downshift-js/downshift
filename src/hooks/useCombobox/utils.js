@@ -69,6 +69,7 @@ export function useControlledReducer(reducer, initialState, props) {
     }
 
     if (
+      previousSelectedItemRef.current !== undefined &&
       props.itemToKey(previousSelectedItemRef.current) !==
       props.itemToKey(props.selectedItem)
     ) {

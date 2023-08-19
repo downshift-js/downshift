@@ -114,26 +114,8 @@ describe('props', () => {
         selectedItem,
       })
 
-      expect(stateReducer).toHaveBeenCalledTimes(1)
-      expect(stateReducer).toHaveBeenCalledWith(
-        {
-          inputValue: itemToString(selectedItem),
-          selectedItem,
-          highlightedIndex: -1,
-          isOpen: false,
-        },
-        expect.objectContaining({
-          type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
-          changes: {
-            inputValue: itemToString(selectedItem),
-            selectedItem,
-            highlightedIndex: -1,
-            isOpen: false,
-          },
-        }),
-      )
+      expect(stateReducer).not.toHaveBeenCalled()
 
-      stateReducer.mockClear()
       rerender({
         stateReducer,
         selectedItem: newSelectedItem,
@@ -167,7 +149,7 @@ describe('props', () => {
       function itemToString(item) {
         return item.value
       }
-      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
       const stateReducer = jest
         .fn()
         .mockImplementation((_state, {changes}) => changes)
@@ -180,12 +162,11 @@ describe('props', () => {
       })
 
       expect(getInput()).toHaveValue(itemToString(selectedItem))
-      expect(itemToKey).toHaveBeenCalledTimes(2)
-      expect(itemToKey.mock.calls[0][0]).toBe(undefined)
-      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
+      expect(stateReducer).not.toHaveBeenCalled()
+      expect(itemToKey).not.toHaveBeenCalled()
 
-      stateReducer.mockReset()
-      itemToKey.mockReset()
+      stateReducer.mockClear()
+      itemToKey.mockClear()
       rerender({
         stateReducer,
         itemToString,
@@ -201,9 +182,9 @@ describe('props', () => {
     })
 
     test('if passed, the initial highlightedIndex will have the value of the selectedItem index', () => {
-      const itemIndex = 0
+      const itemIndex = 2
       const selectedItem = {...itemsAsObjects[itemIndex]}
-      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
 
       renderCombobox({
         itemToKey,
@@ -212,11 +193,7 @@ describe('props', () => {
         items: itemsAsObjects,
       })
 
-      expect(itemToKey).toHaveBeenCalledTimes(4) // 2x in getInitialState, 2x in useControlledReducer.
-      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[0])
-      expect(itemToKey.mock.calls[1][0]).toBe(selectedItem)
-      expect(itemToKey.mock.calls[2][0]).toBe(undefined)
-      expect(itemToKey.mock.calls[3][0]).toBe(selectedItem)
+      expect(itemToKey).toHaveBeenCalledTimes(6) // 2x(index + 1) in getInitialState.
       expect(getInput()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
@@ -224,7 +201,7 @@ describe('props', () => {
     })
 
     test('if not passed, the initial highlightedIndex will not have the value of the selectedItem index if not referentially equal to any item', () => {
-      const itemIndex = 0
+      const itemIndex = 2
       const selectedItem = {...itemsAsObjects[itemIndex]}
 
       renderCombobox({
@@ -237,8 +214,8 @@ describe('props', () => {
     })
 
     test('if passed, the highlightedIndex on open will have the value of the selectedItem index', async () => {
-      const itemIndex = 0
-      const itemToKey = jest.fn().mockReturnValue(item => item.id)
+      const itemIndex = 2
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
       const itemsAsObjectsCopy = itemsAsObjects.reduce(
         (acc, item) => [...acc, {...item}],
         [],
@@ -253,11 +230,10 @@ describe('props', () => {
       await clickOnItemAtIndex(itemIndex)
 
       rerender({itemToKey, items: itemsAsObjectsCopy})
+
       await clickOnInput()
 
-      expect(itemToKey).toHaveBeenCalledTimes(2) // 2x in getHighlightedIndexOnOpen.
-      expect(itemToKey.mock.calls[0][0]).toBe(itemsAsObjects[itemIndex])
-      expect(itemToKey.mock.calls[1][0]).toBe(itemsAsObjectsCopy[itemIndex])
+      expect(itemToKey).toHaveBeenCalledTimes(6) // 2x(index + 1) in getHighlightedIndexOnOpen.
       expect(getInput()).toHaveAttribute(
         'aria-activedescendant',
         defaultIds.getItemId(itemIndex),
@@ -265,7 +241,7 @@ describe('props', () => {
     })
 
     test('if not passed, the highlightedIndex on open will not have the value of the selectedItem index if not referentially equal to any item', async () => {
-      const itemIndex = 0
+      const itemIndex = 3
       const itemsAsObjectsCopy = itemsAsObjects.reduce(
         (acc, item) => [...acc, {...item}],
         [],
@@ -683,6 +659,67 @@ describe('props', () => {
     await clickOnToggleButton()
 
     expect(input).toHaveValue(selectedItem)
+  })
+
+  test('selectedItem change updates the input value', async () => {
+    const selectedItem = items[2]
+    const newSelectedItem = items[4]
+    const nullSelectedItem = null
+    const lastSelectedItem = items[1]
+    const stateReducer = jest.fn().mockImplementation((s, a) => a.changes)
+
+    const {rerender} = renderCombobox({
+      selectedItem,
+      stateReducer,
+    })
+    const input = getInput()
+
+    expect(input).toHaveValue(selectedItem)
+    expect(stateReducer).not.toHaveBeenCalled() // don't call on first render.
+
+    rerender({
+      selectedItem: newSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(newSelectedItem)
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: nullSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue('')
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: lastSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(lastSelectedItem)
   })
 
   describe('stateReducer', () => {
