@@ -366,6 +366,7 @@ export interface UseSelectProps<Item> {
   onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
   onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
+  inputCleanupDebounceWait?: number;
 }
 
 export interface UseSelectStateChangeOptions<Item>

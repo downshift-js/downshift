@@ -41,6 +41,7 @@ const propTypes = {
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
   getA11ySelectionMessage: PropTypes.func,
+  inputCleanupDebounceWait: PropTypes.number,
 }
 
 /**
@@ -79,6 +80,7 @@ export const defaultProps = {
   isItemDisabled() {
     return false
   },
+  inputCleanupDebounceWait: 500,
 }
 
 // eslint-disable-next-line import/no-mutable-exports
