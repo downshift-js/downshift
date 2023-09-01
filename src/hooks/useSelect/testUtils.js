@@ -17,15 +17,6 @@ import useSelect from '.'
 
 export * from '../testUtils'
 
-jest.mock('../../utils', () => {
-  const utils = jest.requireActual('../../utils')
-
-  return {
-    ...utils,
-    generateId: () => 'test-id',
-  }
-})
-
 jest.mock('../utils', () => {
   const utils = jest.requireActual('../utils')
   const hooksUtils = jest.requireActual('../../utils')
@@ -33,6 +24,16 @@ jest.mock('../utils', () => {
   return {
     ...utils,
     useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    }
   }
 })
 

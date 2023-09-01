@@ -7,12 +7,13 @@ import useCombobox from '.'
 
 export * from '../testUtils'
 
-jest.mock('../../utils', () => {
-  const utils = jest.requireActual('../../utils')
-
+// We are using React 18.
+jest.mock('react', () => {
   return {
-    ...utils,
-    generateId: () => 'test-id',
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    }
   }
 })
 
