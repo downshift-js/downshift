@@ -198,7 +198,7 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(jest.runAllTimers)
     })
@@ -272,7 +272,7 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(jest.runAllTimers)
     })
@@ -599,7 +599,7 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       hooksAct(() => jest.runAllTimers())
     })

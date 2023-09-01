@@ -433,7 +433,7 @@ describe('getToggleButtonProps', () => {
 
     describe('on keydown', () => {
       describe('character key', () => {
-        beforeEach(jest.useFakeTimers)
+        beforeEach(() => jest.useFakeTimers())
         afterEach(() => {
           reactAct(() => jest.runAllTimers())
         })

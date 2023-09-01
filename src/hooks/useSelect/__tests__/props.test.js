@@ -87,7 +87,7 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     beforeEach(jest.clearAllTimers)
     afterAll(jest.useRealTimers)
 
@@ -150,7 +150,7 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(jest.runAllTimers)
     })
@@ -479,7 +479,7 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       hooksAct(() => jest.runAllTimers())
     })
@@ -942,7 +942,7 @@ describe('props', () => {
   })
 
   describe('onStateChange', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     beforeEach(jest.clearAllTimers)
     afterAll(jest.useRealTimers)
     test('is called at each state property change but only with changed props', async () => {
