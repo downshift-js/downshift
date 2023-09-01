@@ -1,29 +1,30 @@
 import {debounce} from './utils'
 
-const cleanupStatus = debounce(documentProp => {
-  getStatusDiv(documentProp).textContent = ''
-}, 500)
-
 /**
  * @param {String} status the status message
  * @param {Object} documentProp document passed by the user.
  */
-function setStatus(status, documentProp) {
-  const div = getStatusDiv(documentProp)
-  if (!status) {
+export default function setStatus(status, documentProp = document) {
+  if (!status || !documentProp) {
     return
   }
+
+  const div = getStatusDiv(documentProp)
 
   div.textContent = status
   cleanupStatus(documentProp)
 }
+
+const cleanupStatus = debounce(documentProp => {
+  getStatusDiv(documentProp).textContent = ''
+}, 500)
 
 /**
  * Get the status node or create it if it does not already exist.
  * @param {Object} documentProp document passed by the user.
  * @return {HTMLElement} the status node.
  */
-function getStatusDiv(documentProp = document) {
+function getStatusDiv(documentProp) {
   let statusDiv = documentProp.getElementById('a11y-status-message')
   if (statusDiv) {
     return statusDiv
@@ -47,5 +48,3 @@ function getStatusDiv(documentProp = document) {
   documentProp.body.appendChild(statusDiv)
   return statusDiv
 }
-
-export default setStatus
