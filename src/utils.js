@@ -1,4 +1,4 @@
-import compute from 'compute-scroll-into-view'
+import { compute } from 'compute-scroll-into-view'
 import React from 'react'
 import {isPreact} from './is.macro'
 
@@ -422,7 +422,7 @@ function targetWithinDownshift(
   environment,
   checkActiveElement = true,
 ) {
-  return downshiftElements.some(
+  return environment && downshiftElements.some(
     contextNode =>
       contextNode &&
       (isOrContainsNode(contextNode, target, environment) ||
