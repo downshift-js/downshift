@@ -2,7 +2,7 @@
 // but we still want to have tested.
 
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, act} from '@testing-library/react'
 import Downshift from '../'
 
 test('onStateChange called with changes and downshift state and helpers', () => {
@@ -16,7 +16,9 @@ test('onStateChange called with changes and downshift state and helpers', () => 
     onStateChange: handleStateChange,
   })
   const itemToSelect = 'foo'
-  selectItem(itemToSelect)
+  act(() => {
+    selectItem(itemToSelect)
+  })
   const changes = {
     type: Downshift.stateChangeTypes.unknown,
     inputValue: itemToSelect,
@@ -40,7 +42,9 @@ test('onChange called when clearSelection is triggered', () => {
     selectedItem: 'foo',
     onChange: handleChange,
   })
-  clearSelection()
+  act(() => {
+    clearSelection()
+  })
   expect(handleChange).toHaveBeenCalledTimes(1)
   expect(handleChange).toHaveBeenCalledWith(null, expect.any(Object))
 })
@@ -50,11 +54,15 @@ test('onChange only called when the selection changes', () => {
   const {selectItem} = setup({
     onChange: handleChange,
   })
-  selectItem('foo')
+  act(() => {
+    selectItem('foo')
+  })
   expect(handleChange).toHaveBeenCalledTimes(1)
   expect(handleChange).toHaveBeenCalledWith('foo', expect.any(Object))
   handleChange.mockClear()
-  selectItem('foo')
+  act(() => {
+    selectItem('foo')
+  })
   expect(handleChange).toHaveBeenCalledTimes(0)
 })
 
@@ -63,11 +71,15 @@ test('onSelect called whenever selection happens, even if the item is the same',
   const {selectItem} = setup({
     onSelect: handleSelect,
   })
-  selectItem('foo')
+  act(() => {
+    selectItem('foo')
+  })
   expect(handleSelect).toHaveBeenCalledTimes(1)
   expect(handleSelect).toHaveBeenCalledWith('foo', expect.any(Object))
   handleSelect.mockClear()
-  selectItem('foo')
+  act(() => {
+    selectItem('foo')
+  })
   expect(handleSelect).toHaveBeenCalledTimes(1)
 })
 
@@ -76,7 +88,9 @@ test('onSelect not called when nothing was selected', () => {
   const {openMenu} = setup({
     onSelect: handleSelect,
   })
-  openMenu()
+  act(() => {
+    openMenu()
+  })
   expect(handleSelect).not.toHaveBeenCalled()
 })
 
@@ -93,7 +107,9 @@ test('uses given environment', () => {
     },
   }
   const {unmount, setHighlightedIndex} = setup({environment})
-  setHighlightedIndex()
+  act(() => {
+    setHighlightedIndex()
+  })
   unmount()
   expect(environment.addEventListener).toHaveBeenCalledTimes(5)
   expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
@@ -103,7 +119,9 @@ test('can override onOuterClick callback to maintain isOpen state', () => {
   const renderFn = () => <div />
   const onOuterClick = jest.fn()
   const {openMenu} = setup({render: renderFn, onOuterClick})
-  openMenu()
+  act(() => {
+    openMenu()
+  })
   mouseDownAndUp(document.body)
   expect(onOuterClick).toHaveBeenCalledTimes(1)
   expect(onOuterClick).toHaveBeenCalledWith(
@@ -120,7 +138,9 @@ test('onInputValueChange called when changes contain inputValue', () => {
   const {selectItem} = setup({
     onInputValueChange: handleInputValueChange,
   })
-  selectItem('foo')
+  act(() => {
+    selectItem('foo')
+  })
   expect(handleInputValueChange).toHaveBeenCalledTimes(1)
   expect(handleInputValueChange).toHaveBeenCalledWith('foo', expect.any(Object))
 })
@@ -131,7 +151,9 @@ test('onInputValueChange not called when changes do not contain inputValue', () 
     onInputValueChange: handleInputValueChange,
   })
 
-  openMenu()
+  act(() => {
+    openMenu()
+  })
 
   expect(handleInputValueChange).toHaveBeenCalledTimes(0)
 })
@@ -141,7 +163,9 @@ test('onInputValueChange called with empty string on reset', () => {
   const {reset} = setup({
     onInputValueChange: handleInputValueChange,
   })
-  reset()
+  act(() => {
+    reset()
+  })
   expect(handleInputValueChange).toHaveBeenCalledTimes(1)
   expect(handleInputValueChange).toHaveBeenCalledWith('', expect.any(Object))
 })
@@ -149,7 +173,9 @@ test('onInputValueChange called with empty string on reset', () => {
 test('defaultHighlightedIndex will be used for the highlighted index on reset', () => {
   const {reset, childrenSpy} = setup({defaultHighlightedIndex: 0})
   childrenSpy.mockClear()
-  reset()
+  act(() => {
+    reset()
+  })
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       highlightedIndex: 0,
@@ -161,6 +187,7 @@ test('stateReducer customizes the final state after keyDownEnter handled', () =>
   const {childrenSpy, openMenu, selectHighlightedItem} = setup({
     defaultHighlightedIndex: 0,
     stateReducer: (state, stateToSet) => {
+      // eslint-disable-next-line jest/no-conditional-in-test
       switch (stateToSet.type) {
         case Downshift.stateChangeTypes.keyDownEnter:
           return {
@@ -174,7 +201,9 @@ test('stateReducer customizes the final state after keyDownEnter handled', () =>
     },
   })
   childrenSpy.mockClear()
-  openMenu()
+  act(() => {
+    openMenu()
+  })
   selectHighlightedItem({
     type: Downshift.stateChangeTypes.keyDownEnter,
   })

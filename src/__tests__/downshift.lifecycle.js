@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {act, fireEvent, render, screen} from '@testing-library/react'
 import Downshift from '../'
 import setA11yStatus from '../set-a11y-status'
 import * as utils from '../utils'
@@ -130,6 +130,7 @@ test('props update causes the a11y status to be updated', () => {
       {({getInputProps, getItemProps, isOpen}) => (
         <div>
           <input {...getInputProps()} />
+          {/* eslint-disable-next-line jest/no-conditional-in-test */}
           {isOpen ? <div {...getItemProps({item: 'foo', index: 0})} /> : null}
         </div>
       )}
@@ -190,9 +191,13 @@ test('the callback is invoked on selected item only if it is a function', () => 
 
   childrenSpy.mockClear()
   callbackSpy.mockClear()
-  renderArg.selectItem('foo', {}, callbackSpy)
+  act(() => {
+    renderArg.selectItem('foo', {}, callbackSpy)
+  })
   expect(callbackSpy).toHaveBeenCalledTimes(1)
-  renderArg.selectItem('foo', {})
+  act(() => {
+    renderArg.selectItem('foo', {})
+  })
 })
 
 test('props update of selectedItem will not update inputValue state', () => {
@@ -201,6 +206,7 @@ test('props update of selectedItem will not update inputValue state', () => {
     onInputValueChange: onInputValueChangeSpy,
     selectedItemChanged: (prevItem, item) => prevItem.id !== item.id,
     selectedItem: {id: '123', value: 'wow'},
+    // eslint-disable-next-line jest/no-conditional-in-test
     itemToString: i => (i ? i.value : ''),
     render: () => null,
   }

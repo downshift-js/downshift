@@ -145,9 +145,10 @@ test(`getItemProps doesn't include event handlers when disabled is passed (for I
   const {getItemProps} = setupWithDownshiftController()
   const props = getItemProps({item: 'dog', disabled: true})
   const entry = Object.entries(props).find(
+    // eslint-disable-next-line jest/no-conditional-in-test
     ([key, value]) => key !== 'onMouseDown' && typeof value === 'function',
   )
-  // eslint-disable-next-line jest/no-if
+  // eslint-disable-next-line jest/no-conditional-in-test
   if (entry) {
     throw new Error(
       `getItemProps should not have any props that are callbacks. It has ${entry[0]}.`,

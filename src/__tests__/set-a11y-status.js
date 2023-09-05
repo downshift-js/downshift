@@ -20,7 +20,7 @@ test('replaces the status with a different one', () => {
 test('does add anything for an empty string', () => {
   const setA11yStatus = setup()
   setA11yStatus('')
-  expect(document.body.firstChild).toBeNull()
+  expect(document.body).toBeEmptyDOMElement()
 })
 
 test('escapes HTML', () => {
