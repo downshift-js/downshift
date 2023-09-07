@@ -26,7 +26,10 @@ import {
 } from '../../testUtils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
-import { initialFocusAndOpenTestCases } from '../../useCombobox/testUtils'
+import {
+  initialFocusAndOpenTestCases,
+  initialNoFocusOrOpenTestCases,
+} from '../../useCombobox/testUtils'
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -258,28 +261,25 @@ describe('getToggleButtonProps', () => {
   })
 
   describe('initial focus', () => {
-    for (const [
-      initialIsOpen,
-      defaultIsOpen,
-      isOpen,
-      status,
-    ] of initialFocusAndOpenTestCases) {
-      /* eslint-disable */
-      test(`is ${
-        status ? '' : 'not '
-      }grabbed when initialIsOpen: ${initialIsOpen}, defaultIsOpen: ${defaultIsOpen} and props.isOpen: ${isOpen}`, () => {
+    test.each(initialFocusAndOpenTestCases)(
+      'is grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
         renderSelect({isOpen, defaultIsOpen, initialIsOpen})
 
-        if (status) {
-          expect(getToggleButton()).toHaveFocus()
-          expect(getItems()).toHaveLength(items.length)
-        } else {
-          expect(getToggleButton()).not.toHaveFocus()
-          expect(getItems()).toHaveLength(0)
-        }
-      })
-      /* eslint-enable */
-    }
+        expect(getToggleButton()).toHaveFocus()
+        expect(getItems()).toHaveLength(items.length)
+      },
+    )
+
+    test.each(initialNoFocusOrOpenTestCases)(
+      'is not grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
+        renderSelect({isOpen, defaultIsOpen, initialIsOpen})
+
+        expect(getToggleButton()).not.toHaveFocus()
+        expect(getItems()).toHaveLength(0)
+      },
+    )
   })
 
   describe('event handlers', () => {
@@ -1808,7 +1808,7 @@ describe('getToggleButtonProps', () => {
         const {getMenuProps, getToggleButtonProps} = useSelect({items})
         getMenuProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getToggleButtonProps({}, {suppressRefError: true})

@@ -196,7 +196,7 @@ describe('getMenuProps', () => {
         const {getToggleButtonProps, getMenuProps} = useSelect({items})
         getToggleButtonProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getMenuProps({}, {suppressRefError: true})
@@ -205,7 +205,6 @@ describe('getMenuProps', () => {
 
       rerender()
 
-      // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
 

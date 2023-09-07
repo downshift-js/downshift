@@ -13,7 +13,7 @@ jest.mock('react', () => {
     ...jest.requireActual('react'),
     useId() {
       return 'test-id'
-    }
+    },
   }
 })
 
@@ -94,22 +94,23 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
         </button>
       </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
-        {isOpen &&
-          (props.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? itemToString(item) : item
-            return renderItem ? (
-              renderItem({index, item, getItemProps, stringItem})
-            ) : (
-              <li
-                data-testid={dataTestIds.item(index)}
-                key={`${stringItem}${index}`}
-                {...getItemProps({item, index, disabled: item.disabled})}
-              >
-                {stringItem}
-              </li>
-            )
-          })}
+        {isOpen
+          ? (props.items || items).map((item, index) => {
+              const stringItem =
+                item instanceof Object ? itemToString(item) : item
+              return renderItem ? (
+                renderItem({index, item, getItemProps, stringItem})
+              ) : (
+                <li
+                  data-testid={dataTestIds.item(index)}
+                  key={`${stringItem}${index}`}
+                  {...getItemProps({item, index, disabled: item.disabled})}
+                >
+                  {stringItem}
+                </li>
+              )
+            })
+          : null}
       </ul>
     </div>
   )
@@ -119,14 +120,24 @@ export const renderUseCombobox = props => {
   return renderHook(() => useCombobox({items, ...props}))
 }
 
-// format is: [initialIsOpen, defaultIsOpen, props.isOpen, menu is open && input is focused]
+// format is: [initialIsOpen, defaultIsOpen, props.isOpen]
 export const initialFocusAndOpenTestCases = [
-  [undefined, undefined, undefined, false],
   [undefined, undefined, true, true],
   [true, true, true, true],
   [true, false, true, true],
   [false, true, true, true],
   [false, false, true, true],
+
+  [true, undefined, undefined, true],
+  [true, false, undefined, true],
+  [true, true, undefined, true],
+
+  [undefined, true, undefined, true],
+]
+
+// format is: [initialIsOpen, defaultIsOpen, props.isOpen]
+export const initialNoFocusOrOpenTestCases = [
+  [undefined, undefined, undefined, false],
   [undefined, undefined, false, false],
   [true, true, false, false],
   [true, false, false, false],
@@ -135,9 +146,5 @@ export const initialFocusAndOpenTestCases = [
   [false, undefined, undefined, false],
   [false, false, undefined, false],
   [false, true, undefined, false],
-  [true, undefined, undefined, true],
-  [true, false, undefined, true],
-  [true, true, undefined, true],
   [undefined, false, undefined, false],
-  [undefined, true, undefined, true],
 ]

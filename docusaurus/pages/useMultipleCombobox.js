@@ -158,23 +158,25 @@ export default function DropdownMultipleCombobox() {
         </div>
       </div>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen &&
-          items.map((item, index) => (
-            <li
-              style={{
-                padding: '4px',
-                backgroundColor: highlightedIndex === index ? '#bde4ff' : null,
-              }}
-              key={`${item}${index}`}
-              {...getItemProps({
-                item,
-                index,
-                'data-testid': `downshift-item-${index}`,
-              })}
-            >
-              {item}
-            </li>
-          ))}
+        {isOpen
+          ? items.map((item, index) => (
+              <li
+                style={{
+                  padding: '4px',
+                  backgroundColor:
+                    highlightedIndex === index ? '#bde4ff' : null,
+                }}
+                key={`${item}${index}`}
+                {...getItemProps({
+                  item,
+                  index,
+                  'data-testid': `downshift-item-${index}`,
+                })}
+              >
+                {item}
+              </li>
+            ))
+          : null}
       </ul>
     </div>
   )

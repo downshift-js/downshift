@@ -17,6 +17,7 @@ import {
   tab,
   clickOnInput,
   initialFocusAndOpenTestCases,
+  initialNoFocusOrOpenTestCases,
 } from '../testUtils'
 import utils from '../../utils'
 import useCombobox from '..'
@@ -414,28 +415,25 @@ describe('getInputProps', () => {
   })
 
   describe('initial focus', () => {
-    for (const [
-      initialIsOpen,
-      defaultIsOpen,
-      isOpen,
-      status,
-    ] of initialFocusAndOpenTestCases) {
-      /* eslint-disable */
-      test(`is ${
-        status ? '' : 'not '
-      }grabbed when initialIsOpen: ${initialIsOpen}, defaultIsOpen: ${defaultIsOpen} and props.isOpen: ${isOpen}`, () => {
+    test.each(initialFocusAndOpenTestCases)(
+      'is grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
         renderCombobox({isOpen, defaultIsOpen, initialIsOpen})
 
-        if (status) {
-          expect(getInput()).toHaveFocus()
-          expect(getItems()).toHaveLength(items.length)
-        } else {
-          expect(getInput()).not.toHaveFocus()
-          expect(getItems()).toHaveLength(0)
-        }
-      })
-      /* eslint-enable */
-    }
+        expect(getInput()).toHaveFocus()
+        expect(getItems()).toHaveLength(items.length)
+      },
+    )
+
+    test.each(initialNoFocusOrOpenTestCases)(
+      'is not grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
+        renderCombobox({isOpen, defaultIsOpen, initialIsOpen})
+
+        expect(getInput()).not.toHaveFocus()
+        expect(getItems()).toHaveLength(0)
+      },
+    )
   })
 
   describe('event handlers', () => {
@@ -1836,7 +1834,7 @@ describe('getInputProps', () => {
         })
         getMenuProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getInputProps({}, {suppressRefError: true})

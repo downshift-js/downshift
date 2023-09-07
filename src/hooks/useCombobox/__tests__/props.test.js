@@ -925,6 +925,7 @@ describe('props', () => {
 
       for (let index = 0; index < testCases.length; index++) {
         const {step, state, args, type} = testCases[index]
+        // eslint-disable-next-line jest/no-conditional-in-test
         const previousState = testCases[index - 1]?.state ?? initialState
 
         // eslint-disable-next-line no-await-in-loop

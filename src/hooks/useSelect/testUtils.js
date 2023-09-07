@@ -33,7 +33,7 @@ jest.mock('react', () => {
     ...jest.requireActual('react'),
     useId() {
       return 'test-id'
-    }
+    },
   }
 })
 
@@ -79,22 +79,23 @@ export function DropdownSelect({renderSpy, renderItem, ...props}) {
           : selectedItem) || 'Elements'}
       </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
-        {isOpen &&
-          (props.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? itemToString(item) : item
-            return renderItem ? (
-              renderItem({index, item, getItemProps, stringItem})
-            ) : (
-              <li
-                data-testid={dataTestIds.item(index)}
-                key={`${stringItem}${index}`}
-                {...getItemProps({item, index, disabled: item.disabled})}
-              >
-                {stringItem}
-              </li>
-            )
-          })}
+        {isOpen
+          ? (props.items || items).map((item, index) => {
+              const stringItem =
+                item instanceof Object ? itemToString(item) : item
+              return renderItem ? (
+                renderItem({index, item, getItemProps, stringItem})
+              ) : (
+                <li
+                  data-testid={dataTestIds.item(index)}
+                  key={`${stringItem}${index}`}
+                  {...getItemProps({item, index, disabled: item.disabled})}
+                >
+                  {stringItem}
+                </li>
+              )
+            })
+          : null}
       </ul>
     </div>
   )

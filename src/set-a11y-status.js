@@ -1,20 +1,5 @@
 import {debounce} from './utils'
 
-/**
- * @param {String} status the status message
- * @param {Object} documentProp document passed by the user.
- */
-export default function setStatus(status, documentProp = document) {
-  if (!status || !documentProp) {
-    return
-  }
-
-  const div = getStatusDiv(documentProp)
-
-  div.textContent = status
-  cleanupStatus(documentProp)
-}
-
 const cleanupStatus = debounce(documentProp => {
   getStatusDiv(documentProp).textContent = ''
 }, 500)
@@ -47,4 +32,19 @@ function getStatusDiv(documentProp) {
   })
   documentProp.body.appendChild(statusDiv)
   return statusDiv
+}
+
+/**
+ * @param {String} status the status message
+ * @param {Object} documentProp document passed by the user.
+ */
+export default function setStatus(status, documentProp = document) {
+  if (!status || !documentProp) {
+    return
+  }
+
+  const div = getStatusDiv(documentProp)
+
+  div.textContent = status
+  cleanupStatus(documentProp)
 }

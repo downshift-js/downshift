@@ -577,6 +577,7 @@ describe('props', () => {
       for (let index = 0; index < stateChangeTestCases.length; index++) {
         const {step, state, arg, type} = stateChangeTestCases[index]
         const previousState =
+          // eslint-disable-next-line jest/no-conditional-in-test
           stateChangeTestCases[index - 1]?.state ?? initialState
 
         // eslint-disable-next-line no-await-in-loop
@@ -960,9 +961,11 @@ describe('props', () => {
       for (let index = 0; index < stateChangeTestCases.length; index++) {
         const {step, state, arg, type} = stateChangeTestCases[index]
         const previousState =
+          // eslint-disable-next-line jest/no-conditional-in-test
           stateChangeTestCases[index - 1]?.state ?? initialState
         const newState = Object.keys(state).reduce(
           (acc, key) =>
+            // eslint-disable-next-line jest/no-conditional-in-test
             state[key] === previousState[key]
               ? acc
               : {...acc, [key]: state[key]},

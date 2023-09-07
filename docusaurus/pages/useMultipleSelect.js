@@ -123,7 +123,7 @@ export default function DropdownMultipleSelect() {
         </div>
       </div>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen &&
+        {isOpen ?
           items.map((item, index) => (
             <li
               style={{
@@ -139,7 +139,7 @@ export default function DropdownMultipleSelect() {
             >
               {item}
             </li>
-          ))}
+          )) : null}
       </ul>
     </div>
   )
