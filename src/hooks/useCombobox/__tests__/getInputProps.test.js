@@ -1,6 +1,5 @@
 import * as React from 'react'
-import {act, renderHook} from '@testing-library/react-hooks'
-import {fireEvent, createEvent} from '@testing-library/react'
+import {act, renderHook, fireEvent, createEvent} from '@testing-library/react'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {noop} from '../../../utils'
 import {

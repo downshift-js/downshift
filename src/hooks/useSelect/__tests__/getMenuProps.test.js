@@ -1,4 +1,4 @@
-import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
+import {renderHook, act} from '@testing-library/react'
 import {
   renderUseSelect,
   renderSelect,
@@ -78,7 +78,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      hooksAct(() => {
+      act(() => {
         const {ref} = result.current.getMenuProps({ref: refFn})
 
         ref(menuNode)
@@ -93,7 +93,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      hooksAct(() => {
+      act(() => {
         const {blablaRef} = result.current.getMenuProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
@@ -113,7 +113,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      hooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -134,7 +134,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      hooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })

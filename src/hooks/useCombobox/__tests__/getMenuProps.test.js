@@ -1,4 +1,4 @@
-import {act, renderHook} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
 import {

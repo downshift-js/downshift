@@ -1,5 +1,4 @@
-import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
-import {act} from '@testing-library/react'
+import {act, renderHook} from '@testing-library/react'
 import {
   clickOnItemAtIndex,
   clickOnToggleButton,
@@ -481,7 +480,7 @@ describe('props', () => {
   describe('stateReducer', () => {
     beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      hooksAct(() => jest.runAllTimers())
+      act(() => jest.runAllTimers())
     })
     afterAll(jest.useRealTimers)
 
@@ -489,7 +488,7 @@ describe('props', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {result} = renderUseSelect({stateReducer})
 
-      hooksAct(() => {
+      act(() => {
         result.current.toggleMenu()
       })
 
@@ -499,7 +498,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionToggleMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.openMenu()
       })
 
@@ -509,7 +508,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionOpenMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.closeMenu()
       })
 
@@ -519,7 +518,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionCloseMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.reset()
       })
 
@@ -529,7 +528,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionReset}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.selectItem({})
       })
 
@@ -539,7 +538,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionSelectItem}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.setHighlightedIndex(5)
       })
 
@@ -551,7 +550,7 @@ describe('props', () => {
         }),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.setInputValue({})
       })
 
@@ -746,7 +745,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getItemProps({index: 2}).onClick({})
       })
 
@@ -871,7 +870,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current
           .getToggleButtonProps()
           .onKeyDown({key: 'ArrowDown', preventDefault: jest.fn()})
@@ -934,7 +933,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getToggleButtonProps().onClick({})
       })
 
@@ -996,7 +995,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getItemProps({index: 2}).onClick({})
       })
 

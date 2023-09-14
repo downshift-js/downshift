@@ -1,7 +1,6 @@
 import * as React from 'react'
 
-import {render, screen} from '@testing-library/react'
-import {renderHook} from '@testing-library/react-hooks'
+import {render, screen, renderHook} from '@testing-library/react'
 import {defaultProps} from '../utils'
 import {items, user, dataTestIds} from '../testUtils'
 import useCombobox from '../useCombobox'
