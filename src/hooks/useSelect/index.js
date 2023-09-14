@@ -331,7 +331,7 @@ function useSelect(userProps = {}) {
   )
   const getMenuProps = useCallback(
     (
-      {onMouseLeave, refKey = 'ref', onKeyDown, onBlur, ref, ...rest} = {},
+      {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
       {suppressRefError = false} = {},
     ) => {
       const menuHandleMouseLeave = () => {

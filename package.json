@@ -124,6 +124,11 @@
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2023,
+      "project": "./tsconfig.json",
+      "sourceType": "module"
+    },
     "settings": {
       "import/no-unresolved": [
         2,

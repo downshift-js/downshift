@@ -40,12 +40,14 @@ test('will not reset when clicking within the menu', () => {
           selectedItem,
         }) => (
           <div>
+            {/* eslint-disable-next-line jest/no-conditional-in-test */}
             {selectedItem ? (
               <div data-testid="selection">{selectedItem}</div>
             ) : null}
             <button {...getToggleButtonProps({'data-testid': 'button'})}>
               Open Menu
             </button>
+            {/* eslint-disable-next-line jest/no-conditional-in-test */}
             {isOpen ? <MyMenu {...{getMenuProps, getItemProps}} /> : null}
           </div>
         )}

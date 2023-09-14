@@ -151,7 +151,6 @@ class Downshift extends Component {
   inputId = this.props.inputId || `${this.id}-input`
   getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
 
-  input = null
   items = []
   // itemCount can be changed asynchronously
   // from within downshift (so it can't come from a prop)
@@ -359,7 +358,7 @@ class Downshift extends Component {
         ) {
           onChangeArg = newStateToSet.selectedItem
         }
-        newStateToSet.type = newStateToSet.type || stateChangeTypes.unknown
+        newStateToSet.type ||= stateChangeTypes.unknown
 
         Object.keys(newStateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
@@ -770,8 +769,9 @@ class Downshift extends Component {
       if (
         (activeElement == null || activeElement.id !== this.inputId) &&
         activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
-      )
+      ) {
         this.reset({type: stateChangeTypes.blurButton})
+      }
     })
   }
 
