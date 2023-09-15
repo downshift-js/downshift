@@ -322,6 +322,21 @@ test(`highlight wrapping works with disabled items downwards`, () => {
   expect(input).toHaveValue('Chess')
 })
 
+test('cannot check if node is disabled without environment', () => {
+  const items = [
+    {item: 'Chess', disabled: true},
+  ]
+  const utils = renderDownshift({items, props: {initialHighlightedIndex: 1, environment: null}})
+  const {input, arrowDownInput, enterOnInput} = utils
+
+  // ↓
+  arrowDownInput()
+  // ENTER to select
+  enterOnInput()
+
+  expect(input).toHaveValue('Chess')
+})
+
 function renderDownshift({
   items = [{item: 'Chess'}, {item: 'Dominion'}, {item: 'Checkers'}],
   props,

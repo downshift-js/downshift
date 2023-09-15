@@ -1,5 +1,11 @@
 import * as React from 'react'
-import {render, fireEvent, screen, createEvent, act} from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+} from '@testing-library/react'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -520,6 +526,51 @@ test('on input blur does not reset the state when new focus is on downshift butt
   blurOnInput()
   button.focus()
   jest.runAllTimers()
+  expect(childrenSpy).not.toHaveBeenCalled()
+})
+
+test('on toggle button blur does not reset the state when there is no environment', () => {
+  const items = ['animal', 'bug', 'cat']
+  const utils = renderDownshift({items, props: {environment: null}})
+  const {childrenSpy, changeInputValue, arrowDownInput, enterOnInput, button} =
+    utils
+  changeInputValue('a')
+  // ↓
+  arrowDownInput()
+  // ENTER to select the first one
+  enterOnInput()
+
+  childrenSpy.mockReset()
+  button.focus()
+  button.blur()
+  act(() => {
+    jest.runAllTimers()
+  })
+
+  expect(childrenSpy).not.toHaveBeenCalled()
+})
+
+test('on toggle button blur does not reset the state when input gets focused', () => {
+  const items = ['animal', 'bug', 'cat']
+  const utils = renderDownshift({
+    items,
+  })
+  const {childrenSpy, changeInputValue, arrowDownInput, enterOnInput, button, input} =
+    utils
+  changeInputValue('a')
+  // ↓
+  arrowDownInput()
+  // ENTER to select the first one
+  enterOnInput()
+
+  childrenSpy.mockReset()
+  button.focus()
+  button.blur()
+  input.focus()
+  act(() => {
+    jest.runAllTimers()
+  })
+
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
