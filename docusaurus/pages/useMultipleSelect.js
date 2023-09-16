@@ -67,79 +67,79 @@ export default function DropdownMultipleSelect() {
 
   return (
     <div style={containerStyles}>
-      <div>
-        <label
-          style={{
-            fontWeight: 'bolder',
-            color: selectedItem ? selectedItem : 'black',
-          }}
-          {...getLabelProps()}
-        >
-          Choose an element:
-        </label>
-        <div style={selectedItemsContainerSyles}>
-          {selectedItems.map(function renderSelectedItem(
-            selectedItemForRender,
-            index,
-          ) {
-            return (
+      <label
+        style={{
+          fontWeight: 'bolder',
+          color: selectedItem ? selectedItem : 'black',
+        }}
+        {...getLabelProps()}
+      >
+        Choose an element:
+      </label>
+      <div style={selectedItemsContainerSyles}>
+        {selectedItems.map(function renderSelectedItem(
+          selectedItemForRender,
+          index,
+        ) {
+          return (
+            <span
+              style={selectedItemStyles}
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({
+                selectedItem: selectedItemForRender,
+                index,
+              })}
+            >
+              {selectedItemForRender}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={selectedItemStyles}
-                key={`selected-item-${index}`}
-                {...getSelectedItemProps({
-                  selectedItem: selectedItemForRender,
-                  index,
-                })}
+                style={{padding: '4px', cursor: 'pointer'}}
+                onClick={e => {
+                  e.stopPropagation()
+                  removeSelectedItem(selectedItemForRender)
+                }}
               >
-                {selectedItemForRender}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                <span
-                  style={{padding: '4px', cursor: 'pointer'}}
-                  onClick={e => {
-                    e.stopPropagation()
-                    removeSelectedItem(selectedItemForRender)
-                  }}
-                >
-                  &#10005;
-                </span>
+                &#10005;
               </span>
-            )
-          })}
-          <div
-            style={{
-              padding: '4px',
-              textAlign: 'center',
-              border: '1px solid black',
-              backgroundColor: 'lightgray',
-              cursor: 'pointer',
-            }}
-            type="button"
-            {...getToggleButtonProps(
-              getDropdownProps({preventKeyAction: isOpen}),
-            )}
-          >
-            Pick some colors {isOpen ? <>&#8593;</> : <>&#8595;</>}
-          </div>
+            </span>
+          )
+        })}
+        <div
+          style={{
+            padding: '4px',
+            textAlign: 'center',
+            border: '1px solid black',
+            backgroundColor: 'lightgray',
+            cursor: 'pointer',
+          }}
+          type="button"
+          {...getToggleButtonProps(
+            getDropdownProps({preventKeyAction: isOpen}),
+          )}
+        >
+          Pick some colors {isOpen ? <>&#8593;</> : <>&#8595;</>}
         </div>
       </div>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen ?
-          items.map((item, index) => (
-            <li
-              style={{
-                padding: '4px',
-                backgroundColor: highlightedIndex === index ? '#bde4ff' : null,
-              }}
-              key={`${item}${index}`}
-              {...getItemProps({
-                item,
-                index,
-                'data-testid': `downshift-item-${index}`,
-              })}
-            >
-              {item}
-            </li>
-          )) : null}
+        {isOpen
+          ? items.map((item, index) => (
+              <li
+                style={{
+                  padding: '4px',
+                  backgroundColor:
+                    highlightedIndex === index ? '#bde4ff' : null,
+                }}
+                key={`${item}${index}`}
+                {...getItemProps({
+                  item,
+                  index,
+                  'data-testid': `downshift-item-${index}`,
+                })}
+              >
+                {item}
+              </li>
+            ))
+          : null}
       </ul>
     </div>
   )
