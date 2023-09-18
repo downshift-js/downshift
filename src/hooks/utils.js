@@ -251,7 +251,7 @@ const defaultProps = {
   scrollIntoView,
   environment:
     /* istanbul ignore next (ssr) */
-    typeof window === 'undefined' ? {} : window,
+    typeof window === 'undefined' ? undefined : window,
 }
 
 function getDefaultValue(
@@ -484,7 +484,7 @@ function useA11yMessageSetter(
 ) {
   // Sets a11y status message on changes in state.
   useEffect(() => {
-    if (isInitialMount || isReactNative) {
+    if (isInitialMount || isReactNative || !environment?.document) {
       return
     }
 

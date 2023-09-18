@@ -6,32 +6,32 @@ beforeEach(() => {
 
 test('sets the status', () => {
   const setA11yStatus = setup()
-  setA11yStatus('hello')
+  setA11yStatus('hello', document)
   expect(document.body.firstChild).toMatchSnapshot()
 })
 
 test('replaces the status with a different one', () => {
   const setA11yStatus = setup()
-  setA11yStatus('hello')
-  setA11yStatus('goodbye')
+  setA11yStatus('hello', document)
+  setA11yStatus('goodbye', document)
   expect(document.body.firstChild).toMatchSnapshot()
 })
 
 test('does add anything for an empty string', () => {
   const setA11yStatus = setup()
-  setA11yStatus('')
+  setA11yStatus('', document)
   expect(document.body).toBeEmptyDOMElement()
 })
 
 test('escapes HTML', () => {
   const setA11yStatus = setup()
-  setA11yStatus('<script>alert("!!!")</script>')
+  setA11yStatus('<script>alert("!!!")</script>', document)
   expect(document.body.firstChild).toMatchSnapshot()
 })
 
 test('performs cleanup after a timeout', () => {
   const setA11yStatus = setup()
-  setA11yStatus('hello')
+  setA11yStatus('hello', document)
   jest.runAllTimers()
   expect(document.body.firstChild).toMatchSnapshot()
 })
@@ -69,6 +69,13 @@ test('creates new status div if there is none', () => {
   expect(document.body.appendChild).toHaveBeenCalledWith(statusDiv)
   // eslint-disable-next-line jest-dom/prefer-to-have-text-content
   expect(statusDiv.textContent).toEqual('hello')
+})
+
+
+test('creates no status div if there is no document', () => {
+  const setA11yStatus = setup()
+  setA11yStatus('<script>alert("!!!")</script>')
+  expect(document.body).toBeEmptyDOMElement()
 })
 
 function setup() {

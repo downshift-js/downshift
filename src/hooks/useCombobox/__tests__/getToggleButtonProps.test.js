@@ -257,6 +257,14 @@ describe('getToggleButtonProps', () => {
 
         expect(getInput()).toHaveFocus()
       })
+
+      test('opens the closed menu and sets no focus if there is no environment', async () => {
+        renderCombobox({environment: undefined})
+
+        await clickOnToggleButton()
+
+        expect(getInput()).not.toHaveFocus()
+      })
     })
   })
 })

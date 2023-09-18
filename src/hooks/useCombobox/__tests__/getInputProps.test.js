@@ -1703,6 +1703,20 @@ describe('getInputProps', () => {
           }),
         )
       })
+
+      test('does nothing in environment is not defined', async () => {
+        const initialHighlightedIndex = 2
+        renderCombobox({
+          initialIsOpen: true,
+          initialHighlightedIndex,
+          environment: undefined
+        })
+
+        await tab()
+
+        expect(getItems()).toHaveLength(items.length)
+        expect(getInput()).not.toHaveValue()
+      })
     })
 
     test('on focus does nothing', async () => {

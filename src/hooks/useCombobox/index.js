@@ -146,8 +146,16 @@ function useCombobox(userProps = {}) {
   useEffect(() => {
     if (!isOpen) {
       itemRefs.current = {}
-    } else if (environment.document?.activeElement !== inputRef.current) {
-      inputRef?.current?.focus()
+    }
+  }, [isOpen])
+  // Reset itemRefs on close.
+  useEffect(() => {
+    if (!isOpen || !environment?.document || !inputRef?.current?.focus) {
+      return
+    }
+
+    if (environment.document.activeElement !== inputRef.current) {
+      inputRef.current.focus()
     }
   }, [isOpen, environment])
 
@@ -419,6 +427,7 @@ function useCombobox(userProps = {}) {
       const inputHandleBlur = event => {
         /* istanbul ignore else */
         if (
+          environment?.document &&
           latestState.isOpen &&
           !mouseAndTouchTrackersRef.current.isMouseDown
         ) {
@@ -502,7 +511,7 @@ function useCombobox(userProps = {}) {
       inputKeyDownHandlers,
       dispatch,
       mouseAndTouchTrackersRef,
-      environment
+      environment,
     ],
   )
 

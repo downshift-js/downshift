@@ -38,7 +38,7 @@ function getStatusDiv(documentProp) {
  * @param {String} status the status message
  * @param {Object} documentProp document passed by the user.
  */
-export default function setStatus(status, documentProp = document) {
+export default function setStatus(status, documentProp) {
   if (!status || !documentProp) {
     return
   }

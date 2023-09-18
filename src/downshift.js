@@ -1041,6 +1041,10 @@ class Downshift extends Component {
   }
 
   updateStatus = debounce(() => {
+    if (!this.props?.environment?.document) {
+      return
+    }
+
     const state = this.getState()
     const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
@@ -1053,7 +1057,7 @@ class Downshift extends Component {
     })
     this.previousResultCount = resultCount
 
-    setA11yStatus(status, this.props?.environment?.document)
+    setA11yStatus(status, this.props.environment.document)
   }, 200)
 
   componentDidMount() {
