@@ -109,7 +109,7 @@ type StateChangeFunction<Item> = (
 
 export interface GetRootPropsOptions {
   refKey?: string
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
 }
 
 export interface GetRootPropsReturnValue {
@@ -117,7 +117,7 @@ export interface GetRootPropsReturnValue {
   'aria-haspopup': 'listbox'
   'aria-labelledby': string
   'aria-owns': string | undefined
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   role: 'combobox'
 }
 
@@ -174,7 +174,7 @@ export interface GetMenuPropsOptions
 
 export interface GetMenuPropsReturnValue {
   'aria-labelledby': string | undefined
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   role: 'listbox'
   id: string
 }
@@ -411,7 +411,7 @@ export interface UseSelectGetToggleButtonReturnValue
   'aria-haspopup': 'listbox'
   'aria-labelledby': string | undefined
   id: string
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   role: 'combobox'
   tabIndex: 0
 }
@@ -427,7 +427,7 @@ export interface UseSelectGetItemPropsOptions<Item>
 export interface UseSelectGetItemPropsReturnValue
   extends Omit<GetItemPropsReturnValue, 'onMouseDown'> {
   'aria-disabled': boolean
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
 }
 
 export interface UseSelectPropGetters<Item> {
@@ -603,7 +603,7 @@ export interface UseComboboxGetToggleButtonPropsReturnValue {
   id: string
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   tabIndex: -1
 }
 
@@ -619,7 +619,7 @@ export interface UseComboboxGetItemPropsOptions<Item>
 export interface UseComboboxGetItemPropsReturnValue
   extends GetItemPropsReturnValue {
   'aria-disabled': boolean
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
 }
 
 export interface UseComboboxGetInputPropsOptions
@@ -782,7 +782,7 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
 }
 
 export interface UseMultipleSelectionGetSelectedItemReturnValue {
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   tabIndex: 0 | -1
   onClick: React.MouseEventHandler
   onKeyDown: React.KeyboardEventHandler
@@ -794,7 +794,7 @@ export interface UseMultipleSelectionGetDropdownPropsOptions
 }
 
 export interface UseMultipleSelectionGetDropdownReturnValue {
-  ref?: React.RefObject
+  ref?: React.RefObject<any>
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
 }
