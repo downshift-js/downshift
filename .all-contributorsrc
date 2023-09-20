@@ -1402,10 +1402,21 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "zmdavis",
+      "name": "Zach Davis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/25305144?v=4",
+      "profile": "https://github.com/zmdavis",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "repoHost": "https://github.com",
   "contributorsPerLine": 7,
   "skipCi": true,
-  "commitConvention": "angular"
+  "commitConvention": "angular",
+  "commitType": "docs"
 }
