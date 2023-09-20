@@ -1,5 +1,11 @@
 import * as React from 'react'
-import {render, fireEvent, screen, createEvent} from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  screen,
+  createEvent,
+  act,
+} from '@testing-library/react'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -17,13 +23,8 @@ const colors = [
 ]
 
 test('manages arrow up and down behavior', () => {
-  const {
-    arrowUpInput,
-    arrowDownInput,
-    childrenSpy,
-    endOnInput,
-    homeOnInput,
-  } = renderDownshift()
+  const {arrowUpInput, arrowDownInput, childrenSpy, endOnInput, homeOnInput} =
+    renderDownshift()
   // ↓
   arrowDownInput()
   expect(childrenSpy).toHaveBeenLastCalledWith(
@@ -461,12 +462,8 @@ test('enter on an input with an open menu and a highlightedIndex selects that it
 })
 
 test('escape on an input without a selection should reset downshift and close the menu', () => {
-  const {
-    changeInputValue,
-    input,
-    escapeOnInput,
-    childrenSpy,
-  } = renderDownshift()
+  const {changeInputValue, input, escapeOnInput, childrenSpy} =
+    renderDownshift()
   changeInputValue('p')
   escapeOnInput()
   expect(input).toHaveValue('')
@@ -503,7 +500,9 @@ test('escape on an input with a selection and closed menu should reset downshift
 test('on input blur resets the state', () => {
   const {blurOnInput, childrenSpy, items} = setupDownshiftWithState()
   blurOnInput()
-  jest.runAllTimers()
+  act(() => {
+    jest.runAllTimers()
+  })
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -527,6 +526,51 @@ test('on input blur does not reset the state when new focus is on downshift butt
   blurOnInput()
   button.focus()
   jest.runAllTimers()
+  expect(childrenSpy).not.toHaveBeenCalled()
+})
+
+test('on toggle button blur does not reset the state when there is no environment', () => {
+  const items = ['animal', 'bug', 'cat']
+  const utils = renderDownshift({items, props: {environment: null}})
+  const {childrenSpy, changeInputValue, arrowDownInput, enterOnInput, button} =
+    utils
+  changeInputValue('a')
+  // ↓
+  arrowDownInput()
+  // ENTER to select the first one
+  enterOnInput()
+
+  childrenSpy.mockReset()
+  button.focus()
+  button.blur()
+  act(() => {
+    jest.runAllTimers()
+  })
+
+  expect(childrenSpy).not.toHaveBeenCalled()
+})
+
+test('on toggle button blur does not reset the state when input gets focused', () => {
+  const items = ['animal', 'bug', 'cat']
+  const utils = renderDownshift({
+    items,
+  })
+  const {childrenSpy, changeInputValue, arrowDownInput, enterOnInput, button, input} =
+    utils
+  changeInputValue('a')
+  // ↓
+  arrowDownInput()
+  // ENTER to select the first one
+  enterOnInput()
+
+  childrenSpy.mockReset()
+  button.focus()
+  button.blur()
+  input.focus()
+  act(() => {
+    jest.runAllTimers()
+  })
+
   expect(childrenSpy).not.toHaveBeenCalled()
 })
 
@@ -609,7 +653,7 @@ test('Enter when there is no item at index 0 still selects the highlighted item'
   const {arrowDownInput, enterOnInput, childrenSpy} = renderDownshift({
     items,
     props: {
-      itemToString: i => (i ? i.value : ''),
+      itemToString: i => i.value,
       defaultHighlightedIndex: 1,
       isOpen: true,
     },
@@ -637,7 +681,7 @@ test(`getInputProps doesn't include event handlers when disabled is passed (for 
   const entry = Object.entries(props).find(
     ([_key, value]) => typeof value === 'function',
   )
-  // eslint-disable-next-line jest/no-if
+  // eslint-disable-next-line jest/no-conditional-in-test
   if (entry) {
     throw new Error(
       `getInputProps should not have any props that are callbacks. It has ${entry[0]}.`,
@@ -678,13 +722,8 @@ test('highlight should be removed on inputValue change if defaultHighlightedInde
 function setupDownshiftWithState() {
   const items = ['animal', 'bug', 'cat']
   const utils = renderDownshift({items})
-  const {
-    input,
-    changeInputValue,
-    arrowDownInput,
-    enterOnInput,
-    childrenSpy,
-  } = utils
+  const {input, changeInputValue, arrowDownInput, enterOnInput, childrenSpy} =
+    utils
   // input.fireEvent('keydown')
   changeInputValue('a')
   // ↓
@@ -706,7 +745,7 @@ function setup({items = colors} = {}) {
       <div>
         <input {...getInputProps({'data-testid': 'input'})} />
         <button {...getToggleButtonProps({'data-testid': 'button'})} />
-        {isOpen && (
+        {isOpen ? (
           <div>
             {items.map((item, index) => (
               <div
@@ -717,7 +756,7 @@ function setup({items = colors} = {}) {
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
     ),
   )

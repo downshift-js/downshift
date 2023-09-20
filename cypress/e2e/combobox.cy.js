@@ -115,7 +115,7 @@ describe('combobox', () => {
       .get('body')
       .trigger('touchstart', bodyX, bodyY, {force: true})
       .trigger('touchend', bodyX, bodyY, {force: true})
-    cy.findByTestId('downshift-item-0', {timeout: 10}).should('not.exist')
+    cy.findByTestId('downshift-item-0', {timeout: 100}).should('not.exist')
   })
 
   it('does not reset when swiping outside to scroll a touch screen', () => {

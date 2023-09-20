@@ -39,7 +39,7 @@ export default function DropdownSelect() {
         {isOpen ? <>&#8593;</> : <>&#8595;</>}
       </div>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen &&
+        {isOpen ?
           colors.map((item, index) => (
             <li
               style={{
@@ -55,7 +55,7 @@ export default function DropdownSelect() {
             >
               {item}
             </li>
-          ))}
+          )) : null}
       </ul>
     </div>
   )

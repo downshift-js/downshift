@@ -1,11 +1,11 @@
 import * as React from 'react'
 import {
-  act as reactAct,
+  act,
   createEvent,
   fireEvent,
   screen,
+  renderHook,
 } from '@testing-library/react'
-import {act as reactHooksAct, renderHook} from '@testing-library/react-hooks'
 import {noop} from '../../../utils'
 import {
   renderUseSelect,
@@ -23,10 +23,11 @@ import {
   defaultIds,
   mouseMoveItemAtIndex,
   mouseLeaveItemAtIndex,
+  initialFocusAndOpenTestCases,
+  initialNoFocusOrOpenTestCases,
 } from '../../testUtils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
-import { initialFocusAndOpenTestCases } from '../../useCombobox/testUtils'
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -155,7 +156,7 @@ describe('getToggleButtonProps', () => {
       const userOnClick = jest.fn()
       const {result} = renderUseSelect()
 
-      reactHooksAct(() => {
+      act(() => {
         const {onClick} = result.current.getToggleButtonProps({
           onClick: userOnClick,
         })
@@ -171,7 +172,7 @@ describe('getToggleButtonProps', () => {
       const userOnKeyDown = jest.fn()
       const {result} = renderUseSelect()
 
-      reactHooksAct(() => {
+      act(() => {
         const {onKeyDown} = result.current.getToggleButtonProps({
           onKeyDown: userOnKeyDown,
         })
@@ -189,7 +190,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = renderUseSelect()
 
-      reactHooksAct(() => {
+      act(() => {
         const {onClick} = result.current.getToggleButtonProps({
           onClick: userOnClick,
         })
@@ -207,7 +208,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = renderUseSelect()
 
-      reactHooksAct(() => {
+      act(() => {
         const {onKeyDown} = result.current.getToggleButtonProps({
           onKeyDown: userOnKeyDown,
         })
@@ -226,7 +227,7 @@ describe('getToggleButtonProps', () => {
       const userOnBlur = jest.fn()
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
+      act(() => {
         const {onBlur} = result.current.getToggleButtonProps({
           onBlur: userOnBlur,
         })
@@ -244,7 +245,7 @@ describe('getToggleButtonProps', () => {
       })
       const {result} = renderUseSelect({initialIsOpen: true})
 
-      reactHooksAct(() => {
+      act(() => {
         const {onBlur} = result.current.getToggleButtonProps({
           onBlur: userOnBlur,
         })
@@ -258,28 +259,25 @@ describe('getToggleButtonProps', () => {
   })
 
   describe('initial focus', () => {
-    for (const [
-      initialIsOpen,
-      defaultIsOpen,
-      isOpen,
-      status,
-    ] of initialFocusAndOpenTestCases) {
-      /* eslint-disable */
-      test(`is ${
-        status ? '' : 'not '
-      }grabbed when initialIsOpen: ${initialIsOpen}, defaultIsOpen: ${defaultIsOpen} and props.isOpen: ${isOpen}`, () => {
+    test.each(initialFocusAndOpenTestCases)(
+      'is grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
         renderSelect({isOpen, defaultIsOpen, initialIsOpen})
 
-        if (status) {
-          expect(getToggleButton()).toHaveFocus()
-          expect(getItems()).toHaveLength(items.length)
-        } else {
-          expect(getToggleButton()).not.toHaveFocus()
-          expect(getItems()).toHaveLength(0)
-        }
-      })
-      /* eslint-enable */
-    }
+        expect(getToggleButton()).toHaveFocus()
+        expect(getItems()).toHaveLength(items.length)
+      },
+    )
+
+    test.each(initialNoFocusOrOpenTestCases)(
+      'is not grabbed when initialIsOpen: %s, defaultIsOpen: %s, props.isOpen: %s',
+      (initialIsOpen, defaultIsOpen, isOpen) => {
+        renderSelect({isOpen, defaultIsOpen, initialIsOpen})
+
+        expect(getToggleButton()).not.toHaveFocus()
+        expect(getItems()).toHaveLength(0)
+      },
+    )
   })
 
   describe('event handlers', () => {
@@ -433,9 +431,9 @@ describe('getToggleButtonProps', () => {
 
     describe('on keydown', () => {
       describe('character key', () => {
-        beforeEach(jest.useFakeTimers)
+        beforeEach(() => jest.useFakeTimers())
         afterEach(() => {
-          reactAct(() => jest.runAllTimers())
+          act(() => jest.runAllTimers())
         })
         afterAll(jest.useRealTimers)
 
@@ -464,7 +462,7 @@ describe('getToggleButtonProps', () => {
           renderSelect()
 
           await keyDownOnToggleButton(char)
-          reactAct(jest.runOnlyPendingTimers)
+          act(() => jest.runOnlyPendingTimers())
           await keyDownOnToggleButton(char)
 
           expect(getToggleButton()).toHaveAttribute(
@@ -482,9 +480,9 @@ describe('getToggleButtonProps', () => {
           renderSelect()
 
           await keyDownOnToggleButton(char)
-          reactAct(jest.runOnlyPendingTimers)
+          act(() => jest.runOnlyPendingTimers())
           await keyDownOnToggleButton(char)
-          reactAct(jest.runOnlyPendingTimers)
+          act(() => jest.runOnlyPendingTimers())
           await keyDownOnToggleButton(char)
 
           expect(getToggleButton()).toHaveAttribute(
@@ -512,7 +510,7 @@ describe('getToggleButtonProps', () => {
           renderSelect()
 
           await keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
           await keyDownOnToggleButton(chars[1])
 
           expect(getToggleButton()).toHaveAttribute(
@@ -532,7 +530,7 @@ describe('getToggleButtonProps', () => {
           renderSelect({initialHighlightedIndex: firstValidItemIndex})
 
           await keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
           await keyDownOnToggleButton(chars[1])
 
           // highlight should go on Meitnerium which is the second in the list.
@@ -551,12 +549,12 @@ describe('getToggleButtonProps', () => {
           renderSelect({initialHighlightedIndex: firstValidItemIndex})
 
           await keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
           await keyDownOnToggleButton(chars[1])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
           // Meitnerium is highlighted right now, as we typed "me".
           await keyDownOnToggleButton(chars[2])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
 
           // now we go back to Mendelevium, since we also typed "n".
           expect(getToggleButton()).toHaveAttribute(
@@ -574,11 +572,11 @@ describe('getToggleButtonProps', () => {
           renderSelect()
 
           await keyDownOnToggleButton(chars[0])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
           await keyDownOnToggleButton(chars[1])
-          reactAct(() => jest.runAllTimers())
+          act(() => jest.runAllTimers())
           await keyDownOnToggleButton(chars[2])
-          reactAct(() => jest.advanceTimersByTime(200))
+          act(() => jest.advanceTimersByTime(200))
 
           expect(getToggleButton()).toHaveAttribute(
             'aria-activedescendant',
@@ -601,7 +599,7 @@ describe('getToggleButtonProps', () => {
             // eslint-disable-next-line no-await-in-loop
             await keyDownOnToggleButton(itemToSelect[index])
 
-            reactAct(() => jest.advanceTimersByTime(200))
+            act(() => jest.advanceTimersByTime(200))
           }
 
           expect(toggleButton).toHaveAttribute(
@@ -621,13 +619,13 @@ describe('getToggleButtonProps', () => {
           renderSelect()
 
           await keyDownOnToggleButton(char)
-          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           await keyDownOnToggleButton(char)
-          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           await keyDownOnToggleButton(char)
-          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
           await keyDownOnToggleButton(char)
-          reactAct(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
+          act(() => jest.advanceTimersByTime(200)) // wait some time but not enough to trigger debounce.
 
           expect(getToggleButton()).toHaveAttribute(
             'aria-activedescendant',
@@ -1808,7 +1806,7 @@ describe('getToggleButtonProps', () => {
         const {getMenuProps, getToggleButtonProps} = useSelect({items})
         getMenuProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getToggleButtonProps({}, {suppressRefError: true})

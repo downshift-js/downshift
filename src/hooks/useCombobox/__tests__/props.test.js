@@ -1,6 +1,5 @@
 import React from 'react'
-import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
-import {act} from '@testing-library/react'
+import {renderHook, act} from '@testing-library/react'
 import {
   renderCombobox,
   renderUseCombobox,
@@ -132,7 +131,7 @@ describe('props', () => {
       rerender({
         stateReducer,
         selectedItem: newSelectedItem,
-        itemToString
+        itemToString,
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
@@ -162,7 +161,9 @@ describe('props', () => {
       function itemToString(item) {
         return item.value
       }
-      const selectedItemChanged = jest.fn().mockReturnValue((prev, next) => prev.id !== next.id)
+      const selectedItemChanged = jest
+        .fn()
+        .mockReturnValue((prev, next) => prev.id !== next.id)
       const stateReducer = jest
         .fn()
         .mockImplementation((_state, {changes}) => changes)
@@ -171,7 +172,7 @@ describe('props', () => {
         selectedItemChanged,
         stateReducer,
         selectedItem,
-        itemToString
+        itemToString,
       })
 
       expect(getInput()).toHaveValue(itemToString(selectedItem))
@@ -198,7 +199,7 @@ describe('props', () => {
   })
 
   describe('getA11ySelectionMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(jest.runAllTimers)
     })
@@ -272,7 +273,7 @@ describe('props', () => {
   })
 
   describe('getA11yStatusMessage', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(jest.runAllTimers)
     })
@@ -599,9 +600,9 @@ describe('props', () => {
   })
 
   describe('stateReducer', () => {
-    beforeEach(jest.useFakeTimers)
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      hooksAct(() => jest.runAllTimers())
+      act(() => jest.runAllTimers())
     })
     afterAll(jest.useRealTimers)
 
@@ -609,7 +610,7 @@ describe('props', () => {
       const stateReducer = jest.fn((s, a) => a.changes)
       const {result} = renderUseCombobox({stateReducer})
 
-      hooksAct(() => {
+      act(() => {
         result.current.toggleMenu()
       })
 
@@ -619,7 +620,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionToggleMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.openMenu()
       })
 
@@ -629,7 +630,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionOpenMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.closeMenu()
       })
 
@@ -639,7 +640,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionCloseMenu}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.reset()
       })
 
@@ -649,7 +650,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionReset}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.selectItem({})
       })
 
@@ -659,7 +660,7 @@ describe('props', () => {
         expect.objectContaining({type: stateChangeTypes.FunctionSelectItem}),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.setHighlightedIndex(5)
       })
 
@@ -671,7 +672,7 @@ describe('props', () => {
         }),
       )
 
-      hooksAct(() => {
+      act(() => {
         result.current.setInputValue({})
       })
 
@@ -925,6 +926,7 @@ describe('props', () => {
 
       for (let index = 0; index < testCases.length; index++) {
         const {step, state, args, type} = testCases[index]
+        // eslint-disable-next-line jest/no-conditional-in-test
         const previousState = testCases[index - 1]?.state ?? initialState
 
         // eslint-disable-next-line no-await-in-loop
@@ -1085,7 +1087,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getInputProps().onChange({target: {value: 'ala'}})
       })
 
@@ -1168,7 +1170,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getItemProps({index: 2}).onClick({})
       })
 
@@ -1293,7 +1295,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current
           .getInputProps()
           .onKeyDown({key: 'ArrowDown', preventDefault: jest.fn()})
@@ -1356,7 +1358,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getToggleButtonProps().onClick({})
       })
 
@@ -1525,7 +1527,7 @@ describe('props', () => {
         },
       })
 
-      hooksAct(() => {
+      act(() => {
         result.current.getItemProps({index: 2}).onClick({})
       })
 

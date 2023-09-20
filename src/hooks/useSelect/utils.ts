@@ -35,7 +35,6 @@ export function getItemIndexByCharacterKey<Item>({
   return highlightedIndex
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,

@@ -54,7 +54,7 @@ function useMultipleSelection(userProps = {}) {
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (isInitialMountRef.current || isReactNative) {
+    if (isInitialMountRef.current || isReactNative || !environment?.document) {
       return
     }
 

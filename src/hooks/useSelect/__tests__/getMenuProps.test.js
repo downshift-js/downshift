@@ -1,4 +1,4 @@
-import {renderHook, act as hooksAct} from '@testing-library/react-hooks'
+import {renderHook, act} from '@testing-library/react'
 import {
   renderUseSelect,
   renderSelect,
@@ -78,7 +78,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      hooksAct(() => {
+      act(() => {
         const {ref} = result.current.getMenuProps({ref: refFn})
 
         ref(menuNode)
@@ -93,7 +93,7 @@ describe('getMenuProps', () => {
       const refFn = jest.fn()
       const menuNode = {}
 
-      hooksAct(() => {
+      act(() => {
         const {blablaRef} = result.current.getMenuProps({
           refKey: 'blablaRef',
           blablaRef: refFn,
@@ -113,7 +113,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      hooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -134,7 +134,7 @@ describe('getMenuProps', () => {
         initialIsOpen: true,
       })
 
-      hooksAct(() => {
+      act(() => {
         const {onMouseLeave} = result.current.getMenuProps({
           onMouseLeave: userOnMouseLeave,
         })
@@ -196,7 +196,7 @@ describe('getMenuProps', () => {
         const {getToggleButtonProps, getMenuProps} = useSelect({items})
         getToggleButtonProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getMenuProps({}, {suppressRefError: true})
@@ -205,7 +205,6 @@ describe('getMenuProps', () => {
 
       rerender()
 
-      // eslint-disable-next-line no-console
       expect(console.error).not.toHaveBeenCalled()
     })
 

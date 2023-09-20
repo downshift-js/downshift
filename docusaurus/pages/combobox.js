@@ -53,29 +53,30 @@ export default function ComboBox() {
             </button>
           </div>
           <ul {...getMenuProps()} style={menuStyles}>
-            {isOpen &&
-              (inputValue
-                ? colors.filter(i =>
-                    i.toLowerCase().includes(inputValue.toLowerCase()),
-                  )
-                : colors
-              ).map((item, index) => (
-                <li
-                  style={{
-                    padding: '4px',
-                    backgroundColor:
-                      highlightedIndex === index ? '#bde4ff' : null,
-                  }}
-                  key={`${item}${index}`}
-                  {...getItemProps({
-                    item,
-                    index,
-                    'data-testid': `downshift-item-${index}`,
-                  })}
-                >
-                  {item}
-                </li>
-              ))}
+            {isOpen
+              ? (inputValue
+                  ? colors.filter(i =>
+                      i.toLowerCase().includes(inputValue.toLowerCase()),
+                    )
+                  : colors
+                ).map((item, index) => (
+                  <li
+                    style={{
+                      padding: '4px',
+                      backgroundColor:
+                        highlightedIndex === index ? '#bde4ff' : null,
+                    }}
+                    key={`${item}${index}`}
+                    {...getItemProps({
+                      item,
+                      index,
+                      'data-testid': `downshift-item-${index}`,
+                    })}
+                  >
+                    {item}
+                  </li>
+                ))
+              : null}
           </ul>
         </div>
       )}

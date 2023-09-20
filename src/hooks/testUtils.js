@@ -111,3 +111,30 @@ export function getA11yStatusContainer() {
 export async function tab(shiftKey = false) {
   await user.tab({shift: shiftKey})
 }
+
+// format is: [initialIsOpen, defaultIsOpen, props.isOpen]
+export const initialFocusAndOpenTestCases = [
+  [undefined, undefined, true, true],
+  [true, true, true, true],
+  [true, false, true, true],
+  [false, true, true, true],
+  [false, false, true, true],
+  [true, undefined, undefined, true],
+  [true, false, undefined, true],
+  [true, true, undefined, true],
+  [undefined, true, undefined, true],
+]
+
+// format is: [initialIsOpen, defaultIsOpen, props.isOpen]
+export const initialNoFocusOrOpenTestCases = [
+  [undefined, undefined, undefined, false],
+  [undefined, undefined, false, false],
+  [true, true, false, false],
+  [true, false, false, false],
+  [false, true, false, false],
+  [false, false, false, false],
+  [false, undefined, undefined, false],
+  [false, false, undefined, false],
+  [false, true, undefined, false],
+  [undefined, false, undefined, false],
+]

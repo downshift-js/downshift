@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render, fireEvent, act} from '@testing-library/react'
 import Downshift from '../'
 
 jest.useFakeTimers()
@@ -40,7 +40,9 @@ test('button ignores key events it does not handle', () => {
 test('on button blur resets the state', () => {
   const {button, childrenSpy} = setup()
   fireEvent.blur(button)
-  jest.runAllTimers()
+  act(() => {
+    jest.runAllTimers()
+  })
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({
       isOpen: false,
@@ -89,7 +91,7 @@ test(`getToggleButtonProps doesn't include event handlers when disabled is passe
   const entry = Object.entries(props).find(
     ([_key, value]) => typeof value === 'function',
   )
-  // eslint-disable-next-line jest/no-if
+  // eslint-disable-next-line jest/no-conditional-in-test
   if (entry) {
     throw new Error(
       `getToggleButtonProps should not have any props that are callbacks. It has ${entry[0]}.`,
@@ -108,12 +110,16 @@ describe('Expect timer to trigger on process.env.NODE_ENV !== test value', () =>
     process.env.NODE_ENV = 'production'
     const {button, childrenSpy} = setup()
     fireEvent.click(button)
-    jest.runAllTimers()
+    act(() => {
+      jest.runAllTimers()
+    })
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: true}),
     )
     fireEvent.click(button)
-    jest.runAllTimers()
+    act(() => {
+      jest.runAllTimers()
+    })
     expect(childrenSpy).toHaveBeenLastCalledWith(
       expect.objectContaining({isOpen: false}),
     )

@@ -60,7 +60,7 @@ export default function DropdownCombobox() {
         </button>
       </div>
       <ul {...getMenuProps()} style={menuStyles}>
-        {isOpen &&
+        {isOpen ?
           inputItems.map((item, index) => (
             <li
               style={{
@@ -76,7 +76,7 @@ export default function DropdownCombobox() {
             >
               {item}
             </li>
-          ))}
+          )) : null}
       </ul>
     </div>
   )

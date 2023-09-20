@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {render} from '@testing-library/react'
+import {act, render} from '@testing-library/react'
 import Downshift from '../'
 
 beforeEach(() => jest.spyOn(console, 'error').mockImplementation(() => {}))
@@ -48,7 +48,9 @@ test('selectItemAtIndex can select item that is an empty string', () => {
     </div>
   )
   const {selectItemAtIndex, childrenSpy} = setup({children})
-  selectItemAtIndex(1)
+  act(() => {
+    selectItemAtIndex(1)
+  })
   expect(childrenSpy).toHaveBeenLastCalledWith(
     expect.objectContaining({selectedItem: ''}),
   )
@@ -56,7 +58,9 @@ test('selectItemAtIndex can select item that is an empty string', () => {
 
 test('toggleMenu can take no arguments at all', () => {
   const {toggleMenu, childrenSpy} = setup()
-  toggleMenu()
+  act(() => {
+    toggleMenu()
+  })
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({
       isOpen: true,
@@ -133,7 +137,9 @@ test('should not log error during strict mode during reset', () => {
 test('can use setState for ultimate power', () => {
   const {childrenSpy, setState} = setup()
   childrenSpy.mockClear()
-  setState({isOpen: true, selectedItem: 'hi'})
+  act(() => {
+    setState({isOpen: true, selectedItem: 'hi'})
+  })
   expect(childrenSpy).toHaveBeenCalledTimes(1)
   expect(childrenSpy).toHaveBeenCalledWith(
     expect.objectContaining({isOpen: true, selectedItem: 'hi'}),

@@ -5,25 +5,11 @@ const cleanupStatus = debounce(documentProp => {
 }, 500)
 
 /**
- * @param {String} status the status message
- * @param {Object} documentProp document passed by the user.
- */
-function setStatus(status, documentProp) {
-  const div = getStatusDiv(documentProp)
-  if (!status) {
-    return
-  }
-
-  div.textContent = status
-  cleanupStatus(documentProp)
-}
-
-/**
  * Get the status node or create it if it does not already exist.
  * @param {Object} documentProp document passed by the user.
  * @return {HTMLElement} the status node.
  */
-function getStatusDiv(documentProp = document) {
+function getStatusDiv(documentProp) {
   let statusDiv = documentProp.getElementById('a11y-status-message')
   if (statusDiv) {
     return statusDiv
@@ -48,4 +34,17 @@ function getStatusDiv(documentProp = document) {
   return statusDiv
 }
 
-export default setStatus
+/**
+ * @param {String} status the status message
+ * @param {Object} documentProp document passed by the user.
+ */
+export default function setStatus(status, documentProp) {
+  if (!status || !documentProp) {
+    return
+  }
+
+  const div = getStatusDiv(documentProp)
+
+  div.textContent = status
+  cleanupStatus(documentProp)
+}

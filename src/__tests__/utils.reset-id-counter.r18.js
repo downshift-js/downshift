@@ -1,15 +1,14 @@
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
-import Downshift from '../'
+import Downshift from '..'
 import {resetIdCounter} from '../utils'
 
-jest.mock('react', () => {
-  const {useId, ...react} = jest.requireActual('react')
-  return react
+afterAll(() => {
+  jest.restoreAllMocks()
 })
 
 test('renders with correct and predictable auto generated id upon resetIdCounter call', () => {
-  resetIdCounter()
+  jest.spyOn(console, 'warn').mockImplementation(() => {})
 
   const renderDownshift = ({getInputProps, getLabelProps, getItemProps}) => (
     <div>
@@ -28,28 +27,13 @@ test('renders with correct and predictable auto generated id upon resetIdCounter
     </div>
   )
 
-  const setup1 = setup({renderDownshift})
-  expect(setup1.id).toBe('downshift-0')
-  expect(setup1.label).toHaveAttribute('for', 'downshift-0-input')
-  expect(setup1.input).toHaveAttribute('id', 'downshift-0-input')
-  expect(setup1.item).toHaveAttribute('id', 'downshift-0-item-0')
-  setup1.unmount()
-
-  const setup2 = setup({renderDownshift})
-  expect(setup2.id).toBe('downshift-1')
-  expect(setup2.label).toHaveAttribute('for', 'downshift-1-input')
-  expect(setup2.input).toHaveAttribute('id', 'downshift-1-input')
-  expect(setup2.item).toHaveAttribute('id', 'downshift-1-item-0')
-  setup2.unmount()
-
+  setup({renderDownshift})
   resetIdCounter()
 
-  const setup3 = setup({renderDownshift})
-  expect(setup3.id).toBe('downshift-0')
-  expect(setup3.label).toHaveAttribute('for', 'downshift-0-input')
-  expect(setup3.input).toHaveAttribute('id', 'downshift-0-input')
-  expect(setup3.item).toHaveAttribute('id', 'downshift-0-item-0')
-  setup3.unmount()
+  expect(console.warn).toHaveBeenCalledTimes(1)
+  expect(console.warn).toHaveBeenCalledWith(
+    'It is not necessary to call resetIdCounter when using React 18+',
+  )
 })
 
 function setup({renderDownshift = () => <div />, ...props} = {}) {

@@ -1,4 +1,4 @@
-import {act, renderHook} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react'
 import {noop} from '../../../utils'
 import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
 import {
@@ -162,7 +162,7 @@ describe('getMenuProps', () => {
         })
         getInputProps({}, {suppressRefError: true})
 
-        // eslint-disable-next-line jest/no-if
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
         if (firstRender) {
           firstRender = false
           getMenuProps({}, {suppressRefError: true})

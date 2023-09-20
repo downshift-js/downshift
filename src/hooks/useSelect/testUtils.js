@@ -1,6 +1,5 @@
 import * as React from 'react'
-import {render, act} from '@testing-library/react'
-import {renderHook} from '@testing-library/react-hooks'
+import {render, act, renderHook} from '@testing-library/react'
 import {defaultProps} from '../utils'
 import {
   clickOnItemAtIndex,
@@ -17,15 +16,6 @@ import useSelect from '.'
 
 export * from '../testUtils'
 
-jest.mock('../../utils', () => {
-  const utils = jest.requireActual('../../utils')
-
-  return {
-    ...utils,
-    generateId: () => 'test-id',
-  }
-})
-
 jest.mock('../utils', () => {
   const utils = jest.requireActual('../utils')
   const hooksUtils = jest.requireActual('../../utils')
@@ -33,6 +23,16 @@ jest.mock('../utils', () => {
   return {
     ...utils,
     useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
   }
 })
 
@@ -78,22 +78,23 @@ export function DropdownSelect({renderSpy, renderItem, ...props}) {
           : selectedItem) || 'Elements'}
       </div>
       <ul data-testid={dataTestIds.menu} {...getMenuProps()}>
-        {isOpen &&
-          (props.items || items).map((item, index) => {
-            const stringItem =
-              item instanceof Object ? itemToString(item) : item
-            return renderItem ? (
-              renderItem({index, item, getItemProps, stringItem})
-            ) : (
-              <li
-                data-testid={dataTestIds.item(index)}
-                key={`${stringItem}${index}`}
-                {...getItemProps({item, index, disabled: item.disabled})}
-              >
-                {stringItem}
-              </li>
-            )
-          })}
+        {isOpen
+          ? (props.items || items).map((item, index) => {
+              const stringItem =
+                item instanceof Object ? itemToString(item) : item
+              return renderItem ? (
+                renderItem({index, item, getItemProps, stringItem})
+              ) : (
+                <li
+                  data-testid={dataTestIds.item(index)}
+                  key={`${stringItem}${index}`}
+                  {...getItemProps({item, index, disabled: item.disabled})}
+                >
+                  {stringItem}
+                </li>
+              )
+            })
+          : null}
       </ul>
     </div>
   )

@@ -1,4 +1,4 @@
-import {act, renderHook} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {
   renderUseMultipleSelection,
@@ -71,6 +71,20 @@ describe('props', () => {
   describe('getA11yRemovalMessage', () => {
     afterEach(() => {
       act(() => jest.runAllTimers())
+    })
+
+    test('is not added if the document in undefined', async () => {
+      renderMultipleCombobox({
+        multipleSelectionProps: {
+          initialSelectedItems: [items[0], items[1]],
+          initialActiveIndex: 0,
+          environment: undefined,
+        },
+      })
+
+      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+
+      expect(getA11yStatusContainer()).not.toHaveTextContent()
     })
 
     test('is called with object that contains specific props', async () => {

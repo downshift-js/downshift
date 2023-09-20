@@ -1,4 +1,4 @@
-import {act} from '@testing-library/react-hooks'
+import {act} from '@testing-library/react'
 import {
   renderCombobox,
   renderUseCombobox,
@@ -256,6 +256,14 @@ describe('getToggleButtonProps', () => {
         await clickOnToggleButton()
 
         expect(getInput()).toHaveFocus()
+      })
+
+      test('opens the closed menu and sets no focus if there is no environment', async () => {
+        renderCombobox({environment: undefined})
+
+        await clickOnToggleButton()
+
+        expect(getInput()).not.toHaveFocus()
       })
     })
   })

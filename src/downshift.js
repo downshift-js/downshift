@@ -109,7 +109,7 @@ class Downshift extends Component {
     selectedItemChanged: (prevItem, item) => prevItem !== item,
     environment:
       /* istanbul ignore next (ssr) */
-      typeof window === 'undefined' ? {} : window,
+      typeof window === 'undefined' ? undefined : window,
     stateReducer: (state, stateToSet) => stateToSet,
     suppressRefError: false,
     scrollIntoView,
@@ -151,7 +151,6 @@ class Downshift extends Component {
   inputId = this.props.inputId || `${this.id}-input`
   getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`)
 
-  input = null
   items = []
   // itemCount can be changed asynchronously
   // from within downshift (so it can't come from a prop)
@@ -223,7 +222,9 @@ class Downshift extends Component {
   }
 
   getItemNodeFromIndex(index) {
-    return this.props.environment.document.getElementById(this.getItemId(index))
+    return this.props.environment
+      ? this.props.environment.document.getElementById(this.getItemId(index))
+      : null
   }
 
   isItemDisabled = (_item, index) => {
@@ -357,7 +358,7 @@ class Downshift extends Component {
         ) {
           onChangeArg = newStateToSet.selectedItem
         }
-        newStateToSet.type = newStateToSet.type || stateChangeTypes.unknown
+        newStateToSet.type ||= stateChangeTypes.unknown
 
         Object.keys(newStateToSet).forEach(key => {
           // onStateChangeArg should only have the state that is
@@ -735,12 +736,12 @@ class Downshift extends Component {
     // handle odd case for Safari and Firefox which
     // don't give the button the focus properly.
     /* istanbul ignore if (can't reasonably test this) */
-    if (
-      !isReactNative &&
-      this.props.environment.document.activeElement ===
-        this.props.environment.document.body
-    ) {
-      event.target.focus()
+    if (!isReactNative && this.props.environment) {
+      const {body, activeElement} = this.props.environment.document
+
+      if (body && body === activeElement) {
+        event.target.focus()
+      }
     }
     // to simplify testing components that use downshift, we'll not wrap this in a setTimeout
     // if the NODE_ENV is test. With the proper build system, this should be dead code eliminated
@@ -759,11 +760,15 @@ class Downshift extends Component {
     const blurTarget = event.target // Save blur target for comparison with activeElement later
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
     this.internalSetTimeout(() => {
+      if (this.isMouseDown || !this.props.environment) {
+        return
+      }
+
+      const {activeElement} = this.props.environment.document
+
       if (
-        !this.isMouseDown &&
-        (this.props.environment.document.activeElement == null ||
-          this.props.environment.document.activeElement.id !== this.inputId) &&
-        this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
+        (activeElement == null || activeElement.id !== this.inputId) &&
+        activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
       ) {
         this.reset({type: stateChangeTypes.blurButton})
       }
@@ -868,14 +873,17 @@ class Downshift extends Component {
   inputHandleBlur = () => {
     // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
     this.internalSetTimeout(() => {
+      if (this.isMouseDown || !this.props.environment) {
+        return
+      }
+
+      const {activeElement} = this.props.environment.document
       const downshiftButtonIsActive =
-        this.props.environment.document &&
-        !!this.props.environment.document.activeElement &&
-        !!this.props.environment.document.activeElement.dataset &&
-        this.props.environment.document.activeElement.dataset.toggle &&
+        activeElement?.dataset?.toggle &&
         this._rootNode &&
-        this._rootNode.contains(this.props.environment.document.activeElement)
-      if (!this.isMouseDown && !downshiftButtonIsActive) {
+        this._rootNode.contains(activeElement)
+
+      if (!downshiftButtonIsActive) {
         this.reset({type: stateChangeTypes.blurInput})
       }
     })
@@ -1033,6 +1041,10 @@ class Downshift extends Component {
   }
 
   updateStatus = debounce(() => {
+    if (!this.props?.environment?.document) {
+      return
+    }
+
     const state = this.getState()
     const item = this.items[state.highlightedIndex]
     const resultCount = this.getItemCount()
@@ -1059,8 +1071,8 @@ class Downshift extends Component {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
-    /* istanbul ignore if (react-native) */
-    if (isReactNative) {
+    /* istanbul ignore if (react-native or SSR) */
+    if (isReactNative || !this.props.environment) {
       this.cleanup = () => {
         this.internalClearTimeouts()
       }
@@ -1130,6 +1142,7 @@ class Downshift extends Component {
       this.cleanup = () => {
         this.internalClearTimeouts()
         this.updateStatus.cancel()
+
         environment.removeEventListener('mousedown', onMouseDown)
         environment.removeEventListener('mouseup', onMouseUp)
         environment.removeEventListener('touchstart', onTouchStart)

@@ -1,4 +1,4 @@
-import {act, renderHook} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react'
 import {
   renderUseSelect,
   renderSelect,
@@ -333,7 +333,7 @@ describe('getItemProps', () => {
     test('will be displayed if getInputProps is not called', () => {
       renderHook(() => {
         const {getItemProps} = useSelect({items})
-        getItemProps({disabled: true})
+        getItemProps({disabled: true, index: 99})
       })
 
       expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(

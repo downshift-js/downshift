@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import {render, fireEvent, screen} from '@testing-library/react'
+import {render, fireEvent, screen, act} from '@testing-library/react'
 import Downshift from '../'
 
 test('will not reset when clicking within the menu', () => {
@@ -40,12 +40,14 @@ test('will not reset when clicking within the menu', () => {
           selectedItem,
         }) => (
           <div>
+            {/* eslint-disable-next-line jest/no-conditional-in-test */}
             {selectedItem ? (
               <div data-testid="selection">{selectedItem}</div>
             ) : null}
             <button {...getToggleButtonProps({'data-testid': 'button'})}>
               Open Menu
             </button>
+            {/* eslint-disable-next-line jest/no-conditional-in-test */}
             {isOpen ? <MyMenu {...{getMenuProps, getItemProps}} /> : null}
           </div>
         )}
@@ -54,7 +56,9 @@ test('will not reset when clicking within the menu', () => {
   }
   render(<MyPortalAutocomplete />)
   expect(screen.queryByTestId('menu')).not.toBeInTheDocument()
-  screen.getByTestId('button').click()
+  act(() => {
+    screen.getByTestId('button').click()
+  })
   expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
   const notAnItem = screen.getByTestId('not-an-item')
@@ -71,7 +75,9 @@ test('will not reset when clicking within the menu', () => {
   notAnItem.focus() // sets document.activeElement
   expect(screen.getByTestId('menu')).toBeInstanceOf(HTMLElement)
 
-  screen.getByTestId('item').click()
+  act(() => {
+    screen.getByTestId('item').click()
+  })
   expect(screen.queryByTestId('menu')).not.toBeInTheDocument()
   expect(screen.getByTestId('selection')).toHaveTextContent('The item')
 })

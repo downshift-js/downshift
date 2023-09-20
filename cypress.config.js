@@ -5,6 +5,7 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost:6006',
     video: false,
+    testIsolation: false,
     setupNodeEvents(on) {
       on(
         'file:preprocessor',
