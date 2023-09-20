@@ -23,13 +23,11 @@ import {
   defaultIds,
   mouseMoveItemAtIndex,
   mouseLeaveItemAtIndex,
+  initialFocusAndOpenTestCases,
+  initialNoFocusOrOpenTestCases,
 } from '../../testUtils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
-import {
-  initialFocusAndOpenTestCases,
-  initialNoFocusOrOpenTestCases,
-} from '../../useCombobox/testUtils'
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
