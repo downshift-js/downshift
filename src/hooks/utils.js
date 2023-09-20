@@ -353,7 +353,7 @@ function useMouseAndTouchTracker(
   })
 
   useEffect(() => {
-    if (environment?.addEventListener == null) {
+    if (isReactNative || !environment) {
       return
     }
 

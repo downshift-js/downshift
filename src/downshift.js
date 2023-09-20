@@ -1071,8 +1071,8 @@ class Downshift extends Component {
       validateGetMenuPropsCalledCorrectly(this._menuNode, this.getMenuProps)
     }
 
-    /* istanbul ignore if (react-native) */
-    if (isReactNative) {
+    /* istanbul ignore if (react-native or SSR) */
+    if (isReactNative || !this.props.environment) {
       this.cleanup = () => {
         this.internalClearTimeouts()
       }
@@ -1133,25 +1133,21 @@ class Downshift extends Component {
       }
       const {environment} = this.props
 
-      if (environment?.addEventListener) {
-        environment.addEventListener('mousedown', onMouseDown)
-        environment.addEventListener('mouseup', onMouseUp)
-        environment.addEventListener('touchstart', onTouchStart)
-        environment.addEventListener('touchmove', onTouchMove)
-        environment.addEventListener('touchend', onTouchEnd)
-      }
+      environment.addEventListener('mousedown', onMouseDown)
+      environment.addEventListener('mouseup', onMouseUp)
+      environment.addEventListener('touchstart', onTouchStart)
+      environment.addEventListener('touchmove', onTouchMove)
+      environment.addEventListener('touchend', onTouchEnd)
 
       this.cleanup = () => {
         this.internalClearTimeouts()
         this.updateStatus.cancel()
 
-        if (environment?.removeEventListener) {
-          environment.removeEventListener('mousedown', onMouseDown)
-          environment.removeEventListener('mouseup', onMouseUp)
-          environment.removeEventListener('touchstart', onTouchStart)
-          environment.removeEventListener('touchmove', onTouchMove)
-          environment.removeEventListener('touchend', onTouchEnd)
-        }
+        environment.removeEventListener('mousedown', onMouseDown)
+        environment.removeEventListener('mouseup', onMouseUp)
+        environment.removeEventListener('touchstart', onTouchStart)
+        environment.removeEventListener('touchmove', onTouchMove)
+        environment.removeEventListener('touchend', onTouchEnd)
       }
     }
   }
