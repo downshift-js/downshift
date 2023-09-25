@@ -1709,6 +1709,24 @@ describe('getToggleButtonProps', () => {
     })
 
     describe('blur', () => {
+      test('with the menu closed does nothing', async () => {
+        const initialHighlightedIndex = 2
+        renderSelect({initialHighlightedIndex}, ui => {
+          return (
+            <>
+              {ui}
+              <div tabIndex={0}>Second element</div>
+            </>
+          )
+        })
+
+        await tab() // focus the button
+        screen.getByText(/Second element/).focus()
+
+        expect(getItems()).toHaveLength(0)
+        expect(getToggleButton()).not.toHaveTextContent()
+      })
+
       test('by focusing another element should behave as a normal blur', async () => {
         const initialHighlightedIndex = 2
         renderSelect({initialIsOpen: true, initialHighlightedIndex}, ui => {

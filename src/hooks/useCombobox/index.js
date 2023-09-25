@@ -334,7 +334,7 @@ function useCombobox(userProps = {}) {
           index,
         })
       }
-      const itemHandleMouseDown = e => e.preventDefault()
+      const itemHandleMouseDown = e => e.preventDefault() // keep focus on the input after item click select.
 
       return {
         [refKey]: handleRefs(ref, itemNode => {
