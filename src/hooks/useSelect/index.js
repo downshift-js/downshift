@@ -490,7 +490,7 @@ function useSelect(userProps = {}) {
           index,
         })
       }
-      const itemHandleMouseDown = e => e.preventDefault()
+      const itemHandleMouseDown = e => e.preventDefault() // keep focus on the toggle after item click select.
 
       const itemProps = {
         [refKey]: handleRefs(ref, itemNode => {
