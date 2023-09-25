@@ -451,6 +451,7 @@ function useSelect(userProps = {}) {
       index: indexProp,
       onMouseMove,
       onClick,
+      onMouseDown,
       onPress,
       refKey = 'ref',
       disabled: disabledProp,
@@ -489,6 +490,7 @@ function useSelect(userProps = {}) {
           index,
         })
       }
+      const itemHandleMouseDown = e => e.preventDefault()
 
       const itemProps = {
         [refKey]: handleRefs(ref, itemNode => {
@@ -515,6 +517,10 @@ function useSelect(userProps = {}) {
       itemProps.onMouseMove = callAllEventHandlers(
         onMouseMove,
         itemHandleMouseMove,
+      )
+      itemProps.onMouseDown = callAllEventHandlers(
+        onMouseDown,
+        itemHandleMouseDown,
       )
 
       return itemProps

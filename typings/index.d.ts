@@ -425,7 +425,7 @@ export interface UseSelectGetItemPropsOptions<Item>
     GetPropsWithRefKey {}
 
 export interface UseSelectGetItemPropsReturnValue
-  extends Omit<GetItemPropsReturnValue, 'onMouseDown'> {
+  extends GetItemPropsReturnValue {
   'aria-disabled': boolean
   ref?: React.RefObject<any>
 }

@@ -123,6 +123,44 @@ describe('getItemProps', () => {
       expect(result.current.highlightedIndex).toBe(1)
     })
 
+    test('event handler onMouseDown is called along with downshift handler', () => {
+      const userOnMouseDown = jest.fn()
+      const preventDefault = jest.fn()
+      const {result} = renderUseSelect({initialIsOpen: true})
+
+      act(() => {
+        const {onMouseDown} = result.current.getItemProps({
+          index: 1,
+          onMouseDown: userOnMouseDown,
+        })
+
+        onMouseDown({preventDefault})
+      })
+
+      expect(userOnMouseDown).toHaveBeenCalledTimes(1)
+      expect(preventDefault).toHaveBeenCalledTimes(1)
+    })
+
+    test("event handler onMouseDown is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
+      const userOnMouseDown = jest.fn(event => {
+        event.preventDownshiftDefault = true
+      })
+      const preventDefault = jest.fn()
+      const {result} = renderUseSelect({initialIsOpen: true})
+
+      act(() => {
+        const {onMouseDown} = result.current.getItemProps({
+          index: 0,
+          onMouseDown: userOnMouseDown,
+        })
+
+        onMouseDown({preventDefault})
+      })
+
+      expect(userOnMouseDown).toHaveBeenCalledTimes(1)
+      expect(preventDefault).not.toHaveBeenCalled()
+    })
+
     test("event handler onClick is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
       const userOnClick = jest.fn(event => {
         event.preventDownshiftDefault = true
