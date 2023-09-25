@@ -251,7 +251,7 @@ const defaultProps = {
   scrollIntoView,
   environment:
     /* istanbul ignore next (ssr) */
-    typeof window === 'undefined' ? undefined : window,
+    typeof window === 'undefined' || isReactNative ? undefined : window,
 }
 
 function getDefaultValue(
