@@ -152,6 +152,7 @@ export interface GetLabelPropsReturnValue {
 export interface GetToggleButtonPropsOptions
   extends React.HTMLProps<HTMLButtonElement> {
   disabled?: boolean
+  onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
 interface GetToggleButtonPropsReturnValue {
@@ -398,7 +399,9 @@ export interface UseSelectGetMenuReturnValue extends GetMenuPropsReturnValue {
 
 export interface UseSelectGetToggleButtonPropsOptions
   extends GetPropsWithRefKey,
-    React.HTMLProps<HTMLElement> {}
+    React.HTMLProps<HTMLElement> {
+  onPress?: (event: React.BaseSyntheticEvent) => void
+}
 
 export interface UseSelectGetToggleButtonReturnValue
   extends Pick<
