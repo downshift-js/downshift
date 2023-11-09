@@ -38,8 +38,8 @@ function useMultipleSelection(userProps = {}) {
   // Reducer init.
   const [state, dispatch] = useControlledReducer(
     downshiftMultipleSelectionReducer,
-    getInitialState(props),
     props,
+    getInitialState,
   )
   const {activeIndex, selectedItems} = state
 
