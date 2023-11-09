@@ -187,11 +187,11 @@ function useLatestRef(val) {
  * Also calls the onChange handlers for state values that have changed.
  *
  * @param {Function} reducer Reducer function from downshift.
- * @param {Object} initialState Initial state of the hook.
- * @param {Object} props The hook props.
+ * @param {Object} props The hook props, also passed to createInitialState.
+ * @param {Function} createInitialState Function that returns the initial state.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useEnhancedReducer(reducer, initialState, props) {
+function useEnhancedReducer(reducer, props, createInitialState) {
   const prevStateRef = useRef()
   const actionRef = useRef()
   const enhancedReducer = useCallback(
@@ -206,7 +206,11 @@ function useEnhancedReducer(reducer, initialState, props) {
     },
     [reducer],
   )
-  const [state, dispatch] = useReducer(enhancedReducer, initialState)
+  const [state, dispatch] = useReducer(
+    enhancedReducer,
+    props,
+    createInitialState,
+  )
   const propsRef = useLatestRef(props)
   const dispatchWithProps = useCallback(
     action => dispatch({props: propsRef.current, ...action}),
@@ -234,12 +238,16 @@ function useEnhancedReducer(reducer, initialState, props) {
  * returning the new state.
  *
  * @param {Function} reducer Reducer function from downshift.
- * @param {Object} initialState Initial state of the hook.
- * @param {Object} props The hook props.
+ * @param {Object} props The hook props, also passed to createInitialState.
+ * @param {Function} createInitialState Function that returns the initial state.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useControlledReducer(reducer, initialState, props) {
-  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
+function useControlledReducer(reducer, props, createInitialState) {
+  const [state, dispatch] = useEnhancedReducer(
+    reducer,
+    props,
+    createInitialState,
+  )
 
   return [getState(state, props), dispatch]
 }

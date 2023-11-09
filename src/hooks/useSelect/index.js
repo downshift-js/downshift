@@ -42,11 +42,10 @@ function useSelect(userProps = {}) {
     getA11yStatusMessage,
   } = props
   // Initial state depending on controlled props.
-  const initialState = getInitialState(props)
   const [state, dispatch] = useControlledReducer(
     downshiftSelectReducer,
-    initialState,
     props,
+    getInitialState,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 

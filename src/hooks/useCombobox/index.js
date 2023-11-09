@@ -39,11 +39,10 @@ function useCombobox(userProps = {}) {
     itemToString,
   } = props
   // Initial state depending on controlled props.
-  const initialState = getInitialState(props)
   const [state, dispatch] = useControlledReducer(
     downshiftUseComboboxReducer,
-    initialState,
     props,
+    getInitialState,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
