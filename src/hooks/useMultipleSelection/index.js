@@ -14,6 +14,7 @@ import {
   defaultProps,
   isKeyDownOperationPermitted,
   validatePropTypes,
+  isStateEqual
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -40,6 +41,7 @@ function useMultipleSelection(userProps = {}) {
     downshiftMultipleSelectionReducer,
     props,
     getInitialState,
+    isStateEqual
   )
   const {activeIndex, selectedItems} = state
 

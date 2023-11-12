@@ -12,6 +12,7 @@ import {
   useMouseAndTouchTracker,
   getItemAndIndex,
   getInitialValue,
+  isDropdownsStateEqual,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -46,9 +47,9 @@ function useSelect(userProps = {}) {
     downshiftSelectReducer,
     props,
     getInitialState,
+    isDropdownsStateEqual,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
-
   // Element efs.
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)

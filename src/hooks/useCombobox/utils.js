@@ -58,14 +58,16 @@ const propTypes = {
  * @param {Function} reducer Reducer function from downshift.
  * @param {Object} props The hook props, also passed to createInitialState.
  * @param {Function} createInitialState Function that returns the initial state.
+ * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledReducer(reducer, props, createInitialState) {
+export function useControlledReducer(reducer, props, createInitialState, isStateEqual) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(
     reducer,
     props,
     createInitialState,
+    isStateEqual
   )
 
   // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
