@@ -192,12 +192,7 @@ function useLatestRef(val) {
  * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-function useEnhancedReducer(
-  reducer,
-  props,
-  createInitialState,
-  isStateEqual,
-) {
+function useEnhancedReducer(reducer, props, createInitialState, isStateEqual) {
   const prevStateRef = useRef()
   const actionRef = useRef()
   const enhancedReducer = useCallback(
@@ -225,9 +220,12 @@ function useEnhancedReducer(
   const action = actionRef.current
 
   useEffect(() => {
-    const stateChanged =
-      prevStateRef.current && !isStateEqual(prevStateRef.current, state)
-    if (action && stateChanged) {
+    const shouldCallOnChangeProps =
+      action &&
+      prevStateRef.current &&
+      !isStateEqual(prevStateRef.current, state)
+
+    if (shouldCallOnChangeProps) {
       callOnChangeProps(
         action,
         getState(prevStateRef.current, action.props),
@@ -236,7 +234,13 @@ function useEnhancedReducer(
     }
 
     prevStateRef.current = state
-  }, [state, props, action, isStateEqual])
+  }, [state, action, isStateEqual])
+
+  useEffect(() => {
+    if (props) {
+      prevStateRef.current = getState(prevStateRef.current, props)
+    }
+  }, [props])
 
   return [state, dispatchWithProps]
 }
