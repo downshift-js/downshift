@@ -613,7 +613,7 @@ function isDropdownsStateEqual(prevState, newState) {
     prevState.isOpen === newState.isOpen &&
     prevState.inputValue === newState.inputValue &&
     prevState.highlightedIndex === newState.highlightedIndex &&
-    prevState.selectedItemChange === newState.selectedItemChange
+    prevState.selectedItem === newState.selectedItem
   )
 }
 
