@@ -255,7 +255,7 @@ export interface Actions<Item> {
     cb?: Callback,
   ) => void
   setHighlightedIndex: (
-    index: number,
+    index: number | null,
     otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
   ) => void
@@ -459,7 +459,7 @@ export interface UseSelectActions<Item> {
   closeMenu: () => void
   toggleMenu: () => void
   selectItem: (item: Item | null) => void
-  setHighlightedIndex: (index: number) => void
+  setHighlightedIndex: (index: number | null) => void
 }
 
 export type UseSelectReturnValue<Item> = UseSelectState<Item> &
@@ -666,7 +666,7 @@ export interface UseComboboxActions<Item> {
   closeMenu: () => void
   toggleMenu: () => void
   selectItem: (item: Item | null) => void
-  setHighlightedIndex: (index: number) => void
+  setHighlightedIndex: (index: number | null) => void
   setInputValue: (inputValue: string) => void
 }
 
