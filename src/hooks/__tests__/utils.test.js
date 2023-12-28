@@ -154,14 +154,14 @@ describe('utils', () => {
     })
   })
 
-  describe('isStateEqual', () => {
+  describe('isDropdownsStateEqual', () => {
     test('is true when each property is equal', () => {
       const selectedItem = 'hello'
       const prevState = {
         highlightedIndex: 2,
         isOpen: true,
         selectedItem,
-        inputvalue: selectedItem,
+        inputValue: selectedItem,
       }
       const newState = {
         ...prevState,
@@ -176,7 +176,7 @@ describe('utils', () => {
         highlightedIndex: 2,
         isOpen: true,
         selectedItem,
-        inputvalue: selectedItem,
+        inputValue: selectedItem,
       }
       const newState = {
         ...prevState,
