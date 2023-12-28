@@ -125,7 +125,7 @@ export default function DropdownMultipleCombobox() {
                 style={{padding: '4px', cursor: 'pointer'}}
                 onClick={e => {
                   e.stopPropagation()
-                  removeSelectedItem(null)
+                  removeSelectedItem(selectedItemForRender)
                 }}
               >
                 &#10005;

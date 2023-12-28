@@ -236,12 +236,6 @@ function useEnhancedReducer(reducer, props, createInitialState, isStateEqual) {
     prevStateRef.current = state
   }, [state, action, isStateEqual])
 
-  useEffect(() => {
-    if (props) {
-      prevStateRef.current = getState(prevStateRef.current, props)
-    }
-  }, [props])
-
   return [state, dispatchWithProps]
 }
 
