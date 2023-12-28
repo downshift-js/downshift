@@ -95,6 +95,21 @@ function getA11yRemovalMessage(selectionParameters) {
   return `${itemToStringLocal(removedSelectedItem)} has been removed.`
 }
 
+/**
+ * Check if a state is equal for taglist, by comparing active index and selected items.
+ * Used by useSelect and useCombobox.
+ *
+ * @param {Object} prevState
+ * @param {Object} newState
+ * @returns {boolean} Wheather the states are deeply equal.
+ */
+function isStateEqual(prevState, newState) {
+  return (
+    prevState.selectedItems === newState.selectedItems &&
+    prevState.activeIndex === newState.activeIndex
+  )
+}
+
 const propTypes = {
   ...commonPropTypes,
   selectedItems: PropTypes.array,
@@ -133,4 +148,5 @@ export {
   getDefaultValue,
   getInitialState,
   isKeyDownOperationPermitted,
+  isStateEqual,
 }

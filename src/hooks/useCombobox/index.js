@@ -11,6 +11,7 @@ import {
   useElementIds,
   getItemAndIndex,
   getInitialValue,
+  isDropdownsStateEqual
 } from '../utils'
 import {
   getInitialState,
@@ -43,6 +44,7 @@ function useCombobox(userProps = {}) {
     downshiftUseComboboxReducer,
     props,
     getInitialState,
+    isDropdownsStateEqual
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
