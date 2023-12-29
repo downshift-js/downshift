@@ -419,7 +419,9 @@ export interface UseSelectGetToggleButtonReturnValue
   tabIndex: 0
 }
 
-export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
+export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {
+  onClick: React.MouseEventHandler
+}
 export interface UseSelectGetLabelPropsReturnValue
   extends GetLabelPropsReturnValue {}
 
