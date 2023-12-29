@@ -1,4 +1,4 @@
-import {act, screen} from '@testing-library/react'
+import {screen} from '@testing-library/react'
 import {renderSelect, renderUseSelect} from '../testUtils'
 import {defaultIds, getToggleButton, user} from '../../testUtils'
 
@@ -53,15 +53,13 @@ describe('getLabelProps', () => {
     const mockToggleButton = {focus: jest.fn()}
     const {result} = renderUseSelect()
 
-    act(() => {
-      const {onClick} = result.current.getLabelProps({
-        onClick: userOnClick,
-      })
-      const {ref} = result.current.getToggleButtonProps()
-      ref(mockToggleButton)
-
-      onClick({})
+    const {onClick} = result.current.getLabelProps({
+      onClick: userOnClick,
     })
+    const {ref} = result.current.getToggleButtonProps()
+    ref(mockToggleButton)
+
+    onClick({})
 
     expect(userOnClick).toHaveBeenCalledTimes(1)
     expect(mockToggleButton.focus).toHaveBeenCalledTimes(1)
@@ -74,15 +72,13 @@ describe('getLabelProps', () => {
     const mockToggleButton = {focus: jest.fn()}
     const {result} = renderUseSelect()
 
-    act(() => {
-      const {onClick} = result.current.getLabelProps({
-        onClick: userOnClick,
-      })
-      const {ref} = result.current.getToggleButtonProps()
-      ref(mockToggleButton)
-
-      onClick({})
+    const {onClick} = result.current.getLabelProps({
+      onClick: userOnClick,
     })
+    const {ref} = result.current.getToggleButtonProps()
+    ref(mockToggleButton)
+
+    onClick({})
 
     expect(userOnClick).toHaveBeenCalledTimes(1)
     expect(mockToggleButton.focus).not.toHaveBeenCalled()
