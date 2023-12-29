@@ -867,6 +867,10 @@ described below.
 - `Click`: It will select the item and close the menu.
 - `MouseOver`: It will highlight the item.
 
+#### Label
+
+- `Click`: It will move focus to the toggle element.
+
 ### Customizing Handlers
 
 You can provide your own event handlers to `useSelect` which will be called
