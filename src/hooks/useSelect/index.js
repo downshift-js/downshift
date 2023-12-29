@@ -322,11 +322,18 @@ function useSelect(userProps = {}) {
   )
   // Getter functions.
   const getLabelProps = useCallback(
-    labelProps => ({
-      id: elementIds.labelId,
-      htmlFor: elementIds.toggleButtonId,
-      ...labelProps,
-    }),
+    ({onClick, ...labelProps} = {}) => {
+      const labelHandleClick = () => {
+        toggleButtonRef.current?.focus()
+      }
+
+      return {
+        id: elementIds.labelId,
+        htmlFor: elementIds.toggleButtonId,
+        onClick: callAllEventHandlers(onClick, labelHandleClick),
+        ...labelProps,
+      }
+    },
     [elementIds],
   )
   const getMenuProps = useCallback(
