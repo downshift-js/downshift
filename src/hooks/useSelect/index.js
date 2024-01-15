@@ -31,6 +31,7 @@ const validatePropTypes =
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
+  console.log('hello from redbubble/downshift');
   /* istanbul ignore else */
   if (process.env.NODE_ENV !== 'production') {
     validatePropTypes(userProps)
