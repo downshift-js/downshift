@@ -144,9 +144,10 @@ export function useLatestRef(val) {
  * @param {Function} reducer Reducer function from downshift.
  * @param {Object} initialState Initial state of the hook.
  * @param {Object} props The hook props.
+ * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useEnhancedReducer(reducer, initialState, props) {
+export function useEnhancedReducer(reducer, initialState, props, isStateEqual) {
   const prevStateRef = useRef()
   const actionRef = useRef()
   const enhancedReducer = useCallback(
@@ -170,7 +171,12 @@ export function useEnhancedReducer(reducer, initialState, props) {
   const action = actionRef.current
 
   useEffect(() => {
-    if (action && prevStateRef.current && prevStateRef.current !== state) {
+    const shouldCallOnChangeProps =
+    action &&
+    prevStateRef.current &&
+    !isStateEqual(prevStateRef.current, state)
+
+    if (shouldCallOnChangeProps) {
       callOnChangeProps(
         action,
         getState(prevStateRef.current, action.props),
@@ -179,7 +185,7 @@ export function useEnhancedReducer(reducer, initialState, props) {
     }
 
     prevStateRef.current = state
-  }, [state, props, action])
+  }, [state, action, isStateEqual])
 
   return [state, dispatchWithProps]
 }
@@ -191,10 +197,11 @@ export function useEnhancedReducer(reducer, initialState, props) {
  * @param {Function} reducer Reducer function from downshift.
  * @param {Object} initialState Initial state of the hook.
  * @param {Object} props The hook props.
+ * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledReducer(reducer, initialState, props) {
-  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props)
+export function useControlledReducer(reducer, initialState, props, isStateEqual) {
+  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props, isStateEqual)
 
   return [getState(state, props), dispatch]
 }
@@ -440,4 +447,21 @@ export function useGetterPropsCalledChecker(...propKeys) {
   )
 
   return setGetterPropCallInfo
+}
+
+/**
+ * Check if a state is equal for dropdowns, by comparing isOpen, inputValue, highlightedIndex and selected item.
+ * Used by useSelect and useCombobox.
+ *
+ * @param {Object} prevState
+ * @param {Object} newState
+ * @returns {boolean} Wheather the states are deeply equal.
+ */
+ export function isDropdownsStateEqual(prevState, newState) {
+  return (
+    prevState.isOpen === newState.isOpen &&
+    prevState.inputValue === newState.inputValue &&
+    prevState.highlightedIndex === newState.highlightedIndex &&
+    prevState.selectedItem === newState.selectedItem
+  )
 }

@@ -11,6 +11,7 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
+  isDropdownsStateEqual
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -31,7 +32,6 @@ const validatePropTypes =
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
-  console.log('hello from redbubble/downshift');
   /* istanbul ignore else */
   if (process.env.NODE_ENV !== 'production') {
     validatePropTypes(userProps)
@@ -57,6 +57,7 @@ function useSelect(userProps = {}) {
     downshiftSelectReducer,
     initialState,
     props,
+    isDropdownsStateEqual
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
