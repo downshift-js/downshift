@@ -150,7 +150,7 @@ export interface GetLabelPropsReturnValue {
 }
 
 export interface GetToggleButtonPropsOptions
-  extends React.HTMLProps<HTMLButtonElement> {
+  extends React.HTMLProps<HTMLElement> {
   disabled?: boolean
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
