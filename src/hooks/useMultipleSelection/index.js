@@ -8,13 +8,14 @@ import {
   useLatestRef,
   useControlPropsValidator,
   getItemAndIndex,
+  useIsInitialMount,
 } from '../utils'
 import {
   getInitialState,
   defaultProps,
   isKeyDownOperationPermitted,
   validatePropTypes,
-  isStateEqual
+  isStateEqual,
 } from './utils'
 import downshiftMultipleSelectionReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -41,12 +42,12 @@ function useMultipleSelection(userProps = {}) {
     downshiftMultipleSelectionReducer,
     props,
     getInitialState,
-    isStateEqual
+    isStateEqual,
   )
   const {activeIndex, selectedItems} = state
 
   // Refs.
-  const isInitialMountRef = useRef(true)
+  const isInitialMount = useIsInitialMount()
   const dropdownRef = useRef(null)
   const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
@@ -56,7 +57,7 @@ function useMultipleSelection(userProps = {}) {
   // Effects.
   /* Sets a11y status message on changes in selectedItem. */
   useEffect(() => {
-    if (isInitialMountRef.current || isReactNative || !environment?.document) {
+    if (isInitialMount || isReactNative || !environment?.document) {
       return
     }
 
@@ -83,7 +84,7 @@ function useMultipleSelection(userProps = {}) {
   }, [selectedItems.length])
   // Sets focus on active item.
   useEffect(() => {
-    if (isInitialMountRef.current) {
+    if (isInitialMount) {
       return
     }
 
@@ -92,21 +93,12 @@ function useMultipleSelection(userProps = {}) {
     } else if (selectedItemRefs.current[activeIndex]) {
       selectedItemRefs.current[activeIndex].focus()
     }
-  }, [activeIndex])
+  }, [activeIndex, isInitialMount])
   useControlPropsValidator({
-    isInitialMount: isInitialMountRef.current,
     props,
     state,
   })
   const setGetterPropCallInfo = useGetterPropsCalledChecker('getDropdownProps')
-  // Make initial ref false.
-  useEffect(() => {
-    isInitialMountRef.current = false
-
-    return () => {
-      isInitialMountRef.current = true
-    }
-  }, [])
 
   // Event handler functions.
   const selectedItemKeyDownHandlers = useMemo(

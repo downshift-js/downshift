@@ -1,4 +1,4 @@
-import { compute } from 'compute-scroll-into-view'
+import {compute} from 'compute-scroll-into-view'
 import React from 'react'
 import {isPreact} from './is.macro'
 
@@ -267,6 +267,10 @@ function pickState(state = {}) {
  * @returns {Object} The merged controlled state.
  */
 function getState(state, props) {
+  if (!state || !props) {
+    return state
+  }
+
   return Object.keys(state).reduce((prevState, key) => {
     prevState[key] = isControlledProp(props, key) ? props[key] : state[key]
 
@@ -422,16 +426,19 @@ function targetWithinDownshift(
   environment,
   checkActiveElement = true,
 ) {
-  return environment && downshiftElements.some(
-    contextNode =>
-      contextNode &&
-      (isOrContainsNode(contextNode, target, environment) ||
-        (checkActiveElement &&
-          isOrContainsNode(
-            contextNode,
-            environment.document.activeElement,
-            environment,
-          ))),
+  return (
+    environment &&
+    downshiftElements.some(
+      contextNode =>
+        contextNode &&
+        (isOrContainsNode(contextNode, target, environment) ||
+          (checkActiveElement &&
+            isOrContainsNode(
+              contextNode,
+              environment.document.activeElement,
+              environment,
+            ))),
+    )
   )
 }
 

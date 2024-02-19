@@ -93,6 +93,7 @@ describe('props', () => {
 
   describe('selectedItemChanged', () => {
     test('props update of selectedItem will update inputValue state with default selectedItemChanged referential equality check', () => {
+      const initialSelectedItem = {id: 3, value: 'init'}
       const selectedItem = {id: 1, value: 'wow'}
       const newSelectedItem = {id: 1, value: 'not wow'}
       function itemToString(item) {
@@ -105,13 +106,21 @@ describe('props', () => {
       const {rerender} = renderCombobox({
         stateReducer,
         itemToString,
+        selectedItem: initialSelectedItem,
+      })
+
+      expect(stateReducer).not.toHaveBeenCalled() // won't get called on first render
+
+      rerender({
+        stateReducer,
+        itemToString,
         selectedItem,
       })
 
       expect(stateReducer).toHaveBeenCalledTimes(1)
       expect(stateReducer).toHaveBeenCalledWith(
         {
-          inputValue: itemToString(selectedItem),
+          inputValue: itemToString(initialSelectedItem),
           selectedItem,
           highlightedIndex: -1,
           isOpen: false,
@@ -155,15 +164,15 @@ describe('props', () => {
       expect(getInput()).toHaveValue(itemToString(newSelectedItem))
     })
 
-    test('props update of selectedItem will not update inputValue state', () => {
+    test('props update of selectedItem will not update inputValue state if selectedItemChanged returns false', () => {
+      const initialSelectedItem = {id: 1, value: 'hmm'}
       const selectedItem = {id: 1, value: 'wow'}
-      const newSelectedItem = {id: 1, value: 'not wow'}
       function itemToString(item) {
         return item.value
       }
       const selectedItemChanged = jest
         .fn()
-        .mockReturnValue((prev, next) => prev.id !== next.id)
+        .mockImplementation((prev, next) => prev.id !== next.id)
       const stateReducer = jest
         .fn()
         .mockImplementation((_state, {changes}) => changes)
@@ -171,30 +180,23 @@ describe('props', () => {
       const {rerender} = renderCombobox({
         selectedItemChanged,
         stateReducer,
+        selectedItem: initialSelectedItem,
+        itemToString,
+      })
+
+      rerender({
+        selectedItemChanged,
+        stateReducer,
         selectedItem,
         itemToString,
       })
 
-      expect(getInput()).toHaveValue(itemToString(selectedItem))
-      expect(selectedItemChanged).toHaveBeenCalledTimes(1)
-      expect(selectedItemChanged).toHaveBeenCalledWith(undefined, selectedItem)
-
-      stateReducer.mockReset()
-      selectedItemChanged.mockReset()
-      rerender({
-        stateReducer,
-        itemToString,
-        selectedItem: newSelectedItem,
-        selectedItemChanged,
-      })
-
+      expect(getInput()).toHaveValue(itemToString(initialSelectedItem))
       expect(selectedItemChanged).toHaveBeenCalledTimes(1)
       expect(selectedItemChanged).toHaveBeenCalledWith(
+        initialSelectedItem,
         selectedItem,
-        newSelectedItem,
       )
-      expect(stateReducer).not.toHaveBeenCalled()
-      expect(getInput()).toHaveValue(itemToString(selectedItem))
     })
   })
 

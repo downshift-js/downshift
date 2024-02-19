@@ -13,6 +13,7 @@ import {
   getItemAndIndex,
   getInitialValue,
   isDropdownsStateEqual,
+  useIsInitialMount,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -60,7 +61,7 @@ function useSelect(userProps = {}) {
   const elementIds = useElementIds(props)
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef()
-  const isInitialMountRef = useRef(true)
+  const isInitialMount = useIsInitialMount()
   // utility callback to get item element.
   const latest = useLatestRef({
     state,
@@ -79,7 +80,6 @@ function useSelect(userProps = {}) {
     getA11yStatusMessage,
     [isOpen, highlightedIndex, inputValue, items],
     {
-      isInitialMount: isInitialMountRef.current,
       previousResultCount: previousResultCountRef.current,
       items,
       environment,
@@ -89,7 +89,6 @@ function useSelect(userProps = {}) {
   )
   // Sets a11y status message on changes in selectedItem.
   useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
-    isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
     items,
     environment,
@@ -132,12 +131,11 @@ function useSelect(userProps = {}) {
   }, [dispatch, inputValue])
 
   useControlPropsValidator({
-    isInitialMount: isInitialMountRef.current,
     props,
     state,
   })
   useEffect(() => {
-    if (isInitialMountRef.current) {
+    if (isInitialMount) {
       return
     }
 
@@ -167,14 +165,6 @@ function useSelect(userProps = {}) {
     'getMenuProps',
     'getToggleButtonProps',
   )
-  // Make initial ref false.
-  useEffect(() => {
-    isInitialMountRef.current = false
-
-    return () => {
-      isInitialMountRef.current = true
-    }
-  }, [])
   // Reset itemRefs on close.
   useEffect(() => {
     if (!isOpen) {
@@ -481,7 +471,10 @@ function useSelect(userProps = {}) {
       const disabled = latestProps.isItemDisabled(item, index)
 
       const itemHandleMouseMove = () => {
-        if (index === latestState.highlightedIndex) {
+        if (
+          mouseAndTouchTrackersRef.current.isTouchEnd ||
+          index === latestState.highlightedIndex
+        ) {
           return
         }
         shouldScrollRef.current = false
@@ -532,7 +525,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, elementIds, shouldScrollRef, dispatch],
+    [latest, elementIds, mouseAndTouchTrackersRef, shouldScrollRef, dispatch],
   )
 
   return {

@@ -11,6 +11,7 @@ import {
   defaultProps as defaultPropsCommon,
   getInitialState as getInitialStateCommon,
   useEnhancedReducer,
+  useIsInitialMount,
 } from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
@@ -61,22 +62,28 @@ const propTypes = {
  * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
  * @returns {Array} An array with the state and an action dispatcher.
  */
-export function useControlledReducer(reducer, props, createInitialState, isStateEqual) {
+export function useControlledReducer(
+  reducer,
+  props,
+  createInitialState,
+  isStateEqual,
+) {
   const previousSelectedItemRef = useRef()
   const [state, dispatch] = useEnhancedReducer(
     reducer,
     props,
     createInitialState,
-    isStateEqual
+    isStateEqual,
   )
+  const isInitialMount = useIsInitialMount()
 
-  // ToDo: if needed, make same approach as selectedItemChanged from Downshift.
   useEffect(() => {
     if (!isControlledProp(props, 'selectedItem')) {
       return
     }
 
     if (
+      !isInitialMount && // on first mount we already have the proper inputValue for a initial selected item.
       props.selectedItemChanged(
         previousSelectedItemRef.current,
         props.selectedItem,

@@ -149,7 +149,7 @@ describe('utils', () => {
       )
 
       expect(result.current).toEqual({
-        current: {isMouseDown: false, isTouchMove: false},
+        current: {isMouseDown: false, isTouchMove: false, isTouchEnd: false},
       })
     })
   })
