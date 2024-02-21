@@ -9,8 +9,9 @@ import {
   getItems,
   keyDownOnToggleButton,
   clickOnToggleButton,
+  items,
+  defaultIds,
 } from '../testUtils'
-import {items, defaultIds} from '../../testUtils'
 import useSelect from '..'
 
 describe('getItemProps', () => {
@@ -304,6 +305,37 @@ describe('getItemProps', () => {
 
         await mouseMoveItemAtIndex(disabledIndex)
         expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      // Test that we don't call the mouse move handler on mobile.
+      test('does not set highlight the item if a touch event ocurred', async () => {
+        let touchEndHandler
+        const index = 1
+
+        renderSelect({
+          isOpen: true,
+          environment: {
+            addEventListener: (name, handler) => {
+              // eslint-disable-next-line jest/no-conditional-in-test
+              if (name === 'touchend') {
+                touchEndHandler = handler
+              }
+            },
+            removeEventListener: () => {},
+            document: {
+              createElement: () => {},
+              getElementById: () => {},
+              activeElement: () => {},
+              body: {},
+            },
+            Node: () => {},
+          },
+        })
+
+        act(() => touchEndHandler({target: null}))
+        await mouseMoveItemAtIndex(index)
+
+        expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
       })
     })
 

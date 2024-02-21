@@ -11,7 +11,8 @@ import {
   useElementIds,
   getItemAndIndex,
   getInitialValue,
-  isDropdownsStateEqual
+  isDropdownsStateEqual,
+  useIsInitialMount,
 } from '../utils'
 import {
   getInitialState,
@@ -44,7 +45,7 @@ function useCombobox(userProps = {}) {
     downshiftUseComboboxReducer,
     props,
     getInitialState,
-    isDropdownsStateEqual
+    isDropdownsStateEqual,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
@@ -53,7 +54,8 @@ function useCombobox(userProps = {}) {
   const itemRefs = useRef({})
   const inputRef = useRef(null)
   const toggleButtonRef = useRef(null)
-  const isInitialMountRef = useRef(true)
+  const isInitialMount = useIsInitialMount()
+
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
   // used to keep track of how many items we had on previous cycle.
@@ -72,7 +74,6 @@ function useCombobox(userProps = {}) {
     getA11yStatusMessage,
     [isOpen, highlightedIndex, inputValue, items],
     {
-      isInitialMount: isInitialMountRef.current,
       previousResultCount: previousResultCountRef.current,
       items,
       environment,
@@ -82,7 +83,6 @@ function useCombobox(userProps = {}) {
   )
   // Sets a11y status message on changes in selectedItem.
   useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
-    isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
     items,
     environment,
@@ -99,7 +99,6 @@ function useCombobox(userProps = {}) {
     getItemNodeFromIndex,
   })
   useControlPropsValidator({
-    isInitialMount: isInitialMountRef.current,
     props,
     state,
   })
@@ -113,11 +112,9 @@ function useCombobox(userProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    if (isInitialMountRef.current) {
-      return
+    if (!isInitialMount) {
+      previousResultCountRef.current = items.length
     }
-
-    previousResultCountRef.current = items.length
   })
   // Add mouse/touch events to document.
   const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
@@ -135,14 +132,6 @@ function useCombobox(userProps = {}) {
     'getInputProps',
     'getMenuProps',
   )
-  // Make initial ref false.
-  useEffect(() => {
-    isInitialMountRef.current = false
-
-    return () => {
-      isInitialMountRef.current = true
-    }
-  }, [])
   // Reset itemRefs on close.
   useEffect(() => {
     if (!isOpen) {
@@ -319,10 +308,15 @@ function useCombobox(userProps = {}) {
         : onClick
 
       const itemHandleMouseMove = () => {
-        if (index === latestState.highlightedIndex) {
+        if (
+          mouseAndTouchTrackersRef.current.isTouchEnd ||
+          index === latestState.highlightedIndex
+        ) {
           return
         }
+
         shouldScrollRef.current = false
+
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
@@ -358,7 +352,8 @@ function useCombobox(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, shouldScrollRef, elementIds],
+
+    [dispatch, elementIds, latest, mouseAndTouchTrackersRef, shouldScrollRef],
   )
 
   const getToggleButtonProps = useCallback(

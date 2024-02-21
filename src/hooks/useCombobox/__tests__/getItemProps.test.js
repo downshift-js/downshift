@@ -280,6 +280,37 @@ describe('getItemProps', () => {
         await mouseMoveItemAtIndex(disabledIndex)
         expect(input).toHaveAttribute('aria-activedescendant', '')
       })
+
+      // Test that we don't call the mouse move handler on mobile.
+      test('does not set highlight the item if a touch event ocurred', async () => {
+        let touchEndHandler
+        const index = 1
+
+        renderCombobox({
+          isOpen: true,
+          environment: {
+            addEventListener: (name, handler) => {
+              // eslint-disable-next-line jest/no-conditional-in-test
+              if (name === 'touchend') {
+                touchEndHandler = handler
+              }
+            },
+            removeEventListener: () => {},
+            document: {
+              createElement: () => {},
+              getElementById: () => {},
+              activeElement: () => {},
+              body: {},
+            },
+            Node: () => {},
+          },
+        })
+
+        act(() => touchEndHandler({target: null}))
+        await mouseMoveItemAtIndex(index)
+
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
     })
 
     describe('on click', () => {

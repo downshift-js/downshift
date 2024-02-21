@@ -220,17 +220,12 @@ function useEnhancedReducer(reducer, props, createInitialState, isStateEqual) {
   const action = actionRef.current
 
   useEffect(() => {
+    const prevState = getState(prevStateRef.current, action?.props)
     const shouldCallOnChangeProps =
-      action &&
-      prevStateRef.current &&
-      !isStateEqual(prevStateRef.current, state)
+      action && prevStateRef.current && !isStateEqual(prevState, state)
 
     if (shouldCallOnChangeProps) {
-      callOnChangeProps(
-        action,
-        getState(prevStateRef.current, action.props),
-        state,
-      )
+      callOnChangeProps(action, prevState, state)
     }
 
     prevStateRef.current = state
@@ -371,6 +366,7 @@ function useMouseAndTouchTracker(
   const mouseAndTouchTrackersRef = useRef({
     isMouseDown: false,
     isTouchMove: false,
+    isTouchEnd: false,
   })
 
   useEffect(() => {
@@ -381,10 +377,12 @@ function useMouseAndTouchTracker(
     // The same strategy for checking if a click occurred inside or outside downshift
     // as in downshift.js.
     const onMouseDown = () => {
+      mouseAndTouchTrackersRef.current.isTouchEnd = false // reset this one.
       mouseAndTouchTrackersRef.current.isMouseDown = true
     }
     const onMouseUp = event => {
       mouseAndTouchTrackersRef.current.isMouseDown = false
+
       if (
         isOpen &&
         !targetWithinDownshift(
@@ -397,12 +395,15 @@ function useMouseAndTouchTracker(
       }
     }
     const onTouchStart = () => {
+      mouseAndTouchTrackersRef.current.isTouchEnd = false
       mouseAndTouchTrackersRef.current.isTouchMove = false
     }
     const onTouchMove = () => {
       mouseAndTouchTrackersRef.current.isTouchMove = true
     }
     const onTouchEnd = event => {
+      mouseAndTouchTrackersRef.current.isTouchEnd = true
+
       if (
         isOpen &&
         !mouseAndTouchTrackersRef.current.isTouchMove &&
@@ -501,8 +502,9 @@ if (process.env.NODE_ENV !== 'production') {
 function useA11yMessageSetter(
   getA11yMessage,
   dependencyArray,
-  {isInitialMount, highlightedIndex, items, environment, ...rest},
+  {highlightedIndex, items, environment, ...rest},
 ) {
+  const isInitialMount = useIsInitialMount()
   // Sets a11y status message on changes in state.
   useEffect(() => {
     if (isInitialMount || isReactNative || !environment?.document) {
@@ -558,9 +560,10 @@ function useScrollIntoView({
 let useControlPropsValidator = noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
-  useControlPropsValidator = ({isInitialMount, props, state}) => {
+  useControlPropsValidator = ({props, state}) => {
     // used for checking when props are moving from controlled to uncontrolled.
     const prevPropsRef = useRef(props)
+    const isInitialMount = useIsInitialMount()
 
     useEffect(() => {
       if (isInitialMount) {
@@ -613,6 +616,23 @@ function isDropdownsStateEqual(prevState, newState) {
     prevState.highlightedIndex === newState.highlightedIndex &&
     prevState.selectedItem === newState.selectedItem
   )
+}
+
+/**
+ * Tracks if it's the first render.
+ */
+function useIsInitialMount() {
+  const isInitialMountRef = React.useRef(true)
+
+  React.useEffect(() => {
+    isInitialMountRef.current = false
+
+    return () => {
+      isInitialMountRef.current = true
+    }
+  }, [])
+
+  return isInitialMountRef.current
 }
 
 // Shared between all exports.
@@ -679,4 +699,5 @@ export {
   isDropdownsStateEqual,
   commonDropdownPropTypes,
   commonPropTypes,
+  useIsInitialMount,
 }
