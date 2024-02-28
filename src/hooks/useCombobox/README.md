@@ -81,6 +81,7 @@ and update if necessary.
   - [defaultIsOpen](#defaultisopen)
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [defaultInputValue](#defaultinputvalue)
+  - [itemToKey](#itemtokey)
   - [selectedItemChanged](#selecteditemchanged)
   - [getA11yStatusMessage](#geta11ystatusmessage)
   - [getA11ySelectionMessage](#geta11yselectionmessage)
@@ -393,7 +394,48 @@ reset or when an item is selected.
 Pass a string that sets the content of the input when downshift is reset or when
 an item is selected.
 
+### itemToKey
+
+> `function(item: any)` | defaults to: `item => item`
+
+Used to determine the uniqueness of an item when searching for the item or
+comparing the item with another. Returns the item itself, by default, so the
+comparing/searching is done internally via referential equality.
+
+If using items as objects and their reference will change during use, you can
+use the function to generate a unique key for each item, such as an `id` prop.
+
+```js
+function itemToKey(item) {
+  return item.id
+}
+```
+
+> This deprecates the "selectedItemChanged" prop. If you are using the prop
+> already, make sure you change to "itemToKey" as the former will be removed in
+> the next Breaking Change update. A migration example:
+
+```js
+// initial items.
+const items = [{id: 1, value: 'Apples'}, {id: 2, value: 'Oranges'}]
+// same items but with new references, from the server.
+const newItems = [{id: 1, value: 'Apples'}, {id: 2, value: 'Oranges'}]
+
+// previous prop
+function selectedItemChanged(item1, item2) {
+  return item1.id === item2.id
+}
+
+// moving forward
+function itemToKey(item) {
+  return item.id
+  // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) === itemToKey(nextSelectedItem)
+}
+```
+
 ### selectedItemChanged
+
+> DEPRECATED. Please use "itemToKey".
 
 > `function(prevItem: any, item: any)` | defaults to:
 > `(prevItem, item) => (prevItem !== item)`
