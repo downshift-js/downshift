@@ -162,6 +162,10 @@ function itemToString(item) {
   return item ? String(item) : ''
 }
 
+function itemToKey(item) {
+  return item
+}
+
 function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
 }
@@ -261,6 +265,7 @@ function useControlledReducer(
 }
 
 const defaultProps = {
+  itemToKey,
   itemToString,
   stateReducer,
   getA11ySelectionMessage,
