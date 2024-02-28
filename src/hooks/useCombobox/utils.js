@@ -93,7 +93,7 @@ export function useControlledReducer(
           props.itemToKey(previousSelectedItemRef.current)
       } else {
         console.warn(
-          `The "selectedItemChanged" is deprecated. Please use "itemToKey instead".`,
+          `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
         )
 
         shouldCallDispatch = props.selectedItemChanged(

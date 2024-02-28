@@ -202,7 +202,7 @@ describe('props', () => {
       )
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        `The "selectedItemChanged" is deprecated. Please use "itemToKey instead".`,
+        `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
       )
       consoleWarnSpy.mockRestore()
     })
@@ -712,6 +712,67 @@ describe('props', () => {
     await clickOnToggleButton()
 
     expect(input).toHaveValue(selectedItem)
+  })
+
+  test('selectedItem change updates the input value', async () => {
+    const selectedItem = items[2]
+    const newSelectedItem = items[4]
+    const nullSelectedItem = null
+    const lastSelectedItem = items[1]
+    const stateReducer = jest.fn().mockImplementation((s, a) => a.changes)
+
+    const {rerender} = renderCombobox({
+      selectedItem,
+      stateReducer,
+    })
+    const input = getInput()
+
+    expect(input).toHaveValue(selectedItem)
+    expect(stateReducer).not.toHaveBeenCalled() // don't call on first render.
+
+    rerender({
+      selectedItem: newSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(newSelectedItem)
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: nullSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue('')
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: lastSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(lastSelectedItem)
   })
 
   describe('stateReducer', () => {
