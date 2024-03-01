@@ -109,6 +109,28 @@ describe('returnProps', () => {
       expect(result.current.selectedItems).toBe(inputItems)
     })
 
+    test('setSelectedItems updates previous selected items', () => {
+      let removedItem = null
+      const {result} = renderUseMultipleSelection({
+        getA11yRemovalMessage({ removedSelectedItem }) {
+          removedItem = removedSelectedItem
+        },
+        initialSelectedItems: [1, 2],
+        initialActiveIndex: 0,
+      })
+
+      act(() => {
+        result.current.setSelectedItems([1, 2])
+      })
+      expect(removedItem).toBeNull()
+
+      act(() => {
+        result.current.setSelectedItems([2, 3])
+      })
+      expect(removedItem).toBe(1)
+      expect(result.current.selectedItems).toStrictEqual([2, 3])
+    })
+
     test('reset sets the state to default values', () => {
       const {result} = renderUseMultipleSelection()
 

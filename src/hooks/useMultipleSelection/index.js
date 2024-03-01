@@ -61,11 +61,11 @@ function useMultipleSelection(userProps = {}) {
       return
     }
 
-    if (selectedItems.length < previousSelectedItemsRef.current.length) {
-      const removedSelectedItem = previousSelectedItemsRef.current.find(
-        item => selectedItems.indexOf(item) < 0,
-      )
+    const removedSelectedItem = previousSelectedItemsRef.current.find(
+      item => !selectedItems.includes(item),
+    )
 
+    if (removedSelectedItem) {
       setStatus(
         getA11yRemovalMessage({
           itemToString,
@@ -81,7 +81,7 @@ function useMultipleSelection(userProps = {}) {
     previousSelectedItemsRef.current = selectedItems
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems.length])
+  }, [JSON.stringify(selectedItems)])
   // Sets focus on active item.
   useEffect(() => {
     if (isInitialMount) {
