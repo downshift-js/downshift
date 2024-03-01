@@ -93,7 +93,8 @@ function useMultipleSelection(userProps = {}) {
     } else if (selectedItemRefs.current[activeIndex]) {
       selectedItemRefs.current[activeIndex].focus()
     }
-  }, [activeIndex, isInitialMount])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex])
   useControlPropsValidator({
     props,
     state,
