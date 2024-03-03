@@ -72,10 +72,10 @@ function stateReducer(s, a) {
  * @returns {string} The a11y message.
  */
 function getA11ySelectionMessage(selectionParameters) {
-  const {selectedItem, itemToString: itemToStringLocal} = selectionParameters
+  const {selectedItem, itemToString} = selectionParameters
 
   return selectedItem
-    ? `${itemToStringLocal(selectedItem)} has been selected.`
+    ? `${itemToString(selectedItem)} has been selected.`
     : ''
 }
 
@@ -156,14 +156,6 @@ function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
   }
 
   return [item, index]
-}
-
-function itemToString(item) {
-  return item ? String(item) : ''
-}
-
-function itemToKey(item) {
-  return item
 }
 
 function isAcceptedCharacterKey(key) {
@@ -265,8 +257,12 @@ function useControlledReducer(
 }
 
 const defaultProps = {
-  itemToKey,
-  itemToString,
+  itemToString(item) {
+    return item ? String(item) : ''
+  },
+  itemToKey(item) {
+    return item
+  },
   stateReducer,
   getA11ySelectionMessage,
   scrollIntoView,
@@ -318,7 +314,9 @@ function getInitialState(props) {
   return {
     highlightedIndex:
       highlightedIndex < 0 && selectedItem && isOpen
-        ? props.items.indexOf(selectedItem)
+        ? props.items.findIndex(
+            item => props.itemToKey(item) === props.itemToKey(selectedItem),
+          )
         : highlightedIndex,
     isOpen,
     selectedItem,
@@ -327,7 +325,8 @@ function getInitialState(props) {
 }
 
 function getHighlightedIndexOnOpen(props, state, offset) {
-  const {items, initialHighlightedIndex, defaultHighlightedIndex} = props
+  const {items, initialHighlightedIndex, defaultHighlightedIndex, itemToKey} =
+    props
   const {selectedItem, highlightedIndex} = state
 
   if (items.length === 0) {
@@ -345,7 +344,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
     return defaultHighlightedIndex
   }
   if (selectedItem) {
-    return items.indexOf(selectedItem)
+    return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
   }
   if (offset === 0) {
     return -1
@@ -654,6 +653,7 @@ const commonPropTypes = {
     Node: PropTypes.func.isRequired,
   }),
   itemToString: PropTypes.func,
+  itemToKey: PropTypes.func,
   stateReducer: PropTypes.func,
 }
 

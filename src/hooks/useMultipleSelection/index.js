@@ -63,7 +63,10 @@ function useMultipleSelection(userProps = {}) {
 
     if (selectedItems.length < previousSelectedItemsRef.current.length) {
       const removedSelectedItem = previousSelectedItemsRef.current.find(
-        item => selectedItems.indexOf(item) < 0,
+        selectedItem =>
+          selectedItems.findIndex(
+            item => props.itemToKey(item) === props.itemToKey(selectedItem),
+          ) < 0,
       )
 
       setStatus(

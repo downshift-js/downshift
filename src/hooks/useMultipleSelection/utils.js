@@ -127,6 +127,7 @@ const propTypes = {
 
 export const defaultProps = {
   itemToString: defaultPropsCommon.itemToString,
+  itemToKey: defaultPropsCommon.itemToKey,
   stateReducer: defaultPropsCommon.stateReducer,
   environment: defaultPropsCommon.environment,
   getA11yRemovalMessage,
