@@ -74,7 +74,9 @@ export default function downshiftMultipleSelectionReducer(state, action) {
       break
     case stateChangeTypes.FunctionRemoveSelectedItem: {
       let newActiveIndex = activeIndex
-      const selectedItemIndex = selectedItems.indexOf(selectedItem)
+      const selectedItemIndex = selectedItems.findIndex(
+        item => props.itemToKey(item) === props.itemToKey(selectedItem),
+      )
 
       if (selectedItemIndex < 0) {
         break

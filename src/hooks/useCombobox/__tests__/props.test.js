@@ -165,6 +165,9 @@ describe('props', () => {
     })
 
     test('props update of selectedItem will not update inputValue state if selectedItemChanged returns false', () => {
+      const consoleWarnSpy = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {})
       const initialSelectedItem = {id: 1, value: 'hmm'}
       const selectedItem = {id: 1, value: 'wow'}
       function itemToString(item) {
@@ -197,6 +200,116 @@ describe('props', () => {
         initialSelectedItem,
         selectedItem,
       )
+      expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
+      )
+      consoleWarnSpy.mockRestore()
+    })
+  })
+
+  describe('itemToKey', () => {
+    test('props update of selectedItem will update inputValue state with default itemToKey referential equality check', () => {
+      const initialSelectedItem = {id: 3, value: 'init'}
+      const selectedItem = {id: 1, value: 'wow'}
+      const newSelectedItem = {id: 1, value: 'not wow'}
+      function itemToString(item) {
+        return item.value
+      }
+      const stateReducer = jest
+        .fn()
+        .mockImplementation((_state, {changes}) => changes)
+
+      const {rerender} = renderCombobox({
+        stateReducer,
+        itemToString,
+        selectedItem: initialSelectedItem,
+      })
+
+      expect(stateReducer).not.toHaveBeenCalled() // won't get called on first render
+
+      rerender({
+        stateReducer,
+        itemToString,
+        selectedItem,
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenCalledWith(
+        {
+          inputValue: itemToString(initialSelectedItem),
+          selectedItem,
+          highlightedIndex: -1,
+          isOpen: false,
+        },
+        expect.objectContaining({
+          type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+          changes: {
+            inputValue: itemToString(selectedItem),
+            selectedItem,
+            highlightedIndex: -1,
+            isOpen: false,
+          },
+        }),
+      )
+
+      stateReducer.mockClear()
+      rerender({
+        stateReducer,
+        selectedItem: newSelectedItem,
+        itemToString,
+      })
+
+      expect(stateReducer).toHaveBeenCalledTimes(1)
+      expect(stateReducer).toHaveBeenCalledWith(
+        {
+          inputValue: itemToString(selectedItem),
+          selectedItem: newSelectedItem,
+          highlightedIndex: -1,
+          isOpen: false,
+        },
+        expect.objectContaining({
+          changes: {
+            inputValue: itemToString(newSelectedItem),
+            selectedItem: newSelectedItem,
+            highlightedIndex: -1,
+            isOpen: false,
+          },
+          type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+        }),
+      )
+      expect(getInput()).toHaveValue(itemToString(newSelectedItem))
+    })
+
+    test('props update of selectedItem will not update inputValue state if itemToKey returns equal values', () => {
+      const initialSelectedItem = {id: 1, value: 'hmm'}
+      const selectedItem = {id: 1, value: 'wow'}
+      function itemToString(item) {
+        return item.value
+      }
+      const itemToKey = jest.fn().mockImplementation(item => item.id)
+      const stateReducer = jest
+        .fn()
+        .mockImplementation((_state, {changes}) => changes)
+
+      const {rerender} = renderCombobox({
+        itemToKey,
+        stateReducer,
+        selectedItem: initialSelectedItem,
+        itemToString,
+      })
+
+      rerender({
+        itemToKey,
+        stateReducer,
+        selectedItem,
+        itemToString,
+      })
+
+      expect(getInput()).toHaveValue(itemToString(initialSelectedItem))
+      expect(itemToKey).toHaveBeenCalledTimes(2)
+      expect(itemToKey).toHaveBeenNthCalledWith(1, selectedItem)
+      expect(itemToKey).toHaveBeenNthCalledWith(2, initialSelectedItem)
     })
   })
 
@@ -599,6 +712,67 @@ describe('props', () => {
     await clickOnToggleButton()
 
     expect(input).toHaveValue(selectedItem)
+  })
+
+  test('selectedItem change updates the input value', async () => {
+    const selectedItem = items[2]
+    const newSelectedItem = items[4]
+    const nullSelectedItem = null
+    const lastSelectedItem = items[1]
+    const stateReducer = jest.fn().mockImplementation((s, a) => a.changes)
+
+    const {rerender} = renderCombobox({
+      selectedItem,
+      stateReducer,
+    })
+    const input = getInput()
+
+    expect(input).toHaveValue(selectedItem)
+    expect(stateReducer).not.toHaveBeenCalled() // don't call on first render.
+
+    rerender({
+      selectedItem: newSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(newSelectedItem)
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: nullSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue('')
+
+    stateReducer.mockClear()
+    rerender({
+      selectedItem: lastSelectedItem,
+      stateReducer,
+    })
+
+    expect(stateReducer).toHaveBeenCalledTimes(1)
+    expect(stateReducer).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: useCombobox.stateChangeTypes.ControlledPropUpdatedSelectedItem,
+      }),
+    )
+    expect(input).toHaveValue(lastSelectedItem)
   })
 
   describe('stateReducer', () => {

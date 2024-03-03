@@ -83,16 +83,31 @@ export function useControlledReducer(
     }
 
     if (
-      !isInitialMount && // on first mount we already have the proper inputValue for a initial selected item.
-      props.selectedItemChanged(
-        previousSelectedItemRef.current,
-        props.selectedItem,
-      )
+      !isInitialMount // on first mount we already have the proper inputValue for a initial selected item.
     ) {
-      dispatch({
-        type: ControlledPropUpdatedSelectedItem,
-        inputValue: props.itemToString(props.selectedItem),
-      })
+      let shouldCallDispatch
+
+      if (props.selectedItemChanged === undefined) {
+        shouldCallDispatch =
+          props.itemToKey(props.selectedItem) !==
+          props.itemToKey(previousSelectedItemRef.current)
+      } else {
+        console.warn(
+          `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
+        )
+
+        shouldCallDispatch = props.selectedItemChanged(
+          previousSelectedItemRef.current,
+          props.selectedItem,
+        )
+      }
+
+      if (shouldCallDispatch) {
+        dispatch({
+          type: ControlledPropUpdatedSelectedItem,
+          inputValue: props.itemToString(props.selectedItem),
+        })
+      }
     }
 
     previousSelectedItemRef.current =
@@ -116,7 +131,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const defaultProps = {
   ...defaultPropsCommon,
-  selectedItemChanged: (prevItem, item) => prevItem !== item,
   getA11yStatusMessage,
   isItemDisabled() {
     return false
