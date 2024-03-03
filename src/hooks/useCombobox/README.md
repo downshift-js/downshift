@@ -593,6 +593,38 @@ The item that should be selected.
 
 The value to be displayed in the text input.
 
+🚨 Important 🚨
+
+If you use `onInputValueChange`, `onStateChange` or anything similar in order to
+update a state variable that will end up controlling `inputValue`, you will
+encounter a
+[cursor jump issue](https://github.com/downshift-js/downshift/issues/1108).
+There's no way to properly fix this in our current `React.useReducer` setup, so
+in order to work around the issue, consider the change below.
+
+```jsx
+const [value, setValue] = useState('')
+const {getInputProps} = useCombobox({
+  items: [],
+  inputValue: value,
+  // change this:
+  onInputValueChange: ({inputValue}) => {
+    setValue(inputValue)
+  },
+})
+
+return (
+  <input
+    {...getInputProps({
+      // to this:
+      onChange: e => {
+        setValue(e.target.value)
+      },
+    })}
+  />
+)
+```
+
 ### id
 
 > `string` | defaults to a generated ID
