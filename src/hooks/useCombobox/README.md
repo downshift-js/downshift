@@ -435,7 +435,7 @@ function selectedItemChanged(item1, item2) {
 // moving forward, switch to this one.
 function itemToKey(item) {
   return item.id
-  // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) === itemToKey(nextSelectedItem)
+  // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) !== itemToKey(nextSelectedItem)
 }
 ```
 
