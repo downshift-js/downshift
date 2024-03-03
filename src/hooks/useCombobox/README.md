@@ -417,16 +417,22 @@ function itemToKey(item) {
 
 ```js
 // initial items.
-const items = [{id: 1, value: 'Apples'}, {id: 2, value: 'Oranges'}]
-// same items but with new references, from the server.
-const newItems = [{id: 1, value: 'Apples'}, {id: 2, value: 'Oranges'}]
+const items = [
+  {id: 1, value: 'Apples'},
+  {id: 2, value: 'Oranges'},
+]
+// the same items but with different references, for any reason.
+const newItems = [
+  {id: 1, value: 'Apples'},
+  {id: 2, value: 'Oranges'},
+]
 
-// previous prop
+// previously, if you probably had something like this.
 function selectedItemChanged(item1, item2) {
   return item1.id === item2.id
 }
 
-// moving forward
+// moving forward, switch to this one.
 function itemToKey(item) {
   return item.id
   // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) === itemToKey(nextSelectedItem)

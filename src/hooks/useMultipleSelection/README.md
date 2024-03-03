@@ -44,6 +44,7 @@ such as when an item has been removed from selection.
   - [initialActiveIndex](#initialactiveindex)
   - [defaultSelectedItems](#defaultselecteditems)
   - [defaultActiveIndex](#defaultactiveindex)
+  - [itemToKey](#itemtokey)
   - [getA11yRemovalMessage](#geta11yremovalmessage)
   - [onActiveIndexChange](#onactiveindexchange)
   - [onStateChange](#onstatechange)
@@ -422,6 +423,35 @@ Pass an array of items that are going to be used when downshift is reset.
 
 Pass a number that sets the index of the focused / active selected item when
 downshift is reset.
+
+### itemToKey
+
+> `function(item: any)` | defaults to: `item => item`
+
+Used to determine the uniqueness of an item when searching for the item or
+comparing the item with another. Returns the item itself, by default, so the
+comparing/searching is done internally via referential equality.
+
+If using items as objects and their reference will change during use, you can
+use the function to generate a unique key for each item, such as an `id` prop.
+
+```js
+// initial items.
+const selectedItems = [
+  {id: 1, value: 'Apples'},
+  {id: 2, value: 'Oranges'},
+]
+// the same items but with different references, for any reason.
+const newSelectedItems = [
+  {id: 1, value: 'Apples'},
+  {id: 2, value: 'Oranges'},
+]
+
+function itemToKey(item) {
+  return item.id
+  // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) === itemToKey(nextSelectedItem)
+}
+```
 
 ### getA11yRemovalMessage
 
