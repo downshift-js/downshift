@@ -341,6 +341,7 @@ export interface UseSelectProps<Item> {
   items: Item[]
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
+  itemToKey?: (item: Item | null) => any
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   highlightedIndex?: number
@@ -537,6 +538,7 @@ export interface UseComboboxProps<Item> {
   items: Item[]
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
+  itemToKey?: (item: Item | null) => any
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
   getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
@@ -735,6 +737,7 @@ export interface UseMultipleSelectionProps<Item> {
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
   itemToString?: (item: Item) => string
+  itemToKey?: (item: Item | null) => any
   getA11yRemovalMessage?: (options: A11yRemovalMessage<Item>) => string
   stateReducer?: (
     state: UseMultipleSelectionState<Item>,
