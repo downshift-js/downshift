@@ -49,7 +49,7 @@ export const defaultIds = {
 }
 
 export const waitForDebouncedA11yStatusUpdate = (shouldBeCleared = false) =>
-  act(() => jest.advanceTimersByTime(shouldBeCleared ? 500 : 200))
+  act(() => jest.advanceTimersByTime(shouldBeCleared ? 700 : 200))
 
 export const MemoizedItem = React.memo(function Item({
   index,

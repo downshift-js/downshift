@@ -507,16 +507,12 @@ function useA11yMessageStatus(
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
   useEffect(() => {
     if (!getA11yStatusMessage || isInitialMount || isReactNative || !document) {
-      return noop()
+      return
     }
 
     const status = getA11yStatusMessage(options)
 
     updateA11yStatus(status, document)
-
-    return () => {
-      updateA11yStatus.cancel()
-    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dependencyArray])
@@ -524,6 +520,7 @@ function useA11yMessageStatus(
   // Cleanup the status message container.
   useEffect(() => {
     return () => {
+      updateA11yStatus.cancel()
       cleanupStatusDiv(document)
     }
   }, [document])

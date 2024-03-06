@@ -71,9 +71,9 @@ describe('props', () => {
   describe('getA11yStatusMessage', () => {
     beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      act(jest.runAllTimers)
+      act(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('adds no status message element to the DOM if not passed', async () => {
       renderSelect({
@@ -87,8 +87,12 @@ describe('props', () => {
     })
 
     test('adds a status message element with the text returned', async () => {
-      const a11yStatusMessage = 'Dropdown is open'
-      const getA11yStatusMessage = jest.fn().mockReturnValue(a11yStatusMessage)
+      const a11yStatusMessage1 = 'Dropdown is open'
+      const a11yStatusMessage2 = 'Dropdown is still open'
+      const getA11yStatusMessage = jest
+        .fn()
+        .mockReturnValueOnce(a11yStatusMessage1)
+        .mockReturnValueOnce(a11yStatusMessage2)
       renderSelect({
         items,
         getA11yStatusMessage,
@@ -97,7 +101,7 @@ describe('props', () => {
       await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage)
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage1)
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
       expect(getA11yStatusMessage).toHaveBeenCalledWith({
         highlightedIndex: -1,
@@ -106,7 +110,7 @@ describe('props', () => {
         selectedItem: null,
       })
 
-      getA11yStatusMessage.mockReset()
+      getA11yStatusMessage.mockClear()
 
       await keyDownOnToggleButton('{ArrowDown}')
 
@@ -128,8 +132,7 @@ describe('props', () => {
       })
 
       await clickOnToggleButton()
-      waitForDebouncedA11yStatusUpdate()
-      act(() => jest.advanceTimersByTime(500))
+      waitForDebouncedA11yStatusUpdate(true)
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })

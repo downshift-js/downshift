@@ -52,9 +52,9 @@ describe('props', () => {
   describe('getA11yStatusMessage', () => {
     beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
-      act(jest.runAllTimers)
+      act(() => jest.runAllTimers())
     })
-    afterAll(jest.useRealTimers)
+    afterAll(() => jest.useRealTimers())
 
     test('adds no status message element to the DOM if not passed', async () => {
       renderMultipleCombobox({
@@ -96,7 +96,7 @@ describe('props', () => {
         selectedItems,
       })
 
-      getA11yStatusMessage.mockReset()
+      getA11yStatusMessage.mockClear()
 
       await keyDownOnSelectedItemAtIndex(0, '{ArrowRight}')
 
@@ -120,8 +120,7 @@ describe('props', () => {
       })
 
       await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
-      waitForDebouncedA11yStatusUpdate()
-      act(() => jest.advanceTimersByTime(500))
+      waitForDebouncedA11yStatusUpdate(true)
 
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
@@ -136,8 +135,7 @@ describe('props', () => {
       })
 
       await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
-      waitForDebouncedA11yStatusUpdate()
-      act(() => jest.advanceTimersByTime(500))
+      waitForDebouncedA11yStatusUpdate(true)
       unmount()
 
       expect(getA11yStatusContainer()).not.toBeInTheDocument()
