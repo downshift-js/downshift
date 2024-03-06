@@ -343,7 +343,6 @@ export interface UseSelectProps<Item> {
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -558,7 +557,6 @@ export interface UseComboboxProps<Item> {
   itemToKey?: (item: Item | null) => any
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number

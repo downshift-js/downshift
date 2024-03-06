@@ -48,8 +48,8 @@ export const defaultIds = {
   inputId: 'downshift-test-id-input',
 }
 
-export const waitForDebouncedA11yStatusUpdate = () =>
-  act(() => jest.advanceTimersByTime(200))
+export const waitForDebouncedA11yStatusUpdate = (shouldBeCleared = false) =>
+  act(() => jest.advanceTimersByTime(shouldBeCleared ? 500 : 200))
 
 export const MemoizedItem = React.memo(function Item({
   index,

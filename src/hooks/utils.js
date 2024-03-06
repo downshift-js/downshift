@@ -16,7 +16,7 @@ import {
   noop,
   targetWithinDownshift,
 } from '../utils'
-import setStatus from '../set-a11y-status'
+import {cleanupStatusDiv, setStatus} from '../set-a11y-status'
 
 const dropdownDefaultStateValues = {
   highlightedIndex: -1,
@@ -66,24 +66,10 @@ function stateReducer(s, a) {
 }
 
 /**
- * Returns a message to be added to aria-live region when item is selected.
- *
- * @param {Object} selectionParameters Parameters required to build the message.
- * @returns {string} The a11y message.
- */
-function getA11ySelectionMessage(selectionParameters) {
-  const {selectedItem, itemToString} = selectionParameters
-
-  return selectedItem
-    ? `${itemToString(selectedItem)} has been selected.`
-    : ''
-}
-
-/**
  * Debounced call for updating the a11y message.
  */
-const updateA11yStatus = debounce((getA11yMessage, document) => {
-  setStatus(getA11yMessage(), document)
+const updateA11yStatus = debounce((status, document) => {
+  setStatus(status, document)
 }, 200)
 
 // istanbul ignore next
@@ -264,7 +250,6 @@ const defaultProps = {
     return item
   },
   stateReducer,
-  getA11ySelectionMessage,
   scrollIntoView,
   environment:
     /* istanbul ignore next (ssr) */
@@ -503,30 +488,45 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-function useA11yMessageSetter(
-  getA11yMessage,
+/**
+ * Adds an a11y aria live status message if getA11yStatusMessage is passed.
+ * @param {(options: Object) => string} getA11yStatusMessage The function that builds the status message.
+ * @param {Object} options The options to be passed to getA11yStatusMessage if called.
+ * @param {Array<unknown>} dependencyArray The dependency array that triggers the status message setter via useEffect.
+ * @param {{document: Document}} environment The environment object containing the document.
+ */
+function useA11yMessageStatus(
+  getA11yStatusMessage,
+  options,
   dependencyArray,
-  {highlightedIndex, items, environment, ...rest},
+  environment = {},
 ) {
+  const document = environment.document
   const isInitialMount = useIsInitialMount()
-  // Sets a11y status message on changes in state.
+
+  // Adds an a11y aria live status message if getA11yStatusMessage is passed.
   useEffect(() => {
-    if (isInitialMount || isReactNative || !environment?.document) {
-      return
+    if (!getA11yStatusMessage || isInitialMount || isReactNative || !document) {
+      return noop()
     }
 
-    updateA11yStatus(
-      () =>
-        getA11yMessage({
-          highlightedIndex,
-          highlightedItem: items[highlightedIndex],
-          resultCount: items.length,
-          ...rest,
-        }),
-      environment.document,
-    )
+    const status = getA11yStatusMessage(options)
+
+    updateA11yStatus(status, document)
+
+    return () => {
+      updateA11yStatus.cancel()
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencyArray)
+  }, [dependencyArray])
+
+  // Cleanup the status message container.
+  useEffect(() => {
+    return () => {
+      cleanupStatusDiv(document)
+    }
+  }, [document])
 }
 
 function useScrollIntoView({
@@ -685,7 +685,7 @@ const commonDropdownPropTypes = {
 export {
   useControlPropsValidator,
   useScrollIntoView,
-  useA11yMessageSetter,
+  updateA11yStatus,
   useGetterPropsCalledChecker,
   useMouseAndTouchTracker,
   getHighlightedIndexOnOpen,
@@ -705,4 +705,5 @@ export {
   commonDropdownPropTypes,
   commonPropTypes,
   useIsInitialMount,
+  useA11yMessageStatus,
 }

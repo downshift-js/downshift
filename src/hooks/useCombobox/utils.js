@@ -1,11 +1,6 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {
-  getA11yStatusMessage,
-  isControlledProp,
-  getState,
-  noop,
-} from '../../utils'
+import {isControlledProp, getState, noop} from '../../utils'
 import {
   commonDropdownPropTypes,
   defaultProps as defaultPropsCommon,
@@ -131,7 +126,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const defaultProps = {
   ...defaultPropsCommon,
-  getA11yStatusMessage,
   isItemDisabled() {
     return false
   },

@@ -1,6 +1,4 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {isReactNative} from '../../is.macro'
-import setStatus from '../../set-a11y-status'
 import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
 import {
   useControlledReducer,
@@ -9,6 +7,7 @@ import {
   useControlPropsValidator,
   getItemAndIndex,
   useIsInitialMount,
+  useA11yMessageStatus,
 } from '../utils'
 import {
   getInitialState,
@@ -30,8 +29,7 @@ function useMultipleSelection(userProps = {}) {
     ...userProps,
   }
   const {
-    getA11yRemovalMessage,
-    itemToString,
+    getA11yStatusMessage,
     environment,
     keyNavigationNext,
     keyNavigationPrevious,
@@ -49,42 +47,18 @@ function useMultipleSelection(userProps = {}) {
   // Refs.
   const isInitialMount = useIsInitialMount()
   const dropdownRef = useRef(null)
-  const previousSelectedItemsRef = useRef(selectedItems)
   const selectedItemRefs = useRef()
   selectedItemRefs.current = []
   const latest = useLatestRef({state, props})
 
   // Effects.
-  /* Sets a11y status message on changes in selectedItem. */
-  useEffect(() => {
-    if (isInitialMount || isReactNative || !environment?.document) {
-      return
-    }
-
-    if (selectedItems.length < previousSelectedItemsRef.current.length) {
-      const removedSelectedItem = previousSelectedItemsRef.current.find(
-        selectedItem =>
-          selectedItems.findIndex(
-            item => props.itemToKey(item) === props.itemToKey(selectedItem),
-          ) < 0,
-      )
-
-      setStatus(
-        getA11yRemovalMessage({
-          itemToString,
-          resultCount: selectedItems.length,
-          removedSelectedItem,
-          activeIndex,
-          activeSelectedItem: selectedItems[activeIndex],
-        }),
-        environment.document,
-      )
-    }
-
-    previousSelectedItemsRef.current = selectedItems
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedItems.length])
+  // Adds an a11y aria live status message if getA11yStatusMessage is passed.
+  useA11yMessageStatus(
+    getA11yStatusMessage,
+    state,
+    [activeIndex, selectedItems],
+    environment,
+  )
   // Sets focus on active item.
   useEffect(() => {
     if (isInitialMount) {

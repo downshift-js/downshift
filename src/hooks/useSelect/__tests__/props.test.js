@@ -53,98 +53,18 @@ describe('props', () => {
     })
 
     test('passed as objects should work with custom itemToString', async () => {
-      jest.useFakeTimers()
       renderSelect({
         items: [{str: 'aaa'}, {str: 'bbb'}],
         itemToString: item => item.str,
         initialIsOpen: true,
       })
 
-      await clickOnItemAtIndex(0)
-      waitForDebouncedA11yStatusUpdate()
+      await keyDownOnToggleButton('b')
 
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        'aaa has been selected.',
+      expect(getToggleButton()).toHaveAttribute(
+        'aria-activedescendant',
+        defaultIds.getItemId(1),
       )
-    })
-  })
-
-  test('itemToString should provide string version to a11y status message', async () => {
-    jest.useFakeTimers()
-    renderSelect({
-      itemToString: () => 'custom-item',
-      initialIsOpen: true,
-    })
-
-    await clickOnItemAtIndex(0)
-    waitForDebouncedA11yStatusUpdate()
-
-    expect(getA11yStatusContainer()).toHaveTextContent(
-      'custom-item has been selected.',
-    )
-    jest.useRealTimers()
-  })
-
-  describe('getA11ySelectionMessage', () => {
-    beforeEach(() => jest.useFakeTimers())
-    beforeEach(jest.clearAllTimers)
-    afterAll(jest.useRealTimers)
-
-    test('reports that an item has been selected', async () => {
-      const itemIndex = 0
-      renderSelect({
-        initialIsOpen: true,
-      })
-
-      await clickOnItemAtIndex(itemIndex)
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        `${items[itemIndex]} has been selected.`,
-      )
-    })
-
-    test('is called with object that contains specific props', async () => {
-      const getA11ySelectionMessage = jest.fn()
-      const inputValue = 'a'
-      const isOpen = true
-      const highlightedIndex = 0
-      renderSelect({
-        getA11ySelectionMessage,
-        inputValue,
-        isOpen,
-        highlightedIndex,
-        items,
-      })
-
-      await clickOnItemAtIndex(0)
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11ySelectionMessage).toHaveBeenCalledTimes(1)
-      expect(getA11ySelectionMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          inputValue,
-          isOpen,
-          highlightedIndex,
-          resultCount: items.length,
-          previousResultCount: undefined,
-          highlightedItem: items[0],
-          itemToString: expect.any(Function),
-          selectedItem: items[0],
-        }),
-      )
-    })
-
-    test('is replaced with the user provided one', async () => {
-      renderSelect({
-        getA11ySelectionMessage: () => 'custom message',
-        initialIsOpen: true,
-      })
-
-      await clickOnItemAtIndex(3)
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusContainer()).toHaveTextContent('custom message')
     })
   })
 
@@ -155,60 +75,56 @@ describe('props', () => {
     })
     afterAll(jest.useRealTimers)
 
-    test('reports that no results are available if items list is empty', async () => {
+    test('adds no status message element to the DOM if not passed', async () => {
       renderSelect({
-        items: [],
+        items,
       })
 
       await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        'No results are available',
-      )
+      expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
-    test('reports that one result is available if one item is shown', async () => {
+    test('adds a status message element with the text returned', async () => {
+      const a11yStatusMessage = 'Dropdown is open'
+      const getA11yStatusMessage = jest.fn().mockReturnValue(a11yStatusMessage)
       renderSelect({
-        items: ['item1'],
+        items,
+        getA11yStatusMessage,
       })
 
       await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        '1 result is available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
-      )
-    })
-
-    test('reports the number of results available if more than one item are shown', async () => {
-      renderSelect({
-        items: ['item1', 'item2'],
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage)
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        highlightedIndex: -1,
+        inputValue: '',
+        isOpen: true,
+        selectedItem: null,
       })
 
-      await clickOnToggleButton()
+      getA11yStatusMessage.mockReset()
+
+      await keyDownOnToggleButton('{ArrowDown}')
+
       waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        '2 results are available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.',
-      )
-    })
-
-    test('is empty on menu close', async () => {
-      renderSelect({
-        items: ['item1', 'item2'],
-        initialIsOpen: true,
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        highlightedIndex: 0,
+        inputValue: '',
+        isOpen: true,
+        selectedItem: null,
       })
-
-      await clickOnToggleButton()
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is removed after 500ms as a cleanup', async () => {
+    test('clears the text content after 500ms', async () => {
       renderSelect({
-        items: ['item1', 'item2'],
+        items,
+        getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
       })
 
       await clickOnToggleButton()
@@ -218,83 +134,24 @@ describe('props', () => {
       expect(getA11yStatusContainer()).toBeEmptyDOMElement()
     })
 
-    test('is replaced with the user provided one', async () => {
-      renderSelect({
-        getA11yStatusMessage: () => 'custom message',
+    test('removes the message element from the DOM on unmount', async () => {
+      const {unmount} = renderSelect({
+        items,
+        getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
       })
 
       await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
+      act(() => jest.advanceTimersByTime(500))
+      unmount()
 
-      expect(getA11yStatusContainer()).toHaveTextContent('custom message')
-    })
-
-    test('is called with previousResultCount that gets updated correctly', async () => {
-      const getA11yStatusMessage = jest.fn()
-      const inputItems = ['aaa', 'bbb']
-      renderSelect({
-        getA11yStatusMessage,
-        items: inputItems,
-      })
-
-      await clickOnToggleButton()
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          previousResultCount: undefined,
-          resultCount: inputItems.length,
-        }),
-      )
-
-      inputItems.pop()
-      await keyDownOnToggleButton('{ArrowDown}')
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
-      expect(getA11yStatusMessage).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          previousResultCount: inputItems.length + 1,
-          resultCount: inputItems.length,
-        }),
-      )
-    })
-
-    test('is called with object that contains specific props at toggle', async () => {
-      const getA11yStatusMessage = jest.fn()
-      const inputValue = 'a'
-      const highlightedIndex = 1
-      const initialSelectedItem = items[highlightedIndex]
-      renderSelect({
-        getA11yStatusMessage,
-        inputValue,
-        initialSelectedItem,
-        selectedItem: items[highlightedIndex],
-      })
-
-      await clickOnToggleButton()
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          highlightedIndex,
-          inputValue,
-          isOpen: true,
-          itemToString: expect.any(Function),
-          previousResultCount: undefined,
-          resultCount: items.length,
-          highlightedItem: items[highlightedIndex],
-          selectedItem: items[highlightedIndex],
-        }),
-      )
+      expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
     test('is added to the document provided by the user as prop', async () => {
       const environment = {
         document: {
-          getElementById: jest.fn(() => ({})),
+          getElementById: jest.fn().mockReturnValue({remove: jest.fn()}),
           createElement: jest.fn(),
           activeElement: {},
           body: {},
@@ -303,63 +160,19 @@ describe('props', () => {
         removeEventListener: jest.fn(),
         Node,
       }
-      renderSelect({items: [], environment})
+      renderSelect({
+        items,
+        environment,
+        getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
+      })
 
       await clickOnToggleButton()
       waitForDebouncedA11yStatusUpdate()
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
-    })
-
-    test('is called when isOpen, highlightedIndex, inputValue or items change', async () => {
-      const getA11yStatusMessage = jest.fn()
-      const inputItems = ['aaa', 'bbb']
-      const {rerender} = renderSelect({
-        getA11yStatusMessage,
-        items,
-      })
-
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).not.toHaveBeenCalled()
-
-      // should not be called when any other prop is changed.
-      rerender({getA11yStatusMessage, items, id: 'hello'})
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).not.toHaveBeenCalled()
-
-      rerender({getA11yStatusMessage, items: inputItems})
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({resultCount: inputItems.length}),
+      expect(environment.document.getElementById).toHaveBeenCalledWith(
+        'a11y-status-message',
       )
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
-
-      await clickOnToggleButton()
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({isOpen: true}),
-      )
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
-
-      await keyDownOnToggleButton('b')
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({inputValue: 'b', highlightedIndex: 1}),
-      )
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(3)
-
-      await keyDownOnToggleButton('{ArrowUp}')
-      waitForDebouncedA11yStatusUpdate()
-
-      expect(getA11yStatusMessage).toHaveBeenCalledWith(
-        expect.objectContaining({highlightedIndex: 0}),
-      )
-      expect(getA11yStatusMessage).toHaveBeenCalledTimes(4)
     })
   })
 

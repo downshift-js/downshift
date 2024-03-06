@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {act, fireEvent, render, screen} from '@testing-library/react'
 import Downshift from '../'
-import setA11yStatus from '../set-a11y-status'
+import {setStatus} from '../set-a11y-status'
 import * as utils from '../utils'
 
 jest.useFakeTimers()
@@ -124,7 +124,7 @@ test('handles state change for touchevent events', () => {
 })
 
 test('props update causes the a11y status to be updated', () => {
-  setA11yStatus.mockReset()
+  setStatus.mockReset()
   const MyComponent = () => (
     <Downshift isOpen={false}>
       {({getInputProps, getItemProps, isOpen}) => (
@@ -139,11 +139,11 @@ test('props update causes the a11y status to be updated', () => {
   const {container, unmount} = render(<MyComponent />)
   render(<MyComponent isOpen={true} />, {container})
   jest.runAllTimers()
-  expect(setA11yStatus).toHaveBeenCalledTimes(1)
+  expect(setStatus).toHaveBeenCalledTimes(1)
   render(<MyComponent isOpen={false} />, {container})
   unmount()
   jest.runAllTimers()
-  expect(setA11yStatus).toHaveBeenCalledTimes(1)
+  expect(setStatus).toHaveBeenCalledTimes(1)
 })
 
 test('inputValue initializes properly if the selectedItem is controlled and set', () => {
