@@ -16,7 +16,7 @@ jest.mock('react', () => {
     ...jest.requireActual('react'),
     useId() {
       return 'test-id'
-    }
+    },
   }
 })
 
@@ -68,18 +68,12 @@ const DropdownMultipleCombobox = ({
 }) => {
   const {getSelectedItemProps, getDropdownProps, selectedItems} =
     useMultipleSelection(multipleSelectionProps)
-  const {
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-  } = useCombobox({
-    items,
-    ...comboboxProps,
-  })
-  const {itemToString} = multipleSelectionProps.itemToString
-    ? multipleSelectionProps
-    : defaultProps
+  const {getToggleButtonProps, getLabelProps, getMenuProps, getInputProps} =
+    useCombobox({
+      items,
+      ...comboboxProps,
+    })
+  const {itemToString} = defaultProps
 
   return (
     <div>
