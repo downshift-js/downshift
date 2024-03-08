@@ -84,7 +84,6 @@ and update if necessary.
   - [itemToKey](#itemtokey)
   - [selectedItemChanged](#selecteditemchanged)
   - [getA11yStatusMessage](#geta11ystatusmessage)
-  - [getA11ySelectionMessage](#geta11yselectionmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
   - [onIsOpenChange](#onisopenchange)
   - [onInputValueChange](#oninputvaluechange)
@@ -454,45 +453,40 @@ Used to determine if the new `selectedItem` has changed compared to the previous
 > `function({/* see below */})` | default messages provided in English
 
 This function is passed as props to a status updating function nested within
-that allows you to create your own ARIA statuses. It is called when one of the
-following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
+that allows you to create your own ARIA statuses. It is called when the state
+changes: `selectedItem`, `highlightedIndex`, `inputValue` or `isOpen`.
 
-A default `getA11yStatusMessage` function is provided that will check
-`resultCount` and return "No results are available." or if there are results ,
-"`resultCount` results are available, use up and down arrow keys to navigate.
-Press Enter key to select."
+There is no default function provided anymore since v9, so if there's no prop
+passed, no aria live status message is created. An implementation that resembles
+the previous default is written below, should you want to keep pre v9 behaviour.
 
-> Note: `resultCount` is `items.length` in our default version of the function.
+We don't provide this as a default anymore since we consider that screen readers
+have been significantly improved and they can convey information about items
+count, possible actions and highlighted items only from the HTML markup, without
+the need for aria-live regions.
 
-### getA11ySelectionMessage
+```js
+function getA11yStatusMessage(state) {
+  if (!state.isOpen) {
+    return ''
+  }
+  // you need to get resultCount and previousResultCount yourself now, since we don't pass them as arguments anymore
+  const resultCount = items.length
+  const previousResultCount = previousResultCountRef.current
 
-> `function({/* see below */})` | default messages provided in English
+  if (!resultCount) {
+    return 'No results are available.'
+  }
 
-This function is similar to the `getA11yStatusMessage` but it is generating a
-message when an item is selected. It is passed as props to a status updating
-function nested within that allows you to create your own ARIA statuses. It is
-called when `selectedItem` changes.
+  if (resultCount !== previousResultCount) {
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
 
-A default `getA11ySelectionMessage` function is provided. When an item is
-selected, the message is a selection related one, narrating
-"`itemToString(selectedItem)` has been selected".
-
-The object you are passed to generate your status message, for both
-`getA11yStatusMessage` and `getA11ySelectionMessage`, has the following
-properties:
-
-<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
-
-| property              | type            | description                                                                                  |
-| --------------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `highlightedIndex`    | `number`        | The currently highlighted index                                                              |
-| `highlightedItem`     | `any`           | The value of the highlighted item                                                            |
-| `isOpen`              | `boolean`       | The `isOpen` state                                                                           |
-| `inputValue`          | `string`        | The value in the text input.                                                                 |
-| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated                 |
-| `resultCount`         | `number`        | The total items showing in the dropdown                                                      |
-| `selectedItem`        | `any`           | The value of the currently selected item                                                     |
+  return ''
+}
+```
 
 ### onHighlightedIndexChange
 

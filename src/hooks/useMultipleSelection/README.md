@@ -45,7 +45,7 @@ such as when an item has been removed from selection.
   - [defaultSelectedItems](#defaultselecteditems)
   - [defaultActiveIndex](#defaultactiveindex)
   - [itemToKey](#itemtokey)
-  - [getA11yRemovalMessage](#geta11yremovalmessage)
+  - [getA11yStatusMessage](#geta11ystatusmessage)
   - [onActiveIndexChange](#onactiveindexchange)
   - [onStateChange](#onstatechange)
   - [activeIndex](#activeindex)
@@ -453,33 +453,42 @@ function itemToKey(item) {
 }
 ```
 
-### getA11yRemovalMessage
+### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
 
-This function is similar to the `getA11yStatusMessage` or
-`getA11ySelectionMessage` from `useSelect` and `useCombobox` but it is
-generating an ARIA a11y message when an item is removed. It is passed as props
-to a status updating function nested within that allows you to create your own
-ARIA statuses. It is called when an item is removed and the size of
-`selectedItems` decreases.
+This function is passed as props to a status updating function nested within
+that allows you to create your own ARIA statuses. It is called when the state
+changes: `selectedItem`, `highlightedIndex`, `inputValue` or `isOpen`.
 
-A default `getA11yRemovalMessage` function is provided. When an item is removed,
-the message is a removal related one, narrating "`itemToString(removedItem)` has
-been removed".
+There is no default function provided anymore since v9, so if there's no prop
+passed, no aria live status message is created. An implementation that resembles
+the previous default is written below, should you want to keep pre v9 behaviour.
 
-The object you are passed to generate your status message for
-`getA11yRemovalMessage` has the following properties:
+We don't provide this as a default anymore since we consider that screen readers
+have been significantly improved and they can convey information about items
+count, possible actions and highlighted items only from the HTML markup, without
+the need for aria-live regions.
 
-<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
+```js
+function getA11yStatusMessage(state) {
+  const {selectedItems} = state
 
-| property              | type            | description                                                                                  |
-| --------------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `resultCount`         | `number`        | The count of selected items in the list.                                                     |
-| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `removedSelectedItem` | `any`           | The value of the currently removed item                                                      |
-| `activeSelectedItem`  | `any`           | The value of the currently active item                                                       |
-| `activeIndex`         | `number`        | The index of the currently active item.                                                      |
+  if (selectedItems.length === previousSelectedItemsRef.current.length) {
+    return
+  }
+
+  const removedSelectedItem = previousSelectedItemsRef.current.find(
+    selectedItem =>
+      selectedItems.findIndex(
+        item => props.itemToKey(item) === props.itemToKey(selectedItem),
+      ) < 0,
+  )
+
+  // where itemToString is a function that returns the string equivalent for an item.
+  return `${itemToString(removedSelectedItem)} has been removed.`
+}
+```
 
 ### onActiveIndexChange
 
