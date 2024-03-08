@@ -38,7 +38,6 @@ const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
-  getA11ySelectionMessage: PropTypes.func,
 }
 
 export const defaultProps = {

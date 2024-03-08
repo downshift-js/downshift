@@ -352,8 +352,6 @@ function itemToKey(item) {
 
 ### getA11yStatusMessage
 
-### getA11yStatusMessage
-
 > `function({/* see below */})` | default messages provided in English
 
 This function is passed as props to a status updating function nested within

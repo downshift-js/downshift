@@ -36,7 +36,6 @@ const propTypes = {
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
   selectedItemChanged: PropTypes.func,
-  getA11ySelectionMessage: PropTypes.func,
   inputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
   initialInputValue: PropTypes.string,
