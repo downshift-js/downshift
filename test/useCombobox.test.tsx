@@ -32,12 +32,11 @@ export default function DropdownCombobox() {
   } = useCombobox({
     items: inputItems,
     onInputValueChange: ({inputValue}) => {
-      inputValue !== undefined &&
-        setInputItems(
-          colors.filter(item =>
-            item.toLowerCase().startsWith(inputValue.toLowerCase()),
-          ),
-        )
+      setInputItems(
+        colors.filter(item =>
+          item.toLowerCase().startsWith(inputValue.toLowerCase()),
+        ),
+      )
     },
   })
   return (
