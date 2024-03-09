@@ -13,6 +13,7 @@ import {
   getInput,
   items,
   keyDownOnInput,
+  waitForDebouncedA11yStatusUpdate,
 } from '../testUtils'
 import useMultipleSelection from '..'
 
@@ -32,27 +33,7 @@ describe('props', () => {
   })
 
   describe('selectedItems', () => {
-    afterEach(() => {
-      act(() => jest.runAllTimers())
-    })
-
-    test('passed as objects should work with custom itemToString', async () => {
-      renderMultipleCombobox({
-        multipleSelectionProps: {
-          initialSelectedItems: [{str: 'aaa'}, {str: 'bbb'}],
-          initialActiveIndex: 0,
-          itemToString: item => item.str,
-        },
-      })
-
-      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
-
-      expect(getA11yStatusContainer()).toHaveTextContent(
-        'aaa has been removed.',
-      )
-    })
-
-    test('controls the state property if passed', async () => {
+    test('control the state property if passed', async () => {
       const inputItems = [items[0], items[1]]
 
       renderMultipleCombobox({
@@ -68,72 +49,102 @@ describe('props', () => {
     })
   })
 
-  describe('getA11yRemovalMessage', () => {
+  describe('getA11yStatusMessage', () => {
+    beforeEach(() => jest.useFakeTimers())
     afterEach(() => {
       act(() => jest.runAllTimers())
     })
+    afterAll(() => jest.useRealTimers())
 
-    test('is not added if the document in undefined', async () => {
+    test('adds no status message element to the DOM if not passed', async () => {
       renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems: [items[0], items[1]],
+          selectedItems: [items[0], items[1]],
           initialActiveIndex: 0,
-          environment: undefined,
         },
       })
 
-      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yStatusContainer()).not.toHaveTextContent()
+      expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
-    test('is called with object that contains specific props', async () => {
-      const getA11yRemovalMessage = jest.fn()
-      const itemToString = item => item.str
-      const initialSelectedItems = [{str: 'aaa'}, {str: 'bbb'}]
+    test('adds a status message element with the text returned', async () => {
+      const a11yStatusMessage1 = 'to the left to the left'
+      const a11yStatusMessage2 = 'to the right?'
+      const selectedItems = [items[0], items[1]]
+      const getA11yStatusMessage = jest
+        .fn()
+        .mockReturnValueOnce(a11yStatusMessage1)
+        .mockReturnValueOnce(a11yStatusMessage2)
       renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems,
+          selectedItems,
           initialActiveIndex: 0,
-          itemToString,
-          getA11yRemovalMessage,
-          activeIndex: 0,
+          getA11yStatusMessage,
         },
       })
 
-      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate()
 
-      expect(getA11yRemovalMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          itemToString,
-          resultCount: 1,
-          removedSelectedItem: initialSelectedItems[0],
-          activeIndex: 0,
-          activeSelectedItem: initialSelectedItems[1],
-        }),
-      )
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage1)
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        activeIndex: 0,
+        selectedItems,
+      })
+
+      getA11yStatusMessage.mockClear()
+
+      await keyDownOnSelectedItemAtIndex(0, '{ArrowRight}')
+
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage2)
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        activeIndex: 1,
+        selectedItems,
+      })
     })
 
-    test('is replaced with the user provided one', async () => {
-      const initialSelectedItems = [items[0], items[1]]
-
+    test('clears the text content after 500ms', async () => {
       renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems,
+          selectedItems: [items[0], items[1]],
           initialActiveIndex: 0,
-          getA11yRemovalMessage: () => 'custom message',
+          getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
         },
       })
 
-      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate(true)
 
-      expect(getA11yStatusContainer()).toHaveTextContent('custom message')
+      expect(getA11yStatusContainer()).toBeEmptyDOMElement()
+    })
+
+    test('removes the message element from the DOM on unmount', async () => {
+      const {unmount} = renderMultipleCombobox({
+        multipleSelectionProps: {
+          selectedItems: [items[0], items[1]],
+          initialActiveIndex: 0,
+          getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
+        },
+      })
+
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate(true)
+      unmount()
+
+      expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
     test('is added to the document provided by the user as prop', async () => {
       const environment = {
         document: {
-          getElementById: jest.fn(() => ({})),
+          getElementById: jest.fn().mockReturnValue({remove: jest.fn()}),
           createElement: jest.fn(),
           activeElement: {},
           body: {},
@@ -142,17 +153,23 @@ describe('props', () => {
         removeEventListener: jest.fn(),
         Node,
       }
+
       renderMultipleCombobox({
         multipleSelectionProps: {
-          initialSelectedItems: [items[0], items[1]],
+          selectedItems: [items[0], items[1]],
           initialActiveIndex: 0,
+          getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
           environment,
         },
       })
 
-      await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate()
 
       expect(environment.document.getElementById).toHaveBeenCalledTimes(1)
+      expect(environment.document.getElementById).toHaveBeenCalledWith(
+        'a11y-status-message',
+      )
     })
   })
 

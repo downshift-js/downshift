@@ -2,7 +2,6 @@ import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
 import {
-  useA11yMessageSetter,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   useLatestRef,
@@ -13,6 +12,7 @@ import {
   getInitialValue,
   isDropdownsStateEqual,
   useIsInitialMount,
+  useA11yMessageStatus,
 } from '../utils'
 import {
   getInitialState,
@@ -32,14 +32,7 @@ function useCombobox(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {
-    items,
-    scrollIntoView,
-    environment,
-    getA11yStatusMessage,
-    getA11ySelectionMessage,
-    itemToString,
-  } = props
+  const {items, scrollIntoView, environment, getA11yStatusMessage} = props
   // Initial state depending on controlled props.
   const [state, dispatch] = useControlledReducer(
     downshiftUseComboboxReducer,
@@ -69,26 +62,13 @@ function useCombobox(userProps = {}) {
   )
 
   // Effects.
-  // Sets a11y status message on changes in state.
-  useA11yMessageSetter(
+  // Adds an a11y aria live status message if getA11yStatusMessage is passed.
+  useA11yMessageStatus(
     getA11yStatusMessage,
-    [isOpen, highlightedIndex, inputValue, items],
-    {
-      previousResultCount: previousResultCountRef.current,
-      items,
-      environment,
-      itemToString,
-      ...state,
-    },
-  )
-  // Sets a11y status message on changes in selectedItem.
-  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
-    previousResultCount: previousResultCountRef.current,
-    items,
+    state,
+    [isOpen, highlightedIndex, selectedItem, inputValue],
     environment,
-    itemToString,
-    ...state,
-  })
+  )
   // Scroll on highlighted item if change comes from keyboard.
   const shouldScrollRef = useScrollIntoView({
     menuElement: menuRef.current,

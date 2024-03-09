@@ -38,7 +38,7 @@ function getStatusDiv(documentProp) {
  * @param {String} status the status message
  * @param {Object} documentProp document passed by the user.
  */
-export default function setStatus(status, documentProp) {
+export function setStatus(status, documentProp) {
   if (!status || !documentProp) {
     return
   }
@@ -47,4 +47,16 @@ export default function setStatus(status, documentProp) {
 
   div.textContent = status
   cleanupStatus(documentProp)
+}
+
+/**
+ * Removes the status element from the DOM
+ * @param {Document} documentProp 
+ */
+export function cleanupStatusDiv(documentProp) {
+  const statusDiv = documentProp?.getElementById('a11y-status-message')
+
+  if (statusDiv) {
+    statusDiv.remove()
+  }
 }

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
-import setA11yStatus from './set-a11y-status'
+import {setStatus} from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   handleRefs,
@@ -1057,7 +1057,7 @@ class Downshift extends Component {
     })
     this.previousResultCount = resultCount
 
-    setA11yStatus(status, this.props.environment.document)
+    setStatus(status, this.props.environment.document)
   }, 200)
 
   componentDidMount() {

@@ -5,7 +5,6 @@ import {
   getInitialState,
   useGetterPropsCalledChecker,
   useLatestRef,
-  useA11yMessageSetter,
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
@@ -13,7 +12,7 @@ import {
   getItemAndIndex,
   getInitialValue,
   isDropdownsStateEqual,
-  useIsInitialMount,
+  useA11yMessageStatus,
 } from '../utils'
 import {
   callAllEventHandlers,
@@ -35,14 +34,7 @@ function useSelect(userProps = {}) {
     ...defaultProps,
     ...userProps,
   }
-  const {
-    items,
-    scrollIntoView,
-    environment,
-    itemToString,
-    getA11ySelectionMessage,
-    getA11yStatusMessage,
-  } = props
+  const {scrollIntoView, environment, getA11yStatusMessage} = props
   // Initial state depending on controlled props.
   const [state, dispatch] = useControlledReducer(
     downshiftSelectReducer,
@@ -59,9 +51,6 @@ function useSelect(userProps = {}) {
   const clearTimeoutRef = useRef(null)
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
-  // used to keep track of how many items we had on previous cycle.
-  const previousResultCountRef = useRef()
-  const isInitialMount = useIsInitialMount()
   // utility callback to get item element.
   const latest = useLatestRef({
     state,
@@ -75,26 +64,13 @@ function useSelect(userProps = {}) {
   )
 
   // Effects.
-  // Sets a11y status message on changes in state.
-  useA11yMessageSetter(
+  // Adds an a11y aria live status message if getA11yStatusMessage is passed.
+  useA11yMessageStatus(
     getA11yStatusMessage,
-    [isOpen, highlightedIndex, inputValue, items],
-    {
-      previousResultCount: previousResultCountRef.current,
-      items,
-      environment,
-      itemToString,
-      ...state,
-    },
-  )
-  // Sets a11y status message on changes in selectedItem.
-  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
-    previousResultCount: previousResultCountRef.current,
-    items,
+    state,
+    [isOpen, highlightedIndex, selectedItem, inputValue],
     environment,
-    itemToString,
-    ...state,
-  })
+  )
   // Scroll on highlighted item if change comes from keyboard.
   const shouldScrollRef = useScrollIntoView({
     menuElement: menuRef.current,
@@ -104,7 +80,6 @@ function useSelect(userProps = {}) {
     scrollIntoView,
     getItemNodeFromIndex,
   })
-
   // Sets cleanup for the keysSoFar callback, debounded after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
@@ -120,7 +95,6 @@ function useSelect(userProps = {}) {
       clearTimeoutRef.current.cancel()
     }
   }, [])
-
   // Invokes the keysSoFar callback set up above.
   useEffect(() => {
     if (!inputValue) {
@@ -133,13 +107,6 @@ function useSelect(userProps = {}) {
   useControlPropsValidator({
     props,
     state,
-  })
-  useEffect(() => {
-    if (isInitialMount) {
-      return
-    }
-
-    previousResultCountRef.current = items.length
   })
   // Focus the toggle button on first render if required.
   useEffect(() => {
