@@ -9,7 +9,7 @@ hooks and are detailed below.
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [onChangeTypescriptImprovements](#onchangetypescriptimprovements)
+- [onChange Typescript Improvements](#onchange-typescript-improvements)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
