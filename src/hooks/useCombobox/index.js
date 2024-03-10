@@ -116,17 +116,20 @@ function useCombobox(userProps = {}) {
       previousResultCountRef.current = items.length
     }
   })
-  // Add mouse/touch events to document.
-  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
-    isOpen,
-    [inputRef, menuRef, toggleButtonRef],
+  const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    () => {
-      dispatch({
-        type: stateChangeTypes.InputBlur,
-        selectItem: false,
-      })
-    },
+    [toggleButtonRef, menuRef, inputRef],
+    useCallback(
+      function handleBlur() {
+        if (latest.current.state.isOpen) {
+          dispatch({
+            type: stateChangeTypes.InputBlur,
+            selectItem: false,
+          })
+        }
+      },
+      [dispatch, latest],
+    ),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',
@@ -309,7 +312,7 @@ function useCombobox(userProps = {}) {
 
       const itemHandleMouseMove = () => {
         if (
-          mouseAndTouchTrackersRef.current.isTouchEnd ||
+          mouseAndTouchTrackers.isTouchEnd ||
           index === latestState.highlightedIndex
         ) {
           return
@@ -353,7 +356,7 @@ function useCombobox(userProps = {}) {
       }
     },
 
-    [dispatch, elementIds, latest, mouseAndTouchTrackersRef, shouldScrollRef],
+    [dispatch, elementIds, latest, mouseAndTouchTrackers, shouldScrollRef],
   )
 
   const getToggleButtonProps = useCallback(
@@ -425,7 +428,7 @@ function useCombobox(userProps = {}) {
         if (
           environment?.document &&
           latestState.isOpen &&
-          !mouseAndTouchTrackersRef.current.isMouseDown
+          !mouseAndTouchTrackers.isMouseDown
         ) {
           const isBlurByTabChange =
             event.relatedTarget === null &&
@@ -501,13 +504,13 @@ function useCombobox(userProps = {}) {
       }
     },
     [
-      setGetterPropCallInfo,
-      latest,
-      elementIds,
-      inputKeyDownHandlers,
       dispatch,
-      mouseAndTouchTrackersRef,
+      elementIds,
       environment,
+      inputKeyDownHandlers,
+      latest,
+      mouseAndTouchTrackers,
+      setGetterPropCallInfo,
     ],
   )
 

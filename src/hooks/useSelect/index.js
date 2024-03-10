@@ -150,16 +150,20 @@ function useSelect(userProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  // Add mouse/touch events to document.
-  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(
-    isOpen,
-    [menuRef, toggleButtonRef],
+
+  const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    () => {
-      dispatch({
-        type: stateChangeTypes.ToggleButtonBlur,
-      })
-    },
+    [toggleButtonRef, menuRef],
+    useCallback(
+      function handleBlur() {
+        if (latest.current.state.isOpen) {
+          dispatch({
+            type: stateChangeTypes.ToggleButtonBlur,
+          })
+        }
+      },
+      [dispatch, latest],
+    ),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getMenuProps',
@@ -365,10 +369,7 @@ function useSelect(userProps = {}) {
         })
       }
       const toggleButtonHandleBlur = () => {
-        if (
-          latestState.isOpen &&
-          !mouseAndTouchTrackersRef.current.isMouseDown
-        ) {
+        if (latestState.isOpen && !mouseAndTouchTrackers.isMouseDown) {
           dispatch({
             type: stateChangeTypes.ToggleButtonBlur,
           })
@@ -434,11 +435,11 @@ function useSelect(userProps = {}) {
       return toggleProps
     },
     [
-      latest,
-      elementIds,
-      setGetterPropCallInfo,
       dispatch,
-      mouseAndTouchTrackersRef,
+      elementIds,
+      latest,
+      mouseAndTouchTrackers,
+      setGetterPropCallInfo,
       toggleButtonKeyDownHandlers,
     ],
   )
@@ -472,7 +473,7 @@ function useSelect(userProps = {}) {
 
       const itemHandleMouseMove = () => {
         if (
-          mouseAndTouchTrackersRef.current.isTouchEnd ||
+          mouseAndTouchTrackers.isTouchEnd ||
           index === latestState.highlightedIndex
         ) {
           return
@@ -525,7 +526,7 @@ function useSelect(userProps = {}) {
 
       return itemProps
     },
-    [latest, elementIds, mouseAndTouchTrackersRef, shouldScrollRef, dispatch],
+    [latest, elementIds, mouseAndTouchTrackers, shouldScrollRef, dispatch],
   )
 
   return {

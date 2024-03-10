@@ -84,9 +84,7 @@ describe('utils', () => {
   describe('useMouseAndTouchTracker', () => {
     test('renders without error', () => {
       expect(() => {
-        renderHook(() =>
-          useMouseAndTouchTracker(false, [], undefined, jest.fn()),
-        )
+        renderHook(() => useMouseAndTouchTracker(undefined, [], jest.fn()))
       }).not.toThrowError()
     })
 
@@ -95,9 +93,11 @@ describe('utils', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
+      const refs = []
+      const handleBlur = jest.fn()
 
-      const {unmount, result} = renderHook(() =>
-        useMouseAndTouchTracker(false, [], environment, jest.fn()),
+      const {unmount, rerender, result} = renderHook(() =>
+        useMouseAndTouchTracker(environment, refs, handleBlur),
       )
 
       expect(environment.addEventListener).toHaveBeenCalledTimes(5)
@@ -121,6 +121,10 @@ describe('utils', () => {
         'touchend',
         expect.any(Function),
       )
+      expect(environment.removeEventListener).not.toHaveBeenCalled()
+
+      rerender()
+
       expect(environment.removeEventListener).not.toHaveBeenCalled()
 
       unmount()
@@ -149,7 +153,9 @@ describe('utils', () => {
       )
 
       expect(result.current).toEqual({
-        current: {isMouseDown: false, isTouchMove: false, isTouchEnd: false},
+        isMouseDown: false,
+        isTouchMove: false,
+        isTouchEnd: false,
       })
     })
   })
