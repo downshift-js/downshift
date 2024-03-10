@@ -426,20 +426,19 @@ function targetWithinDownshift(
   environment,
   checkActiveElement = true,
 ) {
-  if (!environment) {
-    return false
-  }
-
-  return downshiftElements.some(
-    contextNode =>
-      contextNode &&
-      (isOrContainsNode(contextNode, target, environment) ||
-        (checkActiveElement &&
-          isOrContainsNode(
-            contextNode,
-            environment.document.activeElement,
-            environment,
-          ))),
+  return (
+    environment &&
+    downshiftElements.some(
+      contextNode =>
+        contextNode &&
+        (isOrContainsNode(contextNode, target, environment) ||
+          (checkActiveElement &&
+            isOrContainsNode(
+              contextNode,
+              environment.document.activeElement,
+              environment,
+            ))),
+    )
   )
 }
 
