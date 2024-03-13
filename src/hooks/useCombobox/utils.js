@@ -35,7 +35,6 @@ const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
-  selectedItemChanged: PropTypes.func,
   inputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
   initialInputValue: PropTypes.string,
@@ -79,22 +78,9 @@ export function useControlledReducer(
     if (
       !isInitialMount // on first mount we already have the proper inputValue for a initial selected item.
     ) {
-      let shouldCallDispatch
-
-      if (props.selectedItemChanged === undefined) {
-        shouldCallDispatch =
-          props.itemToKey(props.selectedItem) !==
-          props.itemToKey(previousSelectedItemRef.current)
-      } else {
-        console.warn(
-          `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
-        )
-
-        shouldCallDispatch = props.selectedItemChanged(
-          previousSelectedItemRef.current,
-          props.selectedItem,
-        )
-      }
+      const shouldCallDispatch =
+        props.itemToKey(props.selectedItem) !==
+        props.itemToKey(previousSelectedItemRef.current)
 
       if (shouldCallDispatch) {
         dispatch({

@@ -555,7 +555,6 @@ export interface UseComboboxProps<Item> {
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
-  selectedItemChanged?: (prevItem: Item, item: Item) => boolean
   getA11yStatusMessage?: (options: UseComboboxState<Item>) => string
   highlightedIndex?: number
   initialHighlightedIndex?: number
