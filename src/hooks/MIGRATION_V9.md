@@ -22,11 +22,13 @@ The handlers below have their types improved to reflect that they will always
 get called with their corresponding state prop:
 
 - useCombobox
+
   - onSelectedItemChange: selectedItem is non optional
   - onIsOpenChange: isOpen is non optional
   - onHighlightedIndexChange: highlightedIndex is non optional
 
 - useSelect
+
   - onSelectedItemChange: selectedItem is non optional
   - onIsOpenChange: isOpen is non optional
   - onHighlightedIndexChange: highlightedIndex is non optional
@@ -80,3 +82,12 @@ References:
 - [useCombobox docs](https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#geta11ystatusmessage)
 - [useSelect docs](https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/README.md#geta11ystatusmessage)
 - [useMultipleSelection docs](https://github.com/downshift-js/downshift/blob/master/src/hooks/useMultipleSelection/README.md#geta11ystatusmessage)
+
+## selectedItemChanged
+
+This prop has been removed from `useCombobox`. You should use `itemToKey`
+instead.
+
+Reference:
+
+[itemToKey docs](https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#itemtokey)

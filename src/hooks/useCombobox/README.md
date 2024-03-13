@@ -82,7 +82,6 @@ and update if necessary.
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [defaultInputValue](#defaultinputvalue)
   - [itemToKey](#itemtokey)
-  - [selectedItemChanged](#selecteditemchanged)
   - [getA11yStatusMessage](#geta11ystatusmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
   - [onIsOpenChange](#onisopenchange)
@@ -411,8 +410,8 @@ function itemToKey(item) {
 ```
 
 > This deprecates the "selectedItemChanged" prop. If you are using the prop
-> already, make sure you change to "itemToKey" as the former will be removed in
-> the next Breaking Change update. A migration example:
+> already, make sure you change to "itemToKey" as the former is removed in v9. A
+> migration example:
 
 ```js
 // initial items.
@@ -437,16 +436,6 @@ function itemToKey(item) {
   // and we will do the comparison like: const isChanged = itemToKey(prevSelectedItem) !== itemToKey(nextSelectedItem)
 }
 ```
-
-### selectedItemChanged
-
-> DEPRECATED. Please use "itemToKey".
-
-> `function(prevItem: any, item: any)` | defaults to:
-> `(prevItem, item) => (prevItem !== item)`
-
-Used to determine if the new `selectedItem` has changed compared to the previous
-`selectedItem` and properly update Downshift's internal state.
 
 ### getA11yStatusMessage
 
