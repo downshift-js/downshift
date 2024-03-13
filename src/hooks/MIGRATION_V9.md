@@ -13,6 +13,7 @@ hooks and are detailed below.
 - [getA11ySelectionMessage](#geta11yselectionmessage)
 - [getA11yRemovalMessage](#geta11yremovalmessage)
 - [getA11yStatusMessage](#geta11ystatusmessage)
+- [selectedItemChanged](#selecteditemchanged)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
