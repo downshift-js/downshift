@@ -42,6 +42,7 @@ function useSelect(userProps = {}) {
     itemToString,
     getA11ySelectionMessage,
     getA11yStatusMessage,
+    inputCleanupDebounceWait,
   } = props
   // Initial state depending on controlled props.
   const [state, dispatch] = useControlledReducer(
@@ -107,19 +108,23 @@ function useSelect(userProps = {}) {
 
   // Sets cleanup for the keysSoFar callback, debounded after 500ms.
   useEffect(() => {
-    // init the clean function here as we need access to dispatch.
-    clearTimeoutRef.current = debounce(outerDispatch => {
-      outerDispatch({
-        type: stateChangeTypes.FunctionSetInputValue,
-        inputValue: '',
-      })
-    }, 500)
+    if (inputCleanupDebounceWait > 0) {
+      // init the clean function here as we need access to dispatch.
+      clearTimeoutRef.current = debounce(outerDispatch => {
+        outerDispatch({
+          type: stateChangeTypes.FunctionSetInputValue,
+          inputValue: '',
+        })
+      }, inputCleanupDebounceWait)
+    } else {
+      clearTimeoutRef.current = null;
+    }
 
     // Cancel any pending debounced calls on mount
     return () => {
-      clearTimeoutRef.current.cancel()
+      clearTimeoutRef?.current.cancel()
     }
-  }, [])
+  }, [inputCleanupDebounceWait])
 
   // Invokes the keysSoFar callback set up above.
   useEffect(() => {
@@ -127,7 +132,7 @@ function useSelect(userProps = {}) {
       return
     }
 
-    clearTimeoutRef.current(dispatch)
+    clearTimeoutRef.current?.(dispatch)
   }, [dispatch, inputValue])
 
   useControlPropsValidator({
