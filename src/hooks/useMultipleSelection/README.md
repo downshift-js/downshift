@@ -27,6 +27,14 @@ arrow navigation between dropdown and items, navigation between the items
 themselves, removing and adding items, and also helpful `aria-live` messages
 such as when an item has been removed from selection.
 
+## Migration through breaking changes
+
+The hook received breaking changes related to how it works, as well as the API,
+starting with v8. They are documented here:
+
+- [v8 migration guide][migration-guide-v8]
+- [v9 migration guide][migration-guide-v9]
+
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -951,3 +959,7 @@ suggestion and the Codesandbox for it, and we will take it from there.
 [sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
+[migration-guide-v8]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
+[migration-guide-v9]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md

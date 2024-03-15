@@ -23,12 +23,14 @@ implement the corresponding ARIA pattern. Every functionality needed should be
 provided out-of-the-box: menu toggle, item selection and up/down movement
 between them, screen reader support, highlight by character keys etc.
 
-## Migration to v7
+## Migration through breaking changes
 
-`useSelect` received some changes related to its API and how it works in version
-7, as a conequence of adapting it to the ARIA 1.2 select-only combobox pattern.
-If you were using _useSelect_ previous to 7.0.0, check the [migration
-guide][migration-guide-v7] and update if necessary.
+The hook received breaking changes related to how it works, as well as the API,
+starting with v7. They are documented here:
+
+- [v7 migration guide][migration-guide-v7]
+- [v8 migration guide][migration-guide-v8]
+- [v9 migration guide][migration-guide-v9]
 
 ## Table of Contents
 
@@ -979,3 +981,7 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#useselect
+[migration-guide-v8]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
+[migration-guide-v9]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md

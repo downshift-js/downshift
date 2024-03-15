@@ -53,12 +53,14 @@ follows:
   - inline autocomplete based on the highlighted item in the menu is also
     performed by the consumer.
 
-## Migration to v7
+## Migration through breaking changes
 
-`useCombobox` received some changes related to how it works in version 7, as a
-conequence of adapting it to the ARIA 1.2 combobox pattern. If you were using
-_useCombobox_ previous to 7.0.0, check the [migration guide][migration-guide-v7]
-and update if necessary.
+The hook received breaking changes related to how it works, as well as the API,
+starting with v7. They are documented here:
+
+- [v7 migration guide][migration-guide-v7]
+- [v8 migration guide][migration-guide-v8]
+- [v9 migration guide][migration-guide-v9]
 
 ## Table of Contents
 
@@ -1151,3 +1153,7 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#usecombobox
+[migration-guide-v8]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
+[migration-guide-v9]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md
