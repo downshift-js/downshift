@@ -1,11 +1,6 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {
-  getA11yStatusMessage,
-  isControlledProp,
-  getState,
-  noop,
-} from '../../utils'
+import {isControlledProp, getState, noop} from '../../utils'
 import {
   commonDropdownPropTypes,
   defaultProps as defaultPropsCommon,
@@ -40,8 +35,6 @@ const propTypes = {
   ...commonDropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
-  selectedItemChanged: PropTypes.func,
-  getA11ySelectionMessage: PropTypes.func,
   inputValue: PropTypes.string,
   defaultInputValue: PropTypes.string,
   initialInputValue: PropTypes.string,
@@ -85,22 +78,9 @@ export function useControlledReducer(
     if (
       !isInitialMount // on first mount we already have the proper inputValue for a initial selected item.
     ) {
-      let shouldCallDispatch
-
-      if (props.selectedItemChanged === undefined) {
-        shouldCallDispatch =
-          props.itemToKey(props.selectedItem) !==
-          props.itemToKey(previousSelectedItemRef.current)
-      } else {
-        console.warn(
-          `The "selectedItemChanged" is deprecated. Please use "itemToKey instead". https://github.com/downshift-js/downshift/blob/master/src/hooks/useCombobox/README.md#selecteditemchanged`,
-        )
-
-        shouldCallDispatch = props.selectedItemChanged(
-          previousSelectedItemRef.current,
-          props.selectedItem,
-        )
-      }
+      const shouldCallDispatch =
+        props.itemToKey(props.selectedItem) !==
+        props.itemToKey(previousSelectedItemRef.current)
 
       if (shouldCallDispatch) {
         dispatch({
@@ -131,7 +111,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export const defaultProps = {
   ...defaultPropsCommon,
-  getA11yStatusMessage,
   isItemDisabled() {
     return false
   },

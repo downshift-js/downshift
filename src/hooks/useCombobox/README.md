@@ -53,12 +53,14 @@ follows:
   - inline autocomplete based on the highlighted item in the menu is also
     performed by the consumer.
 
-## Migration to v7
+## Migration through breaking changes
 
-`useCombobox` received some changes related to how it works in version 7, as a
-conequence of adapting it to the ARIA 1.2 combobox pattern. If you were using
-_useCombobox_ previous to 7.0.0, check the [migration guide][migration-guide-v7]
-and update if necessary.
+The hook received breaking changes related to how it works, as well as the API,
+starting with v7. They are documented here:
+
+- [v7 migration guide][migration-guide-v7]
+- [v8 migration guide][migration-guide-v8]
+- [v9 migration guide][migration-guide-v9]
 
 ## Table of Contents
 
@@ -82,9 +84,7 @@ and update if necessary.
   - [defaultHighlightedIndex](#defaulthighlightedindex)
   - [defaultInputValue](#defaultinputvalue)
   - [itemToKey](#itemtokey)
-  - [selectedItemChanged](#selecteditemchanged)
   - [getA11yStatusMessage](#geta11ystatusmessage)
-  - [getA11ySelectionMessage](#geta11yselectionmessage)
   - [onHighlightedIndexChange](#onhighlightedindexchange)
   - [onIsOpenChange](#onisopenchange)
   - [onInputValueChange](#oninputvaluechange)
@@ -412,8 +412,8 @@ function itemToKey(item) {
 ```
 
 > This deprecates the "selectedItemChanged" prop. If you are using the prop
-> already, make sure you change to "itemToKey" as the former will be removed in
-> the next Breaking Change update. A migration example:
+> already, make sure you change to "itemToKey" as the former is removed in v9. A
+> migration example:
 
 ```js
 // initial items.
@@ -439,60 +439,45 @@ function itemToKey(item) {
 }
 ```
 
-### selectedItemChanged
-
-> DEPRECATED. Please use "itemToKey".
-
-> `function(prevItem: any, item: any)` | defaults to:
-> `(prevItem, item) => (prevItem !== item)`
-
-Used to determine if the new `selectedItem` has changed compared to the previous
-`selectedItem` and properly update Downshift's internal state.
-
 ### getA11yStatusMessage
 
 > `function({/* see below */})` | default messages provided in English
 
 This function is passed as props to a status updating function nested within
-that allows you to create your own ARIA statuses. It is called when one of the
-following props change: `items`, `highlightedIndex`, `inputValue` or `isOpen`.
+that allows you to create your own ARIA statuses. It is called when the state
+changes: `selectedItem`, `highlightedIndex`, `inputValue` or `isOpen`.
 
-A default `getA11yStatusMessage` function is provided that will check
-`resultCount` and return "No results are available." or if there are results ,
-"`resultCount` results are available, use up and down arrow keys to navigate.
-Press Enter key to select."
+There is no default function provided anymore since v9, so if there's no prop
+passed, no aria live status message is created. An implementation that resembles
+the previous default is written below, should you want to keep pre v9 behaviour.
 
-> Note: `resultCount` is `items.length` in our default version of the function.
+We don't provide this as a default anymore since we consider that screen readers
+have been significantly improved and they can convey information about items
+count, possible actions and highlighted items only from the HTML markup, without
+the need for aria-live regions.
 
-### getA11ySelectionMessage
+```js
+function getA11yStatusMessage(state) {
+  if (!state.isOpen) {
+    return ''
+  }
+  // you need to get resultCount and previousResultCount yourself now, since we don't pass them as arguments anymore
+  const resultCount = items.length
+  const previousResultCount = previousResultCountRef.current
 
-> `function({/* see below */})` | default messages provided in English
+  if (!resultCount) {
+    return 'No results are available.'
+  }
 
-This function is similar to the `getA11yStatusMessage` but it is generating a
-message when an item is selected. It is passed as props to a status updating
-function nested within that allows you to create your own ARIA statuses. It is
-called when `selectedItem` changes.
+  if (resultCount !== previousResultCount) {
+    return `${resultCount} result${
+      resultCount === 1 ? ' is' : 's are'
+    } available, use up and down arrow keys to navigate. Press Enter key to select.`
+  }
 
-A default `getA11ySelectionMessage` function is provided. When an item is
-selected, the message is a selection related one, narrating
-"`itemToString(selectedItem)` has been selected".
-
-The object you are passed to generate your status message, for both
-`getA11yStatusMessage` and `getA11ySelectionMessage`, has the following
-properties:
-
-<!-- This table was generated via http://www.tablesgenerator.com/markdown_tables -->
-
-| property              | type            | description                                                                                  |
-| --------------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `highlightedIndex`    | `number`        | The currently highlighted index                                                              |
-| `highlightedItem`     | `any`           | The value of the highlighted item                                                            |
-| `isOpen`              | `boolean`       | The `isOpen` state                                                                           |
-| `inputValue`          | `string`        | The value in the text input.                                                                 |
-| `itemToString`        | `function(any)` | The `itemToString` function (see props) for getting the string value from one of the options |
-| `previousResultCount` | `number`        | The total items showing in the dropdown the last time the status was updated                 |
-| `resultCount`         | `number`        | The total items showing in the dropdown                                                      |
-| `selectedItem`        | `any`           | The value of the currently selected item                                                     |
+  return ''
+}
+```
 
 ### onHighlightedIndexChange
 
@@ -1168,3 +1153,7 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#usecombobox
+[migration-guide-v8]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
+[migration-guide-v9]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md

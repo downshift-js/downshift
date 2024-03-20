@@ -83,19 +83,6 @@ function isKeyDownOperationPermitted(event) {
 }
 
 /**
- * Returns a message to be added to aria-live region when item is removed.
- *
- * @param {Object} selectionParameters Parameters required to build the message.
- * @returns {string} The a11y message.
- */
-function getA11yRemovalMessage(selectionParameters) {
-  const {removedSelectedItem, itemToString: itemToStringLocal} =
-    selectionParameters
-
-  return `${itemToStringLocal(removedSelectedItem)} has been removed.`
-}
-
-/**
  * Check if a state is equal for taglist, by comparing active index and selected items.
  * Used by useSelect and useCombobox.
  *
@@ -111,11 +98,13 @@ function isStateEqual(prevState, newState) {
 }
 
 const propTypes = {
-  ...commonPropTypes,
+  stateReducer: commonPropTypes.stateReducer,
+  itemToKey: commonPropTypes.itemToKey,
+  environment: commonPropTypes.environment,
   selectedItems: PropTypes.array,
   initialSelectedItems: PropTypes.array,
   defaultSelectedItems: PropTypes.array,
-  getA11yRemovalMessage: PropTypes.func,
+  getA11yStatusMessage: PropTypes.func,
   activeIndex: PropTypes.number,
   initialActiveIndex: PropTypes.number,
   defaultActiveIndex: PropTypes.number,
@@ -126,11 +115,9 @@ const propTypes = {
 }
 
 export const defaultProps = {
-  itemToString: defaultPropsCommon.itemToString,
   itemToKey: defaultPropsCommon.itemToKey,
   stateReducer: defaultPropsCommon.stateReducer,
   environment: defaultPropsCommon.environment,
-  getA11yRemovalMessage,
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft',
 }

@@ -342,8 +342,7 @@ export interface UseSelectProps<Item> {
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11yStatusMessage?: (options: UseSelectState<Item>) => string
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -363,9 +362,11 @@ export interface UseSelectProps<Item> {
     state: UseSelectState<Item>,
     actionAndChanges: UseSelectStateChangeOptions<Item>,
   ) => Partial<UseSelectState<Item>>
-  onSelectedItemChange?: (changes: UseSelectStateChange<Item>) => void
-  onIsOpenChange?: (changes: UseSelectStateChange<Item>) => void
-  onHighlightedIndexChange?: (changes: UseSelectStateChange<Item>) => void
+  onSelectedItemChange?: (changes: UseSelectSelectedItemChange<Item>) => void
+  onIsOpenChange?: (changes: UseSelectIsOpenChange<Item>) => void
+  onHighlightedIndexChange?: (
+    changes: UseSelectHighlightedIndexChange<Item>,
+  ) => void
   onStateChange?: (changes: UseSelectStateChange<Item>) => void
   environment?: Environment
 }
@@ -388,6 +389,21 @@ export interface UseSelectDispatchAction<Item> {
 export interface UseSelectStateChange<Item>
   extends Partial<UseSelectState<Item>> {
   type: UseSelectStateChangeTypes
+}
+
+export interface UseSelectSelectedItemChange<Item>
+  extends UseSelectStateChange<Item> {
+  selectedItem: Item
+}
+
+export interface UseSelectHighlightedIndexChange<Item>
+  extends UseSelectStateChange<Item> {
+  highlightedIndex: index
+}
+
+export interface UseSelectIsOpenChange<Item>
+  extends UseSelectStateChange<Item> {
+  isOpen: boolean
 }
 
 export interface UseSelectGetMenuPropsOptions
@@ -539,9 +555,7 @@ export interface UseComboboxProps<Item> {
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
-  selectedItemChanged?: (prevItem: Item, item: Item) => boolean
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
-  getA11ySelectionMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11yStatusMessage?: (options: UseComboboxState<Item>) => string
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -565,11 +579,13 @@ export interface UseComboboxProps<Item> {
     state: UseComboboxState<Item>,
     actionAndChanges: UseComboboxStateChangeOptions<Item>,
   ) => Partial<UseComboboxState<Item>>
-  onSelectedItemChange?: (changes: UseComboboxStateChange<Item>) => void
-  onIsOpenChange?: (changes: UseComboboxStateChange<Item>) => void
-  onHighlightedIndexChange?: (changes: UseComboboxStateChange<Item>) => void
+  onSelectedItemChange?: (changes: UseComboboxSelectedItemChange<Item>) => void
+  onIsOpenChange?: (changes: UseComboboxIsOpenChange<Item>) => void
+  onHighlightedIndexChange?: (
+    changes: UseComboboxHighlightedIndexChange<Item>,
+  ) => void
   onStateChange?: (changes: UseComboboxStateChange<Item>) => void
-  onInputValueChange?: (changes: UseComboboxStateChange<Item>) => void
+  onInputValueChange?: (changes: UseComboboxInputValueChange<Item>) => void
   environment?: Environment
 }
 
@@ -591,6 +607,25 @@ export interface UseComboboxDispatchAction<Item> {
 export interface UseComboboxStateChange<Item>
   extends Partial<UseComboboxState<Item>> {
   type: UseComboboxStateChangeTypes
+}
+
+export interface UseComboboxSelectedItemChange<Item>
+  extends UseComboboxStateChange<Item> {
+  selectedItem: Item
+}
+export interface UseComboboxHighlightedIndexChange<Item>
+  extends UseComboboxStateChange<Item> {
+  highlightedIndex: index
+}
+
+export interface UseComboboxIsOpenChange<Item>
+  extends UseComboboxStateChange<Item> {
+  isOpen: boolean
+}
+
+export interface UseComboboxInputValueChange<Item>
+  extends UseComboboxStateChange<Item> {
+  inputValue: string
 }
 
 export interface UseComboboxGetMenuPropsOptions
@@ -736,9 +771,8 @@ export interface UseMultipleSelectionProps<Item> {
   selectedItems?: Item[]
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
-  itemToString?: (item: Item) => string
   itemToKey?: (item: Item | null) => any
-  getA11yRemovalMessage?: (options: A11yRemovalMessage<Item>) => string
+  getA11yStatusMessage?: (options: UseMultipleSelectionState<Item>) => string
   stateReducer?: (
     state: UseMultipleSelectionState<Item>,
     actionAndChanges: UseMultipleSelectionStateChangeOptions<Item>,
@@ -746,9 +780,11 @@ export interface UseMultipleSelectionProps<Item> {
   activeIndex?: number
   initialActiveIndex?: number
   defaultActiveIndex?: number
-  onActiveIndexChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
+  onActiveIndexChange?: (
+    changes: UseMultipleSelectionActiveIndexChange<Item>,
+  ) => void
   onSelectedItemsChange?: (
-    changes: UseMultipleSelectionStateChange<Item>,
+    changes: UseMultipleSelectionSelectedItemsChange<Item>,
   ) => void
   onStateChange?: (changes: UseMultipleSelectionStateChange<Item>) => void
   keyNavigationNext?: string
@@ -772,6 +808,16 @@ export interface UseMultipleSelectionDispatchAction<Item> {
 export interface UseMultipleSelectionStateChange<Item>
   extends Partial<UseMultipleSelectionState<Item>> {
   type: UseMultipleSelectionStateChangeTypes
+}
+
+export interface UseMultipleSelectionActiveIndexChange<Item>
+  extends UseMultipleSelectionStateChange<Item> {
+  activeIndex: number
+}
+
+export interface UseMultipleSelectionSelectedItemsChange<Item>
+  extends UseMultipleSelectionStateChange<Item> {
+  selectedItems: Item[]
 }
 
 export interface A11yRemovalMessage<Item> {

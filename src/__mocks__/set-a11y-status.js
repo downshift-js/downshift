@@ -1,1 +1,1 @@
-module.exports = jest.fn()
+module.exports = {setStatus: jest.fn(), cleanupStatusDiv: jest.fn()}
