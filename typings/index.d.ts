@@ -38,7 +38,9 @@ export interface DownshiftProps<Item> {
   defaultIsOpen?: boolean
   itemToString?: (item: Item | null) => string
   selectedItemChanged?: (prevItem: Item, item: Item) => boolean
-  getA11yStatusMessage?: (options: A11yStatusMessageOptions<Item>) => string
+  getA11yStatusMessage?: (
+    options: A11yStatusMessageOptions<Item>,
+  ) => string | undefined
   onChange?: (
     selectedItem: Item | null,
     stateAndHelpers: ControllerStateAndHelpers<Item>,
@@ -342,7 +344,7 @@ export interface UseSelectProps<Item> {
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
-  getA11yStatusMessage?: (options: UseSelectState<Item>) => string
+  getA11yStatusMessage?: (options: UseSelectState<Item>) => string | undefined
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -555,7 +557,7 @@ export interface UseComboboxProps<Item> {
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
-  getA11yStatusMessage?: (options: UseComboboxState<Item>) => string
+  getA11yStatusMessage?: (options: UseComboboxState<Item>) => string | undefined
   highlightedIndex?: number
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
@@ -772,7 +774,9 @@ export interface UseMultipleSelectionProps<Item> {
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
   itemToKey?: (item: Item | null) => any
-  getA11yStatusMessage?: (options: UseMultipleSelectionState<Item>) => string
+  getA11yStatusMessage?: (
+    options: UseMultipleSelectionState<Item>,
+  ) => string | undefined
   stateReducer?: (
     state: UseMultipleSelectionState<Item>,
     actionAndChanges: UseMultipleSelectionStateChangeOptions<Item>,
