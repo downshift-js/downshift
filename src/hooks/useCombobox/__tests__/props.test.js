@@ -285,6 +285,25 @@ describe('props', () => {
         'a11y-status-message',
       )
     })
+
+    test('is not overriden if it is called once with a value and again without', async () => {
+      const a11yStatusMessage = 'bla bla'
+      const getA11yStatusMessage = jest
+        .fn()
+        .mockReturnValueOnce(a11yStatusMessage)
+        .mockReturnValueOnce(undefined)
+      renderCombobox({
+        items,
+        getA11yStatusMessage,
+      })
+
+      await clickOnToggleButton()
+      await keyDownOnInput('{ArrowDown}')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage)
+    })
   })
 
   test('highlightedIndex controls the state property if passed', async () => {
