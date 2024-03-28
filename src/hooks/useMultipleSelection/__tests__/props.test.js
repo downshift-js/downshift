@@ -171,6 +171,28 @@ describe('props', () => {
         'a11y-status-message',
       )
     })
+
+    test('is not overriden if it is called once with a value and again without', async () => {
+      const a11yStatusMessage = 'bla bla'
+      const getA11yStatusMessage = jest
+        .fn()
+        .mockReturnValueOnce(a11yStatusMessage)
+        .mockReturnValueOnce(undefined)
+      renderMultipleCombobox({
+        multipleSelectionProps: {
+          selectedItems: [items[0], items[1]],
+          initialActiveIndex: 0,
+          getA11yStatusMessage,
+        },
+      })
+
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowRight}')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(2)
+      expect(getA11yStatusContainer()).toHaveTextContent(a11yStatusMessage)
+    })
   })
 
   describe('activeIndex', () => {

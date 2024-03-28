@@ -411,7 +411,7 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
   }, [environment, handleBlur])
 
   return mouseAndTouchTrackersRef.current
@@ -502,7 +502,7 @@ function useA11yMessageStatus(
 
     const status = getA11yStatusMessage(options)
 
-    updateA11yStatus(status, document)
+    if (status) updateA11yStatus(status, document)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dependencyArray])
