@@ -483,7 +483,7 @@ function getA11yStatusMessage(state) {
   const {selectedItems} = state
 
   if (selectedItems.length === previousSelectedItemsRef.current.length) {
-    return
+    return ''
   }
 
   const removedSelectedItem = previousSelectedItemsRef.current.find(

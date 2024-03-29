@@ -411,7 +411,7 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
   }, [environment, handleBlur])
 
   return mouseAndTouchTrackersRef.current
@@ -505,7 +505,7 @@ function useA11yMessageStatus(
     updateA11yStatus(status, document)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dependencyArray])
+  }, dependencyArray)
 
   // Cleanup the status message container.
   useEffect(() => {

@@ -70,6 +70,33 @@ describe('props', () => {
       expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
+    test('calls the function only on state changes', async () => {
+      const getA11yStatusMessage = jest.fn()
+      const selectedItems = [items[0], items[1]]
+      const multipleSelectionProps = {
+        selectedItems,
+        initialActiveIndex: 1,
+        getA11yStatusMessage,
+      }
+      const {rerender} = renderMultipleCombobox({
+        multipleSelectionProps,
+      })
+
+      await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        activeIndex: 0,
+        selectedItems,
+      })
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+
+      getA11yStatusMessage.mockClear()
+      rerender({multipleSelectionProps: {...multipleSelectionProps, activeIndex: 0}})
+
+      expect(getA11yStatusMessage).not.toHaveBeenCalled()
+    })
+
     test('adds a status message element with the text returned', async () => {
       const a11yStatusMessage1 = 'to the left to the left'
       const a11yStatusMessage2 = 'to the right?'
@@ -81,7 +108,7 @@ describe('props', () => {
       renderMultipleCombobox({
         multipleSelectionProps: {
           selectedItems,
-          initialActiveIndex: 0,
+          initialActiveIndex: 1,
           getA11yStatusMessage,
         },
       })
@@ -114,7 +141,7 @@ describe('props', () => {
       renderMultipleCombobox({
         multipleSelectionProps: {
           selectedItems: [items[0], items[1]],
-          initialActiveIndex: 0,
+          initialActiveIndex: 1,
           getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
         },
       })
@@ -157,7 +184,7 @@ describe('props', () => {
       renderMultipleCombobox({
         multipleSelectionProps: {
           selectedItems: [items[0], items[1]],
-          initialActiveIndex: 0,
+          initialActiveIndex: 1,
           getA11yStatusMessage: jest.fn().mockReturnValue('bla bla'),
           environment,
         },
