@@ -86,6 +86,29 @@ describe('props', () => {
       expect(getA11yStatusContainer()).not.toBeInTheDocument()
     })
 
+    test('calls the function only on state changes', async () => {
+      const getA11yStatusMessage = jest.fn()
+      const {rerender} = renderSelect({
+        getA11yStatusMessage,
+      })
+
+      await keyDownOnToggleButton('h')
+      waitForDebouncedA11yStatusUpdate()
+
+      expect(getA11yStatusMessage).toHaveBeenCalledWith({
+        inputValue: 'h',
+        highlightedIndex: 15,
+        isOpen: true,
+        selectedItem: null
+      })
+      expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
+
+      getA11yStatusMessage.mockClear()
+      rerender({getA11yStatusMessage})
+
+      expect(getA11yStatusMessage).not.toHaveBeenCalled()
+    })
+
     test('adds a status message element with the text returned', async () => {
       const a11yStatusMessage1 = 'Dropdown is open'
       const a11yStatusMessage2 = 'Dropdown is still open'
