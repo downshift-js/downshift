@@ -99,7 +99,7 @@ describe('props', () => {
         inputValue: 'h',
         highlightedIndex: 15,
         isOpen: true,
-        selectedItem: null
+        selectedItem: null,
       })
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
@@ -234,7 +234,72 @@ describe('props', () => {
     }
   })
 
-  test('controls the state property if passed', async () => {
+  test('initialHighlightedIndex is ignored if item is disabled', async () => {
+    const initialHighlightedIndex = 2
+    renderSelect({
+      initialHighlightedIndex,
+      isItemDisabled(item) {
+        return items.indexOf(item) === initialHighlightedIndex
+      },
+    })
+
+    await clickOnToggleButton()
+
+    expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+  })
+
+  test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+    const initialHighlightedIndex = 0
+    const defaultHighlightedIndex = 2
+    renderSelect({
+      initialHighlightedIndex,
+      defaultHighlightedIndex,
+      isItemDisabled(item) {
+        return items.indexOf(item) === initialHighlightedIndex
+      },
+    })
+
+    await clickOnToggleButton()
+
+    expect(getToggleButton()).toHaveAttribute(
+      'aria-activedescendant',
+      defaultIds.getItemId(defaultHighlightedIndex),
+    )
+  })
+
+  test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+    const defaultHighlightedIndex = 2
+    renderSelect({
+      defaultHighlightedIndex,
+      isItemDisabled(item) {
+        return items.indexOf(item) === defaultHighlightedIndex
+      },
+    })
+
+    await clickOnToggleButton()
+
+    expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+  })
+
+  test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+    const initialHighlightedIndex = 0
+    const defaultHighlightedIndex = 2
+    renderSelect({
+      initialHighlightedIndex,
+      defaultHighlightedIndex,
+      isItemDisabled(item) {
+        return [initialHighlightedIndex, defaultHighlightedIndex].includes(
+          items.indexOf(item),
+        )
+      },
+    })
+
+    await clickOnToggleButton()
+
+    expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+  })
+
+  test('isOpen controls the state property if passed', async () => {
     renderSelect({isOpen: true})
     expect(getItems()).toHaveLength(items.length)
     await tab() // focus toggle button
