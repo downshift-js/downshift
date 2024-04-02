@@ -310,8 +310,13 @@ function getInitialState(props) {
 }
 
 function getHighlightedIndexOnOpen(props, state, offset) {
-  const {items, initialHighlightedIndex, defaultHighlightedIndex, itemToKey} =
-    props
+  const {
+    items,
+    initialHighlightedIndex,
+    defaultHighlightedIndex,
+    isItemDisabled,
+    itemToKey,
+  } = props
   const {selectedItem, highlightedIndex} = state
 
   if (items.length === 0) {
@@ -321,11 +326,15 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
   if (
     initialHighlightedIndex !== undefined &&
-    highlightedIndex === initialHighlightedIndex
+    highlightedIndex === initialHighlightedIndex &&
+    !isItemDisabled(items[initialHighlightedIndex])
   ) {
     return initialHighlightedIndex
   }
-  if (defaultHighlightedIndex !== undefined) {
+  if (
+    defaultHighlightedIndex !== undefined &&
+    !isItemDisabled(items[defaultHighlightedIndex])
+  ) {
     return defaultHighlightedIndex
   }
   if (selectedItem) {
