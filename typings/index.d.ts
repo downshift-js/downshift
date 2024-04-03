@@ -398,7 +398,7 @@ export interface UseSelectSelectedItemChange<Item>
 
 export interface UseSelectHighlightedIndexChange<Item>
   extends UseSelectStateChange<Item> {
-  highlightedIndex: index
+  highlightedIndex: number
 }
 
 export interface UseSelectIsOpenChange<Item>
@@ -615,7 +615,7 @@ export interface UseComboboxSelectedItemChange<Item>
 }
 export interface UseComboboxHighlightedIndexChange<Item>
   extends UseComboboxStateChange<Item> {
-  highlightedIndex: index
+  highlightedIndex: number
 }
 
 export interface UseComboboxIsOpenChange<Item>
