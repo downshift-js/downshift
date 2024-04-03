@@ -577,6 +577,81 @@ describe('getInputProps', () => {
           )
         })
 
+        test('initialHighlightedIndex is ignored if item is disabled', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
+        test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+          const initialHighlightedIndex = 0
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === defaultHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
+        test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+          const initialHighlightedIndex = 1
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return [
+                initialHighlightedIndex,
+                defaultHighlightedIndex,
+              ].includes(items.indexOf(item))
+            },
+          })
+
+          await keyDownOnInput('{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
         test('it opens the closed menu and keeps focus on the combobox', async () => {
           renderCombobox()
 
@@ -822,6 +897,81 @@ describe('getInputProps', () => {
             defaultIds.getItemId(defaultHighlightedIndex),
           )
           expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('initialHighlightedIndex is ignored if item is disabled', async () => {
+          const initialHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+          const initialHighlightedIndex = 0
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === defaultHighlightedIndex
+            },
+          })
+
+          await keyDownOnInput('{ArrowDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+          const initialHighlightedIndex = 1
+          const defaultHighlightedIndex = 2
+          renderCombobox({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return [
+                initialHighlightedIndex,
+                defaultHighlightedIndex,
+              ].includes(items.indexOf(item))
+            },
+          })
+
+          await keyDownOnInput('{ArrowDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
         })
 
         test('opens the closed menu and keeps focus on the button', async () => {
@@ -1816,6 +1966,73 @@ describe('getInputProps', () => {
           defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
+
+
+      test('initialHighlightedIndex is ignored if item is disabled', async () => {
+        const initialHighlightedIndex = 2
+        renderCombobox({
+          initialHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === initialHighlightedIndex
+          },
+        })
+
+        await clickOnInput()
+
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+        const initialHighlightedIndex = 0
+        const defaultHighlightedIndex = 2
+        renderCombobox({
+          initialHighlightedIndex,
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === initialHighlightedIndex
+          },
+        })
+
+        await clickOnInput()
+
+        expect(getInput()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+      })
+
+      test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+        const defaultHighlightedIndex = 2
+        renderCombobox({
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === defaultHighlightedIndex
+          },
+        })
+
+        await clickOnInput()
+
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+        const initialHighlightedIndex = 0
+        const defaultHighlightedIndex = 2
+        renderCombobox({
+          initialHighlightedIndex,
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return [initialHighlightedIndex, defaultHighlightedIndex].includes(
+              items.indexOf(item),
+            )
+          },
+        })
+
+        await clickOnInput()
+
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
+
     })
   })
 

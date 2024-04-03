@@ -386,6 +386,71 @@ describe('getToggleButtonProps', () => {
         )
       })
 
+      test('initialHighlightedIndex is ignored if item is disabled', async () => {
+        const initialHighlightedIndex = 2
+        renderSelect({
+          initialHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === initialHighlightedIndex
+          },
+        })
+
+        await clickOnToggleButton()
+
+        expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+        const initialHighlightedIndex = 0
+        const defaultHighlightedIndex = 2
+        renderSelect({
+          initialHighlightedIndex,
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === initialHighlightedIndex
+          },
+        })
+
+        await clickOnToggleButton()
+
+        expect(getToggleButton()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+      })
+
+      test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+        const defaultHighlightedIndex = 2
+        renderSelect({
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return items.indexOf(item) === defaultHighlightedIndex
+          },
+        })
+
+        await clickOnToggleButton()
+
+        expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+      })
+
+      test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+        const initialHighlightedIndex = 0
+        const defaultHighlightedIndex = 2
+        renderSelect({
+          initialHighlightedIndex,
+          defaultHighlightedIndex,
+          isItemDisabled(item) {
+            return [initialHighlightedIndex, defaultHighlightedIndex].includes(
+              items.indexOf(item),
+            )
+          },
+        })
+
+        await clickOnToggleButton()
+
+        expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+      })
+
       test('opens the closed menu at highlightedIndex from props, on every click', async () => {
         const highlightedIndex = 3
         renderSelect({
@@ -781,6 +846,81 @@ describe('getToggleButtonProps', () => {
           )
         })
 
+        test('initialHighlightedIndex is ignored if item is disabled', async () => {
+          const initialHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
+        test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+          const initialHighlightedIndex = 0
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === defaultHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
+        test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+          const initialHighlightedIndex = 0
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return [
+                initialHighlightedIndex,
+                defaultHighlightedIndex,
+              ].includes(items.indexOf(item))
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 1),
+          )
+        })
+
         test('it opens the closed menu and keeps focus on the combobox', async () => {
           renderSelect()
 
@@ -1035,6 +1175,81 @@ describe('getToggleButtonProps', () => {
           expect(toggleButton).toHaveAttribute(
             'aria-activedescendant',
             defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('initialHighlightedIndex is ignored if item is disabled', async () => {
+          const initialHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
+          const initialHighlightedIndex = 0
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === initialHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(defaultHighlightedIndex),
+          )
+        })
+
+        test('defaultHighlightedIndex is ignored if item is disabled', async () => {
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return items.indexOf(item) === defaultHighlightedIndex
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
+          )
+        })
+
+        test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
+          const initialHighlightedIndex = 1
+          const defaultHighlightedIndex = 2
+          renderSelect({
+            initialHighlightedIndex,
+            defaultHighlightedIndex,
+            isItemDisabled(item) {
+              return [
+                initialHighlightedIndex,
+                defaultHighlightedIndex,
+              ].includes(items.indexOf(item))
+            },
+          })
+
+          await keyDownOnToggleButton('{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(0),
           )
         })
 
