@@ -331,19 +331,27 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   ) {
     return initialHighlightedIndex
   }
+
   if (
     defaultHighlightedIndex !== undefined &&
     !isItemDisabled(items[defaultHighlightedIndex])
   ) {
     return defaultHighlightedIndex
   }
+
   if (selectedItem) {
     return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
   }
-  if (offset === 0) {
-    return -1
+
+  if (offset < 0 && !isItemDisabled(items[items.length - 1])) {
+    return items.length - 1
   }
-  return offset < 0 ? items.length - 1 : 0
+
+  if (offset > 0 && !isItemDisabled(items[0])) {
+    return 0
+  }
+  
+  return -1
 }
 /**
  * Tracks mouse and touch events, such as mouseDown, touchMove and touchEnd.
