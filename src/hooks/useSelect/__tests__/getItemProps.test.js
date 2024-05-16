@@ -374,6 +374,25 @@ describe('getItemProps', () => {
           defaultIds.getItemId(2),
         )
       })
+
+      test('it selects the item and resets to user defined defaults, but considers disabled status for an item', async () => {
+        const index = 1
+        const defaultHighlightedIndex = 2
+        renderSelect({
+          defaultIsOpen: true,
+          defaultHighlightedIndex,
+          isItemDisabled(_item, idx) {
+            return idx === defaultHighlightedIndex
+          },
+        })
+        const toggleButton = getToggleButton()
+
+        await clickOnItemAtIndex(index)
+
+        expect(toggleButton).toHaveTextContent(items[index])
+        expect(getItems()).toHaveLength(items.length)
+        expect(toggleButton).toHaveAttribute('aria-activedescendant', '')
+      })
     })
   })
 

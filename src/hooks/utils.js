@@ -293,7 +293,7 @@ function getInitialValue(
 function getInitialState(props) {
   const selectedItem = getInitialValue(props, 'selectedItem')
   const isOpen = getInitialValue(props, 'isOpen')
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const highlightedIndex = getInitialHighlightedIndex(props)
   const inputValue = getInitialValue(props, 'inputValue')
 
   return {
@@ -327,14 +327,14 @@ function getHighlightedIndexOnOpen(props, state, offset) {
   if (
     initialHighlightedIndex !== undefined &&
     highlightedIndex === initialHighlightedIndex &&
-    !isItemDisabled(items[initialHighlightedIndex])
+    !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex)
   ) {
     return initialHighlightedIndex
   }
 
   if (
     defaultHighlightedIndex !== undefined &&
-    !isItemDisabled(items[defaultHighlightedIndex])
+    !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex)
   ) {
     return defaultHighlightedIndex
   }
@@ -343,14 +343,17 @@ function getHighlightedIndexOnOpen(props, state, offset) {
     return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
   }
 
-  if (offset < 0 && !isItemDisabled(items[items.length - 1])) {
+  if (
+    offset < 0 &&
+    !isItemDisabled(items[items.length - 1], items.length - 1)
+  ) {
     return items.length - 1
   }
 
-  if (offset > 0 && !isItemDisabled(items[0])) {
+  if (offset > 0 && !isItemDisabled(items[0], 0)) {
     return 0
   }
-  
+
   return -1
 }
 /**
@@ -643,6 +646,43 @@ function useIsInitialMount() {
   return isInitialMountRef.current
 }
 
+/**
+ * Returns the new highlightedIndex based on the defaultHighlightedIndex prop, if it's not disabled.
+ *
+ * @param {Object} props Props from useCombobox or useSelect.
+ * @returns {number} The highlighted index.
+ */
+function getDefaultHighlightedIndex(props) {
+  const highlightedIndex = getDefaultValue(props, 'highlightedIndex')
+  if (
+    highlightedIndex > -1 &&
+    props.isItemDisabled(props.items[highlightedIndex], highlightedIndex)
+  ) {
+    return -1
+  }
+
+  return highlightedIndex
+}
+
+/**
+ * Returns the new highlightedIndex based on the initialHighlightedIndex prop, if not disabled.
+ *
+ * @param {Object} props Props from useCombobox or useSelect.
+ * @returns {number} The highlighted index.
+ */
+function getInitialHighlightedIndex(props) {
+  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+
+  if (
+    highlightedIndex > -1 &&
+    props.isItemDisabled(props.items[highlightedIndex], highlightedIndex)
+  ) {
+    return -1
+  }
+
+  return highlightedIndex
+}
+
 // Shared between all exports.
 const commonPropTypes = {
   environment: PropTypes.shape({
@@ -710,4 +750,5 @@ export {
   commonPropTypes,
   useIsInitialMount,
   useA11yMessageStatus,
+  getDefaultHighlightedIndex,
 }

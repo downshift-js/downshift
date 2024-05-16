@@ -1447,4 +1447,46 @@ describe('props', () => {
       `downshift: A component has changed the controlled prop "inputValue" to be uncontrolled. This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`,
     )
   })
+
+  test('initialHighlightedIndex is ignored if item is disabled and menu is intially open', () => {
+    const initialHighlightedIndex = 2
+    const isItemDisabled = jest
+      .fn()
+      .mockImplementation(
+        item => items.indexOf(item) === initialHighlightedIndex,
+      )
+    renderCombobox({
+      initialHighlightedIndex,
+      isItemDisabled,
+      initialIsOpen: true,
+    })
+
+    expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+    expect(isItemDisabled).toHaveBeenNthCalledWith(
+      1,
+      items[initialHighlightedIndex],
+      initialHighlightedIndex,
+    )
+  })
+
+  test('defaultHighlightedIndex is ignored if item is disabled and menu is intially open', () => {
+    const defaultHighlightedIndex = 2
+    const isItemDisabled = jest
+      .fn()
+      .mockImplementation(
+        item => items.indexOf(item) === defaultHighlightedIndex,
+      )
+    renderCombobox({
+      defaultHighlightedIndex,
+      isItemDisabled,
+      initialIsOpen: true,
+    })
+
+    expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+    expect(isItemDisabled).toHaveBeenNthCalledWith(
+      1,
+      items[defaultHighlightedIndex],
+      defaultHighlightedIndex,
+    )
+  })
 })

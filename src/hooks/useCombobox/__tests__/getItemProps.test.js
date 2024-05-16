@@ -346,6 +346,25 @@ describe('getItemProps', () => {
           defaultIds.getItemId(defaultHighlightedIndex),
         )
       })
+
+      test('it selects the item and resets to user defined defaults, but considers disabled status for an item', async () => {
+        const index = 1
+        const defaultHighlightedIndex = 2
+        renderCombobox({
+          defaultIsOpen: true,
+          defaultHighlightedIndex,
+          isItemDisabled(_item, idx) {
+            return idx === defaultHighlightedIndex
+          },
+        })
+        const input = getInput()
+
+        await clickOnItemAtIndex(index)
+
+        expect(input).toHaveValue(items[index])
+        expect(getItems()).toHaveLength(items.length)
+        expect(input).toHaveAttribute('aria-activedescendant', '')
+      })
     })
   })
 

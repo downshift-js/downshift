@@ -90,6 +90,22 @@ describe('returnProps', () => {
       expect(result.current.highlightedIndex).toBe(2)
     })
 
+    test('setHighlightedIndex does not set highlightedIndex if item is disabled', () => {
+      const highlightedIndex = 2
+      const {result} = renderUseCombobox({
+        initialIsOpen: true,
+        isItemDisabled(_item, index) {
+          return index === highlightedIndex
+        },
+      })
+
+      act(() => {
+        result.current.setHighlightedIndex(highlightedIndex)
+      })
+
+      expect(result.current.highlightedIndex).toBe(-1)
+    })
+
     test('setInputValue sets inputValue', () => {
       const {result} = renderUseCombobox({})
 
@@ -162,6 +178,29 @@ describe('returnProps', () => {
       )
       expect(result.current.isOpen).toBe(props.defaultIsOpen)
       expect(result.current.inputValue).toBe(props.defaultInputValue)
+    })
+
+    test('reset does not set the defaultHighlightedIndex if item is disabled', () => {
+      const props = {
+        defaultIsOpen: false,
+        defaultHighlightedIndex: 3,
+        defaultSelectedItem: items[2],
+        isItemDisabled(_item, index) {
+          return index === 3
+        },
+      }
+      const {result} = renderUseCombobox(props)
+
+      act(() => {
+        result.current.openMenu()
+        result.current.selectItem(items[4])
+        result.current.setHighlightedIndex(1)
+        result.current.reset()
+      })
+
+      expect(result.current.selectedItem).toBe(props.defaultSelectedItem)
+      expect(result.current.highlightedIndex).toBe(-1)
+      expect(result.current.isOpen).toBe(props.defaultIsOpen)
     })
   })
 
