@@ -388,16 +388,24 @@ describe('getToggleButtonProps', () => {
 
       test('initialHighlightedIndex is ignored if item is disabled', async () => {
         const initialHighlightedIndex = 2
+        const isItemDisabled = jest
+          .fn()
+          .mockImplementation(
+            item => items.indexOf(item) === initialHighlightedIndex,
+          )
         renderSelect({
           initialHighlightedIndex,
-          isItemDisabled(item) {
-            return items.indexOf(item) === initialHighlightedIndex
-          },
+          isItemDisabled,
         })
 
         await clickOnToggleButton()
 
         expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+        expect(isItemDisabled).toHaveBeenNthCalledWith(
+          1,
+          items[initialHighlightedIndex],
+          initialHighlightedIndex,
+        )
       })
 
       test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -421,16 +429,24 @@ describe('getToggleButtonProps', () => {
 
       test('defaultHighlightedIndex is ignored if item is disabled', async () => {
         const defaultHighlightedIndex = 2
+        const isItemDisabled = jest
+          .fn()
+          .mockImplementation(
+            item => items.indexOf(item) === defaultHighlightedIndex,
+          )
         renderSelect({
           defaultHighlightedIndex,
-          isItemDisabled(item) {
-            return items.indexOf(item) === defaultHighlightedIndex
-          },
+          isItemDisabled,
         })
 
         await clickOnToggleButton()
 
         expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
+        expect(isItemDisabled).toHaveBeenNthCalledWith(
+          1,
+          items[defaultHighlightedIndex],
+          defaultHighlightedIndex,
+        )
       })
 
       test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
@@ -848,11 +864,14 @@ describe('getToggleButtonProps', () => {
 
         test('initialHighlightedIndex is ignored if item is disabled', async () => {
           const initialHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === initialHighlightedIndex,
+            )
           renderSelect({
             initialHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === initialHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnToggleButton('{ArrowUp}')
@@ -861,6 +880,7 @@ describe('getToggleButtonProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 2)).toMatchSnapshot()
         })
 
         test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -884,11 +904,14 @@ describe('getToggleButtonProps', () => {
 
         test('defaultHighlightedIndex is ignored if item is disabled', async () => {
           const defaultHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === defaultHighlightedIndex,
+            )
           renderSelect({
             defaultHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === defaultHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnToggleButton('{ArrowUp}')
@@ -897,6 +920,7 @@ describe('getToggleButtonProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 3)).toMatchSnapshot()
         })
 
         test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
@@ -1180,11 +1204,14 @@ describe('getToggleButtonProps', () => {
 
         test('initialHighlightedIndex is ignored if item is disabled', async () => {
           const initialHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === initialHighlightedIndex,
+            )
           renderSelect({
             initialHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === initialHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnToggleButton('{ArrowDown}')
@@ -1193,6 +1220,7 @@ describe('getToggleButtonProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 2)).toMatchSnapshot()
         })
 
         test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -1216,11 +1244,14 @@ describe('getToggleButtonProps', () => {
 
         test('defaultHighlightedIndex is ignored if item is disabled', async () => {
           const defaultHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === defaultHighlightedIndex,
+            )
           renderSelect({
             defaultHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === defaultHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnToggleButton('{ArrowDown}')
@@ -1229,6 +1260,7 @@ describe('getToggleButtonProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 3)).toMatchSnapshot()
         })
 
         test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {

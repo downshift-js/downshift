@@ -3,6 +3,7 @@ import {
   getHighlightedIndexOnOpen,
   getDefaultValue,
   getChangesOnSelection,
+  getDefaultHighlightedIndex,
 } from '../utils'
 import commonReducer from '../reducer'
 import {getItemIndexByCharacterKey} from './utils'
@@ -17,7 +18,7 @@ export default function downshiftSelectReducer(state, action) {
     case stateChangeTypes.ItemClick:
       changes = {
         isOpen: getDefaultValue(props, 'isOpen'),
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        highlightedIndex: getDefaultHighlightedIndex(props),
         selectedItem: props.items[action.index],
       }
 

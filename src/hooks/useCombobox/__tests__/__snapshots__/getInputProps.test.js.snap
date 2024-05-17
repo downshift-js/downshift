@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getInputProps event handlers on key down arrow down defaultHighlightedIndex is ignored if item is disabled 1`] = `
+[
+  [
+    Americium,
+    2,
+  ],
+  [
+    Americium,
+    2,
+  ],
+  [
+    Neptunium,
+    0,
+  ],
+]
+`;
+
+exports[`getInputProps event handlers on key down arrow down initialHighlightedIndex is ignored if item is disabled 1`] = `
+[
+  [
+    Americium,
+    2,
+  ],
+  [
+    Neptunium,
+    0,
+  ],
+]
+`;
+
+exports[`getInputProps event handlers on key down arrow up defaultHighlightedIndex is ignored if item is disabled 1`] = `
+[
+  [
+    Americium,
+    2,
+  ],
+  [
+    Americium,
+    2,
+  ],
+  [
+    Oganesson,
+    25,
+  ],
+]
+`;
+
+exports[`getInputProps event handlers on key down arrow up initialHighlightedIndex is ignored if item is disabled 1`] = `
+[
+  [
+    Americium,
+    2,
+  ],
+  [
+    Oganesson,
+    25,
+  ],
+]
+`;

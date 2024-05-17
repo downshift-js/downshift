@@ -436,47 +436,64 @@ describe('getInputProps', () => {
   })
 
   describe('event handlers', () => {
-    test('on change should open the menu and keep the input value', async () => {
-      renderCombobox()
+    describe('on change', () => {
+      test('should open the menu and keep the input value', async () => {
+        renderCombobox()
 
-      await changeInputValue('california')
+        await changeInputValue('california')
 
-      expect(getItems()).toHaveLength(items.length)
-      expect(getInput()).toHaveValue('california')
-    })
+        expect(getItems()).toHaveLength(items.length)
+        expect(getInput()).toHaveValue('california')
+      })
 
-    test('on change should remove the highlightedIndex', async () => {
-      renderCombobox({initialHighlightedIndex: 2})
+      test('should remove the highlightedIndex', async () => {
+        renderCombobox({initialHighlightedIndex: 2})
 
-      await changeInputValue('california')
+        await changeInputValue('california')
 
-      expect(getInput()).toHaveAttribute('aria-activedescendant', '')
-    })
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
 
-    test('on change should reset to defaultHighlightedIndex', async () => {
-      const defaultHighlightedIndex = 2
-      renderCombobox({defaultHighlightedIndex})
+      test('should reset to defaultHighlightedIndex', async () => {
+        const defaultHighlightedIndex = 2
+        renderCombobox({defaultHighlightedIndex})
 
-      await changeInputValue('a')
+        await changeInputValue('a')
 
-      expect(getInput()).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(defaultHighlightedIndex),
-      )
+        expect(getInput()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
 
-      await keyDownOnInput('{ArrowDown}')
+        await keyDownOnInput('{ArrowDown}')
 
-      expect(getInput()).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(defaultHighlightedIndex + 1),
-      )
+        expect(getInput()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex + 1),
+        )
 
-      await changeInputValue('a')
+        await changeInputValue('a')
 
-      expect(getInput()).toHaveAttribute(
-        'aria-activedescendant',
-        defaultIds.getItemId(defaultHighlightedIndex),
-      )
+        expect(getInput()).toHaveAttribute(
+          'aria-activedescendant',
+          defaultIds.getItemId(defaultHighlightedIndex),
+        )
+      })
+
+      test('should not reset to defaultHighlightedIndex if disabled', async () => {
+        const defaultHighlightedIndex = 2
+        renderCombobox({
+          defaultHighlightedIndex,
+          isItemDisabled(_item, index) {
+            return index === defaultHighlightedIndex
+          },
+        })
+
+        await keyDownOnInput('{ArrowDown}')
+        await changeInputValue('a')
+
+        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+      })
     })
 
     describe('on key down', () => {
@@ -579,11 +596,14 @@ describe('getInputProps', () => {
 
         test('initialHighlightedIndex is ignored if item is disabled', async () => {
           const initialHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === initialHighlightedIndex,
+            )
           renderCombobox({
             initialHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === initialHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnInput('{ArrowUp}')
@@ -592,6 +612,7 @@ describe('getInputProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 2)).toMatchSnapshot()
         })
 
         test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -615,11 +636,14 @@ describe('getInputProps', () => {
 
         test('defaultHighlightedIndex is ignored if item is disabled', async () => {
           const defaultHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === defaultHighlightedIndex,
+            )
           renderCombobox({
             defaultHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === defaultHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnInput('{ArrowUp}')
@@ -628,6 +652,7 @@ describe('getInputProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(items.length - 1),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 3)).toMatchSnapshot()
         })
 
         test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
@@ -901,11 +926,14 @@ describe('getInputProps', () => {
 
         test('initialHighlightedIndex is ignored if item is disabled', async () => {
           const initialHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === initialHighlightedIndex,
+            )
           renderCombobox({
             initialHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === initialHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnInput('{ArrowDown}')
@@ -914,6 +942,7 @@ describe('getInputProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 2)).toMatchSnapshot()
         })
 
         test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -937,11 +966,14 @@ describe('getInputProps', () => {
 
         test('defaultHighlightedIndex is ignored if item is disabled', async () => {
           const defaultHighlightedIndex = 2
+          const isItemDisabled = jest
+            .fn()
+            .mockImplementation(
+              item => items.indexOf(item) === defaultHighlightedIndex,
+            )
           renderCombobox({
             defaultHighlightedIndex,
-            isItemDisabled(item) {
-              return items.indexOf(item) === defaultHighlightedIndex
-            },
+            isItemDisabled,
           })
 
           await keyDownOnInput('{ArrowDown}')
@@ -950,6 +982,7 @@ describe('getInputProps', () => {
             'aria-activedescendant',
             defaultIds.getItemId(0),
           )
+          expect(isItemDisabled.mock.calls.slice(0, 3)).toMatchSnapshot()
         })
 
         test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
@@ -1859,7 +1892,7 @@ describe('getInputProps', () => {
         renderCombobox({
           initialIsOpen: true,
           initialHighlightedIndex,
-          environment: undefined
+          environment: undefined,
         })
 
         await tab()
@@ -1967,19 +2000,26 @@ describe('getInputProps', () => {
         )
       })
 
-
       test('initialHighlightedIndex is ignored if item is disabled', async () => {
         const initialHighlightedIndex = 2
+        const isItemDisabled = jest
+          .fn()
+          .mockImplementation(
+            item => items.indexOf(item) === initialHighlightedIndex,
+          )
         renderCombobox({
           initialHighlightedIndex,
-          isItemDisabled(item) {
-            return items.indexOf(item) === initialHighlightedIndex
-          },
+          isItemDisabled,
         })
 
         await clickOnInput()
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(isItemDisabled).toHaveBeenNthCalledWith(
+          1,
+          items[initialHighlightedIndex],
+          initialHighlightedIndex,
+        )
       })
 
       test('initialHighlightedIndex is ignored and defaultHighlightedIndex is chosen if enabled', async () => {
@@ -2003,16 +2043,24 @@ describe('getInputProps', () => {
 
       test('defaultHighlightedIndex is ignored if item is disabled', async () => {
         const defaultHighlightedIndex = 2
+        const isItemDisabled = jest
+          .fn()
+          .mockImplementation(
+            item => items.indexOf(item) === defaultHighlightedIndex,
+          )
         renderCombobox({
           defaultHighlightedIndex,
-          isItemDisabled(item) {
-            return items.indexOf(item) === defaultHighlightedIndex
-          },
+          isItemDisabled,
         })
 
         await clickOnInput()
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(isItemDisabled).toHaveBeenNthCalledWith(
+          1,
+          items[defaultHighlightedIndex],
+          defaultHighlightedIndex,
+        )
       })
 
       test('both defaultHighlightedIndex and initialHighlightedIndex are ignored if items are disabled', async () => {
@@ -2032,7 +2080,6 @@ describe('getInputProps', () => {
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
-
     })
   })
 

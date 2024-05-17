@@ -2,6 +2,7 @@ import {
   getHighlightedIndexOnOpen,
   getDefaultValue,
   getChangesOnSelection,
+  getDefaultHighlightedIndex,
 } from '../utils'
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
 import commonReducer from '../reducer'
@@ -16,10 +17,11 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.ItemClick:
       changes = {
         isOpen: getDefaultValue(props, 'isOpen'),
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        highlightedIndex: getDefaultHighlightedIndex(props),
         selectedItem: props.items[action.index],
         inputValue: props.itemToString(props.items[action.index]),
       }
+
       break
     case stateChangeTypes.InputKeyDownArrowDown:
       if (state.isOpen) {
@@ -135,7 +137,7 @@ export default function downshiftUseComboboxReducer(state, action) {
     case stateChangeTypes.InputChange:
       changes = {
         isOpen: true,
-        highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+        highlightedIndex: getDefaultHighlightedIndex(props),
         inputValue: action.inputValue,
       }
       break
