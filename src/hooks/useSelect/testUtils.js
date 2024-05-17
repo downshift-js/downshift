@@ -88,7 +88,7 @@ export function DropdownSelect({renderSpy, renderItem, ...props}) {
                 <li
                   data-testid={dataTestIds.item(index)}
                   key={`${stringItem}${index}`}
-                  {...getItemProps({item, index, disabled: item.disabled})}
+                  {...getItemProps({item, index})}
                 >
                   {stringItem}
                 </li>

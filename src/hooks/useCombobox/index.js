@@ -321,7 +321,7 @@ function useCombobox(userProps = {}) {
           }
         }),
         'aria-disabled': disabled,
-        'aria-selected': `${index === latestState.highlightedIndex}`,
+        'aria-selected': index === latestState.highlightedIndex,
         id: elementIds.getItemId(index),
         role: 'option',
         ...(!disabled && {
