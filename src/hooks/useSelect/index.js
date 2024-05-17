@@ -467,7 +467,7 @@ function useSelect(userProps = {}) {
           }
         }),
         'aria-disabled': disabled,
-        'aria-selected': `${item === latestState.selectedItem}`,
+        'aria-selected': item === latestState.selectedItem,
         id: elementIds.getItemId(index),
         role: 'option',
         ...rest,

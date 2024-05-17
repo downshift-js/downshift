@@ -53,15 +53,15 @@ describe('getItemProps', () => {
       const item2Props = result.current.getItemProps({index: 2})
       const item3Props = result.current.getItemProps({index: 3})
 
-      expect(item2Props['aria-selected']).toEqual('false')
-      expect(item3Props['aria-selected']).toEqual('true')
+      expect(item2Props['aria-selected']).toEqual(false)
+      expect(item3Props['aria-selected']).toEqual(true)
     })
 
     test("assign 'false' to aria-selected if item is not highlighted", () => {
       const {result} = renderUseSelect({highlightedIndex: 1})
       const itemProps = result.current.getItemProps({index: 2})
 
-      expect(itemProps['aria-selected']).toEqual('false')
+      expect(itemProps['aria-selected']).toEqual(false)
     })
 
     test('omit click handler when disabled', () => {

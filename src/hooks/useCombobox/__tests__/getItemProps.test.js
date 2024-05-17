@@ -49,14 +49,14 @@ describe('getItemProps', () => {
       const {result} = renderUseCombobox({highlightedIndex: 2})
       const itemProps = result.current.getItemProps({index: 2})
 
-      expect(itemProps['aria-selected']).toEqual('true')
+      expect(itemProps['aria-selected']).toEqual(true)
     })
 
     test("assign 'false' to aria-selected if item is not highlighted", () => {
       const {result} = renderUseCombobox({highlightedIndex: 1})
       const itemProps = result.current.getItemProps({index: 2})
 
-      expect(itemProps['aria-selected']).toEqual('false')
+      expect(itemProps['aria-selected']).toEqual(false)
     })
 
     test("click handler is not called if it's disabled", () => {
