@@ -431,8 +431,7 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
-  }, [environment, handleBlur])
+  }, [environment, handleBlur, downshiftElementRefs])
 
   return mouseAndTouchTrackersRef.current
 }
