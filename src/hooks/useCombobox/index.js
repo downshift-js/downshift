@@ -98,7 +98,6 @@ function useCombobox(userProps = {}) {
   })
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    [toggleButtonRef, menuRef, inputRef],
     useCallback(
       function handleBlur() {
         if (latest.current.state.isOpen) {
@@ -110,6 +109,7 @@ function useCombobox(userProps = {}) {
       },
       [dispatch, latest],
     ),
+    useMemo(() => [toggleButtonRef, menuRef, inputRef], []),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',

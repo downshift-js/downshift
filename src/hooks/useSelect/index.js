@@ -120,7 +120,6 @@ function useSelect(userProps = {}) {
 
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    [toggleButtonRef, menuRef],
     useCallback(
       function handleBlur() {
         if (latest.current.state.isOpen) {
@@ -131,6 +130,7 @@ function useSelect(userProps = {}) {
       },
       [dispatch, latest],
     ),
+    useMemo(() => [toggleButtonRef, menuRef], []),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getMenuProps',

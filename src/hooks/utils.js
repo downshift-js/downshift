@@ -359,15 +359,15 @@ function getHighlightedIndexOnOpen(props, state, offset) {
 /**
  * Tracks mouse and touch events, such as mouseDown, touchMove and touchEnd.
  *
- * @param {Object} environment The environment to add the event listeners to, for instance window.
- * @param {Array<HTMLElement>} downshiftElementRefs The refs for the element that should not trigger a blur action from mouseDown or touchEnd.
- * @param {Function} handleBlur The function that is called if mouseDown or touchEnd occured outside the downshiftElements.
- * @returns {Object} The mouse and touch events information, if any of are happening.
+ * @param {Window} environment The environment to add the event listeners to, for instance window.
+ * @param {() => void} handleBlur The function that is called if mouseDown or touchEnd occured outside the downshiftElements.
+ * @param {Array<{current: HTMLElement}>} downshiftElementRefs The refs for the element that should not trigger a blur action from mouseDown or touchEnd.
+ * @returns {{isMouseDown: boolean, isTouchMove: boolean, isTouchEnd: boolean}} The mouse and touch events information, if any of are happening.
  */
 function useMouseAndTouchTracker(
   environment,
-  downshiftElementRefs,
   handleBlur,
+  downshiftElementRefs,
 ) {
   const mouseAndTouchTrackersRef = useRef({
     isMouseDown: false,
@@ -423,6 +423,7 @@ function useMouseAndTouchTracker(
     environment.addEventListener('touchstart', onTouchStart)
     environment.addEventListener('touchmove', onTouchMove)
     environment.addEventListener('touchend', onTouchEnd)
+    console.log('adds events', downshiftElementRefs)
 
     return function cleanup() {
       environment.removeEventListener('mousedown', onMouseDown)
@@ -430,9 +431,9 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchstart', onTouchStart)
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
+      console.log('cleans up events', downshiftElementRefs)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- refs don't change
-  }, [environment, handleBlur])
+  }, [environment, handleBlur, downshiftElementRefs])
 
   return mouseAndTouchTrackersRef.current
 }
