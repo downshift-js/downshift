@@ -423,7 +423,6 @@ function useMouseAndTouchTracker(
     environment.addEventListener('touchstart', onTouchStart)
     environment.addEventListener('touchmove', onTouchMove)
     environment.addEventListener('touchend', onTouchEnd)
-    console.log('adds events', downshiftElementRefs)
 
     return function cleanup() {
       environment.removeEventListener('mousedown', onMouseDown)
@@ -431,7 +430,6 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchstart', onTouchStart)
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
-      console.log('cleans up events', downshiftElementRefs)
     }
   }, [environment, handleBlur, downshiftElementRefs])
 
