@@ -109,7 +109,7 @@ function useCombobox(userProps = {}) {
       },
       [dispatch, latest],
     ),
-    useMemo(() => [toggleButtonRef, menuRef, inputRef], []),
+    useMemo(() => [menuRef, toggleButtonRef, inputRef], []),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',

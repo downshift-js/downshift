@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils useMouseAndTouchTracker adds and removes listeners to environment: element change rerender adding events 1`] = `
+[
+  [
+    mousedown,
+    [Function],
+  ],
+  [
+    mouseup,
+    [Function],
+  ],
+  [
+    touchstart,
+    [Function],
+  ],
+  [
+    touchmove,
+    [Function],
+  ],
+  [
+    touchend,
+    [Function],
+  ],
+]
+`;
+
+exports[`utils useMouseAndTouchTracker adds and removes listeners to environment: element change rerender remove events 1`] = `
+[
+  [
+    mousedown,
+    [Function],
+  ],
+  [
+    mouseup,
+    [Function],
+  ],
+  [
+    touchstart,
+    [Function],
+  ],
+  [
+    touchmove,
+    [Function],
+  ],
+  [
+    touchend,
+    [Function],
+  ],
+]
+`;
+
+exports[`utils useMouseAndTouchTracker adds and removes listeners to environment: initial adding events 1`] = `
+[
+  [
+    mousedown,
+    [Function],
+  ],
+  [
+    mouseup,
+    [Function],
+  ],
+  [
+    touchstart,
+    [Function],
+  ],
+  [
+    touchmove,
+    [Function],
+  ],
+  [
+    touchend,
+    [Function],
+  ],
+]
+`;
+
+exports[`utils useMouseAndTouchTracker adds and removes listeners to environment: unmount remove events 1`] = `
+[
+  [
+    mousedown,
+    [Function],
+  ],
+  [
+    mouseup,
+    [Function],
+  ],
+  [
+    touchstart,
+    [Function],
+  ],
+  [
+    touchmove,
+    [Function],
+  ],
+  [
+    touchend,
+    [Function],
+  ],
+]
+`;

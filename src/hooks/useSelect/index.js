@@ -47,6 +47,7 @@ function useSelect(userProps = {}) {
   const toggleButtonRef = useRef(null)
   const menuRef = useRef(null)
   const itemRefs = useRef({})
+
   // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef(null)
   // prevent id re-generation between renders.
@@ -130,7 +131,7 @@ function useSelect(userProps = {}) {
       },
       [dispatch, latest],
     ),
-    useMemo(() => [toggleButtonRef, menuRef], []),
+    useMemo(() => [menuRef, toggleButtonRef], []),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getMenuProps',

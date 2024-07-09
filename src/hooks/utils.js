@@ -361,13 +361,13 @@ function getHighlightedIndexOnOpen(props, state, offset) {
  *
  * @param {Window} environment The environment to add the event listeners to, for instance window.
  * @param {() => void} handleBlur The function that is called if mouseDown or touchEnd occured outside the downshiftElements.
- * @param {Array<{current: HTMLElement}>} downshiftElementRefs The refs for the element that should not trigger a blur action from mouseDown or touchEnd.
+ * @param {Array<{current: HTMLElement}>} downshiftElementsRefs The refs for the elements that should not trigger a blur action from mouseDown or touchEnd.
  * @returns {{isMouseDown: boolean, isTouchMove: boolean, isTouchEnd: boolean}} The mouse and touch events information, if any of are happening.
  */
 function useMouseAndTouchTracker(
   environment,
   handleBlur,
-  downshiftElementRefs,
+  downshiftElementsRefs,
 ) {
   const mouseAndTouchTrackersRef = useRef({
     isMouseDown: false,
@@ -380,7 +380,7 @@ function useMouseAndTouchTracker(
       return noop
     }
 
-    const downshiftElements = downshiftElementRefs.map(ref => ref.current)
+    const downshiftElements = downshiftElementsRefs.map(ref => ref.current)
 
     function onMouseDown() {
       mouseAndTouchTrackersRef.current.isTouchEnd = false // reset this one.
@@ -431,7 +431,7 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-  }, [environment, handleBlur, downshiftElementRefs])
+  }, [downshiftElementsRefs, environment, handleBlur])
 
   return mouseAndTouchTrackersRef.current
 }
