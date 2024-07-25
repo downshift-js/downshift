@@ -131,7 +131,10 @@ function useSelect(userProps = {}) {
       },
       [dispatch, latest],
     ),
-    useMemo(() => [menuRef, toggleButtonRef], []),
+    useMemo(
+      () => [menuRef, toggleButtonRef],
+      [menuRef.current, toggleButtonRef.current],
+    ),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getMenuProps',
