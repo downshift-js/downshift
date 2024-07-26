@@ -84,7 +84,7 @@ describe('utils', () => {
   describe('useMouseAndTouchTracker', () => {
     test('renders without error', () => {
       expect(() => {
-        renderHook(() => useMouseAndTouchTracker(undefined, [], jest.fn()))
+        renderHook(() => useMouseAndTouchTracker(undefined, jest.fn(), []))
       }).not.toThrowError()
     })
 
@@ -93,63 +93,53 @@ describe('utils', () => {
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       }
-      const refs = []
+      const elements = [{}, {}]
       const handleBlur = jest.fn()
+      const initialProps = {environment, handleBlur, elements}
 
-      const {unmount, rerender, result} = renderHook(() =>
-        useMouseAndTouchTracker(environment, refs, handleBlur),
+      const {unmount, rerender, result} = renderHook(
+        props =>
+          useMouseAndTouchTracker(
+            props.environment,
+            props.handleBlur,
+            props.elements,
+          ),
+        {initialProps},
       )
 
       expect(environment.addEventListener).toHaveBeenCalledTimes(5)
-      expect(environment.addEventListener).toHaveBeenCalledWith(
-        'mousedown',
-        expect.any(Function),
-      )
-      expect(environment.addEventListener).toHaveBeenCalledWith(
-        'mouseup',
-        expect.any(Function),
-      )
-      expect(environment.addEventListener).toHaveBeenCalledWith(
-        'touchstart',
-        expect.any(Function),
-      )
-      expect(environment.addEventListener).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function),
-      )
-      expect(environment.addEventListener).toHaveBeenCalledWith(
-        'touchend',
-        expect.any(Function),
-      )
       expect(environment.removeEventListener).not.toHaveBeenCalled()
+      expect(environment.addEventListener.mock.calls).toMatchSnapshot(
+        'initial adding events',
+      )
 
-      rerender()
+      environment.addEventListener.mockReset()
+      environment.removeEventListener.mockReset()
+      rerender(initialProps)
 
       expect(environment.removeEventListener).not.toHaveBeenCalled()
+      expect(environment.addEventListener).not.toHaveBeenCalled()
 
-      unmount()
+      rerender({...initialProps, elements: [...elements]})
 
       expect(environment.addEventListener).toHaveBeenCalledTimes(5)
       expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
-      expect(environment.removeEventListener).toHaveBeenCalledWith(
-        'mousedown',
-        expect.any(Function),
+      expect(environment.addEventListener.mock.calls).toMatchSnapshot(
+        'element change rerender adding events',
       )
-      expect(environment.removeEventListener).toHaveBeenCalledWith(
-        'mouseup',
-        expect.any(Function),
+      expect(environment.removeEventListener.mock.calls).toMatchSnapshot(
+        'element change rerender remove events',
       )
-      expect(environment.removeEventListener).toHaveBeenCalledWith(
-        'touchstart',
-        expect.any(Function),
-      )
-      expect(environment.removeEventListener).toHaveBeenCalledWith(
-        'touchmove',
-        expect.any(Function),
-      )
-      expect(environment.removeEventListener).toHaveBeenCalledWith(
-        'touchend',
-        expect.any(Function),
+
+      environment.addEventListener.mockReset()
+      environment.removeEventListener.mockReset()
+
+      unmount()
+
+      expect(environment.addEventListener).not.toHaveBeenCalled()
+      expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
+      expect(environment.removeEventListener.mock.calls).toMatchSnapshot(
+        'unmount remove events',
       )
 
       expect(result.current).toEqual({
