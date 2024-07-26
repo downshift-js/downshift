@@ -57,7 +57,7 @@ class Downshift extends Component {
       document: PropTypes.shape({
         createElement: PropTypes.func.isRequired,
         getElementById: PropTypes.func.isRequired,
-        activeElement: PropTypes.any.isRequired,
+        activeElement: PropTypes.any,
         body: PropTypes.any.isRequired,
       }).isRequired,
       Node: PropTypes.func.isRequired,
