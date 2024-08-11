@@ -448,10 +448,10 @@ let useGetterPropsCalledChecker = () => noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   useGetterPropsCalledChecker = (...propKeys) => {
-    const isInitialMountRef = useRef(true)
     const getterPropsCalledRef = useRef(
       propKeys.reduce((acc, propKey) => {
         acc[propKey] = {}
+
         return acc
       }, {}),
     )
@@ -459,28 +459,29 @@ if (process.env.NODE_ENV !== 'production') {
     useEffect(() => {
       Object.keys(getterPropsCalledRef.current).forEach(propKey => {
         const propCallInfo = getterPropsCalledRef.current[propKey]
-        if (isInitialMountRef.current) {
-          if (!Object.keys(propCallInfo).length) {
-            // eslint-disable-next-line no-console
-            console.error(
-              `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
-            )
-            return
-          }
+
+        if (!Object.keys(propCallInfo).length) {
+          // eslint-disable-next-line no-console
+          console.error(
+            `downshift: You forgot to call the ${propKey} getter function on your component / element.`,
+          )
+          return
         }
 
         const {suppressRefError, refKey, elementRef} = propCallInfo
 
-        if ((!elementRef || !elementRef.current) && !suppressRefError) {
+        if (suppressRefError) {
+          return
+        }
+
+        if (!elementRef?.current) {
           // eslint-disable-next-line no-console
           console.error(
             `downshift: The ref prop "${refKey}" from ${propKey} was not applied correctly on your element.`,
           )
         }
       })
-
-      isInitialMountRef.current = false
-    })
+    }, [])
 
     const setGetterPropCallInfo = useCallback(
       (propKey, suppressRefError, refKey, elementRef) => {

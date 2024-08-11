@@ -244,6 +244,7 @@ describe('getDropdownProps', () => {
 
   describe('non production errors', () => {
     beforeEach(() => {
+      // usually disabled by test utils.
       const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
@@ -260,6 +261,23 @@ describe('getDropdownProps', () => {
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
         `downshift: You forgot to call the getDropdownProps getter function on your component / element.`,
       )
+    })
+
+    test('will not be displayed if getDropdownProps is not called on subsequent renders', () => {
+      let firstRender = true
+      const {rerender} = renderHook(() => {
+        const {getDropdownProps} = useMultipleSelection()
+
+        // eslint-disable-next-line jest/no-if, jest/no-conditional-in-test
+        if (firstRender) {
+          firstRender = false
+          getDropdownProps({}, {suppressRefError: true})
+        }
+      })
+
+      rerender()
+
+      expect(console.error).not.toHaveBeenCalled()
     })
 
     test('will be displayed if element ref is not set and suppressRefError is false', () => {

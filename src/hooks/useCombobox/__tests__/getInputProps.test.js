@@ -2085,6 +2085,7 @@ describe('getInputProps', () => {
 
   describe('non production errors', () => {
     beforeEach(() => {
+      // usually it is disabled by test utils.
       const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
@@ -2136,6 +2137,19 @@ describe('getInputProps', () => {
       expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
         `downshift: The ref prop "ref" from getInputProps was not applied correctly on your element.`,
       )
+    })
+
+    test('will not be displayed if element ref is not set and suppressRefError is true', () => {
+      renderHook(() => {
+        const {getInputProps, getMenuProps} = useCombobox({
+          items,
+        })
+
+        getMenuProps({}, {suppressRefError: true})
+        getInputProps({}, {suppressRefError: true})
+      })
+
+      expect(console.error).not.toHaveBeenCalled()
     })
 
     test('will not be displayed if called with a correct ref', () => {
