@@ -364,7 +364,7 @@ function useSelect(userProps = {}) {
         'aria-activedescendant':
           latestState.isOpen && latestState.highlightedIndex > -1
             ? elementIds.getItemId(latestState.highlightedIndex)
-            : '',
+            : undefined,
         'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         'aria-haspopup': 'listbox',

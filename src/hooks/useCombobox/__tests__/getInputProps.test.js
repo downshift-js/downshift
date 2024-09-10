@@ -91,21 +91,21 @@ describe('getInputProps', () => {
       const {result} = renderUseCombobox({highlightedIndex: 2})
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-activedescendant']).toBe('')
+      expect(inputProps['aria-activedescendant']).toBe(undefined)
     })
 
     test('do not assign aria-activedescendant if no item is highlighted', () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-activedescendant']).toBe('')
+      expect(inputProps['aria-activedescendant']).toBe(undefined)
     })
 
     test('do not assign aria-activedescendant if no item is highlighted and menu is open', () => {
       const {result} = renderUseCombobox({isOpen: true})
       const inputProps = result.current.getInputProps()
 
-      expect(inputProps['aria-activedescendant']).toBe('')
+      expect(inputProps['aria-activedescendant']).toBe(undefined)
     })
 
     test('assign default value to aria-labelledby', () => {
@@ -451,7 +451,7 @@ describe('getInputProps', () => {
 
         await changeInputValue('california')
 
-        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
       })
 
       test('should reset to defaultHighlightedIndex', async () => {
@@ -492,7 +492,7 @@ describe('getInputProps', () => {
         await keyDownOnInput('{ArrowDown}')
         await changeInputValue('a')
 
-        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
       })
     })
 
@@ -513,7 +513,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowUp}')
 
-          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
           expect(getItems()).toHaveLength(0)
         })
 
@@ -525,7 +525,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowUp}')
 
-          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
           expect(getItems()).toHaveLength(0)
         })
 
@@ -771,7 +771,7 @@ describe('getInputProps', () => {
 
           expect(input).toHaveValue(initialSelectedItem)
           expect(getItems()).toHaveLength(0)
-          expect(input).toHaveAttribute('aria-activedescendant', '')
+          expect(input).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('with Alt closes the menu without resetting to user defaults if lhe list is empty', async () => {
@@ -789,7 +789,7 @@ describe('getInputProps', () => {
 
           expect(input).toHaveValue(initialSelectedItem)
           expect(getItems()).toHaveLength(0)
-          expect(input).toHaveAttribute('aria-activedescendant', '')
+          expect(input).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('will continue from 0 to last item', async () => {
@@ -840,7 +840,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowDown}')
 
-          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
           expect(getItems()).toHaveLength(0)
         })
 
@@ -852,7 +852,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{ArrowDown}')
 
-          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
           expect(getItems()).toHaveLength(0)
         })
 
@@ -1046,7 +1046,7 @@ describe('getInputProps', () => {
 
           await keyDownOnInput('{Alt>}{ArrowDown}{/Alt}')
 
-          expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+          expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('with Alt it opens the menu and highlights with selected item highlighted', async () => {
@@ -1334,7 +1334,7 @@ describe('getInputProps', () => {
 
           expect(input).toHaveValue(initialSelectedItem)
           expect(getItems()).toHaveLength(0)
-          expect(input).toHaveAttribute('aria-activedescendant', '')
+          expect(input).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('closes the menu without resetting to user defaults if the list is empty', async () => {
@@ -1352,7 +1352,7 @@ describe('getInputProps', () => {
 
           expect(input).toHaveValue(initialSelectedItem)
           expect(getItems()).toHaveLength(0)
-          expect(input).toHaveAttribute('aria-activedescendant', '')
+          expect(input).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('while IME composing will not select highlighted item', async () => {
@@ -1376,7 +1376,7 @@ describe('getInputProps', () => {
 
           expect(input).toHaveValue(items[2])
           expect(getItems()).toHaveLength(0)
-          expect(input).toHaveAttribute('aria-activedescendant', '')
+          expect(input).toHaveAttribute('aria-activedescendant', undefined)
         })
 
         test('with a closed menu does nothing', async () => {
@@ -1974,7 +1974,7 @@ describe('getInputProps', () => {
         await clickOnInput()
         await clickOnInput()
 
-        expect(input).toHaveAttribute('aria-activedescendant', '')
+        expect(input).toHaveAttribute('aria-activedescendant', undefined)
       })
 
       test('it opens the closed menu at defaultHighlightedIndex, on every click', async () => {
@@ -2014,7 +2014,7 @@ describe('getInputProps', () => {
 
         await clickOnInput()
 
-        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
         expect(isItemDisabled).toHaveBeenNthCalledWith(
           1,
           items[initialHighlightedIndex],
@@ -2055,7 +2055,7 @@ describe('getInputProps', () => {
 
         await clickOnInput()
 
-        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
         expect(isItemDisabled).toHaveBeenNthCalledWith(
           1,
           items[defaultHighlightedIndex],
@@ -2078,7 +2078,7 @@ describe('getInputProps', () => {
 
         await clickOnInput()
 
-        expect(getInput()).toHaveAttribute('aria-activedescendant', '')
+        expect(getInput()).toHaveAttribute('aria-activedescendant', undefined)
       })
     })
   })
