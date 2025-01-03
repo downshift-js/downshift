@@ -339,7 +339,7 @@ export enum UseSelectStateChangeTypes {
 
 export interface UseSelectProps<Item> {
   items: Item[]
-  isItemDisabled?(item: Item, index: number): boolean
+  isItemDisabled?(item: Item | undefined, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
   getA11yStatusMessage?: (options: UseSelectState<Item>) => string
@@ -552,7 +552,7 @@ export enum UseComboboxStateChangeTypes {
 
 export interface UseComboboxProps<Item> {
   items: Item[]
-  isItemDisabled?(item: Item, index: number): boolean
+  isItemDisabled?(item: Item | undefined, index: number): boolean
   itemToString?: (item: Item | null) => string
   itemToKey?: (item: Item | null) => any
   getA11yStatusMessage?: (options: UseComboboxState<Item>) => string
