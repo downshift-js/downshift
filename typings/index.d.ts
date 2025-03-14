@@ -393,7 +393,7 @@ export interface UseSelectStateChange<Item>
 
 export interface UseSelectSelectedItemChange<Item>
   extends UseSelectStateChange<Item> {
-  selectedItem: Item
+  selectedItem: Item | null
 }
 
 export interface UseSelectHighlightedIndexChange<Item>
@@ -611,7 +611,7 @@ export interface UseComboboxStateChange<Item>
 
 export interface UseComboboxSelectedItemChange<Item>
   extends UseComboboxStateChange<Item> {
-  selectedItem: Item
+  selectedItem: Item | null
 }
 export interface UseComboboxHighlightedIndexChange<Item>
   extends UseComboboxStateChange<Item> {
