@@ -5,11 +5,19 @@ import {ReactShadowRoot} from '../../../test/react-shadow'
 
 export default function MultipleComboboxShadow() {
   return (
-    <div data-testid="shadow-root">
-      <ReactShadowRoot>
-        <h2>Shadow DOM</h2>
-        <DropdownMultipleCombobox />
-      </ReactShadowRoot>
+    <div>
+      <div>
+        <button>Button before shadow root</button>
+      </div>
+      <h2>Shadow DOM</h2>
+      <div data-testid="shadow-root">
+        <ReactShadowRoot>
+          <DropdownMultipleCombobox />
+        </ReactShadowRoot>
+      </div>
+      <div>
+        <button>Button after shadow root</button>
+      </div>
     </div>
   )
 }

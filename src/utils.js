@@ -417,7 +417,7 @@ function getNonDisabledIndex(
  * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
  * @param {Window} environment The window context where downshift renders.
  * @param {boolean} checkActiveElement Whether to also check activeElement.
- * @param {boolean} composedPath Whether to check the composed path.
+ * @param {EventTarget[]} composedPath The composed path of the event.
  *
  * @returns {boolean} Whether or not the target is within downshift elements.
  */

@@ -25,6 +25,7 @@ const shadowRootSupported =
  * @param {boolean} props.delegatesFocus  Expands the focus behavior of elements within the shadow DOM.
  * @param {string} props.mode Sets the mode of the shadow root. (open or closed)
  * @param {CSSStyleSheet[]} props.stylesheets Takes an array of CSSStyleSheet objects for constructable stylesheets.
+ * @param {React.ReactNode} props.children The children of the component
  */
 const ReactShadowRoot = ({
   declarative = false,
