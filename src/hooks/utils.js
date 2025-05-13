@@ -390,7 +390,13 @@ function useMouseAndTouchTracker(
       mouseAndTouchTrackersRef.current.isMouseDown = false
 
       if (
-        !targetWithinDownshift(event.target, downshiftElements, environment)
+        !targetWithinDownshift(
+          event.target,
+          downshiftElements,
+          environment,
+          true,
+          'composedPath' in event && event.composedPath(),
+        )
       ) {
         handleBlur()
       }
@@ -412,6 +418,7 @@ function useMouseAndTouchTracker(
           downshiftElements,
           environment,
           false,
+          'composedPath' in event && event.composedPath(),
         )
       ) {
         handleBlur()

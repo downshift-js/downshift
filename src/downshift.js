@@ -1093,6 +1093,8 @@ class Downshift extends Component {
           event.target,
           [this._rootNode, this._menuNode],
           this.props.environment,
+          true,
+          'composedPath' in event && event.composedPath(),
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: stateChangeTypes.mouseUp}, () =>
@@ -1120,6 +1122,7 @@ class Downshift extends Component {
           [this._rootNode, this._menuNode],
           this.props.environment,
           false,
+          'composedPath' in event && event.composedPath(),
         )
         if (
           !this.isTouchMove &&
