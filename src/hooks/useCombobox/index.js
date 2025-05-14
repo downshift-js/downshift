@@ -129,8 +129,17 @@ function useCombobox(userProps = {}) {
     if (!isOpen || !environment?.document || !inputRef?.current?.focus) {
       return
     }
+    let {activeElement} = environment.document
+    // find the real activeElement not a custom element with a shadowRoot
+    /* istanbul ignore next -- JSDOM always reports the focused element as document.activeElement */
+    while (
+      activeElement?.shadowRoot &&
+      activeElement.shadowRoot.activeElement != null
+    ) {
+      activeElement = activeElement.shadowRoot.activeElement
+    }
 
-    if (environment.document.activeElement !== inputRef.current) {
+    if (activeElement !== inputRef.current) {
       inputRef.current.focus()
     }
   }, [isOpen, environment])

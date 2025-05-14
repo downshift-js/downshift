@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import DropdownMultipleCombobox from '../useMultipleCombobox'
+import DropdownCombobox from '../useCombobox'
 import {ReactShadowRoot} from '../../../test/react-shadow'
 
 const style = {
@@ -10,17 +10,11 @@ const style = {
 export default function MultipleComboboxShadow() {
   return (
     <div style={style}>
-      <div>
-        <button>Button before shadow root</button>
-      </div>
       <h2>Shadow DOM</h2>
       <div data-testid="shadow-root">
         <ReactShadowRoot>
-          <DropdownMultipleCombobox />
+          <DropdownCombobox />
         </ReactShadowRoot>
-      </div>
-      <div>
-        <button>Button after shadow root</button>
       </div>
     </div>
   )

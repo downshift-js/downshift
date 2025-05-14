@@ -5,6 +5,7 @@ import Downshift from '../'
 import DropdownSelect from '../../test/useSelect.test'
 import DropdownCombobox, {colors} from '../../test/useCombobox.test'
 import DropdownMultipleSelect from '../../test/useMultipleSelect.test'
+import ComboBox from '../../test/downshift.test'
 import {ReactShadowRoot} from '../../test/react-shadow'
 
 function _queryAllByRoleDeep(container, ...rest) {
@@ -158,4 +159,124 @@ test('DropdownCombobox works correctly in shadow DOM', async () => {
 
   // Menu should close
   expect(input).toHaveAttribute('aria-expanded', 'false')
+})
+
+test('Downshift button blur correctly handles focus moving to external shadow DOM', async () => {
+  const user = userEvent.setup()
+  const {container} = render(<ComboBox />, {wrapper: Wrapper})
+
+  // Verify Downshift's own shadow root exists
+  expect(container.shadowRoot).toBeDefined()
+
+  const comboboxRoot = getByRoleDeep('combobox')
+  const toggleButton = container.shadowRoot.querySelector(
+    '[data-testid="combobox-toggle-button"]',
+  )
+
+  // Open the dropdown
+  await user.click(toggleButton)
+  expect(comboboxRoot).toHaveAttribute('aria-expanded', 'true')
+
+  // Click the element inside the external shadow DOM
+  // This should focus externalFocusableButton and blur toggleButton (or the root/input depending on what had focus)
+  const externalHost = document.createElement('div')
+  document.body.appendChild(externalHost)
+  const shadow = externalHost.attachShadow({mode: 'open'})
+  const externalFocusableButton = document.createElement('button')
+  shadow.appendChild(externalFocusableButton)
+  await user.click(externalFocusableButton)
+
+  // Assert that the menu closes due to blur
+  // Downshift's blur handlers use setTimeout, so wait for the next macrotask
+  await new Promise(resolve => setTimeout(resolve, 0))
+  expect(comboboxRoot).toHaveAttribute('aria-expanded', 'false')
+
+  // Cleanup
+  document.body.removeChild(externalHost)
+})
+
+test('Downshift input blur correctly handles focus moving to external shadow DOM', async () => {
+  const user = userEvent.setup()
+  const {container} = render(<ComboBox />, {wrapper: Wrapper})
+
+  // Verify Downshift's own shadow root exists
+  expect(container.shadowRoot).toBeDefined()
+
+  const comboboxRoot = getByRoleDeep('combobox')
+  const inputField = container.shadowRoot.querySelector(
+    '[data-testid="combobox-input"]',
+  )
+  const downshiftToggleButton = container.shadowRoot.querySelector(
+    '[data-testid="combobox-toggle-button"]',
+  )
+
+  // Create an external element with its own shadow DOM
+  const externalHost = document.createElement('div')
+  document.body.appendChild(externalHost)
+  const shadow = externalHost.attachShadow({mode: 'open'})
+  const externalFocusableButton = document.createElement('button')
+  shadow.appendChild(externalFocusableButton)
+
+  // Open the dropdown by clicking the toggle button
+  await user.click(downshiftToggleButton)
+  expect(comboboxRoot).toHaveAttribute('aria-expanded', 'true')
+
+  // Ensure the input itself is focused before it blurs
+  inputField.focus()
+  await user.type(inputField, 'b')
+  await user.keyboard('{Tab}')
+  // Click the element inside the external shadow DOM
+  // This should focus externalFocusableButton and blur the input
+  await user.click(externalFocusableButton)
+
+  // Assert that the menu closes due to blur
+  // Downshift's blur handlers use setTimeout, so wait for the next macrotask
+  await new Promise(resolve => setTimeout(resolve, 0))
+  expect(comboboxRoot).toHaveAttribute('aria-expanded', 'false')
+
+  // Cleanup
+  document.body.removeChild(externalHost)
+})
+
+test('useCombobox input blur correctly handles focus moving to external shadow DOM', async () => {
+  const user = userEvent.setup()
+  const {container} = render(<DropdownCombobox />, {wrapper: Wrapper})
+
+  // Verify DropdownCombobox's own shadow root exists via the Wrapper
+  expect(container.shadowRoot).toBeDefined()
+
+  const input = container.shadowRoot.querySelector(
+    '[data-testid="combobox-input"]',
+  )
+  const toggleButton = container.shadowRoot.querySelector(
+    '[data-testid="combobox-toggle-button"]',
+  )
+
+  // Create an external element with its own shadow DOM
+  const externalHost = document.createElement('div')
+  document.body.appendChild(externalHost)
+  const shadow = externalHost.attachShadow({mode: 'open'})
+  const externalFocusableButton = document.createElement('button')
+  shadow.appendChild(externalFocusableButton)
+
+  // Open the dropdown by clicking the toggle button
+  await user.click(toggleButton)
+  expect(input).toHaveAttribute('aria-expanded', 'true')
+
+  // Ensure the input itself is focused before it blurs
+  input.focus()
+  await user.type(input, 'b')
+  await user.keyboard('{Tab}')
+
+  // Click the element inside the external shadow DOM
+  // This should focus externalFocusableButton and blur the input in DropdownCombobox
+  await user.click(externalFocusableButton)
+
+  // Assert that the menu closes due to blur
+  // useCombobox's blur handler uses setTimeout, so wait for the next macrotask
+  await new Promise(resolve => setTimeout(resolve, 0))
+  expect(input).toHaveAttribute('aria-expanded', 'false')
+
+  // Cleanup
+  document.body.removeChild(externalHost)
 })

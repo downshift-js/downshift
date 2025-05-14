@@ -26,7 +26,7 @@ describe('useMultipleCombobox', () => {
 })
 
 describe('useMultipleCombobox in shadow DOM', () => {
-  before(() => {
+  beforeEach(() => {
     cy.visit('/shadow-dom/useMultipleCombobox')
   })
 
@@ -52,6 +52,27 @@ describe('useMultipleCombobox in shadow DOM', () => {
         cy.findByText('Red').should('be.visible')
         cy.findByText('Green').should('be.visible')
         cy.findByText('Gray').should('be.visible')
+      })
+  })
+
+  it('can filter the items', () => {
+    cy.get('[data-testid="shadow-root"]')
+      .shadow()
+      .within(() => {
+        cy.findByRole('button', {name: 'toggle menu'}).click()
+        cy.findAllByRole('option').should('have.length', 12)
+        cy.findByRole('combobox').type('g')
+        cy.findByRole('button', {name: 'toggle menu'}).should(
+          'have.attr',
+          'aria-expanded',
+          'true',
+        )
+        cy.findAllByRole('option').should('have.length', 2)
+        cy.findByText('Green').should('be.visible')
+        cy.findByText('Gray').should('be.visible')
+
+        cy.findByRole('combobox').type('{backspace}')
+        cy.findAllByRole('option').should('have.length', 12)
       })
   })
 })
