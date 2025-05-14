@@ -52,7 +52,7 @@ export default function DropdownCombobox() {
           {isOpen ? <>&#8593;</> : <>&#8595;</>}
         </button>
         <button
-          aria-label="toggle menu"
+          aria-label="clear"
           data-testid="clear-button"
           onClick={() => selectItem(null)}
         >
