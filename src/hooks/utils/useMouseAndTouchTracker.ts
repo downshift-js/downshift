@@ -72,11 +72,13 @@ export function useMouseAndTouchTracker(
       }
     }
 
-    environment.addEventListener('mousedown', onMouseDown)
-    environment.addEventListener('mouseup', onMouseUp)
-    environment.addEventListener('touchstart', onTouchStart)
-    environment.addEventListener('touchmove', onTouchMove)
-    environment.addEventListener('touchend', onTouchEnd)
+    const options = {passive: true}
+
+    environment.addEventListener('mousedown', onMouseDown, options)
+    environment.addEventListener('mouseup', onMouseUp, options)
+    environment.addEventListener('touchstart', onTouchStart, options)
+    environment.addEventListener('touchmove', onTouchMove, options)
+    environment.addEventListener('touchend', onTouchEnd, options)
 
     return function cleanup() {
       environment.removeEventListener('mousedown', onMouseDown)

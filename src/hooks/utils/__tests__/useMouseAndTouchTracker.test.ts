@@ -1,4 +1,4 @@
-import {renderHook} from '@testing-library/react'
+import {fireEvent, renderHook} from '@testing-library/react'
 import {useMouseAndTouchTracker} from '../useMouseAndTouchTracker'
 import {Environment} from '../../../downshift.types'
 import {targetWithinDownshift} from '../../../utils'
@@ -73,7 +73,7 @@ describe('useMouseAndTouchTracker', () => {
     }).not.toThrow()
   })
 
-  test('adds listeners to the environment', () => {
+  test('adds passive listeners to the environment', () => {
     renderHook(
       props =>
         useMouseAndTouchTracker(
@@ -89,26 +89,31 @@ describe('useMouseAndTouchTracker', () => {
       1,
       'mousedown',
       expect.any(Function),
+      {passive: true},
     )
     expect(initialProps.environment.addEventListener).toHaveBeenNthCalledWith(
       2,
       'mouseup',
       expect.any(Function),
+      {passive: true},
     )
     expect(initialProps.environment.addEventListener).toHaveBeenNthCalledWith(
       3,
       'touchstart',
       expect.any(Function),
+      {passive: true},
     )
     expect(initialProps.environment.addEventListener).toHaveBeenNthCalledWith(
       4,
       'touchmove',
       expect.any(Function),
+      {passive: true},
     )
     expect(initialProps.environment.addEventListener).toHaveBeenNthCalledWith(
       5,
       'touchend',
       expect.any(Function),
+      {passive: true},
     )
     expect(initialProps.environment.removeEventListener).not.toHaveBeenCalled()
   })
@@ -124,25 +129,39 @@ describe('useMouseAndTouchTracker', () => {
       {initialProps},
     )
 
+    const registeredListeners = jest
+      .mocked(initialProps.environment.addEventListener)
+      .mock.calls.map(([type, handler]) => [type, handler])
+
     unmount()
     expect(initialProps.environment.removeEventListener).toHaveBeenCalledTimes(
       5,
     )
     expect(
-      initialProps.environment.removeEventListener,
-    ).toHaveBeenNthCalledWith(1, 'mousedown', expect.any(Function))
-    expect(
-      initialProps.environment.removeEventListener,
-    ).toHaveBeenNthCalledWith(2, 'mouseup', expect.any(Function))
-    expect(
-      initialProps.environment.removeEventListener,
-    ).toHaveBeenNthCalledWith(3, 'touchstart', expect.any(Function))
-    expect(
-      initialProps.environment.removeEventListener,
-    ).toHaveBeenNthCalledWith(4, 'touchmove', expect.any(Function))
-    expect(
-      initialProps.environment.removeEventListener,
-    ).toHaveBeenNthCalledWith(5, 'touchend', expect.any(Function))
+      jest.mocked(initialProps.environment.removeEventListener).mock.calls,
+    ).toEqual(registeredListeners)
+  })
+
+  test('ignores a swipe outside, handles a subsequent tap, and removes listeners on unmount', () => {
+    const handleBlur = jest.fn()
+    jest.mocked(targetWithinDownshift).mockReturnValue(false)
+    const {unmount} = renderHook(() =>
+      useMouseAndTouchTracker(window, handleBlur, []),
+    )
+
+    fireEvent.touchStart(document.body)
+    fireEvent.touchMove(document.body)
+    fireEvent.touchEnd(document.body)
+    expect(handleBlur).not.toHaveBeenCalled()
+
+    fireEvent.touchStart(document.body)
+    fireEvent.touchEnd(document.body)
+    expect(handleBlur).toHaveBeenCalledTimes(1)
+
+    unmount()
+    fireEvent.touchStart(document.body)
+    fireEvent.touchEnd(document.body)
+    expect(handleBlur).toHaveBeenCalledTimes(1)
   })
 
   test('returns tracking information about mouse and touch', () => {
