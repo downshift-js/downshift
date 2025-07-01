@@ -47,6 +47,15 @@
     "preact",
     "flow-typed"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/downshift.esm.js",
+      "require": "./dist/downshift.cjs.js"
+    },
+    "./react-native": {
+      "require": "./dist/downshift.native.cjs.js"
+    }
+  },
   "keywords": [
     "enhanced input",
     "react",
