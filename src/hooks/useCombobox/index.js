@@ -8,12 +8,12 @@ import {
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
-  getItemAndIndex,
   getInitialValue,
   isDropdownsStateEqual,
   useIsInitialMount,
   useA11yMessageStatus,
 } from '../utils'
+import { getItemAndIndex } from '../utils-ts'
 import {
   getInitialState,
   defaultProps,

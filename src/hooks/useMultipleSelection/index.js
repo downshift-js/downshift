@@ -5,10 +5,10 @@ import {
   useGetterPropsCalledChecker,
   useLatestRef,
   useControlPropsValidator,
-  getItemAndIndex,
   useIsInitialMount,
   useA11yMessageStatus,
 } from '../utils'
+import { getItemAndIndex } from '../utils-ts'
 import {
   getInitialState,
   defaultProps,

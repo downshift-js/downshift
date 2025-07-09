@@ -11,13 +11,13 @@ import {isReactNative} from '../is.macro'
 import {
   scrollIntoView,
   getState,
-  generateId,
   debounce,
   validateControlledUnchanged,
   noop,
   targetWithinDownshift,
 } from '../utils'
 import {cleanupStatusDiv, setStatus} from '../set-a11y-status'
+import { generateId } from '../utils-ts'
 
 const dropdownDefaultStateValues = {
   highlightedIndex: -1,
@@ -132,24 +132,6 @@ const useElementIds =
 
         return elementIds
       }
-
-function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
-  let item, index
-
-  if (itemProp === undefined) {
-    if (indexProp === undefined) {
-      throw new Error(errorMessage)
-    }
-
-    item = items[indexProp]
-    index = indexProp
-  } else {
-    index = indexProp === undefined ? items.indexOf(itemProp) : indexProp
-    item = itemProp
-  }
-
-  return [item, index]
-}
 
 function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
@@ -752,7 +734,6 @@ export {
   useLatestRef,
   capitalizeString,
   isAcceptedCharacterKey,
-  getItemAndIndex,
   useElementIds,
   getChangesOnSelection,
   isDropdownsStateEqual,

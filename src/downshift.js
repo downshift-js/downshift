@@ -11,7 +11,6 @@ import {
   callAllEventHandlers,
   cbToCb,
   debounce,
-  generateId,
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
@@ -29,6 +28,9 @@ import {
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils'
+import {
+  generateId
+} from './utils-ts'
 
 class Downshift extends Component {
   static propTypes = {
