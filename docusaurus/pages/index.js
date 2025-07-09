@@ -20,6 +20,9 @@ export default function Docs() {
         <li>
           <a href="./combobox">Downshift</a>
         </li>
+        <li>
+          <a href="./useTagGroup">useTagGroup</a>
+        </li>
       </ul>
     </div>
   )

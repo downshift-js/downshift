@@ -31,7 +31,7 @@ const config = {
         blog: false,
         pages: {
           path: 'docusaurus/pages',
-          include: ['**/*.{js,jsx}'],
+          include: ['**/*.{js,jsx,tsx}'],
         },
       }),
     ],
