@@ -9,7 +9,6 @@ import {
   useControlPropsValidator,
   useElementIds,
   useMouseAndTouchTracker,
-  getItemAndIndex,
   getInitialValue,
   isDropdownsStateEqual,
   useA11yMessageStatus,
@@ -21,6 +20,7 @@ import {
   normalizeArrowKey,
 } from '../../utils'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
+import { getItemAndIndex } from '../utils-ts'
 import downshiftSelectReducer from './reducer'
 import {validatePropTypes, defaultProps} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'

@@ -1,8 +1,5 @@
 import {compute} from 'compute-scroll-into-view'
-import React from 'react'
 import {isPreact} from './is.macro'
-
-let idCounter = 0
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -115,38 +112,6 @@ function handleRefs(...refs) {
       }
     })
   }
-}
-
-/**
- * This generates a unique ID for an instance of Downshift
- * @return {String} the unique ID
- */
-function generateId() {
-  return String(idCounter++)
-}
-
-/**
- * This is only used in tests
- * @param {Number} num the number to set the idCounter to
- */
-function setIdCounter(num) {
-  idCounter = num
-}
-
-/**
- * Resets idCounter to 0. Used for SSR.
- */
-function resetIdCounter() {
-  // istanbul ignore next
-  if ('useId' in React) {
-    console.warn(
-      `It is not necessary to call resetIdCounter when using React 18+`,
-    )
-
-    return
-  }
-
-  idCounter = 0
 }
 
 /**
@@ -477,15 +442,12 @@ export {
   handleRefs,
   debounce,
   scrollIntoView,
-  generateId,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
   getElementProps,
   noop,
   requiredProp,
-  setIdCounter,
-  resetIdCounter,
   pickState,
   isPlainObject,
   normalizeArrowKey,

@@ -4,10 +4,10 @@ import {
   getInitialValue,
   getDefaultValue,
   useMouseAndTouchTracker,
-  getItemAndIndex,
   isDropdownsStateEqual,
   useElementIds,
 } from '../utils'
+import {getItemAndIndex} from '../utils-ts'
 
 describe('utils', () => {
   describe('useElementIds', () => {

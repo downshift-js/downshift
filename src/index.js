@@ -1,3 +1,3 @@
 export {default} from './downshift'
-export {resetIdCounter} from './utils'
-export {useSelect, useCombobox, useMultipleSelection} from './hooks'
+export {resetIdCounter} from './utils-ts'
+export {useSelect, useCombobox, useMultipleSelection, useTagGroup} from './hooks'
