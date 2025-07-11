@@ -1,11 +1,12 @@
-import {useCallback} from 'react'
+import {useEffect, useCallback, useRef} from 'react'
 
-import {useLatestRef} from '../../utils-ts'
+import {handleRefs, useLatestRef} from '../../utils-ts'
 import {
   useElementIds,
-  defaultProps,
   validatePropTypes,
   useControlledReducer,
+  getInitialState,
+  isTagGroupStateEqual,
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
@@ -28,31 +29,38 @@ import {useTagGroupReducer} from './reducer'
 
 useTagGroup.stateChangeTypes = stateChangeTypes
 
-export default function useTagGroup(
-  userProps: Partial<UseTagGroupProps> = {},
-): UseTagGroupReturnValue {
+export default function useTagGroup<Item>(
+  userProps: Partial<UseTagGroupProps<Item>> = {},
+): UseTagGroupReturnValue<Item> {
   validatePropTypes(userProps, useTagGroup)
   // Props defaults and destructuring.
+  const defaultProps: Pick<UseTagGroupProps<Item>, 'stateReducer'> = {
+    stateReducer(_s, {changes}) {
+      return changes
+    },
+  }
   const props = {
     ...defaultProps,
     ...userProps,
   }
   const [state, dispatch] = useControlledReducer<
-    UseTagGroupState,
-    UseTagGroupProps,
+    UseTagGroupState<Item>,
+    UseTagGroupProps<Item>,
     UseTagGroupStateChangeTypes,
     UseTagGroupReducerAction
-  >(
-    useTagGroupReducer,
-    props,
-    () => ({activeIndex: -1, items: []}),
-    (oldState, newState) => oldState.activeIndex === newState.activeIndex,
-  )
+  >(useTagGroupReducer, props, getInitialState, isTagGroupStateEqual)
+  const {activeIndex, items} = state
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
-
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
+  const itemRefs = useRef<Record<string, HTMLElement>>({})
+
+  useEffect(() => {
+    if (activeIndex >= 0 && activeIndex < items.length) {
+      itemRefs.current[elementIds.getItemId(activeIndex)]?.focus()
+    }
+  }, [activeIndex, elementIds, items])
 
   // Getter functions.
   const getTagGroupProps = useCallback(
@@ -79,7 +87,12 @@ export default function useTagGroup(
   ) as GetTagGroupProps
 
   const getTagProps = useCallback(
-    ({index, ...rest}: GetTagPropsOptions): GetTagPropsReturnValue => {
+    ({
+      index,
+      refKey = 'ref',
+      ref,
+      ...rest
+    }: GetTagPropsOptions): GetTagPropsReturnValue => {
       if (index === undefined) {
         throw new Error('Pass index to getTagProps!')
       }
@@ -91,6 +104,11 @@ export default function useTagGroup(
       }
 
       return {
+        [refKey]: handleRefs(ref, itemNode => {
+          if (itemNode) {
+            itemRefs.current[elementIds.getItemId(index)] = itemNode
+          }
+        }),
         role: 'row',
         id: elementIds.getItemId(index),
         onClick,
@@ -124,8 +142,10 @@ export default function useTagGroup(
   ) as GetTagRemoveProps
 
   return {
+    activeIndex,
     getTagGroupProps,
     getTagProps,
     getTagRemoveProps,
+    items,
   }
 }
