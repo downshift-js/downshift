@@ -1,29 +1,12 @@
 import {UseTagGroupProps} from './index.types'
 
 export type UseElementIdsProps = Pick<
-  UseTagGroupProps,
+  UseTagGroupProps<unknown>,
   'id' | 'getItemId' | 'groupId'
 >
 export type UseElementIdsReturnValue = Required<
-  Pick<UseTagGroupProps, 'getItemId' | 'groupId'>
+  Pick<UseTagGroupProps<unknown>, 'getItemId' | 'groupId'>
 >
-
-// export interface ActionWithProps<P, T> extends Action<T> {
-//   props: P
-// }
-
-// export interface Action<T> {
-//   type: T
-// }
-
-// export type StateReducer<S, P, T> = (
-//   state: S,
-//   actionAndChanges: ActionWithProps<P, T> & {changes: S},
-// ) => S
-
-// export interface Props<S extends State, T> {
-//   onStateChange?(typeAndChanges: Action<T> & Partial<S>): void
-// }
 
 export type State = Record<string, unknown>
 

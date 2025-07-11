@@ -1,31 +1,39 @@
 import {Overwrite} from '../../../typings'
 import {Action} from './utils.types'
 
-export interface UseTagGroupState extends Record<string, unknown> {
+export interface UseTagGroupState<Item> extends Record<string, unknown> {
   activeIndex: number
-  items: unknown[]
+  items: Item[]
 }
 
-export interface UseTagGroupProps extends Partial<UseTagGroupState> {
-  id?: string
+export interface UseTagGroupProps<Item> extends Partial<UseTagGroupState<Item>> {
+  defaultActiveIndex?: number
+  defaultItems?: Item[]
+  initialActiveIndex?: number
+  initialItems?: Item[]
   groupId?: string
   getItemId?: (index: number) => string
+  id?: string
   stateReducer(
-    state: UseTagGroupState,
+    state: UseTagGroupState<Item>,
     actionAndChanges: Action<UseTagGroupStateChangeTypes> & {
-      changes: Partial<UseTagGroupState>
+      changes: Partial<UseTagGroupState<Item>>
     },
-  ): Partial<UseTagGroupState>
+  ): Partial<UseTagGroupState<Item>>
 }
 
-export interface UseTagGroupReturnValue {
+export interface UseTagGroupReturnValue<Item> {
   getTagGroupProps: GetTagGroupProps
   getTagProps: GetTagProps
   getTagRemoveProps: GetTagRemoveProps
+  items: Item[]
+  activeIndex: number
 }
 
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
   index?: number
+  refKey?: string
+  ref?: React.MutableRefObject<HTMLElement>
 }
 
 export interface GetTagPropsReturnValue extends React.HTMLProps<HTMLElement> {
