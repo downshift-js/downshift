@@ -5,8 +5,8 @@ import {
   colors,
   containerStyles,
   menuStyles,
-  selectedItemsContainerSyles,
-  selectedItemStyles,
+  tagGroupSyles,
+  tagStyles,
 } from '../utils'
 
 const initialSelectedItems = [colors[0], colors[1]]
@@ -76,14 +76,14 @@ export default function DropdownMultipleSelect() {
       >
         Choose an element:
       </label>
-      <div style={selectedItemsContainerSyles}>
+      <div style={tagGroupSyles}>
         {selectedItems.map(function renderSelectedItem(
           selectedItemForRender,
           index,
         ) {
           return (
             <span
-              style={selectedItemStyles}
+              style={tagStyles}
               key={`selected-item-${index}`}
               {...getSelectedItemProps({
                 selectedItem: selectedItemForRender,

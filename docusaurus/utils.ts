@@ -35,7 +35,7 @@ export const containerStyles: CSSProperties = {
   alignSelf: 'center',
 }
 
-export const selectedItemsContainerSyles: CSSProperties = {
+export const tagGroupSyles: CSSProperties = {
   display: 'inline-flex',
   gap: '8px',
   alignItems: 'center',
@@ -43,11 +43,12 @@ export const selectedItemsContainerSyles: CSSProperties = {
   padding: '6px',
 }
 
-export const selectedItemStyles: CSSProperties = {
+export const tagStyles: CSSProperties = {
   backgroundColor: 'green',
   padding: '0 6px',
   margin: '0 2px',
   borderRadius: '10px',
+  cursor: 'auto',
 }
 
 export const removeTagStyles: CSSProperties = {
