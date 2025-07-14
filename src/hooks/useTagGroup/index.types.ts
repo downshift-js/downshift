@@ -6,7 +6,8 @@ export interface UseTagGroupState<Item> extends Record<string, unknown> {
   items: Item[]
 }
 
-export interface UseTagGroupProps<Item> extends Partial<UseTagGroupState<Item>> {
+export interface UseTagGroupProps<Item>
+  extends Partial<UseTagGroupState<Item>> {
   defaultActiveIndex?: number
   defaultItems?: Item[]
   initialActiveIndex?: number
@@ -20,14 +21,16 @@ export interface UseTagGroupProps<Item> extends Partial<UseTagGroupState<Item>> 
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>
+  environment?: Environment
 }
 
 export interface UseTagGroupReturnValue<Item> {
+  activeIndex: number
+  addItem: (item: Item, index?: number) => void
   getTagGroupProps: GetTagGroupProps
   getTagProps: GetTagProps
   getTagRemoveProps: GetTagRemoveProps
   items: Item[]
-  activeIndex: number
 }
 
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
@@ -74,21 +77,51 @@ export enum UseTagGroupStateChangeTypes {
   TagClick = '__tag_click__',
   TagGroupKeyDownArrowLeft = '__taggroup_keydown_arrowleft__',
   TagGroupKeyDownArrowRight = '__taggroup_keydown_arrowright__',
+  TagGroupKeyDownBackspace = '__taggroup_keydown_backspace__',
+  TagGroupKeyDownDelete = '__taggroup_keydown_delete__',
+  TagRemoveClick = '__tagremove_click__',
+  FunctionAddItem = '__function_add_item__',
 }
 
-export type UseTagGroupReducerAction =
+export type UseTagGroupReducerAction<Item> =
   | UseTagGroupTagClickReducerAction
-  | UseTagGroupTagGroupKeyDownArrowLeftAction
-  | UseTagGroupTagGroupKeyDownArrowRightAction
+  | UseTagGroupTagKeyDownArrowLeftAction
+  | UseTagGroupTagKeyDownArrowRightAction
+  | UseTagGroupTagKeyDownBackspaceAction
+  | UseTagGroupTagKeyDownDeleteAction
+  | UseTagGroupTagRemoveClickAction
+  | UseTagGroupFunctionAddItem<Item>
 
 export type UseTagGroupTagClickReducerAction = {
   type: UseTagGroupStateChangeTypes.TagClick
   index: number
 }
 
-export type UseTagGroupTagGroupKeyDownArrowLeftAction = {
+export type UseTagGroupTagKeyDownArrowLeftAction = {
   type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowLeft
 }
-export type UseTagGroupTagGroupKeyDownArrowRightAction = {
+export type UseTagGroupTagKeyDownArrowRightAction = {
   type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowRight
+}
+export type UseTagGroupTagKeyDownBackspaceAction = {
+  type: UseTagGroupStateChangeTypes.TagGroupKeyDownBackspace
+}
+export type UseTagGroupTagKeyDownDeleteAction = {
+  type: UseTagGroupStateChangeTypes.TagGroupKeyDownDelete
+}
+export type UseTagGroupTagRemoveClickAction = {
+  type: UseTagGroupStateChangeTypes.TagRemoveClick
+  index: number
+}
+export type UseTagGroupFunctionAddItem<Item> = {
+  type: UseTagGroupStateChangeTypes.FunctionAddItem
+  item: Item
+  index?: number
+}
+
+export interface Environment {
+  addEventListener: typeof window.addEventListener
+  removeEventListener: typeof window.removeEventListener
+  document: Document
+  Node: typeof window.Node
 }

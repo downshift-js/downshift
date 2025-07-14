@@ -1,6 +1,9 @@
 import {useEffect, useCallback, useRef} from 'react'
 
 import {handleRefs, useLatestRef} from '../../utils-ts'
+import {useIsInitialMount} from '../utils-ts'
+// @ts-expect-error: can't import it otherwise.
+import {isReactNative} from '../../is.macro'
 import {
   useElementIds,
   validatePropTypes,
@@ -33,11 +36,18 @@ export default function useTagGroup<Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
 ): UseTagGroupReturnValue<Item> {
   validatePropTypes(userProps, useTagGroup)
+  console.log(isReactNative)
   // Props defaults and destructuring.
-  const defaultProps: Pick<UseTagGroupProps<Item>, 'stateReducer'> = {
+  const defaultProps: Pick<
+    UseTagGroupProps<Item>,
+    'stateReducer' | 'environment'
+  > = {
     stateReducer(_s, {changes}) {
       return changes
     },
+    environment:
+      /* istanbul ignore next (ssr) */
+      typeof window === 'undefined' || isReactNative ? undefined : window,
   }
   const props = {
     ...defaultProps,
@@ -47,7 +57,7 @@ export default function useTagGroup<Item>(
     UseTagGroupState<Item>,
     UseTagGroupProps<Item>,
     UseTagGroupStateChangeTypes,
-    UseTagGroupReducerAction
+    UseTagGroupReducerAction<Item>
   >(useTagGroupReducer, props, getInitialState, isTagGroupStateEqual)
   const {activeIndex, items} = state
   // utility callback to get item element.
@@ -55,23 +65,43 @@ export default function useTagGroup<Item>(
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
   const itemRefs = useRef<Record<string, HTMLElement>>({})
+  const isInitialMount = useIsInitialMount()
 
   useEffect(() => {
-    if (activeIndex >= 0 && activeIndex < items.length) {
+    if (isInitialMount) {
+      return
+    }
+    if (activeIndex >= 0 && activeIndex < items.length && props.environment) {
       itemRefs.current[elementIds.getItemId(activeIndex)]?.focus()
     }
-  }, [activeIndex, elementIds, items])
+  }, [activeIndex, elementIds, isInitialMount, items.length, props.environment])
 
   // Getter functions.
   const getTagGroupProps = useCallback(
     (options?: GetTagGroupPropsOptions & unknown) => {
       const onKeyDown = (e: React.KeyboardEvent): void => {
-        if (e.key === 'ArrowLeft') {
-          dispatch({type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowLeft})
-        } else if (e.key === 'ArrowRight') {
-          dispatch({
-            type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowRight,
-          })
+        switch (e.key) {
+          case 'ArrowLeft':
+            dispatch({
+              type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowLeft,
+            })
+            break
+          case 'ArrowRight':
+            dispatch({
+              type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowRight,
+            })
+            break
+          case 'Delete':
+            dispatch({
+              type: UseTagGroupStateChangeTypes.TagGroupKeyDownDelete,
+            })
+            break
+          case 'Backspace':
+            dispatch({
+              type: UseTagGroupStateChangeTypes.TagGroupKeyDownBackspace,
+            })
+            break
+          default:
         }
       }
 
@@ -128,6 +158,11 @@ export default function useTagGroup<Item>(
         throw new Error('Pass index to getTagRemoveProps!')
       }
 
+      const onClick = (event: React.MouseEvent) => {
+        event.stopPropagation()
+        dispatch({type: UseTagGroupStateChangeTypes.TagRemoveClick, index})
+      }
+
       const tagId = elementIds.getItemId(index)
       const id = `${tagId}-remove`
 
@@ -135,14 +170,23 @@ export default function useTagGroup<Item>(
         id,
         tabIndex: -1,
         'aria-labelledby': `${id} ${tagId}`,
+        onClick,
         ...rest,
       }
     },
-    [elementIds],
+    [elementIds, dispatch],
   ) as GetTagRemoveProps
+
+  const addItem = useCallback<UseTagGroupReturnValue<Item>['addItem']>(
+    (item, index): void => {
+      dispatch({type: UseTagGroupStateChangeTypes.FunctionAddItem, item, index})
+    },
+    [dispatch],
+  )
 
   return {
     activeIndex,
+    addItem,
     getTagGroupProps,
     getTagProps,
     getTagRemoveProps,

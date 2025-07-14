@@ -239,12 +239,14 @@ function invokeOnChangeHandler<
 export function getInitialState<I>(
   props: UseTagGroupProps<I>,
 ): UseTagGroupState<I> {
+  const items = props.items ?? props.initialItems ?? props.defaultItems ?? []
   const activeIndex =
     props.activeIndex ??
     props.initialActiveIndex ??
     props.defaultActiveIndex ??
-    -1
-  const items = props.items ?? props.initialItems ?? props.defaultItems ?? []
+    items.length === 0
+      ? -1
+      : 0
 
   return {
     activeIndex,

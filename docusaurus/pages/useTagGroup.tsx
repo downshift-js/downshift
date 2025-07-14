@@ -8,6 +8,7 @@ import './useTagGroup.css'
 export default function DropdownMultipleCombobox() {
   const initialItems = colors.slice(0, 5)
   const {
+    addItem,
     getTagProps,
     getTagRemoveProps,
     getTagGroupProps,
@@ -38,8 +39,19 @@ export default function DropdownMultipleCombobox() {
       <div>Add more items:</div>
       <ul>
         {itemsToAdd.map(item => (
-          <li className="item-to-add" tabIndex={0} key={item}>
-            {item}
+          <li key={item}>
+            <button
+              className="item-to-add"
+              tabIndex={0}
+              onClick={() => {
+                addItem(item)
+              }}
+              onKeyDown={({key}) => {
+                key === 'Enter' && addItem(item)
+              }}
+            >
+              {item}
+            </button>
           </li>
         ))}
       </ul>
