@@ -18,6 +18,7 @@ import {
 } from '../utils'
 import {cleanupStatusDiv, setStatus} from '../set-a11y-status'
 import { generateId } from '../utils-ts'
+import { useIsInitialMount } from './utils-ts'
 
 const dropdownDefaultStateValues = {
   highlightedIndex: -1,
@@ -622,23 +623,6 @@ function isDropdownsStateEqual(prevState, newState) {
 }
 
 /**
- * Tracks if it's the first render.
- */
-function useIsInitialMount() {
-  const isInitialMountRef = React.useRef(true)
-
-  React.useEffect(() => {
-    isInitialMountRef.current = false
-
-    return () => {
-      isInitialMountRef.current = true
-    }
-  }, [])
-
-  return isInitialMountRef.current
-}
-
-/**
  * Returns the new highlightedIndex based on the defaultHighlightedIndex prop, if it's not disabled.
  *
  * @param {Object} props Props from useCombobox or useSelect.
@@ -739,7 +723,6 @@ export {
   isDropdownsStateEqual,
   commonDropdownPropTypes,
   commonPropTypes,
-  useIsInitialMount,
   useA11yMessageStatus,
   getDefaultHighlightedIndex,
 }

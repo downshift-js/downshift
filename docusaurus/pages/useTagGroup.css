@@ -16,10 +16,10 @@
 }
 
 .tag:hover {
-    opacity: .5;
+  opacity: 0.5;
 }
 
-.selected-tag {
+.tag:focus {
   background-color: red;
   border-color: darkred;
 }
