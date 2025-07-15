@@ -36,7 +36,6 @@ export default function useTagGroup<Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
 ): UseTagGroupReturnValue<Item> {
   validatePropTypes(userProps, useTagGroup)
-  console.log(isReactNative)
   // Props defaults and destructuring.
   const defaultProps: Pick<
     UseTagGroupProps<Item>,
@@ -65,16 +64,29 @@ export default function useTagGroup<Item>(
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
   const itemRefs = useRef<Record<string, HTMLElement>>({})
+  const previousItemsLengthRef = useRef(items.length)
   const isInitialMount = useIsInitialMount()
 
   useEffect(() => {
     if (isInitialMount) {
       return
     }
-    if (activeIndex >= 0 && activeIndex < items.length && props.environment) {
+
+    if (previousItemsLengthRef.current < items.length) {
+      return
+    }
+
+    if (
+      activeIndex >= 0 &&
+      activeIndex < Object.keys(itemRefs.current).length
+    ) {
       itemRefs.current[elementIds.getItemId(activeIndex)]?.focus()
     }
-  }, [activeIndex, elementIds, isInitialMount, items.length, props.environment])
+  }, [activeIndex, elementIds, isInitialMount, items.length])
+
+  useEffect(() => {
+    previousItemsLengthRef.current = items.length
+  })
 
   // Getter functions.
   const getTagGroupProps = useCallback(

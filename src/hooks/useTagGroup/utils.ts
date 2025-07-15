@@ -246,7 +246,7 @@ export function getInitialState<I>(
     props.defaultActiveIndex ??
     items.length === 0
       ? -1
-      : 0
+      : items.length - 1
 
   return {
     activeIndex,

@@ -72,7 +72,6 @@ export function useTagGroupReducer<Item>(
       break
     case stateChangeTypes.FunctionAddItem: {
       let newItems: Item[] = []
-      let newActiveIndex = state.activeIndex
 
       if (action.index === undefined) {
         newItems = [...state.items, action.item]
@@ -82,15 +81,14 @@ export function useTagGroupReducer<Item>(
           action.item,
           ...state.items.slice(action.index),
         ]
-
-        if (action.index >= state.activeIndex) {
-          newActiveIndex = state.activeIndex - 1
-        }
       }
+
+      const newActiveIndex =
+        state.activeIndex === -1 ? newItems.length - 1 : state.activeIndex
 
       changes = {
         items: newItems,
-        activeIndex: newActiveIndex,
+        activeIndex: newActiveIndex
       }
       break
     }
