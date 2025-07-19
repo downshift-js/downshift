@@ -12,8 +12,8 @@ export interface UseTagGroupProps<Item>
   defaultItems?: Item[]
   initialActiveIndex?: number
   initialItems?: Item[]
-  groupId?: string
-  getItemId?: (index: number) => string
+  tagGroupId?: string
+  getTagId?: (index: number) => string
   id?: string
   stateReducer(
     state: UseTagGroupState<Item>,

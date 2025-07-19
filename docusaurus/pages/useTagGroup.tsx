@@ -5,7 +5,7 @@ import {colors} from '../utils'
 
 import './useTagGroup.css'
 
-export default function DropdownMultipleCombobox() {
+export default function TagGroup() {
   const initialItems = colors.slice(0, 5)
   const {
     addItem,
