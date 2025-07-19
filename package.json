@@ -51,7 +51,8 @@
     ".": {
       "import": "./dist/downshift.esm.js",
       "require": "./dist/downshift.cjs.js",
-      "types": "./typings/index.d.ts"
+      "types": "./typings/index.d.ts",
+      "default": "./dist/downshift.esm.js"
     },
     "./react-native": {
       "require": "./dist/downshift.native.cjs.js",
