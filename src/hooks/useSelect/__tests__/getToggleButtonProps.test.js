@@ -65,7 +65,7 @@ describe('getToggleButtonProps', () => {
       expect(toggleButtonProps.id).toEqual(props.toggleButtonId)
     })
 
-    test("assign 'listbbox' to aria-haspopup", () => {
+    test("assign 'listbox' to aria-haspopup", () => {
       const {result} = renderUseSelect()
       const toggleButtonProps = result.current.getToggleButtonProps()
 

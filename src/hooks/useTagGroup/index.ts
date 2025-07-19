@@ -1,6 +1,6 @@
 import {useEffect, useCallback, useRef} from 'react'
 
-import {handleRefs, useLatestRef} from '../../utils-ts'
+import {callAllEventHandlers, handleRefs, useLatestRef} from '../../utils-ts'
 import {useIsInitialMount} from '../utils-ts'
 // @ts-expect-error: can't import it otherwise.
 import {isReactNative} from '../../is.macro'
@@ -80,7 +80,7 @@ export default function useTagGroup<Item>(
       activeIndex >= 0 &&
       activeIndex < Object.keys(itemRefs.current).length
     ) {
-      itemRefs.current[elementIds.getItemId(activeIndex)]?.focus()
+      itemRefs.current[elementIds.getTagId(activeIndex)]?.focus()
     }
   }, [activeIndex, elementIds, isInitialMount, items.length])
 
@@ -90,8 +90,8 @@ export default function useTagGroup<Item>(
 
   // Getter functions.
   const getTagGroupProps = useCallback(
-    (options?: GetTagGroupPropsOptions & unknown) => {
-      const onKeyDown = (e: React.KeyboardEvent): void => {
+    ({onKeyDown, ...rest}: GetTagGroupPropsOptions & unknown = {}) => {
+      const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>): void => {
         switch (e.key) {
           case 'ArrowLeft':
             dispatch({
@@ -119,8 +119,8 @@ export default function useTagGroup<Item>(
 
       const tagGroupProps: GetTagGroupPropsReturnValue = {
         role: 'grid',
-        onKeyDown,
-        ...(options ?? {}),
+        onKeyDown: callAllEventHandlers(onKeyDown, handleKeyDown),
+        ...rest,
       }
 
       return tagGroupProps
@@ -131,6 +131,7 @@ export default function useTagGroup<Item>(
   const getTagProps = useCallback(
     ({
       index,
+      onClick,
       refKey = 'ref',
       ref,
       ...rest
@@ -141,19 +142,19 @@ export default function useTagGroup<Item>(
 
       const latestState = latest.current.state
 
-      const onClick = () => {
+      const handleClick = () => {
         dispatch({type: UseTagGroupStateChangeTypes.TagClick, index})
       }
 
       return {
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(index)] = itemNode
+            itemRefs.current[elementIds.getTagId(index)] = itemNode
           }
         }),
         role: 'row',
-        id: elementIds.getItemId(index),
-        onClick,
+        id: elementIds.getTagId(index),
+        onClick: callAllEventHandlers(onClick, handleClick),
         tabIndex: latestState.activeIndex === index ? 0 : -1,
         ...rest,
       }
@@ -175,7 +176,7 @@ export default function useTagGroup<Item>(
         dispatch({type: UseTagGroupStateChangeTypes.TagRemoveClick, index})
       }
 
-      const tagId = elementIds.getItemId(index)
+      const tagId = elementIds.getTagId(index)
       const id = `${tagId}-remove`
 
       return {

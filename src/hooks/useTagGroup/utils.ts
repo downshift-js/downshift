@@ -38,8 +38,8 @@ export const useElementIds: (
 
 function useElementIdsR18({
   id,
-  groupId,
-  getItemId,
+  tagGroupId,
+  getTagId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
   // Avoid conditional useId call
   const reactId = `downshift-${React.useId()}`
@@ -48,8 +48,8 @@ function useElementIdsR18({
   }
 
   const elementIdsRef = React.useRef({
-    groupId: groupId ?? `${id}-tag-group`,
-    getItemId: getItemId ?? (index => `${id}-item-${index}`),
+    tagGroupId: tagGroupId ?? `${id}-tag-group`,
+    getTagId: getTagId ?? (index => `${id}-tag-${index}`),
   })
 
   return elementIdsRef.current
@@ -57,12 +57,12 @@ function useElementIdsR18({
 
 function useElementIdsLegacy({
   id = `downshift-${generateId()}`,
-  getItemId,
-  groupId,
+  getTagId,
+  tagGroupId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
   const elementIdsRef = React.useRef({
-    groupId: groupId ?? `${id}-menu`,
-    getItemId: getItemId ?? (index => `${id}-item-${index}`),
+    tagGroupId: tagGroupId ?? `${id}-menu`,
+    getTagId: getTagId ?? (index => `${id}-item-${index}`),
   })
 
   return elementIdsRef.current
@@ -244,9 +244,7 @@ export function getInitialState<I>(
     props.activeIndex ??
     props.initialActiveIndex ??
     props.defaultActiveIndex ??
-    items.length === 0
-      ? -1
-      : items.length - 1
+    (items.length === 0 ? -1 : items.length - 1)
 
   return {
     activeIndex,

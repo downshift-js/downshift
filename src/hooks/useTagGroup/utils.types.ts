@@ -2,10 +2,10 @@ import {UseTagGroupProps} from './index.types'
 
 export type UseElementIdsProps = Pick<
   UseTagGroupProps<unknown>,
-  'id' | 'getItemId' | 'groupId'
+  'id' | 'getTagId' | 'tagGroupId'
 >
 export type UseElementIdsReturnValue = Required<
-  Pick<UseTagGroupProps<unknown>, 'getItemId' | 'groupId'>
+  Pick<UseTagGroupProps<unknown>, 'getTagId' | 'tagGroupId'>
 >
 
 export type State = Record<string, unknown>
