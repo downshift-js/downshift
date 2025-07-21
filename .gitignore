@@ -31,3 +31,6 @@ flow-coverage/
 .env.production.local
 
 npm-debug.log*
+
+# IDE settings
+.idea
