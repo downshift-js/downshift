@@ -55,6 +55,10 @@ export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
     return utils.getByRole('grid')
   }
 
+  function getTagsRemoves() {
+    return utils.getAllByRole('button')
+  }
+
   async function clickOnTag(index: number) {
     const tags = getTags()
     const tag = tags[index] as HTMLElement
@@ -62,7 +66,13 @@ export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
     await user.click(tag)
   }
 
-  return {...utils, getTags, getTagGroup, clickOnTag, user}
+  async function clickOnRemoveTag(index: number) {
+    const removeButtons = getTagsRemoves()
+
+    await user.click(removeButtons[index] as HTMLElement)
+  }
+
+  return {...utils, getTags, getTagGroup, clickOnTag, clickOnRemoveTag, user}
 }
 
 export function renderUseTagGroup(
@@ -84,15 +94,16 @@ function TagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
         <span
           className={`${index === activeIndex ? 'selected-tag' : ''} tag`}
           key={color}
+          aria-label={color}
           {...getTagProps({index})}
         >
           {color}
-          <span
+          <button
             className="tag-remove-button"
             {...getTagRemoveProps({index, 'aria-label': 'remove color'})}
           >
             &#10005;
-          </span>
+          </button>
         </span>
       ))}
     </div>

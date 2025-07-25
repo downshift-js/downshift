@@ -4,10 +4,10 @@ describe('getTagProps', () => {
   describe('hook props', () => {
     test('assign assigns a role of "row"', () => {
       const {result} = renderUseTagGroup()
-      const tagGroupProps = result.current.getTagProps({index: 0})
+      const tagProps = result.current.getTagProps({index: 0})
 
-      expect(tagGroupProps.role).toEqual('row')
-      expect(tagGroupProps.tabIndex).toEqual(-1)
+      expect(tagProps.role).toEqual('row')
+      expect(tagProps.tabIndex).toEqual(-1)
     })
 
     test('assign default value to id', () => {
