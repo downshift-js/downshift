@@ -15,13 +15,10 @@ import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupProps,
   GetTagGroupPropsOptions,
-  GetTagGroupPropsReturnValue,
   GetTagProps,
   GetTagPropsOptions,
-  GetTagPropsReturnValue,
   GetTagRemoveProps,
   GetTagRemovePropsOptions,
-  GetTagRemovePropsReturnValue,
   UseTagGroupProps,
   UseTagGroupReducerAction,
   UseTagGroupReturnValue,
@@ -117,7 +114,10 @@ export default function useTagGroup<Item>(
         }
       }
 
-      const tagGroupProps: GetTagGroupPropsReturnValue = {
+      const tagGroupProps = {
+        'aria-live': 'polite',
+        'aria-atomic': 'false',
+        'aria-relevant': 'additions',
         role: 'grid',
         onKeyDown: callAllEventHandlers(onKeyDown, handleKeyDown),
         ...rest,
@@ -129,13 +129,7 @@ export default function useTagGroup<Item>(
   ) as GetTagGroupProps
 
   const getTagProps = useCallback(
-    ({
-      index,
-      onClick,
-      refKey = 'ref',
-      ref,
-      ...rest
-    }: GetTagPropsOptions): GetTagPropsReturnValue => {
+    ({index, onClick, refKey = 'ref', ref, ...rest}: GetTagPropsOptions) => {
       if (index === undefined) {
         throw new Error('Pass index to getTagProps!')
       }
@@ -145,6 +139,7 @@ export default function useTagGroup<Item>(
       const handleClick = () => {
         dispatch({type: UseTagGroupStateChangeTypes.TagClick, index})
       }
+      const id = elementIds.getTagId(index)
 
       return {
         [refKey]: handleRefs(ref, itemNode => {
@@ -153,7 +148,7 @@ export default function useTagGroup<Item>(
           }
         }),
         role: 'row',
-        id: elementIds.getTagId(index),
+        id,
         onClick: callAllEventHandlers(onClick, handleClick),
         tabIndex: latestState.activeIndex === index ? 0 : -1,
         ...rest,
@@ -163,15 +158,12 @@ export default function useTagGroup<Item>(
   ) as GetTagProps
 
   const getTagRemoveProps = useCallback(
-    ({
-      index,
-      ...rest
-    }: GetTagRemovePropsOptions): GetTagRemovePropsReturnValue => {
+    ({index, onClick, ...rest}: GetTagRemovePropsOptions) => {
       if (index === undefined) {
         throw new Error('Pass index to getTagRemoveProps!')
       }
 
-      const onClick = (event: React.MouseEvent) => {
+      const handleClick = (event: React.MouseEvent) => {
         event.stopPropagation()
         dispatch({type: UseTagGroupStateChangeTypes.TagRemoveClick, index})
       }
@@ -183,7 +175,7 @@ export default function useTagGroup<Item>(
         id,
         tabIndex: -1,
         'aria-labelledby': `${id} ${tagId}`,
-        onClick,
+        onClick: callAllEventHandlers(onClick, handleClick),
         ...rest,
       }
     },
