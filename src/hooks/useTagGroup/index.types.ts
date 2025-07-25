@@ -39,26 +39,34 @@ export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
   ref?: React.MutableRefObject<HTMLElement>
 }
 
-export interface GetTagPropsReturnValue extends React.HTMLProps<HTMLElement> {
+export interface GetTagPropsReturnValue {
   id: string
-  role: string
+  role: 'row'
+  onPress?: (event: React.BaseSyntheticEvent) => void
+  onClick?: React.MouseEventHandler
+  tabIndex: 0 | -1
 }
 
 export interface GetTagRemovePropsOptions extends React.HTMLProps<HTMLElement> {
   index?: number
 }
 
-export interface GetTagRemovePropsReturnValue
-  extends React.HTMLProps<HTMLElement> {
+export interface GetTagRemovePropsReturnValue {
   id: string
   'aria-labelledby': string
+  onPress?: (event: React.BaseSyntheticEvent) => void
+  onClick?: React.MouseEventHandler
+  tabIndex: -1
 }
 
 export type GetTagGroupPropsOptions = React.HTMLProps<HTMLElement>
 
-export interface GetTagGroupPropsReturnValue
-  extends React.HTMLProps<HTMLElement> {
-  role: string
+export interface GetTagGroupPropsReturnValue {
+  role: 'grid'
+  'aria-live': 'polite'
+  'aria-atomic': 'false'
+  'aria-relevant': 'additions'
+  onKeyDown: React.KeyboardEventHandler
 }
 
 export type GetTagGroupProps = <Options>(
