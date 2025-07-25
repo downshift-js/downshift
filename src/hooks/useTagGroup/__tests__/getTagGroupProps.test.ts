@@ -8,11 +8,14 @@ import {
 
 describe('getTagGroupProps', () => {
   describe('hook props', () => {
-    test('assign assigns a role of "grid"', () => {
+    test('assign assigns a role of "grid" and aria live attributes', () => {
       const {result} = renderUseTagGroup()
       const tagGroupProps = result.current.getTagGroupProps()
 
       expect(tagGroupProps.role).toEqual('grid')
+      expect(tagGroupProps["aria-live"]).toEqual('polite')
+      expect(tagGroupProps["aria-atomic"]).toEqual('false')
+      expect(tagGroupProps["aria-relevant"]).toEqual('additions')
     })
   })
 
