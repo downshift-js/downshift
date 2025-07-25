@@ -27,12 +27,12 @@ export default function TagGroup() {
             {...getTagProps({index})}
           >
             {color}
-            <span
+            <button
               className="tag-remove-button"
               {...getTagRemoveProps({index, 'aria-label': 'remove color'})}
             >
               &#10005;
-            </span>
+            </button>
           </span>
         ))}
       </div>

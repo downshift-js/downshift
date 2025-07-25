@@ -27,6 +27,8 @@
 .tag-remove-button {
   padding: 4px;
   cursor: pointer;
+  border: none;
+  background-color: transparent;
 }
 
 .item-to-add {
