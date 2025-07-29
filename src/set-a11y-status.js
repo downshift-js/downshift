@@ -15,6 +15,8 @@ function getStatusDiv(documentProp) {
     return statusDiv
   }
 
+  // refactor this for the aria description
+
   statusDiv = documentProp.createElement('div')
   statusDiv.setAttribute('id', 'a11y-status-message')
   statusDiv.setAttribute('role', 'status')

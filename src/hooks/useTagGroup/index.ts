@@ -115,6 +115,7 @@ export default function useTagGroup<Item>(
       }
 
       const tagGroupProps = {
+        id: elementIds.tagGroupId,
         'aria-live': 'polite',
         'aria-atomic': 'false',
         'aria-relevant': 'additions',
@@ -125,7 +126,7 @@ export default function useTagGroup<Item>(
 
       return tagGroupProps
     },
-    [dispatch],
+    [dispatch, elementIds.tagGroupId],
   ) as GetTagGroupProps
 
   const getTagProps = useCallback(
@@ -174,7 +175,7 @@ export default function useTagGroup<Item>(
       return {
         id,
         tabIndex: -1,
-        'aria-labelledby': `${id} ${tagId}`,
+        'aria-labelledby': `${elementIds.tagGroupId} ${tagId}`,
         onClick: callAllEventHandlers(onClick, handleClick),
         ...rest,
       }

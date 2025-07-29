@@ -13,6 +13,7 @@ describe('getTagGroupProps', () => {
       const tagGroupProps = result.current.getTagGroupProps()
 
       expect(tagGroupProps.role).toEqual('grid')
+      expect(tagGroupProps.id).toEqual('downshift-test-id-tag-group')
       expect(tagGroupProps["aria-live"]).toEqual('polite')
       expect(tagGroupProps["aria-atomic"]).toEqual('false')
       expect(tagGroupProps["aria-relevant"]).toEqual('additions')

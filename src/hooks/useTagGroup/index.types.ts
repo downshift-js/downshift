@@ -62,6 +62,7 @@ export interface GetTagRemovePropsReturnValue {
 export type GetTagGroupPropsOptions = React.HTMLProps<HTMLElement>
 
 export interface GetTagGroupPropsReturnValue {
+  id: string
   role: 'grid'
   'aria-live': 'polite'
   'aria-atomic': 'false'

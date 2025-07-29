@@ -72,7 +72,7 @@ export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
     await user.click(removeButtons[index] as HTMLElement)
   }
 
-  return {...utils, getTags, getTagGroup, clickOnTag, clickOnRemoveTag, user}
+  return {...utils, getTags, getTagGroup, clickOnTag, clickOnRemoveTag, getTagsRemoves, user}
 }
 
 export function renderUseTagGroup(
