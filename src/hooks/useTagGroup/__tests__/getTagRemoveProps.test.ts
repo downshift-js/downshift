@@ -15,7 +15,7 @@ describe('getTagRemoveProps', () => {
 
       expect(tagRemoveProps.tabIndex).toEqual(-1)
       expect(tagRemoveProps['aria-labelledby']).toEqual(
-        `${defaultIds.getTagId(0)}-remove ${defaultIds.getTagId(0)}`,
+        `${defaultIds.tagGroupId} ${defaultIds.getTagId(0)}`,
       )
     })
 
