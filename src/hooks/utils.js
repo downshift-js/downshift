@@ -4,6 +4,7 @@ import React, {
   useReducer,
   useEffect,
   useLayoutEffect,
+  useMemo,
 } from 'react'
 import PropTypes from 'prop-types'
 import {isReactNative} from '../is.macro'
@@ -97,15 +98,18 @@ const useElementIds =
           id = reactId
         }
 
-        const elementIdsRef = useRef({
-          labelId: labelId || `${id}-label`,
-          menuId: menuId || `${id}-menu`,
-          getItemId: getItemId || (index => `${id}-item-${index}`),
-          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-          inputId: inputId || `${id}-input`,
-        })
+        const elementIds = useMemo(
+          () => ({
+            labelId: labelId || `${id}-label`,
+            menuId: menuId || `${id}-menu`,
+            getItemId: getItemId || (index => `${id}-item-${index}`),
+            toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+            inputId: inputId || `${id}-input`,
+          }),
+          [getItemId, id, inputId, labelId, menuId, toggleButtonId],
+        )
 
-        return elementIdsRef.current
+        return elementIds
       }
     : function useElementIds({
         id = `downshift-${generateId()}`,
@@ -115,15 +119,18 @@ const useElementIds =
         toggleButtonId,
         inputId,
       }) {
-        const elementIdsRef = useRef({
-          labelId: labelId || `${id}-label`,
-          menuId: menuId || `${id}-menu`,
-          getItemId: getItemId || (index => `${id}-item-${index}`),
-          toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-          inputId: inputId || `${id}-input`,
-        })
+        const elementIds = useMemo(
+          () => ({
+            labelId: labelId || `${id}-label`,
+            menuId: menuId || `${id}-menu`,
+            getItemId: getItemId || (index => `${id}-item-${index}`),
+            toggleButtonId: toggleButtonId || `${id}-toggle-button`,
+            inputId: inputId || `${id}-input`,
+          }),
+          [getItemId, id, inputId, labelId, menuId, toggleButtonId],
+        )
 
-        return elementIdsRef.current
+        return elementIds
       }
 
 function getItemAndIndex(itemProp, indexProp, items, errorMessage) {
