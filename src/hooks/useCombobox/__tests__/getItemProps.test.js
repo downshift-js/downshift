@@ -394,7 +394,7 @@ describe('getItemProps', () => {
     test('will be displayed if getInputProps is not called', () => {
       renderHook(() => {
         const {getItemProps} = useCombobox({items})
-        getItemProps({disabled: true, index: 98})
+        getItemProps({disabled: true, index: 1})
       })
 
       expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(

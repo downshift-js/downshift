@@ -1,7 +1,7 @@
 import {Overwrite} from '../../../typings'
-import {Action} from './utils.types'
+import {Action, State} from '../../utils-ts'
 
-export interface UseTagGroupState<Item> extends Record<string, unknown> {
+export interface UseTagGroupState<Item> extends State {
   activeIndex: number
   items: Item[]
 }

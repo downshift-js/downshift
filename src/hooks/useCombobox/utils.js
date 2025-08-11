@@ -1,13 +1,9 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {isControlledProp, getState, noop} from '../../utils'
-import {
-  commonDropdownPropTypes,
-  defaultProps as defaultPropsCommon,
-  getInitialState as getInitialStateCommon,
-  useEnhancedReducer,
-  useIsInitialMount,
-} from '../utils'
+import {getInitialState as getInitialStateCommon} from '../utils'
+import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
+import {useIsInitialMount, useEnhancedReducer} from '../utils-ts'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
 export function getInitialState(props) {
@@ -32,7 +28,7 @@ export function getInitialState(props) {
 }
 
 const propTypes = {
-  ...commonDropdownPropTypes,
+  ...dropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
   inputValue: PropTypes.string,
@@ -110,7 +106,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export const defaultProps = {
-  ...defaultPropsCommon,
+  ...dropdownDefaultProps,
   isItemDisabled() {
     return false
   },

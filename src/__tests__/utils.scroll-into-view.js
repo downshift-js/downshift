@@ -1,4 +1,4 @@
-import {scrollIntoView} from '../utils'
+import {scrollIntoView} from '../utils-ts'
 
 test('does not throw with a null node', () => {
   expect(() => scrollIntoView(null)).not.toThrow()

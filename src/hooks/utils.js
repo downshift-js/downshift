@@ -1,78 +1,13 @@
-import React, {
-  useRef,
-  useCallback,
-  useReducer,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react'
-import PropTypes from 'prop-types'
+import React, {useRef, useCallback, useEffect, useLayoutEffect} from 'react'
 import {isReactNative} from '../is.macro'
 import {
-  scrollIntoView,
-  getState,
-  debounce,
   validateControlledUnchanged,
   noop,
   targetWithinDownshift,
 } from '../utils'
-import {cleanupStatusDiv, setStatus} from '../set-a11y-status'
-import { generateId } from '../utils-ts'
-import { useIsInitialMount } from './utils-ts'
-
-const dropdownDefaultStateValues = {
-  highlightedIndex: -1,
-  isOpen: false,
-  selectedItem: null,
-  inputValue: '',
-}
-
-function callOnChangeProps(action, state, newState) {
-  const {props, type} = action
-  const changes = {}
-
-  Object.keys(state).forEach(key => {
-    invokeOnChangeHandler(key, action, state, newState)
-
-    if (newState[key] !== state[key]) {
-      changes[key] = newState[key]
-    }
-  })
-
-  if (props.onStateChange && Object.keys(changes).length) {
-    props.onStateChange({type, ...changes})
-  }
-}
-
-function invokeOnChangeHandler(key, action, state, newState) {
-  const {props, type} = action
-  const handler = `on${capitalizeString(key)}Change`
-  if (
-    props[handler] &&
-    newState[key] !== undefined &&
-    newState[key] !== state[key]
-  ) {
-    props[handler]({type, ...newState})
-  }
-}
-
-/**
- * Default state reducer that returns the changes.
- *
- * @param {Object} s state.
- * @param {Object} a action with changes.
- * @returns {Object} changes.
- */
-function stateReducer(s, a) {
-  return a.changes
-}
-
-/**
- * Debounced call for updating the a11y message.
- */
-const updateA11yStatus = debounce((status, document) => {
-  setStatus(status, document)
-}, 200)
+import {generateId} from '../utils-ts'
+import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils-ts'
+import {dropdownDefaultStateValues} from './utils.dropdown'
 
 // istanbul ignore next
 const useIsomorphicLayoutEffect =
@@ -138,153 +73,19 @@ function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
 }
 
-function capitalizeString(string) {
-  return `${string.slice(0, 1).toUpperCase()}${string.slice(1)}`
-}
-
-function useLatestRef(val) {
-  const ref = useRef(val)
-  // technically this is not "concurrent mode safe" because we're manipulating
-  // the value during render (so it's not idempotent). However, the places this
-  // hook is used is to support memoizing callbacks which will be called
-  // *during* render, so we need the latest values *during* render.
-  // If not for this, then we'd probably want to use useLayoutEffect instead.
-  ref.current = val
-  return ref
-}
-
-/**
- * Computes the controlled state using a the previous state, props,
- * two reducers, one from downshift and an optional one from the user.
- * Also calls the onChange handlers for state values that have changed.
- *
- * @param {Function} reducer Reducer function from downshift.
- * @param {Object} props The hook props, also passed to createInitialState.
- * @param {Function} createInitialState Function that returns the initial state.
- * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
- * @returns {Array} An array with the state and an action dispatcher.
- */
-function useEnhancedReducer(reducer, props, createInitialState, isStateEqual) {
-  const prevStateRef = useRef()
-  const actionRef = useRef()
-  const enhancedReducer = useCallback(
-    (state, action) => {
-      actionRef.current = action
-      state = getState(state, action.props)
-
-      const changes = reducer(state, action)
-      const newState = action.props.stateReducer(state, {...action, changes})
-
-      return newState
-    },
-    [reducer],
-  )
-  const [state, dispatch] = useReducer(
-    enhancedReducer,
-    props,
-    createInitialState,
-  )
-  const propsRef = useLatestRef(props)
-  const dispatchWithProps = useCallback(
-    action => dispatch({props: propsRef.current, ...action}),
-    [propsRef],
-  )
-  const action = actionRef.current
-
-  useEffect(() => {
-    const prevState = getState(prevStateRef.current, action?.props)
-    const shouldCallOnChangeProps =
-      action && prevStateRef.current && !isStateEqual(prevState, state)
-
-    if (shouldCallOnChangeProps) {
-      callOnChangeProps(action, prevState, state)
-    }
-
-    prevStateRef.current = state
-  }, [state, action, isStateEqual])
-
-  return [state, dispatchWithProps]
-}
-
-/**
- * Wraps the useEnhancedReducer and applies the controlled prop values before
- * returning the new state.
- *
- * @param {Function} reducer Reducer function from downshift.
- * @param {Object} props The hook props, also passed to createInitialState.
- * @param {Function} createInitialState Function that returns the initial state.
- * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
- * @returns {Array} An array with the state and an action dispatcher.
- */
-function useControlledReducer(
-  reducer,
-  props,
-  createInitialState,
-  isStateEqual,
-) {
-  const [state, dispatch] = useEnhancedReducer(
-    reducer,
-    props,
-    createInitialState,
-    isStateEqual,
-  )
-
-  return [getState(state, props), dispatch]
-}
-
-const defaultProps = {
-  itemToString(item) {
-    return item ? String(item) : ''
-  },
-  itemToKey(item) {
-    return item
-  },
-  stateReducer,
-  scrollIntoView,
-  environment:
-    /* istanbul ignore next (ssr) */
-    typeof window === 'undefined' || isReactNative ? undefined : window,
-}
-
-function getDefaultValue(
-  props,
-  propKey,
-  defaultStateValues = dropdownDefaultStateValues,
-) {
-  const defaultValue = props[`default${capitalizeString(propKey)}`]
-
-  if (defaultValue !== undefined) {
-    return defaultValue
-  }
-
-  return defaultStateValues[propKey]
-}
-
-function getInitialValue(
-  props,
-  propKey,
-  defaultStateValues = dropdownDefaultStateValues,
-) {
-  const value = props[propKey]
-
-  if (value !== undefined) {
-    return value
-  }
-
-  const initialValue = props[`initial${capitalizeString(propKey)}`]
-
-  if (initialValue !== undefined) {
-    return initialValue
-  }
-
-  return getDefaultValue(props, propKey, defaultStateValues)
-}
-
 function getInitialState(props) {
-  const selectedItem = getInitialValue(props, 'selectedItem')
-  const isOpen = getInitialValue(props, 'isOpen')
+  const selectedItem = getInitialValue(
+    props,
+    'selectedItem',
+    dropdownDefaultStateValues,
+  )
+  const isOpen = getInitialValue(props, 'isOpen', dropdownDefaultStateValues)
   const highlightedIndex = getInitialHighlightedIndex(props)
-  const inputValue = getInitialValue(props, 'inputValue')
+  const inputValue = getInitialValue(
+    props,
+    'inputValue',
+    dropdownDefaultStateValues,
+  )
 
   return {
     highlightedIndex:
@@ -491,44 +292,6 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-/**
- * Adds an a11y aria live status message if getA11yStatusMessage is passed.
- * @param {(options: Object) => string} getA11yStatusMessage The function that builds the status message.
- * @param {Object} options The options to be passed to getA11yStatusMessage if called.
- * @param {Array<unknown>} dependencyArray The dependency array that triggers the status message setter via useEffect.
- * @param {{document: Document}} environment The environment object containing the document.
- */
-function useA11yMessageStatus(
-  getA11yStatusMessage,
-  options,
-  dependencyArray,
-  environment = {},
-) {
-  const document = environment.document
-  const isInitialMount = useIsInitialMount()
-
-  // Adds an a11y aria live status message if getA11yStatusMessage is passed.
-  useEffect(() => {
-    if (!getA11yStatusMessage || isInitialMount || isReactNative || !document) {
-      return
-    }
-
-    const status = getA11yStatusMessage(options)
-
-    updateA11yStatus(status, document)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencyArray)
-
-  // Cleanup the status message container.
-  useEffect(() => {
-    return () => {
-      updateA11yStatus.cancel()
-      cleanupStatusDiv(document)
-    }
-  }, [document])
-}
-
 function useScrollIntoView({
   highlightedIndex,
   isOpen,
@@ -596,8 +359,12 @@ function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
     highlightedIndex: -1,
     ...(shouldSelect && {
       selectedItem: props.items[highlightedIndex],
-      isOpen: getDefaultValue(props, 'isOpen'),
-      highlightedIndex: getDefaultValue(props, 'highlightedIndex'),
+      isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
+      highlightedIndex: getDefaultValue(
+        props,
+        'highlightedIndex',
+        dropdownDefaultStateValues,
+      ),
       ...(inputValue && {
         inputValue: props.itemToString(props.items[highlightedIndex]),
       }),
@@ -629,7 +396,11 @@ function isDropdownsStateEqual(prevState, newState) {
  * @returns {number} The highlighted index.
  */
 function getDefaultHighlightedIndex(props) {
-  const highlightedIndex = getDefaultValue(props, 'highlightedIndex')
+  const highlightedIndex = getDefaultValue(
+    props,
+    'highlightedIndex',
+    dropdownDefaultStateValues,
+  )
   if (
     highlightedIndex > -1 &&
     props.isItemDisabled(props.items[highlightedIndex], highlightedIndex)
@@ -647,7 +418,11 @@ function getDefaultHighlightedIndex(props) {
  * @returns {number} The highlighted index.
  */
 function getInitialHighlightedIndex(props) {
-  const highlightedIndex = getInitialValue(props, 'highlightedIndex')
+  const highlightedIndex = getInitialValue(
+    props,
+    'highlightedIndex',
+    dropdownDefaultStateValues,
+  )
 
   if (
     highlightedIndex > -1 &&
@@ -659,70 +434,16 @@ function getInitialHighlightedIndex(props) {
   return highlightedIndex
 }
 
-// Shared between all exports.
-const commonPropTypes = {
-  environment: PropTypes.shape({
-    addEventListener: PropTypes.func.isRequired,
-    removeEventListener: PropTypes.func.isRequired,
-    document: PropTypes.shape({
-      createElement: PropTypes.func.isRequired,
-      getElementById: PropTypes.func.isRequired,
-      activeElement: PropTypes.any.isRequired,
-      body: PropTypes.any.isRequired,
-    }).isRequired,
-    Node: PropTypes.func.isRequired,
-  }),
-  itemToString: PropTypes.func,
-  itemToKey: PropTypes.func,
-  stateReducer: PropTypes.func,
-}
-
-// Shared between useSelect, useCombobox, Downshift.
-const commonDropdownPropTypes = {
-  ...commonPropTypes,
-  getA11yStatusMessage: PropTypes.func,
-  highlightedIndex: PropTypes.number,
-  defaultHighlightedIndex: PropTypes.number,
-  initialHighlightedIndex: PropTypes.number,
-  isOpen: PropTypes.bool,
-  defaultIsOpen: PropTypes.bool,
-  initialIsOpen: PropTypes.bool,
-  selectedItem: PropTypes.any,
-  initialSelectedItem: PropTypes.any,
-  defaultSelectedItem: PropTypes.any,
-  id: PropTypes.string,
-  labelId: PropTypes.string,
-  menuId: PropTypes.string,
-  getItemId: PropTypes.func,
-  toggleButtonId: PropTypes.string,
-  onSelectedItemChange: PropTypes.func,
-  onHighlightedIndexChange: PropTypes.func,
-  onStateChange: PropTypes.func,
-  onIsOpenChange: PropTypes.func,
-  scrollIntoView: PropTypes.func,
-}
-
 export {
   useControlPropsValidator,
   useScrollIntoView,
-  updateA11yStatus,
   useGetterPropsCalledChecker,
   useMouseAndTouchTracker,
   getHighlightedIndexOnOpen,
-  getInitialState,
-  getInitialValue,
-  getDefaultValue,
-  defaultProps,
-  useControlledReducer,
-  useEnhancedReducer,
-  useLatestRef,
-  capitalizeString,
   isAcceptedCharacterKey,
   useElementIds,
   getChangesOnSelection,
   isDropdownsStateEqual,
-  commonDropdownPropTypes,
-  commonPropTypes,
-  useA11yMessageStatus,
   getDefaultHighlightedIndex,
+  getInitialState,
 }
