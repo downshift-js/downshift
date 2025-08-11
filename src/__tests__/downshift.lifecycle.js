@@ -1,21 +1,19 @@
 import * as React from 'react'
+
 import {act, fireEvent, render, screen} from '@testing-library/react'
 import Downshift from '../'
-import {setStatus} from '../set-a11y-status'
-import * as utils from '../utils'
+import {setStatus, scrollIntoView} from '../utils-ts'
 
 jest.useFakeTimers()
-jest.mock('../set-a11y-status')
-jest.mock('../utils', () => {
-  const realUtils = jest.requireActual('../utils')
-  return {
-    ...realUtils,
-    scrollIntoView: jest.fn(),
-  }
-})
+jest.mock('../utils-ts/scrollIntoView.ts', () => ({
+  scrollIntoView: jest.fn(),
+}))
+jest.mock('../utils-ts/setA11yStatus.ts', () => ({
+  setStatus: jest.fn(),
+}))
 
 afterEach(() => {
-  utils.scrollIntoView.mockReset()
+  scrollIntoView.mockReset()
 })
 
 test('do not set state after unmount', () => {
@@ -248,9 +246,9 @@ test('controlled highlighted index change scrolls the item into view', () => {
   updateProps({highlightedIndex: 75})
   expect(renderFn).toHaveBeenCalledTimes(1)
 
-  expect(utils.scrollIntoView).toHaveBeenCalledTimes(1)
+  expect(scrollIntoView).toHaveBeenCalledTimes(1)
   const menuDiv = screen.queryByTestId('menu')
-  expect(utils.scrollIntoView).toHaveBeenCalledWith(
+  expect(scrollIntoView).toHaveBeenCalledWith(
     screen.queryByTestId('item-75'),
     menuDiv,
   )

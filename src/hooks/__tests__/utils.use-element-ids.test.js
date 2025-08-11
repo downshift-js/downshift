@@ -1,19 +1,14 @@
-const {renderHook} = require('@testing-library/react')
-const {useElementIds} = require('../utils')
+import {renderHook} from '@testing-library/react'
+import {useElementIds} from '../utils'
 
 jest.mock('react', () => {
   const {useId, ...react} = jest.requireActual('react')
   return react
 })
 
-jest.mock('../../utils', () => {
-  const downshiftUtils = jest.requireActual('../../utils')
-
-  return {
-    ...downshiftUtils,
-    generateId: () => 'test-id',
-  }
-})
+jest.mock('../../utils-ts/generateId.ts', () => ({
+  generateId: jest.fn().mockReturnValue('test-id'),
+}))
 
 describe('useElementIds', () => {
   test('uses React.useId for React < 18', () => {

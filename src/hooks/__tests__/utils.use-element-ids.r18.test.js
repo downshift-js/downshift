@@ -1,5 +1,5 @@
-const {renderHook} = require('@testing-library/react')
-const {useElementIds} = require('../utils')
+import {renderHook} from '@testing-library/react'
+import {useElementIds} from '../utils'
 
 jest.mock('react', () => {
   return {

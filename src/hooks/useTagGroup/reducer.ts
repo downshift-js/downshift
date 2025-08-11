@@ -1,8 +1,13 @@
-import {UseTagGroupReducerAction, UseTagGroupState} from './index.types'
+import {
+  UseTagGroupProps,
+  UseTagGroupReducerAction,
+  UseTagGroupState,
+} from './index.types'
 import * as stateChangeTypes from './stateChangeTypes'
 
 export function useTagGroupReducer<Item>(
   state: UseTagGroupState<Item>,
+  _props: UseTagGroupProps<Item>,
   action: UseTagGroupReducerAction<Item>,
 ): UseTagGroupState<Item> {
   const {type} = action
@@ -88,7 +93,7 @@ export function useTagGroupReducer<Item>(
 
       changes = {
         items: newItems,
-        activeIndex: newActiveIndex
+        activeIndex: newActiveIndex,
       }
       break
     }

@@ -2,8 +2,12 @@ import {getDefaultValue} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftMultipleSelectionReducer(state, action) {
-  const {type, index, props, selectedItem} = action
+export default function downshiftMultipleSelectionReducer(
+  state,
+  props,
+  action,
+) {
+  const {type, index, selectedItem} = action
   const {activeIndex, selectedItems} = state
   let changes
 

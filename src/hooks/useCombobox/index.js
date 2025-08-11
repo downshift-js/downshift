@@ -1,19 +1,22 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {useLatestRef} from '../../utils-ts'
 import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
-  useLatestRef,
   useScrollIntoView,
   useControlPropsValidator,
   useElementIds,
-  getInitialValue,
   isDropdownsStateEqual,
+} from '../utils'
+import {
+  getItemAndIndex,
+  getInitialValue,
   useIsInitialMount,
   useA11yMessageStatus,
-} from '../utils'
-import { getItemAndIndex } from '../utils-ts'
+} from '../utils-ts'
+import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {
   getInitialState,
   defaultProps,
@@ -84,7 +87,7 @@ function useCombobox(userProps = {}) {
   })
   // Focus the input on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen')
+    const focusOnOpen = getInitialValue(props, 'isOpen', defaultStateValues)
 
     if (focusOnOpen && inputRef.current) {
       inputRef.current.focus()

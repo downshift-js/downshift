@@ -71,7 +71,6 @@ test('creates new status div if there is none', () => {
   expect(statusDiv.textContent).toEqual('hello')
 })
 
-
 test('creates no status div if there is no document', () => {
   const setA11yStatus = setup()
   setA11yStatus('<script>alert("!!!")</script>')
@@ -80,5 +79,5 @@ test('creates no status div if there is no document', () => {
 
 function setup() {
   jest.resetModules()
-  return require('../set-a11y-status').setStatus
+  return require('../utils-ts').setStatus
 }

@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types'
-import {
-  commonDropdownPropTypes,
-  defaultProps as commonDefaultProps,
-} from '../utils'
+import {dropdownPropTypes, dropdownDefaultProps} from '../utils.dropdown'
 import {noop} from '../../utils'
 import {GetItemIndexByCharacterKeyOptions} from './types'
 
@@ -35,13 +32,13 @@ export function getItemIndexByCharacterKey<Item>({
 }
 
 const propTypes = {
-  ...commonDropdownPropTypes,
+  ...dropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
 }
 
 export const defaultProps = {
-  ...commonDefaultProps,
+  ...dropdownDefaultProps,
   isItemDisabled() {
     return false
   },

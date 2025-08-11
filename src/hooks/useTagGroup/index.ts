@@ -1,16 +1,14 @@
 import {useEffect, useCallback, useRef} from 'react'
 
-import {callAllEventHandlers, handleRefs, useLatestRef} from '../../utils-ts'
-import {useIsInitialMount} from '../utils-ts'
+import {
+  callAllEventHandlers,
+  handleRefs,
+  useLatestRef,
+  validatePropTypes,
+} from '../../utils-ts'
 // @ts-expect-error: can't import it otherwise.
 import {isReactNative} from '../../is.macro'
-import {
-  useElementIds,
-  validatePropTypes,
-  useControlledReducer,
-  getInitialState,
-  isTagGroupStateEqual,
-} from './utils'
+import {useControlledReducer, useIsInitialMount} from '../utils-ts'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupProps,
@@ -26,13 +24,14 @@ import {
   UseTagGroupStateChangeTypes,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
+import {getInitialState, isStateEqual, propTypes, useElementIds} from './utils'
 
 useTagGroup.stateChangeTypes = stateChangeTypes
 
 export default function useTagGroup<Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
 ): UseTagGroupReturnValue<Item> {
-  validatePropTypes(userProps, useTagGroup)
+  validatePropTypes(userProps, useTagGroup, propTypes)
   // Props defaults and destructuring.
   const defaultProps: Pick<
     UseTagGroupProps<Item>,
@@ -54,7 +53,7 @@ export default function useTagGroup<Item>(
     UseTagGroupProps<Item>,
     UseTagGroupStateChangeTypes,
     UseTagGroupReducerAction<Item>
-  >(useTagGroupReducer, props, getInitialState, isTagGroupStateEqual)
+  >(useTagGroupReducer, props, getInitialState, isStateEqual)
   const {activeIndex, items} = state
   // utility callback to get item element.
   const latest = useLatestRef({state, props})

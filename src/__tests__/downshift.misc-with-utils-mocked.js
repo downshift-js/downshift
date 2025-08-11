@@ -4,10 +4,12 @@
 import * as React from 'react'
 import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
-import {scrollIntoView} from '../utils'
+import {scrollIntoView} from '../utils-ts'
 
 jest.useFakeTimers()
-jest.mock('../utils')
+jest.mock('../utils-ts/scrollIntoView.ts', () => ({
+  scrollIntoView: jest.fn(),
+}))
 
 test('does not scroll from an onMouseMove event', () => {
   class HighlightedIndexController extends React.Component {

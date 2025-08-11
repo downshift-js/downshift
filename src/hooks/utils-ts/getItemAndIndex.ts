@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 /**
  * Returns both the item and index when both or either is passed.
  *
@@ -39,21 +37,4 @@ export function getItemAndIndex<Item>(
   }
 
   throw new Error(errorMessage)
-}
-
-/**
- * Tracks if it's the first render.
- */
-export function useIsInitialMount(): boolean {
-  const isInitialMountRef = React.useRef(true)
-
-  React.useEffect(() => {
-    isInitialMountRef.current = false
-
-    return () => {
-      isInitialMountRef.current = true
-    }
-  }, [])
-
-  return isInitialMountRef.current
 }

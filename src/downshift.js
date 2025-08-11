@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import {Component, cloneElement} from 'react'
 import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
-import {setStatus} from './set-a11y-status'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   handleRefs,
@@ -20,7 +19,6 @@ import {
   normalizeArrowKey,
   pickState,
   requiredProp,
-  scrollIntoView,
   unwrapArray,
   getState,
   isControlledProp,
@@ -28,9 +26,7 @@ import {
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils'
-import {
-  generateId
-} from './utils-ts'
+import {generateId, scrollIntoView, setStatus} from './utils-ts'
 
 class Downshift extends Component {
   static propTypes = {
