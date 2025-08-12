@@ -6,8 +6,6 @@ import {
   useLatestRef,
   validatePropTypes,
 } from '../../utils-ts'
-// @ts-expect-error: can't import it otherwise.
-import {isReactNative} from '../../is.macro'
 import {useControlledReducer, useIsInitialMount} from '../utils-ts'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
@@ -25,6 +23,9 @@ import {
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
 import {getInitialState, isStateEqual, propTypes, useElementIds} from './utils'
+
+// eslint-disable-next-line
+const { isReactNative } = require('../../is.macro.js');
 
 useTagGroup.stateChangeTypes = stateChangeTypes
 

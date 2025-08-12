@@ -1,7 +1,8 @@
-// @ts-expect-error: can't import it otherwise.
-import {isReactNative} from '../../is.macro'
 import {scrollIntoView} from '../../utils-ts'
 import {stateReducer} from '../utils-ts'
+
+// eslint-disable-next-line
+const { isReactNative } = require('../../is.macro.js');
 
 export const defaultProps = {
   itemToString(item: unknown) {

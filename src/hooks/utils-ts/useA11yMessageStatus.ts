@@ -1,9 +1,10 @@
 import * as React from 'react'
 
-// @ts-expect-error: can't import it otherwise.
-import {isReactNative} from '../../is.macro'
 import {cleanupStatusDiv, debounce, setStatus} from '../../utils-ts'
 import {useIsInitialMount} from '.'
+
+// eslint-disable-next-line
+const { isReactNative } = require('../../is.macro.js');
 
 /**
  * Debounced call for updating the a11y message.

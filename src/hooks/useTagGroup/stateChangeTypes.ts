@@ -1,5 +1,7 @@
-import productionEnum from '../../productionEnum.macro'
 import {UseTagGroupStateChangeTypes} from './index.types'
+
+// eslint-disable-next-line
+const productionEnum = require('../../productionEnum.macro');
 
 export const TagClick: UseTagGroupStateChangeTypes.TagClick =
   productionEnum('__tag_click__')

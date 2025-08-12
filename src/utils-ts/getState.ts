@@ -26,7 +26,7 @@ export function getState<
   return keys.reduce(
     (newState, key) => {
       if (props[key] !== undefined) {
-        newState[key] = props[key] as S[typeof key]
+        newState[key] = (props as Partial<S>)[key] as S[typeof key]
       }
       return newState
     },
