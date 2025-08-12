@@ -28,10 +28,18 @@ function invokeOnChangeHandler<
   P extends Partial<S> & Props<S, T>,
   T,
 >(key: string, action: Action<T>, props: P, state: S, newState: S) {
-  const {type} = action
-  const handlerKey = `on${capitalizeString(key)}Change`
-
-  if (typeof props[handlerKey] === 'function' && newState[key] !== state[key]) {
-    props[handlerKey]({type, ...newState})
+  if (newState[key] === state[key]) {
+    return
   }
+
+  const handlerKey = `on${capitalizeString(key)}Change`
+  const handler = props[handlerKey]
+
+  if (typeof handler !== 'function') {
+    return
+  }
+
+  const {type} = action
+
+  handler({type, ...newState})
 }
