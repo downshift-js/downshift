@@ -92,22 +92,22 @@ export default function useTagGroup<Item>(
         switch (e.key) {
           case 'ArrowLeft':
             dispatch({
-              type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowLeft,
+              type: stateChangeTypes.TagGroupKeyDownArrowLeft,
             })
             break
           case 'ArrowRight':
             dispatch({
-              type: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowRight,
+              type: stateChangeTypes.TagGroupKeyDownArrowRight,
             })
             break
           case 'Delete':
             dispatch({
-              type: UseTagGroupStateChangeTypes.TagGroupKeyDownDelete,
+              type: stateChangeTypes.TagGroupKeyDownDelete,
             })
             break
           case 'Backspace':
             dispatch({
-              type: UseTagGroupStateChangeTypes.TagGroupKeyDownBackspace,
+              type: stateChangeTypes.TagGroupKeyDownBackspace,
             })
             break
           default:
@@ -138,7 +138,7 @@ export default function useTagGroup<Item>(
       const latestState = latest.current.state
 
       const handleClick = () => {
-        dispatch({type: UseTagGroupStateChangeTypes.TagClick, index})
+        dispatch({type: stateChangeTypes.TagClick, index})
       }
       const id = elementIds.getTagId(index)
 
@@ -166,7 +166,7 @@ export default function useTagGroup<Item>(
 
       const handleClick = (event: React.MouseEvent) => {
         event.stopPropagation()
-        dispatch({type: UseTagGroupStateChangeTypes.TagRemoveClick, index})
+        dispatch({type: stateChangeTypes.TagRemoveClick, index})
       }
 
       const tagId = elementIds.getTagId(index)
@@ -185,7 +185,7 @@ export default function useTagGroup<Item>(
 
   const addItem = useCallback<UseTagGroupReturnValue<Item>['addItem']>(
     (item, index): void => {
-      dispatch({type: UseTagGroupStateChangeTypes.FunctionAddItem, item, index})
+      dispatch({type: stateChangeTypes.FunctionAddItem, item, index})
     },
     [dispatch],
   )
