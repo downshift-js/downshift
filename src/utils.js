@@ -1,4 +1,5 @@
 import {isPreact} from './is.macro'
+import { noop } from './utils-ts'
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -11,8 +12,6 @@ import {isPreact} from './is.macro'
 function cbToCb(cb) {
   return typeof cb === 'function' ? cb : noop
 }
-
-function noop() {}
 
 /**
  * @param {HTMLElement} parent the parent node
@@ -196,29 +195,6 @@ function pickState(state = {}) {
     }
   })
   return result
-}
-
-/**
- * This will perform a shallow merge of the given state object
- * with the state coming from props
- * (for the controlled component scenario)
- * This is used in state updater functions so they're referencing
- * the right state regardless of where it comes from.
- *
- * @param {Object} state The state of the component/hook.
- * @param {Object} props The props that may contain controlled values.
- * @returns {Object} The merged controlled state.
- */
-function getState(state, props) {
-  if (!state || !props) {
-    return state
-  }
-
-  return Object.keys(state).reduce((prevState, key) => {
-    prevState[key] = isControlledProp(props, key) ? props[key] : state[key]
-
-    return prevState
-  }, {})
 }
 
 /**
@@ -423,13 +399,11 @@ export {
   unwrapArray,
   isDOMElement,
   getElementProps,
-  noop,
   requiredProp,
   pickState,
   isPlainObject,
   normalizeArrowKey,
   targetWithinDownshift,
-  getState,
   isControlledProp,
   validateControlledUnchanged,
   getHighlightedIndex,

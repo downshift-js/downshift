@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-import {noop} from '../../utils'
+import {noop} from '../../utils-ts'
 import {
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,

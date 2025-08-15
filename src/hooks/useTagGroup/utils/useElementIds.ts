@@ -36,8 +36,8 @@ function useElementIdsLegacy({
   tagGroupId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
   const elementIdsRef = React.useRef({
-    tagGroupId: tagGroupId ?? `${id}-menu`,
-    getTagId: getTagId ?? (index => `${id}-item-${index}`),
+    tagGroupId: tagGroupId ?? `${id}-tag-group`,
+    getTagId: getTagId ?? (index => `${id}-tag-${index}`),
   })
 
   return elementIdsRef.current

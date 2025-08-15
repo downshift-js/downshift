@@ -6,7 +6,7 @@ import {
   screen,
   renderHook,
 } from '@testing-library/react'
-import {noop} from '../../../utils'
+import {noop} from '../../../utils-ts'
 import {
   renderUseSelect,
   renderSelect,

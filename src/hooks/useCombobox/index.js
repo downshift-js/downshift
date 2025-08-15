@@ -1,7 +1,7 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
-import {useLatestRef} from '../../utils-ts'
+import {useLatestRef, validatePropTypes} from '../../utils-ts'
 import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
@@ -21,7 +21,7 @@ import {
   getInitialState,
   defaultProps,
   useControlledReducer,
-  validatePropTypes,
+  propTypes,
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -29,7 +29,7 @@ import * as stateChangeTypes from './stateChangeTypes'
 useCombobox.stateChangeTypes = stateChangeTypes
 
 function useCombobox(userProps = {}) {
-  validatePropTypes(userProps, useCombobox)
+  validatePropTypes(userProps, useCombobox, propTypes)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,

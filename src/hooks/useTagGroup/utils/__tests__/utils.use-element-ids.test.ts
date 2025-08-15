@@ -1,12 +1,12 @@
 import {renderHook} from '@testing-library/react'
-import {useElementIds} from '../utils'
+import {useElementIds} from '..'
 
 jest.mock('react', () => {
   const {useId, ...react} = jest.requireActual('react')
   return react
 })
 
-jest.mock('../../utils-ts/generateId.ts', () => ({
+jest.mock('../../../../utils-ts', () => ({
   generateId: jest.fn().mockReturnValue('test-id'),
 }))
 
@@ -15,12 +15,9 @@ describe('useElementIds', () => {
     const {result} = renderHook(() => useElementIds({}))
 
     expect(result.current).toEqual({
-      getItemId: expect.any(Function),
-      inputId: 'downshift-test-id-input',
-      labelId: 'downshift-test-id-label',
-      menuId: 'downshift-test-id-menu',
-      toggleButtonId: 'downshift-test-id-toggle-button',
+      getTagId: expect.any(Function),
+      tagGroupId: 'downshift-test-id-tag-group',
     })
-    expect(result.current.getItemId(5)).toEqual("downshift-test-id-item-5")
+    expect(result.current.getTagId(12)).toEqual('downshift-test-id-tag-12')
   })
 })

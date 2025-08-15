@@ -1,5 +1,5 @@
 import {renderHook} from '@testing-library/react'
-import {useElementIds} from '../utils'
+import {useElementIds} from '..'
 
 jest.mock('react', () => {
   return {
@@ -15,12 +15,9 @@ describe('useElementIds', () => {
     const {result} = renderHook(() => useElementIds({}))
 
     expect(result.current).toEqual({
-      getItemId: expect.any(Function),
-      inputId: 'downshift-mocked-id-input',
-      labelId: 'downshift-mocked-id-label',
-      menuId: 'downshift-mocked-id-menu',
-      toggleButtonId: 'downshift-mocked-id-toggle-button',
+      getTagId: expect.any(Function),
+      tagGroupId: 'downshift-mocked-id-tag-group',
     })
-    expect(result.current.getItemId(5)).toEqual('downshift-mocked-id-item-5')
+    expect(result.current.getTagId(10)).toEqual("downshift-mocked-id-tag-10")
   })
 })
