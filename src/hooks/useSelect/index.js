@@ -1,5 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {useLatestRef} from '../../utils-ts'
+import {useLatestRef, validatePropTypes} from '../../utils-ts'
 import {
   callAllEventHandlers,
   handleRefs,
@@ -25,13 +25,13 @@ import {
 import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
-import {validatePropTypes, defaultProps} from './utils'
+import {defaultProps, propTypes} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
-  validatePropTypes(userProps, useSelect)
+  validatePropTypes(userProps, useSelect, propTypes)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,

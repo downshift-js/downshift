@@ -15,18 +15,16 @@ import {
   isDOMElement,
   targetWithinDownshift,
   isPlainObject,
-  noop,
   normalizeArrowKey,
   pickState,
   requiredProp,
   unwrapArray,
-  getState,
   isControlledProp,
   validateControlledUnchanged,
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils'
-import {generateId, scrollIntoView, setStatus} from './utils-ts'
+import {generateId, scrollIntoView, setStatus, getState, noop} from './utils-ts'
 
 class Downshift extends Component {
   static propTypes = {

@@ -1,5 +1,5 @@
 import {act, renderHook} from '@testing-library/react'
-import {noop} from '../../../utils'
+import {noop} from '../../../utils-ts'
 import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
 import {
   defaultIds,

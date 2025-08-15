@@ -1,11 +1,7 @@
 import React, {useRef, useCallback, useEffect, useLayoutEffect} from 'react'
 import {isReactNative} from '../is.macro'
-import {
-  validateControlledUnchanged,
-  noop,
-  targetWithinDownshift,
-} from '../utils'
-import {generateId} from '../utils-ts'
+import {validateControlledUnchanged, targetWithinDownshift} from '../utils'
+import {generateId, noop} from '../utils-ts'
 import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils-ts'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 

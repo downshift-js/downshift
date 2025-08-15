@@ -1,6 +1,7 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {isControlledProp, getState, noop} from '../../utils'
+import {isControlledProp} from '../../utils'
+import {getState} from '../../utils-ts'
 import {getInitialState as getInitialStateCommon} from '../utils'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
 import {useIsInitialMount, useEnhancedReducer} from '../utils-ts'
@@ -27,7 +28,7 @@ export function getInitialState(props) {
   }
 }
 
-const propTypes = {
+export const propTypes = {
   ...dropdownPropTypes,
   items: PropTypes.array.isRequired,
   isItemDisabled: PropTypes.func,
@@ -94,15 +95,6 @@ export function useControlledReducer(
   }, [state.selectedItem, props.selectedItem])
 
   return [getState(state, props), dispatch]
-}
-
-// eslint-disable-next-line import/no-mutable-exports
-export let validatePropTypes = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  validatePropTypes = (options, caller) => {
-    PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
-  }
 }
 
 export const defaultProps = {
