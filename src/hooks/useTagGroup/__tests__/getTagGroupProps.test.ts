@@ -4,7 +4,7 @@ import {
   defaultProps,
   renderTagGroup,
   renderUseTagGroup,
-} from '../testUtils'
+} from './utils'
 
 describe('getTagGroupProps', () => {
   describe('hook props', () => {

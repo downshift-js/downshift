@@ -1,4 +1,4 @@
-import {renderTagGroup, renderUseTagGroup, defaultIds, act} from '../testUtils'
+import {renderTagGroup, renderUseTagGroup, defaultIds, act} from './utils'
 
 describe('getTagProps', () => {
   describe('hook props', () => {

@@ -1,4 +1,4 @@
-import {renderTagGroup} from '../testUtils'
+import {renderTagGroup} from './utils'
 
 describe('props', () => {
     test('id if passed will override downshift default', () => {

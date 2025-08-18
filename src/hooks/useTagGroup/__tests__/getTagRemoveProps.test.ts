@@ -5,7 +5,7 @@ import {
   act,
   defaultProps,
   screen,
-} from '../testUtils'
+} from './utils'
 
 describe('getTagRemoveProps', () => {
   describe('hook props', () => {
