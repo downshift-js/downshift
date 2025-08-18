@@ -1,5 +1,5 @@
 import useTagGroup from '..'
-import {renderUseTagGroup, act, defaultProps} from '../testUtils'
+import {renderUseTagGroup, act, defaultProps} from './utils'
 
 import * as stateChangeTypes from '../stateChangeTypes'
 

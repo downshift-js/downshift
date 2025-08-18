@@ -1,47 +1,11 @@
+/* eslint-disable testing-library/prefer-screen-queries */
 import * as React from 'react'
-import {render, renderHook} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import {UseTagGroupProps} from './index.types'
-import useTagGroup from '.'
-
-export * from '@testing-library/react'
-
-// We are using React 18.
-jest.mock('react', () => {
-  return {
-    ...jest.requireActual('react'),
-    useId() {
-      return 'test-id'
-    },
-  }
-})
-
-const colors = [
-  'Black',
-  'Red',
-  'Green',
-  'Blue',
-  'Orange',
-  'Purple',
-  'Pink',
-  'Orchid',
-  'Aqua',
-  'Lime',
-  'Gray',
-  'Brown',
-  'Teal',
-  'Skyblue',
-]
-
-export const defaultProps = {
-  initialItems: colors.slice(0, 5),
-}
-
-export const defaultIds = {
-  tagGroupId: 'downshift-test-id-tag-group',
-  getTagId: (index: number) => `downshift-test-id-tag-${index}`,
-}
+import useTagGroup from '../..'
+import {UseTagGroupProps} from '../../index.types'
+import {defaultProps} from './defaultProps'
 
 export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
   const utils = render(<TagGroup {...defaultProps} {...props} />)
@@ -72,16 +36,15 @@ export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
     await user.click(removeButtons[index] as HTMLElement)
   }
 
-  return {...utils, getTags, getTagGroup, clickOnTag, clickOnRemoveTag, getTagsRemoves, user}
-}
-
-export function renderUseTagGroup(
-  initialProps: Partial<UseTagGroupProps<string>> = {},
-) {
-  return renderHook(
-    (props: Partial<UseTagGroupProps<string>> = {}) => useTagGroup(props),
-    {initialProps: {...defaultProps, ...initialProps}},
-  )
+  return {
+    ...utils,
+    getTags,
+    getTagGroup,
+    clickOnTag,
+    clickOnRemoveTag,
+    getTagsRemoves,
+    user,
+  }
 }
 
 function TagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
