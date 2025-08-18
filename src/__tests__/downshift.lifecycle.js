@@ -16,6 +16,8 @@ jest.mock('../utils', () => {
 
 afterEach(() => {
   utils.scrollIntoView.mockReset()
+  // Ensure any pending timers are cleared if not already handled by tests
+  jest.clearAllTimers()
 })
 
 test('do not set state after unmount', () => {
@@ -254,6 +256,67 @@ test('controlled highlighted index change scrolls the item into view', () => {
     screen.queryByTestId('item-75'),
     menuDiv,
   )
+})
+
+test('input blur when menu is open does not reset state', () => {
+  const handleStateChange = jest.fn()
+  const items = ['apple', 'banana']
+
+  render(
+    <Downshift onStateChange={handleStateChange} itemToString={i => String(i)}>
+      {({
+        getInputProps,
+        getToggleButtonProps,
+        getMenuProps,
+        getItemProps,
+        getRootProps,
+      }) => (
+        <div {...getRootProps()}>
+          <input {...getInputProps({'data-testid': 'downshift-input'})} />
+          <button {...getToggleButtonProps({'data-testid': 'toggle-button'})} />
+          {
+            <ul {...getMenuProps({'data-testid': 'downshift-menu'})}>
+              {items.map((item, index) => (
+                <li
+                  key={item}
+                  {...getItemProps({
+                    index,
+                    item,
+                  })}
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          }
+        </div>
+      )}
+    </Downshift>,
+  )
+
+  const input = screen.getByTestId('downshift-input')
+  const toggleButton = screen.getByTestId('toggle-button')
+
+  fireEvent.click(toggleButton)
+  jest.runAllTimers()
+
+  expect(screen.getByTestId('downshift-menu')).toBeInTheDocument()
+  expect(handleStateChange).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: Downshift.stateChangeTypes.clickButton,
+      isOpen: true,
+    }),
+    expect.anything(),
+  )
+
+  act(() => {
+    input.focus()
+  })
+  fireEvent.blur(input)
+
+  jest.runAllTimers()
+
+  expect(handleStateChange).toHaveBeenCalledTimes(1)
 })
 
 function mouseDownAndUp(node) {
