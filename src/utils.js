@@ -417,6 +417,7 @@ function getNonDisabledIndex(
  * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
  * @param {Window} environment The window context where downshift renders.
  * @param {boolean} checkActiveElement Whether to also check activeElement.
+ * @param {EventTarget[]} composedPath The composed path of the event.
  *
  * @returns {boolean} Whether or not the target is within downshift elements.
  */
@@ -425,20 +426,34 @@ function targetWithinDownshift(
   downshiftElements,
   environment,
   checkActiveElement = true,
+  composedPath,
 ) {
-  return (
-    environment &&
-    downshiftElements.some(
-      contextNode =>
-        contextNode &&
-        (isOrContainsNode(contextNode, target, environment) ||
+  if (!environment) {
+    return false
+  }
+
+  // Find the real activeElement by drilling through shadow roots
+  let activeElement = environment.document.activeElement
+  while (
+    activeElement != null &&
+    activeElement.shadowRoot != null &&
+    activeElement.shadowRoot.activeElement != null
+  ) {
+    activeElement = activeElement.shadowRoot.activeElement
+  }
+
+  return downshiftElements.some(
+    contextNode =>
+      contextNode &&
+      (composedPath
+        ? // Check if the contextNode is in the event's composed path
+          composedPath.indexOf(contextNode) !== -1 ||
           (checkActiveElement &&
-            isOrContainsNode(
-              contextNode,
-              environment.document.activeElement,
-              environment,
-            ))),
-    )
+            isOrContainsNode(contextNode, activeElement, environment))
+        : // Fall back to regular DOM traversal when composedPath not available
+          isOrContainsNode(contextNode, target, environment) ||
+          (checkActiveElement &&
+            isOrContainsNode(contextNode, activeElement, environment))),
   )
 }
 
