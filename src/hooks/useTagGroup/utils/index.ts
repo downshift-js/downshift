@@ -7,6 +7,10 @@ export {
   type UseElementIdsReturnValue,
 } from './getInitialState'
 export {isStateEqual} from './isStateEqual'
+export {
+  useAccessibleDescription,
+  A11Y_DESCRIPTION_ELEMENT_ID,
+} from './useAccessibleDescription'
 
 export const propTypes: Record<
   string,

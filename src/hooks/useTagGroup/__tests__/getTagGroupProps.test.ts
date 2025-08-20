@@ -6,6 +6,16 @@ import {
   renderUseTagGroup,
 } from './utils'
 
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
 describe('getTagGroupProps', () => {
   describe('hook props', () => {
     test('assign assigns a role of "grid" and aria live attributes', () => {

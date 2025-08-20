@@ -22,6 +22,7 @@ export interface UseTagGroupProps<Item>
     },
   ): Partial<UseTagGroupState<Item>>
   environment?: Environment
+  removeElementDescription: string
 }
 
 export interface UseTagGroupReturnValue<Item> {
@@ -40,6 +41,7 @@ export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
 }
 
 export interface GetTagPropsReturnValue {
+  'aria-describedby': string
   id: string
   role: 'row'
   onPress?: (event: React.BaseSyntheticEvent) => void
@@ -59,7 +61,10 @@ export interface GetTagRemovePropsReturnValue {
   tabIndex: -1
 }
 
-export type GetTagGroupPropsOptions = React.HTMLProps<HTMLElement>
+export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
+  refKey?: string
+  ref?: React.MutableRefObject<HTMLElement>
+}
 
 export interface GetTagGroupPropsReturnValue {
   id: string

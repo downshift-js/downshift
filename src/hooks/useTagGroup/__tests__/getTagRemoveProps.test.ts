@@ -7,15 +7,26 @@ import {
   screen,
 } from './utils'
 
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
 describe('getTagRemoveProps', () => {
   describe('hook props', () => {
     test('assign assigns tabindex of -1 and aria-labelledby', () => {
       const {result} = renderUseTagGroup()
       const tagRemoveProps = result.current.getTagRemoveProps({index: 0})
+      const tagId = defaultIds.getTagId(0)
 
       expect(tagRemoveProps.tabIndex).toEqual(-1)
       expect(tagRemoveProps['aria-labelledby']).toEqual(
-        `${defaultIds.tagGroupId} ${defaultIds.getTagId(0)}`,
+        `${tagId}-remove ${tagId}`,
       )
     })
 
