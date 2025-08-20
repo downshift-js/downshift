@@ -22,10 +22,17 @@ import {
   UseTagGroupStateChangeTypes,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
-import {getInitialState, isStateEqual, propTypes, useElementIds} from './utils'
+import {
+  getInitialState,
+  isStateEqual,
+  propTypes,
+  useElementIds,
+  useAccessibleDescription,
+  A11Y_DESCRIPTION_ELEMENT_ID,
+} from './utils'
 
 // eslint-disable-next-line
-const { isReactNative } = require('../../is.macro.js');
+const {isReactNative} = require('../../is.macro.js')
 
 useTagGroup.stateChangeTypes = stateChangeTypes
 
@@ -36,7 +43,7 @@ export default function useTagGroup<Item>(
   // Props defaults and destructuring.
   const defaultProps: Pick<
     UseTagGroupProps<Item>,
-    'stateReducer' | 'environment'
+    'stateReducer' | 'environment' | 'removeElementDescription'
   > = {
     stateReducer(_s, {changes}) {
       return changes
@@ -44,18 +51,22 @@ export default function useTagGroup<Item>(
     environment:
       /* istanbul ignore next (ssr) */
       typeof window === 'undefined' || isReactNative ? undefined : window,
+    removeElementDescription: 'Press Delete to remove tag.',
   }
   const props = {
     ...defaultProps,
     ...userProps,
   }
+
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
     UseTagGroupProps<Item>,
     UseTagGroupStateChangeTypes,
     UseTagGroupReducerAction<Item>
   >(useTagGroupReducer, props, getInitialState, isStateEqual)
+
   const {activeIndex, items} = state
+
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
   // prevent id re-generation between renders.
@@ -63,6 +74,11 @@ export default function useTagGroup<Item>(
   const itemRefs = useRef<Record<string, HTMLElement>>({})
   const previousItemsLengthRef = useRef(items.length)
   const isInitialMount = useIsInitialMount()
+
+  useAccessibleDescription(
+    props.environment?.document,
+    props.removeElementDescription,
+  )
 
   useEffect(() => {
     if (isInitialMount) {
@@ -143,9 +159,10 @@ export default function useTagGroup<Item>(
       const id = elementIds.getTagId(index)
 
       return {
+        'aria-describedby': A11Y_DESCRIPTION_ELEMENT_ID,
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getTagId(index)] = itemNode
+            itemRefs.current[id] = itemNode
           }
         }),
         role: 'row',
@@ -175,7 +192,7 @@ export default function useTagGroup<Item>(
       return {
         id,
         tabIndex: -1,
-        'aria-labelledby': `${elementIds.tagGroupId} ${tagId}`,
+        'aria-labelledby': `${id} ${tagId}`,
         onClick: callAllEventHandlers(onClick, handleClick),
         ...rest,
       }

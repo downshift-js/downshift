@@ -1,4 +1,14 @@
+import { A11Y_DESCRIPTION_ELEMENT_ID } from '../utils'
 import {renderTagGroup, renderUseTagGroup, defaultIds, act} from './utils'
+
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
 
 describe('getTagProps', () => {
   describe('hook props', () => {
@@ -8,6 +18,7 @@ describe('getTagProps', () => {
 
       expect(tagProps.role).toEqual('row')
       expect(tagProps.tabIndex).toEqual(-1)
+      expect(tagProps['aria-describedby']).toEqual(A11Y_DESCRIPTION_ELEMENT_ID)
     })
 
     test('assign default value to id', () => {

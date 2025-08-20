@@ -29,7 +29,8 @@ export default function TagGroup() {
             {color}
             <button
               className="tag-remove-button"
-              {...getTagRemoveProps({index, 'aria-label': 'remove color'})}
+              type="button"
+              {...getTagRemoveProps({index, 'aria-label': 'remove'})}
             >
               &#10005;
             </button>
