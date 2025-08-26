@@ -1,10 +1,5 @@
-import { act } from 'react-dom/test-utils'
-import {
-  screen,
-  defaultProps,
-  renderTagGroup,
-  renderUseTagGroup,
-} from './utils'
+import {act} from 'react-dom/test-utils'
+import {screen, defaultProps, renderTagGroup, renderUseTagGroup} from './utils'
 
 // We are using React 18.
 jest.mock('react', () => {
@@ -24,9 +19,9 @@ describe('getTagGroupProps', () => {
 
       expect(tagGroupProps.role).toEqual('grid')
       expect(tagGroupProps.id).toEqual('downshift-test-id-tag-group')
-      expect(tagGroupProps["aria-live"]).toEqual('polite')
-      expect(tagGroupProps["aria-atomic"]).toEqual('false')
-      expect(tagGroupProps["aria-relevant"]).toEqual('additions')
+      expect(tagGroupProps['aria-live']).toEqual('polite')
+      expect(tagGroupProps['aria-atomic']).toEqual('false')
+      expect(tagGroupProps['aria-relevant']).toEqual('additions')
     })
   })
 
@@ -163,6 +158,30 @@ describe('getTagGroupProps', () => {
       expect(
         screen.queryByRole('tag', {name: defaultProps.initialItems[2]}),
       ).not.toBeInTheDocument()
+      expect(getTags()[2]).toHaveAttribute('tabindex', '0')
+    })
+
+    test('delete removes the active last item and the second to last item becomes active', async () => {
+      const {clickOnTag, user, getTags} = renderTagGroup()
+
+      const tagsCount = getTags().length
+
+      await clickOnTag(tagsCount - 1)
+      await user.keyboard('{Delete}')
+
+      expect(getTags()[tagsCount - 2]).toHaveAttribute('tabindex', '0')
+    })
+
+    test('delete removes the only active item', async () => {
+      const {clickOnTag, user, queryByRole} = renderTagGroup({
+        initialItems: [defaultProps.initialItems[0] as string],
+      })
+
+      await clickOnTag(0)
+      await user.keyboard('{Delete}')
+
+      // eslint-disable-next-line testing-library/prefer-screen-queries
+      expect(queryByRole('tag')).not.toBeInTheDocument()
     })
 
     test('backspace removes the active item', async () => {
@@ -179,6 +198,20 @@ describe('getTagGroupProps', () => {
       expect(
         screen.queryByRole('tag', {name: defaultProps.initialItems[2]}),
       ).not.toBeInTheDocument()
+    })
+
+    test('any other key does nothing', async () => {
+      const {clickOnTag, user, getTags} = renderTagGroup({
+        defaultActiveIndex: 2,
+      })
+
+      await clickOnTag(2)
+      await user.keyboard('{Space}')
+
+      const tags = getTags()
+
+      expect(tags).toHaveLength(defaultProps.initialItems.length)
+      expect(tags[2]).toHaveAttribute('tabindex', '0')
     })
   })
 })

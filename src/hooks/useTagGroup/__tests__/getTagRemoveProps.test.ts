@@ -46,6 +46,14 @@ describe('getTagRemoveProps', () => {
         `${getTagId(0)}-remove`,
       )
     })
+
+    test('calling it without index results in error', () => {
+      const {result} = renderUseTagGroup()
+
+      expect(() =>
+        result.current.getTagRemoveProps({}),
+      ).toThrowErrorMatchingInlineSnapshot(`Pass index to getTagRemoveProps!`)
+    })
   })
 
   describe('user props', () => {
@@ -109,6 +117,26 @@ describe('getTagRemoveProps', () => {
       ).toBeInTheDocument()
     })
 
-    
+
+    test('click removes the active last item and the second to last item becomes active', async () => {
+      const {clickOnRemoveTag, getTags} = renderTagGroup()
+
+      const tagsCount = getTags().length
+
+      await clickOnRemoveTag(tagsCount - 1)
+
+      expect(getTags()[tagsCount - 2]).toHaveAttribute('tabindex', '0')
+    })
+
+    test('click removes the only active item', async () => {
+      const {clickOnRemoveTag, queryByRole} = renderTagGroup({
+        initialItems: [defaultProps.initialItems[0] as string],
+      })
+
+      await clickOnRemoveTag(0)
+
+      // eslint-disable-next-line testing-library/prefer-screen-queries
+      expect(queryByRole('tag')).not.toBeInTheDocument()
+    })
   })
 })

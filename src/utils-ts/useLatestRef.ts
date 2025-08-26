@@ -10,21 +10,3 @@ export function useLatestRef<T>(val: T): React.MutableRefObject<T> {
   ref.current = val
   return ref
 }
-
-export function handleRefs(
-  ...refs: (
-    | React.MutableRefObject<HTMLElement>
-    | React.RefCallback<HTMLElement>
-    | undefined
-  )[]
-) {
-  return (node: HTMLElement) => {
-    refs.forEach(ref => {
-      if (typeof ref === 'function') {
-        ref(node)
-      } else if (ref) {
-        ref.current = node
-      }
-    })
-  }
-}
