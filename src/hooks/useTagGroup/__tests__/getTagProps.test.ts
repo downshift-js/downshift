@@ -1,4 +1,4 @@
-import { A11Y_DESCRIPTION_ELEMENT_ID } from '../utils'
+import {A11Y_DESCRIPTION_ELEMENT_ID} from '../utils'
 import {renderTagGroup, renderUseTagGroup, defaultIds, act} from './utils'
 
 jest.mock('react', () => {
@@ -34,6 +34,14 @@ describe('getTagProps', () => {
       const {result} = renderUseTagGroup({getTagId})
 
       expect(result.current.getTagProps({index: 0}).id).toEqual(getTagId(0))
+    })
+
+    test('calling it without index results in error', () => {
+      const {result} = renderUseTagGroup()
+
+      expect(() =>
+        result.current.getTagProps({}),
+      ).toThrowErrorMatchingInlineSnapshot(`Pass index to getTagProps!`)
     })
   })
 

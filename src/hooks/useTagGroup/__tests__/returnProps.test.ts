@@ -30,6 +30,38 @@ describe('returnProps', () => {
 
       expect(result.current.items).toEqual([...previousItems, 'test'])
     })
+
+    test('addItem keeps the active item if previously set', () => {
+      const {result} = renderUseTagGroup({initialActiveIndex: 2})
+
+      act(() => {
+        result.current.addItem('test')
+      })
+
+      expect(result.current.activeIndex).toEqual(2)
+    })
+
+    test('addItem makes the last item active if there is no previous active item', () => {
+      const {result} = renderUseTagGroup({initialActiveIndex: -1})
+
+      act(() => {
+        result.current.addItem('test')
+      })
+
+      expect(result.current.activeIndex).toEqual(result.current.items.length - 1)
+    })
+
+    test('addItem adds an item to the group at the index specified', () => {
+      const {result} = renderUseTagGroup()
+
+      const previousItems = result.current.items
+
+      act(() => {
+        result.current.addItem('test', 0)
+      })
+
+      expect(result.current.items).toEqual(['test', ...previousItems])
+    })
   })
 
   describe('state and props', () => {

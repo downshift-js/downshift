@@ -2,6 +2,14 @@ import {renderHook, act} from '@testing-library/react'
 import {A11Y_DESCRIPTION_ELEMENT_ID, useAccessibleDescription} from '..'
 
 describe('useAccessibleDescription', () => {
+  test('does nothing if document is undefined', () => {
+    const {result} = renderHook(() =>
+      useAccessibleDescription(undefined, 'description'),
+    )
+
+    expect(result.current).toBeUndefined()
+  })
+
   test('adds a div element to the document that serves as accessible description', () => {
     const divElement = {
       setAttribute: jest.fn(),
@@ -18,7 +26,9 @@ describe('useAccessibleDescription', () => {
     } as unknown as Document
     const description = 'press delete to remove'
 
-    const {unmount} = renderHook(() => useAccessibleDescription(document, description))
+    const {unmount} = renderHook(() =>
+      useAccessibleDescription(document, description),
+    )
 
     expect(document.createElement).toHaveBeenCalledTimes(1)
     expect(document.createElement).toHaveBeenCalledWith('div')

@@ -1,5 +1,6 @@
 export {generateId, setIdCounter, resetIdCounter} from './generateId'
-export {useLatestRef, handleRefs} from './useLatestRef'
+export {useLatestRef} from './useLatestRef'
+export {handleRefs} from './handleRefs'
 export {callAllEventHandlers} from './callAllEventHandlers'
 export {debounce} from './debounce'
 export {setStatus, cleanupStatusDiv} from './setA11yStatus'
