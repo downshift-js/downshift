@@ -970,13 +970,13 @@ suggestion and the Codesandbox for it, and we will take it from there.
 [select-aria]:
   https://w3c.github.io/aria-practices/examples/combobox/combobox-select-only.html
 [sandbox-example]:
-  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useSelect/basic-usage.js
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fhooks%2FuseSelect%2Fbasic-usage.js&moduleview=1
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
-[sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
+[sandbox-repo]: https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:
