@@ -19,7 +19,10 @@ export default function TagGroup() {
 
   return (
     <div>
-      <div {...getTagGroupProps()} className="tag-group">
+      <div
+        {...getTagGroupProps({'aria-label': 'colors example'})}
+        className="tag-group"
+      >
         {items.map((color, index) => (
           <span
             className={`${index === activeIndex ? 'selected-tag' : ''} tag`}
