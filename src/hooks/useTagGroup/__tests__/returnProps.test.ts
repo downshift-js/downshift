@@ -48,7 +48,9 @@ describe('returnProps', () => {
         result.current.addItem('test')
       })
 
-      expect(result.current.activeIndex).toEqual(result.current.items.length - 1)
+      expect(result.current.activeIndex).toEqual(
+        result.current.items.length - 1,
+      )
     })
 
     test('addItem adds an item to the group at the index specified', () => {
@@ -68,9 +70,7 @@ describe('returnProps', () => {
     test('activeIndex is returned', () => {
       const {result} = renderUseTagGroup()
 
-      expect(result.current.activeIndex).toBe(
-        defaultProps.initialItems.length - 1,
-      )
+      expect(result.current.activeIndex).toBe(0)
     })
 
     test('items is returned', () => {

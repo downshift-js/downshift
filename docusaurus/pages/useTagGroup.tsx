@@ -24,7 +24,7 @@ export default function TagGroup() {
           <span
             className={`${index === activeIndex ? 'selected-tag' : ''} tag`}
             key={color}
-            {...getTagProps({index})}
+            {...getTagProps({index, 'aria-label': color})}
           >
             {color}
             <button

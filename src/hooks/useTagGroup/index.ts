@@ -135,7 +135,7 @@ export default function useTagGroup<Item>(
         'aria-live': 'polite',
         'aria-atomic': 'false',
         'aria-relevant': 'additions',
-        role: 'grid',
+        role: 'listbox',
         onKeyDown: callAllEventHandlers(onKeyDown, handleKeyDown),
         ...rest,
       }
@@ -165,7 +165,8 @@ export default function useTagGroup<Item>(
             itemRefs.current[id] = itemNode
           }
         }),
-        role: 'row',
+        'aria-labelledby': id,
+        role: 'option',
         id,
         onClick: callAllEventHandlers(onClick, handleClick),
         tabIndex: latestState.activeIndex === index ? 0 : -1,

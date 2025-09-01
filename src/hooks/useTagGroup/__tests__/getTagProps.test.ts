@@ -12,12 +12,12 @@ jest.mock('react', () => {
 
 describe('getTagProps', () => {
   describe('hook props', () => {
-    test('assign assigns a role of "row"', () => {
+    test('assign assigns a role of "option"', () => {
       const {result} = renderUseTagGroup()
       const tagProps = result.current.getTagProps({index: 0})
 
-      expect(tagProps.role).toEqual('row')
-      expect(tagProps.tabIndex).toEqual(-1)
+      expect(tagProps.role).toEqual('option')
+      expect(tagProps.tabIndex).toEqual(0)
       expect(tagProps['aria-describedby']).toEqual(A11Y_DESCRIPTION_ELEMENT_ID)
     })
 

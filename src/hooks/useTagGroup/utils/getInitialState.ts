@@ -11,12 +11,11 @@ export type UseElementIdsReturnValue = Required<
 export function getInitialState<I>(
   props: UseTagGroupProps<I>,
 ): UseTagGroupState<I> {
-  const items = props.items ?? props.initialItems ?? props.defaultItems ?? []
+  const items = props.items ?? props.initialItems ?? []
   const activeIndex =
     props.activeIndex ??
     props.initialActiveIndex ??
-    props.defaultActiveIndex ??
-    (items.length === 0 ? -1 : items.length - 1)
+    (items.length === 0 ? -1 : 0)
 
   return {
     activeIndex,

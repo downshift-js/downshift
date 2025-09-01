@@ -113,7 +113,7 @@ describe('getTagRemoveProps', () => {
       await clickOnRemoveTag(2)
 
       expect(
-        screen.getByRole('row', {name: defaultProps.initialItems[1]}),
+        screen.getByRole('option', {name: defaultProps.initialItems[1]}),
       ).toBeInTheDocument()
     })
 
