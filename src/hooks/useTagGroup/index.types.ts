@@ -8,8 +8,6 @@ export interface UseTagGroupState<Item> extends State {
 
 export interface UseTagGroupProps<Item>
   extends Partial<UseTagGroupState<Item>> {
-  defaultActiveIndex?: number
-  defaultItems?: Item[]
   initialActiveIndex?: number
   initialItems?: Item[]
   tagGroupId?: string
@@ -43,7 +41,7 @@ export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
 export interface GetTagPropsReturnValue {
   'aria-describedby': string
   id: string
-  role: 'row'
+  role: 'option'
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
   tabIndex: 0 | -1
@@ -68,7 +66,7 @@ export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
 
 export interface GetTagGroupPropsReturnValue {
   id: string
-  role: 'grid'
+  role: 'listbox'
   'aria-live': 'polite'
   'aria-atomic': 'false'
   'aria-relevant': 'additions'
@@ -134,8 +132,5 @@ export type UseTagGroupFunctionAddItem<Item> = {
 }
 
 export interface Environment {
-  addEventListener: typeof window.addEventListener
-  removeEventListener: typeof window.removeEventListener
   document: Document
-  Node: typeof window.Node
 }

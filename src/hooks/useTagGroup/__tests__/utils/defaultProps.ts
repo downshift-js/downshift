@@ -1,4 +1,4 @@
-const colors = [
+export const colors = [
   'Black',
   'Red',
   'Green',
@@ -16,5 +16,5 @@ const colors = [
 ]
 
 export const defaultProps = {
-  initialItems: colors.slice(0, 5),
+  initialItems: colors.slice(0, 8),
 }

@@ -13,11 +13,11 @@ jest.mock('react', () => {
 
 describe('getTagGroupProps', () => {
   describe('hook props', () => {
-    test('assign assigns a role of "grid" and aria live attributes', () => {
+    test('assign assigns a role of "listbox" and aria live attributes', () => {
       const {result} = renderUseTagGroup()
       const tagGroupProps = result.current.getTagGroupProps()
 
-      expect(tagGroupProps.role).toEqual('grid')
+      expect(tagGroupProps.role).toEqual('listbox')
       expect(tagGroupProps.id).toEqual('downshift-test-id-tag-group')
       expect(tagGroupProps['aria-live']).toEqual('polite')
       expect(tagGroupProps['aria-atomic']).toEqual('false')

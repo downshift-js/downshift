@@ -12,11 +12,11 @@ export function renderTagGroup(props: Partial<UseTagGroupProps<string>> = {}) {
   const user = userEvent.setup()
 
   function getTags() {
-    return utils.getAllByRole('row')
+    return utils.getAllByRole('option')
   }
 
   function getTagGroup() {
-    return utils.getByRole('grid')
+    return utils.getByRole('listbox')
   }
 
   function getTagsRemoves() {

@@ -9,7 +9,6 @@ export function handleRefs(
 ) {
   return (node: HTMLElement) => {
     refs.forEach(ref => {
-      console.log(ref, typeof ref)
       if (typeof ref === 'function') {
         ref(node)
       } else if (ref) {
