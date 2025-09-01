@@ -1093,7 +1093,7 @@ platforms:
 > 🚨 We're in the process of moving all examples to the
 > [downshift-examples](https://github.com/downshift-js/downshift-examples) repo
 > (which you can open, interact with, and contribute back to live on
-> [codesandbox](https://codesandbox.io/s/github/kentcdodds/downshift-examples))
+> [codesandbox](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1))
 
 > 🚨 We're also in the process of updating our examples from the
 > [downshift-docs](https://github.com/downshift-js/downshift-docs) repo which is
@@ -1105,18 +1105,18 @@ platforms:
 
 If you're just learning downshift, review these in order:
 
-0.  [basic automplete with getRootProps](https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js) -
+0.  [basic automplete with getRootProps](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F00-get-root-props-example.js%3A11%2C21&moduleview=1) -
     the same as example #1 but using the correct HTML structure as suggested by
     ARIA-WCAG.
-1.  [basic autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
+1.  [basic autocomplete](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1) -
     very bare bones, not styled at all. Good place to start.
-2.  [styled autocomplete](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
+2.  [styled autocomplete](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F02-complete-autocomplete.js&moduleview=1) -
     more complete autocomplete solution using emotion for styling and
     match-sorter for filtering the items.
-3.  [typeahead](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F03-typeahead.js&moduleview=1) -
+3.  [typeahead](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F03-typeahead.js&moduleview=1) -
     Shows how to control the `selectedItem` so the selected item can be one of
     your items or whatever the user types.
-4.  [multi-select](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
+4.  [multi-select](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F04-multi-select.js&moduleview=1) -
     Shows how to create a MultiDownshift component that allows for an array of
     selectedItems for multiple selection using a state reducer
 
@@ -1124,16 +1124,16 @@ If you're just learning downshift, review these in order:
 
 Check out these examples of more advanced use/edge cases:
 
-- [dropdown with select by key](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js) -
+- [dropdown with select by key](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fother-examples%2Fdropdown-select-by-key%2FCustomDropdown%2Findex.js&moduleview=1) -
   An example of using the render prop pattern to utilize a reusable component to
   provide the downshift dropdown component with the functionality of being able
   to highlight a selection item that starts with the key pressed.
-- [using actions](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fusing-actions.js&moduleview=1) -
+- [using actions](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fother-examples%2Fusing-actions.js&moduleview=1) -
   An example of using one of downshift's actions as an event handler.
-- [gmail's composition recipients field](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) -
+- [gmail's composition recipients field](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fother-examples%2Fgmail%2Findex.js&moduleview=1) -
   An example of a highly complex autocomplete component featuring asynchronously
   loading items, multiple selection, and windowing (with react-virtualized)
-- [Downshift HOC and Compound Components](https://codesandbox.io/s/github/kentcdodds/downshift-examples/tree/master/?module=%2Fsrc%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) -
+- [Downshift HOC and Compound Components](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fother-examples%2Fhoc%2Findex.js&moduleview=1) -
   An example of how to implementat compound components with
   `React.createContext` and a downshift higher order component. This is
   generally not recommended because the render prop API exported by downshift is
@@ -1144,7 +1144,7 @@ Check out these examples of more advanced use/edge cases:
 
 _🚨 This is a great contribution opportunity!_ These are examples that have not
 yet been migrated to
-[downshift-examples](https://codesandbox.io/s/github/kentcdodds/downshift-examples).
+[downshift-examples](https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1).
 You're more than welcome to make PRs to the examples repository to move these
 examples over there.
 [Watch this to learn how to contribute completely in the browser](https://www.youtube.com/watch?v=3PAQbhdkTtI&index=2&t=21s&list=PLV5CVI1eNcJgCrPH_e6d57KRUTiDZgs0u)
@@ -1526,8 +1526,8 @@ MIT
   https://www.w3.org/WAI/ARIA/apg/example-index/combobox/combobox-select-only.html
 [docsite]: https://downshift-js.com/
 [code-sandbox-try-it-out]:
-  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/00-get-root-props-example.js
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F00-get-root-props-example.js&moduleview=1
 [code-sandbox-no-get-root-props]:
-  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/downshift/ordered-examples/01-basic-autocomplete.js
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fdownshift%2Fordered-examples%2F01-basic-autocomplete.js&moduleview=1
 [migration-guide-v7]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md

@@ -948,15 +948,15 @@ docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
 [sandbox-example]:
-  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useMultipleSelection/combobox.js
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fhooks%2FuseMultipleSelection%2Fcombobox.js&moduleview=1
 [select-sandbox-example]:
-  https://codesandbox.io/s/github/kentcdodds/downshift-examples?file=/src/hooks/useMultipleSelection/select.js
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fhooks%2FuseMultipleSelection%2Fselect.js&moduleview=1
 [state-change-file]:
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useMultipleSelection/stateChangeTypes.js
 [blog-post-prop-getters]:
   https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
-[sandbox-repo]: https://codesandbox.io/s/github/kentcdodds/downshift-examples
+[sandbox-repo]: https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v8]:
