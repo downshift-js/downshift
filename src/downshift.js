@@ -764,7 +764,16 @@ class Downshift extends Component {
         return
       }
 
-      const {activeElement} = this.props.environment.document
+      let {activeElement} = this.props.environment.document
+
+      // find the real activeElement not a custom element with a shadowRoot
+      /* istanbul ignore next -- JSDOM always reports the focused element as document.activeElement */
+      while (
+        activeElement?.shadowRoot &&
+        activeElement.shadowRoot.activeElement != null
+      ) {
+        activeElement = activeElement.shadowRoot.activeElement
+      }
 
       if (
         (activeElement == null || activeElement.id !== this.inputId) &&
@@ -877,7 +886,15 @@ class Downshift extends Component {
         return
       }
 
-      const {activeElement} = this.props.environment.document
+      let {activeElement} = this.props.environment.document
+      /* istanbul ignore next -- JSDOM always reports the focused element as document.activeElement */
+      while (
+        activeElement?.shadowRoot &&
+        activeElement.shadowRoot.activeElement != null
+      ) {
+        activeElement = activeElement.shadowRoot.activeElement
+      }
+
       const downshiftButtonIsActive =
         activeElement?.dataset?.toggle &&
         this._rootNode &&
@@ -1093,6 +1110,8 @@ class Downshift extends Component {
           event.target,
           [this._rootNode, this._menuNode],
           this.props.environment,
+          true,
+          'composedPath' in event && event.composedPath(),
         )
         if (!contextWithinDownshift && this.getState().isOpen) {
           this.reset({type: stateChangeTypes.mouseUp}, () =>
@@ -1120,6 +1139,7 @@ class Downshift extends Component {
           [this._rootNode, this._menuNode],
           this.props.environment,
           false,
+          'composedPath' in event && event.composedPath(),
         )
         if (
           !this.isTouchMove &&
