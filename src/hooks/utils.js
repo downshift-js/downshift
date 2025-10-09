@@ -375,12 +375,15 @@ function useMouseAndTouchTracker(
     isTouchEnd: false,
   })
 
+  // the elements should be retrieved the moment they are required because these are refs - they can be mutated
+  function getDownshiftElements() {
+    return downshiftElementsRefs.map(ref => ref.current)
+  }
+
   useEffect(() => {
     if (isReactNative || !environment) {
       return noop
     }
-
-    const downshiftElements = downshiftElementsRefs.map(ref => ref.current)
 
     function onMouseDown() {
       mouseAndTouchTrackersRef.current.isTouchEnd = false // reset this one.
@@ -390,7 +393,7 @@ function useMouseAndTouchTracker(
       mouseAndTouchTrackersRef.current.isMouseDown = false
 
       if (
-        !targetWithinDownshift(event.target, downshiftElements, environment)
+        !targetWithinDownshift(event.target, getDownshiftElements(), environment)
       ) {
         handleBlur()
       }
@@ -409,7 +412,7 @@ function useMouseAndTouchTracker(
         !mouseAndTouchTrackersRef.current.isTouchMove &&
         !targetWithinDownshift(
           event.target,
-          downshiftElements,
+          getDownshiftElements(),
           environment,
           false,
         )
