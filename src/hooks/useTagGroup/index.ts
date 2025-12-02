@@ -15,7 +15,9 @@ import {
   GetTagPropsOptions,
   GetTagRemoveProps,
   GetTagRemovePropsOptions,
+  UseTagGroupInterface,
   UseTagGroupProps,
+  UseTagGroupMergedProps,
   UseTagGroupReducerAction,
   UseTagGroupReturnValue,
   UseTagGroupState,
@@ -36,15 +38,12 @@ const {isReactNative} = require('../../is.macro.js')
 
 useTagGroup.stateChangeTypes = stateChangeTypes
 
-export default function useTagGroup<Item>(
+function useTagGroup<Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
 ): UseTagGroupReturnValue<Item> {
   validatePropTypes(userProps, useTagGroup, propTypes)
-  // Props defaults and destructuring.
-  const defaultProps: Pick<
-    UseTagGroupProps<Item>,
-    'stateReducer' | 'environment' | 'removeElementDescription'
-  > = {
+
+  const props: UseTagGroupMergedProps<Item> = {
     stateReducer(_s, {changes}) {
       return changes
     },
@@ -52,15 +51,12 @@ export default function useTagGroup<Item>(
       /* istanbul ignore next (ssr) */
       typeof window === 'undefined' || isReactNative ? undefined : window,
     removeElementDescription: 'Press Delete to remove tag.',
-  }
-  const props = {
-    ...defaultProps,
     ...userProps,
   }
 
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
-    UseTagGroupProps<Item>,
+    UseTagGroupMergedProps<Item>,
     UseTagGroupStateChangeTypes,
     UseTagGroupReducerAction<Item>
   >(useTagGroupReducer, props, getInitialState, isStateEqual)
@@ -70,7 +66,11 @@ export default function useTagGroup<Item>(
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
   // prevent id re-generation between renders.
-  const elementIds = useElementIds(props)
+  const elementIds = useElementIds({
+    getTagId: props.getTagId,
+    id: props.id,
+    tagGroupId: props.tagGroupId,
+  })
   const itemRefs = useRef<Record<string, HTMLElement>>({})
   const previousItemsLengthRef = useRef(items.length)
   const isInitialMount = useIsInitialMount()
@@ -156,18 +156,18 @@ export default function useTagGroup<Item>(
       const handleClick = () => {
         dispatch({type: stateChangeTypes.TagClick, index})
       }
-      const id = elementIds.getTagId(index)
+      const tagId = elementIds.getTagId(index)
 
       return {
         'aria-describedby': A11Y_DESCRIPTION_ELEMENT_ID,
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[id] = itemNode
+            itemRefs.current[tagId] = itemNode
           }
         }),
-        'aria-labelledby': id,
+        'aria-labelledby': tagId,
         role: 'option',
-        id,
+        id: tagId,
         onClick: callAllEventHandlers(onClick, handleClick),
         tabIndex: latestState.activeIndex === index ? 0 : -1,
         ...rest,
@@ -188,12 +188,12 @@ export default function useTagGroup<Item>(
       }
 
       const tagId = elementIds.getTagId(index)
-      const id = `${tagId}-remove`
+      const tagRemoveId = `${tagId}-remove`
 
       return {
-        id,
+        id: tagRemoveId,
         tabIndex: -1,
-        'aria-labelledby': `${id} ${tagId}`,
+        'aria-labelledby': `${tagRemoveId} ${tagId}`,
         onClick: callAllEventHandlers(onClick, handleClick),
         ...rest,
       }
@@ -217,3 +217,5 @@ export default function useTagGroup<Item>(
     items,
   }
 }
+
+export default useTagGroup as UseTagGroupInterface

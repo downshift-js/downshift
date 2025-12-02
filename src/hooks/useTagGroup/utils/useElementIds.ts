@@ -1,7 +1,16 @@
 import * as React from 'react'
 
 import {generateId} from '../../../utils-ts'
-import {UseElementIdsProps, UseElementIdsReturnValue} from '.'
+import {UseTagGroupProps} from '../index.types'
+
+export type UseElementIdsProps = Pick<
+  UseTagGroupProps<unknown>,
+  'id' | 'getTagId' | 'tagGroupId'
+>
+
+export type UseElementIdsReturnValue = Required<
+  Pick<UseTagGroupProps<unknown>, 'getTagId' | 'tagGroupId'>
+>
 
 // istanbul ignore next
 export const useElementIds: (
