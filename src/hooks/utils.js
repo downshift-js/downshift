@@ -1,4 +1,4 @@
-import React, {useRef, useCallback, useEffect, useLayoutEffect} from 'react'
+import * as React from 'react'
 import {isReactNative} from '../is.macro'
 import {validateControlledUnchanged, targetWithinDownshift} from '../utils'
 import {generateId, noop} from '../utils-ts'
@@ -10,8 +10,8 @@ const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' &&
   typeof window.document !== 'undefined' &&
   typeof window.document.createElement !== 'undefined'
-    ? useLayoutEffect
-    : useEffect
+    ? React.useLayoutEffect
+    : React.useEffect
 
 // istanbul ignore next
 const useElementIds =
@@ -30,7 +30,7 @@ const useElementIds =
           id = reactId
         }
 
-        const elementIds = useMemo(
+        const elementIds = React.useMemo(
           () => ({
             labelId: labelId || `${id}-label`,
             menuId: menuId || `${id}-menu`,
@@ -51,7 +51,7 @@ const useElementIds =
         toggleButtonId,
         inputId,
       }) {
-        const elementIds = useMemo(
+        const elementIds = React.useMemo(
           () => ({
             labelId: labelId || `${id}-label`,
             menuId: menuId || `${id}-menu`,
@@ -156,7 +156,7 @@ function useMouseAndTouchTracker(
   handleBlur,
   downshiftRefs,
 ) {
-  const mouseAndTouchTrackersRef = useRef({
+  const mouseAndTouchTrackersRef = React.useRef({
     isMouseDown: false,
     isTouchMove: false,
     isTouchEnd: false,
@@ -167,7 +167,7 @@ const getDownshiftElements = useCallback(
   [downshiftRefs],
 );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isReactNative || !environment) {
       return noop
     }
@@ -180,7 +180,11 @@ const getDownshiftElements = useCallback(
       mouseAndTouchTrackersRef.current.isMouseDown = false
 
       if (
-        !targetWithinDownshift(event.target, getDownshiftElements(), environment)
+        !targetWithinDownshift(
+          event.target,
+          getDownshiftElements(),
+          environment,
+        )
       ) {
         handleBlur()
       }
@@ -238,7 +242,7 @@ let useGetterPropsCalledChecker = () => noop
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   useGetterPropsCalledChecker = (...propKeys) => {
-    const getterPropsCalledRef = useRef(
+    const getterPropsCalledRef = React.useRef(
       propKeys.reduce((acc, propKey) => {
         acc[propKey] = {}
 
@@ -246,7 +250,7 @@ if (process.env.NODE_ENV !== 'production') {
       }, {}),
     )
 
-    useEffect(() => {
+    React.useEffect(() => {
       Object.keys(getterPropsCalledRef.current).forEach(propKey => {
         const propCallInfo = getterPropsCalledRef.current[propKey]
 
@@ -273,7 +277,7 @@ if (process.env.NODE_ENV !== 'production') {
       })
     }, [])
 
-    const setGetterPropCallInfo = useCallback(
+    const setGetterPropCallInfo = React.useCallback(
       (propKey, suppressRefError, refKey, elementRef) => {
         getterPropsCalledRef.current[propKey] = {
           suppressRefError,
@@ -297,7 +301,7 @@ function useScrollIntoView({
   scrollIntoView: scrollIntoViewProp,
 }) {
   // used not to scroll on highlight by mouse.
-  const shouldScrollRef = useRef(true)
+  const shouldScrollRef = React.useRef(true)
   // Scroll on highlighted item if change comes from keyboard.
   useIsomorphicLayoutEffect(() => {
     if (
@@ -325,10 +329,10 @@ let useControlPropsValidator = noop
 if (process.env.NODE_ENV !== 'production') {
   useControlPropsValidator = ({props, state}) => {
     // used for checking when props are moving from controlled to uncontrolled.
-    const prevPropsRef = useRef(props)
+    const prevPropsRef = React.useRef(props)
     const isInitialMount = useIsInitialMount()
 
-    useEffect(() => {
+    React.useEffect(() => {
       if (isInitialMount) {
         return
       }
