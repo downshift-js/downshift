@@ -6,21 +6,39 @@ export interface UseTagGroupState<Item> extends State {
   items: Item[]
 }
 
-export interface UseTagGroupProps<Item>
-  extends Partial<UseTagGroupState<Item>> {
+export interface UseTagGroupProps<Item> extends Partial<
+  UseTagGroupState<Item>
+> {
   initialActiveIndex?: number
   initialItems?: Item[]
   tagGroupId?: string
   getTagId?: (index: number) => string
   id?: string
-  stateReducer(
+  stateReducer?(
     state: UseTagGroupState<Item>,
     actionAndChanges: Action<UseTagGroupStateChangeTypes> & {
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>
   environment?: Environment
-  removeElementDescription: string
+  removeElementDescription?: string
+}
+
+export type UseTagGroupMergedProps<Item> = Required<
+  Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+> & UseTagGroupProps<Item>
+
+export interface UseTagGroupInterface {
+  <Item>(props?: UseTagGroupProps<Item>): UseTagGroupReturnValue<Item>
+  stateChangeTypes: {
+    TagClick: UseTagGroupStateChangeTypes.TagClick
+    TagGroupKeyDownArrowLeft: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowLeft
+    TagGroupKeyDownArrowRight: UseTagGroupStateChangeTypes.TagGroupKeyDownArrowRight
+    TagGroupKeyDownBackspace: UseTagGroupStateChangeTypes.TagGroupKeyDownBackspace
+    TagGroupKeyDownDelete: UseTagGroupStateChangeTypes.TagGroupKeyDownDelete
+    TagRemoveClick: UseTagGroupStateChangeTypes.TagRemoveClick
+    FunctionAddItem: UseTagGroupStateChangeTypes.FunctionAddItem
+  }
 }
 
 export interface UseTagGroupReturnValue<Item> {
