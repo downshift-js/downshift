@@ -111,7 +111,8 @@ function useCombobox(userProps = {}) {
     ),
     useMemo(
       () => [menuRef, toggleButtonRef, inputRef],
-      [menuRef.current, toggleButtonRef.current, inputRef.current],
+      // dependencies can be left empty because refs are getting mutated
+      [],
     ),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(

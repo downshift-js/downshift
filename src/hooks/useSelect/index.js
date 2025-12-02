@@ -133,7 +133,8 @@ function useSelect(userProps = {}) {
     ),
     useMemo(
       () => [menuRef, toggleButtonRef],
-      [menuRef.current, toggleButtonRef.current],
+      // dependencies can be left empty because refs are getting mutated
+      [],
     ),
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
