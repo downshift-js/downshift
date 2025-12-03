@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 
-export {useElementIds} from './useElementIds'
 export {
-  getInitialState,
   type UseElementIdsProps,
   type UseElementIdsReturnValue,
-} from './getInitialState'
+  useElementIds,
+} from './useElementIds'
+export {getInitialState} from './getInitialState'
 export {isStateEqual} from './isStateEqual'
 export {
   useAccessibleDescription,

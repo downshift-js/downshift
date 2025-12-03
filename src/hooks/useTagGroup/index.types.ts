@@ -1,4 +1,4 @@
-import {Overwrite} from '../../../typings'
+import {Environment} from 'typings'
 import {Action, State} from '../../utils-ts'
 
 export interface UseTagGroupState<Item> extends State {
@@ -26,7 +26,8 @@ export interface UseTagGroupProps<Item> extends Partial<
 
 export type UseTagGroupMergedProps<Item> = Required<
   Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
-> & UseTagGroupProps<Item>
+> &
+  UseTagGroupProps<Item>
 
 export interface UseTagGroupInterface {
   <Item>(props?: UseTagGroupProps<Item>): UseTagGroupReturnValue<Item>
@@ -74,7 +75,7 @@ export interface GetTagRemovePropsReturnValue {
   'aria-labelledby': string
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
-  tabIndex: -1
+  tabIndex: number
 }
 
 export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
@@ -90,18 +91,17 @@ export interface GetTagGroupPropsReturnValue {
   'aria-relevant': 'additions'
   onKeyDown: React.KeyboardEventHandler
 }
+export type GetTagGroupProps = <Extra extends Record<string, unknown> = {}>(
+  options?: GetTagGroupPropsOptions & Extra,
+) => GetTagGroupPropsReturnValue & Extra
 
-export type GetTagGroupProps = <Options>(
-  options?: GetTagGroupPropsOptions & Options,
-) => Overwrite<GetTagGroupPropsReturnValue, Options>
+export type GetTagProps = <Extra extends Record<string, unknown> = {}>(
+  options?: GetTagPropsOptions & Extra,
+) => GetTagPropsReturnValue & Extra
 
-export type GetTagProps = <Options>(
-  options?: GetTagPropsOptions & Options,
-) => Overwrite<GetTagPropsReturnValue, Options>
-
-export type GetTagRemoveProps = <Options>(
-  options?: GetTagRemovePropsOptions & Options,
-) => Overwrite<GetTagRemovePropsReturnValue, Options>
+export type GetTagRemoveProps = <Extra extends Record<string, unknown> = {}>(
+  options?: GetTagRemovePropsOptions & Extra,
+) => GetTagRemovePropsReturnValue & Extra
 
 export enum UseTagGroupStateChangeTypes {
   TagClick = '__tag_click__',
@@ -147,8 +147,4 @@ export type UseTagGroupFunctionAddItem<Item> = {
   type: UseTagGroupStateChangeTypes.FunctionAddItem
   item: Item
   index?: number
-}
-
-export interface Environment {
-  document: Document
 }
