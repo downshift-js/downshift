@@ -9,11 +9,8 @@ import {
 import {useControlledReducer, useIsInitialMount} from '../utils-ts'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
-  GetTagGroupProps,
   GetTagGroupPropsOptions,
-  GetTagProps,
   GetTagPropsOptions,
-  GetTagRemoveProps,
   GetTagRemovePropsOptions,
   UseTagGroupInterface,
   UseTagGroupProps,
@@ -22,6 +19,9 @@ import {
   UseTagGroupReturnValue,
   UseTagGroupState,
   UseTagGroupStateChangeTypes,
+  GetTagRemovePropsReturnValue,
+  GetTagPropsReturnValue,
+  GetTagGroupPropsReturnValue,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
 import {
@@ -36,11 +36,9 @@ import {
 // eslint-disable-next-line
 const {isReactNative} = require('../../is.macro.js')
 
-useTagGroup.stateChangeTypes = stateChangeTypes
-
-function useTagGroup<Item>(
+const useTagGroup: UseTagGroupInterface = <Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
-): UseTagGroupReturnValue<Item> {
+) => {
   validatePropTypes(userProps, useTagGroup, propTypes)
 
   const props: UseTagGroupMergedProps<Item> = {
@@ -76,6 +74,7 @@ function useTagGroup<Item>(
   const isInitialMount = useIsInitialMount()
 
   useAccessibleDescription(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     props.environment?.document,
     props.removeElementDescription,
   )
@@ -103,7 +102,11 @@ function useTagGroup<Item>(
 
   // Getter functions.
   const getTagGroupProps = useCallback(
-    ({onKeyDown, ...rest}: GetTagGroupPropsOptions & unknown = {}) => {
+    <Extra extends Record<string, unknown>>(
+      options?: GetTagGroupPropsOptions & Extra,
+    ) => {
+      const {onKeyDown, ...rest} =
+        options ?? ({} as GetTagGroupPropsOptions & Extra)
       const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>): void => {
         switch (e.key) {
           case 'ArrowLeft':
@@ -138,15 +141,24 @@ function useTagGroup<Item>(
         role: 'listbox',
         onKeyDown: callAllEventHandlers(onKeyDown, handleKeyDown),
         ...rest,
-      }
+      } as GetTagGroupPropsReturnValue & Extra
 
       return tagGroupProps
     },
     [dispatch, elementIds.tagGroupId],
-  ) as GetTagGroupProps
+  )
 
   const getTagProps = useCallback(
-    ({index, onClick, refKey = 'ref', ref, ...rest}: GetTagPropsOptions) => {
+    <Extra extends Record<string, unknown>>(
+      options?: GetTagPropsOptions & Extra,
+    ) => {
+      const {
+        index,
+        refKey = 'ref',
+        ref,
+        onClick,
+        ...rest
+      } = options ?? ({} as GetTagPropsOptions & Extra)
       if (index === undefined) {
         throw new Error('Pass index to getTagProps!')
       }
@@ -171,13 +183,18 @@ function useTagGroup<Item>(
         onClick: callAllEventHandlers(onClick, handleClick),
         tabIndex: latestState.activeIndex === index ? 0 : -1,
         ...rest,
-      }
+      } as GetTagPropsReturnValue & Extra
     },
     [dispatch, elementIds, latest],
-  ) as GetTagProps
+  )
 
   const getTagRemoveProps = useCallback(
-    ({index, onClick, ...rest}: GetTagRemovePropsOptions) => {
+    <Extra extends Record<string, unknown>>(
+      options?: GetTagRemovePropsOptions & Extra,
+    ) => {
+      const {index, onClick, ...rest} =
+        options ?? ({} as GetTagRemovePropsOptions & Extra)
+
       if (index === undefined) {
         throw new Error('Pass index to getTagRemoveProps!')
       }
@@ -196,10 +213,10 @@ function useTagGroup<Item>(
         'aria-labelledby': `${tagRemoveId} ${tagId}`,
         onClick: callAllEventHandlers(onClick, handleClick),
         ...rest,
-      }
+      } as GetTagRemovePropsReturnValue & Extra
     },
     [elementIds, dispatch],
-  ) as GetTagRemoveProps
+  )
 
   const addItem = useCallback<UseTagGroupReturnValue<Item>['addItem']>(
     (item, index): void => {
@@ -218,4 +235,6 @@ function useTagGroup<Item>(
   }
 }
 
-export default useTagGroup as UseTagGroupInterface
+useTagGroup.stateChangeTypes = stateChangeTypes
+
+export default useTagGroup

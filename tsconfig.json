@@ -1,4 +1,4 @@
-  {
+{
   "compilerOptions": {
     "noEmit": true,
     "allowJs": true,
@@ -13,10 +13,10 @@
     "typeRoots": ["./typings", "./node_modules/@types"],
     "strictNullChecks": true,
     "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*"]
+    }
   },
-  "include": [
-    "typings/**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-  ],
+  "include": ["typings/**/*.d.ts", "**/*.ts", "**/*.tsx"]
 }

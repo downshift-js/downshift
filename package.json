@@ -6,6 +6,7 @@
   "react-native": "dist/downshift.native.cjs.js",
   "module": "dist/downshift.esm.js",
   "typings": "typings/index.d.ts",
+  "types": "typings/index.d.ts",
   "sideEffects": false,
   "browserslist": [],
   "scripts": {
