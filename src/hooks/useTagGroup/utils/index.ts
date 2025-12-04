@@ -11,6 +11,7 @@ export {
   useAccessibleDescription,
   A11Y_DESCRIPTION_ELEMENT_ID,
 } from './useAccessibleDescription'
+export {getMergedProps} from './getMergedProps'
 
 export const propTypes: Record<
   string,
