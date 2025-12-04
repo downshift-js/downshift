@@ -31,6 +31,7 @@ import {
   useElementIds,
   useAccessibleDescription,
   A11Y_DESCRIPTION_ELEMENT_ID,
+  getMergedProps,
 } from './utils'
 
 // eslint-disable-next-line
@@ -39,18 +40,11 @@ const {isReactNative} = require('../../is.macro.js')
 const useTagGroup: UseTagGroupInterface = <Item>(
   userProps: Partial<UseTagGroupProps<Item>> = {},
 ) => {
+  /* State and Props */
+
   validatePropTypes(userProps, useTagGroup, propTypes)
 
-  const props: UseTagGroupMergedProps<Item> = {
-    stateReducer(_s, {changes}) {
-      return changes
-    },
-    environment:
-      /* istanbul ignore next (ssr) */
-      typeof window === 'undefined' || isReactNative ? undefined : window,
-    removeElementDescription: 'Press Delete to remove tag.',
-    ...userProps,
-  }
+  const props = getMergedProps(userProps)
 
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
@@ -61,9 +55,9 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const {activeIndex, items} = state
 
-  // utility callback to get item element.
+  /* Refs */
+
   const latest = useLatestRef({state, props})
-  // prevent id re-generation between renders.
   const elementIds = useElementIds({
     getTagId: props.getTagId,
     id: props.id,
@@ -73,8 +67,9 @@ const useTagGroup: UseTagGroupInterface = <Item>(
   const previousItemsLengthRef = useRef(items.length)
   const isInitialMount = useIsInitialMount()
 
+  /* Effects */
+
   useAccessibleDescription(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     props.environment?.document,
     props.removeElementDescription,
   )
@@ -100,7 +95,8 @@ const useTagGroup: UseTagGroupInterface = <Item>(
     previousItemsLengthRef.current = items.length
   })
 
-  // Getter functions.
+  /* Getter functions */
+
   const getTagGroupProps = useCallback(
     <Extra extends Record<string, unknown>>(
       options?: GetTagGroupPropsOptions & Extra,
@@ -217,6 +213,8 @@ const useTagGroup: UseTagGroupInterface = <Item>(
     },
     [elementIds, dispatch],
   )
+
+  /* Imperative Functions */
 
   const addItem = useCallback<UseTagGroupReturnValue<Item>['addItem']>(
     (item, index): void => {
