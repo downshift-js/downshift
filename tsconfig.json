@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "allowJs": true,
     "esModuleInterop": true,
     "jsx": "react",
@@ -10,13 +9,24 @@
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true,
     "module": "ESNext",
-    "typeRoots": ["./typings", "./node_modules/@types"],
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types",
+      "./node_modules/@testing-library"
+    ],
     "strictNullChecks": true,
     "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": true,
     "baseUrl": ".",
     "paths": {
       "*": ["*"]
     }
   },
-  "include": ["typings/**/*.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "typings/**/*.d.ts",
+  ]
 }

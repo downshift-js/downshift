@@ -138,7 +138,11 @@
   "eslintConfig": {
     "parserOptions": {
       "ecmaVersion": 2023,
-      "project": "./tsconfig.json",
+      "project": [
+        "./tsconfig.json",
+        "./docusaurus/tsconfig.json",
+        "./test/tsconfig.json"
+      ],
       "sourceType": "module"
     },
     "settings": {

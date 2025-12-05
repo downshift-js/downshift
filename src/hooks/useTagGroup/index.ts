@@ -34,11 +34,8 @@ import {
   getMergedProps,
 } from './utils'
 
-// eslint-disable-next-line
-const {isReactNative} = require('../../is.macro.js')
-
 const useTagGroup: UseTagGroupInterface = <Item>(
-  userProps: Partial<UseTagGroupProps<Item>> = {},
+  userProps: UseTagGroupProps<Item> = {},
 ) => {
   /* State and Props */
 
