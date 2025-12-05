@@ -271,6 +271,9 @@ describe('props', () => {
         body: {appendChild: jest.fn()},
         createElement: jest.fn().mockReturnValue(element),
       } as unknown as Document,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      Node: {} as unknown as (typeof window.Node)
     }
     const {unmount} = renderTagGroup({
       environment,

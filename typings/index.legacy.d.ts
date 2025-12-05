@@ -1,17 +1,17 @@
-import * as React from 'react'
+/// <reference types="react" />
 
 type Callback = () => void
 
 type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
 
-export interface DownshiftState<Item> {
+interface DownshiftState<Item> {
   highlightedIndex: number | null
   inputValue: string | null
   isOpen: boolean
   selectedItem: Item | null
 }
 
-export enum StateChangeTypes {
+declare enum StateChangeTypes {
   unknown = '__autocomplete_unknown__',
   mouseUp = '__autocomplete_mouseup__',
   itemMouseEnter = '__autocomplete_item_mouseenter__',
@@ -29,7 +29,7 @@ export enum StateChangeTypes {
   touchEnd = '__autocomplete_touchend__',
 }
 
-export interface DownshiftProps<Item> {
+interface DownshiftProps<Item> {
   initialSelectedItem?: Item
   initialInputValue?: string
   initialHighlightedIndex?: number | null
@@ -80,14 +80,14 @@ export interface DownshiftProps<Item> {
   suppressRefError?: boolean
 }
 
-export interface Environment {
+interface Environment {
   addEventListener: typeof window.addEventListener
   removeEventListener: typeof window.removeEventListener
   document: Document
   Node: typeof window.Node
 }
 
-export interface A11yStatusMessageOptions<Item> {
+interface A11yStatusMessageOptions<Item> {
   highlightedIndex: number | null
   inputValue: string
   isOpen: boolean
@@ -98,8 +98,7 @@ export interface A11yStatusMessageOptions<Item> {
   selectedItem: Item | null
 }
 
-export interface StateChangeOptions<Item>
-  extends Partial<DownshiftState<Item>> {
+interface StateChangeOptions<Item> extends Partial<DownshiftState<Item>> {
   type: StateChangeTypes
 }
 
@@ -107,12 +106,12 @@ type StateChangeFunction<Item> = (
   state: DownshiftState<Item>,
 ) => Partial<StateChangeOptions<Item>>
 
-export interface GetRootPropsOptions {
+interface GetRootPropsOptions {
   refKey?: string
   ref?: React.RefObject<any>
 }
 
-export interface GetRootPropsReturnValue {
+interface GetRootPropsReturnValue {
   'aria-expanded': boolean
   'aria-haspopup': 'listbox'
   'aria-labelledby': string
@@ -121,12 +120,11 @@ export interface GetRootPropsReturnValue {
   role: 'combobox'
 }
 
-export interface GetInputPropsOptions
-  extends React.HTMLProps<HTMLInputElement> {
+interface GetInputPropsOptions extends React.HTMLProps<HTMLInputElement> {
   disabled?: boolean
 }
 
-export interface GetInputPropsReturnValue {
+interface GetInputPropsReturnValue {
   'aria-autocomplete': 'list'
   'aria-activedescendant': string | undefined
   'aria-controls': string | undefined
@@ -141,16 +139,14 @@ export interface GetInputPropsReturnValue {
   value: string
 }
 
-export interface GetLabelPropsOptions
-  extends React.HTMLProps<HTMLLabelElement> {}
+interface GetLabelPropsOptions extends React.HTMLProps<HTMLLabelElement> {}
 
-export interface GetLabelPropsReturnValue {
+interface GetLabelPropsReturnValue {
   htmlFor: string
   id: string
 }
 
-export interface GetToggleButtonPropsOptions
-  extends React.HTMLProps<HTMLButtonElement> {
+interface GetToggleButtonPropsOptions extends React.HTMLProps<HTMLButtonElement> {
   disabled?: boolean
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
@@ -167,36 +163,35 @@ interface GetToggleButtonPropsReturnValue {
   role: 'button'
   type: 'button'
 }
-export interface GetMenuPropsOptions
-  extends React.HTMLProps<HTMLElement>,
-    GetPropsWithRefKey {
+
+interface GetMenuPropsOptions
+  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
   ['aria-label']?: string
 }
 
-export interface GetMenuPropsReturnValue {
+interface GetMenuPropsReturnValue {
   'aria-labelledby': string | undefined
   ref?: React.RefObject<any>
   role: 'listbox'
   id: string
 }
 
-export interface GetPropsCommonOptions {
+interface GetPropsCommonOptions {
   suppressRefError?: boolean
 }
 
-export interface GetPropsWithRefKey {
+interface GetPropsWithRefKey {
   refKey?: string
 }
 
-export interface GetItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement> {
+interface GetItemPropsOptions<Item> extends React.HTMLProps<HTMLElement> {
   index?: number
   item: Item
   isSelected?: boolean
   disabled?: boolean
 }
 
-export interface GetItemPropsReturnValue {
+interface GetItemPropsReturnValue {
   'aria-selected': boolean
   id: string
   onClick?: React.MouseEventHandler
@@ -206,7 +201,7 @@ export interface GetItemPropsReturnValue {
   role: 'option'
 }
 
-export interface PropGetters<Item> {
+interface PropGetters<Item> {
   getRootProps: <Options>(
     options?: GetRootPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
@@ -229,7 +224,7 @@ export interface PropGetters<Item> {
   ) => Omit<Overwrite<GetItemPropsReturnValue, Options>, 'index' | 'item'>
 }
 
-export interface Actions<Item> {
+interface Actions<Item> {
   reset: (
     otherStateToSet?: Partial<StateChangeOptions<Item>>,
     cb?: Callback,
@@ -271,15 +266,15 @@ export interface Actions<Item> {
   itemToString: (item: Item | null) => string
 }
 
-export type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
+type ControllerStateAndHelpers<Item> = DownshiftState<Item> &
   PropGetters<Item> &
   Actions<Item>
 
-export type ChildrenFunction<Item> = (
+type ChildrenFunction<Item> = (
   options: ControllerStateAndHelpers<Item>,
 ) => React.ReactNode
 
-export default class Downshift<Item = any> extends React.Component<
+declare class Downshift<Item = any> extends React.Component<
   DownshiftProps<Item>
 > {
   static stateChangeTypes: {
@@ -301,18 +296,18 @@ export default class Downshift<Item = any> extends React.Component<
   }
 }
 
-export function resetIdCounter(): void
+declare function resetIdCounter(): void
 
 /* useSelect Types */
 
-export interface UseSelectState<Item> {
+interface UseSelectState<Item> {
   highlightedIndex: number
   selectedItem: Item | null
   isOpen: boolean
   inputValue: string
 }
 
-export enum UseSelectStateChangeTypes {
+declare enum UseSelectStateChangeTypes {
   ToggleButtonClick = '__togglebutton_click__',
   ToggleButtonKeyDownArrowDown = '__togglebutton_keydown_arrow_down__',
   ToggleButtonKeyDownArrowUp = '__togglebutton_keydown_arrow_up__',
@@ -337,7 +332,7 @@ export enum UseSelectStateChangeTypes {
   FunctionReset = '__function_reset__',
 }
 
-export interface UseSelectProps<Item> {
+interface UseSelectProps<Item> {
   items: Item[]
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
@@ -371,12 +366,13 @@ export interface UseSelectProps<Item> {
   environment?: Environment
 }
 
-export interface UseSelectStateChangeOptions<Item>
-  extends UseSelectDispatchAction<Item> {
+interface UseSelectStateChangeOptions<
+  Item,
+> extends UseSelectDispatchAction<Item> {
   changes: Partial<UseSelectState<Item>>
 }
 
-export interface UseSelectDispatchAction<Item> {
+interface UseSelectDispatchAction<Item> {
   type: UseSelectStateChangeTypes
   altKey?: boolean
   key?: string
@@ -386,45 +382,40 @@ export interface UseSelectDispatchAction<Item> {
   inputValue?: string
 }
 
-export interface UseSelectStateChange<Item>
-  extends Partial<UseSelectState<Item>> {
+interface UseSelectStateChange<Item> extends Partial<UseSelectState<Item>> {
   type: UseSelectStateChangeTypes
 }
 
-export interface UseSelectSelectedItemChange<Item>
-  extends UseSelectStateChange<Item> {
+interface UseSelectSelectedItemChange<Item> extends UseSelectStateChange<Item> {
   selectedItem: Item | null
 }
 
-export interface UseSelectHighlightedIndexChange<Item>
-  extends UseSelectStateChange<Item> {
+interface UseSelectHighlightedIndexChange<
+  Item,
+> extends UseSelectStateChange<Item> {
   highlightedIndex: number
 }
 
-export interface UseSelectIsOpenChange<Item>
-  extends UseSelectStateChange<Item> {
+interface UseSelectIsOpenChange<Item> extends UseSelectStateChange<Item> {
   isOpen: boolean
 }
 
-export interface UseSelectGetMenuPropsOptions
-  extends GetPropsWithRefKey,
-    GetMenuPropsOptions {}
+interface UseSelectGetMenuPropsOptions
+  extends GetPropsWithRefKey, GetMenuPropsOptions {}
 
-export interface UseSelectGetMenuReturnValue extends GetMenuPropsReturnValue {
+interface UseSelectGetMenuReturnValue extends GetMenuPropsReturnValue {
   onMouseLeave: React.MouseEventHandler
 }
 
-export interface UseSelectGetToggleButtonPropsOptions
-  extends GetPropsWithRefKey,
-    React.HTMLProps<HTMLElement> {
+interface UseSelectGetToggleButtonPropsOptions
+  extends GetPropsWithRefKey, React.HTMLProps<HTMLElement> {
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
-export interface UseSelectGetToggleButtonReturnValue
-  extends Pick<
-    GetToggleButtonPropsReturnValue,
-    'onBlur' | 'onClick' | 'onPress' | 'onKeyDown'
-  > {
+interface UseSelectGetToggleButtonReturnValue extends Pick<
+  GetToggleButtonPropsReturnValue,
+  'onBlur' | 'onClick' | 'onPress' | 'onKeyDown'
+> {
   'aria-activedescendant': string
   'aria-controls': string
   'aria-expanded': boolean
@@ -436,23 +427,21 @@ export interface UseSelectGetToggleButtonReturnValue
   tabIndex: 0
 }
 
-export interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
-export interface UseSelectGetLabelPropsReturnValue
-  extends GetLabelPropsReturnValue {
+interface UseSelectGetLabelPropsOptions extends GetLabelPropsOptions {}
+
+interface UseSelectGetLabelPropsReturnValue extends GetLabelPropsReturnValue {
   onClick: React.MouseEventHandler
 }
 
-export interface UseSelectGetItemPropsOptions<Item>
-  extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
-    GetPropsWithRefKey {}
+interface UseSelectGetItemPropsOptions<Item>
+  extends Omit<GetItemPropsOptions<Item>, 'disabled'>, GetPropsWithRefKey {}
 
-export interface UseSelectGetItemPropsReturnValue
-  extends GetItemPropsReturnValue {
+interface UseSelectGetItemPropsReturnValue extends GetItemPropsReturnValue {
   'aria-disabled': boolean
   ref?: React.RefObject<any>
 }
 
-export interface UseSelectPropGetters<Item> {
+interface UseSelectPropGetters<Item> {
   getToggleButtonProps: <Options>(
     options?: UseSelectGetToggleButtonPropsOptions & Options,
     otherOptions?: GetPropsCommonOptions,
@@ -472,7 +461,7 @@ export interface UseSelectPropGetters<Item> {
   >
 }
 
-export interface UseSelectActions<Item> {
+interface UseSelectActions<Item> {
   reset: () => void
   openMenu: () => void
   closeMenu: () => void
@@ -481,11 +470,11 @@ export interface UseSelectActions<Item> {
   setHighlightedIndex: (index: number) => void
 }
 
-export type UseSelectReturnValue<Item> = UseSelectState<Item> &
+type UseSelectReturnValue<Item> = UseSelectState<Item> &
   UseSelectPropGetters<Item> &
   UseSelectActions<Item>
 
-export interface UseSelectInterface {
+interface UseSelectInterface {
   <Item>(props: UseSelectProps<Item>): UseSelectReturnValue<Item>
   stateChangeTypes: {
     ToggleButtonClick: UseSelectStateChangeTypes.ToggleButtonClick
@@ -513,18 +502,18 @@ export interface UseSelectInterface {
   }
 }
 
-export const useSelect: UseSelectInterface
+declare const useSelect: UseSelectInterface
 
 /* useCombobox Types */
 
-export interface UseComboboxState<Item> {
+interface UseComboboxState<Item> {
   highlightedIndex: number
   selectedItem: Item | null
   isOpen: boolean
   inputValue: string
 }
 
-export enum UseComboboxStateChangeTypes {
+declare enum UseComboboxStateChangeTypes {
   InputKeyDownArrowDown = '__input_keydown_arrow_down__',
   InputKeyDownArrowUp = '__input_keydown_arrow_up__',
   InputKeyDownEscape = '__input_keydown_escape__',
@@ -550,7 +539,7 @@ export enum UseComboboxStateChangeTypes {
   ControlledPropUpdatedSelectedItem = '__controlled_prop_updated_selected_item__',
 }
 
-export interface UseComboboxProps<Item> {
+interface UseComboboxProps<Item> {
   items: Item[]
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
@@ -589,12 +578,13 @@ export interface UseComboboxProps<Item> {
   environment?: Environment
 }
 
-export interface UseComboboxStateChangeOptions<Item>
-  extends UseComboboxDispatchAction<Item> {
+interface UseComboboxStateChangeOptions<
+  Item,
+> extends UseComboboxDispatchAction<Item> {
   changes: Partial<UseComboboxState<Item>>
 }
 
-export interface UseComboboxDispatchAction<Item> {
+interface UseComboboxDispatchAction<Item> {
   type: UseComboboxStateChangeTypes
   altKey?: boolean
   inputValue?: string
@@ -604,42 +594,41 @@ export interface UseComboboxDispatchAction<Item> {
   selectItem?: boolean
 }
 
-export interface UseComboboxStateChange<Item>
-  extends Partial<UseComboboxState<Item>> {
+interface UseComboboxStateChange<Item> extends Partial<UseComboboxState<Item>> {
   type: UseComboboxStateChangeTypes
 }
 
-export interface UseComboboxSelectedItemChange<Item>
-  extends UseComboboxStateChange<Item> {
+interface UseComboboxSelectedItemChange<
+  Item,
+> extends UseComboboxStateChange<Item> {
   selectedItem: Item | null
 }
-export interface UseComboboxHighlightedIndexChange<Item>
-  extends UseComboboxStateChange<Item> {
+
+interface UseComboboxHighlightedIndexChange<
+  Item,
+> extends UseComboboxStateChange<Item> {
   highlightedIndex: number
 }
 
-export interface UseComboboxIsOpenChange<Item>
-  extends UseComboboxStateChange<Item> {
+interface UseComboboxIsOpenChange<Item> extends UseComboboxStateChange<Item> {
   isOpen: boolean
 }
 
-export interface UseComboboxInputValueChange<Item>
-  extends UseComboboxStateChange<Item> {
+interface UseComboboxInputValueChange<
+  Item,
+> extends UseComboboxStateChange<Item> {
   inputValue: string
 }
 
-export interface UseComboboxGetMenuPropsOptions
-  extends GetPropsWithRefKey,
-    GetMenuPropsOptions {}
+interface UseComboboxGetMenuPropsOptions
+  extends GetPropsWithRefKey, GetMenuPropsOptions {}
 
-export interface UseComboboxGetMenuPropsReturnValue
-  extends UseSelectGetMenuReturnValue {}
+interface UseComboboxGetMenuPropsReturnValue extends UseSelectGetMenuReturnValue {}
 
-export interface UseComboboxGetToggleButtonPropsOptions
-  extends GetPropsWithRefKey,
-    GetToggleButtonPropsOptions {}
+interface UseComboboxGetToggleButtonPropsOptions
+  extends GetPropsWithRefKey, GetToggleButtonPropsOptions {}
 
-export interface UseComboboxGetToggleButtonPropsReturnValue {
+interface UseComboboxGetToggleButtonPropsReturnValue {
   'aria-controls': string
   'aria-expanded': boolean
   id: string
@@ -649,34 +638,30 @@ export interface UseComboboxGetToggleButtonPropsReturnValue {
   tabIndex: -1
 }
 
-export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
+interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
 
-export interface UseComboboxGetLabelPropsReturnValue
-  extends GetLabelPropsReturnValue {}
+interface UseComboboxGetLabelPropsReturnValue extends GetLabelPropsReturnValue {}
 
-export interface UseComboboxGetItemPropsOptions<Item>
-  extends Omit<GetItemPropsOptions<Item>, 'disabled'>,
-    GetPropsWithRefKey {}
+interface UseComboboxGetItemPropsOptions<Item>
+  extends Omit<GetItemPropsOptions<Item>, 'disabled'>, GetPropsWithRefKey {}
 
-export interface UseComboboxGetItemPropsReturnValue
-  extends GetItemPropsReturnValue {
+interface UseComboboxGetItemPropsReturnValue extends GetItemPropsReturnValue {
   'aria-disabled': boolean
   ref?: React.RefObject<any>
 }
 
-export interface UseComboboxGetInputPropsOptions
-  extends GetInputPropsOptions,
-    GetPropsWithRefKey {}
+interface UseComboboxGetInputPropsOptions
+  extends GetInputPropsOptions, GetPropsWithRefKey {}
 
-export interface UseComboboxGetInputPropsReturnValue
-  extends GetInputPropsReturnValue {
+interface UseComboboxGetInputPropsReturnValue extends GetInputPropsReturnValue {
   'aria-activedescendant': string
   'aria-controls': string
   'aria-expanded': boolean
   role: 'combobox'
   onClick: React.MouseEventHandler
 }
-export interface UseComboboxPropGetters<Item> {
+
+interface UseComboboxPropGetters<Item> {
   getToggleButtonProps: <Options>(
     options?: UseComboboxGetToggleButtonPropsOptions & Options,
   ) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
@@ -699,7 +684,7 @@ export interface UseComboboxPropGetters<Item> {
   ) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
 }
 
-export interface UseComboboxActions<Item> {
+interface UseComboboxActions<Item> {
   reset: () => void
   openMenu: () => void
   closeMenu: () => void
@@ -709,11 +694,11 @@ export interface UseComboboxActions<Item> {
   setInputValue: (inputValue: string) => void
 }
 
-export type UseComboboxReturnValue<Item> = UseComboboxState<Item> &
+type UseComboboxReturnValue<Item> = UseComboboxState<Item> &
   UseComboboxPropGetters<Item> &
   UseComboboxActions<Item>
 
-export interface UseComboboxInterface {
+interface UseComboboxInterface {
   <Item>(props: UseComboboxProps<Item>): UseComboboxReturnValue<Item>
   stateChangeTypes: {
     InputKeyDownArrowDown: UseComboboxStateChangeTypes.InputKeyDownArrowDown
@@ -742,16 +727,16 @@ export interface UseComboboxInterface {
   }
 }
 
-export const useCombobox: UseComboboxInterface
+declare const useCombobox: UseComboboxInterface
 
 // useMultipleSelection types.
 
-export interface UseMultipleSelectionState<Item> {
+interface UseMultipleSelectionState<Item> {
   selectedItems: Item[]
   activeIndex: number
 }
 
-export enum UseMultipleSelectionStateChangeTypes {
+declare enum UseMultipleSelectionStateChangeTypes {
   SelectedItemClick = '__selected_item_click__',
   SelectedItemKeyDownDelete = '__selected_item_keydown_delete__',
   SelectedItemKeyDownBackspace = '__selected_item_keydown_backspace__',
@@ -767,7 +752,7 @@ export enum UseMultipleSelectionStateChangeTypes {
   FunctionReset = '__function_reset__',
 }
 
-export interface UseMultipleSelectionProps<Item> {
+interface UseMultipleSelectionProps<Item> {
   selectedItems?: Item[]
   initialSelectedItems?: Item[]
   defaultSelectedItems?: Item[]
@@ -792,12 +777,13 @@ export interface UseMultipleSelectionProps<Item> {
   environment?: Environment
 }
 
-export interface UseMultipleSelectionStateChangeOptions<Item>
-  extends UseMultipleSelectionDispatchAction<Item> {
+interface UseMultipleSelectionStateChangeOptions<
+  Item,
+> extends UseMultipleSelectionDispatchAction<Item> {
   changes: Partial<UseMultipleSelectionState<Item>>
 }
 
-export interface UseMultipleSelectionDispatchAction<Item> {
+interface UseMultipleSelectionDispatchAction<Item> {
   type: UseMultipleSelectionStateChangeTypes
   index?: number
   selectedItem?: Item | null
@@ -805,22 +791,25 @@ export interface UseMultipleSelectionDispatchAction<Item> {
   activeIndex?: number
 }
 
-export interface UseMultipleSelectionStateChange<Item>
-  extends Partial<UseMultipleSelectionState<Item>> {
+interface UseMultipleSelectionStateChange<Item> extends Partial<
+  UseMultipleSelectionState<Item>
+> {
   type: UseMultipleSelectionStateChangeTypes
 }
 
-export interface UseMultipleSelectionActiveIndexChange<Item>
-  extends UseMultipleSelectionStateChange<Item> {
+interface UseMultipleSelectionActiveIndexChange<
+  Item,
+> extends UseMultipleSelectionStateChange<Item> {
   activeIndex: number
 }
 
-export interface UseMultipleSelectionSelectedItemsChange<Item>
-  extends UseMultipleSelectionStateChange<Item> {
+interface UseMultipleSelectionSelectedItemsChange<
+  Item,
+> extends UseMultipleSelectionStateChange<Item> {
   selectedItems: Item[]
 }
 
-export interface A11yRemovalMessage<Item> {
+interface A11yRemovalMessage<Item> {
   itemToString: (item: Item) => string
   resultCount: number
   activeSelectedItem: Item
@@ -828,32 +817,30 @@ export interface A11yRemovalMessage<Item> {
   activeIndex: number
 }
 
-export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement>,
-    GetPropsWithRefKey {
+interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
+  extends React.HTMLProps<HTMLElement>, GetPropsWithRefKey {
   index?: number
   selectedItem: Item
 }
 
-export interface UseMultipleSelectionGetSelectedItemReturnValue {
+interface UseMultipleSelectionGetSelectedItemReturnValue {
   ref?: React.RefObject<any>
   tabIndex: 0 | -1
   onClick: React.MouseEventHandler
   onKeyDown: React.KeyboardEventHandler
 }
 
-export interface UseMultipleSelectionGetDropdownPropsOptions
-  extends React.HTMLProps<HTMLElement> {
+interface UseMultipleSelectionGetDropdownPropsOptions extends React.HTMLProps<HTMLElement> {
   preventKeyAction?: boolean
 }
 
-export interface UseMultipleSelectionGetDropdownReturnValue {
+interface UseMultipleSelectionGetDropdownReturnValue {
   ref?: React.RefObject<any>
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
 }
 
-export interface UseMultipleSelectionPropGetters<Item> {
+interface UseMultipleSelectionPropGetters<Item> {
   getDropdownProps: <Options>(
     options?: UseMultipleSelectionGetDropdownPropsOptions & Options,
     extraOptions?: GetPropsCommonOptions,
@@ -869,7 +856,7 @@ export interface UseMultipleSelectionPropGetters<Item> {
   >
 }
 
-export interface UseMultipleSelectionActions<Item> {
+interface UseMultipleSelectionActions<Item> {
   reset: () => void
   addSelectedItem: (item: Item) => void
   removeSelectedItem: (item: Item) => void
@@ -877,12 +864,11 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> =
-  UseMultipleSelectionState<Item> &
-    UseMultipleSelectionPropGetters<Item> &
-    UseMultipleSelectionActions<Item>
+type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<Item> &
+  UseMultipleSelectionPropGetters<Item> &
+  UseMultipleSelectionActions<Item>
 
-export interface UseMultipleSelectionInterface {
+interface UseMultipleSelectionInterface {
   <Item>(
     props?: UseMultipleSelectionProps<Item>,
   ): UseMultipleSelectionReturnValue<Item>
@@ -903,4 +889,4 @@ export interface UseMultipleSelectionInterface {
   }
 }
 
-export const useMultipleSelection: UseMultipleSelectionInterface
+declare const useMultipleSelection: UseMultipleSelectionInterface

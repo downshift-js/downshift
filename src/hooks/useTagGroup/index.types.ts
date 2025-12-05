@@ -1,4 +1,3 @@
-import {Environment} from 'typings'
 import {Action, State} from '../../utils-ts'
 
 export interface UseTagGroupState<Item> extends State {
