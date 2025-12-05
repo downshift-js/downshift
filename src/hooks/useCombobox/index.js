@@ -96,24 +96,22 @@ function useCombobox(userProps = {}) {
       previousResultCountRef.current = items.length
     }
   })
+
+  const handleBlurInTracker = useCallback(
+    function handleBlur() {
+      if (latest.current.state.isOpen) {
+        dispatch({
+          type: stateChangeTypes.InputBlur,
+        })
+      }
+    },
+    [dispatch, latest],
+  )
+  const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef, inputRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    useCallback(
-      function handleBlur() {
-        if (latest.current.state.isOpen) {
-          dispatch({
-            type: stateChangeTypes.InputBlur,
-            selectItem: false,
-          })
-        }
-      },
-      [dispatch, latest],
-    ),
-    useMemo(
-      () => [menuRef, toggleButtonRef, inputRef],
-      // dependencies can be left empty because refs are getting mutated
-      [],
-    ),
+    handleBlurInTracker,
+    downshiftRefs
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',
