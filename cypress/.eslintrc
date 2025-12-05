@@ -1,8 +1,10 @@
 {
-  "plugins": [
-    "cypress"
-  ],
-  "env": {
-    "cypress/globals": true
+  "files": ["cypress/**/*.ts", "cypress/**/*.js"],
+  "plugins": ["cypress"],
+  "globals": {
+    "cy": "readonly",
+    "Cypress": "readonly",
+    "expect": "readonly",
+    "assert": "readonly"
   }
 }
