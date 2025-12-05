@@ -40,8 +40,8 @@ describe('getTagProps', () => {
       const {result} = renderUseTagGroup()
 
       expect(() =>
-        result.current.getTagProps({}),
-      ).toThrowErrorMatchingInlineSnapshot(`Pass index to getTagProps!`)
+        result.current.getTagProps({index: -2}),
+      ).toThrowErrorMatchingInlineSnapshot("Pass correct item index to getTagProps!")
     })
   })
 

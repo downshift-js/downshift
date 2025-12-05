@@ -143,17 +143,12 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const getTagProps = useCallback(
     <Extra extends Record<string, unknown>>(
-      options?: GetTagPropsOptions & Extra,
+      options: GetTagPropsOptions & Extra,
     ) => {
-      const {
-        index,
-        refKey = 'ref',
-        ref,
-        onClick,
-        ...rest
-      } = options ?? ({} as GetTagPropsOptions & Extra)
-      if (index === undefined) {
-        throw new Error('Pass index to getTagProps!')
+      const {index, refKey = 'ref', ref, onClick, ...rest} = options
+
+      if (!Number.isInteger(index) || index < 0) {
+        throw new Error('Pass correct item index to getTagProps!')
       }
 
       const latestState = latest.current.state
@@ -183,13 +178,12 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const getTagRemoveProps = useCallback(
     <Extra extends Record<string, unknown>>(
-      options?: GetTagRemovePropsOptions & Extra,
+      options: GetTagRemovePropsOptions & Extra,
     ) => {
-      const {index, onClick, ...rest} =
-        options ?? ({} as GetTagRemovePropsOptions & Extra)
+      const {index, onClick, ...rest} = options
 
-      if (index === undefined) {
-        throw new Error('Pass index to getTagRemoveProps!')
+      if (!Number.isInteger(index) || index < 0) {
+        throw new Error('Pass correct item index to getTagRemoveProps!')
       }
 
       const handleClick = (event: React.MouseEvent) => {

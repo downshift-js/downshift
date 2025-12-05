@@ -51,8 +51,8 @@ describe('getTagRemoveProps', () => {
       const {result} = renderUseTagGroup()
 
       expect(() =>
-        result.current.getTagRemoveProps({}),
-      ).toThrowErrorMatchingInlineSnapshot(`Pass index to getTagRemoveProps!`)
+        result.current.getTagRemoveProps({index: -3}),
+      ).toThrowErrorMatchingInlineSnapshot(`Pass correct item index to getTagRemoveProps!`)
     })
   })
 

@@ -51,7 +51,7 @@ export interface UseTagGroupReturnValue<Item> {
 }
 
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
-  index?: number
+  index: number
   refKey?: string
   ref?: React.MutableRefObject<HTMLElement>
 }
@@ -66,7 +66,7 @@ export interface GetTagPropsReturnValue {
 }
 
 export interface GetTagRemovePropsOptions extends React.HTMLProps<HTMLElement> {
-  index?: number
+  index: number
 }
 
 export interface GetTagRemovePropsReturnValue {
@@ -95,11 +95,11 @@ export type GetTagGroupProps = <Extra extends Record<string, unknown> = {}>(
 ) => GetTagGroupPropsReturnValue & Extra
 
 export type GetTagProps = <Extra extends Record<string, unknown> = {}>(
-  options?: GetTagPropsOptions & Extra,
+  options: GetTagPropsOptions & Extra,
 ) => GetTagPropsReturnValue & Extra
 
 export type GetTagRemoveProps = <Extra extends Record<string, unknown> = {}>(
-  options?: GetTagRemovePropsOptions & Extra,
+  options: GetTagRemovePropsOptions & Extra,
 ) => GetTagRemovePropsReturnValue & Extra
 
 export enum UseTagGroupStateChangeTypes {
