@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-import {useSelect} from '..'
-
 export const colors = [
   'Black',
   'Red',

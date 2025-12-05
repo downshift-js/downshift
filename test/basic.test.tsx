@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Downshift, {StateChangeOptions} from '../'
 
 type Item = string
 

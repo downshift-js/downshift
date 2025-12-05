@@ -1,13 +1,11 @@
 import {renderHook} from '@testing-library/react'
 import {
-  defaultProps,
-  getInitialValue,
-  getDefaultValue,
   useMouseAndTouchTracker,
-  getItemAndIndex,
   isDropdownsStateEqual,
   useElementIds,
 } from '../utils'
+import {getInitialValue, getDefaultValue, getItemAndIndex} from '../utils-ts'
+import {dropdownDefaultProps} from '../utils.dropdown'
 
 describe('utils', () => {
   describe('useElementIds', () => {
@@ -63,7 +61,7 @@ describe('utils', () => {
 
   describe('itemToString', () => {
     test('returns empty string if item is falsy', () => {
-      const emptyString = defaultProps.itemToString(null)
+      const emptyString = dropdownDefaultProps.itemToString(null)
       expect(emptyString).toBe('')
     })
   })

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {render, screen, renderHook} from '@testing-library/react'
-import {defaultProps} from '../utils'
+import {dropdownDefaultProps} from '../utils.dropdown'
 import {dataTestIds, items, user} from '../testUtils'
 import useCombobox from '.'
 
@@ -18,7 +18,7 @@ jest.mock('react', () => {
 
 jest.mock('../utils', () => {
   const utils = jest.requireActual('../utils')
-  const hooksUtils = jest.requireActual('../../utils')
+  const hooksUtils = jest.requireActual('../../utils-ts')
 
   return {
     ...utils,
@@ -76,7 +76,7 @@ function DropdownCombobox({renderSpy, renderItem, ...props}) {
     getInputProps,
     getItemProps,
   } = useCombobox({items, ...props})
-  const {itemToString} = props.itemToString ? props : defaultProps
+  const {itemToString} = props.itemToString ? props : dropdownDefaultProps
 
   renderSpy()
 
