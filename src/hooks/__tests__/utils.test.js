@@ -78,7 +78,7 @@ describe('utils', () => {
 
       expect(() =>
         getItemAndIndex(undefined, undefined, [1, 2, 3], errorMessage),
-      ).toThrowError(errorMessage)
+      ).toThrow(errorMessage)
     })
 
     test('returns index if item is passed', () => {
@@ -137,7 +137,7 @@ describe('utils', () => {
     test('renders without error', () => {
       expect(() => {
         renderHook(() => useMouseAndTouchTracker(undefined, jest.fn(), []))
-      }).not.toThrowError()
+      }).not.toThrow()
     })
 
     test('adds and removes listeners to environment', () => {
