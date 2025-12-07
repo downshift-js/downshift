@@ -12,7 +12,6 @@
     "module": "ESNext",
     "typeRoots": ["./typings", "./node_modules/@types"],
     "strictNullChecks": true,
-    "outDir": "dist",
   },
   "include": [
     "typings/**/*.d.ts",
