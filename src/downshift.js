@@ -883,7 +883,13 @@ class Downshift extends Component {
         this._rootNode &&
         this._rootNode.contains(activeElement)
 
-      if (!downshiftButtonIsActive) {
+      // We check for the containment of the newly activeElement in the _menuNode here due to iOS emitting a blur event right away when the menu is opened (maybe due to not showing the keyboard?)
+      const activeElementWithinMenu =
+        this._menuNode &&
+        activeElement &&
+        this._menuNode.contains(activeElement)
+
+      if (!downshiftButtonIsActive && !activeElementWithinMenu) {
         this.reset({type: stateChangeTypes.blurInput})
       }
     })
