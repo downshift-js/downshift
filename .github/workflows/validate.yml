@@ -16,7 +16,7 @@ jobs:
     if: ${{ !contains(github.head_ref, 'all-contributors') }}
     strategy:
       matrix:
-        node: [18, 20]
+        node: [20, 22, 24]
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
@@ -68,7 +68,7 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 24
 
       - name: 📥 Download deps
         uses: bahmutov/npm-install@v1

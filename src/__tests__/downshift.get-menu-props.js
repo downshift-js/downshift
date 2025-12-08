@@ -8,7 +8,7 @@ afterEach(() => console.error.mockRestore())
 const Menu = ({innerRef, ...rest}) => <div ref={innerRef} {...rest} />
 const RefMenu = React.forwardRef((props, ref) => <div ref={ref} {...props} />)
 
-test('using a composite component and calling getMenuProps without a refKey results in an error', () => {
+test('using a composite component and calling getMenuProps without a refKey does not result in error anymore', () => {
   const MyComponent = () => (
     <Downshift
       children={({getMenuProps}) => (
@@ -19,7 +19,7 @@ test('using a composite component and calling getMenuProps without a refKey resu
     />
   )
   render(<MyComponent />)
-  expect(console.error.mock.calls[1][0]).toMatchSnapshot()
+  expect(console.error).not.toHaveBeenCalled()
 })
 
 test('not applying the ref prop results in an error', () => {
