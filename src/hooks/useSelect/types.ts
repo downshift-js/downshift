@@ -5,5 +5,5 @@ export interface GetItemIndexByCharacterKeyOptions<Item> {
   highlightedIndex: number
   items: Item[]
   itemToString(item: Item | null): string
-  isItemDisabled(item: Item, index: number): boolean
+  isItemDisabled(item: Item | undefined, index: number): boolean
 }
