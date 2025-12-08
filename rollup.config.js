@@ -3,6 +3,9 @@ const {babel} = require('@rollup/plugin-babel')
 const typescript = require('@rollup/plugin-typescript')
 const config = require('kcd-scripts/dist/config/rollup.config')
 
+const isPreact = process.env.BUILD_PREACT === 'true'
+const tsconfig = isPreact ? 'tsconfig.preact.json' : 'tsconfig.json'
+
 const babelPluginIndex = config.plugins.findIndex(
   plugin => plugin.name === 'babel',
 )
@@ -21,10 +24,10 @@ config.plugins[cjsPluginIndex] = commonjs({
 })
 
 if (typescriptPluginIndex === -1) {
-  config.plugins.push(typescript({tsconfig: 'tsconfig.json'}))
+  config.plugins.push(typescript({tsconfig}))
 } else {
   config.plugins[typescriptPluginIndex] = typescript({
-    tsconfig: 'tsconfig.json',
+    tsconfig,
   })
 }
 
