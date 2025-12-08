@@ -374,7 +374,7 @@ function getHighlightedIndexOnOpen(props, state, offset) {
 function useMouseAndTouchTracker(
   environment,
   handleBlur,
-  downshiftElementsRefs,
+  downshiftRefs,
 ) {
   const mouseAndTouchTrackersRef = useRef({
     isMouseDown: false,
@@ -382,10 +382,10 @@ function useMouseAndTouchTracker(
     isTouchEnd: false,
   })
 
-  // the elements should be retrieved the moment they are required because these are refs - they can be mutated
-  function getDownshiftElements() {
-    return downshiftElementsRefs.map(ref => ref.current)
-  }
+const getDownshiftElements = useCallback(
+  () => downshiftRefs.map(ref => ref.current),
+  [downshiftRefs],
+);
 
   useEffect(() => {
     if (isReactNative || !environment) {
@@ -441,7 +441,7 @@ function useMouseAndTouchTracker(
       environment.removeEventListener('touchmove', onTouchMove)
       environment.removeEventListener('touchend', onTouchEnd)
     }
-  }, [downshiftElementsRefs, environment, handleBlur])
+  }, [environment, getDownshiftElements, handleBlur])
 
   return mouseAndTouchTrackersRef.current
 }

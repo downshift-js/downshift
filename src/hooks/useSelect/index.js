@@ -119,23 +119,21 @@ function useSelect(userProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleBlurInTracker = useCallback(
+    function handleBlur() {
+      if (latest.current.state.isOpen) {
+        dispatch({
+          type: stateChangeTypes.ToggleButtonBlur,
+        })
+      }
+    },
+    [dispatch, latest],
+  )
+  const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
-    useCallback(
-      function handleBlur() {
-        if (latest.current.state.isOpen) {
-          dispatch({
-            type: stateChangeTypes.ToggleButtonBlur,
-          })
-        }
-      },
-      [dispatch, latest],
-    ),
-    useMemo(
-      () => [menuRef, toggleButtonRef],
-      // dependencies can be left empty because refs are getting mutated
-      [],
-    ),
+    handleBlurInTracker,
+    downshiftRefs,
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getMenuProps',
