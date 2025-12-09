@@ -1,5 +1,5 @@
 import {getState, type Action, type State, type Props} from '../../utils-ts'
-import {useEnhancedReducer} from '.'
+import {useEnhancedReducer} from './useEnhancedReducer'
 
 /**
  * Wraps the useEnhancedReducer and applies the controlled prop values before

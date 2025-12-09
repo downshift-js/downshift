@@ -13,5 +13,5 @@ test('reducer throws error if called without proper action type', () => {
       },
       {type: 'super-bogus'} as unknown as UseTagGroupReducerAction<unknown>,
     )
-  }).toThrowError('Invalid useTagGroup reducer action.')
+  }).toThrow('Invalid useTagGroup reducer action.')
 })

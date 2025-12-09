@@ -1,10 +1,8 @@
 import * as React from 'react'
 
 import {cleanupStatusDiv, debounce, setStatus} from '../../utils-ts'
-import {useIsInitialMount} from '.'
-
-// eslint-disable-next-line
-const { isReactNative } = require('../../is.macro.js');
+import {isReactNative} from '../../is.macro.js'
+import {useIsInitialMount} from './useIsInitialMount'
 
 /**
  * Debounced call for updating the a11y message.

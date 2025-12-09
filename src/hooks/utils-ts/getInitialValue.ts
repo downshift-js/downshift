@@ -1,6 +1,6 @@
 import {State} from '../../utils-ts'
 import {capitalizeString} from './capitalizeString'
-import {getDefaultValue} from '.'
+import {getDefaultValue} from './getDefaultValue'
 
 export function getInitialValue<S extends State, P extends Partial<S>>(
   props: P,

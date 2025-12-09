@@ -98,7 +98,6 @@
     "@mdx-js/react": "^3.0.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-typescript": "^11.1.6",
     "@testing-library/cypress": "^10.0.1",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "^6.4.5",

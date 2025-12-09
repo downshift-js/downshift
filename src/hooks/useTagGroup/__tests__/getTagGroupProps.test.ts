@@ -1,5 +1,4 @@
-import {act} from 'react-dom/test-utils'
-import {screen, defaultProps, renderTagGroup, renderUseTagGroup} from './utils'
+import {act, screen, defaultProps, renderTagGroup, renderUseTagGroup} from './utils'
 
 // We are using React 18.
 jest.mock('react', () => {

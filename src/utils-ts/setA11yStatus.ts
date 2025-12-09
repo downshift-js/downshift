@@ -1,4 +1,4 @@
-import {debounce} from '.'
+import {debounce} from './debounce'
 
 const cleanupStatus = debounce((document: Document) => {
   getStatusDiv(document).textContent = ''

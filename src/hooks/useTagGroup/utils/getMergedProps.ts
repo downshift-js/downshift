@@ -1,7 +1,6 @@
 import {UseTagGroupProps, UseTagGroupMergedProps} from '../index.types'
 
-// eslint-disable-next-line
-const {isReactNative} = require('../../../is.macro.js')
+import {isReactNative} from '../../../is.macro.js'
 
 export function getMergedProps<Item>(
   userProps: UseTagGroupProps<Item>,

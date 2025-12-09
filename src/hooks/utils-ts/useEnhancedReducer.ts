@@ -7,7 +7,7 @@ import {
   getState,
   useLatestRef,
 } from '../../utils-ts'
-import {callOnChangeProps} from '.'
+import {callOnChangeProps} from './callOnChangeProps'
 
 /**
  * Computes the controlled state using a the previous state, props,
@@ -32,7 +32,7 @@ export function useEnhancedReducer<
   isStateEqual: (prevState: S, newState: S) => boolean,
 ): [S, (action: A) => void] {
   const prevStateRef = React.useRef<S | null>(null)
-  const actionRef = React.useRef<A>()
+  const actionRef = React.useRef<A>(undefined)
   const propsRef = useLatestRef(props)
 
   const enhancedReducer = React.useCallback(

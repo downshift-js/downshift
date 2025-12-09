@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import {noop} from '.'
+import {noop} from './noop'
 
 // eslint-disable-next-line import/no-mutable-exports
 export let validatePropTypes = noop as (
