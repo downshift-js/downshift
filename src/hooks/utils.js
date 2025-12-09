@@ -162,7 +162,7 @@ function useMouseAndTouchTracker(
     isTouchEnd: false,
   })
 
-const getDownshiftElements = useCallback(
+const getDownshiftElements = React.useCallback(
   () => downshiftRefs.map(ref => ref.current),
   [downshiftRefs],
 );
