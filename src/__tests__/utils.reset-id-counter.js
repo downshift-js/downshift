@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import Downshift from '../'
-import {resetIdCounter} from '../utils'
+import {resetIdCounter} from '../utils-ts'
 
 jest.mock('react', () => {
   const {useId, ...react} = jest.requireActual('react')

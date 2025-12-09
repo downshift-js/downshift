@@ -6,7 +6,7 @@ import {
   screen,
   renderHook,
 } from '@testing-library/react'
-import {noop} from '../../../utils'
+import {noop} from '../../../utils-ts'
 import {
   renderUseSelect,
   renderSelect,
@@ -65,7 +65,7 @@ describe('getToggleButtonProps', () => {
       expect(toggleButtonProps.id).toEqual(props.toggleButtonId)
     })
 
-    test("assign 'listbbox' to aria-haspopup", () => {
+    test("assign 'listbox' to aria-haspopup", () => {
       const {result} = renderUseSelect()
       const toggleButtonProps = result.current.getToggleButtonProps()
 

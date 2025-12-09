@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {render, act, renderHook} from '@testing-library/react'
-import {defaultProps} from '../utils'
+import {dropdownDefaultProps} from '../utils.dropdown'
 import {
   clickOnItemAtIndex,
   clickOnToggleButton,
@@ -18,7 +18,7 @@ export * from '../testUtils'
 
 jest.mock('../utils', () => {
   const utils = jest.requireActual('../utils')
-  const hooksUtils = jest.requireActual('../../utils')
+  const hooksUtils = jest.requireActual('../../utils-ts')
 
   return {
     ...utils,
@@ -65,7 +65,7 @@ export function DropdownSelect({renderSpy, renderItem, ...props}) {
     getMenuProps,
     getItemProps,
   } = useSelect({items, ...props})
-  const itemToString = props?.itemToString ?? defaultProps.itemToString
+  const itemToString = props?.itemToString ?? dropdownDefaultProps.itemToString
 
   renderSpy()
 

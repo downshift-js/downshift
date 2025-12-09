@@ -1,22 +1,23 @@
 import {
   getHighlightedIndexOnOpen,
-  getDefaultValue,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
 } from '../utils'
+import {getDefaultValue} from '../utils-ts'
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
 import commonReducer from '../reducer'
+import {dropdownDefaultStateValues} from '../utils.dropdown'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftUseComboboxReducer(state, action) {
-  const {type, props, altKey} = action
+export default function downshiftUseComboboxReducer(state, props, action) {
+  const {type, altKey} = action
   let changes
 
   switch (type) {
     case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: getDefaultValue(props, 'isOpen'),
+        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
         highlightedIndex: getDefaultHighlightedIndex(props),
         selectedItem: props.items[action.index],
         inputValue: props.itemToString(props.items[action.index]),
@@ -161,7 +162,7 @@ export default function downshiftUseComboboxReducer(state, action) {
       }
       break
     default:
-      return commonReducer(state, action, stateChangeTypes)
+      return commonReducer(state, props, action, stateChangeTypes)
   }
 
   return {
