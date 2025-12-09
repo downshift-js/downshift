@@ -131,3 +131,5 @@ export {
   GetTagRemovePropsReturnValue,
   UseTagGroupStateChangeTypes,
 } from '../dist/src/hooks/useTagGroup/index.types'
+
+export const useTagGroup: UseTagGroupInterface;
