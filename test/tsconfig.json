@@ -3,5 +3,6 @@
   "compilerOptions": {
     "noEmit": true,
   },
-  "include": ["./**/*.tsx*", "../typings/**/*.d.ts"]
+  "include": ["../typings/index.d.ts"],
+  "exclude": []
 }

@@ -5,6 +5,13 @@ export interface UseTagGroupState<Item> extends State {
   items: Item[]
 }
 
+export interface Environment {
+  addEventListener: typeof window.addEventListener
+  removeEventListener: typeof window.removeEventListener
+  document: Document
+  Node: typeof window.Node
+}
+
 export interface UseTagGroupProps<Item> extends Partial<
   UseTagGroupState<Item>
 > {
