@@ -34,3 +34,7 @@
 .item-to-add {
   cursor: pointer;
 }
+
+.selected-tag {
+  font-style: italic;
+}

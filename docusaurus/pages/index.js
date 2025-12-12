@@ -23,6 +23,9 @@ export default function Docs() {
         <li>
           <a href="./useTagGroup">useTagGroup</a>
         </li>
+        <li>
+          <a href="./useTagGroupCombobox">useTagGroupCombobox</a>
+        </li>
       </ul>
     </div>
   )
