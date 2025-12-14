@@ -1,0 +1,40 @@
+.tag-group {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 6px;
+}
+
+.tag {
+  border: solid 1px darkgreen;
+  background-color: green;
+  padding: 0 6px;
+  margin: 0 2px;
+  border-radius: 10px;
+  cursor: default;
+}
+
+.tag:hover {
+  opacity: 0.5;
+}
+
+.tag:focus {
+  background-color: red;
+  border-color: darkred;
+}
+
+.tag-remove-button {
+  padding: 4px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.item-to-add {
+  cursor: pointer;
+}
+
+.selected-tag {
+  font-style: italic;
+}

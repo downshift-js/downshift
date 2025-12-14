@@ -92,7 +92,9 @@ describe('props', () => {
       expect(getA11yStatusMessage).toHaveBeenCalledTimes(1)
 
       getA11yStatusMessage.mockClear()
-      rerender({multipleSelectionProps: {...multipleSelectionProps, activeIndex: 0}})
+      rerender({
+        multipleSelectionProps: {...multipleSelectionProps, activeIndex: 0},
+      })
 
       expect(getA11yStatusMessage).not.toHaveBeenCalled()
     })
@@ -587,6 +589,7 @@ describe('props', () => {
         onActiveIndexChange: () => {
           result.current.setSelectedItems([items[0]])
         },
+        initialSelectedItems: items,
       })
 
       act(() => {

@@ -422,7 +422,7 @@ describe('getItemProps', () => {
     test('will be displayed if getInputProps is not called', () => {
       renderHook(() => {
         const {getItemProps} = useSelect({items})
-        getItemProps({disabled: true, index: 99})
+        getItemProps({disabled: true, index: 9})
       })
 
       expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(

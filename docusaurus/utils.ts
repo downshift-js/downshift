@@ -1,3 +1,5 @@
+import {type CSSProperties} from 'react'
+
 export const colors = [
   'Black',
   'Red',
@@ -15,7 +17,7 @@ export const colors = [
   'Skyblue',
 ]
 
-export const menuStyles = {
+export const menuStyles: CSSProperties = {
   listStyle: 'none',
   width: '100%',
   padding: '0',
@@ -24,7 +26,7 @@ export const menuStyles = {
   overflowY: 'scroll',
 }
 
-export const containerStyles = {
+export const containerStyles: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   width: 'fit-content',
@@ -33,7 +35,7 @@ export const containerStyles = {
   alignSelf: 'center',
 }
 
-export const selectedItemsContainerSyles = {
+export const tagGroupSyles: CSSProperties = {
   display: 'inline-flex',
   gap: '8px',
   alignItems: 'center',
@@ -41,9 +43,15 @@ export const selectedItemsContainerSyles = {
   padding: '6px',
 }
 
-export const selectedItemStyles = {
-  backgroundColor: 'lightgray',
-  paddingLeft: '4px',
-  paddingRight: '4px',
-  borderRadius: '6px',
+export const tagStyles: CSSProperties = {
+  backgroundColor: 'green',
+  padding: '0 6px',
+  margin: '0 2px',
+  borderRadius: '10px',
+  cursor: 'auto',
+}
+
+export const removeTagStyles: CSSProperties = {
+  padding: '4px',
+  cursor: 'pointer',
 }

@@ -1,5 +1,4 @@
 import * as React from 'react'
-
 import {useCombobox} from '..'
 
 export const colors = [
