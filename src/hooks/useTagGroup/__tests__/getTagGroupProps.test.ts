@@ -1,4 +1,10 @@
-import {act, screen, defaultProps, renderTagGroup, renderUseTagGroup} from './utils'
+import {
+  act,
+  screen,
+  defaultProps,
+  renderTagGroup,
+  renderUseTagGroup,
+} from './utils'
 
 // We are using React 18.
 jest.mock('react', () => {
@@ -158,6 +164,7 @@ describe('getTagGroupProps', () => {
         screen.queryByRole('tag', {name: defaultProps.initialItems[2]}),
       ).not.toBeInTheDocument()
       expect(getTags()[2]).toHaveAttribute('tabindex', '0')
+      expect(getTags()[2]).toHaveFocus()
     })
 
     test('delete removes the active last item and the second to last item becomes active', async () => {
@@ -169,6 +176,7 @@ describe('getTagGroupProps', () => {
       await user.keyboard('{Delete}')
 
       expect(getTags()[tagsCount - 2]).toHaveAttribute('tabindex', '0')
+      expect(getTags()[tagsCount - 2]).toHaveFocus()
     })
 
     test('delete removes the only active item', async () => {
@@ -183,7 +191,7 @@ describe('getTagGroupProps', () => {
       expect(queryByRole('tag')).not.toBeInTheDocument()
     })
 
-    test('backspace removes the active item', async () => {
+     test('backspace removes the active item', async () => {
       const {clickOnTag, user, getTags} = renderTagGroup()
 
       const tagsCount = getTags().length
@@ -197,6 +205,32 @@ describe('getTagGroupProps', () => {
       expect(
         screen.queryByRole('tag', {name: defaultProps.initialItems[2]}),
       ).not.toBeInTheDocument()
+      expect(getTags()[2]).toHaveAttribute('tabindex', '0')
+      expect(getTags()[2]).toHaveFocus()
+    })
+
+    test('backspace removes the active last item and the second to last item becomes active', async () => {
+      const {clickOnTag, user, getTags} = renderTagGroup()
+
+      const tagsCount = getTags().length
+
+      await clickOnTag(tagsCount - 1)
+      await user.keyboard('{Backspace}')
+
+      expect(getTags()[tagsCount - 2]).toHaveAttribute('tabindex', '0')
+      expect(getTags()[tagsCount - 2]).toHaveFocus()
+    })
+
+    test('backspace removes the only active item', async () => {
+      const {clickOnTag, user, queryByRole} = renderTagGroup({
+        initialItems: [defaultProps.initialItems[0] as string],
+      })
+
+      await clickOnTag(0)
+      await user.keyboard('{Backspace}')
+
+      // eslint-disable-next-line testing-library/prefer-screen-queries
+      expect(queryByRole('tag')).not.toBeInTheDocument()
     })
 
     test('any other key does nothing', async () => {

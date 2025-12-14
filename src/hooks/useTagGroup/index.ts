@@ -6,7 +6,7 @@ import {
   useLatestRef,
   validatePropTypes,
 } from '../../utils-ts'
-import {useControlledReducer, useIsInitialMount} from '../utils-ts'
+import {useControlledReducer} from '../utils-ts'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupPropsOptions,
@@ -61,8 +61,8 @@ const useTagGroup: UseTagGroupInterface = <Item>(
     tagGroupId: props.tagGroupId,
   })
   const itemRefs = useRef<Record<string, HTMLElement>>({})
+  const previousActiveIndexRef = useRef(activeIndex)
   const previousItemsLengthRef = useRef(items.length)
-  const isInitialMount = useIsInitialMount()
 
   /* Effects */
 
@@ -72,25 +72,18 @@ const useTagGroup: UseTagGroupInterface = <Item>(
   )
 
   useEffect(() => {
-    if (isInitialMount) {
-      return
-    }
-
-    if (previousItemsLengthRef.current < items.length) {
-      return
-    }
-
     if (
-      activeIndex >= 0 &&
-      activeIndex < Object.keys(itemRefs.current).length
+      (activeIndex !== -1 &&
+        previousActiveIndexRef.current !== -1 &&
+        activeIndex !== previousActiveIndexRef.current) ||
+      previousItemsLengthRef.current === items.length + 1
     ) {
       itemRefs.current[elementIds.getTagId(activeIndex)]?.focus()
     }
-  }, [activeIndex, elementIds, isInitialMount, items.length])
 
-  useEffect(() => {
+    previousActiveIndexRef.current = activeIndex
     previousItemsLengthRef.current = items.length
-  })
+  }, [activeIndex, elementIds, items])
 
   /* Getter functions */
 

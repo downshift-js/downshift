@@ -28,6 +28,16 @@ describe('props', () => {
     expect(tags[2]).toHaveAttribute('tabindex', '-1')
   })
 
+  test('initialActiveIndex does not focus active item at mount', () => {
+    const {getTags} = renderTagGroup({
+      initialActiveIndex: 1,
+    })
+
+    const tags = getTags()
+
+    expect(tags[1]).not.toHaveFocus()
+  })
+
   test('activeIndex controls the activeIndex state', async () => {
     const {getTags, clickOnTag} = renderTagGroup({
       activeIndex: 1,

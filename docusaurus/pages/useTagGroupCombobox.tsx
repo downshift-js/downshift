@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {useTagGroup, useCombobox} from '../..'
+import {useTagGroup, useCombobox} from '../../src'
 import {colors} from '../utils'
 
 import './useTagGroupCombobox.css'
