@@ -12,22 +12,43 @@ export interface Environment {
   Node: typeof window.Node
 }
 
+export interface UseTagGroupStateChange<Item> extends Partial<
+  UseTagGroupState<Item>
+> {
+  type: UseTagGroupStateChangeTypes
+}
+
+export interface UseTagGroupActiveIndexChange<
+  Item,
+> extends UseTagGroupStateChange<Item> {
+  activeIndex: number
+}
+
+export interface UseTagGroupItemsChange<
+  Item,
+> extends UseTagGroupStateChange<Item> {
+  items: Item[]
+}
+
 export interface UseTagGroupProps<Item> extends Partial<
   UseTagGroupState<Item>
 > {
-  initialActiveIndex?: number
-  initialItems?: Item[]
-  tagGroupId?: string
+  environment?: Environment
   getTagId?: (index: number) => string
   id?: string
+  initialActiveIndex?: number
+  initialItems?: Item[]
+  onActiveIndexChange?: (changes: UseTagGroupActiveIndexChange<Item>) => void
+  onItemsChange?: (changes: UseTagGroupItemsChange<Item>) => void
+  onStateChange?: (changes: UseTagGroupStateChange<Item>) => void
+  removeElementDescription?: string
   stateReducer?(
     state: UseTagGroupState<Item>,
     actionAndChanges: Action<UseTagGroupStateChangeTypes> & {
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>
-  environment?: Environment
-  removeElementDescription?: string
+  tagGroupId?: string
 }
 
 export type UseTagGroupMergedProps<Item> = Required<

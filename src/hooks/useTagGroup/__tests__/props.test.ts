@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/prefer-screen-queries */
 import useTagGroup from '..'
 import {A11Y_DESCRIPTION_ELEMENT_ID} from '../utils'
 import {
@@ -283,7 +284,7 @@ describe('props', () => {
       } as unknown as Document,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      Node: {} as unknown as (typeof window.Node)
+      Node: {} as unknown as typeof window.Node,
     }
     const {unmount} = renderTagGroup({
       environment,
@@ -311,16 +312,131 @@ describe('props', () => {
       removeElementDescription,
     })
 
-    // eslint-disable-next-line testing-library/prefer-screen-queries
     expect(getByText(removeElementDescription)).toBeInTheDocument()
-    // eslint-disable-next-line testing-library/prefer-screen-queries
-    expect(queryByText('Press Delete to remove tag.')).not.toBeInTheDocument()
+    expect(queryByText('Press Delete or Backspace to remove tag.')).not.toBeInTheDocument()
   })
 
   test('removeElementDescription has a default options', () => {
     const {getByText} = renderTagGroup()
 
-    // eslint-disable-next-line testing-library/prefer-screen-queries
-    expect(getByText('Press Delete to remove tag.')).toBeInTheDocument()
+    expect(getByText('Press Delete or Backspace to remove tag.')).toBeInTheDocument()
+  })
+
+  test('onStateChange is called after adding an item', () => {
+    const onStateChange = jest.fn()
+    const {result} = renderUseTagGroup({onStateChange})
+
+    act(() => {
+      result.current.addItem('test')
+    })
+
+    expect(onStateChange).toHaveBeenCalledTimes(1)
+    expect(onStateChange).toHaveBeenNthCalledWith(1, {
+      items: [...defaultProps.initialItems, 'test'],
+      type: useTagGroup.stateChangeTypes.FunctionAddItem,
+    })
+  })
+
+  test('onStateChange is called after each user action', async () => {
+    const onStateChange = jest.fn()
+    const {clickOnTag, clickOnRemoveTag, user} = renderTagGroup({onStateChange})
+
+    await clickOnTag(2)
+
+    expect(onStateChange).toHaveBeenCalledTimes(1)
+    expect(onStateChange).toHaveBeenCalledWith({
+      type: useTagGroup.stateChangeTypes.TagClick,
+      activeIndex: 2,
+    })
+
+    await clickOnRemoveTag(4)
+
+    expect(onStateChange).toHaveBeenCalledTimes(2)
+    expect(onStateChange).toHaveBeenNthCalledWith(2, {
+      type: useTagGroup.stateChangeTypes.TagRemoveClick,
+      activeIndex: 4,
+      items: [
+        ...defaultProps.initialItems.slice(0, 4),
+        ...defaultProps.initialItems.slice(5),
+      ],
+    })
+
+    await user.keyboard('{ArrowLeft}')
+
+    expect(onStateChange).toHaveBeenCalledTimes(3)
+    expect(onStateChange).toHaveBeenNthCalledWith(3, {
+      type: useTagGroup.stateChangeTypes.TagGroupKeyDownArrowLeft,
+      activeIndex: 3,
+    })
+
+    await user.keyboard('{ArrowRight}')
+
+    expect(onStateChange).toHaveBeenCalledTimes(4)
+    expect(onStateChange).toHaveBeenNthCalledWith(4, {
+      type: useTagGroup.stateChangeTypes.TagGroupKeyDownArrowRight,
+      activeIndex: 4,
+    })
+
+    await user.keyboard('{Delete}')
+
+    expect(onStateChange).toHaveBeenCalledTimes(5)
+    expect(onStateChange).toHaveBeenNthCalledWith(5, {
+      type: useTagGroup.stateChangeTypes.TagGroupKeyDownDelete,
+      items: [
+        ...defaultProps.initialItems.slice(0, 4),
+        ...defaultProps.initialItems.slice(6),
+      ],
+    })
+
+    await user.keyboard('{Backspace}')
+
+    expect(onStateChange).toHaveBeenCalledTimes(6)
+    expect(onStateChange).toHaveBeenNthCalledWith(6, {
+      type: useTagGroup.stateChangeTypes.TagGroupKeyDownBackspace,
+      items: [
+        ...defaultProps.initialItems.slice(0, 4),
+        ...defaultProps.initialItems.slice(7),
+      ],
+    })
+  })
+
+  test('onActiveIndexChange is called after active index changes', async () => {
+    const onActiveIndexChange = jest.fn()
+    const {clickOnTag, clickOnRemoveTag} = renderTagGroup({onActiveIndexChange})
+
+    await clickOnTag(2)
+
+    expect(onActiveIndexChange).toHaveBeenCalledTimes(1)
+    expect(onActiveIndexChange).toHaveBeenCalledWith({
+      type: useTagGroup.stateChangeTypes.TagClick,
+      activeIndex: 2,
+      items: defaultProps.initialItems,
+    })
+
+    onActiveIndexChange.mockClear()
+    await clickOnRemoveTag(2)
+
+    expect(onActiveIndexChange).not.toHaveBeenCalled()
+  })
+
+  test('onItemsChange is called after items change', async () => {
+    const onItemsChange = jest.fn()
+    const {clickOnTag, clickOnRemoveTag} = renderTagGroup({onItemsChange})
+
+    await clickOnTag(2)
+
+    expect(onItemsChange).not.toHaveBeenCalled()
+
+    await clickOnRemoveTag(2)
+
+    expect(onItemsChange).toHaveBeenCalledTimes(1)
+    expect(onItemsChange).toHaveBeenCalledWith({
+      type: useTagGroup.stateChangeTypes.TagRemoveClick,
+      activeIndex: 2,
+      items: [
+        ...defaultProps.initialItems.slice(0, 2),
+        ...defaultProps.initialItems.slice(3),
+      ],
+    })
   })
 })

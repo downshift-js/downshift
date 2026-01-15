@@ -12,7 +12,7 @@ export function getMergedProps<Item>(
     environment:
       /* istanbul ignore next (ssr) */
       typeof window === 'undefined' || isReactNative ? undefined : window,
-    removeElementDescription: 'Press Delete to remove tag.',
+    removeElementDescription: 'Press Delete or Backspace to remove tag.',
     ...userProps,
   }
 }

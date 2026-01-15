@@ -24,12 +24,6 @@ export default function DropdownCombobox() {
         ),
       )
     },
-    onSelectedItemChange(changes) {
-      console.log(changes)
-    },
-    onIsOpenChange(changes) {
-      console.log(changes)
-    }
   })
   return (
     <div style={containerStyles}>
