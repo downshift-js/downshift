@@ -1,4 +1,4 @@
-# useSelect
+# useTagGroup
 
 ## The problem
 
