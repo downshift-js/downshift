@@ -30,40 +30,35 @@ movement between items, screen reader support etc.
 
 - [Usage](#usage)
 - [Basic Props](#basic-props)
-  - [items](#items)
-  - [itemToString](#itemtostring)
-  - [onSelectedItemChange](#onselecteditemchange)
+  - [removeElementDescription](#removeelementdescription)
+  - [onItemsChange](#onitemschange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
   - [isItemDisabled](#isitemdisabled)
-  - [initialSelectedItem](#initialselecteditem)
-  - [initialIsOpen](#initialisopen)
-  - [initialHighlightedIndex](#initialhighlightedindex)
-  - [defaultSelectedItem](#defaultselecteditem)
-  - [defaultIsOpen](#defaultisopen)
-  - [defaultHighlightedIndex](#defaulthighlightedindex)
-  - [itemToKey](#itemtokey)
-  - [getA11yStatusMessage](#geta11ystatusmessage)
-  - [onHighlightedIndexChange](#onhighlightedindexchange)
-  - [onIsOpenChange](#onisopenchange)
+  - [initialItems](#initialitems)
+  - [initialActiveIndex](#initialactiveindex)
+  - [onActiveIndexChange](#onactiveindexchange)
   - [onStateChange](#onstatechange)
-  - [highlightedIndex](#highlightedindex)
-  - [isOpen](#isopen)
-  - [selectedItem](#selecteditem)
+  - [activeIndex](#activeindex)
+  - [items](#items)
   - [id](#id)
-  - [labelId](#labelid)
-  - [menuId](#menuid)
-  - [toggleButtonId](#togglebuttonid)
-  - [getItemId](#getitemid)
+  - [tagGroupId](#taggroupid)
+  - [getTagId](#gettagid)
   - [environment](#environment)
 - [stateChangeTypes](#statechangetypes)
 - [Control Props](#control-props)
 - [Returned props](#returned-props)
   - [prop getters](#prop-getters)
+    - [`getTagGroupProps`](#gettaggroupprops)
+    - [`getTagProps`](#gettagprops)
+    - [`getTagRemoveProps`](#gettagremoveprops)
   - [actions](#actions)
   - [state](#state)
 - [Event Handlers](#event-handlers)
   - [Default handlers](#default-handlers)
+    - [Tag Group](#tag-group)
+    - [Tag](#tag)
+  - [Tag Remove Remove](#tag-remove-remove)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -624,74 +619,38 @@ described below.
 
 ### Default handlers
 
-#### Toggle Button
+#### Tag Group
 
-- `Click`: If the menu is not displayed, it will open it. Otherwise it will
-  close it. If there is already an item selected, the menu will be opened with
-  that item already highlighted.
-- `Enter`: If the menu is closed, opens the menu. If the menu is opened and
-  there is an item highlighted, it will select that item.
-- `Space`: If the menu is closed, opens the menu. If the menu is opened and
-  there is an item highlighted, it will select that item. If the user has typed
-  character keys before pressing `Space`, the space character will concatenate
-  to the search query. This allows search for options such as `Republic of ..`.
-- `CharacterKey`: Opens the menu if closed and highlights the first option that
-  starts with that key. For instance, typing `C` will select the option that
-  starts with `C`. Pressing `C` again will move the highlight to the next item
-  that starts with `C`. Typing keys into rapid succession (in less than 500ms
-  each) will select the option starting with that key combination, for instance
-  typing `CAL` will select `californium` if this option exists.
-- `ArrowDown`: If the menu is closed, it will open it. If there is already an
-  item selected, it will open the menu with the selected item highlighted.
-  Otherwise, it will open the menu with the first option highlighted. If the
-  menu is already open, it will highlight the next item.
-- `ArrowUp`: If the menu is closed, it will open it. If there is already an item
-  selected, it will open the menu with the selected item highlighted. Otherwise,
-  it will open the menu with the last option highlighted. If the menu is already
-  open, it will highlight the previous item.
-- `Alt+ArrowDown`: If the menu is closed, it will open it, without highlighting
-  any item.
-- `Alt+ArrowUp`: If the menu is open, it will close it and will select the item
-  that was highlighted.
-- `End`: If the menu is closed, it will open it. It will also highlight the last
-  item in the list.
-- `Home`: If the menu is closed, it will open it. It will also highlight the
-  first item in the list.
-- `PageUp`: If the menu is open, it will move the highlight the item 10
-  positions before the current selection.
-- `PageDown`: If the menu is open, it will move the highlight the item 10
-  positions after the current selection.
-- `Escape`: It will close the menu without selecting anything and keeps focus to
-  the toggle button.
-- `Blur(Tab, Shift+Tab, MouseClick outside)`: It will close the menu will select
-  the highlighted item if any. Focus is handled naturally (next / previous
-  elemenent in the tab order, body element if click outside.).
+- `ArrowLeft`: if a tag is focused and there are multiple tags in the tag group,
+  it will move focus to the tag that's placed to the left. If the tag has no
+  neighbours to the left, it will move focus to the last tag.
+- `ArrowRight`: if a tag is focused and there are multiple tags in the tag
+  group, it will move focus to the tag that's placed to the right. If the tag
+  has no neighbours to the right, it will move focus to the first tag.
 
-#### Menu
+#### Tag
 
-- `MouseLeave`: Will clear the value of the `highlightedIndex` if it was set.
+- `Click`: moves the focus to this tag. Useful to execute optional actions as
+  well, such as opening a non-modal with additional information.
+- `Delete, Backspace`: removes the tag from the tag group and moves the focus to
+  either the next or previous tag, depending on the removed tag index.
 
-#### Item
+### Tag Remove Remove
 
-- `Click`: It will select the item and close the menu.
-- `MouseOver`: It will highlight the item.
-
-#### Label
-
-- `Click`: It will move focus to the toggle element.
+- `Click`: removes the tag from the tag group and moves the focus to either the
+  next or previous tag, depending on the removed tag index.
 
 ### Customizing Handlers
 
-You can provide your own event handlers to `useSelect` which will be called
+You can provide your own event handlers to `useTagGroup` which will be called
 before the default handlers:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getTagGroup} = useTagGroup({initialItems: items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps({
+  <div
+    {...getTagGroup({
       onKeyDown: event => {
         // your custom keyDown handler here.
       },
@@ -704,14 +663,14 @@ If you would like to prevent the default handler behavior in some cases, you can
 set the event's `preventDownshiftDefault` property to `true`:
 
 ```javascript
-const {getMenuProps} = useSelect({items})
+const items = [...] // items here.
+const {getTagGroup} = useTagGroup({initialItems: items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps({
+  <div
+    {...getTagGroup({
       onKeyDown: event => {
         // your custom keyDown handler here.
-        if (event.key === 'Enter') {
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
           // Prevent Downshift's default 'Enter' behavior.
           event.nativeEvent.preventDownshiftDefault = true
 
@@ -728,11 +687,10 @@ favor of your own, you can bypass prop getters:
 
 ```javascript
 const items = [...] // items here.
-const {getMenuProps} = useSelect({items})
+const {getTagGroup} = useTagGroup({initialItems: items})
 const ui = (
-  /* button, label, ... */
-  <ul
-    {...getMenuProps()}
+  <div
+    {...getTagGroup()}
     onKeyDown={event => {
       // your custom keyDown handler here.
     }}
@@ -750,12 +708,10 @@ It can be a great contributing opportunity to provide relevant use cases as
 docsite examples. If you have such an example, please create an issue with the
 suggestion and the Codesandbox for it, and we will take it from there.
 
-[select-aria]:
-  https://w3c.github.io/aria-practices/examples/combobox/combobox-select-only.html
 [sandbox-example]:
-  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fhooks%2FuseSelect%2Fbasic-usage.js&moduleview=1
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Fhooks%2FuseTagGroup%2Fbasic-usage.js&moduleview=1
 [state-change-file]:
-  https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect/stateChangeTypes.js
+  https://github.com/downshift-js/downshift/blob/master/src/hooks/useTagGroup/stateChangeTypes.ts
 [blog-post-prop-getters]:
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
@@ -763,9 +719,3 @@ suggestion and the Codesandbox for it, and we will take it from there.
   https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
-[migration-guide-v7]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md#useselect
-[migration-guide-v8]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
-[migration-guide-v9]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md
