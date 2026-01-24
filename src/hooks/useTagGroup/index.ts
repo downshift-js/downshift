@@ -1,4 +1,4 @@
-import {useEffect, useCallback, useRef} from 'react'
+import {useCallback} from 'react'
 
 import {
   callAllEventHandlers,
@@ -32,6 +32,7 @@ import {
   useAccessibleDescription,
   A11Y_DESCRIPTION_ELEMENT_ID,
   getMergedProps,
+  useRovingTagFocus,
 } from './utils'
 
 const useTagGroup: UseTagGroupInterface = <Item>(
@@ -60,9 +61,6 @@ const useTagGroup: UseTagGroupInterface = <Item>(
     id: props.id,
     tagGroupId: props.tagGroupId,
   })
-  const itemRefs = useRef<Record<string, HTMLElement>>({})
-  const previousActiveIndexRef = useRef(activeIndex)
-  const previousItemsLengthRef = useRef(items.length)
 
   /* Effects */
 
@@ -71,19 +69,11 @@ const useTagGroup: UseTagGroupInterface = <Item>(
     props.removeElementDescription,
   )
 
-  useEffect(() => {
-    if (
-      (activeIndex !== -1 &&
-        previousActiveIndexRef.current !== -1 &&
-        activeIndex !== previousActiveIndexRef.current) ||
-      previousItemsLengthRef.current === items.length + 1
-    ) {
-      itemRefs.current[elementIds.getTagId(activeIndex)]?.focus()
-    }
-
-    previousActiveIndexRef.current = activeIndex
-    previousItemsLengthRef.current = items.length
-  }, [activeIndex, elementIds, items])
+  const itemRefs = useRovingTagFocus(
+    activeIndex,
+    items.length,
+    elementIds.getTagId,
+  )
 
   /* Getter functions */
 
@@ -166,7 +156,7 @@ const useTagGroup: UseTagGroupInterface = <Item>(
         ...rest,
       } as GetTagPropsReturnValue & Extra
     },
-    [dispatch, elementIds, latest],
+    [dispatch, elementIds, latest, itemRefs],
   )
 
   const getTagRemoveProps = useCallback(
