@@ -71,7 +71,7 @@ movement between items, screen reader support etc.
 ```jsx
 import * as React from 'react'
 import {render} from 'react-dom'
-import {useSelect} from 'downshift'
+import {useTagGroup} from 'downshift'
 
 const colors = [
   'Black',

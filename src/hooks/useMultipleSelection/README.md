@@ -1,5 +1,14 @@
 # useMultipleSelection
 
+## Deprecated: migration to useTagGroup
+
+If you're considering a multiple selection solution with tags, check
+[useTagGroup][use-tag-group].
+
+If you're already using the hook, migrate to `useTagGroup`. It's meant to offer
+a more intuitive and extensible API than `useMultipleSelection`. The
+[migration-guide][migration-guide] shows how to migrate to the new hook.
+
 ## The problem
 
 You have a custom `select` or a `combobox` in your applications which performs a
@@ -212,38 +221,37 @@ function DropdownMultipleCombobox() {
           padding: '6px',
         }}
       >
-        {selectedItems.map(function renderSelectedItem(
-          selectedItemForRender,
-          index,
-        ) {
-          return (
-            <span
-              style={{
-                backgroundColor: 'lightgray',
-                paddingLeft: '4px',
-                paddingRight: '4px',
-                borderRadius: '6px',
-              }}
-              key={`selected-item-${index}`}
-              {...getSelectedItemProps({
-                selectedItem: selectedItemForRender,
-                index,
-              })}
-            >
-              {selectedItemForRender}
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+        {selectedItems.map(
+          function renderSelectedItem(selectedItemForRender, index) {
+            return (
               <span
-                style={{padding: '4px', cursor: 'pointer'}}
-                onClick={e => {
-                  e.stopPropagation()
-                  removeSelectedItem(null)
+                style={{
+                  backgroundColor: 'lightgray',
+                  paddingLeft: '4px',
+                  paddingRight: '4px',
+                  borderRadius: '6px',
                 }}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({
+                  selectedItem: selectedItemForRender,
+                  index,
+                })}
               >
-                &#10005;
+                {selectedItemForRender}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  style={{padding: '4px', cursor: 'pointer'}}
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeSelectedItem(null)
+                  }}
+                >
+                  &#10005;
+                </span>
               </span>
-            </span>
-          )
-        })}
+            )
+          },
+        )}
         <div>
           <input
             style={{padding: '4px'}}
@@ -956,10 +964,15 @@ suggestion and the Codesandbox for it, and we will take it from there.
 [blog-post-prop-getters]:
   https://kentcdodds.com/blog/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
-[sandbox-repo]: https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
+[sandbox-repo]:
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v8]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V8.md
 [migration-guide-v9]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V9.md
+[use-tag-group]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useTagGroup/README.md
+[migration-guide]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection/MIGRATION_GUIDE.md
