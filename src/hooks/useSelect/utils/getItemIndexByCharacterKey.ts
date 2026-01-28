@@ -1,4 +1,10 @@
-import {GetItemIndexByCharacterKeyOptions} from '../types'
+type GetItemIndexByCharacterKeyOptions<Item> = {
+  keysSoFar: string
+  highlightedIndex: number
+  items: Item[]
+  itemToString(item: Item | null): string
+  isItemDisabled(item: Item, index: number): boolean
+}
 
 export function getItemIndexByCharacterKey<Item>({
   keysSoFar,

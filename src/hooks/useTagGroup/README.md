@@ -58,7 +58,7 @@ movement between items, screen reader support etc.
   - [Default handlers](#default-handlers)
     - [Tag Group](#tag-group)
     - [Tag](#tag)
-  - [Tag Remove Remove](#tag-remove-remove)
+  - [Tag Remove](#tag-remove)
   - [Customizing Handlers](#customizing-handlers)
 - [Examples](#examples)
 
@@ -635,7 +635,7 @@ described below.
 - `Delete, Backspace`: removes the tag from the tag group and moves the focus to
   either the next or previous tag, depending on the removed tag index.
 
-### Tag Remove Remove
+### Tag Remove
 
 - `Click`: removes the tag from the tag group and moves the focus to either the
   next or previous tag, depending on the removed tag index.
