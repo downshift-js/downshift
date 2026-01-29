@@ -46,9 +46,12 @@ export default function TagGroup() {
     },
     selectedItem: null,
     stateReducer(_state, actionAndChanges) {
-      const {changes} = actionAndChanges
+      const {changes, type} = actionAndChanges
 
-      if (changes.selectedItem) {
+      if (
+        changes.selectedItem &&
+        type !== useCombobox.stateChangeTypes.InputBlur
+      ) {
         return {...changes, inputValue: '', highlightedIndex: 0, isOpen: true}
       }
 

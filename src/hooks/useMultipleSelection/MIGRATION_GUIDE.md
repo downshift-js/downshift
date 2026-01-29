@@ -292,9 +292,12 @@ function TagGroup() {
     },
     selectedItem: null,
     stateReducer(_state, actionAndChanges) {
-      const {changes} = actionAndChanges
+      const {changes, type} = actionAndChanges
 
-      if (changes.selectedItem) {
+      if (
+        changes.selectedItem &&
+        type !== useCombobox.stateChangeTypes.InputBlur
+      ) {
         return {...changes, inputValue: '', highlightedIndex: 0, isOpen: true}
       }
 
@@ -442,7 +445,9 @@ purpose, but the `useTagGroup` example has a cleaner code. Anyway, choose
 whatever you prefer, or any other way to filter the combobox items from the
 already selected and the input value.
 
-Notice we keep controlling the `selectedItem` for `useCombobox` since we are controlling the actual selection, and `useCombobox` only supports single selection by default.
+Notice we keep controlling the `selectedItem` for `useCombobox` since we are
+controlling the actual selection, and `useCombobox` only supports single
+selection by default.
 
 ## JSX
 
@@ -491,8 +496,14 @@ To this
   >
 ```
 
-Using a `button` element might be better, but keep in mind that by default we are removing it from the tab order, since keyboard users can just use Delete/Backspace when a selected item is focused.
+Using a `button` element might be better, but keep in mind that by default we
+are removing it from the tab order, since keyboard users can just use
+Delete/Backspace when a selected item is focused.
 
 ## Wrapping up
 
-We hope that `useTagGroup` provides a way better experience for your users, since we aimed to make it more accessible, either when using it by itself or building tag based multiple selection for selects and comboboxes. Feel free to provide more tips for usage or migrations by opeing a PR / issue in Github in order to help other users. Thank you!
+We hope that `useTagGroup` provides a way better experience for your users,
+since we aimed to make it more accessible, either when using it by itself or
+building tag based multiple selection for selects and comboboxes. Feel free to
+provide more tips for usage or migrations by opeing a PR / issue in Github in
+order to help other users. Thank you!
