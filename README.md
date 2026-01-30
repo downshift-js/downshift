@@ -254,7 +254,7 @@ There is also an [example without getRootProps][code-sandbox-no-get-root-props].
 
 `Downshift` is the only component exposed by this package. It doesn't render
 anything itself, it just calls the render function and renders that. ["Use a
-render prop!"][use-a-render-prop]!
+render prop!"][use-a-render-prop]
 `<Downshift>{downshift => <div>/* your JSX here! */</div>}</Downshift>`.
 
 ## Basic Props
