@@ -1,8 +1,5 @@
-import {compute} from 'compute-scroll-into-view'
-import React from 'react'
 import {isPreact} from './is.macro'
-
-let idCounter = 0
+import { noop } from './utils-ts'
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -14,29 +11,6 @@ let idCounter = 0
  */
 function cbToCb(cb) {
   return typeof cb === 'function' ? cb : noop
-}
-
-function noop() {}
-
-/**
- * Scroll node into view if necessary
- * @param {HTMLElement} node the element that should scroll into view
- * @param {HTMLElement} menuNode the menu element of the component
- */
-function scrollIntoView(node, menuNode) {
-  if (!node) {
-    return
-  }
-
-  const actions = compute(node, {
-    boundary: menuNode,
-    block: 'nearest',
-    scrollMode: 'if-needed',
-  })
-  actions.forEach(({el, top, left}) => {
-    el.scrollTop = top
-    el.scrollLeft = left
-  })
 }
 
 /**
@@ -115,38 +89,6 @@ function handleRefs(...refs) {
       }
     })
   }
-}
-
-/**
- * This generates a unique ID for an instance of Downshift
- * @return {String} the unique ID
- */
-function generateId() {
-  return String(idCounter++)
-}
-
-/**
- * This is only used in tests
- * @param {Number} num the number to set the idCounter to
- */
-function setIdCounter(num) {
-  idCounter = num
-}
-
-/**
- * Resets idCounter to 0. Used for SSR.
- */
-function resetIdCounter() {
-  // istanbul ignore next
-  if ('useId' in React) {
-    console.warn(
-      `It is not necessary to call resetIdCounter when using React 18+`,
-    )
-
-    return
-  }
-
-  idCounter = 0
 }
 
 /**
@@ -253,29 +195,6 @@ function pickState(state = {}) {
     }
   })
   return result
-}
-
-/**
- * This will perform a shallow merge of the given state object
- * with the state coming from props
- * (for the controlled component scenario)
- * This is used in state updater functions so they're referencing
- * the right state regardless of where it comes from.
- *
- * @param {Object} state The state of the component/hook.
- * @param {Object} props The props that may contain controlled values.
- * @returns {Object} The merged controlled state.
- */
-function getState(state, props) {
-  if (!state || !props) {
-    return state
-  }
-
-  return Object.keys(state).reduce((prevState, key) => {
-    prevState[key] = isControlledProp(props, key) ? props[key] : state[key]
-
-    return prevState
-  }, {})
 }
 
 /**
@@ -476,21 +395,15 @@ export {
   callAllEventHandlers,
   handleRefs,
   debounce,
-  scrollIntoView,
-  generateId,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
   getElementProps,
-  noop,
   requiredProp,
-  setIdCounter,
-  resetIdCounter,
   pickState,
   isPlainObject,
   normalizeArrowKey,
   targetWithinDownshift,
-  getState,
   isControlledProp,
   validateControlledUnchanged,
   getHighlightedIndex,

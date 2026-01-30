@@ -1,5 +1,5 @@
-const {renderHook} = require('@testing-library/react')
-const {useElementIds} = require('../utils')
+import {renderHook} from '@testing-library/react'
+import {useElementIds} from '../utils'
 
 jest.mock('react', () => {
   return {
@@ -21,5 +21,6 @@ describe('useElementIds', () => {
       menuId: 'downshift-mocked-id-menu',
       toggleButtonId: 'downshift-mocked-id-toggle-button',
     })
+    expect(result.current.getItemId(5)).toEqual('downshift-mocked-id-item-5')
   })
 })

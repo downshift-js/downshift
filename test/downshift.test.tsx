@@ -1,5 +1,4 @@
 import * as React from 'react'
-
 import Downshift from '..'
 
 export const colors = [

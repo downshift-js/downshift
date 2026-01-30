@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
+
+import {noop} from '../../utils-ts'
 import {
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,
-  defaultProps as defaultPropsCommon,
-  commonPropTypes,
-} from '../utils'
-import {noop} from '../../utils'
+} from '../utils-ts'
+import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
 
 const defaultStateValues = {
   activeIndex: -1,
@@ -98,9 +98,9 @@ function isStateEqual(prevState, newState) {
 }
 
 const propTypes = {
-  stateReducer: commonPropTypes.stateReducer,
-  itemToKey: commonPropTypes.itemToKey,
-  environment: commonPropTypes.environment,
+  stateReducer: dropdownPropTypes.stateReducer,
+  itemToKey: dropdownPropTypes.itemToKey,
+  environment: dropdownPropTypes.environment,
   selectedItems: PropTypes.array,
   initialSelectedItems: PropTypes.array,
   defaultSelectedItems: PropTypes.array,
@@ -115,9 +115,9 @@ const propTypes = {
 }
 
 export const defaultProps = {
-  itemToKey: defaultPropsCommon.itemToKey,
-  stateReducer: defaultPropsCommon.stateReducer,
-  environment: defaultPropsCommon.environment,
+  itemToKey: dropdownDefaultProps.itemToKey,
+  stateReducer: dropdownDefaultProps.stateReducer,
+  environment: dropdownDefaultProps.environment,
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft',
 }

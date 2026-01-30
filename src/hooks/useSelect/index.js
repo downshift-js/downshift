@@ -1,34 +1,37 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {
-  isAcceptedCharacterKey,
-  useControlledReducer,
-  getInitialState,
-  useGetterPropsCalledChecker,
-  useLatestRef,
-  useScrollIntoView,
-  useControlPropsValidator,
-  useElementIds,
-  useMouseAndTouchTracker,
-  getItemAndIndex,
-  getInitialValue,
-  isDropdownsStateEqual,
-  useA11yMessageStatus,
-} from '../utils'
+import {useLatestRef, validatePropTypes} from '../../utils-ts'
 import {
   callAllEventHandlers,
   handleRefs,
   debounce,
   normalizeArrowKey,
 } from '../../utils'
+import {
+  isAcceptedCharacterKey,
+  getInitialState,
+  useGetterPropsCalledChecker,
+  useScrollIntoView,
+  useControlPropsValidator,
+  useElementIds,
+  useMouseAndTouchTracker,
+  isDropdownsStateEqual,
+} from '../utils'
+import {
+  useControlledReducer,
+  getInitialValue,
+  getItemAndIndex,
+  useA11yMessageStatus,
+} from '../utils-ts'
+import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
-import {validatePropTypes, defaultProps} from './utils'
+import {defaultProps, propTypes} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect(userProps = {}) {
-  validatePropTypes(userProps, useSelect)
+  validatePropTypes(userProps, useSelect, propTypes)
   // Props defaults and destructuring.
   const props = {
     ...defaultProps,
@@ -111,7 +114,7 @@ function useSelect(userProps = {}) {
   })
   // Focus the toggle button on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen')
+    const focusOnOpen = getInitialValue(props, 'isOpen', defaultStateValues)
 
     if (focusOnOpen && toggleButtonRef.current) {
       toggleButtonRef.current.focus()

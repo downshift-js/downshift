@@ -1,31 +1,30 @@
 const commonjs = require('@rollup/plugin-commonjs')
 const {babel} = require('@rollup/plugin-babel')
-const typescript = require('@rollup/plugin-typescript')
 const config = require('kcd-scripts/dist/config/rollup.config')
 
-const babelPluginIndex = config.plugins.findIndex(
-  plugin => plugin.name === 'babel',
-)
-const typescriptPluginIndex = config.plugins.findIndex(
-  plugin => plugin.name === 'typescript',
-)
-const cjsPluginIndex = config.plugins.findIndex(
-  plugin => plugin.name === 'commonjs',
-)
-config.plugins[babelPluginIndex] = babel({
+const babelPlugin = babel({
   babelHelpers: 'runtime',
+  extensions: ['.js', '.jsx', '.ts', '.tsx'],
   exclude: '**/node_modules/**',
 })
-config.plugins[cjsPluginIndex] = commonjs({
-  include: 'node_modules/**',
-})
+const cjsPlugin = commonjs({include: 'node_modules/**'})
 
-if (typescriptPluginIndex === -1) {
-  config.plugins.push(typescript({tsconfig: 'tsconfig.json'}))
-} else {
-  config.plugins[typescriptPluginIndex] = typescript({
-    tsconfig: 'tsconfig.json',
-  })
+config.plugins = [
+  babelPlugin,
+  cjsPlugin,
+  ...config.plugins.filter(
+    p => !['babel', 'typescript', 'commonjs'].includes(p.name),
+  ),
+]
+
+const prevExternal = config.external
+config.external = id => {
+  if (id.includes('productionEnum.macro') || id.includes('is.macro')) {
+    return true
+  }
+  if (typeof prevExternal === 'function') return prevExternal(id)
+  if (Array.isArray(prevExternal)) return prevExternal.includes(id)
+  return false
 }
 
 module.exports = config
