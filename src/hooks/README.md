@@ -27,7 +27,7 @@ For a `combobox/autocomplete` input check out [useCombobox][combobox-readme].
 ### useTagGroup
 
 For a `tag group` that could also be used to build a multiple selection `select`
-or a `combobox` with tags, check out [useMultipleSelection][tag-group-readme].
+or a `combobox` with tags, check out [useTagGroup][tag-group-readme].
 
 ## Downshift Hooks API talk
 
