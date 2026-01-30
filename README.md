@@ -46,9 +46,8 @@ list below.
 
 - [useSelect][useselect-readme] for a custom select component.
 - [useCombobox][combobox-readme] for a combobox or autocomplete input.
-- [useMultipleSelection][multiple-selection-readme] for selecting multiple items
-  in a select or a combobox, as well as deleting items from selection or
-  navigating between the selected items.
+- [useTagGroup][tag-group-readme] for a tag group component. Also useful to
+  build a multiple selection combobox or select component with tags.
 
 The second solution is the `Downshift` component, which can also be used to
 create accessible combobox and select components, providing the logic in the
@@ -734,8 +733,8 @@ check could fail even if the ref is correctly forwarded to the root DOM
 component. In these cases, you can provide the object
 `{suppressRefError : true}` as the second argument to `getRootProps` to
 completely bypass the check.\
-**Please use it with extreme care and only if you are absolutely sure that the ref
-is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
+**Please use it with extreme care and only if you are absolutely sure that the
+ref is correctly forwarded otherwise `Downshift` will unexpectedly fail.**\
 See [#235](https://github.com/downshift-js/downshift/issues/235) for the
 discussion that lead to this.
 
@@ -1516,8 +1515,8 @@ MIT
   https://github.com/downshift-js/downshift/blob/master/src/hooks/useSelect
 [combobox-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
-[multiple-selection-readme]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
+[tag-group-readme]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useTagGroup
 [bundle-phobia-link]: https://bundlephobia.com/result?p=downshift@3.4.8
 [aria]: https://www.w3.org/TR/wai-aria-practices/
 [combobox-aria-example]:
