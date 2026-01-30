@@ -24,10 +24,10 @@ For a custom `select` dropdown check out [useSelect][select-readme].
 
 For a `combobox/autocomplete` input check out [useCombobox][combobox-readme].
 
-### useMultipleSelection
+### useTagGroup
 
-For a `multiple selection` with either a `select` or a `combobox` check out
-[useMultipleSelection][multiple-selection-readme].
+For a `tag group` that could also be used to build a multiple selection `select`
+or a `combobox` with tags, check out [useMultipleSelection][tag-group-readme].
 
 ## Downshift Hooks API talk
 
@@ -36,6 +36,7 @@ hooks at the [axe-con][axe-con] 2021 conference. The talk, which is also
 [recorded][axe-con-recording], illustrates how to build an accessible select,
 combobox, and support multiple selection using Downshift hooks and custom
 components from [ChakraUI][chakra-ui]. It offers a brief crash course to:
+
 - build a custom Select.
 - build a custom Combobox.
 - enhance the Select and Combobox with multiple selection.
@@ -53,8 +54,8 @@ Next steps:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useSelect
 [combobox-readme]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/useCombobox
-[multiple-selection-readme]:
-  https://github.com/downshift-js/downshift/tree/master/src/hooks/useMultipleSelection
+[tag-group-readme]:
+  https://github.com/downshift-js/downshift/tree/master/src/hooks/useTagGroup
 [migration-guide]:
   https://github.com/downshift-js/downshift/tree/master/src/hooks/MIGRATION_V7.md
 [axe-con]: https://www.deque.com/axe-con/
