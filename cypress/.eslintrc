@@ -1,8 +1,8 @@
 {
-  "plugins": [
-    "cypress"
-  ],
-  "env": {
-    "cypress/globals": true
+  "plugins": ["cypress"],
+  "globals": {
+    "cy": true,
+    "Cypress": true,
+    "before": true
   }
 }

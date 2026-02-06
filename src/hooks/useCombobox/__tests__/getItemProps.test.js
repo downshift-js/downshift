@@ -17,7 +17,7 @@ describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
     const {result} = renderUseCombobox()
 
-    expect(result.current.getItemProps).toThrowError(
+    expect(result.current.getItemProps).toThrow(
       'Pass either item or index to getItemProps!',
     )
   })
