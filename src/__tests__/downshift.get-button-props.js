@@ -74,11 +74,7 @@ test('getToggleButtonProps returns all given props', () => {
   const Button = jest.fn(props => <button {...props} />)
   setup({buttonProps, Button})
   expect(Button).toHaveBeenCalledTimes(1)
-  const context = expect.any(Object)
-  expect(Button).toHaveBeenCalledWith(
-    expect.objectContaining(buttonProps),
-    context,
-  )
+  expect(Button).toHaveBeenCalledWith(expect.objectContaining(buttonProps), expect.anything())
 })
 
 // normally this test would be like the others where we render and then simulate a click on the

@@ -11,7 +11,7 @@ test('throws error when index is not passed and item is not found in the array',
   const item = {hi: 'hello'}
   const errorMessage = 'no item found'
 
-  expect(() => getItemAndIndex(item, undefined, [], errorMessage)).toThrowError(
+  expect(() => getItemAndIndex(item, undefined, [], errorMessage)).toThrow(
     errorMessage,
   )
 })
@@ -28,7 +28,7 @@ test('throws error when item is not passed and item is not found in the array', 
 
   expect(() =>
     getItemAndIndex(undefined, 1, [item], errorMessage),
-  ).toThrowError(errorMessage)
+  ).toThrow(errorMessage)
 })
 
 test('returns the index and the item found', () => {
@@ -43,5 +43,5 @@ test('throws error when both index and item are not passed', () => {
   
   expect(() =>
     getItemAndIndex(undefined, undefined, [{item: 'bla'}], errorMessage),
-  ).toThrowError(errorMessage)
+  ).toThrow(errorMessage)
 })
