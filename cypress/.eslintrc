@@ -1,9 +1,8 @@
 {
-  "plugins": [
-    "cypress"
-  ],
+  "plugins": ["cypress"],
   "globals": {
     "cy": true,
-    "Cypress": true
+    "Cypress": true,
+    "before": true
   }
 }

@@ -9,14 +9,12 @@ module.exports = Object.assign(jestConfig, {
   },
   moduleNameMapper: babelHelpersList.reduce(
     (aliasMap, helper) => {
-      aliasMap[
-        `@babel/runtime/helpers/esm/${helper}`
-      ] = `@babel/runtime/helpers/${helper}`
+      aliasMap[`@babel/runtime/helpers/esm/${helper}`] =
+        `@babel/runtime/helpers/${helper}`
       return aliasMap
     },
     {
       '^preact(/(.*)|$)': 'preact$1',
-      '(.*)\\.esm\\.mjs$': '$1.cjs.cjs',
     },
   ),
 })
