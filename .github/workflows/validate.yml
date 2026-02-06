@@ -20,11 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.6.0
+        uses: styfle/cancel-workflow-action@0.13.1
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Increase watchers
         run:
@@ -32,7 +32,7 @@ jobs:
           && sudo sysctl -p
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -47,7 +47,9 @@ jobs:
           FORCE_COLOR: true
 
       - name: ⬆️ Upload coverage report
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   release:
     needs: main
@@ -58,15 +60,15 @@ jobs:
       github.ref) && github.event_name == 'push' }}
     steps:
       - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.6.0
+        uses: styfle/cancel-workflow-action@0.13.1
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: 24
 
@@ -79,9 +81,9 @@ jobs:
         run: npm run build
 
       - name: 🚀 Release
-        uses: cycjimmy/semantic-release-action@v2
+        uses: cycjimmy/semantic-release-action@v4
         with:
-          semantic_version: 17
+          semantic_version: 24
           branches: |
             [
               '+([0-9])?(.{+([0-9]),x}).x',
