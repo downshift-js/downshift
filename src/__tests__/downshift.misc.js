@@ -101,8 +101,14 @@ test('clearItems clears all items', () => {
   const downshiftInstance = dsRef.current
 
   expect(downshiftInstance.items).toEqual([item])
-  downshiftInstance.clearItems()
+
+  act(() => {
+    downshiftInstance.clearItems()
+  })
+
   expect(downshiftInstance.items).toEqual([])
+
+  root.unmount()
 })
 
 test('reset can take no arguments at all', () => {
