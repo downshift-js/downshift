@@ -15,7 +15,7 @@ import esImport, {
   useCombobox as useComboboxEsImport,
   useSelect as useSelectEsImport,
   useMultipleSelection as useMultipleSelectionEsImport,
-} from '../../../dist/downshift.esm'
+} from '../../../dist/downshift.esm.mjs'
 
 import cjsImport, {
   useCombobox as useComboboxCjsImport,
@@ -33,21 +33,21 @@ import rnImport, {
   useCombobox as useComboboxRnImport,
   useSelect as useSelectRnImport,
   useMultipleSelection as useMultipleSelectionRnImport,
-} from '../../../dist/downshift.native.cjs'
+} from '../../../dist/downshift.native.cjs.cjs'
 
 import rnWebImport, {
   useCombobox as useComboboxRnWebImport,
   useSelect as useSelectRnWebImport,
   useMultipleSelection as useMultipleSelectionRnWebImport,
-} from '../../../dist/downshift.nativeweb.cjs'
+} from '../../../dist/downshift.nativeweb.cjs.cjs'
 
 // intentionally left out because you shouldn't ever
 // try to require the ES file in CommonJS
 // const esRequire = require('../../../dist/downshift.es')
 const cjsRequire = require('../../../') // picks up the main from package.json
 const umdRequire = require('../../../dist/downshift.umd')
-const rnCjsRequire = require('../../../dist/downshift.native.cjs')
-const rnWebCjsRequire = require('../../../dist/downshift.native.cjs')
+const rnCjsRequire = require('../../../dist/downshift.native.cjs.cjs')
+const rnWebCjsRequire = require('../../../dist/downshift.nativeweb.cjs.cjs')
 
 test('downshift component is imported', () => {
   assert(

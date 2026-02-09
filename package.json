@@ -2,9 +2,9 @@
   "name": "downshift",
   "version": "0.0.0-semantically-released",
   "description": "🏎 A set of primitives to build simple, flexible, WAI-ARIA compliant React autocomplete, combobox or select dropdown components.",
-  "main": "dist/downshift.cjs.js",
-  "react-native": "dist/downshift.native.cjs.js",
-  "module": "dist/downshift.esm.js",
+  "main": "dist/downshift.cjs.cjs",
+  "react-native": "dist/downshift.native.cjs.cjs",
+  "module": "dist/downshift.esm.mjs",
   "typings": "typings/index.d.ts",
   "types": "typings/index.d.ts",
   "sideEffects": false,
@@ -50,13 +50,13 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/downshift.esm.js",
-      "require": "./dist/downshift.cjs.js",
+      "import": "./dist/downshift.esm.mjs",
+      "require": "./dist/downshift.cjs.cjs",
       "types": "./typings/index.d.ts",
-      "default": "./dist/downshift.esm.js"
+      "default": "./dist/downshift.esm.mjs"
     },
     "./react-native": {
-      "require": "./dist/downshift.native.cjs.js",
+      "require": "./dist/downshift.native.cjs.cjs",
       "types": "./typings/index.d.ts"
     }
   },
@@ -122,7 +122,7 @@
     "flow-bin": "^0.299.0",
     "flow-coverage-report": "^0.8.0",
     "get-pkg-repo": "5.0.0",
-    "kcd-scripts": "^15.0.1",
+    "kcd-scripts": "^17.0.0",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "npm-run-all": "^4.1.5",
     "preact": "^10.28.2",
