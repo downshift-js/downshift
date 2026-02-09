@@ -25,7 +25,7 @@ const useElementIds =
         inputId,
       }) {
         // Avoid conditional useId call
-        const reactId = `downshift-${React.useId()}`
+        const reactId = `downshift-${CSS.escape(React.useId())}`
         if (!id) {
           id = reactId
         }
