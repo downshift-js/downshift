@@ -4,9 +4,12 @@ const babelHelpersList = require('@babel/helpers').list
 module.exports = Object.assign(jestConfig, {
   roots: ['.'],
   testEnvironment: 'jsdom',
-  testEnvironmentOptions: {
-    customExportConditions: ['require', 'node'],
+  transform: {
+    '^.+\\.(js|jsx|mjs)$': ['babel-jest', { rootMode: 'upward' }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(dedent|@testing-library/preact)/)',
+  ],
   moduleNameMapper: babelHelpersList.reduce(
     (aliasMap, helper) => {
       aliasMap[`@babel/runtime/helpers/esm/${helper}`] =
