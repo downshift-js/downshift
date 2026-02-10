@@ -5,22 +5,37 @@ exports[`utils useMouseAndTouchTracker adds and removes listeners to environment
   [
     mousedown,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     mouseup,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchstart,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchmove,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchend,
     [Function],
+    {
+      passive: true,
+    },
   ],
 ]
 `;
@@ -30,22 +45,37 @@ exports[`utils useMouseAndTouchTracker adds and removes listeners to environment
   [
     mousedown,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     mouseup,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchstart,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchmove,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchend,
     [Function],
+    {
+      passive: true,
+    },
   ],
 ]
 `;
@@ -55,22 +85,37 @@ exports[`utils useMouseAndTouchTracker adds and removes listeners to environment
   [
     mousedown,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     mouseup,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchstart,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchmove,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchend,
     [Function],
+    {
+      passive: true,
+    },
   ],
 ]
 `;
@@ -80,22 +125,37 @@ exports[`utils useMouseAndTouchTracker adds and removes listeners to environment
   [
     mousedown,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     mouseup,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchstart,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchmove,
     [Function],
+    {
+      passive: true,
+    },
   ],
   [
     touchend,
     [Function],
+    {
+      passive: true,
+    },
   ],
 ]
 `;

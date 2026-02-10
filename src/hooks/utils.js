@@ -212,18 +212,20 @@ const getDownshiftElements = React.useCallback(
       }
     }
 
-    environment.addEventListener('mousedown', onMouseDown)
-    environment.addEventListener('mouseup', onMouseUp)
-    environment.addEventListener('touchstart', onTouchStart)
-    environment.addEventListener('touchmove', onTouchMove)
-    environment.addEventListener('touchend', onTouchEnd)
+    const options = {passive: true}
+
+    environment.addEventListener('mousedown', onMouseDown, options)
+    environment.addEventListener('mouseup', onMouseUp, options)
+    environment.addEventListener('touchstart', onTouchStart, options)
+    environment.addEventListener('touchmove', onTouchMove, options)
+    environment.addEventListener('touchend', onTouchEnd, options)
 
     return function cleanup() {
-      environment.removeEventListener('mousedown', onMouseDown)
-      environment.removeEventListener('mouseup', onMouseUp)
-      environment.removeEventListener('touchstart', onTouchStart)
-      environment.removeEventListener('touchmove', onTouchMove)
-      environment.removeEventListener('touchend', onTouchEnd)
+      environment.removeEventListener('mousedown', onMouseDown, options)
+      environment.removeEventListener('mouseup', onMouseUp, options)
+      environment.removeEventListener('touchstart', onTouchStart, options)
+      environment.removeEventListener('touchmove', onTouchMove, options)
+      environment.removeEventListener('touchend', onTouchEnd, options)
     }
   }, [environment, getDownshiftElements, handleBlur])
 
