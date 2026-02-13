@@ -44,16 +44,19 @@ function useElementIdsR18({
 }
 
 function useElementIdsLegacy({
-  id = `downshift-${generateId()}`,
+  id,
   getTagId,
   tagGroupId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
+  const baseIdRef = React.useRef(id ?? `downshift-${generateId()}`)
+  const baseId = baseIdRef.current
+
   const elementIds = React.useMemo(
     () => ({
-      tagGroupId: tagGroupId ?? `${id}-tag-group`,
-      getTagId: getTagId ?? (index => `${id}-tag-${index}`),
+      tagGroupId: tagGroupId ?? `${baseId}-tag-group`,
+      getTagId: getTagId ?? (index => `${baseId}-tag-${index}`),
     }),
-    [getTagId, id, tagGroupId],
+    [getTagId, baseId, tagGroupId],
   )
 
   return elementIds

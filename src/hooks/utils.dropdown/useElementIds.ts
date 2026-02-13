@@ -53,22 +53,25 @@ function useElementIdsR18({
 }
 
 function useElementIdsLegacy({
-  id = `downshift-${generateId()}`,
+  id,
   labelId,
   menuId,
   getItemId,
   toggleButtonId,
   inputId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
+  const baseIdRef = React.useRef(id ?? `downshift-${generateId()}`)
+  const baseId = baseIdRef.current
+
   const elementIds = React.useMemo(
     () => ({
-      labelId: labelId ?? `${id}-label`,
-      menuId: menuId ?? `${id}-menu`,
-      getItemId: getItemId ?? (index => `${id}-item-${index}`),
-      toggleButtonId: toggleButtonId ?? `${id}-toggle-button`,
-      inputId: inputId ?? `${id}-input`,
+      labelId: labelId ?? `${baseId}-label`,
+      menuId: menuId ?? `${baseId}-menu`,
+      getItemId: getItemId ?? (index => `${baseId}-item-${index}`),
+      toggleButtonId: toggleButtonId ?? `${baseId}-toggle-button`,
+      inputId: inputId ?? `${baseId}-input`,
     }),
-    [getItemId, id, inputId, labelId, menuId, toggleButtonId],
+    [getItemId, inputId, labelId, menuId, toggleButtonId, baseId],
   )
 
   return elementIds
