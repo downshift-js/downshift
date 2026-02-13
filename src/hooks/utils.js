@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {isReactNative} from '../is.macro'
 import {validateControlledUnchanged, targetWithinDownshift} from '../utils'
-import {generateId, noop} from '../utils-ts'
+import {noop} from '../utils-ts'
 import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils-ts'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 
@@ -12,58 +12,6 @@ const useIsomorphicLayoutEffect =
   typeof window.document.createElement !== 'undefined'
     ? React.useLayoutEffect
     : React.useEffect
-
-// istanbul ignore next
-const useElementIds =
-  'useId' in React // Avoid conditional useId call
-    ? function useElementIds({
-        id,
-        labelId,
-        menuId,
-        getItemId,
-        toggleButtonId,
-        inputId,
-      }) {
-        // Avoid conditional useId call
-        const reactId = `downshift-${React.useId()}`
-        if (!id) {
-          id = reactId
-        }
-
-        const elementIds = React.useMemo(
-          () => ({
-            labelId: labelId || `${id}-label`,
-            menuId: menuId || `${id}-menu`,
-            getItemId: getItemId || (index => `${id}-item-${index}`),
-            toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-            inputId: inputId || `${id}-input`,
-          }),
-          [getItemId, id, inputId, labelId, menuId, toggleButtonId],
-        )
-
-        return elementIds
-      }
-    : function useElementIds({
-        id = `downshift-${generateId()}`,
-        labelId,
-        menuId,
-        getItemId,
-        toggleButtonId,
-        inputId,
-      }) {
-        const elementIds = React.useMemo(
-          () => ({
-            labelId: labelId || `${id}-label`,
-            menuId: menuId || `${id}-menu`,
-            getItemId: getItemId || (index => `${id}-item-${index}`),
-            toggleButtonId: toggleButtonId || `${id}-toggle-button`,
-            inputId: inputId || `${id}-input`,
-          }),
-          [getItemId, id, inputId, labelId, menuId, toggleButtonId],
-        )
-
-        return elementIds
-      }
 
 function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
@@ -441,7 +389,6 @@ export {
   useMouseAndTouchTracker,
   getHighlightedIndexOnOpen,
   isAcceptedCharacterKey,
-  useElementIds,
   getChangesOnSelection,
   isDropdownsStateEqual,
   getDefaultHighlightedIndex,

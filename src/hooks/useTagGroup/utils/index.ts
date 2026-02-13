@@ -1,10 +1,6 @@
 import PropTypes from 'prop-types'
 
-export {
-  type UseElementIdsProps,
-  type UseElementIdsReturnValue,
-  useElementIds,
-} from './useElementIds'
+export {useElementIds} from './useElementIds'
 export {getInitialState} from './getInitialState'
 export {isStateEqual} from './isStateEqual'
 export {
