@@ -1,42 +1,46 @@
 import * as React from 'react'
 
 import {generateId} from '../../../utils-ts'
-import {UseTagGroupProps} from '../index.types'
 
-export type UseElementIdsProps = Pick<
-  UseTagGroupProps<unknown>,
-  'id' | 'getTagId' | 'tagGroupId'
->
+type UseElementIdsProps = {
+  id?: string
+  tagGroupId?: string
+  getTagId?: (index: number) => string
+}
 
-export type UseElementIdsReturnValue = Required<
-  Pick<UseTagGroupProps<unknown>, 'getTagId' | 'tagGroupId'>
->
+type UseElementIdsReturnValue = {
+  tagGroupId: string
+  getTagId: (index: number) => string
+}
+
+// eslint-disable-next-line @typescript-eslint/dot-notation
+const reactUseId = React['useId']
 
 // istanbul ignore next
 export const useElementIds: (
   props: UseElementIdsProps,
 ) => UseElementIdsReturnValue =
-  'useId' in React // Avoid conditional useId call
-    ? useElementIdsR18
-    : useElementIdsLegacy
+  typeof reactUseId === 'function' ? useElementIdsR18 : useElementIdsLegacy
 
 function useElementIdsR18({
   id,
   tagGroupId,
   getTagId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
-  // Avoid conditional useId call
-  const reactId = `downshift-${React.useId()}`
+  const reactId = `downshift-${reactUseId()}`
   if (!id) {
     id = reactId
   }
 
-  const elementIdsRef = React.useRef({
-    tagGroupId: tagGroupId ?? `${id}-tag-group`,
-    getTagId: getTagId ?? (index => `${id}-tag-${index}`),
-  })
+  const elementIds = React.useMemo(
+    () => ({
+      tagGroupId: tagGroupId ?? `${id}-tag-group`,
+      getTagId: getTagId ?? (index => `${id}-tag-${index}`),
+    }),
+    [getTagId, id, tagGroupId],
+  )
 
-  return elementIdsRef.current
+  return elementIds
 }
 
 function useElementIdsLegacy({
@@ -44,10 +48,13 @@ function useElementIdsLegacy({
   getTagId,
   tagGroupId,
 }: UseElementIdsProps): UseElementIdsReturnValue {
-  const elementIdsRef = React.useRef({
-    tagGroupId: tagGroupId ?? `${id}-tag-group`,
-    getTagId: getTagId ?? (index => `${id}-tag-${index}`),
-  })
+  const elementIds = React.useMemo(
+    () => ({
+      tagGroupId: tagGroupId ?? `${id}-tag-group`,
+      getTagId: getTagId ?? (index => `${id}-tag-${index}`),
+    }),
+    [getTagId, id, tagGroupId],
+  )
 
-  return elementIdsRef.current
+  return elementIds
 }

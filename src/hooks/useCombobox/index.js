@@ -7,7 +7,6 @@ import {
   useGetterPropsCalledChecker,
   useScrollIntoView,
   useControlPropsValidator,
-  useElementIds,
   isDropdownsStateEqual,
 } from '../utils'
 import {
@@ -25,6 +24,7 @@ import {
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
+import {useElementIds} from '../utils.dropdown/useElementIds'
 
 useCombobox.stateChangeTypes = stateChangeTypes
 
@@ -114,7 +114,7 @@ function useCombobox(userProps = {}) {
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
     environment,
     handleBlurInTracker,
-    downshiftRefs
+    downshiftRefs,
   )
   const setGetterPropCallInfo = useGetterPropsCalledChecker(
     'getInputProps',
