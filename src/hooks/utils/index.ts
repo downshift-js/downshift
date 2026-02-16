@@ -9,3 +9,7 @@ export {capitalizeString} from './capitalizeString'
 export {getDefaultValue} from './getDefaultValue'
 export {getInitialValue} from './getInitialValue'
 export {useA11yMessageStatus} from './useA11yMessageStatus'
+export {isAcceptedCharacterKey} from './isAcceptedCharacterKey'
+export {useScrollIntoView} from './useScrollIntoView'
+
+export * from './index.legacy'

@@ -1,4 +1,4 @@
-import {Action, State} from '../../utils-ts'
+import {Action, State} from '../../utils'
 
 /**
  * Default state reducer that returns the changes.

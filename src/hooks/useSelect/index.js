@@ -1,32 +1,30 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {useLatestRef, validatePropTypes} from '../../utils-ts'
+import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import {
+  useLatestRef,
+  validatePropTypes,
   callAllEventHandlers,
   handleRefs,
   debounce,
   normalizeArrowKey,
-} from '../../utils'
-import {
-  isAcceptedCharacterKey,
-  getInitialState,
   useGetterPropsCalledChecker,
-  useScrollIntoView,
-  useControlPropsValidator,
   useMouseAndTouchTracker,
-  isDropdownsStateEqual,
-} from '../utils'
-import {
+  defaultProps,
+  propTypes,
   useControlledReducer,
+  useElementIds,
+  defaultStateValues,
+  isAcceptedCharacterKey,
   getInitialValue,
-  getItemAndIndex,
+  useScrollIntoView,
   useA11yMessageStatus,
-} from '../utils-ts'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
-import {isReactNative, isReactNativeWeb} from '../../is.macro'
+  getItemAndIndex,
+  getInitialState,
+  useControlPropsValidator,
+  isDropdownsStateEqual,
+} from './utils'
 import downshiftSelectReducer from './reducer'
-import {defaultProps, propTypes} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
-import { useElementIds } from '../utils.dropdown/useElementIds'
 
 useSelect.stateChangeTypes = stateChangeTypes
 

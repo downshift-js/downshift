@@ -6,7 +6,7 @@ import {
   type State,
   getState,
   useLatestRef,
-} from '../../utils-ts'
+} from '../../utils'
 import {callOnChangeProps} from './callOnChangeProps'
 
 /**

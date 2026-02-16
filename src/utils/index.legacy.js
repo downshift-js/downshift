@@ -1,5 +1,5 @@
-import {isPreact} from './is.macro'
-import { noop } from './utils-ts'
+import {isPreact} from '../is.macro'
+import {noop} from '.'
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -26,69 +26,6 @@ function isOrContainsNode(parent, child, environment) {
       parent.contains &&
       parent.contains(child))
   return result
-}
-
-/**
- * Simple debounce implementation. Will call the given
- * function once after the time given has passed since
- * it was last called.
- * @param {Function} fn the function to call after the time
- * @param {Number} time the time to wait
- * @return {Function} the debounced function
- */
-function debounce(fn, time) {
-  let timeoutId
-
-  function cancel() {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-  }
-
-  function wrapper(...args) {
-    cancel()
-    timeoutId = setTimeout(() => {
-      timeoutId = null
-      fn(...args)
-    }, time)
-  }
-
-  wrapper.cancel = cancel
-
-  return wrapper
-}
-
-/**
- * This is intended to be used to compose event handlers.
- * They are executed in order until one of them sets
- * `event.preventDownshiftDefault = true`.
- * @param {...Function} fns the event handler functions
- * @return {Function} the event handler to add to an element
- */
-function callAllEventHandlers(...fns) {
-  return (event, ...args) =>
-    fns.some(fn => {
-      if (fn) {
-        fn(event, ...args)
-      }
-      return (
-        event.preventDownshiftDefault ||
-        (event.hasOwnProperty('nativeEvent') &&
-          event.nativeEvent.preventDownshiftDefault)
-      )
-    })
-}
-
-function handleRefs(...refs) {
-  return node => {
-    refs.forEach(ref => {
-      if (typeof ref === 'function') {
-        ref(node)
-      } else if (ref) {
-        ref.current = node
-      }
-    })
-  }
 }
 
 /**
@@ -392,9 +329,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export {
   cbToCb,
-  callAllEventHandlers,
-  handleRefs,
-  debounce,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,

@@ -1,13 +1,13 @@
 import {getNonDisabledIndex, getHighlightedIndex} from '../../utils'
+import {getDefaultValue} from '../utils'
+import commonReducer from '../reducer'
+import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {
+  getItemIndexByCharacterKey,
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
-} from '../utils'
-import {getDefaultValue} from '../utils-ts'
-import commonReducer from '../reducer'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
-import {getItemIndexByCharacterKey} from './utils'
+} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
@@ -61,8 +61,8 @@ export default function downshiftSelectReducer(state, props, action) {
               props.isItemDisabled,
             )
           : altKey && state.selectedItem == null
-          ? -1
-          : getHighlightedIndexOnOpen(props, state, 1)
+            ? -1
+            : getHighlightedIndexOnOpen(props, state, 1)
         changes = {
           highlightedIndex,
           isOpen: true,

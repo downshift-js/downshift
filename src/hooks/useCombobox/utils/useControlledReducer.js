@@ -1,43 +1,9 @@
 import {useRef, useEffect} from 'react'
-import PropTypes from 'prop-types'
-import {isControlledProp} from '../../utils'
-import {getState} from '../../utils-ts'
-import {getInitialState as getInitialStateCommon} from '../utils'
-import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
-import {useIsInitialMount, useEnhancedReducer} from '../utils-ts'
-import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
-export function getInitialState(props) {
-  const initialState = getInitialStateCommon(props)
-  const {selectedItem} = initialState
-  let {inputValue} = initialState
-
-  if (
-    inputValue === '' &&
-    selectedItem &&
-    props.defaultInputValue === undefined &&
-    props.initialInputValue === undefined &&
-    props.inputValue === undefined
-  ) {
-    inputValue = props.itemToString(selectedItem)
-  }
-
-  return {
-    ...initialState,
-    inputValue,
-  }
-}
-
-export const propTypes = {
-  ...dropdownPropTypes,
-  items: PropTypes.array.isRequired,
-  isItemDisabled: PropTypes.func,
-  inputValue: PropTypes.string,
-  defaultInputValue: PropTypes.string,
-  initialInputValue: PropTypes.string,
-  inputId: PropTypes.string,
-  onInputValueChange: PropTypes.func,
-}
+import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
+import {isControlledProp} from '../../../utils'
+import {getState} from '../../utils'
+import {useEnhancedReducer, useIsInitialMount} from '.'
 
 /**
  * The useCombobox version of useControlledReducer, which also
@@ -95,11 +61,4 @@ export function useControlledReducer(
   }, [state.selectedItem, props.selectedItem])
 
   return [getState(state, props), dispatch]
-}
-
-export const defaultProps = {
-  ...dropdownDefaultProps,
-  isItemDisabled() {
-    return false
-  },
 }

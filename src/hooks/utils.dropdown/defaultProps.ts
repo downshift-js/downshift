@@ -1,5 +1,5 @@
-import {scrollIntoView} from '../../utils-ts'
-import {stateReducer} from '../utils-ts'
+import {scrollIntoView} from '../../utils'
+import {stateReducer} from '../utils'
 
 import {isReactNative} from '../../is.macro.js'
 

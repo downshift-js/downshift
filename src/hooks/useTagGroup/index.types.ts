@@ -1,15 +1,9 @@
-import {Action, State} from '../../utils-ts'
+import {Environment} from 'src/index.types'
+import {Action, State} from '../../utils'
 
 export interface UseTagGroupState<Item> extends State {
   activeIndex: number
   items: Item[]
-}
-
-export interface Environment {
-  addEventListener: typeof window.addEventListener
-  removeEventListener: typeof window.removeEventListener
-  document: Document
-  Node: typeof window.Node
 }
 
 export interface UseTagGroupStateChange<Item> extends Partial<

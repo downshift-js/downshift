@@ -1,4 +1,4 @@
-import {Action, Props, State} from '../../utils-ts'
+import {Action, Props, State} from '../../utils'
 import {capitalizeString} from './capitalizeString'
 
 export function callOnChangeProps<

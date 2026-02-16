@@ -1,11 +1,27 @@
 import PropTypes from 'prop-types'
 
-import {noop} from '../../utils-ts'
+import {noop} from '../../utils'
 import {
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,
-} from '../utils-ts'
+} from '../utils'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
+
+export {
+  handleRefs,
+  callAllEventHandlers,
+  normalizeArrowKey,
+  useLatestRef,
+  useGetterPropsCalledChecker,
+} from '../../utils'
+
+export {
+  useControlPropsValidator,
+  useControlledReducer,
+  useIsInitialMount,
+  useA11yMessageStatus,
+  getItemAndIndex,
+} from '../utils'
 
 const defaultStateValues = {
   activeIndex: -1,

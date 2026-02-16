@@ -6,6 +6,11 @@ import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
+  generateId,
+  scrollIntoView,
+  setStatus,
+  getState,
+  noop,
   handleRefs,
   callAllEventHandlers,
   cbToCb,
@@ -24,7 +29,6 @@ import {
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils'
-import {generateId, scrollIntoView, setStatus, getState, noop} from './utils-ts'
 
 class Downshift extends Component {
   static propTypes = {

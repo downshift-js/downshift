@@ -1,4 +1,4 @@
-import {State} from '../../utils-ts'
+import {State} from '../../utils'
 import {capitalizeString} from './capitalizeString'
 
 export function getDefaultValue<S extends State, P extends Partial<S>>(

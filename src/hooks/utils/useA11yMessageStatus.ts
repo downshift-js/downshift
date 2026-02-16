@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {cleanupStatusDiv, debounce, setStatus} from '../../utils-ts'
+import {cleanupStatusDiv, debounce, setStatus} from '../../utils/index.js'
 import {isReactNative} from '../../is.macro.js'
 import {useIsInitialMount} from './useIsInitialMount'
 

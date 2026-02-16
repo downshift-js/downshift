@@ -1,4 +1,4 @@
-import {getItemAndIndex} from '../getItemAndIndex'
+import {getItemAndIndex} from '../../utils-ts/getItemAndIndex'
 
 test('returns the props if both are passed', () => {
   const item = {hi: 'hello'}

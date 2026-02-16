@@ -5,8 +5,16 @@ import {
   handleRefs,
   useLatestRef,
   validatePropTypes,
-} from '../../utils-ts'
-import {useControlledReducer} from '../utils-ts'
+  useControlledReducer,
+  getInitialState,
+  isStateEqual,
+  propTypes,
+  useElementIds,
+  getMergedProps,
+  useAccessibleDescription,
+  A11Y_DESCRIPTION_ELEMENT_ID,
+  useRovingTagFocus,
+} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupPropsOptions,
@@ -24,16 +32,6 @@ import {
   GetTagGroupPropsReturnValue,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
-import {
-  getInitialState,
-  isStateEqual,
-  propTypes,
-  useElementIds,
-  useAccessibleDescription,
-  A11Y_DESCRIPTION_ELEMENT_ID,
-  getMergedProps,
-  useRovingTagFocus,
-} from './utils'
 
 const useTagGroup: UseTagGroupInterface = <Item>(
   userProps: UseTagGroupProps<Item> = {},
