@@ -1,33 +1,4 @@
 import {isPreact} from '../is.macro'
-import {noop} from '.'
-
-/**
- * Accepts a parameter and returns it if it's a function
- * or a noop function if it's not. This allows us to
- * accept a callback, but not worry about it if it's not
- * passed.
- * @param {Function} cb the callback
- * @return {Function} a function
- */
-function cbToCb(cb) {
-  return typeof cb === 'function' ? cb : noop
-}
-
-/**
- * @param {HTMLElement} parent the parent node
- * @param {HTMLElement} child the child node
- * @param {Window} environment The window context where downshift renders.
- * @return {Boolean} whether the parent is the child or the child is in the parent
- */
-function isOrContainsNode(parent, child, environment) {
-  const result =
-    parent === child ||
-    (child instanceof environment.Node &&
-      parent.contains &&
-      parent.contains(child))
-  return result
-}
-
 /**
  * Default implementation for status message. Only added when menu is open.
  * Will specify if there are results in the list, and if so, how many,
@@ -266,69 +237,7 @@ function getNonDisabledIndex(
   return -1
 }
 
-/**
- * Checks if event target is within the downshift elements.
- *
- * @param {EventTarget} target Target to check.
- * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
- * @param {Window} environment The window context where downshift renders.
- * @param {boolean} checkActiveElement Whether to also check activeElement.
- *
- * @returns {boolean} Whether or not the target is within downshift elements.
- */
-function targetWithinDownshift(
-  target,
-  downshiftElements,
-  environment,
-  checkActiveElement = true,
-) {
-  return (
-    environment &&
-    downshiftElements.some(
-      contextNode =>
-        contextNode &&
-        (isOrContainsNode(contextNode, target, environment) ||
-          (checkActiveElement &&
-            isOrContainsNode(
-              contextNode,
-              environment.document.activeElement,
-              environment,
-            ))),
-    )
-  )
-}
-
-// eslint-disable-next-line import/no-mutable-exports
-let validateControlledUnchanged = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  validateControlledUnchanged = (state, prevProps, nextProps) => {
-    const warningDescription = `This prop should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled Downshift element for the lifetime of the component. More info: https://github.com/downshift-js/downshift#control-props`
-
-    Object.keys(state).forEach(propKey => {
-      if (
-        prevProps[propKey] !== undefined &&
-        nextProps[propKey] === undefined
-      ) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `downshift: A component has changed the controlled prop "${propKey}" to be uncontrolled. ${warningDescription}`,
-        )
-      } else if (
-        prevProps[propKey] === undefined &&
-        nextProps[propKey] !== undefined
-      ) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `downshift: A component has changed the uncontrolled prop "${propKey}" to be controlled. ${warningDescription}`,
-        )
-      }
-    })
-  }
-}
-
 export {
-  cbToCb,
   getA11yStatusMessage,
   unwrapArray,
   isDOMElement,
@@ -337,9 +246,7 @@ export {
   pickState,
   isPlainObject,
   normalizeArrowKey,
-  targetWithinDownshift,
   isControlledProp,
-  validateControlledUnchanged,
   getHighlightedIndex,
   getNonDisabledIndex,
 }

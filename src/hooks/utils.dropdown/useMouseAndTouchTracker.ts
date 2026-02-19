@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {isReactNative} from 'src/is.macro'
-import {noop, targetWithinDownshift} from 'src/utils'
+import {isTargetWithinDownshift, noop} from 'src/utils'
 import {Environment} from 'src/index.types'
 
 /**
@@ -10,8 +10,8 @@ import {Environment} from 'src/index.types'
  * @param environment The environment to add the event listeners to, for instance window.
  * @param handleBlur The function that is called if mouseDown or touchEnd occured outside the downshiftElements.
  * @param downshiftRefs The refs for the elements that should not trigger a blur action from mouseDown or touchEnd.
- * 
- * @returns {{isMouseDown: boolean, isTouchMove: boolean, isTouchEnd: boolean}} The mouse and touch events information, if any of are happening.
+ *
+ * @returns The mouse and touch events information, if any of are happening.
  */
 export function useMouseAndTouchTracker(
   environment: Environment | undefined,
@@ -42,7 +42,7 @@ export function useMouseAndTouchTracker(
       mouseAndTouchTrackersRef.current.isMouseDown = false
 
       if (
-        !targetWithinDownshift(
+        !isTargetWithinDownshift(
           event.target,
           getDownshiftElements(),
           environment,
@@ -63,7 +63,7 @@ export function useMouseAndTouchTracker(
 
       if (
         !mouseAndTouchTrackersRef.current.isTouchMove &&
-        !targetWithinDownshift(
+        !isTargetWithinDownshift(
           event.target,
           getDownshiftElements(),
           environment,

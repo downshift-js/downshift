@@ -18,7 +18,7 @@ import {
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
-  targetWithinDownshift,
+  isTargetWithinDownshift,
   isPlainObject,
   normalizeArrowKey,
   pickState,
@@ -1089,7 +1089,7 @@ class Downshift extends Component {
         this.isMouseDown = false
         // if the target element or the activeElement is within a downshift node
         // then we don't want to reset downshift
-        const contextWithinDownshift = targetWithinDownshift(
+        const contextWithinDownshift = isTargetWithinDownshift(
           event.target,
           [this._rootNode, this._menuNode],
           this.props.environment,
@@ -1115,7 +1115,7 @@ class Downshift extends Component {
       }
 
       const onTouchEnd = event => {
-        const contextWithinDownshift = targetWithinDownshift(
+        const contextWithinDownshift = isTargetWithinDownshift(
           event.target,
           [this._rootNode, this._menuNode],
           this.props.environment,
