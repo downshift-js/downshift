@@ -19,8 +19,9 @@ type UseElementIdsReturnValue = {
   inputId: string
 }
 
-// eslint-disable-next-line @typescript-eslint/dot-notation
-const reactUseId = React['useId']
+// https://github.com/downshift-js/downshift/issues/1674#issuecomment-3924320872
+const SafeReact = {...React}
+const reactUseId = SafeReact.useId
 
 export const useElementIds =
   typeof reactUseId === 'function' ? useElementIdsR18 : useElementIdsLegacy

@@ -13,8 +13,9 @@ type UseElementIdsReturnValue = {
   getTagId: (index: number) => string
 }
 
-// eslint-disable-next-line @typescript-eslint/dot-notation
-const reactUseId = React['useId']
+// https://github.com/downshift-js/downshift/issues/1674#issuecomment-3924320872
+const SafeReact = {...React}
+const reactUseId = SafeReact.useId
 
 // istanbul ignore next
 export const useElementIds: (
