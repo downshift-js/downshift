@@ -2,13 +2,13 @@ import * as React from 'react'
 
 import {act, fireEvent, render, screen} from '@testing-library/react'
 import Downshift from '../'
-import {setStatus, scrollIntoView} from '../utils-ts'
+import {setStatus, scrollIntoView} from '../utils'
 
 jest.useFakeTimers()
-jest.mock('../utils-ts/scrollIntoView.ts', () => ({
+jest.mock('../utils/scrollIntoView.ts', () => ({
   scrollIntoView: jest.fn(),
 }))
-jest.mock('../utils-ts/setA11yStatus.ts', () => ({
+jest.mock('../utils/setA11yStatus.ts', () => ({
   setStatus: jest.fn(),
 }))
 

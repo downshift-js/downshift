@@ -1,18 +1,18 @@
 import {getDefaultValue} from '../utils'
-import {defaultStateValues} from '../utils.dropdown'
-
+import {dropdownDefaultStateValues} from '../utils.dropdown'
+import {DropdownProps} from './types'
 
 /**
  * Returns the new highlightedIndex based on the defaultHighlightedIndex prop, if it's not disabled.
  *
- * @param {Object} props Props from useCombobox or useSelect.
+ * @param {DropdownProps} props Props from useCombobox or useSelect.
  * @returns {number} The highlighted index.
  */
-function getDefaultHighlightedIndex(props) {
+export function getDefaultHighlightedIndex(props: DropdownProps) {
   const highlightedIndex = getDefaultValue(
     props,
     'highlightedIndex',
-    defaultStateValues,
+    dropdownDefaultStateValues,
   )
   if (
     highlightedIndex > -1 &&
@@ -23,5 +23,3 @@ function getDefaultHighlightedIndex(props) {
 
   return highlightedIndex
 }
-
-export {getDefaultHighlightedIndex}

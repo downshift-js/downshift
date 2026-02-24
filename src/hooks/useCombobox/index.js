@@ -10,7 +10,7 @@ import {
   useGetterPropsCalledChecker,
   useScrollIntoView,
   useControlPropsValidator,
-  isDropdownsStateEqual,
+  isDropdownStateEqual,
   getItemAndIndex,
   getInitialValue,
   useIsInitialMount,
@@ -20,7 +20,7 @@ import {
   useControlledReducer,
   propTypes,
   useElementIds,
-  defaultStateValues,
+  dropdownDefaultStateValues
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -40,7 +40,7 @@ function useCombobox(userProps = {}) {
     downshiftUseComboboxReducer,
     props,
     getInitialState,
-    isDropdownsStateEqual,
+    isDropdownStateEqual,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
@@ -86,7 +86,7 @@ function useCombobox(userProps = {}) {
   })
   // Focus the input on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen', defaultStateValues)
+    const focusOnOpen = getInitialValue(props, 'isOpen', dropdownDefaultStateValues)
 
     if (focusOnOpen && inputRef.current) {
       inputRef.current.focus()

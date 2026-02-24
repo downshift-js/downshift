@@ -21,7 +21,7 @@ import {
   getItemAndIndex,
   getInitialState,
   useControlPropsValidator,
-  isDropdownsStateEqual,
+  isDropdownStateEqual,
 } from './utils'
 import downshiftSelectReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -41,7 +41,7 @@ function useSelect(userProps = {}) {
     downshiftSelectReducer,
     props,
     getInitialState,
-    isDropdownsStateEqual,
+    isDropdownStateEqual,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
   // Element efs.

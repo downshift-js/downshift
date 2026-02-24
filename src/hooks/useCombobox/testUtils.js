@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {render, screen, renderHook} from '@testing-library/react'
-import {dropdownDefaultProps} from '../utils.dropdown'
 import {dataTestIds, items, user} from '../testUtils'
+import {dropdownDefaultProps} from './utils'
 import useCombobox from '.'
 
 export * from '../testUtils'
@@ -16,13 +16,12 @@ jest.mock('react', () => {
   }
 })
 
-jest.mock('../utils', () => {
-  const utils = jest.requireActual('../utils')
-  const hooksUtils = jest.requireActual('../../utils-ts')
+jest.mock('../../utils', () => {
+  const utils = jest.requireActual('../../utils')
 
   return {
     ...utils,
-    useGetterPropsCalledChecker: () => hooksUtils.noop,
+    useGetterPropsCalledChecker: () => utils.noop,
   }
 })
 

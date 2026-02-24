@@ -136,7 +136,7 @@ describe('getMenuProps', () => {
   describe('non production errors', () => {
     beforeEach(() => {
       // usally disabled by test utils.
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

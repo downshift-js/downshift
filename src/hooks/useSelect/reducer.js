@@ -1,12 +1,13 @@
-import {getNonDisabledIndex, getHighlightedIndex} from '../../utils'
 import {getDefaultValue} from '../utils'
 import commonReducer from '../reducer'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {
+  getNonDisabledIndex,
+  getHighlightedIndex,
   getItemIndexByCharacterKey,
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
+  defaultStateValues,
 } from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 

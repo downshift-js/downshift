@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import {isReactNative} from 'src/is.macro'
-import {isTargetWithinDownshift, noop} from 'src/utils'
-import {Environment} from 'src/index.types'
+import {isTargetWithinDownshift, noop} from '../../utils'
+import {Environment} from '../../index.types'
+import {isReactNative} from '../../is.macro'
 
 /**
  * Tracks mouse and touch events, such as mouseDown, touchMove and touchEnd.

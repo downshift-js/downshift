@@ -1,4 +1,4 @@
-import {getInitialState as getInitialDropdownState} from '.'
+import {getInitialDropdownState} from '.'
 
 export function getInitialState(props) {
   const initialState = getInitialDropdownState(props)

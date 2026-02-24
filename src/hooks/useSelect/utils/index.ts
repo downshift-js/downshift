@@ -6,25 +6,27 @@ export {
   debounce,
   normalizeArrowKey,
   useGetterPropsCalledChecker,
+  getHighlightedIndex,
+  getNonDisabledIndex,
 } from '../../../utils'
 export {
   useControlPropsValidator,
-  isDropdownsStateEqual,
   getItemAndIndex,
   useControlledReducer,
   useA11yMessageStatus,
   isAcceptedCharacterKey,
   useScrollIntoView,
   getInitialValue,
-  getInitialState,
 } from '../../utils'
 export {
+  getInitialDropdownState,
   useElementIds,
-  defaultStateValues,
+  dropdownDefaultStateValues,
   useMouseAndTouchTracker,
   getHighlightedIndexOnOpen,
-  propTypes as dropdownPropTypes,
-  defaultProps as dropdownDefaultProps,
+  dropdownPropTypes,
+  dropdownDefaultProps,
+  isDropdownStateEqual,
 } from '../../utils.dropdown'
 
 export {propTypes} from './propTypes'

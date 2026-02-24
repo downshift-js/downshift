@@ -3,7 +3,7 @@ import {
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
-  defaultStateValues as dropdownDefaultStateValues,
+  dropdownDefaultStateValues,
   getNonDisabledIndex,
   getHighlightedIndex,
   getDefaultValue,

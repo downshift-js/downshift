@@ -1,13 +1,8 @@
 import PropTypes from 'prop-types'
 
-import {
-  propTypes as dropdownPropTypes,
-  defaultProps as dropdownDefaultProps,
-} from '../../utils.dropdown'
+import {dropdownPropTypes, dropdownDefaultProps} from '../../utils.dropdown'
 
-export {getInitialState} from './getInitialState'
-export {useControlledReducer} from './useControlledReducer'
-
+// Re-exports
 export {
   handleRefs,
   normalizeArrowKey,
@@ -16,12 +11,11 @@ export {
   useLatestRef,
   useGetterPropsCalledChecker,
   getNonDisabledIndex,
-  getHighlightedIndex
+  getHighlightedIndex,
 } from '../../../utils'
 export {
   useScrollIntoView,
   useControlPropsValidator,
-  isDropdownsStateEqual,
   getItemAndIndex,
   getInitialValue,
   useIsInitialMount,
@@ -29,13 +23,19 @@ export {
   useA11yMessageStatus,
   getDefaultValue,
 } from '../../utils'
-
 export {
-  defaultStateValues,
+  dropdownDefaultStateValues,
   useElementIds,
+  dropdownDefaultProps,
+  getInitialDropdownState,
   useMouseAndTouchTracker,
+  isDropdownStateEqual,
+  getHighlightedIndexOnOpen,
+  getChangesOnSelection,
+  getDefaultHighlightedIndex,
 } from '../../utils.dropdown'
 
+// Actual exports
 export const propTypes = {
   ...dropdownPropTypes,
   items: PropTypes.array.isRequired,
@@ -53,3 +53,6 @@ export const defaultProps = {
     return false
   },
 }
+
+export {getInitialState} from './getInitialState'
+export {useControlledReducer} from './useControlledReducer'

@@ -3,7 +3,7 @@ import {stateReducer} from '../utils'
 
 import {isReactNative} from '../../is.macro.js'
 
-export const defaultProps = {
+export const dropdownDefaultProps = {
   itemToString(item: unknown) {
     return item ? String(item) : ''
   },

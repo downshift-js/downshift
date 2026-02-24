@@ -5,7 +5,10 @@ import {
   getInitialValue as getInitialValueCommon,
   getDefaultValue as getDefaultValueCommon,
 } from '../utils'
-import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
+import {
+  dropdownDefaultProps,
+  dropdownPropTypes,
+} from '../utils.dropdown'
 
 export {
   handleRefs,

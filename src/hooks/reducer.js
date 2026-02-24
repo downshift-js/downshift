@@ -1,6 +1,9 @@
-import {getHighlightedIndexOnOpen, getDefaultHighlightedIndex} from './utils'
+import {
+  getHighlightedIndexOnOpen,
+  getDefaultHighlightedIndex,
+  dropdownDefaultStateValues,
+} from './utils.dropdown'
 import {getDefaultValue} from './utils'
-import {defaultStateValues} from './utils.dropdown'
 
 export default function downshiftCommonReducer(
   state,
@@ -67,13 +70,17 @@ export default function downshiftCommonReducer(
     case stateChangeTypes.FunctionReset:
       changes = {
         highlightedIndex: getDefaultHighlightedIndex(props),
-        isOpen: getDefaultValue(props, 'isOpen', defaultStateValues),
+        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
         selectedItem: getDefaultValue(
           props,
           'selectedItem',
-          defaultStateValues,
+          dropdownDefaultStateValues,
         ),
-        inputValue: getDefaultValue(props, 'inputValue', defaultStateValues),
+        inputValue: getDefaultValue(
+          props,
+          'inputValue',
+          dropdownDefaultStateValues,
+        ),
       }
 
       break

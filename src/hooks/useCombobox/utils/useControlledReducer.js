@@ -1,8 +1,7 @@
 import {useRef, useEffect} from 'react'
 
 import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
-import {isControlledProp} from '../../../utils'
-import {getState} from '../../utils'
+import {isControlledProp, getState} from '../../../utils'
 import {useEnhancedReducer, useIsInitialMount} from '.'
 
 /**

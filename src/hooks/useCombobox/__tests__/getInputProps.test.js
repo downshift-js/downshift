@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {act, renderHook, fireEvent, createEvent} from '@testing-library/react'
 import * as stateChangeTypes from '../stateChangeTypes'
-import {noop} from '../../../utils-ts'
+import {noop} from '../../../utils'
 import {
   renderUseCombobox,
   renderCombobox,
@@ -2086,7 +2086,7 @@ describe('getInputProps', () => {
   describe('non production errors', () => {
     beforeEach(() => {
       // usually it is disabled by test utils.
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

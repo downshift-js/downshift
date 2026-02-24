@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {noop, validateControlledUnchanged} from 'src/utils'
+import {noop, validateControlledUnchanged} from '../../utils'
 import {useIsInitialMount} from './useIsInitialMount'
 
 type UseControlPropsValidator = (options: {
