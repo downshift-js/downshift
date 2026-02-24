@@ -1,8 +1,8 @@
-import {defaultProps} from '../dropdownDefaultProps'
+import {dropdownDefaultProps} from '../dropdownDefaultProps'
 
 describe('itemToString', () => {
   test('returns empty string if item is falsy', () => {
-    const emptyString = defaultProps.itemToString(null)
+    const emptyString = dropdownDefaultProps.itemToString(null)
     expect(emptyString).toBe('')
   })
 })
@@ -10,12 +10,12 @@ describe('itemToString', () => {
 describe('itemToKey', () => {
   test('returns the item', () => {
     const item = {hi: 'hello'}
-    expect(defaultProps.itemToKey(item)).toBe(item)
+    expect(dropdownDefaultProps.itemToKey(item)).toBe(item)
   })
 })
 
 describe('environment', () => {
   test('is window in browser environment', () => {
-    expect(defaultProps.environment).toBe(window)
+    expect(dropdownDefaultProps.environment).toBe(window)
   })
 })

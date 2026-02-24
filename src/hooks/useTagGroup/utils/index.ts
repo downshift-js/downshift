@@ -1,14 +1,5 @@
 import PropTypes from 'prop-types'
 
-// Re-export utils from parent directories
-export {
-  callAllEventHandlers,
-  handleRefs,
-  useLatestRef,
-  validatePropTypes,
-} from '../../../utils'
-export {useControlledReducer} from '../../utils'
-
 export {useElementIds} from './useElementIds'
 export {getInitialState} from './getInitialState'
 export {isStateEqual} from './isStateEqual'

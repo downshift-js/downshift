@@ -1,19 +1,27 @@
 import {getDefaultValue} from '../utils'
-import commonReducer from '../reducer'
+import {getNonDisabledIndex, getHighlightedIndex} from '../../utils'
 import {
-  getNonDisabledIndex,
-  getHighlightedIndex,
-  getItemIndexByCharacterKey,
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
-  defaultStateValues,
-} from './utils'
+  dropdownDefaultStateValues as defaultStateValues,
+} from '../utils.dropdown'
+import commonReducer from '../reducer'
+import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
 export default function downshiftSelectReducer(state, props, action) {
   const {type, altKey} = action
+  const {
+    items,
+    initialHighlightedIndex,
+    defaultHighlightedIndex,
+    isItemDisabled,
+    itemToKey,
+    itemToString,
+  } = props
+  const {highlightedIndex, selectedItem} = state
   let changes
 
   switch (type) {
@@ -21,7 +29,7 @@ export default function downshiftSelectReducer(state, props, action) {
       changes = {
         isOpen: getDefaultValue(props, 'isOpen', defaultStateValues),
         highlightedIndex: getDefaultHighlightedIndex(props),
-        selectedItem: props.items[action.index],
+        selectedItem: items[action.index],
       }
 
       break
@@ -31,22 +39,21 @@ export default function downshiftSelectReducer(state, props, action) {
         const inputValue = `${state.inputValue}${lowercasedKey}`
         const prevHighlightedIndex =
           !state.isOpen && state.selectedItem
-            ? props.items.findIndex(
-                item =>
-                  props.itemToKey(item) === props.itemToKey(state.selectedItem),
+            ? items.findIndex(
+                item => itemToKey(item) === itemToKey(state.selectedItem),
               )
-            : state.highlightedIndex
-        const highlightedIndex = getItemIndexByCharacterKey({
+            : highlightedIndex
+        const nextHighlightedIndex = getItemIndexByCharacterKey({
           keysSoFar: inputValue,
           highlightedIndex: prevHighlightedIndex,
-          items: props.items,
-          itemToString: props.itemToString,
-          isItemDisabled: props.isItemDisabled,
+          items,
+          itemToString,
+          isItemDisabled,
         })
 
         changes = {
           inputValue,
-          highlightedIndex,
+          highlightedIndex: nextHighlightedIndex,
           isOpen: true,
         }
       }
@@ -54,18 +61,27 @@ export default function downshiftSelectReducer(state, props, action) {
       break
     case stateChangeTypes.ToggleButtonKeyDownArrowDown:
       {
-        const highlightedIndex = state.isOpen
+        const nextHighlightedIndex = state.isOpen
           ? getHighlightedIndex(
               state.highlightedIndex,
               1,
-              props.items,
-              props.isItemDisabled,
+              items,
+              isItemDisabled,
             )
           : altKey && state.selectedItem == null
             ? -1
-            : getHighlightedIndexOnOpen(props, state, 1)
+            : getHighlightedIndexOnOpen({
+                items,
+                initialHighlightedIndex,
+                defaultHighlightedIndex,
+                selectedItem,
+                itemToKey,
+                isItemDisabled,
+                highlightedIndex,
+                offset: 1,
+              })
         changes = {
-          highlightedIndex,
+          highlightedIndex: nextHighlightedIndex,
           isOpen: true,
         }
       }
@@ -75,16 +91,25 @@ export default function downshiftSelectReducer(state, props, action) {
       if (state.isOpen && altKey) {
         changes = getChangesOnSelection(props, state.highlightedIndex, false)
       } else {
-        const highlightedIndex = state.isOpen
+        const nextHighlightedIndex = state.isOpen
           ? getHighlightedIndex(
               state.highlightedIndex,
               -1,
-              props.items,
-              props.isItemDisabled,
+              items,
+              isItemDisabled,
             )
-          : getHighlightedIndexOnOpen(props, state, -1)
+          : getHighlightedIndexOnOpen({
+              items,
+              initialHighlightedIndex,
+              defaultHighlightedIndex,
+              selectedItem,
+              itemToKey,
+              isItemDisabled,
+              highlightedIndex,
+              offset: -1,
+            })
         changes = {
-          highlightedIndex,
+          highlightedIndex: nextHighlightedIndex,
           isOpen: true,
         }
       }
@@ -98,12 +123,7 @@ export default function downshiftSelectReducer(state, props, action) {
       break
     case stateChangeTypes.ToggleButtonKeyDownHome:
       changes = {
-        highlightedIndex: getNonDisabledIndex(
-          0,
-          false,
-          props.items,
-          props.isItemDisabled,
-        ),
+        highlightedIndex: getNonDisabledIndex(0, false, items, isItemDisabled),
         isOpen: true,
       }
 
@@ -111,10 +131,10 @@ export default function downshiftSelectReducer(state, props, action) {
     case stateChangeTypes.ToggleButtonKeyDownEnd:
       changes = {
         highlightedIndex: getNonDisabledIndex(
-          props.items.length - 1,
+          items.length - 1,
           true,
-          props.items,
-          props.isItemDisabled,
+          items,
+          isItemDisabled,
         ),
         isOpen: true,
       }
@@ -125,8 +145,8 @@ export default function downshiftSelectReducer(state, props, action) {
         highlightedIndex: getHighlightedIndex(
           state.highlightedIndex,
           -10,
-          props.items,
-          props.isItemDisabled,
+          items,
+          isItemDisabled,
         ),
       }
       break
@@ -135,8 +155,8 @@ export default function downshiftSelectReducer(state, props, action) {
         highlightedIndex: getHighlightedIndex(
           state.highlightedIndex,
           10,
-          props.items,
-          props.isItemDisabled,
+          items,
+          isItemDisabled,
         ),
       }
       break
@@ -152,8 +172,8 @@ export default function downshiftSelectReducer(state, props, action) {
         isOpen: false,
         highlightedIndex: -1,
         ...(state.highlightedIndex >= 0 &&
-          props.items?.length && {
-            selectedItem: props.items[state.highlightedIndex],
+          items?.length && {
+            selectedItem: items[state.highlightedIndex],
           }),
       }
 

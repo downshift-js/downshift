@@ -16,13 +16,12 @@ import useSelect from '.'
 
 export * from '../testUtils'
 
-jest.mock('../utils', () => {
-  const utils = jest.requireActual('../utils')
-  const hooksUtils = jest.requireActual('../../utils')
+jest.mock('../../utils', () => {
+  const utils = jest.requireActual('../../utils')
 
   return {
     ...utils,
-    useGetterPropsCalledChecker: () => hooksUtils.noop,
+    useGetterPropsCalledChecker: () => utils.noop,
   }
 })
 

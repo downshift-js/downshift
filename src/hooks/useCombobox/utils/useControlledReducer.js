@@ -2,7 +2,7 @@ import {useRef, useEffect} from 'react'
 
 import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
 import {isControlledProp, getState} from '../../../utils'
-import {useEnhancedReducer, useIsInitialMount} from '.'
+import {useEnhancedReducer, useIsInitialMount} from '../../utils'
 
 /**
  * The useCombobox version of useControlledReducer, which also

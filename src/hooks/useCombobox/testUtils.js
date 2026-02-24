@@ -1,15 +1,17 @@
 import * as React from 'react'
 import {render, screen, renderHook} from '@testing-library/react'
+
 import {dataTestIds, items, user} from '../testUtils'
-import {dropdownDefaultProps} from './utils'
+import {dropdownDefaultProps} from '../utils.dropdown'
 import useCombobox from '.'
 
 export * from '../testUtils'
 
 // We are using React 18.
 jest.mock('react', () => {
+  const actualReact = jest.requireActual('react')
   return {
-    ...jest.requireActual('react'),
+    ...actualReact,
     useId() {
       return 'test-id'
     },

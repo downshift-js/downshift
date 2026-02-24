@@ -6,22 +6,23 @@ import {
   callAllEventHandlers,
   useLatestRef,
   validatePropTypes,
-  useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
+} from '../../utils'
+import {
   useScrollIntoView,
   useControlPropsValidator,
-  isDropdownStateEqual,
   getItemAndIndex,
   getInitialValue,
   useIsInitialMount,
   useA11yMessageStatus,
-  getInitialState,
-  defaultProps,
-  useControlledReducer,
-  propTypes,
+} from '../utils'
+import {
+  dropdownDefaultStateValues,
   useElementIds,
-  dropdownDefaultStateValues
-} from './utils'
+  useMouseAndTouchTracker,
+  isDropdownStateEqual,
+} from '../utils.dropdown'
+import {getInitialState, useControlledReducer, defaultProps, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 

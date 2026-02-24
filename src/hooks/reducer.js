@@ -11,6 +11,14 @@ export default function downshiftCommonReducer(
   action,
   stateChangeTypes,
 ) {
+  const {
+    items,
+    initialHighlightedIndex,
+    defaultHighlightedIndex,
+    isItemDisabled,
+    itemToKey,
+  } = props
+  const {highlightedIndex, selectedItem, isOpen} = state
   const {type} = action
   let changes
 
@@ -30,17 +38,35 @@ export default function downshiftCommonReducer(
     case stateChangeTypes.ToggleButtonClick:
     case stateChangeTypes.FunctionToggleMenu:
       changes = {
-        isOpen: !state.isOpen,
-        highlightedIndex: state.isOpen
+        isOpen: !isOpen,
+        highlightedIndex: isOpen
           ? -1
-          : getHighlightedIndexOnOpen(props, state, 0),
+          : getHighlightedIndexOnOpen({
+              items,
+              initialHighlightedIndex,
+              defaultHighlightedIndex,
+              selectedItem,
+              itemToKey,
+              isItemDisabled,
+              highlightedIndex,
+              offset: 0,
+            }),
       }
 
       break
     case stateChangeTypes.FunctionOpenMenu:
       changes = {
         isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
+        highlightedIndex: getHighlightedIndexOnOpen({
+          items,
+          initialHighlightedIndex,
+          defaultHighlightedIndex,
+          selectedItem,
+          itemToKey,
+          isItemDisabled,
+          highlightedIndex,
+          offset: 0,
+        }),
       }
 
       break
@@ -52,8 +78,8 @@ export default function downshiftCommonReducer(
       break
     case stateChangeTypes.FunctionSetHighlightedIndex:
       changes = {
-        highlightedIndex: props.isItemDisabled(
-          props.items[action.highlightedIndex],
+        highlightedIndex: isItemDisabled(
+          items[action.highlightedIndex],
           action.highlightedIndex,
         )
           ? -1

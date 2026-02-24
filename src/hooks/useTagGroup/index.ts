@@ -5,7 +5,9 @@ import {
   handleRefs,
   useLatestRef,
   validatePropTypes,
-  useControlledReducer,
+} from '../../utils'
+import {useControlledReducer} from '../utils'
+import {
   getInitialState,
   isStateEqual,
   propTypes,

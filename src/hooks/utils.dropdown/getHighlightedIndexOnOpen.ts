@@ -44,30 +44,36 @@ export function getHighlightedIndexOnOpen(
     return -1
   }
 
-  // Start with the first item as the default highlighted index.
-  let highlightedIndexOnOpen = 0
-
   // initialHighlightedIndex will give value to highlightedIndex on initial state only.
   if (
     initialHighlightedIndex !== undefined &&
-    highlightedIndex === initialHighlightedIndex
+    highlightedIndex === initialHighlightedIndex &&
+    !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex)
   ) {
-    highlightedIndexOnOpen = initialHighlightedIndex
-  } else if (defaultHighlightedIndex !== undefined) {
-    highlightedIndexOnOpen = defaultHighlightedIndex
-  } else if (selectedItem) {
-    const selectedIndex = items.findIndex(
-      item => itemToKey(selectedItem) === itemToKey(item),
-    )
-
-    if (selectedIndex >= 0) {
-      highlightedIndexOnOpen = selectedIndex
-    }
-  } else if (offset === Direction.Up) {
-    highlightedIndexOnOpen = items.length - 1
+    return initialHighlightedIndex
   }
 
-  return isItemDisabled(items[highlightedIndexOnOpen], highlightedIndexOnOpen)
-    ? -1
-    : highlightedIndexOnOpen
+  if (
+    defaultHighlightedIndex !== undefined &&
+    !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex)
+  ) {
+    return defaultHighlightedIndex
+  }
+
+  if (selectedItem) {
+    return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
+  }
+
+  if (
+    offset < 0 &&
+    !isItemDisabled(items[items.length - 1], items.length - 1)
+  ) {
+    return items.length - 1
+  }
+
+  if (offset > 0 && !isItemDisabled(items[0], 0)) {
+    return 0
+  }
+
+  return -1
 }

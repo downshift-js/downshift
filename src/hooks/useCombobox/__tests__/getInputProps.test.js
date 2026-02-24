@@ -1,7 +1,7 @@
 import * as React from 'react'
+
 import {act, renderHook, fireEvent, createEvent} from '@testing-library/react'
-import * as stateChangeTypes from '../stateChangeTypes'
-import {noop} from '../../../utils'
+
 import {
   renderUseCombobox,
   renderCombobox,
@@ -18,7 +18,8 @@ import {
   initialFocusAndOpenTestCases,
   initialNoFocusOrOpenTestCases,
 } from '../testUtils'
-import utils from '../../utils'
+import utils from '../../../utils'
+import * as stateChangeTypes from '../stateChangeTypes'
 import useCombobox from '..'
 
 describe('getInputProps', () => {
@@ -138,7 +139,7 @@ describe('getInputProps', () => {
       act(() => {
         const {ref: inputRef} = result.current.getInputProps()
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
       })
 
@@ -230,12 +231,12 @@ describe('getInputProps', () => {
       const {ref: inputRef, onKeyDown} = result.current.getInputProps({
         onKeyDown: userOnKeyDown,
       })
-      inputRef({focus: noop})
+      inputRef({focus() {}})
       act(() => {
         result.current.toggleMenu()
       })
       act(() => {
-        onKeyDown({key: 'Escape', preventDefault: noop, stopPropagation: noop})
+        onKeyDown({key: 'Escape', preventDefault() {}, stopPropagation() {}})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -253,9 +254,9 @@ describe('getInputProps', () => {
           onKeyDown: userOnKeyDown,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
-        onKeyDown({key: 'Escape', preventDefault: noop})
+        onKeyDown({key: 'Escape', preventDefault() {}})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -271,7 +272,7 @@ describe('getInputProps', () => {
           onBlur: userOnBlur,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
         onBlur({})
       })
@@ -291,9 +292,9 @@ describe('getInputProps', () => {
           onBlur: userOnBlur,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
-        onBlur({preventDefault: noop})
+        onBlur({preventDefault() {}})
       })
 
       expect(userOnBlur).toHaveBeenCalledTimes(1)
@@ -309,7 +310,7 @@ describe('getInputProps', () => {
           onChange: userOnChange,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
         onChange({target: {value: 'lalaland'}})
       })
@@ -329,7 +330,7 @@ describe('getInputProps', () => {
           onChange: userOnChange,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
         onChange({target: {value: 'lalaland'}})
       })
@@ -347,7 +348,7 @@ describe('getInputProps', () => {
           onInput: userOnInput,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
         onChange({target: {value: 'a'}})
       })
@@ -367,7 +368,7 @@ describe('getInputProps', () => {
           onInput: userOnInput,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         result.current.toggleMenu()
         onChange({target: {value: 'a'}})
       })
@@ -385,7 +386,7 @@ describe('getInputProps', () => {
           onClick: userOnClick,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         onClick({})
       })
 
@@ -404,7 +405,7 @@ describe('getInputProps', () => {
           onClick: userOnClick,
         })
 
-        inputRef({focus: noop})
+        inputRef({focus() {}})
         onClick({})
       })
 

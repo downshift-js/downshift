@@ -7,7 +7,7 @@ import {
   mouseMoveItemAtIndex,
 } from '../testUtils'
 import {defaultIds, items} from '../../testUtils'
-import utils from '../../utils'
+import utils from '../../../utils'
 import useSelect from '..'
 
 describe('getMenuProps', () => {
@@ -171,7 +171,7 @@ describe('getMenuProps', () => {
 
   describe('non production errors', () => {
     beforeEach(() => {
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

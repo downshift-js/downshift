@@ -6,7 +6,7 @@ import {
   screen,
   renderHook,
 } from '@testing-library/react'
-import {noop} from '../../../utils'
+
 import {
   renderUseSelect,
   renderSelect,
@@ -16,16 +16,15 @@ import {
   getToggleButton,
   keyDownOnToggleButton,
   tab,
-} from '../testUtils'
-import utils from '../../utils'
-import {
   items,
   defaultIds,
   mouseMoveItemAtIndex,
   mouseLeaveItemAtIndex,
   initialFocusAndOpenTestCases,
   initialNoFocusOrOpenTestCases,
-} from '../../testUtils'
+} from '../testUtils'
+
+import utils from '../../../utils'
 import useSelect from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
 
@@ -177,7 +176,7 @@ describe('getToggleButtonProps', () => {
           onKeyDown: userOnKeyDown,
         })
 
-        onKeyDown({key: 'ArrowDown', preventDefault: noop})
+        onKeyDown({key: 'ArrowDown', preventDefault() {}})
       })
 
       expect(userOnKeyDown).toHaveBeenCalledTimes(1)
@@ -215,7 +214,7 @@ describe('getToggleButtonProps', () => {
 
         onKeyDown({
           key: 'ArrowDown',
-          preventDefault: noop,
+          preventDefault() {},
         })
       })
 
@@ -2047,7 +2046,7 @@ describe('getToggleButtonProps', () => {
 
   describe('non production errors', () => {
     beforeEach(() => {
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-import {dropdownPropTypes} from '.'
+import {dropdownPropTypes} from '../../utils.dropdown'
 
 export const propTypes = {
   ...dropdownPropTypes,

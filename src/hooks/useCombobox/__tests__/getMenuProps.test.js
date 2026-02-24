@@ -1,13 +1,15 @@
 import {act, renderHook} from '@testing-library/react'
-import {noop} from '../utils'
-import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
+
 import {
+  getInput,
+  renderCombobox,
+  renderUseCombobox,
   defaultIds,
   items,
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
-} from '../../testUtils'
-import utils from '../../utils'
+} from '../testUtils'
+import utils from '../../../utils'
 import useCombobox from '..'
 
 describe('getMenuProps', () => {
@@ -85,7 +87,7 @@ describe('getMenuProps', () => {
           onMouseLeave: userOnMouseLeave,
         })
 
-        onMouseLeave({preventDefault: noop})
+        onMouseLeave({preventDefault() {}})
       })
 
       expect(userOnMouseLeave).toHaveBeenCalledTimes(1)
@@ -106,7 +108,7 @@ describe('getMenuProps', () => {
           onMouseLeave: userOnMouseLeave,
         })
 
-        onMouseLeave({preventDefault: noop})
+        onMouseLeave({preventDefault() {}})
       })
 
       expect(userOnMouseLeave).toHaveBeenCalledTimes(1)

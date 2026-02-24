@@ -8,21 +8,24 @@ import {
   debounce,
   normalizeArrowKey,
   useGetterPropsCalledChecker,
-  useMouseAndTouchTracker,
-  defaultProps,
-  propTypes,
-  useControlledReducer,
-  useElementIds,
-  defaultStateValues,
-  isAcceptedCharacterKey,
-  getInitialValue,
-  useScrollIntoView,
-  useA11yMessageStatus,
-  getItemAndIndex,
-  getInitialState,
+} from '../../utils'
+import {
   useControlPropsValidator,
+  getItemAndIndex,
+  useControlledReducer,
+  useA11yMessageStatus,
+  isAcceptedCharacterKey,
+  useScrollIntoView,
+  getInitialValue,
+} from '../utils'
+import {
+  getInitialDropdownState as getInitialState,
+  useElementIds,
+  dropdownDefaultStateValues as defaultStateValues,
+  useMouseAndTouchTracker,
   isDropdownStateEqual,
-} from './utils'
+} from '../utils.dropdown'
+import {propTypes, defaultProps} from './utils'
 import downshiftSelectReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 

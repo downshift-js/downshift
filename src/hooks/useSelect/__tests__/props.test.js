@@ -1,4 +1,5 @@
 import {act, renderHook} from '@testing-library/react'
+
 import {
   clickOnItemAtIndex,
   clickOnToggleButton,
@@ -12,13 +13,12 @@ import {
   renderUseSelect,
   stateChangeTestCases,
   tab,
-} from '../testUtils'
-import * as stateChangeTypes from '../stateChangeTypes'
-import {
   items,
   defaultIds,
   waitForDebouncedA11yStatusUpdate,
-} from '../../testUtils'
+} from '../testUtils'
+
+import * as stateChangeTypes from '../stateChangeTypes'
 import useSelect from '..'
 
 describe('props', () => {
@@ -884,7 +884,7 @@ describe('props', () => {
       initialHighlightedIndex,
     )
   })
-  
+
   test('defaultHighlightedIndex is ignored if item is disabled and menu is intially open', () => {
     const defaultHighlightedIndex = 2
     const isItemDisabled = jest
