@@ -17,6 +17,9 @@ export default function downshiftCommonReducer(
     defaultHighlightedIndex,
     isItemDisabled,
     itemToKey,
+    defaultIsOpen,
+    defaultSelectedItem,
+    defaultInputValue,
   } = props
   const {highlightedIndex, selectedItem, isOpen} = state
   const {type} = action
@@ -95,17 +98,22 @@ export default function downshiftCommonReducer(
       break
     case stateChangeTypes.FunctionReset:
       changes = {
-        highlightedIndex: getDefaultHighlightedIndex(props),
-        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
+        highlightedIndex: getDefaultHighlightedIndex({
+          defaultHighlightedIndex,
+          isItemDisabled,
+          items,
+        }),
+        isOpen: getDefaultValue(
+          defaultIsOpen,
+          dropdownDefaultStateValues.isOpen,
+        ),
         selectedItem: getDefaultValue(
-          props,
-          'selectedItem',
-          dropdownDefaultStateValues,
+          defaultSelectedItem,
+          dropdownDefaultStateValues.selectedItem,
         ),
         inputValue: getDefaultValue(
-          props,
-          'inputValue',
-          dropdownDefaultStateValues,
+          defaultInputValue,
+          dropdownDefaultStateValues.inputValue,
         ),
       }
 

@@ -1,16 +1,13 @@
-import {State} from '../../utils'
-import {capitalizeString} from './capitalizeString'
-
-export function getDefaultValue<S extends State, P extends Partial<S>>(
-  props: P,
-  propKey: keyof S,
-  defaultStateValues: S,
-): S[keyof S] {
-  const defaultValue = props[`default${capitalizeString(propKey as string)}`]
-
-  if (defaultValue !== undefined) {
-    return defaultValue as S[keyof S]
-  }
-
-  return defaultStateValues[propKey]
+/**
+ * Returns the default value based on the defaultProp and defaultStateValue.
+ * 
+ * @param defaultProp The default prop value.
+ * @param defaultStateValue The default state value.
+ * @returns The resolved default value.
+ */
+export function getDefaultValue<T>(
+  defaultProp: T | undefined,
+  defaultStateValue: T,
+): T {
+  return defaultProp === undefined ? defaultStateValue : defaultProp
 }

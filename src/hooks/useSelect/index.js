@@ -115,7 +115,12 @@ function useSelect(userProps = {}) {
   })
   // Focus the toggle button on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen', defaultStateValues)
+    const focusOnOpen = getInitialValue(
+      props.isOpen,
+      props.initialIsOpen,
+      props.defaultIsOpen,
+      defaultStateValues.isOpen,
+    )
 
     if (focusOnOpen && toggleButtonRef.current) {
       toggleButtonRef.current.focus()

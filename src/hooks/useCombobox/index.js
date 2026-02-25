@@ -22,7 +22,12 @@ import {
   useMouseAndTouchTracker,
   isDropdownStateEqual,
 } from '../utils.dropdown'
-import {getInitialState, useControlledReducer, defaultProps, propTypes} from './utils'
+import {
+  getInitialState,
+  useControlledReducer,
+  defaultProps,
+  propTypes,
+} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -87,7 +92,12 @@ function useCombobox(userProps = {}) {
   })
   // Focus the input on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen', dropdownDefaultStateValues)
+    const focusOnOpen = getInitialValue(
+      props.isOpen,
+      props.initialIsOpen,
+      props.defaultIsOpen,
+      dropdownDefaultStateValues.isOpen,
+    )
 
     if (focusOnOpen && inputRef.current) {
       inputRef.current.focus()

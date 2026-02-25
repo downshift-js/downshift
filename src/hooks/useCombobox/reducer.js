@@ -19,6 +19,7 @@ export default function downshiftUseComboboxReducer(state, props, action) {
     isItemDisabled,
     itemToKey,
     itemToString,
+    defaultIsOpen,
   } = props
   const {highlightedIndex, selectedItem, isOpen} = state
   let changes
@@ -26,8 +27,15 @@ export default function downshiftUseComboboxReducer(state, props, action) {
   switch (type) {
     case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
-        highlightedIndex: getDefaultHighlightedIndex(props),
+        isOpen: getDefaultValue(
+          defaultIsOpen,
+          dropdownDefaultStateValues.isOpen,
+        ),
+        highlightedIndex: getDefaultHighlightedIndex({
+          defaultHighlightedIndex,
+          isItemDisabled,
+          items,
+        }),
         selectedItem: items[action.index],
         inputValue: itemToString(items[action.index]),
       }
@@ -66,7 +74,14 @@ export default function downshiftUseComboboxReducer(state, props, action) {
     case stateChangeTypes.InputKeyDownArrowUp:
       if (isOpen) {
         if (altKey) {
-          changes = getChangesOnSelection(props, highlightedIndex)
+          changes = getChangesOnSelection({
+            highlightedIndex,
+            inputValue: true,
+            items,
+            itemToString,
+            defaultHighlightedIndex,
+            defaultIsOpen,
+          })
         } else {
           changes = {
             highlightedIndex: getHighlightedIndex(
@@ -95,7 +110,14 @@ export default function downshiftUseComboboxReducer(state, props, action) {
       }
       break
     case stateChangeTypes.InputKeyDownEnter:
-      changes = getChangesOnSelection(props, highlightedIndex)
+      changes = getChangesOnSelection({
+        highlightedIndex,
+        inputValue: true,
+        items,
+        itemToString,
+        defaultHighlightedIndex,
+        defaultIsOpen,
+      })
 
       break
     case stateChangeTypes.InputKeyDownEscape:
@@ -160,7 +182,11 @@ export default function downshiftUseComboboxReducer(state, props, action) {
     case stateChangeTypes.InputChange:
       changes = {
         isOpen: true,
-        highlightedIndex: getDefaultHighlightedIndex(props),
+        highlightedIndex: getDefaultHighlightedIndex({
+          defaultHighlightedIndex,
+          isItemDisabled,
+          items,
+        }),
         inputValue: action.inputValue,
       }
       break

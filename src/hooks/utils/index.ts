@@ -12,5 +12,3 @@ export {useA11yMessageStatus} from './useA11yMessageStatus'
 export {isAcceptedCharacterKey} from './isAcceptedCharacterKey'
 export {useScrollIntoView} from './useScrollIntoView'
 export {useControlPropsValidator} from './useControlPropsValidator'
-
-export * from './index.legacy'

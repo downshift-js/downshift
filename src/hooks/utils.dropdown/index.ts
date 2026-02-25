@@ -5,6 +5,10 @@ export {useElementIds} from './useElementIds'
 export {getHighlightedIndexOnOpen} from './getHighlightedIndexOnOpen'
 export {useMouseAndTouchTracker} from './useMouseAndTouchTracker'
 export {isDropdownStateEqual} from './isDropdownStateEqual'
-export {getInitialDropdownState} from './getInitialDropdownState'
+export {
+  getInitialDropdownState,
+  type GetInitialDropdownStateProps,
+} from './getInitialDropdownState'
 export {getChangesOnSelection} from './getChangesOnSelection'
 export {getDefaultHighlightedIndex} from './getDefaultHighlightedIndex'
+export * from './types'

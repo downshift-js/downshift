@@ -1,33 +1,25 @@
 import {getInitialValue} from '../getInitialValue'
 
-test('getInitialValue will not return undefined as initial value', () => {
-  const defaultStateValues = {bogusValue: 'hello', initialBogusValue: undefined}
-  const props = {initialBogusValue: undefined}
-  const value = getInitialValue(props, 'bogusValue', defaultStateValues)
+test('returns the default value if all other values are undefined', () => {
+  const value = getInitialValue(undefined, undefined, undefined, 'ciao')
 
-  expect(value).toEqual(defaultStateValues.bogusValue)
+  expect(value).toEqual('ciao')
 })
 
-test('getInitialValue will not return undefined as value', () => {
-  const defaultStateValues = {bogusValue: 'hello'}
-  const props = {bogusValue: undefined}
-  const value = getInitialValue(props, 'bogusValue', defaultStateValues)
+test('returns the controlled prop value if it is defined', () => {
+  const value = getInitialValue('hello', 'hi', 'ola', 'ciao')
 
-  expect(value).toEqual(defaultStateValues.bogusValue)
+  expect(value).toEqual('hello')
 })
 
-test('getInitialValue will return the value if it is defined', () => {
-  const defaultStateValues = {bogusValue: 'hello'}
-  const props = {bogusValue: 'hi'}
-  const value = getInitialValue(props, 'bogusValue', defaultStateValues)
+test('returns the initial value if it is defined', () => {
+  const value = getInitialValue(undefined, 'hi', 'ola', 'ciao')
 
-  expect(value).toEqual(props.bogusValue)
+  expect(value).toEqual('hi')
 })
 
-test('getInitialValue will return the initial value if it is defined', () => {
-  const defaultStateValues = {bogusValue: 'hello'}
-  const props = {initialBogusValue: 'hi', bogusValue: undefined}
-  const value = getInitialValue(props, 'bogusValue', defaultStateValues)
+test('returns the default value if it is defined', () => {
+  const value = getInitialValue(undefined, undefined, 'ola', 'ciao')
 
-  expect(value).toEqual(props.initialBogusValue)
+  expect(value).toEqual('ola')
 })
