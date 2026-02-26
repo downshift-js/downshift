@@ -1,16 +1,4 @@
-export interface Action<T> extends Record<string, unknown> {
-  type: T
-}
-
-export type State = Record<string, unknown>
-
-export interface Props<S, T> {
-  onStateChange?(typeAndChanges: unknown): void
-  stateReducer(
-    state: S,
-    actionAndChanges: Action<T> & {changes: Partial<S>},
-  ): Partial<S>
-}
+import { Props, State } from "./index.types"
 
 /**
  * This will perform a shallow merge of the given state object

@@ -1,6 +1,6 @@
 import {getInitialValue} from '../utils/getInitialValue'
 import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
-import {DropdownState} from './types'
+import {DropdownState} from './index.types'
 
 export type GetInitialDropdownStateProps = {
   isOpen?: boolean

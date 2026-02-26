@@ -1,4 +1,4 @@
-import {DropdownState} from './types'
+import {DropdownState} from './index.types'
 
 /**
  * Check if a state is equal for dropdowns, by comparing isOpen, inputValue, highlightedIndex and selected item.

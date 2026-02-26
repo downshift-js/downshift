@@ -11,4 +11,4 @@ export {
 } from './getInitialDropdownState'
 export {getChangesOnSelection} from './getChangesOnSelection'
 export {getDefaultHighlightedIndex} from './getDefaultHighlightedIndex'
-export * from './types'
+export * from './index.types'
