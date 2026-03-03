@@ -1,14 +1,13 @@
 import {useRef, useEffect} from 'react'
 
 import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
-import {isControlledProp, getState} from '../../../utils'
+import {getState, type Action} from '../../../utils'
 import {useEnhancedReducer, useIsInitialMount} from '../../utils'
 import {
-  UseComboboxMergedProps,
-  UseComboboxState,
-  UseComboboxStateChangeTypes,
+  type UseComboboxMergedProps,
+  type UseComboboxState,
+  type UseComboboxStateChangeTypes,
 } from '../index.types'
-import {Action} from '../../../utils/index.types'
 
 /**
  * The useCombobox version of useControlledReducer, which also
@@ -41,7 +40,7 @@ export function useControlledReducer<Item>(
   UseComboboxState<Item>,
   (action: Action<UseComboboxStateChangeTypes>) => void,
 ] {
-  const previousSelectedItemRef = useRef<Item | null | undefined>(null)
+  const previousSelectedItemRef = useRef<Item | null>(null)
   const [state, dispatch] = useEnhancedReducer(
     reducer,
     props,
@@ -51,7 +50,7 @@ export function useControlledReducer<Item>(
   const isInitialMount = useIsInitialMount()
 
   useEffect(() => {
-    if (!isControlledProp(props, 'selectedItem')) {
+    if (props.selectedItem === undefined) {
       return
     }
 

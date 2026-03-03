@@ -8,9 +8,18 @@ import {
   dropdownDefaultStateValues,
 } from '../utils.dropdown'
 import * as stateChangeTypes from './stateChangeTypes'
+import {
+  UseComboboxDispatchAction,
+  UseComboboxMergedProps,
+  UseComboboxState,
+} from './index.types'
 
 /* eslint-disable complexity */
-export default function downshiftUseComboboxReducer(state, props, action) {
+export default function useComboboxReducer<Item>(
+  state: UseComboboxState<Item>,
+  props: UseComboboxMergedProps<Item>,
+  action: UseComboboxDispatchAction<Item>,
+) {
   const {type, altKey} = action
   const {
     items,
@@ -25,7 +34,7 @@ export default function downshiftUseComboboxReducer(state, props, action) {
   let changes
 
   switch (type) {
-    case stateChangeTypes.ItemClick:
+    case stateChangeTypes.ItemClick: {
       changes = {
         isOpen: getDefaultValue(
           defaultIsOpen,
@@ -36,11 +45,12 @@ export default function downshiftUseComboboxReducer(state, props, action) {
           isItemDisabled,
           items,
         }),
-        selectedItem: items[action.index],
-        inputValue: itemToString(items[action.index]),
+        selectedItem: items[action.index as number],
+        inputValue: itemToString(items[action.index as number] as Item),
       }
 
       break
+    }
     case stateChangeTypes.InputKeyDownArrowDown:
       if (isOpen) {
         changes = {
@@ -172,10 +182,10 @@ export default function downshiftUseComboboxReducer(state, props, action) {
         isOpen: false,
         highlightedIndex: -1,
         ...(highlightedIndex >= 0 &&
-          items?.length &&
+          items.length &&
           action.selectItem && {
             selectedItem: items[highlightedIndex],
-            inputValue: itemToString(items[highlightedIndex]),
+            inputValue: itemToString(items[highlightedIndex] as Item),
           }),
       }
       break
@@ -210,7 +220,7 @@ export default function downshiftUseComboboxReducer(state, props, action) {
     case stateChangeTypes.FunctionSelectItem:
       changes = {
         selectedItem: action.selectedItem,
-        inputValue: itemToString(action.selectedItem),
+        inputValue: itemToString(action.selectedItem as Item | null),
       }
       break
     case stateChangeTypes.ControlledPropUpdatedSelectedItem:

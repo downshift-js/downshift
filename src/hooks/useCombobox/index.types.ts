@@ -92,9 +92,9 @@ export interface UseComboboxMergedProps<Item> extends UseComboboxProps<Item> {
   stateReducer: NonNullable<UseComboboxProps<Item>['stateReducer']>
   isItemDisabled: NonNullable<UseComboboxProps<Item>['isItemDisabled']>
   // TODO: BREAKING CHANGE -> Change the one in UseComboboxProps to also accept undefined for item.
-  itemToString: (item: Item | null | undefined) => string
+  itemToString: NonNullable<UseComboboxProps<Item>['itemToString']>
   // TODO: BREAKING CHANGE -> Change the one in UseComboboxProps to also accept undefined for item and return unknown.
-  itemToKey: (item: Item | null | undefined) => unknown
+  itemToKey: NonNullable<UseComboboxProps<Item>['itemToKey']>
   scrollIntoView: NonNullable<UseComboboxProps<Item>['scrollIntoView']>
   environment: NonNullable<UseComboboxProps<Item>['environment']>
 }

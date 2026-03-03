@@ -1,15 +1,16 @@
 enum Direction {
   Up = -1,
   Down = 1,
+  None = 0
 }
 
-type GetHighlightedIndexOnOpenProps = {
-  items: unknown[]
+type GetHighlightedIndexOnOpenProps<Item> = {
+  items: Item[]
   initialHighlightedIndex?: number
   defaultHighlightedIndex?: number
-  isItemDisabled: (item: unknown, index: number) => boolean
-  itemToKey: (item: unknown) => string
-  selectedItem: unknown
+  isItemDisabled: (item: Item, index: number) => boolean
+  itemToKey: (item: Item | null) => string
+  selectedItem: Item | null
   highlightedIndex: number
   offset: Direction
 }
@@ -26,8 +27,8 @@ type GetHighlightedIndexOnOpenProps = {
  * @param props The properties for determining the highlighted index.
  * @returns The index of the highlighted item, or -1 if none.
  */
-export function getHighlightedIndexOnOpen(
-  props: GetHighlightedIndexOnOpenProps,
+export function getHighlightedIndexOnOpen<Item>(
+  props: GetHighlightedIndexOnOpenProps<Item>,
 ) {
   const {
     items,
@@ -48,6 +49,7 @@ export function getHighlightedIndexOnOpen(
   if (
     initialHighlightedIndex !== undefined &&
     highlightedIndex === initialHighlightedIndex &&
+    items[initialHighlightedIndex] &&
     !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex)
   ) {
     return initialHighlightedIndex
@@ -55,6 +57,7 @@ export function getHighlightedIndexOnOpen(
 
   if (
     defaultHighlightedIndex !== undefined &&
+    items[defaultHighlightedIndex] &&
     !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex)
   ) {
     return defaultHighlightedIndex
@@ -66,12 +69,13 @@ export function getHighlightedIndexOnOpen(
 
   if (
     offset < 0 &&
-    !isItemDisabled(items[items.length - 1], items.length - 1)
+    items[items.length - 1] &&
+    !isItemDisabled(items[items.length - 1] as Item, items.length - 1)
   ) {
     return items.length - 1
   }
 
-  if (offset > 0 && !isItemDisabled(items[0], 0)) {
+  if (offset > 0 && items[0] && !isItemDisabled(items[0], 0)) {
     return 0
   }
 

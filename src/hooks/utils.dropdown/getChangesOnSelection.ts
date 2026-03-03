@@ -1,9 +1,9 @@
 import {getDefaultValue} from '../utils/getDefaultValue'
 import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 
-type GetChangesOnSelectionProps = {
-  items: unknown[]
-  itemToString: (item: unknown) => string
+type GetChangesOnSelectionProps<Item> = {
+  items: Item[]
+  itemToString: (item: Item | null) => string
   defaultIsOpen?: boolean
   defaultHighlightedIndex?: number
   highlightedIndex: number
@@ -19,7 +19,9 @@ type GetChangesOnSelectionProps = {
  * @param inputValue Also return the input value for state.
  * @returns The changes for the state.
  */
-export function getChangesOnSelection(props: GetChangesOnSelectionProps) {
+export function getChangesOnSelection<Item>(
+  props: GetChangesOnSelectionProps<Item>,
+) {
   const {
     highlightedIndex,
     inputValue,
@@ -41,7 +43,7 @@ export function getChangesOnSelection(props: GetChangesOnSelectionProps) {
         dropdownDefaultStateValues.highlightedIndex,
       ),
       ...(inputValue && {
-        inputValue: itemToString(items[highlightedIndex]),
+        inputValue: itemToString(items[highlightedIndex] as Item),
       }),
     }),
   }
