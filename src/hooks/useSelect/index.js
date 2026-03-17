@@ -14,7 +14,7 @@ import {
   useControlPropsValidator,
   useMouseAndTouchTracker,
   isDropdownsStateEqual,
-} from '../utils'
+} from '../utils.legacy'
 import {
   useControlledReducer,
   getInitialValue,

@@ -1,4 +1,4 @@
-import {getHighlightedIndexOnOpen, getDefaultHighlightedIndex} from './utils'
+import {getHighlightedIndexOnOpen, getDefaultHighlightedIndex} from './utils.legacy'
 import {getDefaultValue} from './utils-ts'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 

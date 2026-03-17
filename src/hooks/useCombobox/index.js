@@ -8,7 +8,7 @@ import {
   useScrollIntoView,
   useControlPropsValidator,
   isDropdownsStateEqual,
-} from '../utils'
+} from '../utils.legacy'
 import {
   getItemAndIndex,
   getInitialValue,

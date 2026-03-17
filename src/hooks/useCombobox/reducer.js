@@ -2,7 +2,7 @@ import {
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
-} from '../utils'
+} from '../utils.legacy'
 import {getDefaultValue} from '../utils-ts'
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils.legacy'
 import commonReducer from '../reducer'

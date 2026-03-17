@@ -18,7 +18,7 @@ import {
   initialFocusAndOpenTestCases,
   initialNoFocusOrOpenTestCases,
 } from '../testUtils'
-import utils from '../../utils'
+import utils from '../../utils.legacy'
 import useCombobox from '..'
 
 describe('getInputProps', () => {
@@ -2086,7 +2086,7 @@ describe('getInputProps', () => {
   describe('non production errors', () => {
     beforeEach(() => {
       // usually it is disabled by test utils.
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils.legacy')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

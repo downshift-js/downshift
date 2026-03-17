@@ -3,7 +3,7 @@ import {
   getHighlightedIndexOnOpen,
   getChangesOnSelection,
   getDefaultHighlightedIndex,
-} from '../utils'
+} from '../utils.legacy'
 import {getDefaultValue} from '../utils-ts'
 import commonReducer from '../reducer'
 import {defaultStateValues} from '../utils.dropdown/defaultStateValues'

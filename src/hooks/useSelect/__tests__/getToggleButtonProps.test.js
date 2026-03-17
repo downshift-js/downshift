@@ -17,7 +17,7 @@ import {
   keyDownOnToggleButton,
   tab,
 } from '../testUtils'
-import utils from '../../utils'
+import utils from '../../utils.legacy'
 import {
   items,
   defaultIds,
@@ -2047,7 +2047,7 @@ describe('getToggleButtonProps', () => {
 
   describe('non production errors', () => {
     beforeEach(() => {
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils.legacy')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)
