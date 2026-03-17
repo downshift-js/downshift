@@ -1,5 +1,5 @@
 export {default} from './downshift'
-export {resetIdCounter} from './utils-ts'
+export {resetIdCounter} from './utils'
 export {useSelect, useCombobox, useTagGroup} from './hooks'
 /**
  * @deprecated Not maintained anymore. Use the new useTagGroup instead.

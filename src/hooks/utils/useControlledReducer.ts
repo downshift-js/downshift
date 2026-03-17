@@ -1,4 +1,4 @@
-import {getState} from '../../utils-ts'
+import {getState} from '../../utils'
 import {useEnhancedReducer} from './useEnhancedReducer'
 import {type Props, type Reducer} from './index.types'
 

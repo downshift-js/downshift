@@ -3,7 +3,7 @@ import {
   getChangesOnSelection,
   getDefaultHighlightedIndex,
 } from '../utils.legacy'
-import {getDefaultValue} from '../utils-ts'
+import {getDefaultValue} from '../utils'
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils.legacy'
 import commonReducer from '../reducer'
 import {dropdownDefaultStateValues} from '../utils.dropdown'

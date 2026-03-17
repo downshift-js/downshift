@@ -1,4 +1,4 @@
-import {type Action} from '../utils-ts'
+import {type Action} from '../utils'
 
 export interface UseTagGroupState<Item> {
   activeIndex: number

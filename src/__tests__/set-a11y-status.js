@@ -79,5 +79,5 @@ test('creates no status div if there is no document', () => {
 
 function setup() {
   jest.resetModules()
-  return require('../utils-ts').setStatus
+  return require('../utils').setStatus
 }

@@ -24,7 +24,7 @@ import {
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils.legacy'
-import {generateId, scrollIntoView, setStatus, getState, noop} from './utils-ts'
+import {generateId, scrollIntoView, setStatus, getState, noop} from './utils'
 
 class Downshift extends Component {
   static propTypes = {

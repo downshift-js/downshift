@@ -1,13 +1,13 @@
 import {renderHook} from '@testing-library/react'
 import {useA11yMessageStatus} from '../useA11yMessageStatus'
-import {setStatus, cleanupStatusDiv} from '../../../utils-ts'
+import {setStatus, cleanupStatusDiv} from '../../../utils'
 
 // eslint-disable-next-line no-var
 var cancelMock: jest.Mock
 
-jest.mock('../../../utils-ts', () => {
+jest.mock('../../../utils', () => {
   return {
-    ...jest.requireActual('../../../utils-ts'),
+    ...jest.requireActual('../../../utils'),
     debounce: (fn: Function) => {
       const debouncedFn = (...args: unknown[]) => fn(...args)
       debouncedFn.cancel = jest.fn()

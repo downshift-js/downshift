@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {getState, useLatestRef} from '../../utils-ts'
+import {getState, useLatestRef} from '../../utils'
 import {callOnChangeProps} from './callOnChangeProps'
 import {type Action, type Props, type Reducer} from './index.types'
 

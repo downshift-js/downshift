@@ -1,10 +1,10 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {isControlledProp} from '../../utils.legacy'
-import {getState} from '../../utils-ts'
+import {getState} from '../../utils'
 import {getInitialState as getInitialStateCommon} from '../utils.legacy'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
-import {useIsInitialMount, useEnhancedReducer} from '../utils-ts'
+import {useIsInitialMount, useEnhancedReducer} from '../utils'
 import {ControlledPropUpdatedSelectedItem} from './stateChangeTypes'
 
 export function getInitialState(props) {

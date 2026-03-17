@@ -1,5 +1,5 @@
 import {getHighlightedIndexOnOpen, getDefaultHighlightedIndex} from './utils.legacy'
-import {getDefaultValue} from './utils-ts'
+import {getDefaultValue} from './utils'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 
 export default function downshiftCommonReducer(

@@ -1,5 +1,5 @@
 import {isPreact} from './is.macro'
-import { noop } from './utils-ts'
+import { noop } from './utils'
 
 /**
  * Accepts a parameter and returns it if it's a function

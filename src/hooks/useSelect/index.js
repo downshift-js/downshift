@@ -1,5 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {useLatestRef, validatePropTypes} from '../../utils-ts'
+import {useLatestRef, validatePropTypes} from '../../utils'
 import {
   callAllEventHandlers,
   handleRefs,
@@ -20,7 +20,7 @@ import {
   getInitialValue,
   getItemAndIndex,
   useA11yMessageStatus,
-} from '../utils-ts'
+} from '../utils'
 import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {useElementIds} from '../utils.dropdown/useElementIds'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'

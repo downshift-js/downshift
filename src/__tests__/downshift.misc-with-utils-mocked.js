@@ -4,10 +4,10 @@
 import * as React from 'react'
 import {render, fireEvent, screen} from '@testing-library/react'
 import Downshift from '../'
-import {scrollIntoView} from '../utils-ts'
+import {scrollIntoView} from '../utils'
 
 jest.useFakeTimers()
-jest.mock('../utils-ts/scrollIntoView.ts', () => ({
+jest.mock('../utils/scrollIntoView.ts', () => ({
   scrollIntoView: jest.fn(),
 }))
 

@@ -22,7 +22,7 @@ jest.mock('react', () => {
 
 jest.mock('../utils.legacy', () => {
   const utils = jest.requireActual('../utils.legacy')
-  const hooksUtils = jest.requireActual('../../utils-ts')
+  const hooksUtils = jest.requireActual('../../utils')
 
   return {
     ...utils,

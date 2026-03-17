@@ -1,4 +1,4 @@
-import {getDefaultValue} from '../utils-ts'
+import {getDefaultValue} from '../utils'
 import {defaultStateValues} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {isReactNative} from '../is.macro'
 import {validateControlledUnchanged, targetWithinDownshift} from '../utils.legacy'
-import {noop} from '../utils-ts'
-import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils-ts'
+import {noop} from '../utils'
+import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 
 // istanbul ignore next

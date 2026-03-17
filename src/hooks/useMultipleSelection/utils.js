@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 
-import {noop} from '../../utils-ts'
-import {getInitialValue} from '../utils-ts'
+import {noop} from '../../utils'
+import {getInitialValue} from '../utils'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
 
 export const defaultStateValues = {

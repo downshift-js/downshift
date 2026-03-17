@@ -5,8 +5,8 @@ import {
   handleRefs,
   useLatestRef,
   validatePropTypes,
-} from '../../utils-ts'
-import {useControlledReducer} from '../utils-ts'
+} from '../../utils'
+import {useControlledReducer} from '../utils'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupPropsOptions,

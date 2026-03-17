@@ -1,7 +1,7 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils.legacy'
-import {useLatestRef, validatePropTypes} from '../../utils-ts'
+import {useLatestRef, validatePropTypes} from '../../utils'
 import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
@@ -14,7 +14,7 @@ import {
   getInitialValue,
   useIsInitialMount,
   useA11yMessageStatus,
-} from '../utils-ts'
+} from '../utils'
 import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
 import {useElementIds} from '../utils.dropdown/useElementIds'
 import {

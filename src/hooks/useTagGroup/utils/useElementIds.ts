@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {generateId} from '../../../utils-ts'
+import {generateId} from '../../../utils'
 
 type UseElementIdsProps = {
   id?: string

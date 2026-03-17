@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {render, screen} from '@testing-library/react'
 import Downshift from '..'
-import {resetIdCounter} from '../utils-ts'
+import {resetIdCounter} from '../utils'
 
 afterAll(() => {
   jest.restoreAllMocks()
