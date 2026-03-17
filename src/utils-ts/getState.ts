@@ -1,17 +1,3 @@
-export interface Action<T> extends Record<string, unknown> {
-  type: T
-}
-
-export type State = Record<string, unknown>
-
-export interface Props<S, T> {
-  onStateChange?(typeAndChanges: unknown): void
-  stateReducer(
-    state: S,
-    actionAndChanges: Action<T> & {changes: Partial<S>},
-  ): Partial<S>
-}
-
 /**
  * This will perform a shallow merge of the given state object
  * with the state coming from props
@@ -23,11 +9,7 @@ export interface Props<S, T> {
  * @param props The props that may contain controlled values.
  * @returns The merged controlled state.
  */
-export function getState<
-  S extends State,
-  P extends Partial<S> & Props<S, T>,
-  T,
->(state: S, props?: P): S {
+export function getState<S extends object>(state: S, props?: Partial<S>): S {
   if (!props) {
     return state
   }
@@ -36,8 +18,10 @@ export function getState<
 
   return keys.reduce(
     (newState, key) => {
+      // state keys could be in props, but with value undefined, which means they should be ignored.
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (props[key] !== undefined) {
-        newState[key] = (props as Partial<S>)[key] as S[typeof key]
+        newState[key] = props[key] as S[typeof key]
       }
       return newState
     },

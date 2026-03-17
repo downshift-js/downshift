@@ -11,14 +11,14 @@ import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftSelectReducer(state, props, action) {
-  const {type, altKey} = action
+export default function downshiftSelectReducer(state, action) {
+  const {type, props, altKey} = action
   let changes
 
   switch (type) {
     case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: getDefaultValue(props, 'isOpen', defaultStateValues),
+        isOpen: getDefaultValue(props.defaultIsOpen, defaultStateValues.isOpen),
         highlightedIndex: getDefaultHighlightedIndex(props),
         selectedItem: props.items[action.index],
       }

@@ -1,4 +1,4 @@
-import {getState, Props} from '../getState'
+import {getState} from '../getState'
 
 test('returns state if no props are passed', () => {
   const state = {a: 'b'}
@@ -8,7 +8,7 @@ test('returns state if no props are passed', () => {
 
 test('merges state with props', () => {
   const state = {a: 'b', c: 'd'}
-  const props = {b: 'e', c: 'f'} as unknown as Props<unknown, unknown>
+  const props = {b: 'e', c: 'f'}
 
   expect(getState(state, props)).toEqual({a: 'b', c: 'f'})
 })

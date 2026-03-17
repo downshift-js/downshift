@@ -1,13 +1,10 @@
-import {getDefaultValue} from './utils'
+import {getDefaultValue} from '../utils-ts'
+import {defaultStateValues} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftMultipleSelectionReducer(
-  state,
-  props,
-  action,
-) {
-  const {type, index, selectedItem} = action
+export default function downshiftMultipleSelectionReducer(state, action) {
+  const {type, index, selectedItem, props} = action
   const {activeIndex, selectedItems} = state
   let changes
 
@@ -118,8 +115,14 @@ export default function downshiftMultipleSelectionReducer(
     }
     case stateChangeTypes.FunctionReset:
       changes = {
-        activeIndex: getDefaultValue(props, 'activeIndex'),
-        selectedItems: getDefaultValue(props, 'selectedItems'),
+        activeIndex: getDefaultValue(
+          props.defaultActiveIndex,
+          defaultStateValues.activeIndex,
+        ),
+        selectedItems: getDefaultValue(
+          props.defaultSelectedItems,
+          defaultStateValues.selectedItems,
+        ),
       }
       break
     default:

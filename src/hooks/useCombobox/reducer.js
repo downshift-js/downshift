@@ -10,14 +10,17 @@ import {dropdownDefaultStateValues} from '../utils.dropdown'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
-export default function downshiftUseComboboxReducer(state, props, action) {
-  const {type, altKey} = action
+export default function downshiftUseComboboxReducer(state, action) {
+  const {type, props, altKey} = action
   let changes
 
   switch (type) {
     case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
+        isOpen: getDefaultValue(
+          props.defaultIsOpen,
+          dropdownDefaultStateValues.isOpen,
+        ),
         highlightedIndex: getDefaultHighlightedIndex(props),
         selectedItem: props.items[action.index],
         inputValue: props.itemToString(props.items[action.index]),

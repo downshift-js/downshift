@@ -16,6 +16,7 @@ import {
   useA11yMessageStatus,
 } from '../utils-ts'
 import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
+import {useElementIds} from '../utils.dropdown/useElementIds'
 import {
   getInitialState,
   defaultProps,
@@ -24,7 +25,6 @@ import {
 } from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
-import {useElementIds} from '../utils.dropdown/useElementIds'
 
 useCombobox.stateChangeTypes = stateChangeTypes
 
@@ -87,7 +87,12 @@ function useCombobox(userProps = {}) {
   })
   // Focus the input on first render if required.
   useEffect(() => {
-    const focusOnOpen = getInitialValue(props, 'isOpen', defaultStateValues)
+    const focusOnOpen = getInitialValue(
+      props.isOpen,
+      props.initialIsOpen,
+      props.defaultIsOpen,
+      defaultStateValues.isOpen,
+    )
 
     if (focusOnOpen && inputRef.current) {
       inputRef.current.focus()

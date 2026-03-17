@@ -1,6 +1,6 @@
 import {renderHook} from '@testing-library/react'
 import {useMouseAndTouchTracker, isDropdownsStateEqual} from '../utils'
-import {getInitialValue, getDefaultValue, getItemAndIndex} from '../utils-ts'
+import {getItemAndIndex} from '../utils-ts'
 import {dropdownDefaultProps} from '../utils.dropdown'
 
 describe('utils', () => {
@@ -41,39 +41,6 @@ describe('utils', () => {
         index,
       ])
     })
-  })
-
-  test('getInitialValue will not return undefined as initial value', () => {
-    const defaults = {bogusValue: 'hello'}
-    const value = getInitialValue(
-      {initialBogusValue: undefined},
-      'bogusValue',
-      defaults,
-    )
-
-    expect(value).toEqual(defaults.bogusValue)
-  })
-
-  test('getInitialValue will not return undefined as value', () => {
-    const defaults = {bogusValue: 'hello'}
-    const value = getInitialValue(
-      {bogusValue: undefined},
-      'bogusValue',
-      defaults,
-    )
-
-    expect(value).toEqual(defaults.bogusValue)
-  })
-
-  test('getDefaultValue will not return undefined as value', () => {
-    const defaults = {bogusValue: 'hello'}
-    const value = getDefaultValue(
-      {defaultBogusValue: undefined},
-      'bogusValue',
-      defaults,
-    )
-
-    expect(value).toEqual(defaults.bogusValue)
   })
 
   describe('useMouseAndTouchTracker', () => {

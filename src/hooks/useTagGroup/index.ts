@@ -14,11 +14,9 @@ import {
   GetTagRemovePropsOptions,
   UseTagGroupInterface,
   UseTagGroupProps,
-  UseTagGroupMergedProps,
   UseTagGroupReducerAction,
   UseTagGroupReturnValue,
   UseTagGroupState,
-  UseTagGroupStateChangeTypes,
   GetTagRemovePropsReturnValue,
   GetTagPropsReturnValue,
   GetTagGroupPropsReturnValue,
@@ -46,8 +44,6 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
-    UseTagGroupMergedProps<Item>,
-    UseTagGroupStateChangeTypes,
     UseTagGroupReducerAction<Item>
   >(useTagGroupReducer, props, getInitialState, isStateEqual)
 

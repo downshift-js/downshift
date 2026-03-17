@@ -137,6 +137,12 @@ describe('props', () => {
         index: undefined,
         item: 'test',
         type: useTagGroup.stateChangeTypes.FunctionAddItem,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
   })
@@ -165,6 +171,12 @@ describe('props', () => {
         },
         index: 3,
         type: useTagGroup.stateChangeTypes.TagClick,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
 
@@ -183,6 +195,12 @@ describe('props', () => {
           items: defaultProps.initialItems,
         },
         type: useTagGroup.stateChangeTypes.TagGroupKeyDownArrowLeft,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
 
@@ -201,6 +219,12 @@ describe('props', () => {
           items: defaultProps.initialItems,
         },
         type: useTagGroup.stateChangeTypes.TagGroupKeyDownArrowRight,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
 
@@ -224,6 +248,12 @@ describe('props', () => {
           items: newItemsAfterBackspace,
         },
         type: useTagGroup.stateChangeTypes.TagGroupKeyDownBackspace,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
 
@@ -247,6 +277,12 @@ describe('props', () => {
           items: newItemsAfterDelete,
         },
         type: useTagGroup.stateChangeTypes.TagGroupKeyDownDelete,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
 
@@ -271,6 +307,12 @@ describe('props', () => {
         },
         index: 0,
         type: useTagGroup.stateChangeTypes.TagRemoveClick,
+        props: {
+          environment: window,
+          initialItems: defaultProps.initialItems,
+          removeElementDescription: 'Press Delete or Backspace to remove tag.',
+          stateReducer,
+        },
       },
     )
   })
@@ -313,13 +355,17 @@ describe('props', () => {
     })
 
     expect(getByText(removeElementDescription)).toBeInTheDocument()
-    expect(queryByText('Press Delete or Backspace to remove tag.')).not.toBeInTheDocument()
+    expect(
+      queryByText('Press Delete or Backspace to remove tag.'),
+    ).not.toBeInTheDocument()
   })
 
   test('removeElementDescription has a default options', () => {
     const {getByText} = renderTagGroup()
 
-    expect(getByText('Press Delete or Backspace to remove tag.')).toBeInTheDocument()
+    expect(
+      getByText('Press Delete or Backspace to remove tag.'),
+    ).toBeInTheDocument()
   })
 
   test('onStateChange is called after adding an item', () => {

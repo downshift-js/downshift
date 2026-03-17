@@ -1,40 +1,12 @@
 import PropTypes from 'prop-types'
 
 import {noop} from '../../utils-ts'
-import {
-  getInitialValue as getInitialValueCommon,
-  getDefaultValue as getDefaultValueCommon,
-} from '../utils-ts'
+import {getInitialValue} from '../utils-ts'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
 
-const defaultStateValues = {
+export const defaultStateValues = {
   activeIndex: -1,
   selectedItems: [],
-}
-
-/**
- * Returns the initial value for a state key in the following order:
- * 1. controlled prop, 2. initial prop, 3. default prop, 4. default
- * value from Downshift.
- *
- * @param {Object} props Props passed to the hook.
- * @param {string} propKey Props key to generate the value for.
- * @returns {any} The initial value for that prop.
- */
-function getInitialValue(props, propKey) {
-  return getInitialValueCommon(props, propKey, defaultStateValues)
-}
-
-/**
- * Returns the default value for a state key in the following order:
- * 1. controlled prop, 2. default prop, 3. default value from Downshift.
- *
- * @param {Object} props Props passed to the hook.
- * @param {string} propKey Props key to generate the value for.
- * @returns {any} The initial value for that prop.
- */
-function getDefaultValue(props, propKey) {
-  return getDefaultValueCommon(props, propKey, defaultStateValues)
 }
 
 /**
@@ -45,8 +17,18 @@ function getDefaultValue(props, propKey) {
  * @returns {Object} The initial state.
  */
 function getInitialState(props) {
-  const activeIndex = getInitialValue(props, 'activeIndex')
-  const selectedItems = getInitialValue(props, 'selectedItems')
+  const activeIndex = getInitialValue(
+    props.activeIndex,
+    props.initialActiveIndex,
+    props.defaultActiveIndex,
+    defaultStateValues.activeIndex,
+  )
+  const selectedItems = getInitialValue(
+    props.selectedItems,
+    props.initialSelectedItems,
+    props.defaultSelectedItems,
+    defaultStateValues.selectedItems,
+  )
 
   return {
     activeIndex,
@@ -133,7 +115,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export {
   validatePropTypes,
-  getDefaultValue,
   getInitialState,
   isKeyDownOperationPermitted,
   isStateEqual,
