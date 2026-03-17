@@ -1,4 +1,4 @@
-import {handleRefs} from '../utils'
+import {handleRefs} from '../utils.legacy'
 
 test('handle object and functinonal refs', () => {
   const refValue = 'Here could be your HTMLElement'

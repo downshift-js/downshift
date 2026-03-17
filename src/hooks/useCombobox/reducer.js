@@ -4,7 +4,7 @@ import {
   getDefaultHighlightedIndex,
 } from '../utils'
 import {getDefaultValue} from '../utils-ts'
-import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
+import {getHighlightedIndex, getNonDisabledIndex} from '../../utils.legacy'
 import commonReducer from '../reducer'
 import {dropdownDefaultStateValues} from '../utils.dropdown'
 import * as stateChangeTypes from './stateChangeTypes'

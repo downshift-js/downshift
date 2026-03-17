@@ -23,7 +23,7 @@ import {
   validateControlledUnchanged,
   getHighlightedIndex,
   getNonDisabledIndex,
-} from './utils'
+} from './utils.legacy'
 import {generateId, scrollIntoView, setStatus, getState, noop} from './utils-ts'
 
 class Downshift extends Component {

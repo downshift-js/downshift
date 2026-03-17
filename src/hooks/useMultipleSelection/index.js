@@ -1,5 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
+import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils.legacy'
 import {useLatestRef} from '../../utils-ts'
 import {useGetterPropsCalledChecker, useControlPropsValidator} from '../utils'
 import {

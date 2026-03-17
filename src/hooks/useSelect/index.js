@@ -5,7 +5,7 @@ import {
   handleRefs,
   debounce,
   normalizeArrowKey,
-} from '../../utils'
+} from '../../utils.legacy'
 import {
   isAcceptedCharacterKey,
   getInitialState,

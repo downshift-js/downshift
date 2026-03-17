@@ -1,6 +1,6 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {isControlledProp} from '../../utils'
+import {isControlledProp} from '../../utils.legacy'
 import {getState} from '../../utils-ts'
 import {getInitialState as getInitialStateCommon} from '../utils'
 import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'

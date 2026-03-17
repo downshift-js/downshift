@@ -1,4 +1,4 @@
-import {getHighlightedIndex} from '../utils'
+import {getHighlightedIndex} from '../utils.legacy'
 
 test('should return next index', () => {
   const offset = 1

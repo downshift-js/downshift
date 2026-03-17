@@ -1,6 +1,6 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
-import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils'
+import {handleRefs, normalizeArrowKey, callAllEventHandlers} from '../../utils.legacy'
 import {useLatestRef, validatePropTypes} from '../../utils-ts'
 import {
   useMouseAndTouchTracker,

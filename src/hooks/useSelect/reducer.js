@@ -1,4 +1,4 @@
-import {getNonDisabledIndex, getHighlightedIndex} from '../../utils'
+import {getNonDisabledIndex, getHighlightedIndex} from '../../utils.legacy'
 import {
   getHighlightedIndexOnOpen,
   getChangesOnSelection,

@@ -1,4 +1,4 @@
-import {callAllEventHandlers} from '../utils'
+import {callAllEventHandlers} from '../utils.legacy'
 
 test('prevent default handlers when defaultDownshiftPrevented is true', () => {
   const customHandler = jest.fn(e => {

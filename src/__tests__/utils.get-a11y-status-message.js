@@ -1,4 +1,4 @@
-import {getA11yStatusMessage} from '../utils'
+import {getA11yStatusMessage} from '../utils.legacy'
 
 const tests = [
   {
