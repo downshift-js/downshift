@@ -1,14 +1,16 @@
-import {Action, Props, State} from '../../utils-ts'
 import {capitalizeString} from './capitalizeString'
 
-export function callOnChangeProps<
-  S extends State,
-  P extends Partial<S> & Props<S, T>,
-  T,
->(action: Action<T>, props: P, state: S, newState: S) {
+import {Action, Props} from './index.types'
+
+export function callOnChangeProps<S extends object, A extends {type: string}>(
+  action: Action<S, A>,
+  props: Props<S, A>,
+  state: S,
+  newState: S,
+) {
   const {type} = action
-  const changes: Partial<State> = {}
-  const keys = Object.keys(state)
+  const changes: Partial<S> = {}
+  const keys = Object.keys(state) as (keyof S)[]
 
   for (const key of keys) {
     invokeOnChangeHandler(key, action, props, state, newState)
@@ -18,22 +20,24 @@ export function callOnChangeProps<
     }
   }
 
-  if (props.onStateChange && Object.keys(changes).length) {
+  if (typeof props.onStateChange === 'function' && Object.keys(changes).length) {
     props.onStateChange({type, ...changes})
   }
 }
 
-function invokeOnChangeHandler<
-  S extends State,
-  P extends Partial<S> & Props<S, T>,
-  T,
->(key: string, action: Action<T>, props: P, state: S, newState: S) {
+function invokeOnChangeHandler<S extends object, A extends {type: string}>(
+  key: keyof S,
+  action: Action<S, A>,
+  props: Props<S, A>,
+  state: S,
+  newState: S,
+) {
   if (newState[key] === state[key]) {
     return
   }
 
-  const handlerKey = `on${capitalizeString(key)}Change`
-  const handler = props[handlerKey]
+  const handlerKey = `on${capitalizeString(key as string)}Change`
+  const handler = (props as Record<string, unknown>)[handlerKey]
 
   if (typeof handler !== 'function') {
     return

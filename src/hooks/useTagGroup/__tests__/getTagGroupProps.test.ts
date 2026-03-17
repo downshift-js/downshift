@@ -191,7 +191,7 @@ describe('getTagGroupProps', () => {
       expect(queryByRole('tag')).not.toBeInTheDocument()
     })
 
-     test('backspace removes the active item', async () => {
+    test('backspace removes the active item', async () => {
       const {clickOnTag, user, getTags} = renderTagGroup()
 
       const tagsCount = getTags().length
@@ -234,9 +234,7 @@ describe('getTagGroupProps', () => {
     })
 
     test('any other key does nothing', async () => {
-      const {clickOnTag, user, getTags} = renderTagGroup({
-        defaultActiveIndex: 2,
-      })
+      const {clickOnTag, user, getTags} = renderTagGroup()
 
       await clickOnTag(2)
       await user.keyboard('{Space}')

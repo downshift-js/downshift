@@ -67,16 +67,17 @@ export default function downshiftCommonReducer(
     case stateChangeTypes.FunctionReset:
       changes = {
         highlightedIndex: getDefaultHighlightedIndex(props),
-        isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
+        isOpen: getDefaultValue(
+          props.defaultIsOpen,
+          dropdownDefaultStateValues.isOpen,
+        ),
         selectedItem: getDefaultValue(
-          props,
-          'selectedItem',
-          dropdownDefaultStateValues,
+          props.defaultSelectedItem,
+          dropdownDefaultStateValues.selectedItem,
         ),
         inputValue: getDefaultValue(
-          props,
-          'inputValue',
-          dropdownDefaultStateValues,
+          props.defaultInputValue,
+          dropdownDefaultStateValues.inputValue,
         ),
       }
 

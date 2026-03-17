@@ -19,16 +19,23 @@ function isAcceptedCharacterKey(key) {
 
 function getInitialState(props) {
   const selectedItem = getInitialValue(
-    props,
-    'selectedItem',
-    dropdownDefaultStateValues,
+    props.selectedItem,
+    props.initialSelectedItem,
+    props.defaultSelectedItem,
+    dropdownDefaultStateValues.selectedItem,
   )
-  const isOpen = getInitialValue(props, 'isOpen', dropdownDefaultStateValues)
+  const isOpen = getInitialValue(
+    props.isOpen,
+    props.initialIsOpen,
+    props.defaultIsOpen,
+    dropdownDefaultStateValues.isOpen,
+  )
   const highlightedIndex = getInitialHighlightedIndex(props)
   const inputValue = getInitialValue(
-    props,
-    'inputValue',
-    dropdownDefaultStateValues,
+    props.inputValue,
+    props.initialInputValue,
+    props.defaultInputValue,
+    dropdownDefaultStateValues.inputValue,
   )
 
   return {
@@ -99,21 +106,17 @@ function getHighlightedIndexOnOpen(props, state, offset) {
  * @param {Array<{current: HTMLElement}>} downshiftElementsRefs The refs for the elements that should not trigger a blur action from mouseDown or touchEnd.
  * @returns {{isMouseDown: boolean, isTouchMove: boolean, isTouchEnd: boolean}} The mouse and touch events information, if any of are happening.
  */
-function useMouseAndTouchTracker(
-  environment,
-  handleBlur,
-  downshiftRefs,
-) {
+function useMouseAndTouchTracker(environment, handleBlur, downshiftRefs) {
   const mouseAndTouchTrackersRef = React.useRef({
     isMouseDown: false,
     isTouchMove: false,
     isTouchEnd: false,
   })
 
-const getDownshiftElements = React.useCallback(
-  () => downshiftRefs.map(ref => ref.current),
-  [downshiftRefs],
-);
+  const getDownshiftElements = React.useCallback(
+    () => downshiftRefs.map(ref => ref.current),
+    [downshiftRefs],
+  )
 
   React.useEffect(() => {
     if (isReactNative || !environment) {
@@ -307,11 +310,13 @@ function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
     highlightedIndex: -1,
     ...(shouldSelect && {
       selectedItem: props.items[highlightedIndex],
-      isOpen: getDefaultValue(props, 'isOpen', dropdownDefaultStateValues),
+      isOpen: getDefaultValue(
+        props.defaultIsOpen,
+        dropdownDefaultStateValues.isOpen,
+      ),
       highlightedIndex: getDefaultValue(
-        props,
-        'highlightedIndex',
-        dropdownDefaultStateValues,
+        props.defaultHighlightedIndex,
+        dropdownDefaultStateValues.highlightedIndex,
       ),
       ...(inputValue && {
         inputValue: props.itemToString(props.items[highlightedIndex]),
@@ -345,9 +350,8 @@ function isDropdownsStateEqual(prevState, newState) {
  */
 function getDefaultHighlightedIndex(props) {
   const highlightedIndex = getDefaultValue(
-    props,
-    'highlightedIndex',
-    dropdownDefaultStateValues,
+    props.defaultHighlightedIndex,
+    dropdownDefaultStateValues.highlightedIndex,
   )
   if (
     highlightedIndex > -1 &&
@@ -367,9 +371,10 @@ function getDefaultHighlightedIndex(props) {
  */
 function getInitialHighlightedIndex(props) {
   const highlightedIndex = getInitialValue(
-    props,
-    'highlightedIndex',
-    dropdownDefaultStateValues,
+    props.highlightedIndex,
+    props.initialHighlightedIndex,
+    props.defaultHighlightedIndex,
+    dropdownDefaultStateValues.highlightedIndex,
   )
 
   if (

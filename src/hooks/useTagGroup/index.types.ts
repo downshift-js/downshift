@@ -1,6 +1,6 @@
-import {Action, State} from '../../utils-ts'
+import {type Action} from '../utils-ts'
 
-export interface UseTagGroupState<Item> extends State {
+export interface UseTagGroupState<Item> {
   activeIndex: number
   items: Item[]
 }
@@ -44,7 +44,10 @@ export interface UseTagGroupProps<Item> extends Partial<
   removeElementDescription?: string
   stateReducer?(
     state: UseTagGroupState<Item>,
-    actionAndChanges: Action<UseTagGroupStateChangeTypes> & {
+    actionAndChanges: Action<
+      UseTagGroupState<Item>,
+      UseTagGroupReducerAction<Item>
+    > & {
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>

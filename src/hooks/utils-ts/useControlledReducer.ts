@@ -1,5 +1,6 @@
-import {getState, type Action, type State, type Props} from '../../utils-ts'
+import {getState} from '../../utils-ts'
 import {useEnhancedReducer} from './useEnhancedReducer'
+import {type Props, type Reducer} from './index.types'
 
 /**
  * Wraps the useEnhancedReducer and applies the controlled prop values before
@@ -12,17 +13,15 @@ import {useEnhancedReducer} from './useEnhancedReducer'
  * @returns {Array} An array with the state and an action dispatcher.
  */
 export function useControlledReducer<
-  S extends State,
-  P extends Partial<S> & Props<S, T>,
-  T,
-  A extends Action<T>,
+  S extends object,
+  A extends {type: string},
 >(
-  reducer: (state: S, props: P, action: A) => S,
-  props: P,
-  createInitialState: (props: P) => S,
-  isStateEqual: (prevState: S, newState: S) => boolean,
+  reducer: Reducer<S, A>,
+  props: Props<S, A>,
+  createInitialState: (props: Props<S, A>) => S,
+  isStateEqual: (prev: S, next: S) => boolean,
 ): [S, (action: A) => void] {
-  const [state, dispatch] = useEnhancedReducer(
+  const [state, dispatch] = useEnhancedReducer<S, A>(
     reducer,
     props,
     createInitialState,

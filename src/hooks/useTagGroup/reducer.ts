@@ -1,15 +1,14 @@
-import {
-  UseTagGroupProps,
-  UseTagGroupReducerAction,
-  UseTagGroupState,
-} from './index.types'
+import {type Action} from '../utils-ts'
+import {UseTagGroupReducerAction, UseTagGroupState} from './index.types'
 import * as stateChangeTypes from './stateChangeTypes'
 
 export function useTagGroupReducer<Item>(
   state: UseTagGroupState<Item>,
-  _props: UseTagGroupProps<Item>,
-  action: UseTagGroupReducerAction<Item>,
-): UseTagGroupState<Item> {
+  action: Action<
+    UseTagGroupState<Item>,
+    UseTagGroupReducerAction<Item>
+  >,
+): Partial<UseTagGroupState<Item>> {
   const {type} = action
 
   let changes
@@ -46,8 +45,8 @@ export function useTagGroupReducer<Item>(
         newItems.length === 0
           ? -1
           : newItems.length === state.activeIndex
-          ? state.activeIndex - 1
-          : state.activeIndex
+            ? state.activeIndex - 1
+            : state.activeIndex
       changes = {
         items: [
           ...state.items.slice(0, state.activeIndex),
@@ -67,8 +66,8 @@ export function useTagGroupReducer<Item>(
           newItems.length === 0
             ? -1
             : newItems.length === action.index
-            ? action.index - 1
-            : action.index
+              ? action.index - 1
+              : action.index
         changes = {
           items: newItems,
           activeIndex: newActiveIndex,

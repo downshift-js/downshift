@@ -1,17 +1,15 @@
-import {UseTagGroupReducerAction} from '../index.types'
+import {type Action} from '../../utils-ts'
+import {
+  UseTagGroupReducerAction,
+  UseTagGroupState,
+  UseTagGroupStateChangeTypes,
+} from '../index.types'
 import {useTagGroupReducer} from '../reducer'
 
 test('reducer throws error if called without proper action type', () => {
   expect(() => {
-    useTagGroupReducer(
-      {activeIndex: 0, items: []},
-      {
-        stateReducer(state) {
-          return state
-        },
-        removeElementDescription: 'bla bla',
-      },
-      {type: 'super-bogus'} as unknown as UseTagGroupReducerAction<unknown>,
-    )
+    useTagGroupReducer({activeIndex: 0, items: []}, {
+      type: 'super-bogus' as UseTagGroupStateChangeTypes,
+    } as Action<UseTagGroupState<never>, UseTagGroupReducerAction<never>>)
   }).toThrow('Invalid useTagGroup reducer action.')
 })
