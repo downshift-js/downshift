@@ -6,16 +6,12 @@ import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
-  handleRefs,
-  callAllEventHandlers,
   cbToCb,
-  debounce,
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
   targetWithinDownshift,
   isPlainObject,
-  normalizeArrowKey,
   pickState,
   requiredProp,
   unwrapArray,
@@ -24,7 +20,17 @@ import {
   getHighlightedIndex,
   getNonDisabledIndex,
 } from './utils.legacy'
-import {generateId, scrollIntoView, setStatus, getState, noop} from './utils'
+import {
+  generateId,
+  scrollIntoView,
+  setStatus,
+  getState,
+  noop,
+  callAllEventHandlers,
+  handleRefs,
+  debounce,
+  normalizeArrowKey,
+} from './utils'
 
 class Downshift extends Component {
   static propTypes = {

@@ -1,11 +1,12 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {useLatestRef, validatePropTypes} from '../../utils'
 import {
+  useLatestRef,
+  validatePropTypes,
   callAllEventHandlers,
   handleRefs,
   debounce,
   normalizeArrowKey,
-} from '../../utils.legacy'
+} from '../../utils'
 import {
   isAcceptedCharacterKey,
   getInitialState,
@@ -21,8 +22,7 @@ import {
   getItemAndIndex,
   useA11yMessageStatus,
 } from '../utils'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
-import {useElementIds} from '../utils.dropdown/useElementIds'
+import {dropdownDefaultStateValues, useElementIds} from '../utils.dropdown'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {defaultProps, propTypes} from './utils'
@@ -118,7 +118,7 @@ function useSelect(userProps = {}) {
       props.isOpen,
       props.initialIsOpen,
       props.defaultIsOpen,
-      defaultStateValues.isOpen,
+      dropdownDefaultStateValues.isOpen,
     )
 
     if (focusOnOpen && toggleButtonRef.current) {
