@@ -1,12 +1,12 @@
 import {getNonDisabledIndex, getHighlightedIndex} from '../../utils.legacy'
-import {
-  getHighlightedIndexOnOpen,
-  getChangesOnSelection,
-  getDefaultHighlightedIndex,
-} from '../utils.legacy'
+import {getHighlightedIndexOnOpen} from '../utils.legacy'
 import {getDefaultValue} from '../utils'
 import commonReducer from '../reducer'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
+import {
+  dropdownDefaultStateValues,
+  getDefaultHighlightedIndex,
+  getChangesOnSelection,
+} from '../utils.dropdown'
 import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -18,8 +18,15 @@ export default function downshiftSelectReducer(state, action) {
   switch (type) {
     case stateChangeTypes.ItemClick:
       changes = {
-        isOpen: getDefaultValue(props.defaultIsOpen, defaultStateValues.isOpen),
-        highlightedIndex: getDefaultHighlightedIndex(props),
+        isOpen: getDefaultValue(
+          props.defaultIsOpen,
+          dropdownDefaultStateValues.isOpen,
+        ),
+        highlightedIndex: getDefaultHighlightedIndex(
+          props.items,
+          props.isItemDisabled,
+          props.defaultHighlightedIndex,
+        ),
         selectedItem: props.items[action.index],
       }
 
@@ -61,8 +68,8 @@ export default function downshiftSelectReducer(state, action) {
               props.isItemDisabled,
             )
           : altKey && state.selectedItem == null
-          ? -1
-          : getHighlightedIndexOnOpen(props, state, 1)
+            ? -1
+            : getHighlightedIndexOnOpen(props, state, 1)
         changes = {
           highlightedIndex,
           isOpen: true,
@@ -72,7 +79,14 @@ export default function downshiftSelectReducer(state, action) {
       break
     case stateChangeTypes.ToggleButtonKeyDownArrowUp:
       if (state.isOpen && altKey) {
-        changes = getChangesOnSelection(props, state.highlightedIndex, false)
+        changes = getChangesOnSelection(
+          props.items,
+          props.itemToString,
+          props.defaultIsOpen,
+          props.defaultHighlightedIndex,
+          state.highlightedIndex,
+          false,
+        )
       } else {
         const highlightedIndex = state.isOpen
           ? getHighlightedIndex(
@@ -92,7 +106,14 @@ export default function downshiftSelectReducer(state, action) {
     // only triggered when menu is open.
     case stateChangeTypes.ToggleButtonKeyDownEnter:
     case stateChangeTypes.ToggleButtonKeyDownSpaceButton:
-      changes = getChangesOnSelection(props, state.highlightedIndex, false)
+      changes = getChangesOnSelection(
+        props.items,
+        props.itemToString,
+        props.defaultIsOpen,
+        props.defaultHighlightedIndex,
+        state.highlightedIndex,
+        false,
+      )
 
       break
     case stateChangeTypes.ToggleButtonKeyDownHome:

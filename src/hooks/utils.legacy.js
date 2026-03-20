@@ -2,7 +2,7 @@ import * as React from 'react'
 import {isReactNative} from '../is.macro'
 import {validateControlledUnchanged, targetWithinDownshift} from '../utils.legacy'
 import {noop} from '../utils'
-import {useIsInitialMount, getDefaultValue, getInitialValue} from './utils'
+import {useIsInitialMount, getInitialValue} from './utils'
 import {dropdownDefaultStateValues} from './utils.dropdown'
 
 // istanbul ignore next
@@ -295,37 +295,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 /**
- * Handles selection on Enter / Alt + ArrowUp. Closes the menu and resets the highlighted index, unless there is a highlighted.
- * In that case, selects the item and resets to defaults for open state and highlighted idex.
- * @param {Object} props The useCombobox props.
- * @param {number} highlightedIndex The index from the state.
- * @param {boolean} inputValue Also return the input value for state.
- * @returns The changes for the state.
- */
-function getChangesOnSelection(props, highlightedIndex, inputValue = true) {
-  const shouldSelect = props.items?.length && highlightedIndex >= 0
-
-  return {
-    isOpen: false,
-    highlightedIndex: -1,
-    ...(shouldSelect && {
-      selectedItem: props.items[highlightedIndex],
-      isOpen: getDefaultValue(
-        props.defaultIsOpen,
-        dropdownDefaultStateValues.isOpen,
-      ),
-      highlightedIndex: getDefaultValue(
-        props.defaultHighlightedIndex,
-        dropdownDefaultStateValues.highlightedIndex,
-      ),
-      ...(inputValue && {
-        inputValue: props.itemToString(props.items[highlightedIndex]),
-      }),
-    }),
-  }
-}
-
-/**
  * Check if a state is equal for dropdowns, by comparing isOpen, inputValue, highlightedIndex and selected item.
  * Used by useSelect and useCombobox.
  *
@@ -340,27 +309,6 @@ function isDropdownsStateEqual(prevState, newState) {
     prevState.highlightedIndex === newState.highlightedIndex &&
     prevState.selectedItem === newState.selectedItem
   )
-}
-
-/**
- * Returns the new highlightedIndex based on the defaultHighlightedIndex prop, if it's not disabled.
- *
- * @param {Object} props Props from useCombobox or useSelect.
- * @returns {number} The highlighted index.
- */
-function getDefaultHighlightedIndex(props) {
-  const highlightedIndex = getDefaultValue(
-    props.defaultHighlightedIndex,
-    dropdownDefaultStateValues.highlightedIndex,
-  )
-  if (
-    highlightedIndex > -1 &&
-    props.isItemDisabled(props.items[highlightedIndex], highlightedIndex)
-  ) {
-    return -1
-  }
-
-  return highlightedIndex
 }
 
 /**
@@ -394,8 +342,6 @@ export {
   useMouseAndTouchTracker,
   getHighlightedIndexOnOpen,
   isAcceptedCharacterKey,
-  getChangesOnSelection,
   isDropdownsStateEqual,
-  getDefaultHighlightedIndex,
   getInitialState,
 }

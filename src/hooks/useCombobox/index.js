@@ -20,8 +20,7 @@ import {
   useIsInitialMount,
   useA11yMessageStatus,
 } from '../utils'
-import {defaultStateValues} from '../utils.dropdown/defaultStateValues'
-import {useElementIds} from '../utils.dropdown/useElementIds'
+import {dropdownDefaultStateValues, useElementIds} from '../utils.dropdown'
 import {
   getInitialState,
   defaultProps,
@@ -96,7 +95,7 @@ function useCombobox(userProps = {}) {
       props.isOpen,
       props.initialIsOpen,
       props.defaultIsOpen,
-      defaultStateValues.isOpen,
+      dropdownDefaultStateValues.isOpen,
     )
 
     if (focusOnOpen && inputRef.current) {
