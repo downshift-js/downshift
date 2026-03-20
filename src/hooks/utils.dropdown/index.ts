@@ -4,3 +4,4 @@ export {defaultStateValues as dropdownDefaultStateValues} from './defaultStateVa
 export {useElementIds} from './useElementIds'
 export {getDefaultHighlightedIndex} from './getDefaultHighlightedIndex'
 export {getChangesOnSelection} from './getChangesOnSelection'
+export {getHighlightedIndexOnOpen} from './getHighlightedIndexOnOpen'

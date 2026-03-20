@@ -51,53 +51,6 @@ function getInitialState(props) {
   }
 }
 
-function getHighlightedIndexOnOpen(props, state, offset) {
-  const {
-    items,
-    initialHighlightedIndex,
-    defaultHighlightedIndex,
-    isItemDisabled,
-    itemToKey,
-  } = props
-  const {selectedItem, highlightedIndex} = state
-
-  if (items.length === 0) {
-    return -1
-  }
-
-  // initialHighlightedIndex will give value to highlightedIndex on initial state only.
-  if (
-    initialHighlightedIndex !== undefined &&
-    highlightedIndex === initialHighlightedIndex &&
-    !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex)
-  ) {
-    return initialHighlightedIndex
-  }
-
-  if (
-    defaultHighlightedIndex !== undefined &&
-    !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex)
-  ) {
-    return defaultHighlightedIndex
-  }
-
-  if (selectedItem) {
-    return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
-  }
-
-  if (
-    offset < 0 &&
-    !isItemDisabled(items[items.length - 1], items.length - 1)
-  ) {
-    return items.length - 1
-  }
-
-  if (offset > 0 && !isItemDisabled(items[0], 0)) {
-    return 0
-  }
-
-  return -1
-}
 /**
  * Tracks mouse and touch events, such as mouseDown, touchMove and touchEnd.
  *
@@ -340,7 +293,6 @@ export {
   useScrollIntoView,
   useGetterPropsCalledChecker,
   useMouseAndTouchTracker,
-  getHighlightedIndexOnOpen,
   isAcceptedCharacterKey,
   isDropdownsStateEqual,
   getInitialState,

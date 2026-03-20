@@ -1,11 +1,11 @@
 import {getNonDisabledIndex, getHighlightedIndex} from '../../utils.legacy'
-import {getHighlightedIndexOnOpen} from '../utils.legacy'
 import {getDefaultValue} from '../utils'
 import commonReducer from '../reducer'
 import {
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
   getChangesOnSelection,
+  getHighlightedIndexOnOpen,
 } from '../utils.dropdown'
 import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
@@ -69,7 +69,16 @@ export default function downshiftSelectReducer(state, action) {
             )
           : altKey && state.selectedItem == null
             ? -1
-            : getHighlightedIndexOnOpen(props, state, 1)
+            : getHighlightedIndexOnOpen(
+                props.items,
+                props.initialHighlightedIndex,
+                props.defaultHighlightedIndex,
+                props.isItemDisabled,
+                props.itemToKey,
+                state.selectedItem,
+                state.highlightedIndex,
+                1,
+              )
         changes = {
           highlightedIndex,
           isOpen: true,
@@ -95,7 +104,16 @@ export default function downshiftSelectReducer(state, action) {
               props.items,
               props.isItemDisabled,
             )
-          : getHighlightedIndexOnOpen(props, state, -1)
+          : getHighlightedIndexOnOpen(
+              props.items,
+              props.initialHighlightedIndex,
+              props.defaultHighlightedIndex,
+              props.isItemDisabled,
+              props.itemToKey,
+              state.selectedItem,
+              state.highlightedIndex,
+              -1,
+            )
         changes = {
           highlightedIndex,
           isOpen: true,

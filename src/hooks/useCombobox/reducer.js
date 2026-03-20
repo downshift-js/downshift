@@ -1,4 +1,3 @@
-import {getHighlightedIndexOnOpen} from '../utils.legacy'
 import {getDefaultValue} from '../utils'
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils.legacy'
 import commonReducer from '../reducer'
@@ -6,6 +5,7 @@ import {
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
   getChangesOnSelection,
+  getHighlightedIndexOnOpen,
 } from '../utils.dropdown'
 import * as stateChangeTypes from './stateChangeTypes'
 
@@ -47,7 +47,16 @@ export default function downshiftUseComboboxReducer(state, action) {
           highlightedIndex:
             altKey && state.selectedItem == null
               ? -1
-              : getHighlightedIndexOnOpen(props, state, 1),
+              : getHighlightedIndexOnOpen(
+                  props.items,
+                  props.initialHighlightedIndex,
+                  props.defaultHighlightedIndex,
+                  props.isItemDisabled,
+                  props.itemToKey,
+                  state.selectedItem,
+                  state.highlightedIndex,
+                  1,
+                ),
           isOpen: props.items.length >= 0,
         }
       }
@@ -76,7 +85,16 @@ export default function downshiftUseComboboxReducer(state, action) {
         }
       } else {
         changes = {
-          highlightedIndex: getHighlightedIndexOnOpen(props, state, -1),
+          highlightedIndex: getHighlightedIndexOnOpen(
+            props.items,
+            props.initialHighlightedIndex,
+            props.defaultHighlightedIndex,
+            props.isItemDisabled,
+            props.itemToKey,
+            state.selectedItem,
+            state.highlightedIndex,
+            -1,
+          ),
           isOpen: props.items.length >= 0,
         }
       }
@@ -172,7 +190,16 @@ export default function downshiftUseComboboxReducer(state, action) {
         isOpen: !state.isOpen,
         highlightedIndex: state.isOpen
           ? -1
-          : getHighlightedIndexOnOpen(props, state, 0),
+          : getHighlightedIndexOnOpen(
+              props.items,
+              props.initialHighlightedIndex,
+              props.defaultHighlightedIndex,
+              props.isItemDisabled,
+              props.itemToKey,
+              state.selectedItem,
+              state.highlightedIndex,
+              0,
+            ),
       }
       break
     case stateChangeTypes.FunctionSelectItem:

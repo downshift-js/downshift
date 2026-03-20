@@ -1,8 +1,8 @@
-import {getHighlightedIndexOnOpen} from './utils.legacy'
 import {getDefaultValue} from './utils'
 import {
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
+  getHighlightedIndexOnOpen,
 } from './utils.dropdown'
 
 export default function downshiftCommonReducer(
@@ -33,14 +33,32 @@ export default function downshiftCommonReducer(
         isOpen: !state.isOpen,
         highlightedIndex: state.isOpen
           ? -1
-          : getHighlightedIndexOnOpen(props, state, 0),
+          : getHighlightedIndexOnOpen(
+              props.items,
+              props.initialHighlightedIndex,
+              props.defaultHighlightedIndex,
+              props.isItemDisabled,
+              props.itemToKey,
+              state.selectedItem,
+              state.highlightedIndex,
+              0,
+            ),
       }
 
       break
     case stateChangeTypes.FunctionOpenMenu:
       changes = {
         isOpen: true,
-        highlightedIndex: getHighlightedIndexOnOpen(props, state, 0),
+        highlightedIndex: getHighlightedIndexOnOpen(
+          props.items,
+          props.initialHighlightedIndex,
+          props.defaultHighlightedIndex,
+          props.isItemDisabled,
+          props.itemToKey,
+          state.selectedItem,
+          state.highlightedIndex,
+          0,
+        ),
       }
 
       break
