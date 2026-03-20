@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 /**
  * Returns the highlighted index when the menu is opened.
  * Takes into account the initialHighlightedIndex, defaultHighlightedIndex,
@@ -13,7 +14,6 @@
  * @param offset The direction of navigation: positive opens downward, negative opens upward.
  * @returns The new highlighted index.
  */
-// eslint-disable-next-line max-params
 export function getHighlightedIndexOnOpen<Item>(
   items: Item[],
   initialHighlightedIndex: number | undefined,

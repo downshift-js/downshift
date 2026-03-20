@@ -1,6 +1,9 @@
 import * as React from 'react'
 import {isReactNative} from '../is.macro'
-import {validateControlledUnchanged, targetWithinDownshift} from '../utils.legacy'
+import {
+  validateControlledUnchanged,
+  targetWithinDownshift,
+} from '../utils.legacy'
 import {noop} from '../utils'
 import {useIsInitialMount, getInitialValue} from './utils'
 import {dropdownDefaultStateValues} from './utils.dropdown'
