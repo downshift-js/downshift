@@ -1,9 +1,9 @@
-import {getDefaultValue} from './utils'
 import {
+  getDefaultValue,
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
   getHighlightedIndexOnOpen,
-} from './utils.dropdown'
+} from './utils'
 
 export default function downshiftCommonReducer(
   state,

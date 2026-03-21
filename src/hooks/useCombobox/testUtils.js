@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {render, screen, renderHook} from '@testing-library/react'
-import {dropdownDefaultProps} from '../utils.dropdown'
+import {dropdownDefaultProps} from '../utils'
 import {dataTestIds, items, user} from '../testUtils'
 import useCombobox from '.'
 

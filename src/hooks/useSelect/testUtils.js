@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {render, act, renderHook} from '@testing-library/react'
-import {dropdownDefaultProps} from '../utils.dropdown'
+import {dropdownDefaultProps} from '../utils'
 import {
   clickOnItemAtIndex,
   clickOnToggleButton,

@@ -1,8 +1,11 @@
 import PropTypes from 'prop-types'
 
 import {noop} from '../../utils'
-import {getInitialValue} from '../utils'
-import {dropdownDefaultProps, dropdownPropTypes} from '../utils.dropdown'
+import {
+  dropdownDefaultProps,
+  dropdownPropTypes,
+  getInitialValue,
+} from '../utils'
 
 export const defaultStateValues = {
   activeIndex: -1,

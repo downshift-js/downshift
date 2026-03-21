@@ -5,8 +5,11 @@ import {
   targetWithinDownshift,
 } from '../utils.legacy'
 import {noop} from '../utils'
-import {useIsInitialMount, getInitialValue} from './utils'
-import {dropdownDefaultStateValues} from './utils.dropdown'
+import {
+  useIsInitialMount,
+  getInitialValue,
+  dropdownDefaultStateValues,
+} from './utils'
 
 // istanbul ignore next
 const useIsomorphicLayoutEffect =

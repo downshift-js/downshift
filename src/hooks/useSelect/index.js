@@ -21,8 +21,9 @@ import {
   getInitialValue,
   getItemAndIndex,
   useA11yMessageStatus,
+  dropdownDefaultStateValues,
+  useElementIds,
 } from '../utils'
-import {dropdownDefaultStateValues, useElementIds} from '../utils.dropdown'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {defaultProps, propTypes} from './utils'

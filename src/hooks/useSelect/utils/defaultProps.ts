@@ -1,4 +1,4 @@
-import {dropdownDefaultProps} from '../../utils.dropdown'
+import {dropdownDefaultProps} from '../../utils'
 
 export const defaultProps = {
   ...dropdownDefaultProps,

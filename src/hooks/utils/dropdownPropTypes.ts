@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {commonPropTypes} from '../utils'
 
 // Shared between useSelect, useCombobox, Downshift.
-export const propTypes = {
+export const dropdownPropTypes = {
   ...commonPropTypes,
   getA11yStatusMessage: PropTypes.func,
   highlightedIndex: PropTypes.number,

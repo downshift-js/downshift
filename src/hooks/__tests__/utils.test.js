@@ -1,7 +1,6 @@
 import {renderHook} from '@testing-library/react'
 import {useMouseAndTouchTracker, isDropdownsStateEqual} from '../utils.legacy'
-import {getItemAndIndex} from '../utils'
-import {dropdownDefaultProps} from '../utils.dropdown'
+import {getItemAndIndex, dropdownDefaultProps} from '../utils'
 
 describe('utils', () => {
   describe('itemToString', () => {

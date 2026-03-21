@@ -19,8 +19,9 @@ import {
   getInitialValue,
   useIsInitialMount,
   useA11yMessageStatus,
+  dropdownDefaultStateValues,
+  useElementIds,
 } from '../utils'
-import {dropdownDefaultStateValues, useElementIds} from '../utils.dropdown'
 import {
   getInitialState,
   defaultProps,

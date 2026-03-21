@@ -1,12 +1,12 @@
 import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
-import {getDefaultValue} from '../utils'
-import commonReducer from '../reducer'
 import {
+  getDefaultValue,
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
   getChangesOnSelection,
   getHighlightedIndexOnOpen,
-} from '../utils.dropdown'
+} from '../utils'
+import commonReducer from '../reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 
 /* eslint-disable complexity */
