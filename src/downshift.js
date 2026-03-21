@@ -15,7 +15,6 @@ import {
   pickState,
   requiredProp,
   unwrapArray,
-  isControlledProp,
   validateControlledUnchanged,
 } from './utils.legacy'
 import {
@@ -379,7 +378,7 @@ class Downshift extends Component {
           }
           nextFullState[key] = newStateToSet[key]
           // if it's coming from props, then we don't care to set it internally
-          if (!isControlledProp(this.props, key)) {
+          if (this.props[key] === undefined) {
             nextState[key] = newStateToSet[key]
           }
         })
@@ -1181,7 +1180,7 @@ class Downshift extends Component {
     }
 
     if (
-      isControlledProp(this.props, 'selectedItem') &&
+      this.props.selectedItem !== undefined &&
       this.props.selectedItemChanged(
         prevProps.selectedItem,
         this.props.selectedItem,

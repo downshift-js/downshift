@@ -1,6 +1,5 @@
 import {useRef, useEffect} from 'react'
 import PropTypes from 'prop-types'
-import {isControlledProp} from '../../utils.legacy'
 import {getState} from '../../utils'
 import {getInitialState as getInitialStateCommon} from '../utils.legacy'
 import {
@@ -72,7 +71,7 @@ export function useControlledReducer(
   const isInitialMount = useIsInitialMount()
 
   useEffect(() => {
-    if (!isControlledProp(props, 'selectedItem')) {
+    if (props.selectedItem === undefined) {
       return
     }
 

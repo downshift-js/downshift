@@ -135,19 +135,6 @@ function pickState(state = {}) {
 }
 
 /**
- * This determines whether a prop is a "controlled prop" meaning it is
- * state which is controlled by the outside of this component rather
- * than within this component.
- *
- * @param {Object} props The props that may contain controlled values.
- * @param {String} key the key to check
- * @return {Boolean} whether it is a controlled controlled prop
- */
-function isControlledProp(props, key) {
-  return props[key] !== undefined
-}
-
-/**
  * Simple check if the value passed is object literal
  * @param {*} obj any things
  * @return {Boolean} whether it's object literal
@@ -227,6 +214,5 @@ export {
   pickState,
   isPlainObject,
   targetWithinDownshift,
-  isControlledProp,
   validateControlledUnchanged,
 }
