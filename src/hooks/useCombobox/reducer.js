@@ -1,5 +1,5 @@
+import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
 import {getDefaultValue} from '../utils'
-import {getHighlightedIndex, getNonDisabledIndex} from '../../utils.legacy'
 import commonReducer from '../reducer'
 import {
   dropdownDefaultStateValues,

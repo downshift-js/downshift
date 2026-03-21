@@ -1,4 +1,4 @@
-import {getNonDisabledIndex, getHighlightedIndex} from '../../utils.legacy'
+import {getHighlightedIndex, getNonDisabledIndex} from '../../utils'
 import {getDefaultValue} from '../utils'
 import commonReducer from '../reducer'
 import {

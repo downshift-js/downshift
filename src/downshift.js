@@ -17,8 +17,6 @@ import {
   unwrapArray,
   isControlledProp,
   validateControlledUnchanged,
-  getHighlightedIndex,
-  getNonDisabledIndex,
 } from './utils.legacy'
 import {
   generateId,
@@ -30,6 +28,8 @@ import {
   handleRefs,
   debounce,
   normalizeArrowKey,
+  getHighlightedIndex,
+  getNonDisabledIndex,
 } from './utils'
 
 class Downshift extends Component {

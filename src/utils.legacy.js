@@ -1,5 +1,5 @@
 import {isPreact} from './is.macro'
-import { noop } from './utils'
+import {noop} from './utils'
 
 /**
  * Accepts a parameter and returns it if it's a function
@@ -157,102 +157,6 @@ function isPlainObject(obj) {
 }
 
 /**
- * Returns the next non-disabled highlightedIndex value.
- *
- * @param {number} start The current highlightedIndex.
- * @param {number} offset The offset from the current highlightedIndex to start searching.
- * @param {unknown[]} items The items array.
- * @param {(item: unknown, index: number) => boolean} isItemDisabled Function that tells if an item is disabled or not.
- * @param {boolean?} circular If the search reaches the end, if it can search again starting from the other end.
- * @returns {number} The next highlightedIndex.
- */
-function getHighlightedIndex(
-  start,
-  offset,
-  items,
-  isItemDisabled,
-  circular = false,
-) {
-  const count = items.length
-  if (count === 0) {
-    return -1
-  }
-
-  const itemsLastIndex = count - 1
-
-  if (typeof start !== 'number' || start < 0 || start > itemsLastIndex) {
-    start = offset > 0 ? -1 : itemsLastIndex + 1
-  }
-
-  let current = start + offset
-
-  if (current < 0) {
-    current = circular ? itemsLastIndex : 0
-  } else if (current > itemsLastIndex) {
-    current = circular ? 0 : itemsLastIndex
-  }
-
-  const highlightedIndex = getNonDisabledIndex(
-    current,
-    offset < 0,
-    items,
-    isItemDisabled,
-    circular,
-  )
-
-  if (highlightedIndex === -1) {
-    return start >= count ? -1 : start
-  }
-
-  return highlightedIndex
-}
-
-/**
- * Returns the next non-disabled highlightedIndex value.
- *
- * @param {number} start The current highlightedIndex.
- * @param {boolean} backwards If true, it will search backwards from the start.
- * @param {unknown[]} items The items array.
- * @param {(item: unknown, index: number) => boolean} isItemDisabled Function that tells if an item is disabled or not.
- * @param {boolean} circular If the search reaches the end, if it can search again starting from the other end.
- * @returns {number} The next non-disabled index.
- */
-function getNonDisabledIndex(
-  start,
-  backwards,
-  items,
-  isItemDisabled,
-  circular = false,
-) {
-  const count = items.length
-
-  if (backwards) {
-    for (let index = start; index >= 0; index--) {
-      if (!isItemDisabled(items[index], index)) {
-        return index
-      }
-    }
-  } else {
-    for (let index = start; index < count; index++) {
-      if (!isItemDisabled(items[index], index)) {
-        return index
-      }
-    }
-  }
-
-  if (circular) {
-    return getNonDisabledIndex(
-      backwards ? count - 1 : 0,
-      backwards,
-      items,
-      isItemDisabled,
-    )
-  }
-
-  return -1
-}
-
-/**
  * Checks if event target is within the downshift elements.
  *
  * @param {EventTarget} target Target to check.
@@ -325,6 +229,4 @@ export {
   targetWithinDownshift,
   isControlledProp,
   validateControlledUnchanged,
-  getHighlightedIndex,
-  getNonDisabledIndex,
 }
