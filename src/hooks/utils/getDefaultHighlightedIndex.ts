@@ -1,5 +1,5 @@
 import {getDefaultValue} from '../utils'
-import {dropdownDefaultStateValues} from '.'
+import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 
 /**
  * Returns the new highlightedIndex based on the defaultHighlightedIndex prop, if it's not disabled.
