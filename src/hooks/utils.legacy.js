@@ -5,11 +5,7 @@ import {
   targetWithinDownshift,
 } from '../utils.legacy'
 import {noop} from '../utils'
-import {
-  useIsInitialMount,
-  getInitialValue,
-  dropdownDefaultStateValues,
-} from './utils'
+import {useIsInitialMount} from './utils'
 
 // istanbul ignore next
 const useIsomorphicLayoutEffect =
@@ -21,40 +17,6 @@ const useIsomorphicLayoutEffect =
 
 function isAcceptedCharacterKey(key) {
   return /^\S{1}$/.test(key)
-}
-
-function getInitialState(props) {
-  const selectedItem = getInitialValue(
-    props.selectedItem,
-    props.initialSelectedItem,
-    props.defaultSelectedItem,
-    dropdownDefaultStateValues.selectedItem,
-  )
-  const isOpen = getInitialValue(
-    props.isOpen,
-    props.initialIsOpen,
-    props.defaultIsOpen,
-    dropdownDefaultStateValues.isOpen,
-  )
-  const highlightedIndex = getInitialHighlightedIndex(props)
-  const inputValue = getInitialValue(
-    props.inputValue,
-    props.initialInputValue,
-    props.defaultInputValue,
-    dropdownDefaultStateValues.inputValue,
-  )
-
-  return {
-    highlightedIndex:
-      highlightedIndex < 0 && selectedItem && isOpen
-        ? props.items.findIndex(
-            item => props.itemToKey(item) === props.itemToKey(selectedItem),
-          )
-        : highlightedIndex,
-    isOpen,
-    selectedItem,
-    inputValue,
-  }
 }
 
 /**
@@ -270,30 +232,6 @@ function isDropdownsStateEqual(prevState, newState) {
   )
 }
 
-/**
- * Returns the new highlightedIndex based on the initialHighlightedIndex prop, if not disabled.
- *
- * @param {Object} props Props from useCombobox or useSelect.
- * @returns {number} The highlighted index.
- */
-function getInitialHighlightedIndex(props) {
-  const highlightedIndex = getInitialValue(
-    props.highlightedIndex,
-    props.initialHighlightedIndex,
-    props.defaultHighlightedIndex,
-    dropdownDefaultStateValues.highlightedIndex,
-  )
-
-  if (
-    highlightedIndex > -1 &&
-    props.isItemDisabled(props.items[highlightedIndex], highlightedIndex)
-  ) {
-    return -1
-  }
-
-  return highlightedIndex
-}
-
 export {
   useControlPropsValidator,
   useScrollIntoView,
@@ -301,5 +239,4 @@ export {
   useMouseAndTouchTracker,
   isAcceptedCharacterKey,
   isDropdownsStateEqual,
-  getInitialState,
 }
