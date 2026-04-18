@@ -20,6 +20,7 @@ import {
   GetTagRemovePropsReturnValue,
   GetTagPropsReturnValue,
   GetTagGroupPropsReturnValue,
+  UseTagGroupMergedProps,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
 import {
@@ -44,7 +45,8 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
-    UseTagGroupReducerAction<Item>
+    UseTagGroupReducerAction<Item>,
+    UseTagGroupMergedProps<Item>
   >(useTagGroupReducer, props, getInitialState, isStateEqual)
 
   const {activeIndex, items} = state

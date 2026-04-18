@@ -10,11 +10,11 @@ import {getNonDisabledIndex} from './getNonDisabledIndex'
  * @param circular If the search reaches the end, if it can search again starting from the other end.
  * @returns The next highlightedIndex.
  */
-export function getHighlightedIndex(
+export function getHighlightedIndex<Item>(
   start: number,
   offset: number,
-  items: unknown[],
-  isItemDisabled: (item: unknown, index: number) => boolean,
+  items: Item[],
+  isItemDisabled: (item: Item, index: number) => boolean,
   circular = false,
 ) {
   const count = items.length

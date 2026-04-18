@@ -1,10 +1,10 @@
 import {getDefaultValue} from '../utils/getDefaultValue'
 import {dropdownDefaultStateValues} from '.'
 
-type Changes = {
+type Changes<Item> = {
   isOpen: boolean
   highlightedIndex: number
-  selectedItem?: unknown
+  selectedItem?: Item
   inputValue?: string
 }
 
@@ -24,7 +24,7 @@ export function getChangesOnSelection<Item>(
   defaultHighlightedIndex: number | undefined,
   highlightedIndex: number,
   inputValue?: boolean,
-): Changes {
+): Changes<Item> {
   const shouldSelect = items.length && highlightedIndex >= 0
 
   return {

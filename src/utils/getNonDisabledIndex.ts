@@ -8,24 +8,24 @@
  * @param circular If the search reaches the end, if it can search again starting from the other end.
  * @returns The next non-disabled index.
  */
-export function getNonDisabledIndex(
+export function getNonDisabledIndex<Item>(
   start: number,
   backwards: boolean,
-  items: unknown[],
-  isItemDisabled: (item: unknown, index: number) => boolean,
+  items: Item[],
+  isItemDisabled: (item: Item, index: number) => boolean,
   circular = false,
 ) {
   const count = items.length
 
   if (backwards) {
     for (let index = start; index >= 0; index--) {
-      if (!isItemDisabled(items[index], index)) {
+      if (!isItemDisabled(items[index] as Item, index)) {
         return index
       }
     }
   } else {
     for (let index = start; index < count; index++) {
-      if (!isItemDisabled(items[index], index)) {
+      if (!isItemDisabled(items[index] as Item, index)) {
         return index
       }
     }

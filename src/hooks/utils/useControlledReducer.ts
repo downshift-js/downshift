@@ -5,23 +5,23 @@ import {type Props, type Reducer} from './index.types'
 /**
  * Wraps the useEnhancedReducer and applies the controlled prop values before
  * returning the new state.
- *
- * @param {Function} reducer Reducer function from downshift.
- * @param {Object} props The hook props, also passed to createInitialState.
- * @param {Function} createInitialState Function that returns the initial state.
- * @param {Function} isStateEqual Function that checks if a previous state is equal to the next.
- * @returns {Array} An array with the state and an action dispatcher.
+ * @param reducer Reducer function from downshift.
+ * @param props The hook props, also passed to createInitialState.
+ * @param createInitialState Function that returns the initial state.
+ * @param isStateEqual Function that checks if a previous state is equal to the next.
+ * @returns An array with the state and an action dispatcher.
  */
 export function useControlledReducer<
   S extends object,
   A extends {type: string},
+  P extends Props<S, A>,
 >(
   reducer: Reducer<S, A>,
-  props: Props<S, A>,
-  createInitialState: (props: Props<S, A>) => S,
+  props: P,
+  createInitialState: (props: P) => S,
   isStateEqual: (prev: S, next: S) => boolean,
 ): [S, (action: A) => void] {
-  const [state, dispatch] = useEnhancedReducer<S, A>(
+  const [state, dispatch] = useEnhancedReducer<S, A, P>(
     reducer,
     props,
     createInitialState,

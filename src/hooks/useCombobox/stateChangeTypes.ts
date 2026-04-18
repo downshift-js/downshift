@@ -1,5 +1,5 @@
 import productionEnum from '../../productionEnum.macro'
-import {UseComboboxStateChangeTypes} from '.'
+import {UseComboboxStateChangeTypes} from './index.types'
 
 export const InputKeyDownArrowDown = productionEnum(
   '__input_keydown_arrow_down__',

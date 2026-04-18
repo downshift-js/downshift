@@ -1,13 +1,15 @@
-import {type Action} from '../utils'
-import {UseTagGroupReducerAction, UseTagGroupState} from './index.types'
+import {
+  UseTagGroupMergedProps,
+  UseTagGroupReducerAction,
+  UseTagGroupState,
+} from './index.types'
 import * as stateChangeTypes from './stateChangeTypes'
 
 export function useTagGroupReducer<Item>(
   state: UseTagGroupState<Item>,
-  action: Action<
-    UseTagGroupState<Item>,
-    UseTagGroupReducerAction<Item>
-  >,
+  action: UseTagGroupReducerAction<Item> & {
+    props: UseTagGroupMergedProps<Item>
+  },
 ): Partial<UseTagGroupState<Item>> {
   const {type} = action
 

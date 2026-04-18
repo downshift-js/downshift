@@ -8,11 +8,21 @@ import {
 } from '../utils'
 import commonReducer from '../reducer'
 import * as stateChangeTypes from './stateChangeTypes'
+import {
+  UseComboboxMergedProps,
+  UseComboboxReducerAction,
+  UseComboboxState,
+} from './index.types'
 
 /* eslint-disable complexity */
-export default function downshiftUseComboboxReducer(state, action) {
-  const {type, props, altKey} = action
-  let changes
+export default function downshiftUseComboboxReducer<Item>(
+  state: UseComboboxState<Item>,
+  action: UseComboboxReducerAction<Item> & {
+    props: UseComboboxMergedProps<Item>
+  },
+): UseComboboxState<Item> {
+  const {type, props} = action
+  let changes: Partial<UseComboboxState<Item>>
 
   switch (type) {
     case stateChangeTypes.ItemClick:
@@ -27,7 +37,7 @@ export default function downshiftUseComboboxReducer(state, action) {
           props.defaultHighlightedIndex,
         ),
         selectedItem: props.items[action.index],
-        inputValue: props.itemToString(props.items[action.index]),
+        inputValue: props.itemToString(props.items[action.index] as Item),
       }
 
       break
@@ -45,7 +55,7 @@ export default function downshiftUseComboboxReducer(state, action) {
       } else {
         changes = {
           highlightedIndex:
-            altKey && state.selectedItem == null
+            action.altKey && state.selectedItem == null
               ? -1
               : getHighlightedIndexOnOpen(
                   props.items,
@@ -63,7 +73,7 @@ export default function downshiftUseComboboxReducer(state, action) {
       break
     case stateChangeTypes.InputKeyDownArrowUp:
       if (state.isOpen) {
-        if (altKey) {
+        if (action.altKey) {
           changes = getChangesOnSelection(
             props.items,
             props.itemToString,
@@ -167,10 +177,12 @@ export default function downshiftUseComboboxReducer(state, action) {
         isOpen: false,
         highlightedIndex: -1,
         ...(state.highlightedIndex >= 0 &&
-          props.items?.length &&
+          props.items.length &&
           action.selectItem && {
             selectedItem: props.items[state.highlightedIndex],
-            inputValue: props.itemToString(props.items[state.highlightedIndex]),
+            inputValue: props.itemToString(
+              props.items[state.highlightedIndex] as Item,
+            ),
           }),
       }
       break

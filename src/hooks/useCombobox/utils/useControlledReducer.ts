@@ -1,17 +1,12 @@
 import {useRef, useEffect} from 'react'
 import {getState} from '../../../utils'
-import {
-  useIsInitialMount,
-  useEnhancedReducer,
-  Reducer,
-  Props,
-} from '../../utils'
+import {useIsInitialMount, useEnhancedReducer, Reducer} from '../../utils'
 import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
 import {
   UseComboboxMergedProps,
   UseComboboxState,
   UseComboboxStateChange,
-} from '..'
+} from '../index.types'
 
 /**
  * The useCombobox version of useControlledReducer, which also
@@ -41,10 +36,7 @@ export function useControlledReducer<Item>(
   const [state, dispatch] = useEnhancedReducer(
     reducer,
     props,
-    // ToDo: improve this cast
-    createInitialState as (
-      props: Props<UseComboboxState<Item>, UseComboboxStateChange<Item>>,
-    ) => UseComboboxState<Item>,
+    createInitialState,
     isStateEqual,
   )
   const isInitialMount = useIsInitialMount()

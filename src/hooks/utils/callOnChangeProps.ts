@@ -2,12 +2,11 @@ import {capitalizeString} from './capitalizeString'
 
 import {Action, Props} from './index.types'
 
-export function callOnChangeProps<S extends object, A extends {type: string}>(
-  action: Action<S, A>,
-  props: Props<S, A>,
-  state: S,
-  newState: S,
-) {
+export function callOnChangeProps<
+  S extends object,
+  A extends {type: string},
+  P extends Props<S, A>,
+>(action: Action<S, A, P>, props: P, state: S, newState: S) {
   const {type} = action
   const changes: Partial<S> = {}
   const keys = Object.keys(state) as (keyof S)[]
@@ -20,18 +19,19 @@ export function callOnChangeProps<S extends object, A extends {type: string}>(
     }
   }
 
-  if (typeof props.onStateChange === 'function' && Object.keys(changes).length) {
+  if (
+    typeof props.onStateChange === 'function' &&
+    Object.keys(changes).length
+  ) {
     props.onStateChange({type, ...changes})
   }
 }
 
-function invokeOnChangeHandler<S extends object, A extends {type: string}>(
-  key: keyof S,
-  action: Action<S, A>,
-  props: Props<S, A>,
-  state: S,
-  newState: S,
-) {
+function invokeOnChangeHandler<
+  S extends object,
+  A extends {type: string},
+  P extends Props<S, A>,
+>(key: keyof S, action: Action<S, A, P>, props: P, state: S, newState: S) {
   if (newState[key] === state[key]) {
     return
   }

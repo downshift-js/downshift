@@ -1,6 +1,6 @@
 import React from "react"
 
-import {Environment} from '../dist/hooks/useTagGroup/index.types'
+import {Environment} from '../dist/hooks/index.types'
 
 export {Environment}
 

@@ -15,16 +15,20 @@ import {type Action, type Props, type Reducer} from './index.types'
  * @param isStateEqual Function that checks if a previous state is equal to the next.
  * @returns An array with the state and an action dispatcher.
  */
-export function useEnhancedReducer<S extends object, A extends {type: string}>(
+export function useEnhancedReducer<
+  S extends object,
+  A extends {type: string},
+  P extends Props<S, A>,
+>(
   reducer: Reducer<S, A>,
-  props: Props<S, A>,
-  createInitialState: (props: Props<S, A>) => S,
+  props: P,
+  createInitialState: (props: P) => S,
   isStateEqual: (prev: S, next: S) => boolean,
 ): [S, (action: A) => void] {
   const prevStateRef = React.useRef<S>({} as S)
-  const actionRef = React.useRef<Action<S, A>>()
+  const actionRef = React.useRef<Action<S, A, P>>()
   const enhancedReducer = React.useCallback(
-    (state: S, action: Action<S, A>): S => {
+    (state: S, action: Action<S, A, P>): S => {
       actionRef.current = action
       state = getState(state, action.props)
 

@@ -1,15 +1,8 @@
-import {type Action} from '../utils'
+import {Environment} from '../index.types'
 
 export interface UseTagGroupState<Item> {
   activeIndex: number
   items: Item[]
-}
-
-export interface Environment {
-  addEventListener: typeof window.addEventListener
-  removeEventListener: typeof window.removeEventListener
-  document: Document
-  Node: typeof window.Node
 }
 
 export interface UseTagGroupStateChange<Item> extends Partial<
@@ -44,20 +37,26 @@ export interface UseTagGroupProps<Item> extends Partial<
   removeElementDescription?: string
   stateReducer?(
     state: UseTagGroupState<Item>,
-    actionAndChanges: Action<
-      UseTagGroupState<Item>,
-      UseTagGroupReducerAction<Item>
-    > & {
+    actionAndChanges: UseTagGroupReducerAction<Item> & {
+      props: UseTagGroupMergedProps<Item>
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>
   tagGroupId?: string
 }
 
-export type UseTagGroupMergedProps<Item> = Required<
-  Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+export type UseTagGroupMergedProps<Item> = Omit<
+  UseTagGroupProps<Item>,
+  'stateReducer' | 'removeElementDescription'
 > &
-  UseTagGroupProps<Item>
+  Required<
+    Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+  >
+
+// export type UseTagGroupMergedProps<Item> = Required<
+//   Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+// > &
+//   UseTagGroupProps<Item>
 
 export interface UseTagGroupInterface {
   <Item>(props?: UseTagGroupProps<Item>): UseTagGroupReturnValue<Item>

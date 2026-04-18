@@ -4,9 +4,9 @@ import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 export type GetInitialStateProps<T> = {
   items: T[]
   isItemDisabled: (item: T, index: number) => boolean
-  selectedItem?: T
-  initialSelectedItem?: T
-  defaultSelectedItem?: T
+  selectedItem?: T | null
+  initialSelectedItem?: T | null
+  defaultSelectedItem?: T | null
   isOpen?: boolean
   initialIsOpen?: boolean
   defaultIsOpen?: boolean
