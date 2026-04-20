@@ -1,4 +1,4 @@
-export type StateReducerProp<S extends object, A extends {type: string}> = (
+type StateReducerProp<S extends object, A extends {type: string}> = (
   state: S,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actionAndChanges: (A & {props: any}) & {changes: Partial<S>},

@@ -10,9 +10,6 @@ export {
 export {getMergedProps} from './getMergedProps'
 export {useRovingTagFocus} from './useRovingTagFocus'
 
-export const propTypes: Record<
-  string,
-  PropTypes.Requireable<(...args: unknown[]) => unknown>
-> = {
+export const propTypes = {
   isItemDisabled: PropTypes.func,
 }

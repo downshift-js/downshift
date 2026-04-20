@@ -4,8 +4,8 @@ import {useIsInitialMount, useEnhancedReducer, Reducer} from '../../utils'
 import {ControlledPropUpdatedSelectedItem} from '../stateChangeTypes'
 import {
   UseComboboxMergedProps,
+  UseComboboxReducerAction,
   UseComboboxState,
-  UseComboboxStateChange,
 } from '../index.types'
 
 /**
@@ -22,7 +22,7 @@ import {
  * @returns An array with the state and an action dispatcher.
  */
 export function useControlledReducer<Item>(
-  reducer: Reducer<UseComboboxState<Item>, UseComboboxStateChange<Item>>,
+  reducer: Reducer<UseComboboxState<Item>, UseComboboxReducerAction<Item>>,
   props: UseComboboxMergedProps<Item>,
   createInitialState: (
     props: UseComboboxMergedProps<Item>,
@@ -31,7 +31,7 @@ export function useControlledReducer<Item>(
     prev: UseComboboxState<Item>,
     next: UseComboboxState<Item>,
   ) => boolean,
-) {
+): [UseComboboxState<Item>, (action: UseComboboxReducerAction<Item>) => void] {
   const previousSelectedItemRef = useRef<Item | null>(null)
   const [state, dispatch] = useEnhancedReducer(
     reducer,

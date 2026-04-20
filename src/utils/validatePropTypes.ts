@@ -5,20 +5,14 @@ import {noop} from './noop'
 export let validatePropTypes = noop as (
   options: unknown,
   caller: Function,
-  propTypes: Record<
-    string,
-    PropTypes.Requireable<(...args: unknown[]) => unknown>
-  >,
+  propTypes: Record<string, PropTypes.Validator<unknown>>,
 ) => void
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'production') {
   validatePropTypes = (
     options: unknown,
     caller: Function,
-    propTypes: Record<
-      string,
-      PropTypes.Requireable<(...args: unknown[]) => unknown>
-    >,
+    propTypes: Record<string, PropTypes.Validator<unknown>>,
   ): void => {
     PropTypes.checkPropTypes(propTypes, options, 'prop', caller.name)
   }

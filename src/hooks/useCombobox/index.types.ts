@@ -218,6 +218,7 @@ export interface UseComboboxStateChangeOptions<
   Item,
 > extends UseComboboxDispatchAction<Item> {
   changes: Partial<UseComboboxState<Item>>
+  props: UseComboboxMergedProps<Item>
 }
 
 export interface UseComboboxDispatchAction<Item> {
