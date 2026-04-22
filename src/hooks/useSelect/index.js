@@ -11,7 +11,6 @@ import {
   isAcceptedCharacterKey,
   useGetterPropsCalledChecker,
   useScrollIntoView,
-  useControlPropsValidator,
   useMouseAndTouchTracker,
   isDropdownsStateEqual,
 } from '../utils.legacy'
@@ -22,6 +21,7 @@ import {
   useA11yMessageStatus,
   dropdownDefaultStateValues,
   useElementIds,
+  useControlPropsValidator,
   getInitialState,
 } from '../utils'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'

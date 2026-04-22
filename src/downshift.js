@@ -15,7 +15,6 @@ import {
   pickState,
   requiredProp,
   unwrapArray,
-  validateControlledUnchanged,
 } from './utils.legacy'
 import {
   generateId,
@@ -29,6 +28,7 @@ import {
   normalizeArrowKey,
   getHighlightedIndex,
   getNonDisabledIndex,
+  validateControlledUnchanged,
 } from './utils'
 
 class Downshift extends Component {

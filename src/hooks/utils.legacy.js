@@ -1,11 +1,7 @@
 import * as React from 'react'
 import {isReactNative} from '../is.macro'
-import {
-  validateControlledUnchanged,
-  targetWithinDownshift,
-} from '../utils.legacy'
+import {targetWithinDownshift} from '../utils.legacy'
 import {noop} from '../utils'
-import {useIsInitialMount} from './utils'
 
 // istanbul ignore next
 const useIsomorphicLayoutEffect =
@@ -195,26 +191,6 @@ function useScrollIntoView({
   return shouldScrollRef
 }
 
-// eslint-disable-next-line import/no-mutable-exports
-let useControlPropsValidator = noop
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'production') {
-  useControlPropsValidator = ({props, state}) => {
-    // used for checking when props are moving from controlled to uncontrolled.
-    const prevPropsRef = React.useRef(props)
-    const isInitialMount = useIsInitialMount()
-
-    React.useEffect(() => {
-      if (isInitialMount) {
-        return
-      }
-
-      validateControlledUnchanged(state, prevPropsRef.current, props)
-      prevPropsRef.current = props
-    }, [state, props, isInitialMount])
-  }
-}
-
 /**
  * Check if a state is equal for dropdowns, by comparing isOpen, inputValue, highlightedIndex and selected item.
  * Used by useSelect and useCombobox.
@@ -233,7 +209,6 @@ function isDropdownsStateEqual(prevState, newState) {
 }
 
 export {
-  useControlPropsValidator,
   useScrollIntoView,
   useGetterPropsCalledChecker,
   useMouseAndTouchTracker,
