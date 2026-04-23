@@ -10,7 +10,6 @@ import {
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
-  targetWithinDownshift,
   isPlainObject,
   pickState,
   requiredProp,
@@ -28,6 +27,7 @@ import {
   normalizeArrowKey,
   getHighlightedIndex,
   getNonDisabledIndex,
+  targetWithinDownshift,
   validateControlledUnchanged,
 } from './utils'
 

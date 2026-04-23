@@ -11,7 +11,6 @@ import {
   isAcceptedCharacterKey,
   useGetterPropsCalledChecker,
   useScrollIntoView,
-  useMouseAndTouchTracker,
   isDropdownsStateEqual,
 } from '../utils.legacy'
 import {
@@ -23,6 +22,7 @@ import {
   useElementIds,
   useControlPropsValidator,
   getInitialState,
+  useMouseAndTouchTracker,
 } from '../utils'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'

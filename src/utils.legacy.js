@@ -14,21 +14,6 @@ function cbToCb(cb) {
 }
 
 /**
- * @param {HTMLElement} parent the parent node
- * @param {HTMLElement} child the child node
- * @param {Window} environment The window context where downshift renders.
- * @return {Boolean} whether the parent is the child or the child is in the parent
- */
-function isOrContainsNode(parent, child, environment) {
-  const result =
-    parent === child ||
-    (child instanceof environment.Node &&
-      parent.contains &&
-      parent.contains(child))
-  return result
-}
-
-/**
  * Default implementation for status message. Only added when menu is open.
  * Will specify if there are results in the list, and if so, how many,
  * and what keys are relevant.
@@ -143,38 +128,6 @@ function isPlainObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
 
-/**
- * Checks if event target is within the downshift elements.
- *
- * @param {EventTarget} target Target to check.
- * @param {HTMLElement[]} downshiftElements The elements that form downshift (list, toggle button etc).
- * @param {Window} environment The window context where downshift renders.
- * @param {boolean} checkActiveElement Whether to also check activeElement.
- *
- * @returns {boolean} Whether or not the target is within downshift elements.
- */
-function targetWithinDownshift(
-  target,
-  downshiftElements,
-  environment,
-  checkActiveElement = true,
-) {
-  return (
-    environment &&
-    downshiftElements.some(
-      contextNode =>
-        contextNode &&
-        (isOrContainsNode(contextNode, target, environment) ||
-          (checkActiveElement &&
-            isOrContainsNode(
-              contextNode,
-              environment.document.activeElement,
-              environment,
-            ))),
-    )
-  )
-}
-
 export {
   cbToCb,
   getA11yStatusMessage,
@@ -184,5 +137,4 @@ export {
   requiredProp,
   pickState,
   isPlainObject,
-  targetWithinDownshift,
 }
