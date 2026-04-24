@@ -1,4 +1,4 @@
-import {Environment} from '../index.types'
+import {Environment} from '../../downshift.types'
 
 export interface UseTagGroupState<Item> {
   activeIndex: number

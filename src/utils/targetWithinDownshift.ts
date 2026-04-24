@@ -1,4 +1,4 @@
-import {Environment} from 'typings/index.legacy'
+import {Environment} from '../downshift.types'
 
 /**
  * Checks if event target is within the downshift elements.

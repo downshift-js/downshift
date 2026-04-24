@@ -1,4 +1,6 @@
+import {UseSelectGetMenuReturnValue} from '../../../typings/index.legacy'
 import {
+  Environment,
   GetPropsWithRefKey,
   GetMenuPropsOptions,
   GetToggleButtonPropsOptions,
@@ -10,9 +12,7 @@ import {
   GetInputPropsReturnValue,
   GetPropsCommonOptions,
   Overwrite,
-  UseSelectGetMenuReturnValue
-} from '../../../typings/index.legacy'
-import {Environment} from '../index.types'
+} from '../../downshift.types'
 
 export interface UseComboboxState<Item> {
   highlightedIndex: number

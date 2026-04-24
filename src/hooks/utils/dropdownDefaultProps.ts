@@ -1,6 +1,5 @@
 import {scrollIntoView} from '../../utils'
 import {isReactNative} from '../../is.macro.js'
-import {Environment} from '../index.types'
 
 export const dropdownDefaultProps = {
   itemToString(item: unknown) {
@@ -17,7 +16,5 @@ export const dropdownDefaultProps = {
   scrollIntoView,
   environment:
     /* istanbul ignore next (ssr) */
-    (typeof window === 'undefined' || isReactNative
-      ? undefined
-      : window) as Environment,
+    typeof window === 'undefined' || isReactNative ? undefined : window,
 }
