@@ -199,7 +199,6 @@ export type UseComboboxMergedProps<Item> = Omit<
   | 'itemToKey'
   | 'stateReducer'
   | 'scrollIntoView'
-  | 'environment'
   | 'isItemDisabled'
 > &
   Required<
@@ -209,7 +208,6 @@ export type UseComboboxMergedProps<Item> = Omit<
       | 'itemToKey'
       | 'stateReducer'
       | 'scrollIntoView'
-      | 'environment'
       | 'isItemDisabled'
     >
   >
