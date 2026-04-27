@@ -19,5 +19,7 @@ export {
 } from '../dist/hooks/useTagGroup/index.types'
 
 import {UseTagGroupInterface} from '../dist/hooks/useTagGroup/index.types'
+import {UseComboboxInterface} from '../dist/hooks/useCombobox/index.types'
 export const useTagGroup: UseTagGroupInterface
-export {UseTagGroupInterface}
+export const useCombobox: UseComboboxInterface
+export {UseTagGroupInterface, UseComboboxInterface}
