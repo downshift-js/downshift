@@ -1,7 +1,7 @@
 /**
  * Normalizes the 'key' property of a KeyboardEvent in IE/Edge
- * @param {Object} event a keyboardEvent object
- * @return {String} keyboard key
+ * @param event a keyboardEvent object
+ * @return keyboard key
  */
 export function normalizeArrowKey(event: KeyboardEvent): string {
   const {key, keyCode} = event

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 
-import {commonPropTypes} from '../utils'
+import {propTypes as commonPropTypes} from './propTypes'
 
 // Shared between useSelect, useCombobox, Downshift.
 export const dropdownPropTypes = {

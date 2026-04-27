@@ -1,15 +1,5 @@
-import {UseSelectGetMenuReturnValue} from '../../../typings/index.legacy'
 import {
   Environment,
-  GetPropsWithRefKey,
-  GetMenuPropsOptions,
-  GetToggleButtonPropsOptions,
-  GetLabelPropsOptions,
-  GetLabelPropsReturnValue,
-  GetItemPropsOptions,
-  GetItemPropsReturnValue,
-  GetInputPropsOptions,
-  GetInputPropsReturnValue,
   GetPropsCommonOptions,
   Overwrite,
 } from '../../downshift.types'
@@ -259,14 +249,31 @@ export interface UseComboboxInputValueChange<
   inputValue: string
 }
 
-export interface UseComboboxGetMenuPropsOptions
-  extends GetPropsWithRefKey, GetMenuPropsOptions {}
+export interface UseComboboxGetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
+  refKey?: string
+  ref?: React.Ref<HTMLElement>
+}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UseComboboxGetMenuPropsReturnValue extends UseSelectGetMenuReturnValue {}
+export interface UseComboboxGetMenuPropsReturnValue {
+  'aria-label': string | undefined
+  'aria-labelledby': string | undefined
+  ref?: React.Ref<HTMLElement>
+  role: 'listbox'
+  id: string
+  onMouseLeave: React.MouseEventHandler
+}
 
-export interface UseComboboxGetToggleButtonPropsOptions
-  extends GetPropsWithRefKey, GetToggleButtonPropsOptions {}
+export type UseComboboxGetMenuProps = <Options>(
+  options?: UseComboboxGetMenuPropsOptions & Options,
+  otherOptions?: GetPropsCommonOptions,
+) => Overwrite<UseComboboxGetMenuPropsReturnValue, Options>
+
+export interface UseComboboxGetToggleButtonPropsOptions extends React.HTMLProps<HTMLElement> {
+  disabled?: boolean
+  refKey?: string
+  ref?: React.Ref<HTMLElement>
+  onPress?: (event: React.BaseSyntheticEvent) => void
+}
 
 export interface UseComboboxGetToggleButtonPropsReturnValue {
   'aria-controls': string
@@ -274,58 +281,93 @@ export interface UseComboboxGetToggleButtonPropsReturnValue {
   id: string
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref?: React.RefObject<any>
+  ref?: React.Ref<HTMLElement>
   tabIndex: -1
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UseComboboxGetLabelPropsOptions extends GetLabelPropsOptions {}
+export type UseComboboxGetToggleButtonProps = <Options>(
+  options?: UseComboboxGetToggleButtonPropsOptions & Options,
+) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UseComboboxGetLabelPropsReturnValue extends GetLabelPropsReturnValue {}
+export interface UseComboboxGetLabelPropsOptions extends React.HTMLProps<HTMLElement> {}
 
-export interface UseComboboxGetItemPropsOptions<Item>
-  extends Omit<GetItemPropsOptions<Item>, 'disabled'>, GetPropsWithRefKey {}
-
-export interface UseComboboxGetItemPropsReturnValue extends GetItemPropsReturnValue {
-  'aria-disabled': boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ref?: React.RefObject<any>
+export interface UseComboboxGetLabelPropsReturnValue {
+  htmlFor: string
+  id: string
 }
 
-export interface UseComboboxGetInputPropsOptions
-  extends GetInputPropsOptions, GetPropsWithRefKey {}
+export type UseComboboxGetLabelProps = <Options>(
+  options?: UseComboboxGetLabelPropsOptions & Options,
+) => Overwrite<UseComboboxGetLabelPropsReturnValue, Options>
 
-export interface UseComboboxGetInputPropsReturnValue extends GetInputPropsReturnValue {
+export interface UseComboboxGetItemPropsOptions<
+  Item,
+> extends React.HTMLProps<HTMLElement> {
+  index?: number
+  item?: Item
+  refKey?: string
+  ref?: React.Ref<HTMLElement>
+  onPress?: (event: React.BaseSyntheticEvent) => void
+}
+
+export interface UseComboboxGetItemPropsReturnValue {
+  'aria-selected': boolean
+  'aria-disabled': boolean
+  id: string
+  onClick?: React.MouseEventHandler
+  onMouseDown?: React.MouseEventHandler
+  onMouseMove?: React.MouseEventHandler
+  onPress?: React.MouseEventHandler
+  ref?: React.Ref<HTMLElement>
+  role: 'option'
+}
+
+export type UseComboboxGetItemProps<Item> = <Options>(
+  options?: UseComboboxGetItemPropsOptions<Item> & Options,
+) => Omit<
+  Overwrite<UseComboboxGetItemPropsReturnValue, Options>,
+  'index' | 'item'
+>
+
+export interface UseComboboxGetInputPropsOptions extends React.HTMLProps<HTMLInputElement> {
+  refKey?: string
+  ref?: React.Ref<HTMLInputElement>
+  onChangeText?: (event: React.BaseSyntheticEvent) => void
+}
+
+export interface UseComboboxGetInputPropsReturnValue {
+  ref?: React.Ref<HTMLElement>
   'aria-activedescendant': string
+  'aria-autocomplete': 'list'
   'aria-controls': string
   'aria-expanded': boolean
+  'aria-labelledby': string | undefined
+  'aria-label': string | undefined
+  autoComplete: 'off'
+  disabled: boolean | undefined
+  id: string
   role: 'combobox'
-  onClick: React.MouseEventHandler
+  value: string
+  onBlur?: React.FocusEventHandler
+  onChange?: React.ChangeEventHandler
+  onChangeText?: React.ChangeEventHandler
+  onClick?: React.MouseEventHandler
+  onInput?: React.FormEventHandler
+  onKeyDown?: React.KeyboardEventHandler
 }
 
+export type UseComboboxGetInputProps = <Options>(
+  options?: UseComboboxGetInputPropsOptions & Options,
+  otherOptions?: GetPropsCommonOptions,
+) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
+
 export interface UseComboboxPropGetters<Item> {
-  getToggleButtonProps: <Options>(
-    options?: UseComboboxGetToggleButtonPropsOptions & Options,
-  ) => Overwrite<UseComboboxGetToggleButtonPropsReturnValue, Options>
-  getLabelProps: <Options>(
-    options?: UseComboboxGetLabelPropsOptions & Options,
-  ) => Overwrite<UseComboboxGetLabelPropsReturnValue, Options>
-  getMenuProps: <Options>(
-    options?: UseComboboxGetMenuPropsOptions & Options,
-    otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseComboboxGetMenuPropsReturnValue, Options>
-  getItemProps: <Options>(
-    options: UseComboboxGetItemPropsOptions<Item> & Options,
-  ) => Omit<
-    Overwrite<UseComboboxGetItemPropsReturnValue, Options>,
-    'index' | 'item'
-  >
-  getInputProps: <Options>(
-    options?: UseComboboxGetInputPropsOptions & Options,
-    otherOptions?: GetPropsCommonOptions,
-  ) => Overwrite<UseComboboxGetInputPropsReturnValue, Options>
+  getToggleButtonProps: UseComboboxGetToggleButtonProps
+  getLabelProps: UseComboboxGetLabelProps
+  getMenuProps: UseComboboxGetMenuProps
+  getItemProps: UseComboboxGetItemProps<Item>
+  getInputProps: UseComboboxGetInputProps
 }
 
 export interface UseComboboxActions<Item> {

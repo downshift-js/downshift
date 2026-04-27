@@ -7,7 +7,7 @@ import {
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
 } from '../../testUtils'
-import utils from '../../utils.legacy'
+import utils from '../../utils'
 import useCombobox from '..'
 
 describe('getMenuProps', () => {
@@ -136,7 +136,7 @@ describe('getMenuProps', () => {
   describe('non production errors', () => {
     beforeEach(() => {
       // usally disabled by test utils.
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils.legacy')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

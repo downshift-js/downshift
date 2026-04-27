@@ -10,7 +10,7 @@ import {
   keyDownOnInput,
   items,
 } from '../testUtils'
-import utils from '../../utils.legacy'
+import utils from '../../utils'
 import useMultipleSelection from '..'
 
 describe('getDropdownProps', () => {
@@ -245,7 +245,7 @@ describe('getDropdownProps', () => {
   describe('non production errors', () => {
     beforeEach(() => {
       // usually disabled by test utils.
-      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils.legacy')
+      const {useGetterPropsCalledChecker} = jest.requireActual('../../utils')
       jest
         .spyOn(utils, 'useGetterPropsCalledChecker')
         .mockImplementation(useGetterPropsCalledChecker)

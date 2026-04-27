@@ -1,4 +1,4 @@
-import {getDefaultValue} from '../utils'
+import {getDefaultValue} from './getDefaultValue'
 import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 
 /**

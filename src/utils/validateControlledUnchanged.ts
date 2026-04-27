@@ -18,7 +18,6 @@ if (process.env.NODE_ENV !== 'production') {
 
     Object.keys(state).forEach(propKey => {
       if (
-        propKey in nextProps &&
         prevProps[propKey] !== undefined &&
         nextProps[propKey] === undefined
       ) {

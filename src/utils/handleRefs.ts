@@ -1,18 +1,12 @@
 import * as React from 'react'
 
-export function handleRefs(
-  ...refs: (
-    | React.MutableRefObject<HTMLElement>
-    | React.RefCallback<HTMLElement>
-    | undefined
-  )[]
-) {
-  return (node: HTMLElement) => {
+export function handleRefs<T extends HTMLElement>(...refs: (React.Ref<T> | undefined)[]) {
+  return (node: T) => {
     refs.forEach(ref => {
       if (typeof ref === 'function') {
         ref(node)
       } else if (ref) {
-        ref.current = node
+        ;(ref as React.MutableRefObject<T | null>).current = node
       }
     })
   }

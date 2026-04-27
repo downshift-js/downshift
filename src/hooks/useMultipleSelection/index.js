@@ -5,13 +5,13 @@ import {
   handleRefs,
   normalizeArrowKey,
 } from '../../utils'
-import {useGetterPropsCalledChecker} from '../utils.legacy'
 import {
   useControlledReducer,
   useIsInitialMount,
   useA11yMessageStatus,
   getItemAndIndex,
   useControlPropsValidator,
+  useGetterPropsCalledChecker,
 } from '../utils'
 import {
   getInitialState,

@@ -1,5 +1,5 @@
-import {getDefaultValue} from '../utils/getDefaultValue'
-import {dropdownDefaultStateValues} from '.'
+import {getDefaultValue} from './getDefaultValue'
+import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 
 type Changes<Item> = {
   isOpen: boolean
