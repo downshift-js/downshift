@@ -1,4 +1,4 @@
-import {useRef, useEffect, useCallback, useMemo} from 'react'
+import React, {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
   useLatestRef,
   validatePropTypes,
@@ -23,48 +23,58 @@ import {
   getInitialState,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
+  dropdownDefaultProps,
 } from '../utils'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
-import {defaultProps, propTypes} from './utils'
+import {propTypes} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'
+import {
+  UseSelectGetItemProps,
+  UseSelectGetLabelProps,
+  UseSelectGetMenuProps,
+  UseSelectGetToggleButtonProps,
+  UseSelectMergedProps,
+  UseSelectProps,
+  UseSelectReducerAction,
+  UseSelectState,
+} from './index.types'
 
 useSelect.stateChangeTypes = stateChangeTypes
 
-function useSelect(userProps = {}) {
+function useSelect<Item>(
+  userProps: UseSelectProps<Item> = {} as UseSelectProps<Item>,
+) {
   validatePropTypes(userProps, useSelect, propTypes)
   // Props defaults and destructuring.
-  const props = {
-    ...defaultProps,
+  const props: UseSelectMergedProps<Item> = {
+    ...dropdownDefaultProps,
     ...userProps,
   }
   const {scrollIntoView, environment, getA11yStatusMessage} = props
   // Initial state depending on controlled props.
-  const [state, dispatch] = useControlledReducer(
-    downshiftSelectReducer,
-    props,
-    getInitialState,
-    isDropdownsStateEqual,
-  )
+  const [state, dispatch] = useControlledReducer<
+    UseSelectState<Item>,
+    UseSelectReducerAction<Item>,
+    UseSelectMergedProps<Item>
+  >(downshiftSelectReducer, props, getInitialState, isDropdownsStateEqual)
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
-  // Element efs.
-  const toggleButtonRef = useRef(null)
-  const menuRef = useRef(null)
-  const itemRefs = useRef({})
+
+  // Element refs.
+  const toggleButtonRef = useRef<HTMLElement | null>(null)
+  const menuRef = useRef<HTMLElement | null>(null)
+  const itemRefs = useRef<Record<string, HTMLElement>>({})
 
   // used to keep the inputValue clearTimeout object between renders.
-  const clearTimeoutRef = useRef(null)
+  const clearTimeoutRef = useRef<ReturnType<typeof debounce> | null>(null)
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
   // utility callback to get item element.
-  const latest = useLatestRef({
-    state,
-    props,
-  })
+  const latest = useLatestRef({state, props})
 
   // Some utils.
   const getItemNodeFromIndex = useCallback(
-    index => itemRefs.current[elementIds.getItemId(index)],
+    (index: number) => itemRefs.current[elementIds.getItemId(index)],
     [elementIds],
   )
 
@@ -85,10 +95,10 @@ function useSelect(userProps = {}) {
     scrollIntoView,
     getItemNodeFromIndex,
   })
-  // Sets cleanup for the keysSoFar callback, debounded after 500ms.
+  // Sets cleanup for the keysSoFar callback, debounced after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
-    clearTimeoutRef.current = debounce(outerDispatch => {
+    clearTimeoutRef.current = debounce((outerDispatch: typeof dispatch) => {
       outerDispatch({
         type: stateChangeTypes.FunctionSetInputValue,
         inputValue: '',
@@ -97,7 +107,7 @@ function useSelect(userProps = {}) {
 
     // Cancel any pending debounced calls on mount
     return () => {
-      clearTimeoutRef.current.cancel()
+      clearTimeoutRef.current?.cancel()
     }
   }, [])
   // Invokes the keysSoFar callback set up above.
@@ -106,7 +116,7 @@ function useSelect(userProps = {}) {
       return
     }
 
-    clearTimeoutRef.current(dispatch)
+    clearTimeoutRef.current?.(dispatch)
   }, [dispatch, inputValue])
 
   useControlPropsValidator({
@@ -158,7 +168,7 @@ function useSelect(userProps = {}) {
   // Event handler functions.
   const toggleButtonKeyDownHandlers = useMemo(
     () => ({
-      ArrowDown(event) {
+      ArrowDown(event: KeyboardEvent) {
         event.preventDefault()
 
         dispatch({
@@ -166,7 +176,7 @@ function useSelect(userProps = {}) {
           altKey: event.altKey,
         })
       },
-      ArrowUp(event) {
+      ArrowUp(event: KeyboardEvent) {
         event.preventDefault()
 
         dispatch({
@@ -174,14 +184,14 @@ function useSelect(userProps = {}) {
           altKey: event.altKey,
         })
       },
-      Home(event) {
+      Home(event: KeyboardEvent) {
         event.preventDefault()
 
         dispatch({
           type: stateChangeTypes.ToggleButtonKeyDownHome,
         })
       },
-      End(event) {
+      End(event: KeyboardEvent) {
         event.preventDefault()
 
         dispatch({
@@ -195,7 +205,7 @@ function useSelect(userProps = {}) {
           })
         }
       },
-      Enter(event) {
+      Enter(event: KeyboardEvent) {
         event.preventDefault()
 
         dispatch({
@@ -204,7 +214,7 @@ function useSelect(userProps = {}) {
             : stateChangeTypes.ToggleButtonClick,
         })
       },
-      PageUp(event) {
+      PageUp(event: KeyboardEvent) {
         if (latest.current.state.isOpen) {
           event.preventDefault()
 
@@ -213,7 +223,7 @@ function useSelect(userProps = {}) {
           })
         }
       },
-      PageDown(event) {
+      PageDown(event: KeyboardEvent) {
         if (latest.current.state.isOpen) {
           event.preventDefault()
 
@@ -222,7 +232,7 @@ function useSelect(userProps = {}) {
           })
         }
       },
-      ' '(event) {
+      ' '(event: KeyboardEvent) {
         event.preventDefault()
 
         const currentState = latest.current.state
@@ -245,57 +255,10 @@ function useSelect(userProps = {}) {
     [dispatch, latest],
   )
 
-  // Action functions.
-  const toggleMenu = useCallback(() => {
-    dispatch({
-      type: stateChangeTypes.FunctionToggleMenu,
-    })
-  }, [dispatch])
-  const closeMenu = useCallback(() => {
-    dispatch({
-      type: stateChangeTypes.FunctionCloseMenu,
-    })
-  }, [dispatch])
-  const openMenu = useCallback(() => {
-    dispatch({
-      type: stateChangeTypes.FunctionOpenMenu,
-    })
-  }, [dispatch])
-  const setHighlightedIndex = useCallback(
-    newHighlightedIndex => {
-      dispatch({
-        type: stateChangeTypes.FunctionSetHighlightedIndex,
-        highlightedIndex: newHighlightedIndex,
-      })
-    },
-    [dispatch],
-  )
-  const selectItem = useCallback(
-    newSelectedItem => {
-      dispatch({
-        type: stateChangeTypes.FunctionSelectItem,
-        selectedItem: newSelectedItem,
-      })
-    },
-    [dispatch],
-  )
-  const reset = useCallback(() => {
-    dispatch({
-      type: stateChangeTypes.FunctionReset,
-    })
-  }, [dispatch])
-  const setInputValue = useCallback(
-    newInputValue => {
-      dispatch({
-        type: stateChangeTypes.FunctionSetInputValue,
-        inputValue: newInputValue,
-      })
-    },
-    [dispatch],
-  )
   // Getter functions.
   const getLabelProps = useCallback(
-    ({onClick, ...labelProps} = {}) => {
+    labelProps => {
+      const {onClick, ...rest} = labelProps ?? {}
       const labelHandleClick = () => {
         toggleButtonRef.current?.focus()
       }
@@ -304,16 +267,23 @@ function useSelect(userProps = {}) {
         id: elementIds.labelId,
         htmlFor: elementIds.toggleButtonId,
         onClick: callAllEventHandlers(onClick, labelHandleClick),
-        ...labelProps,
+        ...rest,
       }
     },
     [elementIds],
-  )
+  ) as UseSelectGetLabelProps
+
   const getMenuProps = useCallback(
-    (
-      {onMouseLeave, refKey = 'ref', ref, ...rest} = {},
-      {suppressRefError = false} = {},
-    ) => {
+    (menuProps, otherProps) => {
+      const {
+        onMouseLeave,
+        refKey = 'ref',
+        ref,
+        'aria-label': ariaLabel,
+        ...rest
+      } = menuProps ?? {}
+      const {suppressRefError = false} = otherProps ?? {}
+
       const menuHandleMouseLeave = () => {
         dispatch({
           type: stateChangeTypes.MenuMouseLeave,
@@ -323,24 +293,36 @@ function useSelect(userProps = {}) {
       setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef)
 
       return {
-        [refKey]: handleRefs(ref, menuNode => {
+        [refKey]: handleRefs(ref, (menuNode: HTMLElement | null) => {
           menuRef.current = menuNode
         }),
         id: elementIds.menuId,
         role: 'listbox',
-        'aria-labelledby':
-          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
+        'aria-labelledby': ariaLabel ? undefined : `${elementIds.labelId}`,
         onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
         ...rest,
       }
     },
     [dispatch, setGetterPropCallInfo, elementIds],
-  )
+  ) as UseSelectGetMenuProps
+
   const getToggleButtonProps = useCallback(
     (
-      {onBlur, onClick, onPress, onKeyDown, refKey = 'ref', ref, ...rest} = {},
-      {suppressRefError = false} = {},
+      toggleButtonProps?: Parameters<UseSelectGetToggleButtonProps>[0],
+      otherProps?: Parameters<UseSelectGetToggleButtonProps>[1],
     ) => {
+      const {
+        onBlur,
+        onClick,
+        onPress,
+        onKeyDown,
+        refKey = 'ref',
+        ref,
+        disabled,
+        ...rest
+      } = toggleButtonProps ?? {}
+      const {suppressRefError = false} = otherProps ?? {}
+
       const latestState = latest.current.state
       const toggleButtonHandleClick = () => {
         dispatch({
@@ -354,10 +336,12 @@ function useSelect(userProps = {}) {
           })
         }
       }
-      const toggleButtonHandleKeyDown = event => {
+      const toggleButtonHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
-        if (key && toggleButtonKeyDownHandlers[key]) {
-          toggleButtonKeyDownHandlers[key](event)
+        if (key && key in toggleButtonKeyDownHandlers) {
+          toggleButtonKeyDownHandlers[
+            key as keyof typeof toggleButtonKeyDownHandlers
+          ](event)
         } else if (isAcceptedCharacterKey(key)) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
@@ -365,10 +349,14 @@ function useSelect(userProps = {}) {
           })
         }
       }
+
       const toggleProps = {
-        [refKey]: handleRefs(ref, toggleButtonNode => {
-          toggleButtonRef.current = toggleButtonNode
-        }),
+        [refKey]: handleRefs(
+          ref as React.Ref<HTMLElement>,
+          (toggleButtonNode: HTMLElement | null) => {
+            toggleButtonRef.current = toggleButtonNode
+          },
+        ),
         'aria-activedescendant':
           latestState.isOpen && latestState.highlightedIndex > -1
             ? elementIds.getItemId(latestState.highlightedIndex)
@@ -376,31 +364,31 @@ function useSelect(userProps = {}) {
         'aria-controls': elementIds.menuId,
         'aria-expanded': latest.current.state.isOpen,
         'aria-haspopup': 'listbox',
-        'aria-labelledby':
-          rest && rest['aria-label'] ? undefined : `${elementIds.labelId}`,
+        'aria-labelledby': rest['aria-label']
+          ? undefined
+          : `${elementIds.labelId}`,
         id: elementIds.toggleButtonId,
         role: 'combobox',
         tabIndex: 0,
         onBlur: callAllEventHandlers(onBlur, toggleButtonHandleBlur),
+        disabled,
         ...rest,
       }
 
-      if (!rest.disabled) {
+      if (!disabled) {
         /* istanbul ignore if (react-native) */
         if (isReactNative || isReactNativeWeb) {
-          toggleProps.onPress = callAllEventHandlers(
-            onPress,
-            toggleButtonHandleClick,
-          )
+          Object.assign(toggleProps, {
+            onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
+          })
         } else {
-          toggleProps.onClick = callAllEventHandlers(
-            onClick,
-            toggleButtonHandleClick,
-          )
-          toggleProps.onKeyDown = callAllEventHandlers(
-            onKeyDown,
-            toggleButtonHandleKeyDown,
-          )
+          Object.assign(toggleProps, {
+            onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
+            onKeyDown: callAllEventHandlers(
+              onKeyDown,
+              toggleButtonHandleKeyDown,
+            ),
+          })
         }
       }
 
@@ -421,20 +409,23 @@ function useSelect(userProps = {}) {
       setGetterPropCallInfo,
       toggleButtonKeyDownHandlers,
     ],
-  )
+  ) as UseSelectGetToggleButtonProps
+
   const getItemProps = useCallback(
-    ({
-      item: itemProp,
-      index: indexProp,
-      onMouseMove,
-      onClick,
-      onMouseDown,
-      onPress,
-      refKey = 'ref',
-      disabled: disabledProp,
-      ref,
-      ...rest
-    } = {}) => {
+    (itemProps?: Parameters<UseSelectGetItemProps<Item>>[0]) => {
+      const {
+        item: itemProp,
+        index: indexProp,
+        onMouseMove,
+        onClick,
+        onMouseDown,
+        onPress,
+        refKey = 'ref',
+        disabled: disabledProp,
+        ref,
+        ...rest
+      } = itemProps ?? {}
+
       if (disabledProp !== undefined) {
         console.warn(
           'Passing "disabled" as an argument to getItemProps is not supported anymore. Please use the isItemDisabled prop from useSelect.',
@@ -470,42 +461,91 @@ function useSelect(userProps = {}) {
           index,
         })
       }
-      const itemHandleMouseDown = e => e.preventDefault() // keep focus on the toggle after item click select.
+      const itemHandleMouseDown = (e: React.MouseEvent) => e.preventDefault() // keep focus on the toggle after item click select.
 
-      const itemProps = {
-        [refKey]: handleRefs(ref, itemNode => {
-          if (itemNode) {
-            itemRefs.current[elementIds.getItemId(index)] = itemNode
-          }
-        }),
+      const resultItemProps = {
+        [refKey]: handleRefs(
+          ref as React.Ref<HTMLElement>,
+          (itemNode: HTMLElement | null) => {
+            if (itemNode) {
+              itemRefs.current[elementIds.getItemId(index)] = itemNode
+            }
+          },
+        ),
         'aria-disabled': disabled,
         'aria-selected': item === latestState.selectedItem,
         id: elementIds.getItemId(index),
         role: 'option',
+        onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
+        onMouseDown: callAllEventHandlers(onMouseDown, itemHandleMouseDown),
         ...rest,
       }
 
       if (!disabled) {
         /* istanbul ignore next (react-native) */
         if (isReactNative || isReactNativeWeb) {
-          itemProps.onPress = callAllEventHandlers(onPress, itemHandleClick)
+          Object.assign(resultItemProps, {
+            onPress: callAllEventHandlers(onPress, itemHandleClick),
+          })
         } else {
-          itemProps.onClick = callAllEventHandlers(onClick, itemHandleClick)
+          Object.assign(resultItemProps, {
+            onClick: callAllEventHandlers(onClick, itemHandleClick),
+          })
         }
       }
 
-      itemProps.onMouseMove = callAllEventHandlers(
-        onMouseMove,
-        itemHandleMouseMove,
-      )
-      itemProps.onMouseDown = callAllEventHandlers(
-        onMouseDown,
-        itemHandleMouseDown,
-      )
-
-      return itemProps
+      return resultItemProps
     },
     [latest, elementIds, mouseAndTouchTrackers, shouldScrollRef, dispatch],
+  ) as UseSelectGetItemProps<Item>
+
+  // Action functions.
+  const toggleMenu = useCallback(() => {
+    dispatch({
+      type: stateChangeTypes.FunctionToggleMenu,
+    })
+  }, [dispatch])
+  const closeMenu = useCallback(() => {
+    dispatch({
+      type: stateChangeTypes.FunctionCloseMenu,
+    })
+  }, [dispatch])
+  const openMenu = useCallback(() => {
+    dispatch({
+      type: stateChangeTypes.FunctionOpenMenu,
+    })
+  }, [dispatch])
+  const setHighlightedIndex = useCallback(
+    (newHighlightedIndex: number) => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetHighlightedIndex,
+        highlightedIndex: newHighlightedIndex,
+      })
+    },
+    [dispatch],
+  )
+  const selectItem = useCallback(
+    (newSelectedItem: Item | null) => {
+      dispatch({
+        type: stateChangeTypes.FunctionSelectItem,
+        selectedItem: newSelectedItem,
+      })
+    },
+    [dispatch],
+  )
+  const reset = useCallback(() => {
+    dispatch({
+      type: stateChangeTypes.FunctionReset,
+    })
+  }, [dispatch])
+  const setInputValue = useCallback(
+    (newInputValue: string) => {
+      dispatch({
+        type: stateChangeTypes.FunctionSetInputValue,
+        inputValue: newInputValue,
+      })
+    },
+    [dispatch],
   )
 
   return {

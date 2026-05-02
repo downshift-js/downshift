@@ -18,13 +18,9 @@ import {
   useControlPropsValidator,
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
+  dropdownDefaultProps,
 } from '../utils'
-import {
-  getInitialState,
-  defaultProps,
-  useControlledReducer,
-  propTypes,
-} from './utils'
+import {getInitialState, useControlledReducer, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
@@ -46,7 +42,7 @@ function useCombobox<Item>(
   validatePropTypes(userProps, useCombobox, propTypes)
   // Props defaults and destructuring.
   const props: UseComboboxMergedProps<Item> = {
-    ...defaultProps,
+    ...dropdownDefaultProps,
     ...userProps,
   }
   const {items, scrollIntoView, environment, getA11yStatusMessage} = props

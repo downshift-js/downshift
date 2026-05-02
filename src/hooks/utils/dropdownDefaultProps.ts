@@ -8,6 +8,9 @@ export const dropdownDefaultProps = {
   itemToKey(item: unknown) {
     return item
   },
+  isItemDisabled() {
+    return false
+  },
   stateReducer: <S, A>(
     _state: S,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
