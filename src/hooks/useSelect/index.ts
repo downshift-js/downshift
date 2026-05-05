@@ -8,11 +8,7 @@ import {
   normalizeArrowKey,
 } from '../../utils'
 import {
-  isAcceptedCharacterKey,
-  useScrollIntoView,
-  isDropdownsStateEqual,
-} from '../utils.legacy'
-import {
+  isDropdownStateEqual,
   useControlledReducer,
   getInitialValue,
   getItemAndIndex,
@@ -24,6 +20,7 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   dropdownDefaultProps,
+  useScrollIntoView,
 } from '../utils'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
@@ -57,13 +54,13 @@ function useSelect<Item>(
     UseSelectState<Item>,
     UseSelectReducerAction<Item>,
     UseSelectMergedProps<Item>
-  >(downshiftSelectReducer, props, getInitialState, isDropdownsStateEqual)
+  >(downshiftSelectReducer, props, getInitialState, isDropdownStateEqual)
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   // Element refs.
   const toggleButtonRef = useRef<HTMLElement | null>(null)
   const menuRef = useRef<HTMLElement | null>(null)
-  const itemRefs = useRef<Record<string, HTMLElement>>({})
+  const itemsRef = useRef<Record<string, HTMLElement>>({})
 
   // used to keep the inputValue clearTimeout object between renders.
   const clearTimeoutRef = useRef<ReturnType<typeof debounce> | null>(null)
@@ -71,12 +68,6 @@ function useSelect<Item>(
   const elementIds = useElementIds(props)
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
-
-  // Some utils.
-  const getItemNodeFromIndex = useCallback(
-    (index: number) => itemRefs.current[elementIds.getItemId(index)],
-    [elementIds],
-  )
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -87,14 +78,14 @@ function useSelect<Item>(
     environment,
   )
   // Scroll on highlighted item if change comes from keyboard.
-  const shouldScrollRef = useScrollIntoView({
-    menuElement: menuRef.current,
+  const preventScroll = useScrollIntoView(
+    scrollIntoView,
     highlightedIndex,
     isOpen,
-    itemRefs,
-    scrollIntoView,
-    getItemNodeFromIndex,
-  })
+    menuRef.current,
+    itemsRef.current,
+    elementIds.getItemId,
+  )
   // Sets cleanup for the keysSoFar callback, debounced after 500ms.
   useEffect(() => {
     // init the clean function here as we need access to dispatch.
@@ -161,7 +152,7 @@ function useSelect<Item>(
   // Reset itemRefs on close.
   useEffect(() => {
     if (!isOpen) {
-      itemRefs.current = {}
+      itemsRef.current = {}
     }
   }, [isOpen])
 
@@ -342,7 +333,7 @@ function useSelect<Item>(
           toggleButtonKeyDownHandlers[
             key as keyof typeof toggleButtonKeyDownHandlers
           ](event)
-        } else if (isAcceptedCharacterKey(key)) {
+        } else if (/^\S{1}$/.test(key)) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownCharacter,
             key,
@@ -448,7 +439,7 @@ function useSelect<Item>(
         ) {
           return
         }
-        shouldScrollRef.current = false
+        preventScroll()
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
           index,
@@ -468,7 +459,7 @@ function useSelect<Item>(
           ref as React.Ref<HTMLElement>,
           (itemNode: HTMLElement | null) => {
             if (itemNode) {
-              itemRefs.current[elementIds.getItemId(index)] = itemNode
+              itemsRef.current[elementIds.getItemId(index)] = itemNode
             }
           },
         ),
@@ -496,7 +487,7 @@ function useSelect<Item>(
 
       return resultItemProps
     },
-    [latest, elementIds, mouseAndTouchTrackers, shouldScrollRef, dispatch],
+    [latest, elementIds, mouseAndTouchTrackers, preventScroll, dispatch],
   ) as UseSelectGetItemProps<Item>
 
   // Action functions.

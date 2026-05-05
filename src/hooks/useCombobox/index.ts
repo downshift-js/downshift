@@ -7,8 +7,8 @@ import {
   handleRefs,
   normalizeArrowKey,
 } from '../../utils'
-import {useScrollIntoView, isDropdownsStateEqual} from '../utils.legacy'
 import {
+  isDropdownStateEqual,
   getItemAndIndex,
   getInitialValue,
   useIsInitialMount,
@@ -19,6 +19,7 @@ import {
   useMouseAndTouchTracker,
   useGetterPropsCalledChecker,
   dropdownDefaultProps,
+  useScrollIntoView,
 } from '../utils'
 import {getInitialState, useControlledReducer, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
@@ -51,13 +52,13 @@ function useCombobox<Item>(
     downshiftUseComboboxReducer,
     props,
     getInitialState,
-    isDropdownsStateEqual,
+    isDropdownStateEqual,
   )
   const {isOpen, highlightedIndex, selectedItem, inputValue} = state
 
   // Element refs.
   const menuRef = useRef<HTMLElement | null>(null)
-  const itemRefs = useRef<Record<string, HTMLElement>>({})
+  const itemsRef = useRef<Record<string, HTMLElement>>({})
   const inputRef = useRef<HTMLInputElement | null>(null)
   const toggleButtonRef = useRef<HTMLElement | null>(null)
   const isInitialMount = useIsInitialMount()
@@ -69,11 +70,6 @@ function useCombobox<Item>(
   // utility callback to get item element.
   const latest = useLatestRef({state, props})
 
-  const getItemNodeFromIndex = useCallback(
-    (index: number) => itemRefs.current[elementIds.getItemId(index)],
-    [elementIds],
-  )
-
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
   useA11yMessageStatus(
@@ -83,14 +79,14 @@ function useCombobox<Item>(
     environment,
   )
   // Scroll on highlighted item if change comes from keyboard.
-  const shouldScrollRef = useScrollIntoView({
-    menuElement: menuRef.current,
+  const preventScroll = useScrollIntoView(
+    scrollIntoView,
     highlightedIndex,
     isOpen,
-    itemRefs,
-    scrollIntoView,
-    getItemNodeFromIndex,
-  })
+    menuRef.current,
+    itemsRef.current,
+    elementIds.getItemId,
+  )
   useControlPropsValidator({
     state,
     props,
@@ -138,7 +134,7 @@ function useCombobox<Item>(
   // Reset itemRefs on close.
   useEffect(() => {
     if (!isOpen) {
-      itemRefs.current = {}
+      itemsRef.current = {}
     }
   }, [isOpen])
   // Reset itemRefs on close.
@@ -327,7 +323,7 @@ function useCombobox<Item>(
           return
         }
 
-        shouldScrollRef.current = false
+        preventScroll()
 
         dispatch({
           type: stateChangeTypes.ItemMouseMove,
@@ -346,7 +342,7 @@ function useCombobox<Item>(
       return {
         [refKey]: handleRefs(ref, itemNode => {
           if (itemNode) {
-            itemRefs.current[elementIds.getItemId(index)] = itemNode
+            itemsRef.current[elementIds.getItemId(index)] = itemNode
           }
         }),
         'aria-disabled': disabled,
@@ -365,7 +361,7 @@ function useCombobox<Item>(
       }
     },
 
-    [dispatch, elementIds, latest, mouseAndTouchTrackers, shouldScrollRef],
+    [dispatch, elementIds, latest, mouseAndTouchTrackers, preventScroll],
   ) as UseComboboxGetItemProps<Item>
 
   const getToggleButtonProps = useCallback(
