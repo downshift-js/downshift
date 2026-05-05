@@ -8,7 +8,7 @@ export const dropdownDefaultProps = {
   itemToKey(item: unknown) {
     return item
   },
-  isItemDisabled() {
+  isItemDisabled(_item: unknown) {
     return false
   },
   stateReducer: <S, A>(

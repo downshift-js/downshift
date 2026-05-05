@@ -67,6 +67,12 @@ describe('useMouseAndTouchTracker', () => {
     jest.clearAllMocks()
   })
 
+  test('renders without error', () => {
+    expect(() => {
+      renderHook(() => useMouseAndTouchTracker(undefined, jest.fn(), []))
+    }).not.toThrow()
+  })
+
   test('adds listeners to the environment', () => {
     renderHook(
       props =>
