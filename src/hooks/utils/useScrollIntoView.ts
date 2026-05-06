@@ -45,7 +45,7 @@ export function useScrollIntoView(
     }
   }, [highlightedIndex])
 
-  return function preventScroll() {
+  return React.useCallback(function preventScroll() {
     shouldScrollRef.current = false
-  }
+  }, [])
 }
