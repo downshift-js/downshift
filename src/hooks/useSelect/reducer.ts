@@ -6,7 +6,7 @@ import {
   getChangesOnSelection,
   getHighlightedIndexOnOpen,
 } from '../utils'
-import commonReducer from '../reducer'
+import commonReducer from '../utils/reducer'
 
 import {getItemIndexByCharacterKey} from './utils'
 import * as stateChangeTypes from './stateChangeTypes'

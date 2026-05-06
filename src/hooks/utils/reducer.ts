@@ -3,16 +3,45 @@ import {
   dropdownDefaultStateValues,
   getDefaultHighlightedIndex,
   getHighlightedIndexOnOpen,
-} from './utils'
+} from '.'
 
-export default function downshiftCommonReducer(
-  state,
-  props,
-  action,
-  stateChangeTypes,
-) {
+type CommonState<Item> = {
+  highlightedIndex: number
+  isOpen: boolean
+  selectedItem: Item | null
+  inputValue: string
+}
+
+type CommonProps<Item> = {
+  items: Item[]
+  isItemDisabled: (item: Item, index: number) => boolean
+  itemToKey: (item: Item | null) => unknown
+  initialHighlightedIndex?: number
+  defaultHighlightedIndex?: number
+  defaultIsOpen?: boolean
+  defaultSelectedItem?: Item | null
+  defaultInputValue?: string
+}
+
+type CommonAction<Item> = {
+  type: string
+  index?: number
+  disabled?: boolean
+  highlightedIndex?: number
+  inputValue?: string
+  selectedItem?: Item | null
+}
+
+type CommonStateChangeTypes = Record<string, string>
+
+export default function downshiftCommonReducer<Item>(
+  state: CommonState<Item>,
+  props: CommonProps<Item>,
+  action: CommonAction<Item>,
+  stateChangeTypes: CommonStateChangeTypes,
+): CommonState<Item> {
   const {type} = action
-  let changes
+  let changes: Partial<CommonState<Item>>
 
   switch (type) {
     case stateChangeTypes.ItemMouseMove:
@@ -68,15 +97,17 @@ export default function downshiftCommonReducer(
       }
 
       break
-    case stateChangeTypes.FunctionSetHighlightedIndex:
+    case stateChangeTypes.FunctionSetHighlightedIndex: {
+      const highlightedIndex = action.highlightedIndex ?? -1
       changes = {
         highlightedIndex: props.isItemDisabled(
-          props.items[action.highlightedIndex],
-          action.highlightedIndex,
+          props.items[highlightedIndex] as Item,
+          highlightedIndex,
         )
           ? -1
-          : action.highlightedIndex,
+          : highlightedIndex,
       }
+    }
 
       break
     case stateChangeTypes.FunctionSetInputValue:

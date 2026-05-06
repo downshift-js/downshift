@@ -6,7 +6,7 @@ import {
   getChangesOnSelection,
   getHighlightedIndexOnOpen,
 } from '../utils'
-import commonReducer from '../reducer'
+import commonReducer from '../utils/reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   UseComboboxMergedProps,
