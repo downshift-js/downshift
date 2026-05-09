@@ -66,8 +66,9 @@ export interface UseMultipleSelectionDispatchAction<Item> {
   activeIndex?: number
 }
 
-export interface UseMultipleSelectionStateChange<Item>
-  extends Partial<UseMultipleSelectionState<Item>> {
+export interface UseMultipleSelectionStateChange<Item> extends Partial<
+  UseMultipleSelectionState<Item>
+> {
   type: UseMultipleSelectionStateChangeTypes
 }
 
@@ -91,8 +92,9 @@ export interface A11yRemovalMessage<Item> {
   activeIndex: number
 }
 
-export interface UseMultipleSelectionGetSelectedItemPropsOptions<Item>
-  extends React.HTMLProps<HTMLElement> {
+export interface UseMultipleSelectionGetSelectedItemPropsOptions<
+  Item,
+> extends React.HTMLProps<HTMLElement> {
   refKey?: string
   ref?: React.Ref<HTMLElement>
   index?: number
@@ -106,8 +108,7 @@ export interface UseMultipleSelectionGetSelectedItemReturnValue {
   onKeyDown: React.KeyboardEventHandler
 }
 
-export interface UseMultipleSelectionGetDropdownPropsOptions
-  extends React.HTMLProps<HTMLElement> {
+export interface UseMultipleSelectionGetDropdownPropsOptions extends React.HTMLProps<HTMLElement> {
   preventKeyAction?: boolean
   refKey?: string
   ref?: React.Ref<HTMLElement>
@@ -143,9 +144,10 @@ export interface UseMultipleSelectionActions<Item> {
   setActiveIndex: (index: number) => void
 }
 
-export type UseMultipleSelectionReturnValue<Item> = UseMultipleSelectionState<Item> &
-  UseMultipleSelectionPropGetters<Item> &
-  UseMultipleSelectionActions<Item>
+export type UseMultipleSelectionReturnValue<Item> =
+  UseMultipleSelectionState<Item> &
+    UseMultipleSelectionPropGetters<Item> &
+    UseMultipleSelectionActions<Item>
 
 export interface UseMultipleSelectionInterface {
   <Item>(
@@ -167,3 +169,5 @@ export interface UseMultipleSelectionInterface {
     FunctionReset: UseMultipleSelectionStateChangeTypes.FunctionReset
   }
 }
+
+export declare const useMultipleSelection: UseMultipleSelectionInterface

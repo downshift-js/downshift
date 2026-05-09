@@ -366,3 +366,5 @@ export interface UseSelectInterface {
     FunctionReset: UseSelectStateChangeTypes.FunctionReset
   }
 }
+
+export declare const useSelect: UseSelectInterface

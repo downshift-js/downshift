@@ -413,4 +413,4 @@ export interface UseComboboxInterface {
   }
 }
 
-// export const useCombobox: UseComboboxInterface
+export declare const useCombobox: UseComboboxInterface

@@ -177,3 +177,5 @@ export type UseTagGroupFunctionAddItem<Item> = {
   item: Item
   index?: number
 }
+
+export declare const useTagGroup: UseTagGroupInterface
