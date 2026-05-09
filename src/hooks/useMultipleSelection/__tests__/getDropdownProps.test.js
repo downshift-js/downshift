@@ -219,7 +219,7 @@ describe('getDropdownProps', () => {
     })
 
     test('on click it should remove active status from item if any', async () => {
-      const {user} =  renderMultipleCombobox({
+      const {user} = renderMultipleCombobox({
         multipleSelectionProps: {
           initialSelectedItems: [items[0], items[1]],
           initialActiveIndex: 1,

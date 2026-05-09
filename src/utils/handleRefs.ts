@@ -1,6 +1,8 @@
 import * as React from 'react'
 
-export function handleRefs<T extends HTMLElement>(...refs: (React.Ref<T> | undefined)[]) {
+export function handleRefs<T extends HTMLElement>(
+  ...refs: (React.Ref<T> | undefined)[]
+) {
   return (node: T) => {
     refs.forEach(ref => {
       if (typeof ref === 'function') {

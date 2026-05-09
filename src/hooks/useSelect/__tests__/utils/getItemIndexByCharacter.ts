@@ -8,8 +8,10 @@ import {items} from '../../../testUtils'
  */
 export function getItemIndexByCharacter(character: string, startIndex = 0) {
   return (
-    items.slice(startIndex).findIndex(item =>
-      item.toLowerCase().startsWith(character.toLowerCase()),
-    ) + startIndex
+    items
+      .slice(startIndex)
+      .findIndex(item =>
+        item.toLowerCase().startsWith(character.toLowerCase()),
+      ) + startIndex
   )
 }

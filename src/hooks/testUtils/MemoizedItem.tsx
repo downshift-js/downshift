@@ -4,7 +4,9 @@ import {dataTestIds} from './fixtures'
 type MemoizedItemProps = {
   index: number
   item: string
-  getItemProps: (options: Record<string, unknown>) => React.HTMLAttributes<HTMLLIElement>
+  getItemProps: (
+    options: Record<string, unknown>,
+  ) => React.HTMLAttributes<HTMLLIElement>
   stringItem: string
   [key: string]: unknown
 }

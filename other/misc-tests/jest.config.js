@@ -5,7 +5,7 @@ module.exports = Object.assign(jestConfig, {
   roots: ['.'],
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.(js|jsx|mjs)$': ['babel-jest', { rootMode: 'upward' }],
+    '^.+\\.(js|jsx|mjs)$': ['babel-jest', {rootMode: 'upward'}],
   },
   transformIgnorePatterns: [
     'node_modules/(?!(dedent|@testing-library/preact)/)',

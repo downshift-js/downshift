@@ -28,7 +28,9 @@ describe('getHighlightedIndex', () => {
 
     test('wraps around and skips disabled when circular and all forward items are disabled', () => {
       const allButFirstDisabled = (_item: unknown, index: number) => index !== 0
-      expect(getHighlightedIndex(1, 1, items, allButFirstDisabled, true)).toBe(0)
+      expect(getHighlightedIndex(1, 1, items, allButFirstDisabled, true)).toBe(
+        0,
+      )
     })
 
     test('returns start when all items forward are disabled and non-circular', () => {

@@ -1,4 +1,4 @@
-import { dropdownDefaultProps } from "../dropdownDefaultProps";
+import {dropdownDefaultProps} from '../dropdownDefaultProps'
 
 test('dropdownDefaultProps has the expected properties', () => {
   expect(dropdownDefaultProps).toHaveProperty('itemToString')
@@ -24,25 +24,25 @@ test('dropdownDefaultProps.itemToString returns string representation for truthy
 })
 
 test('dropdownDefaultProps.itemToKey returns the item itself', () => {
-  const item = { id: 1, name: 'Test' }
+  const item = {id: 1, name: 'Test'}
   expect(dropdownDefaultProps.itemToKey(item)).toBe(item)
 })
 
 test('dropdownDefaultProps.isItemDisabled returns false for any item', () => {
   expect(dropdownDefaultProps.isItemDisabled({})).toBe(false)
-  expect(dropdownDefaultProps.isItemDisabled({ disabled: true })).toBe(false)
+  expect(dropdownDefaultProps.isItemDisabled({disabled: true})).toBe(false)
 })
 
 test('dropdownDefaultProps.stateReducer returns changes from actionAndChanges', () => {
-  const state = { highlightedIndex: -1 }
+  const state = {highlightedIndex: -1}
   const actionAndChanges = {
     type: 'setHighlightedIndex',
-    changes: { highlightedIndex: 2 },
+    changes: {highlightedIndex: 2},
     props: {},
   }
-  expect(
-    dropdownDefaultProps.stateReducer(state, actionAndChanges),
-  ).toEqual({ highlightedIndex: 2 })
+  expect(dropdownDefaultProps.stateReducer(state, actionAndChanges)).toEqual({
+    highlightedIndex: 2,
+  })
 })
 
 test('dropdownDefaultProps.environment is window in browser environment', () => {

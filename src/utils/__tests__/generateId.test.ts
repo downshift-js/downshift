@@ -1,7 +1,8 @@
 import {generateId, resetIdCounter, setIdCounter} from '../generateId'
 
 jest.mock('react', () => {
-  const {useId: _useId, ...react} = jest.requireActual<typeof import('react')>('react')
+  const {useId: _useId, ...react} =
+    jest.requireActual<typeof import('react')>('react')
   return react
 })
 

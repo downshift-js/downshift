@@ -41,10 +41,7 @@ const defaultProps: ReducerProps = {
 }
 
 function renderReducer(propsOverrides: Partial<ReducerProps> = {}) {
-  const reducer = (
-    state: ReducerState,
-    action: ReducerAction,
-  ) => {
+  const reducer = (state: ReducerState, action: ReducerAction) => {
     switch (action.type) {
       case 'increment':
         return {count: state.count + 1}
@@ -212,7 +209,10 @@ describe('useEnhancedReducer', () => {
       expect.objectContaining({
         changes: {count: 6},
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        props: expect.objectContaining<Partial<ReducerProps>>({...defaultProps, count: 5}),
+        props: expect.objectContaining<Partial<ReducerProps>>({
+          ...defaultProps,
+          count: 5,
+        }),
       }),
     )
   })

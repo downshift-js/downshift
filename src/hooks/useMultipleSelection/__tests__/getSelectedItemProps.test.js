@@ -195,7 +195,7 @@ describe('getSelectedItemProps', () => {
       })
 
       test('keeps tabindex "0" to an already active item', async () => {
-       const {user} = renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 0,

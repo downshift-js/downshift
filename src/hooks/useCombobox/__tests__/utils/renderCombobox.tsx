@@ -16,7 +16,11 @@ type DropdownComboboxProps = Partial<UseComboboxProps<string>> & {
   }) => React.ReactNode
 }
 
-function DropdownCombobox({renderSpy, renderItem, ...props}: DropdownComboboxProps) {
+function DropdownCombobox({
+  renderSpy,
+  renderItem,
+  ...props
+}: DropdownComboboxProps) {
   const {
     isOpen,
     getToggleButtonProps,
@@ -53,7 +57,10 @@ function DropdownCombobox({renderSpy, renderItem, ...props}: DropdownComboboxPro
                 <li
                   data-testid={dataTestIds.item(index)}
                   key={`${stringItem}${index}`}
-                  {...(getItemProps({item, index}) as React.HTMLAttributes<HTMLLIElement>)}
+                  {...(getItemProps({
+                    item,
+                    index,
+                  }) as React.HTMLAttributes<HTMLLIElement>)}
                 >
                   {stringItem}
                 </li>

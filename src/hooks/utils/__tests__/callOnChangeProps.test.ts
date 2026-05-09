@@ -98,7 +98,12 @@ test('callOnChangeProps calls multiple on[Key]Change handlers if multiple values
   const onCountChange = jest.fn()
   const onOtherChange = jest.fn()
   const onStateChange = jest.fn()
-  const props = {stateReducer: () => ({}), onCountChange, onOtherChange, onStateChange}
+  const props = {
+    stateReducer: () => ({}),
+    onCountChange,
+    onOtherChange,
+    onStateChange,
+  }
   const action = {type: 'test', props}
   const state = {count: 0, other: 'a'}
   const newState = {count: 1, other: 'b'}
@@ -118,7 +123,11 @@ test('callOnChangeProps calls multiple on[Key]Change handlers if multiple values
     other: 'b',
   })
   expect(onStateChange).toHaveBeenCalledTimes(1)
-  expect(onStateChange).toHaveBeenCalledWith({type: 'test', count: 1, other: 'b'})
+  expect(onStateChange).toHaveBeenCalledWith({
+    type: 'test',
+    count: 1,
+    other: 'b',
+  })
 })
 
 test('callOnChangeProps calls onStateChange with all changes even if some on[Key]Change handlers are missing', () => {

@@ -77,33 +77,32 @@ export default function DropdownMultipleSelect() {
         Choose an element:
       </label>
       <div style={tagGroupSyles}>
-        {selectedItems.map(function renderSelectedItem(
-          selectedItemForRender,
-          index,
-        ) {
-          return (
-            <span
-              style={tagStyles}
-              key={`selected-item-${index}`}
-              {...getSelectedItemProps({
-                selectedItem: selectedItemForRender,
-                index,
-              })}
-            >
-              {selectedItemForRender}
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+        {selectedItems.map(
+          function renderSelectedItem(selectedItemForRender, index) {
+            return (
               <span
-                style={{padding: '4px', cursor: 'pointer'}}
-                onClick={e => {
-                  e.stopPropagation()
-                  removeSelectedItem(selectedItemForRender)
-                }}
+                style={tagStyles}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({
+                  selectedItem: selectedItemForRender,
+                  index,
+                })}
               >
-                &#10005;
+                {selectedItemForRender}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  style={{padding: '4px', cursor: 'pointer'}}
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeSelectedItem(selectedItemForRender)
+                  }}
+                >
+                  &#10005;
+                </span>
               </span>
-            </span>
-          )
-        })}
+            )
+          },
+        )}
         <div
           style={{
             padding: '4px',

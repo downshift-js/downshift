@@ -76,30 +76,29 @@ export default function DropdownMultipleSelect() {
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <div>
-        {selectedItems.map(function renderSelectedItem(
-          selectedItemForRender,
-          index,
-        ) {
-          return (
-            <span
-              key={`selected-item-${index}`}
-              {...getSelectedItemProps({
-                selectedItem: selectedItemForRender,
-                index,
-              })}
-            >
-              {selectedItemForRender}
+        {selectedItems.map(
+          function renderSelectedItem(selectedItemForRender, index) {
+            return (
               <span
-                onClick={e => {
-                  e.stopPropagation()
-                  removeSelectedItem(selectedItemForRender)
-                }}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({
+                  selectedItem: selectedItemForRender,
+                  index,
+                })}
               >
-                &#10005;
+                {selectedItemForRender}
+                <span
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeSelectedItem(selectedItemForRender)
+                  }}
+                >
+                  &#10005;
+                </span>
               </span>
-            </span>
-          )
-        })}
+            )
+          },
+        )}
         <div
           {...getToggleButtonProps(
             getDropdownProps({preventKeyAction: isOpen}),

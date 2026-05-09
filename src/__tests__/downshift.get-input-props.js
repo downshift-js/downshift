@@ -555,8 +555,14 @@ test('on toggle button blur does not reset the state when input gets focused', (
   const utils = renderDownshift({
     items,
   })
-  const {childrenSpy, changeInputValue, arrowDownInput, enterOnInput, button, input} =
-    utils
+  const {
+    childrenSpy,
+    changeInputValue,
+    arrowDownInput,
+    enterOnInput,
+    button,
+    input,
+  } = utils
   changeInputValue('a')
   // ↓
   arrowDownInput()

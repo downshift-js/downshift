@@ -17,7 +17,11 @@ type DropdownSelectProps = Omit<UseSelectProps<string>, 'items'> & {
   }) => React.ReactNode
 }
 
-function DropdownSelect({renderSpy, renderItem, ...props}: DropdownSelectProps) {
+function DropdownSelect({
+  renderSpy,
+  renderItem,
+  ...props
+}: DropdownSelectProps) {
   const resolvedItems = props.items ?? items
   const {
     isOpen,
@@ -50,7 +54,10 @@ function DropdownSelect({renderSpy, renderItem, ...props}: DropdownSelectProps) 
                 <li
                   data-testid={dataTestIds.item(index)}
                   key={`${stringItem}${index}`}
-                  {...(getItemProps({item, index}) as React.HTMLAttributes<HTMLLIElement>)}
+                  {...(getItemProps({
+                    item,
+                    index,
+                  }) as React.HTMLAttributes<HTMLLIElement>)}
                 >
                   {stringItem}
                 </li>

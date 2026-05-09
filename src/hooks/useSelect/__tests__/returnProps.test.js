@@ -117,9 +117,12 @@ describe('returnProps', () => {
 
     test('setHighlightedIndex does not set highlightedIndex if item is disabled', () => {
       const highlightedIndex = 2
-      const {result} = renderUseSelect({initialIsOpen: true, isItemDisabled(_item, index) {
-        return index === highlightedIndex
-      }})
+      const {result} = renderUseSelect({
+        initialIsOpen: true,
+        isItemDisabled(_item, index) {
+          return index === highlightedIndex
+        },
+      })
 
       act(() => {
         result.current.setHighlightedIndex(highlightedIndex)
