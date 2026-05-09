@@ -5,8 +5,8 @@
   "main": "dist/downshift.cjs.cjs",
   "react-native": "dist/downshift.native.cjs.cjs",
   "module": "dist/downshift.esm.mjs",
-  "typings": "typings/index.d.ts",
-  "types": "typings/index.d.ts",
+  "typings": "index.d.ts",
+  "types": "index.d.ts",
   "sideEffects": false,
   "browserslist": [],
   "scripts": {
@@ -44,7 +44,7 @@
   },
   "files": [
     "dist",
-    "typings",
+    "index.d.ts",
     "preact",
     "flow-typed"
   ],
@@ -52,12 +52,12 @@
     ".": {
       "import": "./dist/downshift.esm.mjs",
       "require": "./dist/downshift.cjs.cjs",
-      "types": "./typings/index.d.ts",
+      "types": "./index.d.ts",
       "default": "./dist/downshift.esm.mjs"
     },
     "./react-native": {
       "require": "./dist/downshift.native.cjs.cjs",
-      "types": "./typings/index.d.ts"
+      "types": "./index.d.ts"
     }
   },
   "keywords": [
@@ -199,7 +199,6 @@
     "dist",
     ".docusaurus",
     "build",
-    "typings",
     "test",
     "playwright-report",
     "test-results"

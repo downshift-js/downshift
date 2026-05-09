@@ -9,11 +9,7 @@
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": true,
     "module": "ESNext",
-    "typeRoots": [
-      "./typings",
-      "./node_modules/@types",
-      "./node_modules/@testing-library"
-    ],
+    "typeRoots": ["./node_modules/@types", "./node_modules/@testing-library"],
     "strictNullChecks": true,
     "outDir": "dist",
     "declaration": true,
