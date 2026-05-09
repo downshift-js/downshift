@@ -96,13 +96,15 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<
   Item,
 > extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   index?: number
   selectedItem: Item
 }
 
 export interface UseMultipleSelectionGetSelectedItemReturnValue {
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   tabIndex: 0 | -1
   onClick: React.MouseEventHandler
   onKeyDown: React.KeyboardEventHandler
@@ -111,11 +113,13 @@ export interface UseMultipleSelectionGetSelectedItemReturnValue {
 export interface UseMultipleSelectionGetDropdownPropsOptions extends React.HTMLProps<HTMLElement> {
   preventKeyAction?: boolean
   refKey?: string
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
 }
 
 export interface UseMultipleSelectionGetDropdownReturnValue {
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
 }

@@ -1,5 +1,6 @@
 // Downshift (legacy class component)
 export * from './src/downshift.types'
+export {default} from './src/downshift.types'
 
 // useSelect
 export * from './src/hooks/useSelect/index.types'

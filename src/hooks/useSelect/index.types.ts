@@ -234,14 +234,16 @@ export interface UseSelectIsOpenChange<
 
 export interface UseSelectGetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
 }
 
 export interface UseSelectGetMenuPropsReturnValue {
   'aria-labelledby': string | undefined
   id: string
   onMouseLeave: React.MouseEventHandler
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   role: 'listbox'
 }
 
@@ -252,7 +254,8 @@ export type UseSelectGetMenuProps = <Options>(
 
 export interface UseSelectGetToggleButtonPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -267,7 +270,8 @@ export interface UseSelectGetToggleButtonPropsReturnValue {
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
   onPress?: (event: React.BaseSyntheticEvent) => void
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   role: 'combobox'
   tabIndex: 0
 }
@@ -296,7 +300,8 @@ export interface UseSelectGetItemPropsOptions<
   item?: Item
   index?: number
   refKey?: string
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -308,7 +313,8 @@ export interface UseSelectGetItemPropsReturnValue {
   onMouseDown?: React.MouseEventHandler
   onMouseMove?: React.MouseEventHandler
   onPress?: React.MouseEventHandler
-  ref?: React.Ref<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   role: 'option'
 }
 
