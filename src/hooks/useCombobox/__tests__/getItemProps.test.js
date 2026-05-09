@@ -1,5 +1,7 @@
-import {act, renderHook} from '@testing-library/react'
+import useCombobox from '..'
 import {
+  act,
+  renderHook,
   renderCombobox,
   renderUseCombobox,
   items,
@@ -10,8 +12,33 @@ import {
   getItems,
   clickOnItemAtIndex,
   keyDownOnInput,
-} from '../testUtils'
-import useCombobox from '..'
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const utils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...utils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 describe('getItemProps', () => {
   test('throws error if no index or item has been passed', () => {
@@ -202,11 +229,11 @@ describe('getItemProps', () => {
     describe('on mouse over', () => {
       test('it highlights the item', async () => {
         const index = 1
-        renderCombobox({
+        const {user} = renderCombobox({
           isOpen: true,
         })
 
-        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(user, index)
 
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
         expect(getInput()).toHaveAttribute(
@@ -218,12 +245,12 @@ describe('getItemProps', () => {
       test('it removes highlight from the previously highlighted item', async () => {
         const index = 1
         const previousIndex = 2
-        renderCombobox({
+        const {user} = renderCombobox({
           isOpen: true,
           initialHighlightedIndex: previousIndex,
         })
 
-        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(user, index)
 
         expect(getItemAtIndex(index)).toHaveAttribute('aria-selected', 'true')
         expect(getItemAtIndex(previousIndex)).toHaveAttribute(
@@ -242,13 +269,13 @@ describe('getItemProps', () => {
 
       it('keeps highlight on multiple events', async () => {
         const index = 1
-        renderCombobox({
+        const {user} = renderCombobox({
           isOpen: true,
         })
 
-        await mouseMoveItemAtIndex(index)
-        await mouseMoveItemAtIndex(index)
-        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(user, index)
+        await mouseMoveItemAtIndex(user, index)
+        await mouseMoveItemAtIndex(user, index)
 
         expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
@@ -261,7 +288,7 @@ describe('getItemProps', () => {
         const disabledIndex = 1
         const highlightedIndex = 2
 
-        renderCombobox({
+        const {user} = renderCombobox({
           items,
           isOpen: true,
           isItemDisabled(_item, index) {
@@ -270,14 +297,14 @@ describe('getItemProps', () => {
         })
         const input = getInput()
 
-        await mouseMoveItemAtIndex(highlightedIndex)
+        await mouseMoveItemAtIndex(user, highlightedIndex)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
 
-        await mouseMoveItemAtIndex(disabledIndex)
+        await mouseMoveItemAtIndex(user, disabledIndex)
         expect(input).toHaveAttribute('aria-activedescendant', '')
       })
 
@@ -286,7 +313,7 @@ describe('getItemProps', () => {
         let touchEndHandler
         const index = 1
 
-        renderCombobox({
+        const {user} = renderCombobox({
           isOpen: true,
           environment: {
             addEventListener: (name, handler) => {
@@ -307,7 +334,7 @@ describe('getItemProps', () => {
         })
 
         act(() => touchEndHandler({target: null}))
-        await mouseMoveItemAtIndex(index)
+        await mouseMoveItemAtIndex(user, index)
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
@@ -316,12 +343,12 @@ describe('getItemProps', () => {
     describe('on click', () => {
       test('it selects the item and keeps focus on the input', async () => {
         const index = 1
-        renderCombobox({
+        const {user} = renderCombobox({
           initialIsOpen: true,
         })
         const input = getInput()
 
-        await clickOnItemAtIndex(index)
+        await clickOnItemAtIndex(user, index)
 
         expect(getItems()).toHaveLength(0)
         expect(input).toHaveValue(items[index])
@@ -331,13 +358,13 @@ describe('getItemProps', () => {
       test('it selects the item and resets to user defined defaults', async () => {
         const index = 1
         const defaultHighlightedIndex = 2
-        renderCombobox({
+        const {user} = renderCombobox({
           defaultIsOpen: true,
           defaultHighlightedIndex,
         })
         const input = getInput()
 
-        await clickOnItemAtIndex(index)
+        await clickOnItemAtIndex(user, index)
 
         expect(input).toHaveValue(items[index])
         expect(getItems()).toHaveLength(items.length)
@@ -350,7 +377,7 @@ describe('getItemProps', () => {
       test('it selects the item and resets to user defined defaults, but considers disabled status for an item', async () => {
         const index = 1
         const defaultHighlightedIndex = 2
-        renderCombobox({
+        const {user} = renderCombobox({
           defaultIsOpen: true,
           defaultHighlightedIndex,
           isItemDisabled(_item, idx) {
@@ -359,7 +386,7 @@ describe('getItemProps', () => {
         })
         const input = getInput()
 
-        await clickOnItemAtIndex(index)
+        await clickOnItemAtIndex(user, index)
 
         expect(input).toHaveValue(items[index])
         expect(getItems()).toHaveLength(items.length)
@@ -371,12 +398,12 @@ describe('getItemProps', () => {
   describe('scrolling', () => {
     test('is performed by the menu to the item if highlighted and not 100% visible', async () => {
       const scrollIntoView = jest.fn()
-      renderCombobox({
+      const {user} = renderCombobox({
         initialIsOpen: true,
         scrollIntoView,
       })
 
-      await keyDownOnInput('{End}')
+      await keyDownOnInput(user, '{End}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })

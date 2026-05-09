@@ -1,5 +1,5 @@
-import {act} from '@testing-library/react'
 import {
+  act,
   renderCombobox,
   renderUseCombobox,
   items,
@@ -7,7 +7,33 @@ import {
   clickOnToggleButton,
   getInput,
   getItems,
-} from '../testUtils'
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const utils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...utils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
@@ -126,58 +152,58 @@ describe('getToggleButtonProps', () => {
   describe('event handlers', () => {
     describe('on click', () => {
       test('opens the closed menu', async () => {
-        renderCombobox()
+        const {user} = renderCombobox()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(items.length)
       })
 
       test('closes the open menu', async () => {
-        renderCombobox({
+        const {user} = renderCombobox({
           initialIsOpen: true,
         })
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(0)
       })
 
       test('opens and closes menu at consecutive clicks', async () => {
-        renderCombobox()
+        const {user} = renderCombobox()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(items.length)
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(0)
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(items.length)
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getItems()).toHaveLength(0)
       })
 
       test('opens the closed menu without any option highlighted', async () => {
-        renderCombobox()
+        const {user} = renderCombobox()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
       test('opens the closed menu with selected option highlighted', async () => {
         const selectedIndex = 3
-        renderCombobox({
+        const {user} = renderCombobox({
           initialSelectedItem: items[selectedIndex],
         })
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
@@ -187,39 +213,39 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu at initialHighlightedIndex, but on first click only', async () => {
         const initialHighlightedIndex = 3
-        renderCombobox({
+        const {user} = renderCombobox({
           initialHighlightedIndex,
         })
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getInput()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(initialHighlightedIndex),
         )
 
-        await clickOnToggleButton()
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
+        await clickOnToggleButton(user)
 
         expect(getInput()).toHaveAttribute('aria-activedescendant', '')
       })
 
       test('opens the closed menu at defaultHighlightedIndex, on every click', async () => {
         const defaultHighlightedIndex = 3
-        renderCombobox({
+        const {user} = renderCombobox({
           defaultHighlightedIndex,
         })
         const input = getInput()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(defaultHighlightedIndex),
         )
 
-        await clickOnToggleButton()
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
+        await clickOnToggleButton(user)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -229,20 +255,20 @@ describe('getToggleButtonProps', () => {
 
       test('opens the closed menu at highlightedIndex from props, on every click', async () => {
         const highlightedIndex = 3
-        renderCombobox({
+        const {user} = renderCombobox({
           highlightedIndex,
         })
         const input = getInput()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(highlightedIndex),
         )
 
-        await clickOnToggleButton()
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
+        await clickOnToggleButton(user)
 
         expect(input).toHaveAttribute(
           'aria-activedescendant',
@@ -251,17 +277,17 @@ describe('getToggleButtonProps', () => {
       })
 
       test('opens the closed menu and sets focus on the input', async () => {
-        renderCombobox()
+        const {user} = renderCombobox()
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getInput()).toHaveFocus()
       })
 
       test('opens the closed menu and sets no focus if there is no environment', async () => {
-        renderCombobox({environment: undefined})
+        const {user} = renderCombobox({environment: undefined})
 
-        await clickOnToggleButton()
+        await clickOnToggleButton(user)
 
         expect(getInput()).not.toHaveFocus()
       })

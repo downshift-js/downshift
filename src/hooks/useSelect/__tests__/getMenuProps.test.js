@@ -1,14 +1,42 @@
-import {renderHook, act} from '@testing-library/react'
+import utils from '../../utils'
+import useSelect from '..'
 import {
+  renderHook,
+  act,
   renderUseSelect,
   renderSelect,
   getToggleButton,
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
-} from '../testUtils'
-import {defaultIds, items} from '../../testUtils'
-import utils from '../../utils'
-import useSelect from '..'
+  defaultIds,
+  items,
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const actualUtils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...actualUtils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 describe('getMenuProps', () => {
   describe('hook props', () => {
@@ -150,19 +178,19 @@ describe('getMenuProps', () => {
   describe('event handlers', () => {
     describe('on mouse leave', () => {
       test('the highlightedIndex should be reset', async () => {
-        renderSelect({
+        const {user} = renderSelect({
           initialIsOpen: true,
         })
         const itemIndex = 2
 
-        await mouseMoveItemAtIndex(itemIndex)
+        await mouseMoveItemAtIndex(user, itemIndex)
 
         expect(getToggleButton()).toHaveAttribute(
           'aria-activedescendant',
           defaultIds.getItemId(itemIndex),
         )
 
-        await mouseLeaveItemAtIndex(itemIndex)
+        await mouseLeaveItemAtIndex(user, itemIndex)
 
         expect(getToggleButton()).toHaveAttribute('aria-activedescendant', '')
       })

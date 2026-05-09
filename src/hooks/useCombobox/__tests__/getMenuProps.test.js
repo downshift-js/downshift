@@ -1,14 +1,43 @@
-import {act, renderHook} from '@testing-library/react'
 import {noop} from '../../../utils'
-import {getInput, renderCombobox, renderUseCombobox} from '../testUtils'
+import utils from '../../utils'
+import useCombobox from '..'
 import {
+  act,
+  renderHook,
+  getInput,
+  renderCombobox,
+  renderUseCombobox,
   defaultIds,
   items,
   mouseLeaveItemAtIndex,
   mouseMoveItemAtIndex,
-} from '../../testUtils'
-import utils from '../../utils'
-import useCombobox from '..'
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const actualUtils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...actualUtils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 describe('getMenuProps', () => {
   describe('hook props', () => {
@@ -119,13 +148,13 @@ describe('getMenuProps', () => {
       describe('on mouse leave', () => {
         test('the highlightedIndex should be reset', async () => {
           const initialHighlightedIndex = 2
-          renderCombobox({
+          const {user} = renderCombobox({
             initialIsOpen: true,
             initialHighlightedIndex,
           })
 
-          await mouseMoveItemAtIndex(initialHighlightedIndex)
-          await mouseLeaveItemAtIndex(initialHighlightedIndex)
+          await mouseMoveItemAtIndex(user, initialHighlightedIndex)
+          await mouseLeaveItemAtIndex(user, initialHighlightedIndex)
 
           expect(getInput()).toHaveAttribute('aria-activedescendant', '')
         })

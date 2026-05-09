@@ -71,7 +71,7 @@ export default function downshiftSelectReducer<Item>(
       break
     case stateChangeTypes.ToggleButtonKeyDownArrowDown:
       {
-        const altKey = 'altKey' in action ? action.altKey : false
+        const altKey = action.altKey
         const highlightedIndex = state.isOpen
           ? getHighlightedIndex(
               state.highlightedIndex,
@@ -100,7 +100,7 @@ export default function downshiftSelectReducer<Item>(
       break
     case stateChangeTypes.ToggleButtonKeyDownArrowUp:
       {
-        const altKey = 'altKey' in action ? action.altKey : false
+        const altKey = action.altKey
         if (state.isOpen && altKey) {
           changes = getChangesOnSelection(
             props.items,

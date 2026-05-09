@@ -289,6 +289,7 @@ function useSelect<Item>(
         }),
         id: elementIds.menuId,
         role: 'listbox',
+        'aria-label': ariaLabel,
         'aria-labelledby': ariaLabel ? undefined : `${elementIds.labelId}`,
         onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
         ...rest,

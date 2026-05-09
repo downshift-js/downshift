@@ -1,10 +1,11 @@
 import * as React from 'react'
 
 import {render, screen, renderHook} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {dropdownDefaultProps} from '../utils'
-import {items, user, dataTestIds} from '../testUtils'
+import {items, dataTestIds} from '../testUtils'
 import useCombobox from '../useCombobox'
-import {getInput, keyDownOnInput} from '../useCombobox/testUtils'
+import {getInput, keyDownOnInput} from '../useCombobox/__tests__/utils'
 import useMultipleSelection from '.'
 
 export * from '../testUtils'
@@ -41,10 +42,10 @@ export function getSelectedItems() {
   return screen.queryAllByTestId(new RegExp(dataTestIds.selectedItemPrefix))
 }
 
-export async function clickOnSelectedItemAtIndex(index) {
+export async function clickOnSelectedItemAtIndex(user, index) {
   await user.click(getSelectedItemAtIndex(index))
 }
-export async function keyDownOnSelectedItemAtIndex(index, key) {
+export async function keyDownOnSelectedItemAtIndex(user, index, key) {
   const selectedItem = getSelectedItemAtIndex(index)
 
   if (document.activeElement !== selectedItem) {
@@ -58,7 +59,7 @@ export function focusSelectedItemAtIndex(index) {
   getSelectedItemAtIndex(index).focus()
 }
 
-export async function clickOnInput() {
+export async function clickOnInput(user) {
   await user.click(getInput())
 }
 
@@ -105,10 +106,12 @@ export const renderMultipleCombobox = props => {
   const utils = render(<DropdownMultipleCombobox {...props} />)
   const rerender = newProps =>
     utils.rerender(<DropdownMultipleCombobox {...newProps} />)
+  const user = userEvent.setup({delay: null})
 
   return {
     ...utils,
     rerender,
+    user,
   }
 }
 

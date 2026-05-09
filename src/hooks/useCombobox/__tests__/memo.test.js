@@ -4,8 +4,36 @@ import {
   renderCombobox,
   getInput,
   keyDownOnInput,
-} from '../testUtils'
-import {items, defaultIds, MemoizedItem} from '../../testUtils'
+  items,
+  defaultIds,
+  MemoizedItem,
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const utils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...utils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 test('functions are memoized', () => {
   const {result, rerender} = renderUseCombobox()
@@ -39,7 +67,7 @@ test('will skip disabled items after component rerenders and items are memoized'
     return index === items.length - 2
   }
 
-  const {rerender} = renderCombobox({
+  const {user, rerender} = renderCombobox({
     isItemDisabled,
     isOpen: true,
     initialHighlightedIndex: items.length - 1,
@@ -47,7 +75,7 @@ test('will skip disabled items after component rerenders and items are memoized'
   })
 
   rerender({renderItem, isOpen: true, isItemDisabled})
-  await keyDownOnInput('{ArrowUp}')
+  await keyDownOnInput(user, '{ArrowUp}')
 
   expect(getInput()).toHaveAttribute(
     'aria-activedescendant',

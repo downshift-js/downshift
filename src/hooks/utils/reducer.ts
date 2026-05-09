@@ -97,17 +97,18 @@ export default function downshiftCommonReducer<Item>(
       }
 
       break
-    case stateChangeTypes.FunctionSetHighlightedIndex: {
-      const highlightedIndex = action.highlightedIndex ?? -1
-      changes = {
-        highlightedIndex: props.isItemDisabled(
-          props.items[highlightedIndex] as Item,
-          highlightedIndex,
-        )
-          ? -1
-          : highlightedIndex,
+    case stateChangeTypes.FunctionSetHighlightedIndex:
+      {
+        const highlightedIndex = action.highlightedIndex as number
+        changes = {
+          highlightedIndex: props.isItemDisabled(
+            props.items[highlightedIndex] as Item,
+            highlightedIndex,
+          )
+            ? -1
+            : highlightedIndex,
+        }
       }
-    }
 
       break
     case stateChangeTypes.FunctionSetInputValue:

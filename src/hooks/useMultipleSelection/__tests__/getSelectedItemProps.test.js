@@ -184,26 +184,25 @@ describe('getSelectedItemProps', () => {
   describe('event handlers', () => {
     describe('on click', () => {
       test('sets tabindex to "0"', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
-        await clickOnSelectedItemAtIndex(0)
-
+        await clickOnSelectedItemAtIndex(user, 0)
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(0)).toHaveFocus()
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
       })
 
       test('keeps tabindex "0" to an already active item', async () => {
-        renderMultipleCombobox({
+       const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 0,
           },
         })
 
-        await clickOnSelectedItemAtIndex(0)
+        await clickOnSelectedItemAtIndex(user, 0)
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(0)).toHaveFocus()
@@ -212,56 +211,56 @@ describe('getSelectedItemProps', () => {
 
     describe('on key down', () => {
       test('arrow left should change active item descendently', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 1,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(0)).toHaveFocus()
       })
 
       test(`arrow left should not change active item if it's the first one added`, async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 0,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(0, '{ArrowLeft}')
+        await keyDownOnSelectedItemAtIndex(user, 0, '{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(0)).toHaveFocus()
       })
 
       test('arrow right should change active item ascendently', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 0,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(0, '{ArrowRight}')
+        await keyDownOnSelectedItemAtIndex(user, 0, '{ArrowRight}')
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
       })
 
       test(`arrow right should make no item active if it's on last one added`, async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1]],
             initialActiveIndex: 1,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowRight}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowRight}')
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
@@ -269,32 +268,32 @@ describe('getSelectedItemProps', () => {
       })
 
       test('arrow navigation moves focus back and forth', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 2,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(2, '{ArrowLeft}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
 
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
 
-        await keyDownOnSelectedItemAtIndex(0, '{ArrowRight}')
+        await keyDownOnSelectedItemAtIndex(user, 0, '{ArrowRight}')
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
 
-        await keyDownOnSelectedItemAtIndex(2, '{ArrowRight}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{ArrowRight}')
 
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
@@ -302,14 +301,14 @@ describe('getSelectedItemProps', () => {
       })
 
       test('backspace removes item and moves focus to next item if any', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 1,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(1, '{Backspace}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
@@ -317,28 +316,28 @@ describe('getSelectedItemProps', () => {
       })
 
       test('backspace removes item and moves focus to input if no items left', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0]],
             initialActiveIndex: 0,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(0, '{Backspace}')
+        await keyDownOnSelectedItemAtIndex(user, 0, '{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(0)
         expect(getInput()).toHaveFocus()
       })
 
       test('backspace removes item and moves focus to previous item if it was the last in the array', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 2,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(2, '{Backspace}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
@@ -346,14 +345,14 @@ describe('getSelectedItemProps', () => {
       })
 
       test('delete removes item and moves focus to next item if any', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 1,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(1, '{Delete}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Delete}')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
@@ -361,28 +360,28 @@ describe('getSelectedItemProps', () => {
       })
 
       test('delete removes item and moves focus to input if no items left', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0]],
             initialActiveIndex: 0,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(0, '{Delete}')
+        await keyDownOnSelectedItemAtIndex(user, 0, '{Delete}')
 
         expect(getSelectedItems()).toHaveLength(0)
         expect(getInput()).toHaveFocus()
       })
 
       test('delete removes item and moves focus to previous item if it was the last in the array', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 2,
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(2, '{Delete}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{Delete}')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
@@ -390,47 +389,46 @@ describe('getSelectedItemProps', () => {
       })
 
       test('backspace and delete change nothing if there is no selected item focused', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
           },
         })
 
-        await keyDownOnSelectedItemAtIndex(2, '{Backspace}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{Backspace}')
 
         expect(getSelectedItems()).toHaveLength(3)
 
-        await keyDownOnSelectedItemAtIndex(1, '{Delete}')
-
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Delete}')
         expect(getSelectedItems()).toHaveLength(3)
       })
 
       test('navigation works correctly with both click and arrow keys', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
           },
         })
 
-        await clickOnSelectedItemAtIndex(1)
+        await clickOnSelectedItemAtIndex(user, 1)
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
 
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowLeft}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowLeft}')
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
 
-        await clickOnSelectedItemAtIndex(1)
+        await clickOnSelectedItemAtIndex(user, 1)
 
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '-1')
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '-1')
 
-        await keyDownOnSelectedItemAtIndex(2, '{ArrowRight}')
+        await keyDownOnSelectedItemAtIndex(user, 2, '{ArrowRight}')
 
         expect(getSelectedItemAtIndex(2)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')
@@ -438,15 +436,15 @@ describe('getSelectedItemProps', () => {
       })
 
       test("other than the ones supported don't affect anything", async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {initialSelectedItems: [items[0], items[1]]},
         })
 
-        await keyDownOnSelectedItemAtIndex(1, '{Alt}')
-        await keyDownOnSelectedItemAtIndex(1, '{Control}')
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowUp}')
-        await keyDownOnSelectedItemAtIndex(1, '{ArrowDown}')
-        await keyDownOnSelectedItemAtIndex(1, '{Enter}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Alt}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Control}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowUp}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{ArrowDown}')
+        await keyDownOnSelectedItemAtIndex(user, 1, '{Enter}')
 
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
@@ -455,7 +453,7 @@ describe('getSelectedItemProps', () => {
 
     describe('on focus', () => {
       test('keeps tabindex "0" when focusing input by tab/click so user can return via tab', async () => {
-        renderMultipleCombobox({
+        const {user} = renderMultipleCombobox({
           multipleSelectionProps: {
             initialSelectedItems: [items[0], items[1], items[2]],
             initialActiveIndex: 0,
@@ -463,7 +461,7 @@ describe('getSelectedItemProps', () => {
         })
 
         focusSelectedItemAtIndex(0)
-        await tab()
+        await tab(user)
 
         expect(getSelectedItemAtIndex(0)).toHaveAttribute('tabindex', '0')
         expect(getSelectedItemAtIndex(1)).toHaveAttribute('tabindex', '-1')

@@ -1,4 +1,4 @@
-import {getItemIndexByCharacterKey} from '../utils'
+import {getItemIndexByCharacterKey} from '..'
 
 describe('getItemIndexByCharacterKey', () => {
   const items = ['a', 'b', 'aba', 'aab', 'bab']

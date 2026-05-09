@@ -1,6 +1,36 @@
-import {screen} from '@testing-library/react'
-import {renderSelect, renderUseSelect} from '../testUtils'
-import {defaultIds, getToggleButton, user} from '../../testUtils'
+import {
+  screen,
+  renderSelect,
+  renderUseSelect,
+  defaultIds,
+  getToggleButton,
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const utils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...utils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 describe('getLabelProps', () => {
   test('should have a default id assigned', () => {
@@ -39,7 +69,7 @@ describe('getLabelProps', () => {
   })
 
   test('on click moves focus to the toggle button', async () => {
-    renderSelect()
+    const {user} = renderSelect()
 
     await user.click(
       screen.getByText('Choose an element:', {selector: 'label'}),
