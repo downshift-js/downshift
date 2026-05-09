@@ -339,6 +339,7 @@ export interface UseSelectActions<Item> {
   toggleMenu: () => void
   selectItem: (item: Item | null) => void
   setHighlightedIndex: (index: number) => void
+  setInputValue: (inputValue: string) => void
 }
 
 export type UseSelectReturnValue<Item> = UseSelectState<Item> &

@@ -3,6 +3,7 @@ import * as React from 'react'
 import {useTagGroup, useCombobox} from '../../src'
 import {colors} from '../utils'
 
+import './shared.css'
 import './useTagGroupCombobox.css'
 
 export default function TagGroup() {
@@ -97,7 +98,7 @@ export default function TagGroup() {
           </button>
         </div>
       </div>
-      <ul className="menu" {...getMenuProps()}>
+      <ul className="combobox-menu" {...getMenuProps()}>
         {isOpen
           ? itemsToAdd.map((item, index) => (
               <li

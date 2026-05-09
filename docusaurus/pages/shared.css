@@ -1,3 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  justify-content: center;
+  margin-top: 100px;
+  align-self: center;
+}
+
+.menu {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 4px 0 0 0;
+  max-height: 120px;
+  overflow-y: scroll;
+}
+
 .tag-group {
   display: inline-flex;
   gap: 8px;

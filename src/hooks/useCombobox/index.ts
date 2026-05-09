@@ -33,13 +33,14 @@ import {
   UseComboboxGetToggleButtonProps,
   UseComboboxMergedProps,
   UseComboboxProps,
+  UseComboboxReturnValue,
 } from './index.types'
 
 useCombobox.stateChangeTypes = stateChangeTypes
 
 function useCombobox<Item>(
   userProps: UseComboboxProps<Item> = {} as UseComboboxProps<Item>,
-) {
+): UseComboboxReturnValue<Item> {
   validatePropTypes(userProps, useCombobox, propTypes)
   // Props defaults and destructuring.
   const props: UseComboboxMergedProps<Item> = {
@@ -575,7 +576,7 @@ function useCombobox<Item>(
     [dispatch],
   )
   const selectItem = useCallback(
-    (newSelectedItem: Item) => {
+    (newSelectedItem: Item | null) => {
       dispatch({
         type: stateChangeTypes.FunctionSelectItem,
         selectedItem: newSelectedItem,

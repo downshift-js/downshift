@@ -34,6 +34,7 @@ import {
   UseSelectMergedProps,
   UseSelectProps,
   UseSelectReducerAction,
+  UseSelectReturnValue,
   UseSelectState,
 } from './index.types'
 
@@ -41,7 +42,7 @@ useSelect.stateChangeTypes = stateChangeTypes
 
 function useSelect<Item>(
   userProps: UseSelectProps<Item> = {} as UseSelectProps<Item>,
-) {
+): UseSelectReturnValue<Item> {
   validatePropTypes(userProps, useSelect, propTypes)
   // Props defaults and destructuring.
   const props: UseSelectMergedProps<Item> = {

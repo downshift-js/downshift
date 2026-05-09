@@ -1,17 +1,13 @@
 import * as React from 'react'
 
 import {useSelect, useMultipleSelection} from '../../src'
-import {
-  colors,
-  containerStyles,
-  menuStyles,
-  tagGroupSyles,
-  tagStyles,
-} from '../utils'
+import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
+import {colors} from '../utils'
+import './shared.css'
 
-const initialSelectedItems = [colors[0], colors[1]]
+const initialSelectedItems = colors.slice(0, 2)
 
-function getFilteredItems(selectedItems) {
+function getFilteredItems(selectedItems: string[]) {
   return colors.filter(colour => !selectedItems.includes(colour))
 }
 
@@ -22,7 +18,9 @@ export default function DropdownMultipleSelect() {
     addSelectedItem,
     removeSelectedItem,
     selectedItems,
-  } = useMultipleSelection({initialSelectedItems})
+  } = useMultipleSelection({
+    initialSelectedItems,
+  }) as unknown as UseMultipleSelectionReturnValue<string>
   const items = getFilteredItems(selectedItems)
   const {
     isOpen,
@@ -66,7 +64,7 @@ export default function DropdownMultipleSelect() {
   })
 
   return (
-    <div style={containerStyles}>
+    <div className="container">
       <label
         style={{
           fontWeight: 'bolder',
@@ -76,33 +74,34 @@ export default function DropdownMultipleSelect() {
       >
         Choose an element:
       </label>
-      <div style={tagGroupSyles}>
-        {selectedItems.map(
-          function renderSelectedItem(selectedItemForRender, index) {
-            return (
+      <div className="tag-group">
+        {selectedItems.map(function renderSelectedItem(
+          selectedItemForRender: string,
+          index: number,
+        ) {
+          return (
+            <span
+              className="tag"
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({
+                selectedItem: selectedItemForRender,
+                index,
+              })}
+            >
+              {selectedItemForRender}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={tagStyles}
-                key={`selected-item-${index}`}
-                {...getSelectedItemProps({
-                  selectedItem: selectedItemForRender,
-                  index,
-                })}
+                style={{padding: '4px', cursor: 'pointer'}}
+                onClick={e => {
+                  e.stopPropagation()
+                  removeSelectedItem(selectedItemForRender)
+                }}
               >
-                {selectedItemForRender}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                <span
-                  style={{padding: '4px', cursor: 'pointer'}}
-                  onClick={e => {
-                    e.stopPropagation()
-                    removeSelectedItem(selectedItemForRender)
-                  }}
-                >
-                  &#10005;
-                </span>
+                &#10005;
               </span>
-            )
-          },
-        )}
+            </span>
+          )
+        })}
         <div
           style={{
             padding: '4px',
@@ -111,7 +110,6 @@ export default function DropdownMultipleSelect() {
             backgroundColor: 'lightgray',
             cursor: 'pointer',
           }}
-          type="button"
           {...getToggleButtonProps(
             getDropdownProps({preventKeyAction: isOpen}),
           )}
@@ -119,14 +117,14 @@ export default function DropdownMultipleSelect() {
           Pick some colors {isOpen ? <>&#8593;</> : <>&#8595;</>}
         </div>
       </div>
-      <ul {...getMenuProps()} style={menuStyles}>
+      <ul {...getMenuProps()} className="menu">
         {isOpen
           ? items.map((item, index) => (
               <li
                 style={{
                   padding: '4px',
                   backgroundColor:
-                    highlightedIndex === index ? '#bde4ff' : null,
+                    highlightedIndex === index ? '#bde4ff' : undefined,
                 }}
                 key={`${item}${index}`}
                 {...getItemProps({

@@ -1,17 +1,13 @@
 import * as React from 'react'
 
 import {useCombobox, useMultipleSelection} from '../../src'
-import {
-  colors,
-  containerStyles,
-  menuStyles,
-  tagGroupSyles,
-  tagStyles,
-} from '../utils'
+import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
+import {colors} from '../utils'
+import './shared.css'
 
-const initialSelectedItems = [colors[0], colors[1]]
+const initialSelectedItems = colors.slice(0, 2)
 
-function getFilteredItems(selectedItems, inputValue) {
+function getFilteredItems(selectedItems: string[], inputValue: string) {
   const lowerCasedInputValue = inputValue.toLowerCase()
 
   return colors.filter(
@@ -31,21 +27,8 @@ export default function DropdownMultipleCombobox() {
 
   const {getSelectedItemProps, getDropdownProps, removeSelectedItem} =
     useMultipleSelection({
-      selectedItems,
-      onStateChange({selectedItems: newSelectedItems, type}) {
-        switch (type) {
-          case useMultipleSelection.stateChangeTypes
-            .SelectedItemKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
-          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-            setSelectedItems(newSelectedItems)
-            break
-          default:
-            break
-        }
-      },
-    })
+      initialSelectedItems,
+    }) as unknown as UseMultipleSelectionReturnValue<string>
   const {
     isOpen,
     getToggleButtonProps,
@@ -55,7 +38,7 @@ export default function DropdownMultipleCombobox() {
     highlightedIndex,
     getItemProps,
     selectedItem,
-    clearSelection,
+    reset,
   } = useCombobox({
     items,
     inputValue,
@@ -83,11 +66,11 @@ export default function DropdownMultipleCombobox() {
       switch (type) {
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.ItemClick:
-          setSelectedItems([...selectedItems, newSelectedItem])
+          setSelectedItems([...selectedItems, newSelectedItem as string])
 
           break
         case useCombobox.stateChangeTypes.InputChange:
-          setInputValue(newInputValue)
+          setInputValue(newInputValue as string)
           break
         default:
           break
@@ -95,7 +78,7 @@ export default function DropdownMultipleCombobox() {
     },
   })
   return (
-    <div style={containerStyles}>
+    <div className="container">
       <label
         style={{
           fontWeight: 'bolder',
@@ -105,33 +88,34 @@ export default function DropdownMultipleCombobox() {
       >
         Choose an element:
       </label>
-      <div style={tagGroupSyles}>
-        {selectedItems.map(
-          function renderSelectedItem(selectedItemForRender, index) {
-            return (
+      <div className="tag-group">
+        {selectedItems.map(function renderSelectedItem(
+          selectedItemForRender: string,
+          index: number,
+        ) {
+          return (
+            <span
+              className="tag"
+              key={`selected-item-${index}`}
+              {...getSelectedItemProps({
+                selectedItem: selectedItemForRender,
+                index,
+              })}
+            >
+              {selectedItemForRender}
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={tagStyles}
-                key={`selected-item-${index}`}
-                {...getSelectedItemProps({
-                  selectedItem: selectedItemForRender,
-                  index,
-                })}
+                style={{padding: '4px', cursor: 'pointer'}}
+                onClick={e => {
+                  e.stopPropagation()
+                  removeSelectedItem(selectedItemForRender)
+                }}
               >
-                {selectedItemForRender}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-                <span
-                  style={{padding: '4px', cursor: 'pointer'}}
-                  onClick={e => {
-                    e.stopPropagation()
-                    removeSelectedItem(selectedItemForRender)
-                  }}
-                >
-                  &#10005;
-                </span>
+                &#10005;
               </span>
-            )
-          },
-        )}
+            </span>
+          )
+        })}
         <div>
           <input
             style={{padding: '4px'}}
@@ -150,20 +134,20 @@ export default function DropdownMultipleCombobox() {
             style={{padding: '4px 8px'}}
             aria-label="clear selection"
             data-testid="clear-button"
-            onClick={clearSelection}
+            onClick={() => reset()}
           >
             &#10007;
           </button>
         </div>
       </div>
-      <ul {...getMenuProps()} style={menuStyles}>
+      <ul {...getMenuProps()} className="menu">
         {isOpen
           ? items.map((item, index) => (
               <li
                 style={{
                   padding: '4px',
                   backgroundColor:
-                    highlightedIndex === index ? '#bde4ff' : null,
+                    highlightedIndex === index ? '#bde4ff' : undefined,
                 }}
                 key={`${item}${index}`}
                 {...getItemProps({

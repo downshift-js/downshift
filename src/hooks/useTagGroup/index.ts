@@ -36,7 +36,7 @@ import {
 
 const useTagGroup: UseTagGroupInterface = <Item>(
   userProps: UseTagGroupProps<Item> = {},
-) => {
+): UseTagGroupReturnValue<Item> => {
   /* State and Props */
 
   validatePropTypes(userProps, useTagGroup, propTypes)

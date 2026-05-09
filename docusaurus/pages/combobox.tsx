@@ -1,7 +1,9 @@
 import * as React from 'react'
 
 import Downshift from '../../src'
-import {colors, containerStyles, menuStyles} from '../utils'
+import {type ControllerStateAndHelpers} from '../../src/downshift.types'
+import {colors} from '../utils'
+import './shared.css'
 
 export default function ComboBox() {
   return (
@@ -18,8 +20,8 @@ export default function ComboBox() {
         selectedItem,
         getRootProps,
         clearSelection,
-      }) => (
-        <div style={containerStyles}>
+      }: ControllerStateAndHelpers<string>) => (
+        <div className="container">
           <label
             style={{
               fontWeight: 'bolder',
@@ -47,12 +49,12 @@ export default function ComboBox() {
               style={{padding: '4px 8px'}}
               aria-label="toggle menu"
               data-testid="clear-button"
-              onClick={clearSelection}
+              onClick={() => clearSelection()}
             >
               &#10007;
             </button>
           </div>
-          <ul {...getMenuProps()} style={menuStyles}>
+          <ul {...getMenuProps()} className="menu">
             {isOpen
               ? (inputValue
                   ? colors.filter(i =>
@@ -64,7 +66,7 @@ export default function ComboBox() {
                     style={{
                       padding: '4px',
                       backgroundColor:
-                        highlightedIndex === index ? '#bde4ff' : null,
+                        highlightedIndex === index ? '#bde4ff' : undefined,
                     }}
                     key={`${item}${index}`}
                     {...getItemProps({
