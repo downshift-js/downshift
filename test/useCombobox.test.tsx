@@ -38,15 +38,23 @@ export default function DropdownCombobox() {
       )
     },
   })
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  const toggleButtonRef = React.useRef<HTMLButtonElement>(null)
+  const menuRef = React.useRef<HTMLUListElement>(null)
+  const itemRef = React.useRef<HTMLLIElement>(null)
+
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <div>
-        <input {...getInputProps()} data-testid="combobox-input" />
+        <input
+          {...getInputProps({ref: inputRef})}
+          data-testid="combobox-input"
+        />
         <button
           aria-label="toggle menu"
           data-testid="combobox-toggle-button"
-          {...getToggleButtonProps()}
+          {...getToggleButtonProps({ref: toggleButtonRef})}
         >
           {isOpen ? <>&#8593;</> : <>&#8595;</>}
         </button>
@@ -58,7 +66,7 @@ export default function DropdownCombobox() {
           &#10007;
         </button>
       </div>
-      <ul {...getMenuProps()}>
+      <ul {...getMenuProps({ref: menuRef})}>
         {isOpen &&
           inputItems.map((item, index) => (
             <li
@@ -67,6 +75,7 @@ export default function DropdownCombobox() {
                 item,
                 index,
                 'data-testid': `downshift-item-${index}`,
+                ref: index === 0 ? itemRef : undefined,
               })}
             >
               {item}

@@ -53,11 +53,6 @@ export type UseTagGroupMergedProps<Item> = Omit<
     Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
   >
 
-// export type UseTagGroupMergedProps<Item> = Required<
-//   Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
-// > &
-//   UseTagGroupProps<Item>
-
 export interface UseTagGroupInterface {
   <Item>(props?: UseTagGroupProps<Item>): UseTagGroupReturnValue<Item>
   stateChangeTypes: {
@@ -83,12 +78,15 @@ export interface UseTagGroupReturnValue<Item> {
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
   index: number
   refKey?: string
-  ref?: React.MutableRefObject<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
 }
 
 export interface GetTagPropsReturnValue {
   'aria-describedby': string
   id: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   role: 'option'
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
@@ -109,11 +107,14 @@ export interface GetTagRemovePropsReturnValue {
 
 export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  ref?: React.MutableRefObject<HTMLElement>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
 }
 
 export interface GetTagGroupPropsReturnValue {
   id: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
+  ref?: React.Ref<any>
   role: 'listbox'
   'aria-live': 'polite'
   'aria-atomic': 'false'
