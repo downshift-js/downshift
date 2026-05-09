@@ -39,7 +39,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "kcd-scripts pre-commit"
+      "pre-commit": "unset ELECTRON_RUN_AS_NODE && kcd-scripts pre-commit"
     }
   },
   "files": [
