@@ -93,6 +93,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@cypress/webpack-preprocessor": "^7.0.2",
     "@docusaurus/core": "3.10.1",
+    "@docusaurus/babel": "3.10.1",
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
     "@mdx-js/react": "^3.0.1",
