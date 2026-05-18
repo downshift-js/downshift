@@ -1,15 +1,15 @@
 // Downshift (legacy class component)
-export * from '../src/downshift.types'
-export {default} from '../src/downshift.types'
+export * from '../dist/downshift.types'
+export {default} from '../dist/downshift.types'
 
 // useSelect
-export * from '../src/hooks/useSelect/index.types'
+export * from '../dist/hooks/useSelect/index.types'
 
 // useCombobox
-export * from '../src/hooks/useCombobox/index.types'
+export * from '../dist/hooks/useCombobox/index.types'
 
 // useMultipleSelection
-export * from '../src/hooks/useMultipleSelection/index.types'
+export * from '../dist/hooks/useMultipleSelection/index.types'
 
 // useTagGroup
-export * from '../src/hooks/useTagGroup/index.types'
+export * from '../dist/hooks/useTagGroup/index.types'
