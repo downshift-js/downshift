@@ -10,6 +10,9 @@ on:
       - 'alpha'
       - '!all-contributors/**'
   pull_request: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   main:
     # ignore all-contributors PRs
@@ -19,10 +22,6 @@ jobs:
         node: [20, 22, 24]
     runs-on: ubuntu-latest
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5
 
@@ -59,11 +58,6 @@ jobs:
       contains('refs/heads/master,refs/heads/beta,refs/heads/next,refs/heads/alpha',
       github.ref) && github.event_name == 'push' }}
     steps:
-      - name: 🛑 Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v5
 
