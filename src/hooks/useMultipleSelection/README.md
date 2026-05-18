@@ -51,7 +51,6 @@ starting with v8. They are documented here:
 
 - [Usage](#usage)
 - [Basic Props](#basic-props)
-  - [itemToString](#itemtostring)
   - [onSelectedItemsChange](#onselecteditemschange)
   - [stateReducer](#statereducer)
 - [Advanced Props](#advanced-props)
@@ -316,14 +315,6 @@ The equivalent example with `useSelect` is [here][select-sandbox-example].
 
 This is the list of props that you should probably know about. There are some
 [advanced props](#advanced-props) below as well.
-
-### itemToString
-
-> `function(item: any)` | defaults to: `i => (i == null ? '' : String(i))`
-
-If your items are stored as, say, objects instead of strings, downshift still
-needs a string representation for each one. This is required for accessibility
-aria-live messages (e.g., after removing a selection).
 
 ### onSelectedItemsChange
 
