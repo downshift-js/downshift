@@ -101,7 +101,7 @@ test.describe('combobox', () => {
     await expect(input).toHaveValue('Red')
   })
 
-  test('resets when bluring the input', async ({page}) => {
+  test('resets when blurring the input', async ({page}) => {
     const input = page.getByTestId('combobox-input')
     await input.fill('re')
     await input.blur()
