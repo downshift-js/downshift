@@ -34,3 +34,7 @@ npm-debug.log*
 
 # IDE settings
 .idea
+
+# Playwright
+test-results
+playwright-report

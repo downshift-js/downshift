@@ -50,8 +50,8 @@ this project:
 - test:ssr - This ensures that downshift works with server-side rendering (it
   can run and render in an environment without the DOM). These tests live in
   `other/ssr/__tests__`
-- test:cypress - This runs tests in an actual browser. It runs and tests the
-  storybook examples. These tests live in `cypress/integration`.
+- test:e2e - This runs tests in an actual browser. It runs and tests the
+  docusaurus examples. These tests live in `e2e/`.
 
 ### opt into git hooks
 
