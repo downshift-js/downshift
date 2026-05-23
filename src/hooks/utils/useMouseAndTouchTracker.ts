@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {isReactNative} from '../../is.macro'
-import {Environment} from '../../downshift.types'
+import {Environment} from '../../types'
 import {noop, targetWithinDownshift} from '../../utils'
 
 /**

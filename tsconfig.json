@@ -21,5 +21,5 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "playwright.config.ts"],
-  "exclude": ["typings"]
+  "exclude": ["dist"]
 }

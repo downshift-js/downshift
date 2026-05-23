@@ -1,9 +1,10 @@
 import * as React from 'react'
 import {
+  AnyRef,
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../downshift.types'
+} from '../../types'
 
 export interface UseMultipleSelectionState<Item> {
   selectedItems: Item[]
@@ -96,15 +97,13 @@ export interface UseMultipleSelectionGetSelectedItemPropsOptions<
   Item,
 > extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   index?: number
   selectedItem: Item
 }
 
 export interface UseMultipleSelectionGetSelectedItemReturnValue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   tabIndex: 0 | -1
   onClick: React.MouseEventHandler
   onKeyDown: React.KeyboardEventHandler
@@ -113,13 +112,11 @@ export interface UseMultipleSelectionGetSelectedItemReturnValue {
 export interface UseMultipleSelectionGetDropdownPropsOptions extends React.HTMLProps<HTMLElement> {
   preventKeyAction?: boolean
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
 }
 
 export interface UseMultipleSelectionGetDropdownReturnValue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
 }

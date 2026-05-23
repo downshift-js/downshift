@@ -1,4 +1,4 @@
-import {Environment} from '../downshift.types'
+import {Environment} from '../types'
 
 /**
  * Checks if event target is within the downshift elements.

@@ -1,4 +1,4 @@
-import {Environment} from '../../downshift.types'
+import {AnyRef, Environment} from '../../types'
 
 export interface UseTagGroupState<Item> {
   activeIndex: number
@@ -78,15 +78,13 @@ export interface UseTagGroupReturnValue<Item> {
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
   index: number
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
 }
 
 export interface GetTagPropsReturnValue {
   'aria-describedby': string
   id: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'option'
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
@@ -107,14 +105,12 @@ export interface GetTagRemovePropsReturnValue {
 
 export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
 }
 
 export interface GetTagGroupPropsReturnValue {
   id: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'listbox'
   'aria-live': 'polite'
   'aria-atomic': 'false'

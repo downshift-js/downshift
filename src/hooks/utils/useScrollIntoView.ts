@@ -43,6 +43,7 @@ export function useScrollIntoView(
     } else {
       shouldScrollRef.current = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only re-runs when highlightedIndex changes; other params are refs/stable values that don't trigger scrolling
   }, [highlightedIndex])
 
   return React.useCallback(function preventScroll() {

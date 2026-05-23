@@ -11,7 +11,7 @@ type DropdownState<Item> = {
  *
  * @param prevState The previous dropdown state.
  * @param newState The new dropdown state.
- * @returns Wheather the states are deeply equal.
+ * @returns Whether the states are deeply equal.
  */
 export function isDropdownStateEqual<Item>(
   prevState: DropdownState<Item>,

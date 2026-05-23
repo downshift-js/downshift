@@ -148,4 +148,3 @@ export default function downshiftCommonReducer<Item>(
     ...changes,
   }
 }
-/* eslint-enable complexity */

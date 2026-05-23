@@ -1,15 +1,9 @@
 import React from 'react'
+import {AnyRef, Environment, GetPropsCommonOptions, Overwrite} from './types'
+
+export type {AnyRef, Environment, GetPropsCommonOptions, Overwrite}
 
 export type Callback = () => void
-
-export type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
-
-export interface Environment {
-  addEventListener: typeof window.addEventListener
-  removeEventListener: typeof window.removeEventListener
-  document: Document
-  Node: typeof window.Node
-}
 
 export interface DownshiftState<Item> {
   highlightedIndex: number | null
@@ -180,10 +174,6 @@ export interface GetMenuPropsReturnValue {
   ref?: React.RefObject<any>
   role: 'listbox'
   id: string
-}
-
-export interface GetPropsCommonOptions {
-  suppressRefError?: boolean
 }
 
 export interface GetPropsWithRefKey {

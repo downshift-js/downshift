@@ -1,8 +1,9 @@
 import {
+  AnyRef,
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../downshift.types'
+} from '../../types'
 
 export interface UseComboboxState<Item> {
   highlightedIndex: number
@@ -251,15 +252,13 @@ export interface UseComboboxInputValueChange<
 
 export interface UseComboboxGetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
 }
 
 export interface UseComboboxGetMenuPropsReturnValue {
   'aria-label': string | undefined
   'aria-labelledby': string | undefined
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'listbox'
   id: string
   onMouseLeave: React.MouseEventHandler
@@ -273,8 +272,7 @@ export type UseComboboxGetMenuProps = <Options>(
 export interface UseComboboxGetToggleButtonPropsOptions extends React.HTMLProps<HTMLElement> {
   disabled?: boolean
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -284,8 +282,7 @@ export interface UseComboboxGetToggleButtonPropsReturnValue {
   id: string
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   tabIndex: -1
 }
 
@@ -311,8 +308,7 @@ export interface UseComboboxGetItemPropsOptions<
   index?: number
   item?: Item
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -324,8 +320,7 @@ export interface UseComboboxGetItemPropsReturnValue {
   onMouseDown?: React.MouseEventHandler
   onMouseMove?: React.MouseEventHandler
   onPress?: React.MouseEventHandler
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'option'
 }
 
@@ -343,8 +338,7 @@ export interface UseComboboxGetInputPropsOptions extends React.HTMLProps<HTMLInp
 }
 
 export interface UseComboboxGetInputPropsReturnValue {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   'aria-activedescendant': string
   'aria-autocomplete': 'list'
   'aria-controls': string

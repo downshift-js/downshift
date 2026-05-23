@@ -1,9 +1,10 @@
 import * as React from 'react'
 import {
+  AnyRef,
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../downshift.types'
+} from '../../types'
 
 export interface UseSelectState<Item> {
   highlightedIndex: number
@@ -234,16 +235,14 @@ export interface UseSelectIsOpenChange<
 
 export interface UseSelectGetMenuPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
 }
 
 export interface UseSelectGetMenuPropsReturnValue {
   'aria-labelledby': string | undefined
   id: string
   onMouseLeave: React.MouseEventHandler
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'listbox'
 }
 
@@ -254,8 +253,7 @@ export type UseSelectGetMenuProps = <Options>(
 
 export interface UseSelectGetToggleButtonPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -270,8 +268,7 @@ export interface UseSelectGetToggleButtonPropsReturnValue {
   onClick?: React.MouseEventHandler
   onKeyDown?: React.KeyboardEventHandler
   onPress?: (event: React.BaseSyntheticEvent) => void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'combobox'
   tabIndex: 0
 }
@@ -300,8 +297,7 @@ export interface UseSelectGetItemPropsOptions<
   item?: Item
   index?: number
   refKey?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   onPress?: (event: React.BaseSyntheticEvent) => void
 }
 
@@ -313,8 +309,7 @@ export interface UseSelectGetItemPropsReturnValue {
   onMouseDown?: React.MouseEventHandler
   onMouseMove?: React.MouseEventHandler
   onPress?: React.MouseEventHandler
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- element type unknown at declaration site
-  ref?: React.Ref<any>
+  ref?: AnyRef
   role: 'option'
 }
 
