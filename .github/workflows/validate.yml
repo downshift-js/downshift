@@ -41,6 +41,9 @@ jobs:
         with:
           useLockFile: false
 
+      - name: 🎭 Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: ▶️ Run validate script
         run: npm run validate
         env:

@@ -24,18 +24,18 @@
     "test:flow:coverage": "flow-coverage-report",
     "test:build": "jest --config other/misc-tests/jest.config.js",
     "// FIXME: test:build": "jest --projects other/misc-tests other/react-native",
-    "test:cypress:dev": "npm-run-all --parallel --race docs:dev cy:open",
-    "pretest:cypress": "npm run docs:build --silent",
-    "test:cypress": "start-server-and-test docs:serve http://localhost:6006 cy:run",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open",
+    "test:e2e:dev": "playwright test --ui",
+    "pretest:e2e": "npm run docs:build --silent",
+    "test:e2e": "playwright test",
+    "pw:run": "playwright test",
+    "pw:open": "playwright test --ui",
     "build-and-test": "npm run build -s && npm run test:build -s",
     "docs:build": "docusaurus build",
     "docs:dev": "docusaurus start",
     "docs:serve": "docusaurus serve --port 6006",
     "docs:clear": "docusaurus clear",
     "setup": "npm install && npm run validate",
-    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:cypress"
+    "validate": "kcd-scripts validate lint,build-and-test,test:cover,test:ts,test:ssr,test:e2e"
   },
   "husky": {
     "hooks": {
@@ -89,17 +89,14 @@
   },
   "devDependencies": {
     "@babel/helpers": "^7.28.6",
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@cypress/webpack-preprocessor": "^7.0.2",
-    "@docusaurus/core": "3.10.1",
     "@docusaurus/babel": "3.10.1",
+    "@docusaurus/core": "3.10.1",
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
     "@mdx-js/react": "^3.0.1",
+    "@playwright/test": "^1.60.0",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^29.0.0",
-    "@testing-library/cypress": "^10.1.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/preact": "^3.2.4",
@@ -116,9 +113,7 @@
     "buble": "^0.20.0",
     "cpy-cli": "^6.0.0",
     "cross-env": "^10.1.0",
-    "cypress": "15.9.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-cypress": "^3.6.0",
     "eslint-plugin-react": "7.37.5",
     "flow-bin": "^0.299.0",
     "flow-coverage-report": "^0.8.0",
@@ -143,7 +138,8 @@
       "project": [
         "./tsconfig.json",
         "./docusaurus/tsconfig.json",
-        "./test/tsconfig.json"
+        "./test/tsconfig.json",
+        "./e2e/tsconfig.json"
       ],
       "sourceType": "module"
     },
@@ -183,11 +179,16 @@
     "overrides": [
       {
         "files": [
-          "cypress/**/*.js"
+          "e2e/**/*.ts"
         ],
         "rules": {
           "testing-library/prefer-screen-queries": "off",
-          "testing-library/await-async-query": "off"
+          "import/no-extraneous-dependencies": [
+            "error",
+            {
+              "devDependencies": true
+            }
+          ]
         }
       }
     ]
@@ -199,7 +200,9 @@
     ".docusaurus",
     "build",
     "typings",
-    "test"
+    "test",
+    "playwright-report",
+    "test-results"
   ],
   "repository": {
     "type": "git",
