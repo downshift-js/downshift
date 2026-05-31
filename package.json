@@ -39,8 +39,15 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "unset ELECTRON_RUN_AS_NODE && kcd-scripts pre-commit"
+      "pre-commit": "kcd-scripts pre-commit"
     }
+  },
+  "lint-staged": {
+    "*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)": [
+      "kcd-scripts format",
+      "kcd-scripts lint",
+      "kcd-scripts test --findRelatedTests --passWithNoTests"
+    ]
   },
   "files": [
     "dist",
