@@ -20,6 +20,6 @@
       "*": ["*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "playwright.config.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist"]
 }

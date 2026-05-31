@@ -3,7 +3,7 @@ import {
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../types'
+} from '../../downshift.types'
 
 export interface UseComboboxState<Item> {
   highlightedIndex: number

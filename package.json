@@ -200,6 +200,7 @@
     ".docusaurus",
     "build",
     "test",
+    "typings",
     "playwright-report",
     "test-results"
   ],

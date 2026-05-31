@@ -1,4 +1,4 @@
-import {AnyRef, Environment} from '../../types'
+import {AnyRef, Environment} from '../../downshift.types'
 
 export interface UseTagGroupState<Item> {
   activeIndex: number

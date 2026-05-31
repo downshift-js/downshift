@@ -4,7 +4,7 @@ import {
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../types'
+} from '../../downshift.types'
 
 export interface UseMultipleSelectionState<Item> {
   selectedItems: Item[]

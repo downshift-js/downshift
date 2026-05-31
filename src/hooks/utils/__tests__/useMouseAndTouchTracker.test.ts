@@ -1,6 +1,6 @@
 import {renderHook} from '@testing-library/react'
 import {useMouseAndTouchTracker} from '../useMouseAndTouchTracker'
-import {Environment} from '../../../types'
+import {Environment} from '../../../downshift.types'
 import {targetWithinDownshift} from '../../../utils'
 
 jest.mock('../../../utils', () => ({

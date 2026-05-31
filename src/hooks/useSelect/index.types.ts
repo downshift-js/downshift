@@ -4,7 +4,7 @@ import {
   Environment,
   GetPropsCommonOptions,
   Overwrite,
-} from '../../types'
+} from '../../downshift.types'
 
 export interface UseSelectState<Item> {
   highlightedIndex: number
