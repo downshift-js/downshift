@@ -46,7 +46,7 @@ export default function downshiftCommonReducer<Item>(
   switch (type) {
     case stateChangeTypes.ItemMouseMove:
       changes = {
-        highlightedIndex: action.disabled ? -1 : action.index,
+        highlightedIndex: action.disabled ? -1 : (action.index as number),
       }
 
       break
@@ -113,7 +113,7 @@ export default function downshiftCommonReducer<Item>(
       break
     case stateChangeTypes.FunctionSetInputValue:
       changes = {
-        inputValue: action.inputValue,
+        inputValue: action.inputValue as string,
       }
 
       break
