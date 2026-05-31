@@ -292,7 +292,11 @@ how the component interacts with user updates. It gives you the current state
 and the state that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
-- `actionAndChanges`: Object that contains the action `type`, the `props` passed to `useCombobox`, the `changes` suggested by the Downshift default reducer, and any action-specific fields (e.g. `altKey`, `key`, `index`). About the `type` property you can learn more about in the [`stateChangeTypes`](#statechangetypes) section.
+- `actionAndChanges`: Object that contains the action `type`, the `props` passed
+  to `useCombobox`, the `changes` suggested by the Downshift default reducer,
+  and any action-specific fields (e.g. `altKey`, `key`, `index`). About the
+  `type` property you can learn more about in the
+  [`stateChangeTypes`](#statechangetypes) section.
 
 ```javascript
 import {useCombobox} from 'downshift'

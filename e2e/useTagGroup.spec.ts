@@ -5,11 +5,15 @@ test.describe('useTagGroup', () => {
 
   test.beforeEach(async ({page}) => {
     await page.goto('/useTagGroup')
-    await expect(page.getByRole('listbox', {name: /colors example/i})).toBeVisible()
+    await expect(
+      page.getByRole('listbox', {name: /colors example/i}),
+    ).toBeVisible()
     await expect(page.getByRole('option')).toHaveCount(5)
   })
 
-  test('clicks a tag and navigates with circular arrow keys', async ({page}) => {
+  test('clicks a tag and navigates with circular arrow keys', async ({
+    page,
+  }) => {
     await page.getByRole('option', {name: /Black/i}).click()
     await expect(page.getByRole('option', {name: /Black/i})).toBeFocused()
 
