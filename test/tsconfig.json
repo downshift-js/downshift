@@ -3,5 +3,5 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["../index.d.ts"]
+  "include": ["../typings/index.d.ts"]
 }
