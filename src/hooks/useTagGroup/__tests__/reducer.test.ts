@@ -1,4 +1,4 @@
-import {UseTagGroupReducerAction} from '../index.types'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useTagGroupReducer} from '../reducer'
 
 test('reducer throws error if called without proper action type', () => {
@@ -6,12 +6,9 @@ test('reducer throws error if called without proper action type', () => {
     useTagGroupReducer(
       {activeIndex: 0, items: []},
       {
-        stateReducer(state) {
-          return state
-        },
-        removeElementDescription: 'bla bla',
+        type: 'super-bogus' as any,
+        props: {} as any,
       },
-      {type: 'super-bogus'} as unknown as UseTagGroupReducerAction<unknown>,
     )
   }).toThrow('Invalid useTagGroup reducer action.')
 })

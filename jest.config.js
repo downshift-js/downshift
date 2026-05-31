@@ -5,6 +5,7 @@ module.exports = Object.assign(jestConfig, {
     ...jestConfig.coveragePathIgnorePatterns,
     '.macro.js$',
     '<rootDir>/src/stateChangeTypes.js',
+    '\\.types\\.ts$',
   ],
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
   moduleFileExtensions: ['ts', 'js', 'tsx', 'jsx'],

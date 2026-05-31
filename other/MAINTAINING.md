@@ -80,4 +80,5 @@ necessary by the git commit messages. With this in mind, **please brush up on
 
 Thank you so much for helping to maintain this project!
 
-[commit]: https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/ed32559941719a130bb0327f886d6a32a8cbc2ba/convention.md
+[commit]:
+  https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/ed32559941719a130bb0327f886d6a32a8cbc2ba/convention.md

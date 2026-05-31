@@ -5,8 +5,8 @@ import {
   handleRefs,
   useLatestRef,
   validatePropTypes,
-} from '../../utils-ts'
-import {useControlledReducer} from '../utils-ts'
+} from '../../utils'
+import {useControlledReducer} from '../utils'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   GetTagGroupPropsOptions,
@@ -14,14 +14,13 @@ import {
   GetTagRemovePropsOptions,
   UseTagGroupInterface,
   UseTagGroupProps,
-  UseTagGroupMergedProps,
   UseTagGroupReducerAction,
   UseTagGroupReturnValue,
   UseTagGroupState,
-  UseTagGroupStateChangeTypes,
   GetTagRemovePropsReturnValue,
   GetTagPropsReturnValue,
   GetTagGroupPropsReturnValue,
+  UseTagGroupMergedProps,
 } from './index.types'
 import {useTagGroupReducer} from './reducer'
 import {
@@ -37,7 +36,7 @@ import {
 
 const useTagGroup: UseTagGroupInterface = <Item>(
   userProps: UseTagGroupProps<Item> = {},
-) => {
+): UseTagGroupReturnValue<Item> => {
   /* State and Props */
 
   validatePropTypes(userProps, useTagGroup, propTypes)
@@ -46,9 +45,8 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   const [state, dispatch] = useControlledReducer<
     UseTagGroupState<Item>,
-    UseTagGroupMergedProps<Item>,
-    UseTagGroupStateChangeTypes,
-    UseTagGroupReducerAction<Item>
+    UseTagGroupReducerAction<Item>,
+    UseTagGroupMergedProps<Item>
   >(useTagGroupReducer, props, getInitialState, isStateEqual)
 
   const {activeIndex, items} = state

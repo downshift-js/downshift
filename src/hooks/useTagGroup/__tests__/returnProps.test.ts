@@ -2,7 +2,6 @@ import useTagGroup from '..'
 import * as stateChangeTypes from '../stateChangeTypes'
 import {renderUseTagGroup, act, defaultProps} from './utils'
 
-
 describe('returnProps', () => {
   test('should have stateChangeTypes attached to hook', () => {
     expect(useTagGroup).toHaveProperty('stateChangeTypes', stateChangeTypes)

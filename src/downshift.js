@@ -6,25 +6,30 @@ import {isForwardRef} from 'react-is'
 import {isPreact, isReactNative, isReactNativeWeb} from './is.macro'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
-  handleRefs,
-  callAllEventHandlers,
   cbToCb,
-  debounce,
   getA11yStatusMessage,
   getElementProps,
   isDOMElement,
-  targetWithinDownshift,
   isPlainObject,
-  normalizeArrowKey,
   pickState,
   requiredProp,
   unwrapArray,
-  isControlledProp,
-  validateControlledUnchanged,
+} from './utils.legacy'
+import {
+  generateId,
+  scrollIntoView,
+  setStatus,
+  getState,
+  noop,
+  callAllEventHandlers,
+  handleRefs,
+  debounce,
+  normalizeArrowKey,
   getHighlightedIndex,
   getNonDisabledIndex,
+  targetWithinDownshift,
+  validateControlledUnchanged,
 } from './utils'
-import {generateId, scrollIntoView, setStatus, getState, noop} from './utils-ts'
 
 class Downshift extends Component {
   static propTypes = {
@@ -373,7 +378,7 @@ class Downshift extends Component {
           }
           nextFullState[key] = newStateToSet[key]
           // if it's coming from props, then we don't care to set it internally
-          if (!isControlledProp(this.props, key)) {
+          if (this.props[key] === undefined) {
             nextState[key] = newStateToSet[key]
           }
         })
@@ -1175,7 +1180,7 @@ class Downshift extends Component {
     }
 
     if (
-      isControlledProp(this.props, 'selectedItem') &&
+      this.props.selectedItem !== undefined &&
       this.props.selectedItemChanged(
         prevProps.selectedItem,
         this.props.selectedItem,

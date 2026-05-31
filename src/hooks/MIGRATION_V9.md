@@ -23,13 +23,11 @@ The handlers below have their types improved to reflect that they will always
 get called with their corresponding state prop:
 
 - useCombobox
-
   - onSelectedItemChange: selectedItem is non optional
   - onIsOpenChange: isOpen is non optional
   - onHighlightedIndexChange: highlightedIndex is non optional
 
 - useSelect
-
   - onSelectedItemChange: selectedItem is non optional
   - onIsOpenChange: isOpen is non optional
   - onHighlightedIndexChange: highlightedIndex is non optional

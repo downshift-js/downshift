@@ -1,15 +1,8 @@
-import {Action, State} from '../../utils-ts'
+import {AnyRef, Environment} from '../../downshift.types'
 
-export interface UseTagGroupState<Item> extends State {
+export interface UseTagGroupState<Item> {
   activeIndex: number
   items: Item[]
-}
-
-export interface Environment {
-  addEventListener: typeof window.addEventListener
-  removeEventListener: typeof window.removeEventListener
-  document: Document
-  Node: typeof window.Node
 }
 
 export interface UseTagGroupStateChange<Item> extends Partial<
@@ -44,17 +37,21 @@ export interface UseTagGroupProps<Item> extends Partial<
   removeElementDescription?: string
   stateReducer?(
     state: UseTagGroupState<Item>,
-    actionAndChanges: Action<UseTagGroupStateChangeTypes> & {
+    actionAndChanges: UseTagGroupReducerAction<Item> & {
+      props: UseTagGroupMergedProps<Item>
       changes: Partial<UseTagGroupState<Item>>
     },
   ): Partial<UseTagGroupState<Item>>
   tagGroupId?: string
 }
 
-export type UseTagGroupMergedProps<Item> = Required<
-  Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+export type UseTagGroupMergedProps<Item> = Omit<
+  UseTagGroupProps<Item>,
+  'stateReducer' | 'removeElementDescription'
 > &
-  UseTagGroupProps<Item>
+  Required<
+    Pick<UseTagGroupProps<Item>, 'stateReducer' | 'removeElementDescription'>
+  >
 
 export interface UseTagGroupInterface {
   <Item>(props?: UseTagGroupProps<Item>): UseTagGroupReturnValue<Item>
@@ -81,12 +78,13 @@ export interface UseTagGroupReturnValue<Item> {
 export interface GetTagPropsOptions extends React.HTMLProps<HTMLElement> {
   index: number
   refKey?: string
-  ref?: React.MutableRefObject<HTMLElement>
+  ref?: AnyRef
 }
 
 export interface GetTagPropsReturnValue {
   'aria-describedby': string
   id: string
+  ref?: AnyRef
   role: 'option'
   onPress?: (event: React.BaseSyntheticEvent) => void
   onClick?: React.MouseEventHandler
@@ -107,11 +105,12 @@ export interface GetTagRemovePropsReturnValue {
 
 export interface GetTagGroupPropsOptions extends React.HTMLProps<HTMLElement> {
   refKey?: string
-  ref?: React.MutableRefObject<HTMLElement>
+  ref?: AnyRef
 }
 
 export interface GetTagGroupPropsReturnValue {
   id: string
+  ref?: AnyRef
   role: 'listbox'
   'aria-live': 'polite'
   'aria-atomic': 'false'
@@ -175,3 +174,5 @@ export type UseTagGroupFunctionAddItem<Item> = {
   item: Item
   index?: number
 }
+
+export declare const useTagGroup: UseTagGroupInterface

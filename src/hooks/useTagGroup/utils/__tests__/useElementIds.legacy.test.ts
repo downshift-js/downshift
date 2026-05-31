@@ -18,41 +18,41 @@ describe('useElementIds for React < 18', () => {
   })
 
   test('returns the same reference on re-renders when the props do not change', () => {
-      const getTestTagId = () => 'test-tag-id'
-      const {result, rerender} = renderHook(useElementIds, {
-        initialProps: {
-          id: 'test-id',
-          tagGroupId: 'test-tag-group-id',
-          getTagId: getTestTagId,
-        },
-      })
-      const renderOneResult = result.current
-      rerender({
+    const getTestTagId = () => 'test-tag-id'
+    const {result, rerender} = renderHook(useElementIds, {
+      initialProps: {
         id: 'test-id',
         tagGroupId: 'test-tag-group-id',
         getTagId: getTestTagId,
-      })
-      const renderTwoResult = result.current
-      expect(renderOneResult).toBe(renderTwoResult)
+      },
     })
-  
-    test('returns a new reference on re-renders when the props change', () => {
-      const {result, rerender} = renderHook(useElementIds, {
-        initialProps: {
-          id: 'test-id',
-          tagGroupId: 'test-tag-group-id',
-          getTagId: () => 'test-tag-id',
-        },
-      })
-      const renderOneResult = result.current
-      rerender({
+    const renderOneResult = result.current
+    rerender({
+      id: 'test-id',
+      tagGroupId: 'test-tag-group-id',
+      getTagId: getTestTagId,
+    })
+    const renderTwoResult = result.current
+    expect(renderOneResult).toBe(renderTwoResult)
+  })
+
+  test('returns a new reference on re-renders when the props change', () => {
+    const {result, rerender} = renderHook(useElementIds, {
+      initialProps: {
         id: 'test-id',
         tagGroupId: 'test-tag-group-id',
         getTagId: () => 'test-tag-id',
-      })
-      const renderTwoResult = result.current
-      expect(renderOneResult).not.toBe(renderTwoResult)
+      },
     })
+    const renderOneResult = result.current
+    rerender({
+      id: 'test-id',
+      tagGroupId: 'test-tag-group-id',
+      getTagId: () => 'test-tag-id',
+    })
+    const renderTwoResult = result.current
+    expect(renderOneResult).not.toBe(renderTwoResult)
+  })
 
   test('generates stable IDs across re-renders', () => {
     const {result, rerender} = renderHook(() => useElementIds({}))

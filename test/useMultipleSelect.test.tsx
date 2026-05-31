@@ -34,6 +34,10 @@ export default function DropdownMultipleSelect() {
     selectedItems,
   } = useMultipleSelection({initialSelectedItems})
   const items = getFilteredItems(selectedItems)
+  const selectedItemRef = React.useRef<HTMLSpanElement>(null)
+  const toggleButtonRef = React.useRef<HTMLDivElement>(null)
+  const menuRef = React.useRef<HTMLUListElement>(null)
+  const itemRef = React.useRef<HTMLLIElement>(null)
   const {
     isOpen,
     getToggleButtonProps,
@@ -76,39 +80,39 @@ export default function DropdownMultipleSelect() {
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
       <div>
-        {selectedItems.map(function renderSelectedItem(
-          selectedItemForRender,
-          index,
-        ) {
-          return (
-            <span
-              key={`selected-item-${index}`}
-              {...getSelectedItemProps({
-                selectedItem: selectedItemForRender,
-                index,
-              })}
-            >
-              {selectedItemForRender}
+        {selectedItems.map(
+          function renderSelectedItem(selectedItemForRender, index) {
+            return (
               <span
-                onClick={e => {
-                  e.stopPropagation()
-                  removeSelectedItem(selectedItemForRender)
-                }}
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({
+                  selectedItem: selectedItemForRender,
+                  index,
+                  ref: index === 0 ? selectedItemRef : undefined,
+                })}
               >
-                &#10005;
+                {selectedItemForRender}
+                <span
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeSelectedItem(selectedItemForRender)
+                  }}
+                >
+                  &#10005;
+                </span>
               </span>
-            </span>
-          )
-        })}
+            )
+          },
+        )}
         <div
           {...getToggleButtonProps(
-            getDropdownProps({preventKeyAction: isOpen}),
+            getDropdownProps({preventKeyAction: isOpen, ref: toggleButtonRef}),
           )}
         >
           Elements {isOpen ? <>&#8593;</> : <>&#8595;</>}
         </div>
       </div>
-      <ul {...getMenuProps()}>
+      <ul {...getMenuProps({ref: menuRef})}>
         {isOpen &&
           colors.map((item, index) => (
             <li
@@ -116,6 +120,7 @@ export default function DropdownMultipleSelect() {
               {...getItemProps({
                 item,
                 index,
+                ref: index === 0 ? itemRef : undefined,
               })}
             >
               {item}

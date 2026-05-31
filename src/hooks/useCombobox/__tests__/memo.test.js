@@ -4,14 +4,58 @@ import {
   renderCombobox,
   getInput,
   keyDownOnInput,
-} from '../testUtils'
-import {items, defaultIds, MemoizedItem} from '../../testUtils'
+  items,
+  defaultIds,
+  MemoizedItem,
+} from './utils'
+
+jest.mock('../../utils', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const utils = jest.requireActual('../../utils')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const hooksUtils = jest.requireActual('../../../utils')
+
+  return {
+    ...utils,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    useGetterPropsCalledChecker: () => hooksUtils.noop,
+  }
+})
+
+// We are using React 18.
+jest.mock('react', () => {
+  return {
+    ...jest.requireActual('react'),
+    useId() {
+      return 'test-id'
+    },
+  }
+})
+
+beforeEach(jest.resetAllMocks)
+afterAll(jest.restoreAllMocks)
 
 test('functions are memoized', () => {
   const {result, rerender} = renderUseCombobox()
   const firstRenderResult = result.current
   rerender()
   const secondRenderResult = result.current
+  expect(firstRenderResult.getInputProps).toBe(secondRenderResult.getInputProps)
+  expect(firstRenderResult.getItemProps).toBe(secondRenderResult.getItemProps)
+  expect(firstRenderResult.getLabelProps).toBe(secondRenderResult.getLabelProps)
+  expect(firstRenderResult.getMenuProps).toBe(secondRenderResult.getMenuProps)
+  expect(firstRenderResult.getToggleButtonProps).toBe(
+    secondRenderResult.getToggleButtonProps,
+  )
+  expect(firstRenderResult.openMenu).toBe(secondRenderResult.openMenu)
+  expect(firstRenderResult.closeMenu).toBe(secondRenderResult.closeMenu)
+  expect(firstRenderResult.toggleMenu).toBe(secondRenderResult.toggleMenu)
+  expect(firstRenderResult.setHighlightedIndex).toBe(
+    secondRenderResult.setHighlightedIndex,
+  )
+  expect(firstRenderResult.selectItem).toBe(secondRenderResult.selectItem)
+  expect(firstRenderResult.reset).toBe(secondRenderResult.reset)
+  expect(firstRenderResult.setInputValue).toBe(secondRenderResult.setInputValue)
   expect(firstRenderResult).toEqual(secondRenderResult)
 })
 
@@ -23,7 +67,7 @@ test('will skip disabled items after component rerenders and items are memoized'
     return index === items.length - 2
   }
 
-  const {rerender} = renderCombobox({
+  const {user, rerender} = renderCombobox({
     isItemDisabled,
     isOpen: true,
     initialHighlightedIndex: items.length - 1,
@@ -31,7 +75,7 @@ test('will skip disabled items after component rerenders and items are memoized'
   })
 
   rerender({renderItem, isOpen: true, isItemDisabled})
-  await keyDownOnInput('{ArrowUp}')
+  await keyDownOnInput(user, '{ArrowUp}')
 
   expect(getInput()).toHaveAttribute(
     'aria-activedescendant',

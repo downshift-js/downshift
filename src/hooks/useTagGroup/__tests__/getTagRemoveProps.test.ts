@@ -52,7 +52,9 @@ describe('getTagRemoveProps', () => {
 
       expect(() =>
         result.current.getTagRemoveProps({index: -3}),
-      ).toThrowErrorMatchingInlineSnapshot(`Pass correct item index to getTagRemoveProps!`)
+      ).toThrowErrorMatchingInlineSnapshot(
+        `Pass correct item index to getTagRemoveProps!`,
+      )
     })
   })
 
@@ -116,7 +118,6 @@ describe('getTagRemoveProps', () => {
         screen.getByRole('option', {name: defaultProps.initialItems[1]}),
       ).toBeInTheDocument()
     })
-
 
     test('click removes the active last item and the second to last item becomes active', async () => {
       const {clickOnRemoveTag, getTags} = renderTagGroup()

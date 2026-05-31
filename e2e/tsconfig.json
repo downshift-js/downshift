@@ -3,6 +3,6 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "../playwright.config.ts"],
   "exclude": []
 }

@@ -42,11 +42,7 @@ export default class App extends React.Component<Props, State> {
           return (
             <div>
               <div {...getRootProps({}, {})}></div>
-              <label
-                {...getLabelProps()}
-              >
-                Hello:
-              </label>
+              <label {...getLabelProps()}>Hello:</label>
               <label {...getLabelProps()}>Hello:</label>
               <input
                 {...getInputProps({

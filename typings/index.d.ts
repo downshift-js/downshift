@@ -1,23 +1,15 @@
-export * from './index.legacy'
-import Downshift from './index.legacy'
-export default Downshift
+// Downshift (legacy class component)
+export * from '../dist/downshift.types'
+export {default} from '../dist/downshift.types'
 
-export {
-  UseTagGroupState,
-  UseTagGroupProps,
-  UseTagGroupReturnValue,
-  GetTagGroupProps,
-  GetTagGroupPropsOptions,
-  GetTagGroupPropsReturnValue,
-  GetTagProps,
-  GetTagPropsOptions,
-  GetTagPropsReturnValue,
-  GetTagRemoveProps,
-  GetTagRemovePropsOptions,
-  GetTagRemovePropsReturnValue,
-  UseTagGroupStateChangeTypes,
-} from '../dist/hooks/useTagGroup/index.types'
+// useSelect
+export * from '../dist/hooks/useSelect/index.types'
 
-import {UseTagGroupInterface} from '../dist/hooks/useTagGroup/index.types'
-export const useTagGroup: UseTagGroupInterface
-export {UseTagGroupInterface}
+// useCombobox
+export * from '../dist/hooks/useCombobox/index.types'
+
+// useMultipleSelection
+export * from '../dist/hooks/useMultipleSelection/index.types'
+
+// useTagGroup
+export * from '../dist/hooks/useTagGroup/index.types'

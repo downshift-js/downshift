@@ -42,6 +42,13 @@
       "pre-commit": "kcd-scripts pre-commit"
     }
   },
+  "lint-staged": {
+    "*.+(js|jsx|json|yml|yaml|css|less|scss|ts|tsx|md|gql|graphql|mdx|vue)": [
+      "kcd-scripts format",
+      "kcd-scripts lint",
+      "kcd-scripts test --findRelatedTests --passWithNoTests"
+    ]
+  },
   "files": [
     "dist",
     "typings",
@@ -199,8 +206,8 @@
     "dist",
     ".docusaurus",
     "build",
-    "typings",
     "test",
+    "typings",
     "playwright-report",
     "test-results"
   ],

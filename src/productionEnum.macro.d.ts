@@ -1,3 +1,3 @@
-declare function productionEnum<T extends string>(value: T): T;
+declare function productionEnum<T extends string>(value: T): T
 
-export default productionEnum;
+export default productionEnum

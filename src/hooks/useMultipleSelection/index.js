@@ -1,13 +1,18 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {handleRefs, callAllEventHandlers, normalizeArrowKey} from '../../utils'
-import {useLatestRef} from '../../utils-ts'
-import {useGetterPropsCalledChecker, useControlPropsValidator} from '../utils'
+import {
+  useLatestRef,
+  callAllEventHandlers,
+  handleRefs,
+  normalizeArrowKey,
+} from '../../utils'
 import {
   useControlledReducer,
   useIsInitialMount,
   useA11yMessageStatus,
   getItemAndIndex,
-} from '../utils-ts'
+  useControlPropsValidator,
+  useGetterPropsCalledChecker,
+} from '../utils'
 import {
   getInitialState,
   defaultProps,

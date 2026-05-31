@@ -28,15 +28,18 @@ export default function DropdownSelect() {
     getMenuProps,
     getItemProps,
   } = useSelect({items: colors})
+  const toggleButtonRef = React.useRef<HTMLDivElement>(null)
+  const menuRef = React.useRef<HTMLUListElement>(null)
+  const itemRef = React.useRef<HTMLLIElement>(null)
 
   return (
     <div>
       <label {...getLabelProps()}>Choose an element:</label>
-      <div {...getToggleButtonProps()}>
+      <div {...getToggleButtonProps({ref: toggleButtonRef})}>
         {selectedItem ?? 'Elements'}
         {isOpen ? <>&#8593;</> : <>&#8595;</>}
       </div>
-      <ul {...getMenuProps()}>
+      <ul {...getMenuProps({ref: menuRef})}>
         {isOpen &&
           colors.map((item, index) => (
             <li
@@ -44,6 +47,7 @@ export default function DropdownSelect() {
               {...getItemProps({
                 item,
                 index,
+                ref: index === 0 ? itemRef : undefined,
               })}
             >
               {item}

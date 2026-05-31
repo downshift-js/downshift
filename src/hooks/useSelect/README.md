@@ -234,10 +234,11 @@ how the component interacts with user updates. It gives you the current state
 and the state that will be set, and you return the state that you want to set.
 
 - `state`: The full current state of downshift.
-- `actionAndChanges`: Object that contains the action `type`, props needed to
-  return a new state based on that type and the changes suggested by the
-  Downshift default reducer. About the `type` property you can learn more about
-  in the [`stateChangeTypes`](#statechangetypes) section.
+- `actionAndChanges`: Object that contains the action `type`, the `props` passed
+  to `useSelect`, the `changes` suggested by the Downshift default reducer, and
+  any action-specific fields (e.g. `altKey`, `key`, `index`). About the `type`
+  property you can learn more about in the
+  [`stateChangeTypes`](#statechangetypes) section.
 
 ```javascript
 import {useSelect} from 'downshift'
@@ -976,7 +977,8 @@ suggestion and the Codesandbox for it, and we will take it from there.
 [blog-post-prop-getters]:
   https://blog.kentcdodds.com/how-to-give-rendering-control-to-users-with-prop-getters-549eaef76acf
 [docsite]: https://downshift-js.com/
-[sandbox-repo]: https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
+[sandbox-repo]:
+  https://codesandbox.io/p/sandbox/github/kentcdodds/downshift-examples?file=%2Fsrc%2Findex.js&moduleview=1
 [advanced-react-component-patterns-course]:
   https://github.com/downshift-js/downshift#advanced-react-component-patterns-course
 [migration-guide-v7]:

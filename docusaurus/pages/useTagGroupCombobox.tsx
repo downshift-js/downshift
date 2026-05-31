@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import {UseComboboxInterface} from '../../typings'
-import {useTagGroup, useCombobox as useComboboxUntyped} from '../../src'
+import {useTagGroup, useCombobox} from '../../src'
 import {colors} from '../utils'
 
+import './shared.css'
 import './useTagGroupCombobox.css'
 
 export default function TagGroup() {
@@ -23,8 +23,6 @@ export default function TagGroup() {
       !items.includes(color) &&
       (!inputValue || color.toLowerCase().includes(inputValue.toLowerCase())),
   )
-  const useCombobox = useComboboxUntyped as UseComboboxInterface
-
   const {
     isOpen,
     getToggleButtonProps,
@@ -100,7 +98,7 @@ export default function TagGroup() {
           </button>
         </div>
       </div>
-      <ul className="menu" {...getMenuProps()}>
+      <ul className="combobox-menu" {...getMenuProps()}>
         {isOpen
           ? itemsToAdd.map((item, index) => (
               <li

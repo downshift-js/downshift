@@ -1,0 +1,45 @@
+export const items = [
+  'Neptunium',
+  'Plutonium',
+  'Americium',
+  'Curium',
+  'Berkelium',
+  'Californium',
+  'Einsteinium',
+  'Fermium',
+  'Mendelevium',
+  'Nobelium',
+  'Lawrencium',
+  'Rutherfordium',
+  'Dubnium',
+  'Seaborgium',
+  'Bohrium',
+  'Hassium',
+  'Meitnerium',
+  'Darmstadtium',
+  'Roentgenium',
+  'Copernicium',
+  'Nihonium',
+  'Flerovium',
+  'Moscovium',
+  'Livermorium',
+  'Tennessine',
+  'Oganesson',
+]
+
+export const dataTestIds = {
+  toggleButton: 'toggle-button-id',
+  menu: 'menu-id',
+  item: (index: number) => `item-id-${index}`,
+  input: 'input-id',
+  selectedItemPrefix: 'selected-item-id',
+  selectedItem: (index: number) => `selected-item-id-${index}`,
+}
+
+export const defaultIds = {
+  labelId: 'downshift-test-id-label',
+  menuId: 'downshift-test-id-menu',
+  getItemId: (index: number) => `downshift-test-id-item-${index}`,
+  toggleButtonId: 'downshift-test-id-toggle-button',
+  inputId: 'downshift-test-id-input',
+}

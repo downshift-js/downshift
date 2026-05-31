@@ -60,7 +60,6 @@ Event changes occured because of the focus shift, as well as new accessibility
 pattern recommendantions.
 
 - getToggleButtonProps additions:
-
   - _ArrowDown+Alt_: opens the menu without any item highlighted.
   - _ArrowUp+Alt_: closes the menu and selects the highlighted item.
   - _End_: highlights the last item and opens the menu if closed.
@@ -82,7 +81,6 @@ pattern recommendantions.
     supported anymore.
 
 - getToggleButtonProps changes:
-
   - _ArrowUp_: if there is an item selected, opens the menu with that item
     highlighted, not with the -1 offset as it did in v6 (ARIA 1.1).
   - _ArrowDown_: if there is an item selected, opens the menu with that item
@@ -208,7 +206,6 @@ As a result of the 1.2 pattern, there are a few event handling changes detailed
 below.
 
 - getInputProps additions:
-
   - _ArrowDown+Alt_: opens the menu without any item highlighted.
   - _ArrowUp+Alt_: closes the menu and selects the highlighted item.
   - _PageUp_: if menu is open, moves highlight by 10 positions to the start.

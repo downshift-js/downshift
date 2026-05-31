@@ -1,4 +1,4 @@
-import {pickState} from '../utils'
+import {pickState} from '../utils.legacy'
 
 test('pickState only picks state that downshift cares about', () => {
   const otherStateToSet = {
