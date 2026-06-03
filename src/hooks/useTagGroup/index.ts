@@ -3,7 +3,6 @@ import {useCallback} from 'react'
 import {
   callAllEventHandlers,
   handleRefs,
-  useLatestRef,
   validatePropTypes,
 } from '../../utils'
 import {useControlledReducer} from '../utils'
@@ -53,7 +52,6 @@ const useTagGroup: UseTagGroupInterface = <Item>(
 
   /* Refs */
 
-  const latest = useLatestRef({state, props})
   const elementIds = useElementIds({
     getTagId: props.getTagId,
     id: props.id,
@@ -132,8 +130,6 @@ const useTagGroup: UseTagGroupInterface = <Item>(
         throw new Error('Pass correct item index to getTagProps!')
       }
 
-      const latestState = latest.current.state
-
       const handleClick = () => {
         dispatch({type: stateChangeTypes.TagClick, index})
       }
@@ -150,11 +146,11 @@ const useTagGroup: UseTagGroupInterface = <Item>(
         role: 'option',
         id: tagId,
         onClick: callAllEventHandlers(onClick, handleClick),
-        tabIndex: latestState.activeIndex === index ? 0 : -1,
+        tabIndex: activeIndex === index ? 0 : -1,
         ...rest,
       } as GetTagPropsReturnValue & Extra
     },
-    [dispatch, elementIds, latest, itemRefs],
+    [dispatch, elementIds, activeIndex, itemRefs],
   )
 
   const getTagRemoveProps = useCallback(
