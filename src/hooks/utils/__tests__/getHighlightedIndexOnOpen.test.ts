@@ -186,3 +186,33 @@ test('returns -1 when no conditions match', () => {
     ),
   ).toBe(-1)
 })
+
+test('returns -1 when defaultHighlightedIndex is -1, even when selectedItem is set', () => {
+  expect(
+    getHighlightedIndexOnOpen(
+      items,
+      undefined,
+      -1,
+      isItemDisabled,
+      itemToKey,
+      'b',
+      -1,
+      1,
+    ),
+  ).toBe(-1)
+})
+
+test('returns -1 when initialHighlightedIndex is -1 and highlightedIndex matches', () => {
+  expect(
+    getHighlightedIndexOnOpen(
+      items,
+      -1,
+      undefined,
+      isItemDisabled,
+      itemToKey,
+      'b',
+      -1,
+      1,
+    ),
+  ).toBe(-1)
+})
