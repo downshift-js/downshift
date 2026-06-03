@@ -3,7 +3,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "jsx": "react",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
@@ -11,14 +11,11 @@
     "module": "ESNext",
     "typeRoots": ["./node_modules/@types", "./node_modules/@testing-library"],
     "strictNullChecks": true,
+    "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
-    "emitDeclarationOnly": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["*"]
-    }
+    "emitDeclarationOnly": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist"]
