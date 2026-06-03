@@ -346,7 +346,6 @@ export interface UseComboboxGetInputPropsReturnValue {
   'aria-labelledby': string | undefined
   'aria-label': string | undefined
   autoComplete: 'off'
-  disabled: boolean | undefined
   id: string
   role: 'combobox'
   value: string

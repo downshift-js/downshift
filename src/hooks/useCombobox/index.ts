@@ -21,16 +21,19 @@ import {
   dropdownDefaultProps,
   useScrollIntoView,
 } from '../utils'
+import {type GetPropsCommonOptions} from '../../downshift.types'
 import {getInitialState, useControlledReducer, propTypes} from './utils'
 import downshiftUseComboboxReducer from './reducer'
 import * as stateChangeTypes from './stateChangeTypes'
 import {
   UseComboboxGetInputProps,
+  UseComboboxGetInputPropsOptions,
   UseComboboxGetInputPropsReturnValue,
   UseComboboxGetItemProps,
   UseComboboxGetLabelProps,
   UseComboboxGetMenuProps,
   UseComboboxGetToggleButtonProps,
+  UseComboboxGetToggleButtonPropsOptions,
   UseComboboxMergedProps,
   UseComboboxProps,
   UseComboboxReturnValue,
@@ -366,13 +369,12 @@ function useCombobox<Item>(
   ) as UseComboboxGetItemProps<Item>
 
   const getToggleButtonProps = useCallback(
-    toggleButtonProps => {
+    (toggleButtonProps?: UseComboboxGetToggleButtonPropsOptions) => {
       const {
         onClick,
         onPress,
         refKey = 'ref',
         ref,
-        disabled,
         ...rest
       } = toggleButtonProps ?? {}
       const latestState = latest.current.state
@@ -390,7 +392,7 @@ function useCombobox<Item>(
         'aria-expanded': latestState.isOpen,
         id: elementIds.toggleButtonId,
         tabIndex: -1,
-        ...(!disabled && {
+        ...(!rest.disabled && {
           ...(isReactNative || isReactNativeWeb
             ? /* istanbul ignore next (react-native) */ {
                 onPress: callAllEventHandlers(onPress, toggleButtonHandleClick),
@@ -399,7 +401,6 @@ function useCombobox<Item>(
                 onClick: callAllEventHandlers(onClick, toggleButtonHandleClick),
               }),
         }),
-        disabled,
         ...rest,
       }
     },
@@ -407,10 +408,12 @@ function useCombobox<Item>(
   ) as UseComboboxGetToggleButtonProps
 
   const getInputProps = useCallback(
-    (inputProps, otherProps) => {
+    (
+      inputProps?: UseComboboxGetInputPropsOptions,
+      otherProps?: GetPropsCommonOptions,
+    ) => {
       const {
         'aria-label': ariaLabel,
-        disabled,
         onKeyDown,
         onChange,
         onInput,
@@ -484,7 +487,7 @@ function useCombobox<Item>(
         | 'onChangeText'
       >
 
-      if (!disabled) {
+      if (!rest.disabled) {
         eventHandlers = {
           [onChangeKey]: callAllEventHandlers(
             onChange,
@@ -531,7 +534,6 @@ function useCombobox<Item>(
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
         // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
         autoComplete: 'off',
-        disabled,
         id: elementIds.inputId,
         role: 'combobox',
         value: latestState.inputValue,

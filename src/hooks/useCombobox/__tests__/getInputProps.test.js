@@ -52,6 +52,29 @@ afterAll(jest.restoreAllMocks)
 
 describe('getInputProps', () => {
   describe('hook props', () => {
+    test('returns an object with some default props', () => {
+      const {result} = renderUseCombobox()
+      const inputProps = result.current.getInputProps()
+
+      expect(Object.keys(inputProps)).toEqual([
+        'ref',
+        'aria-activedescendant',
+        'aria-autocomplete',
+        'aria-controls',
+        'aria-expanded',
+        'aria-labelledby',
+        'aria-label',
+        'autoComplete',
+        'id',
+        'role',
+        'value',
+        'onChange',
+        'onKeyDown',
+        'onBlur',
+        'onClick',
+      ])
+    })
+
     test("assign 'combobox' to role", () => {
       const {result} = renderUseCombobox()
       const inputProps = result.current.getInputProps()

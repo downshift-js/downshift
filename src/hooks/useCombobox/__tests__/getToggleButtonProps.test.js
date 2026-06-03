@@ -37,6 +37,20 @@ afterAll(jest.restoreAllMocks)
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
+    test('returns an object with some default props', () => {
+      const {result} = renderUseCombobox()
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(Object.keys(toggleButtonProps)).toEqual([
+        'ref',
+        'aria-controls',
+        'aria-expanded',
+        'id',
+        'tabIndex',
+        'onClick',
+      ])
+    })
+
     test('assign default value to id', () => {
       const {result} = renderUseCombobox()
       const toggleButtonProps = result.current.getToggleButtonProps()

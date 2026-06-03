@@ -22,6 +22,7 @@ import {
   dropdownDefaultProps,
   useScrollIntoView,
 } from '../utils'
+import {GetPropsCommonOptions} from '../../downshift.types'
 import {isReactNative, isReactNativeWeb} from '../../is.macro'
 import downshiftSelectReducer from './reducer'
 import {propTypes} from './utils'
@@ -31,6 +32,7 @@ import {
   UseSelectGetLabelProps,
   UseSelectGetMenuProps,
   UseSelectGetToggleButtonProps,
+  UseSelectGetToggleButtonPropsOptions,
   UseSelectMergedProps,
   UseSelectProps,
   UseSelectReducerAction,
@@ -301,8 +303,8 @@ function useSelect<Item>(
 
   const getToggleButtonProps = useCallback(
     (
-      toggleButtonProps?: Parameters<UseSelectGetToggleButtonProps>[0],
-      otherProps?: Parameters<UseSelectGetToggleButtonProps>[1],
+      toggleButtonProps?: UseSelectGetToggleButtonPropsOptions,
+      otherProps?: GetPropsCommonOptions,
     ) => {
       const {
         onBlur,
@@ -311,7 +313,6 @@ function useSelect<Item>(
         onKeyDown,
         refKey = 'ref',
         ref,
-        disabled,
         ...rest
       } = toggleButtonProps ?? {}
       const {suppressRefError = false} = otherProps ?? {}
@@ -364,11 +365,10 @@ function useSelect<Item>(
         role: 'combobox',
         tabIndex: 0,
         onBlur: callAllEventHandlers(onBlur, toggleButtonHandleBlur),
-        disabled,
         ...rest,
       }
 
-      if (!disabled) {
+      if (!rest.disabled) {
         /* istanbul ignore if (react-native) */
         if (isReactNative || isReactNativeWeb) {
           Object.assign(toggleProps, {
