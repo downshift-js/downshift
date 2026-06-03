@@ -152,7 +152,7 @@ describe('useMouseAndTouchTracker', () => {
           props.environment,
           props.handleBlur,
           props.downshiftRefs,
-        ),
+        ).current,
       {initialProps},
     )
 

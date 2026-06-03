@@ -334,7 +334,7 @@ function useSelect<Item>(
         })
       }
       const toggleButtonHandleBlur = () => {
-        if (stateRef.current.isOpen && !mouseAndTouchTrackers.isMouseDown) {
+        if (stateRef.current.isOpen && !mouseAndTouchTrackers.current.isMouseDown) {
           dispatch({
             type: stateChangeTypes.ToggleButtonBlur,
           })
@@ -447,7 +447,7 @@ function useSelect<Item>(
 
       const itemHandleMouseMove = () => {
         if (
-          mouseAndTouchTrackers.isTouchEnd ||
+          mouseAndTouchTrackers.current.isTouchEnd ||
           index === stateRef.current.highlightedIndex
         ) {
           return

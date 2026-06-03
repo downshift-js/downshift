@@ -329,7 +329,7 @@ function useCombobox<Item>(
 
       const itemHandleMouseMove = () => {
         if (
-          mouseAndTouchTrackers.isTouchEnd ||
+          mouseAndTouchTrackers.current.isTouchEnd ||
           index === stateRef.current.highlightedIndex
         ) {
           return
@@ -471,7 +471,7 @@ function useCombobox<Item>(
         if (
           environment?.document &&
           stateRef.current.isOpen &&
-          !mouseAndTouchTrackers.isMouseDown
+          !mouseAndTouchTrackers.current.isMouseDown
         ) {
           const isBlurByTabChange =
             event.relatedTarget === null &&
