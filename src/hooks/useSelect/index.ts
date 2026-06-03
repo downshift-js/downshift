@@ -1,6 +1,5 @@
 import React, {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  useLatestRef,
   validatePropTypes,
   callAllEventHandlers,
   handleRefs,
@@ -49,7 +48,13 @@ function useSelect<Item>(
     ...dropdownDefaultProps,
     ...userProps,
   }
-  const {scrollIntoView, environment, getA11yStatusMessage} = props
+  const {
+    items,
+    isItemDisabled,
+    scrollIntoView,
+    environment,
+    getA11yStatusMessage,
+  } = props
   // Initial state depending on controlled props.
   const [state, dispatch] = useControlledReducer<
     UseSelectState<Item>,
@@ -67,8 +72,15 @@ function useSelect<Item>(
   const clearTimeoutRef = useRef<ReturnType<typeof debounce> | null>(null)
   // prevent id re-generation between renders.
   const elementIds = useElementIds(props)
-  // utility callback to get item element.
-  const latest = useLatestRef({state, props})
+  /**
+   * Ref to read `state` in handlers to preserve referential identity.
+   * Only to be used in handlers and effects.
+   * **never access this in getters**
+   */
+  const stateRef = useRef(state)
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -132,13 +144,13 @@ function useSelect<Item>(
 
   const handleBlurInTracker = useCallback(
     function handleBlur() {
-      if (latest.current.state.isOpen) {
+      if (stateRef.current.isOpen) {
         dispatch({
           type: stateChangeTypes.ToggleButtonBlur,
         })
       }
     },
-    [dispatch, latest],
+    [dispatch],
   )
   const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
@@ -191,7 +203,7 @@ function useSelect<Item>(
         })
       },
       Escape() {
-        if (latest.current.state.isOpen) {
+        if (stateRef.current.isOpen) {
           dispatch({
             type: stateChangeTypes.ToggleButtonKeyDownEscape,
           })
@@ -201,13 +213,13 @@ function useSelect<Item>(
         event.preventDefault()
 
         dispatch({
-          type: latest.current.state.isOpen
+          type: stateRef.current.isOpen
             ? stateChangeTypes.ToggleButtonKeyDownEnter
             : stateChangeTypes.ToggleButtonClick,
         })
       },
       PageUp(event: KeyboardEvent) {
-        if (latest.current.state.isOpen) {
+        if (stateRef.current.isOpen) {
           event.preventDefault()
 
           dispatch({
@@ -216,7 +228,7 @@ function useSelect<Item>(
         }
       },
       PageDown(event: KeyboardEvent) {
-        if (latest.current.state.isOpen) {
+        if (stateRef.current.isOpen) {
           event.preventDefault()
 
           dispatch({
@@ -227,7 +239,7 @@ function useSelect<Item>(
       ' '(event: KeyboardEvent) {
         event.preventDefault()
 
-        const currentState = latest.current.state
+        const currentState = stateRef.current
 
         if (!currentState.isOpen) {
           dispatch({type: stateChangeTypes.ToggleButtonClick})
@@ -244,7 +256,7 @@ function useSelect<Item>(
         }
       },
     }),
-    [dispatch, latest],
+    [dispatch],
   )
 
   // Getter functions.
@@ -316,14 +328,13 @@ function useSelect<Item>(
       } = toggleButtonProps ?? {}
       const {suppressRefError = false} = otherProps ?? {}
 
-      const latestState = latest.current.state
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
         })
       }
       const toggleButtonHandleBlur = () => {
-        if (latestState.isOpen && !mouseAndTouchTrackers.isMouseDown) {
+        if (stateRef.current.isOpen && !mouseAndTouchTrackers.isMouseDown) {
           dispatch({
             type: stateChangeTypes.ToggleButtonBlur,
           })
@@ -351,11 +362,11 @@ function useSelect<Item>(
           },
         ),
         'aria-activedescendant':
-          latestState.isOpen && latestState.highlightedIndex > -1
-            ? elementIds.getItemId(latestState.highlightedIndex)
+          state.isOpen && state.highlightedIndex > -1
+            ? elementIds.getItemId(state.highlightedIndex)
             : '',
         'aria-controls': elementIds.menuId,
-        'aria-expanded': latest.current.state.isOpen,
+        'aria-expanded': state.isOpen,
         'aria-haspopup': 'listbox',
         'aria-labelledby': rest['aria-label']
           ? undefined
@@ -397,7 +408,8 @@ function useSelect<Item>(
     [
       dispatch,
       elementIds,
-      latest,
+      state.isOpen,
+      state.highlightedIndex,
       mouseAndTouchTrackers,
       setGetterPropCallInfo,
       toggleButtonKeyDownHandlers,
@@ -425,19 +437,18 @@ function useSelect<Item>(
         )
       }
 
-      const {state: latestState, props: latestProps} = latest.current
       const [item, index] = getItemAndIndex(
         itemProp,
         indexProp,
-        latestProps.items,
+        items,
         'Pass either item or index to getItemProps!',
       )
-      const disabled = latestProps.isItemDisabled(item, index)
+      const disabled = isItemDisabled(item, index)
 
       const itemHandleMouseMove = () => {
         if (
           mouseAndTouchTrackers.isTouchEnd ||
-          index === latestState.highlightedIndex
+          index === stateRef.current.highlightedIndex
         ) {
           return
         }
@@ -466,7 +477,7 @@ function useSelect<Item>(
           },
         ),
         'aria-disabled': disabled,
-        'aria-selected': item === latestState.selectedItem,
+        'aria-selected': item === state.selectedItem,
         id: elementIds.getItemId(index),
         role: 'option',
         onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
@@ -489,7 +500,15 @@ function useSelect<Item>(
 
       return resultItemProps
     },
-    [latest, elementIds, mouseAndTouchTrackers, preventScroll, dispatch],
+    [
+      items,
+      isItemDisabled,
+      state.selectedItem,
+      elementIds,
+      mouseAndTouchTrackers,
+      preventScroll,
+      dispatch,
+    ],
   ) as UseSelectGetItemProps<Item>
 
   // Action functions.
