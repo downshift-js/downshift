@@ -3,7 +3,6 @@ import * as React from 'react'
 import Downshift from '../../src'
 import {type ControllerStateAndHelpers} from '../../src/downshift.types'
 import {colors} from '../utils'
-import './shared.css'
 
 export default function ComboBox() {
   return (

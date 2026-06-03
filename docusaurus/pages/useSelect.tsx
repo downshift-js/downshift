@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {useSelect} from '../../src'
 import {colors} from '../utils'
-import './shared.css'
 
 export default function DropdownSelect() {
   const {

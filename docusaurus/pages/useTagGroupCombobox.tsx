@@ -3,8 +3,6 @@ import * as React from 'react'
 import {useTagGroup, useCombobox} from '../../src'
 import {colors} from '../utils'
 
-import './shared.css'
-import './useTagGroupCombobox.css'
 
 export default function TagGroup() {
   const initialItems = colors.slice(0, 5)

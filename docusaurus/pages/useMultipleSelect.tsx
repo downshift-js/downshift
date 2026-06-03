@@ -3,7 +3,6 @@ import * as React from 'react'
 import {useSelect, useMultipleSelection} from '../../src'
 import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
 import {colors} from '../utils'
-import './shared.css'
 
 const initialSelectedItems = colors.slice(0, 2)
 
