@@ -83,8 +83,8 @@ function useSelect<Item>(
     scrollIntoView,
     highlightedIndex,
     isOpen,
-    menuRef.current,
-    itemsRef.current,
+    menuRef,
+    itemsRef,
     elementIds.getItemId,
   )
   // Sets cleanup for the keysSoFar callback, debounced after 500ms.

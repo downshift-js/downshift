@@ -1,7 +1,6 @@
 import React, {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {
-  useLatestRef,
   validatePropTypes,
   callAllEventHandlers,
   handleRefs,
@@ -47,7 +46,13 @@ function useCombobox<Item>(
     ...dropdownDefaultProps,
     ...userProps,
   }
-  const {items, scrollIntoView, environment, getA11yStatusMessage} = props
+  const {
+    items,
+    isItemDisabled,
+    scrollIntoView,
+    environment,
+    getA11yStatusMessage,
+  } = props
   // Initial state depending on controlled props.
   const [state, dispatch] = useControlledReducer(
     downshiftUseComboboxReducer,
@@ -68,8 +73,15 @@ function useCombobox<Item>(
   const elementIds = useElementIds(props)
   // used to keep track of how many items we had on previous cycle.
   const previousResultCountRef = useRef<number>()
-  // utility callback to get item element.
-  const latest = useLatestRef({state, props})
+  /**
+   * Ref to read `state` in handlers to preserve referential identity.
+   * Only to be used in handlers and effects.
+   * **never access this in getters**
+   */
+  const stateRef = useRef(state)
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -84,8 +96,8 @@ function useCombobox<Item>(
     scrollIntoView,
     highlightedIndex,
     isOpen,
-    menuRef.current,
-    itemsRef.current,
+    menuRef,
+    itemsRef,
     elementIds.getItemId,
   )
   useControlPropsValidator({
@@ -114,13 +126,13 @@ function useCombobox<Item>(
 
   const handleBlurInTracker = useCallback(
     function handleBlur() {
-      if (latest.current.state.isOpen) {
+      if (stateRef.current.isOpen) {
         dispatch({
           type: stateChangeTypes.InputBlur,
         })
       }
     },
-    [dispatch, latest],
+    [dispatch],
   )
   const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef, inputRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
@@ -167,7 +179,7 @@ function useCombobox<Item>(
         })
       },
       Home(event: KeyboardEvent) {
-        if (!latest.current.state.isOpen) {
+        if (!stateRef.current.isOpen) {
           return
         }
 
@@ -177,7 +189,7 @@ function useCombobox<Item>(
         })
       },
       End(event: KeyboardEvent) {
-        if (!latest.current.state.isOpen) {
+        if (!stateRef.current.isOpen) {
           return
         }
 
@@ -187,7 +199,7 @@ function useCombobox<Item>(
         })
       },
       Escape(event: KeyboardEvent) {
-        const latestState = latest.current.state
+        const latestState = stateRef.current
         if (
           latestState.isOpen ||
           latestState.inputValue ||
@@ -202,7 +214,7 @@ function useCombobox<Item>(
         }
       },
       Enter(event: KeyboardEvent) {
-        const latestState = latest.current.state
+        const latestState = stateRef.current
         // if closed or no highlighted index, do nothing.
         if (
           !latestState.isOpen ||
@@ -217,7 +229,7 @@ function useCombobox<Item>(
         })
       },
       PageUp(event: KeyboardEvent) {
-        if (latest.current.state.isOpen) {
+        if (stateRef.current.isOpen) {
           event.preventDefault()
 
           dispatch({
@@ -226,7 +238,7 @@ function useCombobox<Item>(
         }
       },
       PageDown(event: KeyboardEvent) {
-        if (latest.current.state.isOpen) {
+        if (stateRef.current.isOpen) {
           event.preventDefault()
 
           dispatch({
@@ -235,7 +247,7 @@ function useCombobox<Item>(
         }
       },
     }),
-    [dispatch, latest],
+    [dispatch],
   )
 
   // Getter props.
@@ -300,14 +312,13 @@ function useCombobox<Item>(
         )
       }
 
-      const {props: latestProps, state: latestState} = latest.current
       const [item, index] = getItemAndIndex(
         itemProp,
         indexProp,
-        latestProps.items,
+        items,
         'Pass either item or index to getItemProps!',
       )
-      const disabled = latestProps.isItemDisabled(item, index)
+      const disabled = isItemDisabled(item, index)
       const onSelectKey =
         isReactNative || isReactNativeWeb
           ? /* istanbul ignore next (react-native) */ 'onPress'
@@ -319,7 +330,7 @@ function useCombobox<Item>(
       const itemHandleMouseMove = () => {
         if (
           mouseAndTouchTrackers.isTouchEnd ||
-          index === latestState.highlightedIndex
+          index === stateRef.current.highlightedIndex
         ) {
           return
         }
@@ -347,7 +358,7 @@ function useCombobox<Item>(
           }
         }),
         'aria-disabled': disabled,
-        'aria-selected': index === latestState.highlightedIndex,
+        'aria-selected': index === state.highlightedIndex,
         id: elementIds.getItemId(index),
         role: 'option',
         ...(!disabled && {
@@ -362,7 +373,15 @@ function useCombobox<Item>(
       }
     },
 
-    [dispatch, elementIds, latest, mouseAndTouchTrackers, preventScroll],
+    [
+      dispatch,
+      elementIds,
+      items,
+      isItemDisabled,
+      state.highlightedIndex,
+      mouseAndTouchTrackers,
+      preventScroll,
+    ],
   ) as UseComboboxGetItemProps<Item>
 
   const getToggleButtonProps = useCallback(
@@ -375,7 +394,6 @@ function useCombobox<Item>(
         disabled,
         ...rest
       } = toggleButtonProps ?? {}
-      const latestState = latest.current.state
       const toggleButtonHandleClick = () => {
         dispatch({
           type: stateChangeTypes.ToggleButtonClick,
@@ -387,7 +405,7 @@ function useCombobox<Item>(
           toggleButtonRef.current = toggleButtonNode
         }),
         'aria-controls': elementIds.menuId,
-        'aria-expanded': latestState.isOpen,
+        'aria-expanded': state.isOpen,
         id: elementIds.toggleButtonId,
         tabIndex: -1,
         ...(!disabled && {
@@ -403,8 +421,9 @@ function useCombobox<Item>(
         ...rest,
       }
     },
-    [dispatch, latest, elementIds],
+    [dispatch, state.isOpen, elementIds],
   ) as UseComboboxGetToggleButtonProps
+
 
   const getInputProps = useCallback(
     (inputProps, otherProps) => {
@@ -425,7 +444,6 @@ function useCombobox<Item>(
 
       setGetterPropCallInfo('getInputProps', suppressRefError, refKey, inputRef)
 
-      const latestState = latest.current.state
       const inputHandleKeyDown = (event: KeyboardEvent) => {
         const key = normalizeArrowKey(event)
         if (key && key in inputKeyDownHandlers) {
@@ -452,7 +470,7 @@ function useCombobox<Item>(
         /* istanbul ignore else */
         if (
           environment?.document &&
-          latestState.isOpen &&
+          stateRef.current.isOpen &&
           !mouseAndTouchTrackers.isMouseDown
         ) {
           const isBlurByTabChange =
@@ -520,12 +538,12 @@ function useCombobox<Item>(
           inputRef.current = inputNode
         }),
         'aria-activedescendant':
-          latestState.isOpen && latestState.highlightedIndex > -1
-            ? elementIds.getItemId(latestState.highlightedIndex)
+          state.isOpen && state.highlightedIndex > -1
+            ? elementIds.getItemId(state.highlightedIndex)
             : '',
         'aria-autocomplete': 'list',
         'aria-controls': elementIds.menuId,
-        'aria-expanded': latestState.isOpen,
+        'aria-expanded': state.isOpen,
         'aria-labelledby': ariaLabel ? undefined : elementIds.labelId,
         'aria-label': ariaLabel,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
@@ -534,7 +552,7 @@ function useCombobox<Item>(
         disabled,
         id: elementIds.inputId,
         role: 'combobox',
-        value: latestState.inputValue,
+        value: state.inputValue,
         ...eventHandlers,
         ...rest,
       }
@@ -544,7 +562,9 @@ function useCombobox<Item>(
       elementIds,
       environment,
       inputKeyDownHandlers,
-      latest,
+      state.isOpen,
+      state.highlightedIndex,
+      state.inputValue,
       mouseAndTouchTrackers,
       setGetterPropCallInfo,
     ],
