@@ -58,14 +58,13 @@ export function useEnhancedReducer<
   )
 
   React.useEffect(() => {
-    if (!lastAction) {
-      return
-    }
-    const prevState = getState(prevStateRef.current, lastAction.props)
-    const shouldCallOnChangeProps = !isStateEqual(prevState, state)
+    if (lastAction) {
+      const prevState = getState(prevStateRef.current, lastAction.props)
+      const shouldCallOnChangeProps = !isStateEqual(prevState, state)
 
-    if (shouldCallOnChangeProps) {
-      callOnChangeProps(lastAction, lastAction.props, prevState, state)
+      if (shouldCallOnChangeProps) {
+        callOnChangeProps(lastAction, lastAction.props, prevState, state)
+      }
     }
 
     prevStateRef.current = state
