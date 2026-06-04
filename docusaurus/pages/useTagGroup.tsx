@@ -3,7 +3,6 @@ import * as React from 'react'
 import {useTagGroup} from '../../src'
 import {colors} from '../utils'
 
-import './shared.css'
 
 export default function TagGroup() {
   const initialItems = colors.slice(0, 5)

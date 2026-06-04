@@ -29,6 +29,12 @@ const config = {
       ({
         docs: false,
         blog: false,
+        theme: {
+          customCss: [
+            require.resolve('./docusaurus/pages/shared.css'),
+            require.resolve('./docusaurus/pages/useTagGroupCombobox.css'),
+          ],
+        },
         pages: {
           path: 'docusaurus/pages',
           include: ['**/*.{js,jsx,tsx}'],
@@ -42,6 +48,7 @@ const config = {
       name: 'configure-webpack-target',
       configureWebpack(webpackConfig, isServer) {
         webpackConfig.target = isServer ? 'node' : 'web'
+        return {devtool: 'source-map'}
       },
     }),
     require.resolve('./docusaurus/plugins/webpack5polyfills.js'),

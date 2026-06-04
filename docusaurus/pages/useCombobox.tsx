@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {useCombobox} from '../../src'
 import {colors} from '../utils'
-import './shared.css'
 
 export default function DropdownCombobox() {
   const [inputItems, setInputItems] = React.useState(colors)
