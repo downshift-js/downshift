@@ -10,6 +10,7 @@
     "noUncheckedIndexedAccess": true,
     "module": "ESNext",
     "typeRoots": ["./node_modules/@types", "./node_modules/@testing-library"],
+    "types": ["jest", "jest-dom", "node"],
     "strictNullChecks": true,
     "rootDir": "src",
     "outDir": "dist",
