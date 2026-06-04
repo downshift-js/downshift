@@ -32,9 +32,8 @@ export function getHighlightedIndexOnOpen<Item>(
   if (
     initialHighlightedIndex !== undefined &&
     highlightedIndex === initialHighlightedIndex &&
-    (initialHighlightedIndex === -1 ||
-      (items[initialHighlightedIndex] &&
-        !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex)))
+    (items[initialHighlightedIndex] === undefined ||
+      !isItemDisabled(items[initialHighlightedIndex], initialHighlightedIndex))
   ) {
     return initialHighlightedIndex
   }
@@ -42,8 +41,8 @@ export function getHighlightedIndexOnOpen<Item>(
   if (
     defaultHighlightedIndex !== undefined &&
     (defaultHighlightedIndex === -1 ||
-      (items[defaultHighlightedIndex] &&
-        !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex)))
+      items[defaultHighlightedIndex] === undefined ||
+      !isItemDisabled(items[defaultHighlightedIndex], defaultHighlightedIndex))
   ) {
     return defaultHighlightedIndex
   }
