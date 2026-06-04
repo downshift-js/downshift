@@ -53,6 +53,26 @@ afterAll(jest.restoreAllMocks)
 
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
+    test('returns an object with some default props', () => {
+      const {result} = renderUseSelect()
+      const toggleButtonProps = result.current.getToggleButtonProps()
+
+      expect(Object.keys(toggleButtonProps)).toEqual([
+        'ref',
+        'aria-activedescendant',
+        'aria-controls',
+        'aria-expanded',
+        'aria-haspopup',
+        'aria-labelledby',
+        'id',
+        'role',
+        'tabIndex',
+        'onBlur',
+        'onClick',
+        'onKeyDown',
+      ])
+    })
+
     test('assign default value to aria-labelledby', () => {
       const {result} = renderUseSelect()
       const toggleButtonProps = result.current.getToggleButtonProps()
