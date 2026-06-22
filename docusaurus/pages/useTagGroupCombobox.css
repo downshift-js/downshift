@@ -12,16 +12,22 @@
 .input-wrapper {
   display: flex;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  background-color: var(--ifm-background-surface-color);
   gap: 0.125rem;
 }
 
 .text-input {
   width: 100%;
   padding: 0.375rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
 }
 
 .toggle-button {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
@@ -29,7 +35,8 @@
 .combobox-menu {
   position: absolute;
   width: 18rem;
-  background-color: white;
+  background-color: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
   margin-top: 0.25rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-height: 20rem;
@@ -51,4 +58,10 @@
 
 .menu-item.highlighted {
   background-color: #93c5fd;
+  color: #1c1e21;
+}
+
+html[data-theme='dark'] .menu-item.highlighted {
+  background-color: #1f6feb;
+  color: #ffffff;
 }

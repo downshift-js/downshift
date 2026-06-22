@@ -65,10 +65,8 @@ export default function DropdownMultipleSelect() {
   return (
     <div className="container">
       <label
-        style={{
-          fontWeight: 'bolder',
-          color: selectedItem ? selectedItem : 'black',
-        }}
+        className="example-label"
+        style={selectedItem ? {color: selectedItem} : undefined}
         {...getLabelProps()}
       >
         Choose an element:
@@ -102,13 +100,7 @@ export default function DropdownMultipleSelect() {
           )
         })}
         <div
-          style={{
-            padding: '4px',
-            textAlign: 'center',
-            border: '1px solid black',
-            backgroundColor: 'lightgray',
-            cursor: 'pointer',
-          }}
+          className="example-select-toggle"
           {...getToggleButtonProps(
             getDropdownProps({preventKeyAction: isOpen}),
           )}
@@ -120,11 +112,9 @@ export default function DropdownMultipleSelect() {
         {isOpen
           ? items.map((item, index) => (
               <li
-                style={{
-                  padding: '4px',
-                  backgroundColor:
-                    highlightedIndex === index ? '#bde4ff' : undefined,
-                }}
+                className={`example-menu-item${
+                  highlightedIndex === index ? ' highlighted' : ''
+                }`}
                 key={`${item}${index}`}
                 {...getItemProps({
                   item,

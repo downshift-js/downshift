@@ -16,6 +16,48 @@
   overflow-y: scroll;
 }
 
+.example-label {
+  color: var(--ifm-font-color-base);
+  font-weight: bolder;
+}
+
+.example-input {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  padding: 4px;
+}
+
+.example-button {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
+  padding: 4px 8px;
+}
+
+.example-select-toggle {
+  padding: 4px;
+  text-align: center;
+  border: 1px solid var(--ifm-color-emphasis-600);
+  background-color: var(--ifm-color-emphasis-100);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+}
+
+.example-menu-item {
+  padding: 4px;
+}
+
+.example-menu-item.highlighted {
+  background-color: #bde4ff;
+  color: #1c1e21;
+}
+
+html[data-theme='dark'] .example-menu-item.highlighted {
+  background-color: #1f6feb;
+  color: #ffffff;
+}
+
 .tag-group {
   display: inline-flex;
   gap: 8px;
@@ -27,6 +69,7 @@
 .tag {
   border: solid 1px darkgreen;
   background-color: green;
+  color: #ffffff;
   padding: 0 6px;
   margin: 0 2px;
   border-radius: 10px;
@@ -51,6 +94,7 @@
 
 .item-to-add {
   cursor: pointer;
+  color: var(--ifm-font-color-base);
 }
 
 .selected-tag {

@@ -22,22 +22,20 @@ export default function ComboBox() {
       }: ControllerStateAndHelpers<string>) => (
         <div className="container">
           <label
-            style={{
-              fontWeight: 'bolder',
-              color: selectedItem ? selectedItem : 'black',
-            }}
+            className="example-label"
+            style={selectedItem ? {color: selectedItem} : undefined}
             {...getLabelProps()}
           >
             Choose an element:
           </label>
           <div {...getRootProps({}, {suppressRefError: true})}>
             <input
-              style={{padding: '4px'}}
+              className="example-input"
               {...getInputProps()}
               data-testid="combobox-input"
             />
             <button
-              style={{padding: '4px 8px'}}
+              className="example-button"
               aria-label="toggle menu"
               data-testid="combobox-toggle-button"
               {...getToggleButtonProps()}
@@ -45,7 +43,7 @@ export default function ComboBox() {
               {isOpen ? <>&#8593;</> : <>&#8595;</>}
             </button>
             <button
-              style={{padding: '4px 8px'}}
+              className="example-button"
               aria-label="toggle menu"
               data-testid="clear-button"
               onClick={() => clearSelection()}
@@ -62,11 +60,9 @@ export default function ComboBox() {
                   : colors
                 ).map((item, index) => (
                   <li
-                    style={{
-                      padding: '4px',
-                      backgroundColor:
-                        highlightedIndex === index ? '#bde4ff' : undefined,
-                    }}
+                    className={`example-menu-item${
+                      highlightedIndex === index ? ' highlighted' : ''
+                    }`}
                     key={`${item}${index}`}
                     {...getItemProps({
                       item,
