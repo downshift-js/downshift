@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {useSelect, useMultipleSelection} from '../../src'
 import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
-import {colors} from '../utils'
+import {colors, getExampleLabelClassName} from '../utils'
 
 const initialSelectedItems = colors.slice(0, 2)
 
@@ -65,8 +65,7 @@ export default function DropdownMultipleSelect() {
   return (
     <div className="container">
       <label
-        className="example-label"
-        style={selectedItem ? {color: selectedItem} : undefined}
+        className={getExampleLabelClassName(selectedItem)}
         {...getLabelProps()}
       >
         Choose an element:
@@ -88,7 +87,7 @@ export default function DropdownMultipleSelect() {
               {selectedItemForRender}
               {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={{padding: '4px', cursor: 'pointer'}}
+                className="tag-remove-control"
                 onClick={e => {
                   e.stopPropagation()
                   removeSelectedItem(selectedItemForRender)

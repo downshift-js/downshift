@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import Downshift from '../../src'
 import {type ControllerStateAndHelpers} from '../../src/downshift.types'
-import {colors} from '../utils'
+import {colors, getExampleLabelClassName} from '../utils'
 
 export default function ComboBox() {
   return (
@@ -22,8 +22,7 @@ export default function ComboBox() {
       }: ControllerStateAndHelpers<string>) => (
         <div className="container">
           <label
-            className="example-label"
-            style={selectedItem ? {color: selectedItem} : undefined}
+            className={getExampleLabelClassName(selectedItem)}
             {...getLabelProps()}
           >
             Choose an element:

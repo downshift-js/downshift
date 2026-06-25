@@ -7,6 +7,11 @@
   align-self: center;
 }
 
+.docs-index {
+  width: 50%;
+  margin: 200px auto;
+}
+
 .menu {
   list-style: none;
   width: 100%;
@@ -19,6 +24,118 @@
 .example-label {
   color: var(--ifm-font-color-base);
   font-weight: bolder;
+}
+
+.example-color-black {
+  color: #1c1e21;
+}
+
+.example-color-red {
+  color: #b00020;
+}
+
+.example-color-green {
+  color: #006b3c;
+}
+
+.example-color-blue {
+  color: #0b57d0;
+}
+
+.example-color-orange {
+  color: #9a4d00;
+}
+
+.example-color-purple {
+  color: #6f2da8;
+}
+
+.example-color-pink {
+  color: #b0005a;
+}
+
+.example-color-orchid {
+  color: #8a2a8a;
+}
+
+.example-color-aqua {
+  color: #007c89;
+}
+
+.example-color-lime {
+  color: #4a6f00;
+}
+
+.example-color-gray {
+  color: #606770;
+}
+
+.example-color-brown {
+  color: #7a3e14;
+}
+
+.example-color-teal {
+  color: #00796b;
+}
+
+.example-color-skyblue {
+  color: #0369a1;
+}
+
+html[data-theme='dark'] .example-color-black {
+  color: #f5f6f7;
+}
+
+html[data-theme='dark'] .example-color-red {
+  color: #ff8a80;
+}
+
+html[data-theme='dark'] .example-color-green {
+  color: #7ee787;
+}
+
+html[data-theme='dark'] .example-color-blue {
+  color: #79c0ff;
+}
+
+html[data-theme='dark'] .example-color-orange {
+  color: #ffa657;
+}
+
+html[data-theme='dark'] .example-color-purple {
+  color: #d2a8ff;
+}
+
+html[data-theme='dark'] .example-color-pink {
+  color: #ff99c8;
+}
+
+html[data-theme='dark'] .example-color-orchid {
+  color: #ff9df5;
+}
+
+html[data-theme='dark'] .example-color-aqua {
+  color: #7ee7ff;
+}
+
+html[data-theme='dark'] .example-color-lime {
+  color: #b8ff7a;
+}
+
+html[data-theme='dark'] .example-color-gray {
+  color: #c9d1d9;
+}
+
+html[data-theme='dark'] .example-color-brown {
+  color: #d4a373;
+}
+
+html[data-theme='dark'] .example-color-teal {
+  color: #56d4c6;
+}
+
+html[data-theme='dark'] .example-color-skyblue {
+  color: #9cdcfe;
 }
 
 .example-input {
@@ -92,7 +209,14 @@ html[data-theme='dark'] .example-menu-item.highlighted {
   background-color: transparent;
 }
 
+.tag-remove-control {
+  padding: 4px;
+  cursor: pointer;
+}
+
 .item-to-add {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background-color: var(--ifm-color-emphasis-100);
   cursor: pointer;
   color: var(--ifm-font-color-base);
 }

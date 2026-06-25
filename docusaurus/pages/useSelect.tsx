@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {useSelect} from '../../src'
-import {colors} from '../utils'
+import {colors, getExampleLabelClassName} from '../utils'
 
 export default function DropdownSelect() {
   const {
@@ -17,8 +17,7 @@ export default function DropdownSelect() {
   return (
     <div className="container">
       <label
-        className="example-label"
-        style={selectedItem ? {color: selectedItem} : undefined}
+        className={getExampleLabelClassName(selectedItem)}
         {...getLabelProps()}
       >
         Choose an element:
