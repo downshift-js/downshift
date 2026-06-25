@@ -14,3 +14,11 @@ export const colors = [
   'Teal',
   'Skyblue',
 ]
+
+export function getExampleLabelClassName(selectedItem?: string | null) {
+  if (!selectedItem) {
+    return 'example-label'
+  }
+
+  return `example-label example-color-${selectedItem.toLowerCase()}`
+}

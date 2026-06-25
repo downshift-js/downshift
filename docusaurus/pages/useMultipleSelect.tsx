@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {useSelect, useMultipleSelection} from '../../src'
 import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
-import {colors} from '../utils'
+import {colors, getExampleLabelClassName} from '../utils'
 
 const initialSelectedItems = colors.slice(0, 2)
 
@@ -65,10 +65,7 @@ export default function DropdownMultipleSelect() {
   return (
     <div className="container">
       <label
-        style={{
-          fontWeight: 'bolder',
-          color: selectedItem ? selectedItem : 'black',
-        }}
+        className={getExampleLabelClassName(selectedItem)}
         {...getLabelProps()}
       >
         Choose an element:
@@ -90,7 +87,7 @@ export default function DropdownMultipleSelect() {
               {selectedItemForRender}
               {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={{padding: '4px', cursor: 'pointer'}}
+                className="tag-remove-control"
                 onClick={e => {
                   e.stopPropagation()
                   removeSelectedItem(selectedItemForRender)
@@ -102,13 +99,7 @@ export default function DropdownMultipleSelect() {
           )
         })}
         <div
-          style={{
-            padding: '4px',
-            textAlign: 'center',
-            border: '1px solid black',
-            backgroundColor: 'lightgray',
-            cursor: 'pointer',
-          }}
+          className="example-select-toggle"
           {...getToggleButtonProps(
             getDropdownProps({preventKeyAction: isOpen}),
           )}
@@ -120,11 +111,9 @@ export default function DropdownMultipleSelect() {
         {isOpen
           ? items.map((item, index) => (
               <li
-                style={{
-                  padding: '4px',
-                  backgroundColor:
-                    highlightedIndex === index ? '#bde4ff' : undefined,
-                }}
+                className={`example-menu-item${
+                  highlightedIndex === index ? ' highlighted' : ''
+                }`}
                 key={`${item}${index}`}
                 {...getItemProps({
                   item,

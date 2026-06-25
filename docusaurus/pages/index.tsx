@@ -2,7 +2,7 @@ import * as React from 'react'
 
 export default function Docs() {
   return (
-    <div style={{width: '50%', margin: '200px auto'}}>
+    <div className="docs-index">
       Downshift Docs for E2E Testing
       <ul>
         <li>

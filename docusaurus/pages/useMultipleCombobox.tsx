@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import {useCombobox, useMultipleSelection} from '../../src'
 import {type UseMultipleSelectionReturnValue} from '../../src/hooks/useMultipleSelection/index.types'
-import {colors} from '../utils'
+import {colors, getExampleLabelClassName} from '../utils'
 
 const initialSelectedItems = colors.slice(0, 2)
 
@@ -79,10 +79,7 @@ export default function DropdownMultipleCombobox() {
   return (
     <div className="container">
       <label
-        style={{
-          fontWeight: 'bolder',
-          color: selectedItem ? selectedItem : 'black',
-        }}
+        className={getExampleLabelClassName(selectedItem)}
         {...getLabelProps()}
       >
         Choose an element:
@@ -104,7 +101,7 @@ export default function DropdownMultipleCombobox() {
               {selectedItemForRender}
               {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
-                style={{padding: '4px', cursor: 'pointer'}}
+                className="tag-remove-control"
                 onClick={e => {
                   e.stopPropagation()
                   removeSelectedItem(selectedItemForRender)
@@ -117,12 +114,12 @@ export default function DropdownMultipleCombobox() {
         })}
         <div>
           <input
-            style={{padding: '4px'}}
+            className="example-input"
             {...getInputProps(getDropdownProps({preventKeyAction: isOpen}))}
             data-testid="combobox-input"
           />
           <button
-            style={{padding: '4px 8px'}}
+            className="example-button"
             aria-label="toggle menu"
             data-testid="combobox-toggle-button"
             {...getToggleButtonProps()}
@@ -130,7 +127,7 @@ export default function DropdownMultipleCombobox() {
             {isOpen ? <>&#8593;</> : <>&#8595;</>}
           </button>
           <button
-            style={{padding: '4px 8px'}}
+            className="example-button"
             aria-label="clear selection"
             data-testid="clear-button"
             onClick={() => reset()}
@@ -143,11 +140,9 @@ export default function DropdownMultipleCombobox() {
         {isOpen
           ? items.map((item, index) => (
               <li
-                style={{
-                  padding: '4px',
-                  backgroundColor:
-                    highlightedIndex === index ? '#bde4ff' : undefined,
-                }}
+                className={`example-menu-item${
+                  highlightedIndex === index ? ' highlighted' : ''
+                }`}
                 key={`${item}${index}`}
                 {...getItemProps({
                   item,
