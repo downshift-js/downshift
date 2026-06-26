@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {getState} from '../../utils'
+import {getState, useLatestRef} from '../../utils'
 import {callOnChangeProps} from './callOnChangeProps'
 import {type Action, type Props, type Reducer} from './index.types'
 
@@ -48,10 +48,7 @@ export function useEnhancedReducer<
       lastAction: undefined,
     }),
   )
-  const propsRef = React.useRef(props)
-  React.useEffect(() => {
-    propsRef.current = props
-  }, [props])
+  const propsRef = useLatestRef(props)
   const dispatchWithProps = React.useCallback(
     (action: A) => dispatch({...action, props: propsRef.current}),
     [propsRef],

@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
   validatePropTypes,
+  useLatestRef,
   callAllEventHandlers,
   handleRefs,
   debounce,
@@ -77,10 +78,7 @@ function useSelect<Item>(
    * Only to be used in handlers and effects.
    * **never access this in getters**
    */
-  const stateRef = useRef(state)
-  useEffect(() => {
-    stateRef.current = state
-  }, [state])
+  const stateRef = useLatestRef(state)
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -150,7 +148,7 @@ function useSelect<Item>(
         })
       }
     },
-    [dispatch],
+    [dispatch, stateRef],
   )
   const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
@@ -256,7 +254,7 @@ function useSelect<Item>(
         }
       },
     }),
-    [dispatch],
+    [dispatch, stateRef],
   )
 
   // Getter functions.
@@ -334,7 +332,10 @@ function useSelect<Item>(
         })
       }
       const toggleButtonHandleBlur = () => {
-        if (stateRef.current.isOpen && !mouseAndTouchTrackers.current.isMouseDown) {
+        if (
+          stateRef.current.isOpen &&
+          !mouseAndTouchTrackers.current.isMouseDown
+        ) {
           dispatch({
             type: stateChangeTypes.ToggleButtonBlur,
           })
@@ -362,11 +363,11 @@ function useSelect<Item>(
           },
         ),
         'aria-activedescendant':
-          state.isOpen && state.highlightedIndex > -1
-            ? elementIds.getItemId(state.highlightedIndex)
+          isOpen && highlightedIndex > -1
+            ? elementIds.getItemId(highlightedIndex)
             : '',
         'aria-controls': elementIds.menuId,
-        'aria-expanded': state.isOpen,
+        'aria-expanded': isOpen,
         'aria-haspopup': 'listbox',
         'aria-labelledby': rest['aria-label']
           ? undefined
@@ -408,11 +409,12 @@ function useSelect<Item>(
     [
       dispatch,
       elementIds,
-      state.isOpen,
-      state.highlightedIndex,
+      isOpen,
+      highlightedIndex,
       mouseAndTouchTrackers,
       setGetterPropCallInfo,
       toggleButtonKeyDownHandlers,
+      stateRef,
     ],
   ) as UseSelectGetToggleButtonProps
 
@@ -477,7 +479,7 @@ function useSelect<Item>(
           },
         ),
         'aria-disabled': disabled,
-        'aria-selected': item === state.selectedItem,
+        'aria-selected': item === selectedItem,
         id: elementIds.getItemId(index),
         role: 'option',
         onMouseMove: callAllEventHandlers(onMouseMove, itemHandleMouseMove),
@@ -503,11 +505,12 @@ function useSelect<Item>(
     [
       items,
       isItemDisabled,
-      state.selectedItem,
+      selectedItem,
       elementIds,
       mouseAndTouchTrackers,
       preventScroll,
       dispatch,
+      stateRef,
     ],
   ) as UseSelectGetItemProps<Item>
 

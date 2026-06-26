@@ -176,6 +176,51 @@ describe('useEnhancedReducer', () => {
     expect(onStateChange).toHaveBeenCalledTimes(1)
   })
 
+  test('should use latest props when dispatch happens in layout effect after rerender', () => {
+    type LayoutDispatchProps = ReducerProps & {dispatchInLayout?: boolean}
+    const stateReducer = jest.fn(
+      (
+        _state: ReducerState,
+        actionAndChanges: {changes: Partial<ReducerState>},
+      ) => actionAndChanges.changes,
+    )
+    const reducer = (state: ReducerState) => ({count: state.count + 1})
+    const createInitialState = jest.fn(() => ({count: 0}))
+    const initialProps: LayoutDispatchProps = {...defaultProps, stateReducer}
+
+    const {result, rerender} = renderHook(
+      (currentProps: LayoutDispatchProps) => {
+        const [state, dispatch] = useEnhancedReducer<
+          ReducerState,
+          ReducerAction,
+          LayoutDispatchProps
+        >(
+          reducer,
+          currentProps,
+          createInitialState,
+          (prev, next) => prev.count === next.count,
+        )
+
+        React.useLayoutEffect(() => {
+          if (currentProps.dispatchInLayout) {
+            dispatch({type: 'increment'})
+          }
+        }, [currentProps.dispatchInLayout, dispatch])
+
+        return state
+      },
+      {initialProps},
+    )
+
+    rerender({...defaultProps, stateReducer, count: 5, dispatchInLayout: true})
+
+    expect(stateReducer).toHaveBeenLastCalledWith(
+      expect.objectContaining({count: 5}),
+      expect.objectContaining({changes: {count: 6}}),
+    )
+    expect(result.current.count).toBe(6)
+  })
+
   test('should add the props to action when dispatching', () => {
     const {result} = renderReducer()
     const [, dispatch] = result.current

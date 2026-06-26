@@ -2,6 +2,7 @@ import React, {useRef, useEffect, useCallback, useMemo} from 'react'
 import {isPreact, isReactNative, isReactNativeWeb} from '../../is.macro'
 import {
   validatePropTypes,
+  useLatestRef,
   callAllEventHandlers,
   handleRefs,
   normalizeArrowKey,
@@ -78,10 +79,7 @@ function useCombobox<Item>(
    * Only to be used in handlers and effects.
    * **never access this in getters**
    */
-  const stateRef = useRef(state)
-  useEffect(() => {
-    stateRef.current = state
-  }, [state])
+  const stateRef = useLatestRef(state)
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -132,7 +130,7 @@ function useCombobox<Item>(
         })
       }
     },
-    [dispatch],
+    [dispatch, stateRef],
   )
   const downshiftRefs = useMemo(() => [menuRef, toggleButtonRef, inputRef], [])
   const mouseAndTouchTrackers = useMouseAndTouchTracker(
@@ -247,7 +245,7 @@ function useCombobox<Item>(
         }
       },
     }),
-    [dispatch],
+    [dispatch, stateRef],
   )
 
   // Getter props.
@@ -358,7 +356,7 @@ function useCombobox<Item>(
           }
         }),
         'aria-disabled': disabled,
-        'aria-selected': index === state.highlightedIndex,
+        'aria-selected': index === highlightedIndex,
         id: elementIds.getItemId(index),
         role: 'option',
         ...(!disabled && {
@@ -378,9 +376,10 @@ function useCombobox<Item>(
       elementIds,
       items,
       isItemDisabled,
-      state.highlightedIndex,
+      highlightedIndex,
       mouseAndTouchTrackers,
       preventScroll,
+      stateRef,
     ],
   ) as UseComboboxGetItemProps<Item>
 
@@ -405,7 +404,7 @@ function useCombobox<Item>(
           toggleButtonRef.current = toggleButtonNode
         }),
         'aria-controls': elementIds.menuId,
-        'aria-expanded': state.isOpen,
+        'aria-expanded': isOpen,
         id: elementIds.toggleButtonId,
         tabIndex: -1,
         ...(!disabled && {
@@ -421,9 +420,8 @@ function useCombobox<Item>(
         ...rest,
       }
     },
-    [dispatch, state.isOpen, elementIds],
+    [dispatch, isOpen, elementIds],
   ) as UseComboboxGetToggleButtonProps
-
 
   const getInputProps = useCallback(
     (inputProps, otherProps) => {
@@ -538,12 +536,12 @@ function useCombobox<Item>(
           inputRef.current = inputNode
         }),
         'aria-activedescendant':
-          state.isOpen && state.highlightedIndex > -1
-            ? elementIds.getItemId(state.highlightedIndex)
+          isOpen && highlightedIndex > -1
+            ? elementIds.getItemId(highlightedIndex)
             : '',
         'aria-autocomplete': 'list',
         'aria-controls': elementIds.menuId,
-        'aria-expanded': state.isOpen,
+        'aria-expanded': isOpen,
         'aria-labelledby': ariaLabel ? undefined : elementIds.labelId,
         'aria-label': ariaLabel,
         // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
@@ -552,7 +550,7 @@ function useCombobox<Item>(
         disabled,
         id: elementIds.inputId,
         role: 'combobox',
-        value: state.inputValue,
+        value: inputValue,
         ...eventHandlers,
         ...rest,
       }
@@ -562,11 +560,12 @@ function useCombobox<Item>(
       elementIds,
       environment,
       inputKeyDownHandlers,
-      state.isOpen,
-      state.highlightedIndex,
-      state.inputValue,
+      isOpen,
+      highlightedIndex,
+      inputValue,
       mouseAndTouchTrackers,
       setGetterPropCallInfo,
+      stateRef,
     ],
   ) as UseComboboxGetInputProps
 
