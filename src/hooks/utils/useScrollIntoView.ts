@@ -1,12 +1,6 @@
 import * as React from 'react'
 
-// istanbul ignore next
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' &&
-  typeof window.document !== 'undefined' &&
-  typeof window.document.createElement !== 'undefined'
-    ? React.useLayoutEffect
-    : React.useEffect
+import {useIsomorphicLayoutEffect} from '../../utils'
 
 /**
  * Utility hook that scrolls an item from a menu into view.
