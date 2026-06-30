@@ -9,7 +9,7 @@ import {noop, targetWithinDownshift} from '../../utils'
  * @param environment The environment to add the event listeners to, for instance window.
  * @param handleBlur The function that is called if mouseDown or touchEnd occured outside the downshiftElements.
  * @param downshiftRefs The refs for the elements that should not trigger a blur action from mouseDown or touchEnd.
- * @returns The mouse and touch events information.
+ * @returns A ref holding the mouse and touch events information. Read `.current` only inside event handlers/effects.
  */
 export function useMouseAndTouchTracker(
   environment: Environment | undefined,
@@ -87,5 +87,5 @@ export function useMouseAndTouchTracker(
     }
   }, [environment, getDownshiftElements, handleBlur])
 
-  return mouseAndTouchTrackersRef.current
+  return mouseAndTouchTrackersRef
 }

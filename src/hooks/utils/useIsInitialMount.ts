@@ -14,5 +14,6 @@ export function useIsInitialMount(): boolean {
     }
   }, [])
 
+  // eslint-disable-next-line react-hooks/refs
   return isInitialMountRef.current
 }

@@ -19,8 +19,8 @@ function renderScrollHook(props = {}) {
         p.scrollIntoView,
         p.highlightedIndex,
         p.isOpen,
-        p.menuElement,
-        p.itemElements,
+        {current: p.menuElement},
+        {current: p.itemElements},
         p.getItemId,
       ),
     {

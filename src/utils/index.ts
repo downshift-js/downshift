@@ -1,4 +1,5 @@
 export {generateId, setIdCounter, resetIdCounter} from './generateId'
+export {useIsomorphicLayoutEffect} from './useIsomorphicLayoutEffect'
 export {useLatestRef} from './useLatestRef'
 export {handleRefs} from './handleRefs'
 export {callAllEventHandlers} from './callAllEventHandlers'

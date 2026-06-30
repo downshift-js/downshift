@@ -26,41 +26,46 @@ export function useEnhancedReducer<
   isStateEqual: (prev: S, next: S) => boolean,
 ): [S, (action: A) => void] {
   const prevStateRef = React.useRef<S>({} as S)
-  const actionRef = React.useRef<Action<S, A, P>>()
   const enhancedReducer = React.useCallback(
-    (state: S, action: Action<S, A, P>): S => {
-      actionRef.current = action
+    (
+      {state}: {state: S},
+      action: Action<S, A, P>,
+    ): {state: S; lastAction?: Action<S, A, P>} => {
       state = getState(state, action.props)
 
       const changes = reducer(state, action)
       const newState = action.props.stateReducer(state, {...action, changes})
 
-      return {...state, ...newState}
+      return {state: {...state, ...newState}, lastAction: action}
     },
     [reducer],
   )
-  const [state, dispatch] = React.useReducer(
+  const [{state, lastAction}, dispatch] = React.useReducer(
     enhancedReducer,
     props,
-    createInitialState,
+    p => ({
+      state: createInitialState(p),
+      lastAction: undefined,
+    }),
   )
   const propsRef = useLatestRef(props)
   const dispatchWithProps = React.useCallback(
     (action: A) => dispatch({...action, props: propsRef.current}),
     [propsRef],
   )
-  const action = actionRef.current
 
   React.useEffect(() => {
-    const prevState = getState(prevStateRef.current, action?.props)
-    const shouldCallOnChangeProps = action && !isStateEqual(prevState, state)
+    if (lastAction) {
+      const prevState = getState(prevStateRef.current, lastAction.props)
+      const shouldCallOnChangeProps = !isStateEqual(prevState, state)
 
-    if (shouldCallOnChangeProps) {
-      callOnChangeProps(action, action.props, prevState, state)
+      if (shouldCallOnChangeProps) {
+        callOnChangeProps(lastAction, lastAction.props, prevState, state)
+      }
     }
 
     prevStateRef.current = state
-  }, [state, action, isStateEqual])
+  }, [state, lastAction, isStateEqual])
 
   return [state, dispatchWithProps]
 }

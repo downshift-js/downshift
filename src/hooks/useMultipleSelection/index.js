@@ -1,6 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
 import {
-  useLatestRef,
   callAllEventHandlers,
   handleRefs,
   normalizeArrowKey,
@@ -51,9 +50,13 @@ function useMultipleSelection(userProps = {}) {
   // Refs.
   const isInitialMount = useIsInitialMount()
   const dropdownRef = useRef(null)
-  const selectedItemRefs = useRef()
-  selectedItemRefs.current = []
-  const latest = useLatestRef({state, props})
+  // Map of selected-item index -> DOM node. Populated by the ref callback in
+  // getSelectedItemProps and read by the focus effect. Keyed by
+  // index so we never reset it during render.
+  const selectedItemRefs = useRef(null)
+  if (selectedItemRefs.current === null) {
+    selectedItemRefs.current = new Map()
+  }
 
   // Effects.
   // Adds an a11y aria live status message if getA11yStatusMessage is passed.
@@ -71,8 +74,8 @@ function useMultipleSelection(userProps = {}) {
 
     if (activeIndex === -1 && dropdownRef.current) {
       dropdownRef.current.focus()
-    } else if (selectedItemRefs.current[activeIndex]) {
-      selectedItemRefs.current[activeIndex].focus()
+    } else {
+      selectedItemRefs.current.get(activeIndex)?.focus()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex])
@@ -139,14 +142,13 @@ function useMultipleSelection(userProps = {}) {
       index: indexProp,
       ...rest
     } = {}) => {
-      const {state: latestState} = latest.current
       const [, index] = getItemAndIndex(
         selectedItemProp,
         indexProp,
-        latestState.selectedItems,
+        selectedItems,
         'Pass either item or index to getSelectedItemProps!',
       )
-      const isFocusable = index > -1 && index === latestState.activeIndex
+      const isFocusable = index > -1 && index === activeIndex
 
       const selectedItemHandleClick = () => {
         dispatch({
@@ -164,7 +166,9 @@ function useMultipleSelection(userProps = {}) {
       return {
         [refKey]: handleRefs(ref, selectedItemNode => {
           if (selectedItemNode) {
-            selectedItemRefs.current.push(selectedItemNode)
+            selectedItemRefs.current.set(index, selectedItemNode)
+          } else {
+            selectedItemRefs.current.delete(index)
           }
         }),
         tabIndex: isFocusable ? 0 : -1,
@@ -173,7 +177,7 @@ function useMultipleSelection(userProps = {}) {
         ...rest,
       }
     },
-    [dispatch, latest, selectedItemKeyDownHandlers],
+    [dispatch, selectedItems, activeIndex, selectedItemKeyDownHandlers],
   )
   const getDropdownProps = useCallback(
     (
