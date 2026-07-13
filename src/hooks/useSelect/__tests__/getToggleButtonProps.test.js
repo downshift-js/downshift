@@ -847,6 +847,21 @@ describe('getToggleButtonProps', () => {
           expect(getItems()).toHaveLength(items.length)
         })
 
+        test('it skips disabled trailing options when opening the menu', async () => {
+          const {user} = renderSelect({
+            isItemDisabled(_item, index) {
+              return index >= items.length - 2
+            },
+          })
+
+          await keyDownOnToggleButton(user, '{ArrowUp}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 3),
+          )
+        })
+
         test('it opens the closed menu with selected option highlighted', async () => {
           const selectedIndex = 4
           const {user} = renderSelect({
@@ -1186,6 +1201,21 @@ describe('getToggleButtonProps', () => {
             defaultIds.getItemId(0),
           )
           expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('skips disabled leading options when opening the menu', async () => {
+          const {user} = renderSelect({
+            isItemDisabled(_item, index) {
+              return index < 2
+            },
+          })
+
+          await keyDownOnToggleButton(user, '{ArrowDown}')
+
+          expect(getToggleButton()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(2),
+          )
         })
 
         test('opens the closed menu with selected option highlighted', async () => {

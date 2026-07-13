@@ -593,6 +593,21 @@ describe('getInputProps', () => {
           expect(getItems()).toHaveLength(items.length)
         })
 
+        test('it skips disabled trailing options when opening the menu', async () => {
+          const {user} = renderCombobox({
+            isItemDisabled(_item, index) {
+              return index >= items.length - 2
+            },
+          })
+
+          await keyDownOnInput(user, '{ArrowUp}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(items.length - 3),
+          )
+        })
+
         test('it opens the closed menu with selected option highlighted', async () => {
           const selectedIndex = 4
           const {user} = renderCombobox({
@@ -918,6 +933,21 @@ describe('getInputProps', () => {
             defaultIds.getItemId(0),
           )
           expect(getItems()).toHaveLength(items.length)
+        })
+
+        test('it skips disabled leading options when opening the menu', async () => {
+          const {user} = renderCombobox({
+            isItemDisabled(_item, index) {
+              return index < 2
+            },
+          })
+
+          await keyDownOnInput(user, '{ArrowDown}')
+
+          expect(getInput()).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(2),
+          )
         })
 
         test('opens the closed menu with selected option highlighted', async () => {
