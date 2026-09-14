@@ -19,7 +19,7 @@ autocomplete, combobox or select dropdown components.</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-113-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-145-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
@@ -1440,6 +1440,7 @@ Thanks goes to these people ([emoji key][emojis]):
       <td align="center" valign="top" width="14.28%"><a href="https://tjenkinson.me"><img src="https://avatars.githubusercontent.com/u/3259993?v=4?s=100" width="100px;" alt="Tom Jenkinson"/><br /><sub><b>Tom Jenkinson</b></sub></a><br /><a href="#infra-tjenkinson" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/aliceHendicott"><img src="https://avatars.githubusercontent.com/u/40346716?v=4?s=100" width="100px;" alt="Alice Hendicott"/><br /><sub><b>Alice Hendicott</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=aliceHendicott" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3AaliceHendicott" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/zmdavis"><img src="https://avatars.githubusercontent.com/u/25305144?v=4?s=100" width="100px;" alt="Zach Davis"/><br /><sub><b>Zach Davis</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=zmdavis" title="Code">💻</a> <a href="https://github.com/downshift-js/downshift/issues?q=author%3Azmdavis" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/naveedsajjdawan"><img src="https://avatars.githubusercontent.com/u/88137903?v=4?s=100" width="100px;" alt="Naveed Sajjad"/><br /><sub><b>Naveed Sajjad</b></sub></a><br /><a href="https://github.com/downshift-js/downshift/commits?author=naveedsajjdawan" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
