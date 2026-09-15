@@ -454,9 +454,19 @@ function useCombobox<Item>(
       }
       const inputHandleChange = (
         event:
-          | React.ChangeEvent<HTMLInputElement>
-          | {nativeEvent: {text: string}},
+          React.ChangeEvent<HTMLInputElement> | {nativeEvent: {text: string}},
       ) => {
+        if (
+          !isReactNative &&
+          !isReactNativeWeb &&
+          (
+            (event as React.ChangeEvent<HTMLInputElement>)
+              .nativeEvent as InputEvent
+          )?.isComposing
+        ) {
+          return
+        }
+
         dispatch({
           type: stateChangeTypes.InputChange,
           inputValue:
