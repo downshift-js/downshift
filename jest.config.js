@@ -1,6 +1,7 @@
 const jestConfig = require('kcd-scripts/jest')
 
 module.exports = Object.assign(jestConfig, {
+  testEnvironment: 'warpdom',
   coveragePathIgnorePatterns: [
     ...jestConfig.coveragePathIgnorePatterns,
     '.macro.js$',

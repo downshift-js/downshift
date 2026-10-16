@@ -3,7 +3,7 @@ const babelHelpersList = require('@babel/helpers').list
 
 module.exports = Object.assign(jestConfig, {
   roots: ['.'],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'warpdom',
   transform: {
     '^.+\\.(js|jsx|mjs)$': ['babel-jest', {rootMode: 'upward'}],
   },
