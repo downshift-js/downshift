@@ -19,7 +19,7 @@ autocomplete, combobox or select dropdown components.</p>
 [![downloads][downloads-badge]][npmcharts] [![version][version-badge]][package]
 [![MIT License][license-badge]][license]
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-145-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-114-orange.svg?style=flat-square)](#contributors)
 [![PRs Welcome][prs-badge]][prs] [![Chat][chat-badge]][chat]
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
