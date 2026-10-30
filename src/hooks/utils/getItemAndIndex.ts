@@ -10,7 +10,7 @@
 export function getItemAndIndex<Item>(
   itemProp: Item | undefined,
   indexProp: number | undefined,
-  items: Item[],
+  items: readonly Item[],
   errorMessage: string,
 ): [Item, number] {
   if (itemProp !== undefined && indexProp !== undefined) {

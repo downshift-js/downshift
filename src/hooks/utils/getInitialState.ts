@@ -2,7 +2,7 @@ import {getInitialValue} from './getInitialValue'
 import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
 
 export type GetInitialStateProps<T> = {
-  items: T[]
+  items: readonly T[]
   isItemDisabled: (item: T, index: number) => boolean
   selectedItem?: T | null
   initialSelectedItem?: T | null
