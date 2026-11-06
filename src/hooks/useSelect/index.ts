@@ -241,6 +241,10 @@ function useSelect<Item>(
 
         const currentState = stateRef.current
 
+        if (event.repeat && !currentState.inputValue) {
+          return
+        }
+
         if (!currentState.isOpen) {
           dispatch({type: stateChangeTypes.ToggleButtonClick})
           return
