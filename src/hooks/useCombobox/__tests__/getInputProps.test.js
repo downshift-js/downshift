@@ -1758,15 +1758,19 @@ describe('getInputProps', () => {
     describe('on blur', () => {
       test('by tab the open menu will be closed and highlighted item will be selected', async () => {
         const initialHighlightedIndex = 2
+        const stateReducer = jest.fn((_state, {changes}) => changes)
         const {user} = renderCombobox({
           initialIsOpen: true,
           initialHighlightedIndex,
+          stateReducer,
         })
 
         await tab(user)
 
         expect(getItems()).toHaveLength(0)
         expect(getInput()).toHaveValue(items[initialHighlightedIndex])
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer.mock.calls[0][1]).not.toHaveProperty('source')
       })
 
       test('by tab the open menu will be closed and highlighted item will not be selected if the highlight by mouse leaves the menu', async () => {
@@ -1824,6 +1828,7 @@ describe('getInputProps', () => {
           },
           expect.objectContaining({
             type: stateChangeTypes.InputBlur,
+            source: 'outside',
             changes: {
               highlightedIndex: -1,
               inputValue: '',
@@ -1863,6 +1868,7 @@ describe('getInputProps', () => {
           },
           expect.objectContaining({
             type: stateChangeTypes.InputBlur,
+            source: 'outside',
             changes: {
               highlightedIndex: -1,
               inputValue: '',

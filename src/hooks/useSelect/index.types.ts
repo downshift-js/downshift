@@ -76,6 +76,7 @@ export type UseSelectToggleButtonKeyDownPageDownAction = {
 }
 export type UseSelectToggleButtonBlurAction = {
   type: UseSelectStateChangeTypes.ToggleButtonBlur
+  source?: 'outside'
 }
 export type UseSelectMenuMouseLeaveAction = {
   type: UseSelectStateChangeTypes.MenuMouseLeave
@@ -207,6 +208,7 @@ export interface UseSelectDispatchAction<Item> {
   highlightedIndex?: number
   selectedItem?: Item | null
   inputValue?: string
+  source?: 'outside'
 }
 
 export interface UseSelectStateChange<Item> extends Partial<

@@ -147,6 +147,7 @@ function useSelect<Item>(
       if (stateRef.current.isOpen) {
         dispatch({
           type: stateChangeTypes.ToggleButtonBlur,
+          source: 'outside',
         })
       }
     },

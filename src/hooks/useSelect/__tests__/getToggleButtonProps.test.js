@@ -2028,8 +2028,9 @@ describe('getToggleButtonProps', () => {
 
       test('by focusing another element should behave as a normal blur', async () => {
         const initialHighlightedIndex = 2
+        const stateReducer = jest.fn((_state, {changes}) => changes)
         const {user} = renderSelect(
-          {initialIsOpen: true, initialHighlightedIndex},
+          {initialIsOpen: true, initialHighlightedIndex, stateReducer},
           ui => {
             return (
               <>
@@ -2047,6 +2048,8 @@ describe('getToggleButtonProps', () => {
         expect(getToggleButton()).toHaveTextContent(
           items[initialHighlightedIndex],
         )
+        expect(stateReducer).toHaveBeenCalledTimes(1)
+        expect(stateReducer.mock.calls[0][1]).not.toHaveProperty('source')
       })
 
       test('by mouse is not triggered if target is within downshift', async () => {
@@ -2069,7 +2072,10 @@ describe('getToggleButtonProps', () => {
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
           expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
+          expect.objectContaining({
+            type: stateChangeTypes.ToggleButtonBlur,
+            source: 'outside',
+          }),
         )
       })
 
@@ -2094,7 +2100,10 @@ describe('getToggleButtonProps', () => {
         expect(stateReducer).toHaveBeenCalledTimes(1)
         expect(stateReducer).toHaveBeenCalledWith(
           expect.objectContaining({}),
-          expect.objectContaining({type: stateChangeTypes.ToggleButtonBlur}),
+          expect.objectContaining({
+            type: stateChangeTypes.ToggleButtonBlur,
+            source: 'outside',
+          }),
         )
       })
     })

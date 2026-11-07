@@ -71,6 +71,7 @@ export type UseComboboxInputChangeAction = {
 export type UseComboboxInputBlurAction = {
   type: UseComboboxStateChangeTypes.InputBlur
   selectItem?: boolean
+  source?: 'outside'
 }
 export type UseComboboxInputClickAction = {
   type: UseComboboxStateChangeTypes.InputClick
@@ -218,6 +219,7 @@ export interface UseComboboxDispatchAction<Item> {
   highlightedIndex?: number
   selectedItem?: Item | null
   selectItem?: boolean
+  source?: 'outside'
 }
 
 export interface UseComboboxStateChange<Item> extends Partial<
