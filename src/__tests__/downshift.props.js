@@ -94,7 +94,7 @@ test('onSelect not called when nothing was selected', () => {
   expect(handleSelect).not.toHaveBeenCalled()
 })
 
-test('uses given environment', () => {
+test('uses passive listeners in the given environment and removes them on unmount', () => {
   const environment = {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
@@ -110,9 +110,35 @@ test('uses given environment', () => {
   act(() => {
     setHighlightedIndex()
   })
-  unmount()
   expect(environment.addEventListener).toHaveBeenCalledTimes(5)
+  for (const type of [
+    'mousedown',
+    'mouseup',
+    'touchstart',
+    'touchmove',
+    'touchend',
+  ]) {
+    expect(environment.addEventListener).toHaveBeenCalledWith(
+      type,
+      expect.any(Function),
+      {passive: true},
+    )
+  }
+  expect(environment.removeEventListener).not.toHaveBeenCalled()
+
+  unmount()
   expect(environment.removeEventListener).toHaveBeenCalledTimes(5)
+  expect(
+    environment.removeEventListener.mock.calls.map(([type, handler]) => [
+      type,
+      handler,
+    ]),
+  ).toEqual(
+    environment.addEventListener.mock.calls.map(([type, handler]) => [
+      type,
+      handler,
+    ]),
+  )
 })
 
 test('can override onOuterClick callback to maintain isOpen state', () => {
