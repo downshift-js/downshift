@@ -130,6 +130,7 @@ function useCombobox<Item>(
       if (stateRef.current.isOpen) {
         dispatch({
           type: stateChangeTypes.InputBlur,
+          source: 'outside',
         })
       }
     },

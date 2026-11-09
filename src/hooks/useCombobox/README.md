@@ -332,6 +332,24 @@ function stateReducer(state, actionAndChanges) {
 > reducer function should be "pure." This means it should do nothing other than
 > return the state changes you want to have happen.
 
+When an outside mouse or touch interaction triggers `InputBlur`,
+`actionAndChanges.source` is `'outside'`. This field is omitted for blur actions
+from the input's `onBlur` handler. If another library manages outside dismissal,
+you can ignore Downshift's outside blur actions while preserving normal blur
+behavior:
+
+```javascript
+useCombobox({
+  items,
+  stateReducer(state, {type, source, changes}) {
+    return type === useCombobox.stateChangeTypes.InputBlur &&
+      source === 'outside'
+      ? state
+      : changes
+  },
+})
+```
+
 ## Advanced Props
 
 ### isItemDisabled
