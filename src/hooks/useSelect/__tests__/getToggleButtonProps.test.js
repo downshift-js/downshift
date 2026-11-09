@@ -51,6 +51,33 @@ jest.mock('react', () => {
 beforeEach(jest.resetAllMocks)
 afterAll(jest.restoreAllMocks)
 
+test('holding Space does not reopen the menu after selecting an item', () => {
+  renderSelect({initialIsOpen: true, initialHighlightedIndex: 0})
+  const toggle = getToggleButton()
+  fireEvent.keyDown(toggle, {key: ' ', repeat: false})
+  expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  fireEvent.keyDown(toggle, {key: ' ', repeat: true})
+  expect(toggle).toHaveAttribute('aria-expanded', 'false')
+})
+
+test('holding Space does not immediately select an item after opening', () => {
+  renderSelect({})
+  const toggle = getToggleButton()
+  fireEvent.keyDown(toggle, {key: ' ', repeat: false})
+  expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  fireEvent.keyDown(toggle, {key: ' ', repeat: true})
+  expect(toggle).toHaveAttribute('aria-expanded', 'true')
+})
+
+test('repeated Space remains available in a typeahead query', () => {
+  const onStateChange = jest.fn()
+  renderSelect({initialIsOpen: true, initialInputValue: 'a', onStateChange})
+  fireEvent.keyDown(getToggleButton(), {key: ' ', repeat: true})
+  expect(onStateChange).toHaveBeenCalledWith(
+    expect.objectContaining({inputValue: 'a '}),
+  )
+})
+
 describe('getToggleButtonProps', () => {
   describe('hook props', () => {
     test('returns an object with some default props', () => {
