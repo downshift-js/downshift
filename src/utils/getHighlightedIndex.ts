@@ -13,7 +13,7 @@ import {getNonDisabledIndex} from './getNonDisabledIndex'
 export function getHighlightedIndex<Item>(
   start: number,
   offset: number,
-  items: Item[],
+  items: readonly Item[],
   isItemDisabled: (item: Item, index: number) => boolean,
   circular = false,
 ) {

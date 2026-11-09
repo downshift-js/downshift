@@ -8,7 +8,7 @@ import {dropdownDefaultStateValues} from './dropdownDefaultStateValues'
  * @returns The highlighted index.
  */
 export function getDefaultHighlightedIndex<Item>(
-  items: Item[],
+  items: readonly Item[],
   isItemDisabled: (item: Item, index: number) => boolean,
   defaultHighlightedIndex?: number,
 ) {

@@ -15,7 +15,7 @@
  * @returns The new highlighted index.
  */
 export function getHighlightedIndexOnOpen<Item>(
-  items: Item[],
+  items: readonly Item[],
   initialHighlightedIndex: number | undefined,
   defaultHighlightedIndex: number | undefined,
   isItemDisabled: (item: Item, index: number) => boolean,

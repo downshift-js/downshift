@@ -1,7 +1,7 @@
 type GetItemIndexByCharacterKeyOptions<Item> = {
   keysSoFar: string
   highlightedIndex: number
-  items: Item[]
+  items: readonly Item[]
   itemToString(item: Item | null): string
   isItemDisabled(item: Item, index: number): boolean
 }

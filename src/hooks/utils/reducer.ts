@@ -13,7 +13,7 @@ type CommonState<Item> = {
 }
 
 type CommonProps<Item> = {
-  items: Item[]
+  items: readonly Item[]
   isItemDisabled: (item: Item, index: number) => boolean
   itemToKey: (item: Item | null) => unknown
   initialHighlightedIndex?: number
