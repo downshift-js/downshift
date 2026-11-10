@@ -370,6 +370,41 @@ describe('getInputProps', () => {
       expect(result.current.inputValue).toBe('lalaland')
     })
 
+    test('does not update inputValue while an IME composition is in progress', () => {
+      const userOnChange = jest.fn()
+      const onInputValueChange = jest.fn()
+      const {result} = renderUseCombobox({onInputValueChange})
+
+      act(() => {
+        const {ref: inputRef, onChange} = result.current.getInputProps({
+          onChange: userOnChange,
+        })
+
+        inputRef({focus: noop})
+        onChange({
+          target: {value: 'に'},
+          nativeEvent: {isComposing: true},
+        })
+      })
+
+      expect(userOnChange).toHaveBeenCalledTimes(1)
+      expect(onInputValueChange).not.toHaveBeenCalled()
+      expect(result.current.inputValue).toBe('')
+
+      act(() => {
+        result.current.getInputProps().onChange({
+          target: {value: '日本'},
+          nativeEvent: {isComposing: false},
+        })
+      })
+
+      expect(onInputValueChange).toHaveBeenCalledTimes(1)
+      expect(onInputValueChange).toHaveBeenCalledWith(
+        expect.objectContaining({inputValue: '日本'}),
+      )
+      expect(result.current.inputValue).toBe('日本')
+    })
+
     test("event handler onChange is called without downshift handler if 'preventDownshiftDefault' is passed in user event", () => {
       const userOnChange = jest.fn(event => {
         event.preventDownshiftDefault = true
