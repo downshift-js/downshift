@@ -1033,6 +1033,13 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/25305144?v=4",
       "profile": "https://github.com/zmdavis",
       "contributions": ["code", "bug"]
+    },
+    {
+      "login": "naveedsajjdawan",
+      "name": "Naveed Sajjad",
+      "avatar_url": "https://avatars.githubusercontent.com/u/88137903?v=4",
+      "profile": "https://github.com/naveedsajjdawan",
+      "contributions": ["doc"]
     }
   ],
   "repoHost": "https://github.com",

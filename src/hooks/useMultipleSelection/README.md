@@ -462,40 +462,76 @@ function itemToKey(item) {
 
 ### getA11yStatusMessage
 
-> `function({/* see below */})` | default messages provided in English
+> `function({activeIndex, selectedItems})` | optional, no default
 
 This function is passed as props to a status updating function nested within
-that allows you to create your own ARIA statuses. It is called when the state
-changes: `selectedItem`, `highlightedIndex`, `inputValue` or `isOpen`.
+that allows you to create your own ARIA statuses. It is called after the initial
+mount when `activeIndex` or `selectedItems` changes.
 
 There is no default function provided anymore since v9, so if there's no prop
-passed, no aria live status message is created. An implementation that resembles
-the previous default is written below, should you want to keep pre v9 behaviour.
+passed, no aria live status message is created. The example below opts into
+announcements when selected books are removed.
 
 We don't provide this as a default anymore since we consider that screen readers
 have been significantly improved and they can convey information about items
 count, possible actions and highlighted items only from the HTML markup, without
 the need for aria-live regions.
 
-```js
-function getA11yStatusMessage(state) {
-  const {selectedItems} = state
+```jsx
+import * as React from 'react'
+import {useMultipleSelection} from 'downshift'
 
-  if (selectedItems.length === previousSelectedItemsRef.current.length) {
-    return ''
-  }
+const initialSelectedItems = [
+  {id: 1, title: 'To Kill a Mockingbird'},
+  {id: 2, title: 'War and Peace'},
+]
 
-  const removedSelectedItem = previousSelectedItemsRef.current.find(
-    selectedItem =>
-      selectedItems.findIndex(
-        item => props.itemToKey(item) === props.itemToKey(selectedItem),
-      ) < 0,
+function SelectedBooks() {
+  const previousSelectedItemsRef = React.useRef(initialSelectedItems)
+  const {selectedItems, getSelectedItemProps, getDropdownProps} =
+    useMultipleSelection({
+      initialSelectedItems,
+      itemToKey: item => item.id,
+      getA11yStatusMessage({selectedItems: currentSelectedItems}) {
+        const previousSelectedItems = previousSelectedItemsRef.current
+        previousSelectedItemsRef.current = currentSelectedItems
+
+        const currentIds = new Set(currentSelectedItems.map(item => item.id))
+        return previousSelectedItems
+          .filter(item => !currentIds.has(item.id))
+          .map(item => `${item.title} has been removed.`)
+          .join(' ')
+      },
+    })
+
+  return (
+    <div>
+      <p id="selected-books-help">
+        Focus a selected book and press Delete or Backspace to remove it.
+      </p>
+      {selectedItems.map((selectedItem, index) => (
+        <span
+          key={selectedItem.id}
+          {...getSelectedItemProps({selectedItem, index})}
+          aria-describedby="selected-books-help"
+        >
+          {selectedItem.title}
+        </span>
+      ))}
+      <label htmlFor="selected-books-input">Books</label>
+      <input id="selected-books-input" {...getDropdownProps()} />
+    </div>
   )
-
-  // where itemToString is a function that returns the string equivalent for an item.
-  return `${itemToString(removedSelectedItem)} has been removed.`
 }
 ```
+
+Keep the previous selection in a ref initialized to the same selection as the
+hook. Update it on every callback, including replacements with the same number
+of items. Compare stable IDs so new object references do not count as removals.
+This example returns an empty message for additions or focus changes and
+announces each removed book when multiple books are removed at once. For a
+controlled selection, initialize the ref from your initial `selectedItems` prop
+instead.
 
 ### onActiveIndexChange
 
