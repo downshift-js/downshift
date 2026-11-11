@@ -1,3 +1,5 @@
+import {getNonDisabledIndex} from '../../utils/getNonDisabledIndex'
+
 /* eslint-disable max-params */
 /**
  * Returns the highlighted index when the menu is opened.
@@ -58,16 +60,11 @@ export function getHighlightedIndexOnOpen<Item>(
     return items.findIndex(item => itemToKey(selectedItem) === itemToKey(item))
   }
 
-  if (
-    offset < 0 &&
-    items[items.length - 1] &&
-    !isItemDisabled(items[items.length - 1] as Item, items.length - 1)
-  ) {
-    return items.length - 1
-  }
+  if (offset !== 0) {
+    const backwards = offset < 0
+    const startIndex = backwards ? items.length - 1 : 0
 
-  if (offset > 0 && items[0] && !isItemDisabled(items[0], 0)) {
-    return 0
+    return getNonDisabledIndex(startIndex, backwards, items, isItemDisabled)
   }
 
   return -1

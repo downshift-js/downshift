@@ -5,6 +5,9 @@ const isItemDisabled = () => false
 const isFirstItemDisabled = (_item: string, index: number) => index === 0
 const isLastItemDisabled = (_item: string, index: number) =>
   index === items.length - 1
+const areAllItemsDisabled = () => true
+const areFirstTwoItemsDisabled = (_item: string, index: number) => index < 2
+const areLastTwoItemsDisabled = (_item: string, index: number) => index > 0
 const itemToKey = (item: string | null) => item
 
 test('returns -1 when items is empty', () => {
@@ -70,7 +73,7 @@ test('skips initialHighlightedIndex when state highlightedIndex does not match',
   ).toBe(-1)
 })
 
-test('skips initialHighlightedIndex when that item is disabled', () => {
+test('falls back to the next enabled item when initialHighlightedIndex is disabled', () => {
   const initialHighlightedIndex = 0
   const defaultHighlightedIndex = undefined
   const selectedItem = null
@@ -88,7 +91,7 @@ test('skips initialHighlightedIndex when that item is disabled', () => {
       highlightedIndex,
       offset,
     ),
-  ).toBe(-1)
+  ).toBe(1)
 })
 
 test('returns defaultHighlightedIndex when it is not disabled', () => {
@@ -112,7 +115,7 @@ test('returns defaultHighlightedIndex when it is not disabled', () => {
   ).toBe(2)
 })
 
-test('skips defaultHighlightedIndex when that item is disabled', () => {
+test('falls back to the next enabled item when defaultHighlightedIndex is disabled', () => {
   const initialHighlightedIndex = undefined
   const defaultHighlightedIndex = 0
   const selectedItem = null
@@ -130,7 +133,7 @@ test('skips defaultHighlightedIndex when that item is disabled', () => {
       highlightedIndex,
       offset,
     ),
-  ).toBe(-1)
+  ).toBe(1)
 })
 
 test('returns index of selectedItem when selectedItem is set', () => {
@@ -175,7 +178,7 @@ test('returns last index when offset is negative and last item is not disabled',
   ).toBe(2)
 })
 
-test('skips last index when offset is negative and last item is disabled', () => {
+test('returns previous enabled index when offset is negative and last item is disabled', () => {
   const initialHighlightedIndex = undefined
   const defaultHighlightedIndex = undefined
   const selectedItem = null
@@ -193,7 +196,22 @@ test('skips last index when offset is negative and last item is disabled', () =>
       highlightedIndex,
       offset,
     ),
-  ).toBe(-1)
+  ).toBe(1)
+})
+
+test('skips consecutive disabled items when opening with a negative offset', () => {
+  expect(
+    getHighlightedIndexOnOpen(
+      items,
+      undefined,
+      undefined,
+      areLastTwoItemsDisabled,
+      itemToKey,
+      null,
+      -1,
+      -1,
+    ),
+  ).toBe(0)
 })
 
 test('returns 0 when offset is positive and first item is not disabled', () => {
@@ -217,7 +235,7 @@ test('returns 0 when offset is positive and first item is not disabled', () => {
   ).toBe(0)
 })
 
-test('skips 0 when offset is positive and first item is disabled', () => {
+test('returns next enabled index when offset is positive and first item is disabled', () => {
   const initialHighlightedIndex = undefined
   const defaultHighlightedIndex = undefined
   const selectedItem = null
@@ -235,8 +253,41 @@ test('skips 0 when offset is positive and first item is disabled', () => {
       highlightedIndex,
       offset,
     ),
-  ).toBe(-1)
+  ).toBe(1)
 })
+
+test('skips consecutive disabled items when opening with a positive offset', () => {
+  expect(
+    getHighlightedIndexOnOpen(
+      items,
+      undefined,
+      undefined,
+      areFirstTwoItemsDisabled,
+      itemToKey,
+      null,
+      -1,
+      1,
+    ),
+  ).toBe(2)
+})
+
+test.each([-1, 1])(
+  'returns -1 when all items are disabled and offset is %i',
+  offset => {
+    expect(
+      getHighlightedIndexOnOpen(
+        items,
+        undefined,
+        undefined,
+        areAllItemsDisabled,
+        itemToKey,
+        null,
+        -1,
+        offset,
+      ),
+    ).toBe(-1)
+  },
+)
 
 test('returns -1 when no conditions match', () => {
   const initialHighlightedIndex = undefined
