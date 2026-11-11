@@ -3,6 +3,7 @@ import {act} from '@testing-library/react'
 import {
   renderUseMultipleSelection,
   renderMultipleCombobox,
+  renderMultipleComboboxWithStableKeys,
   clickOnSelectedItemAtIndex,
   getSelectedItemAtIndex,
   focusSelectedItemAtIndex,
@@ -386,6 +387,36 @@ describe('getSelectedItemProps', () => {
         expect(getSelectedItems()).toHaveLength(2)
         expect(getSelectedItemAtIndex(1)).toHaveFocus()
         expect(getSelectedItemAtIndex(1)).toHaveTextContent(items[1])
+      })
+
+      test('backspace keeps focus on the active item when items use stable keys', async () => {
+        const {user} = renderMultipleComboboxWithStableKeys({
+          multipleSelectionProps: {
+            initialSelectedItems: [items[0], items[1], items[2]],
+            initialActiveIndex: 0,
+          },
+        })
+
+        await keyDownOnSelectedItemAtIndex(user, 0, '{Backspace}')
+
+        expect(getSelectedItems()).toHaveLength(2)
+        expect(getSelectedItemAtIndex(0)).toHaveTextContent(items[1])
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
+      })
+
+      test('delete keeps focus on the active item when items use stable keys', async () => {
+        const {user} = renderMultipleComboboxWithStableKeys({
+          multipleSelectionProps: {
+            initialSelectedItems: [items[0], items[1], items[2]],
+            initialActiveIndex: 0,
+          },
+        })
+
+        await keyDownOnSelectedItemAtIndex(user, 0, '{Delete}')
+
+        expect(getSelectedItems()).toHaveLength(2)
+        expect(getSelectedItemAtIndex(0)).toHaveTextContent(items[1])
+        expect(getSelectedItemAtIndex(0)).toHaveFocus()
       })
 
       test('backspace and delete change nothing if there is no selected item focused', async () => {

@@ -66,6 +66,7 @@ export async function clickOnInput(user) {
 const DropdownMultipleCombobox = ({
   multipleSelectionProps = {},
   comboboxProps = {},
+  stableKeys = false,
 }) => {
   const {getSelectedItemProps, getDropdownProps, selectedItems} =
     useMultipleSelection(multipleSelectionProps)
@@ -82,7 +83,9 @@ const DropdownMultipleCombobox = ({
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {selectedItems.map((selectedItem, index) => (
           <span
-            key={`selected-item-${index}`}
+            key={
+              stableKeys ? itemToString(selectedItem) : `selected-item-${index}`
+            }
             data-testid={dataTestIds.selectedItem(index)}
             {...getSelectedItemProps({selectedItem, index})}
           >
@@ -113,6 +116,10 @@ export const renderMultipleCombobox = props => {
     rerender,
     user,
   }
+}
+
+export const renderMultipleComboboxWithStableKeys = props => {
+  return renderMultipleCombobox({...props, stableKeys: true})
 }
 
 export const renderUseMultipleSelection = props => {

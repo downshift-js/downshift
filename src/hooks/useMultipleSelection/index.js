@@ -1,9 +1,5 @@
 import {useRef, useEffect, useCallback, useMemo} from 'react'
-import {
-  callAllEventHandlers,
-  handleRefs,
-  normalizeArrowKey,
-} from '../../utils'
+import {callAllEventHandlers, handleRefs, normalizeArrowKey} from '../../utils'
 import {
   useControlledReducer,
   useIsInitialMount,
@@ -77,8 +73,13 @@ function useMultipleSelection(userProps = {}) {
     } else {
       selectedItemRefs.current.get(activeIndex)?.focus()
     }
+    // `selectedItems.length` is needed so focus is restored to the active item
+    // when a selected item is removed without `activeIndex` changing (e.g.
+    // deleting the first item keeps `activeIndex` at 0). Otherwise, when items
+    // are rendered with stable keys, the removed item's node unmounts and focus
+    // is lost to the document body.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex])
+  }, [activeIndex, selectedItems.length])
   useControlPropsValidator({
     props,
     state,
