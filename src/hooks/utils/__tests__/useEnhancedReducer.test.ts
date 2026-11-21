@@ -85,6 +85,41 @@ describe('useEnhancedReducer', () => {
     jest.clearAllMocks()
   })
 
+  test('does not replay controlled callbacks when the effect runs for the same action', () => {
+    const onCountChange = jest.fn()
+    const nextOnCountChange = jest.fn()
+    const props = {...defaultProps, count: 0, onCountChange}
+    const increment = {type: 'increment'}
+    const {result, rerender} = renderHook(
+      (currentProps: ReducerProps) =>
+        useEnhancedReducer<ReducerState, ReducerAction, ReducerProps>(
+          state => ({count: state.count + 1}),
+          currentProps,
+          () => ({count: 0}),
+          (prev, next) => prev.count === next.count,
+        ),
+      {initialProps: props},
+    )
+
+    React.act(() => {
+      result.current[1](increment)
+    })
+    expect(onCountChange).toHaveBeenCalledTimes(1)
+
+    rerender({...props, onCountChange: nextOnCountChange})
+    expect(onCountChange).toHaveBeenCalledTimes(1)
+    expect(nextOnCountChange).not.toHaveBeenCalled()
+
+    React.act(() => {
+      result.current[1](increment)
+    })
+    expect(nextOnCountChange).toHaveBeenCalledTimes(1)
+    expect(nextOnCountChange).toHaveBeenCalledWith({
+      type: 'increment',
+      count: 1,
+    })
+  })
+
   test('should update state after dispatch', () => {
     const {result} = renderReducer()
     const [state, dispatch] = result.current
