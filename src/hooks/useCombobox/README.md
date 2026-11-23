@@ -502,10 +502,8 @@ function getA11yStatusMessage(state) {
 
 > `function(changes: object)` | optional, no useful default
 
-Called each time the highlighted item was changed. Items can be highlighted
-while hovering the mouse over them or by keyboard keys such as Up Arrow, Down
-Arrow, Home and End. Items can also be highlighted by hitting character keys
-that are part of their starting string equivalent.
+Called each time the highlighted item changes, for example when the pointer
+moves over an item or the user presses `ArrowUp` or `ArrowDown`.
 
 - `changes`: These are the properties that actually have changed since the last
   state change. This object is guaranteed to contain the `highlightedIndex`
@@ -1055,8 +1053,9 @@ described below.
   that was highlighted.
 - `CharacterKey`: Will change the `inputValue` according to the value visible in
   the `<input>`. `Backspace` or `Space` trigger the same event.
-- `End`: If the menu is open, it will highlight the last item in the list.
-- `Home`: If the menu is open, it will highlight the first item in the list.
+- `Home` and `End`: Editable inputs keep their native cursor movement and text
+  selection, including with `Shift`, even when the menu is open. In a read-only
+  input with the menu open, these keys highlight the first or last enabled item.
 - `PageUp`: If the menu is open, it will move the highlight the item 10
   positions before the current selection.
 - `PageDown`: If the menu is open, it will move the highlight the item 10

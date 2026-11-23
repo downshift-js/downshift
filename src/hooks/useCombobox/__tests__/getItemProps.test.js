@@ -403,7 +403,7 @@ describe('getItemProps', () => {
         scrollIntoView,
       })
 
-      await keyDownOnInput(user, '{End}')
+      await keyDownOnInput(user, '{ArrowUp}')
 
       expect(scrollIntoView).toHaveBeenCalledTimes(1)
     })

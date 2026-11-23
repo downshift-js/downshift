@@ -164,6 +164,27 @@ function useCombobox<Item>(
   }, [isOpen, environment])
 
   /* Event handler functions */
+  const handleHomeAndEnd = useCallback(
+    (event: KeyboardEvent) => {
+      if (!stateRef.current.isOpen) {
+        return
+      }
+
+      const readOnly = inputRef.current?.readOnly === true
+      if (readOnly) {
+        event.preventDefault()
+      }
+      dispatch({
+        type:
+          event.key === 'Home'
+            ? stateChangeTypes.InputKeyDownHome
+            : stateChangeTypes.InputKeyDownEnd,
+        readOnly,
+      })
+    },
+    [dispatch, stateRef],
+  )
+
   const inputKeyDownHandlers = useMemo(
     () => ({
       ArrowDown(event: KeyboardEvent) {
@@ -180,26 +201,8 @@ function useCombobox<Item>(
           altKey: event.altKey,
         })
       },
-      Home(event: KeyboardEvent) {
-        if (!stateRef.current.isOpen) {
-          return
-        }
-
-        event.preventDefault()
-        dispatch({
-          type: stateChangeTypes.InputKeyDownHome,
-        })
-      },
-      End(event: KeyboardEvent) {
-        if (!stateRef.current.isOpen) {
-          return
-        }
-
-        event.preventDefault()
-        dispatch({
-          type: stateChangeTypes.InputKeyDownEnd,
-        })
-      },
+      Home: handleHomeAndEnd,
+      End: handleHomeAndEnd,
       Escape(event: KeyboardEvent) {
         const latestState = stateRef.current
         if (
@@ -249,7 +252,7 @@ function useCombobox<Item>(
         }
       },
     }),
-    [dispatch, stateRef],
+    [dispatch, handleHomeAndEnd, stateRef],
   )
 
   // Getter props.

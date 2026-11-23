@@ -48,9 +48,11 @@ export type UseComboboxInputKeyDownArrowUpAction = {
 }
 export type UseComboboxInputKeyDownHomeAction = {
   type: UseComboboxStateChangeTypes.InputKeyDownHome
+  readOnly: boolean
 }
 export type UseComboboxInputKeyDownEndAction = {
   type: UseComboboxStateChangeTypes.InputKeyDownEnd
+  readOnly: boolean
 }
 export type UseComboboxInputKeyDownEscapeAction = {
   type: UseComboboxStateChangeTypes.InputKeyDownEscape
