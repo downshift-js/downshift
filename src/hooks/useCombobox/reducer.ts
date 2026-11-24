@@ -153,25 +153,22 @@ export default function downshiftUseComboboxReducer<Item>(
       }
       break
     case stateChangeTypes.InputKeyDownHome:
+    case stateChangeTypes.InputKeyDownEnd: {
+      if (!action.readOnly) {
+        return state
+      }
+
+      const isEnd = type === stateChangeTypes.InputKeyDownEnd
       changes = {
         highlightedIndex: getNonDisabledIndex(
-          0,
-          false,
+          isEnd ? props.items.length - 1 : 0,
+          isEnd,
           props.items,
           props.isItemDisabled,
         ),
       }
       break
-    case stateChangeTypes.InputKeyDownEnd:
-      changes = {
-        highlightedIndex: getNonDisabledIndex(
-          props.items.length - 1,
-          true,
-          props.items,
-          props.isItemDisabled,
-        ),
-      }
-      break
+    }
     case stateChangeTypes.InputBlur:
       changes = {
         isOpen: false,

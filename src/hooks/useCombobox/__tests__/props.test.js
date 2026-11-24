@@ -753,7 +753,7 @@ describe('props', () => {
           args: '{Home}',
           state: {
             isOpen: true,
-            highlightedIndex: 0,
+            highlightedIndex: items.length - 1,
             inputValue: '',
             selectedItem: null,
           },
@@ -1339,23 +1339,23 @@ describe('props', () => {
         }),
       )
 
-      await keyDownOnInput(user, '{End}')
+      await keyDownOnInput(user, '{ArrowUp}')
 
       expect(onStateChange).toHaveBeenCalledTimes(6)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          highlightedIndex: items.length - 1,
-          type: stateChangeTypes.InputKeyDownEnd,
+          highlightedIndex: 1,
+          type: stateChangeTypes.InputKeyDownArrowUp,
         }),
       )
 
-      await keyDownOnInput(user, '{Home}')
+      await keyDownOnInput(user, '{ArrowUp}')
 
       expect(onStateChange).toHaveBeenCalledTimes(7)
       expect(onStateChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           highlightedIndex: 0,
-          type: stateChangeTypes.InputKeyDownHome,
+          type: stateChangeTypes.InputKeyDownArrowUp,
         }),
       )
 

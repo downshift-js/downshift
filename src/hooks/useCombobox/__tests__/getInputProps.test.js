@@ -1157,106 +1157,109 @@ describe('getInputProps', () => {
         })
       })
 
-      describe('end', () => {
-        test('highlights the last option number', async () => {
-          const {user} = renderCombobox({
-            isOpen: true,
+      describe.each([
+        ['Home', stateChangeTypes.InputKeyDownHome, 0, 1],
+        [
+          'End',
+          stateChangeTypes.InputKeyDownEnd,
+          items.length - 1,
+          items.length - 2,
+        ],
+      ])('%s', (key, actionType, edgeIndex, enabledIndex) => {
+        test.each([false, true])(
+          'keeps native editing and the highlighted option with shiftKey=%s',
+          shiftKey => {
+            const onStateChange = jest.fn()
+            renderCombobox({
+              initialIsOpen: true,
+              initialHighlightedIndex: 2,
+              initialInputValue: 'hello',
+              onStateChange,
+            })
+            const input = getInput()
+            const event = createEvent.keyDown(input, {key, shiftKey})
+
+            fireEvent(input, event)
+
+            expect(event.defaultPrevented).toBe(false)
+            expect(input).toHaveValue('hello')
+            expect(input).toHaveAttribute(
+              'aria-activedescendant',
+              defaultIds.getItemId(2),
+            )
+            expect(onStateChange).not.toHaveBeenCalled()
+          },
+        )
+
+        test('lets a custom reducer handle the key on an editable input', () => {
+          const stateReducer = jest.fn((_state, {changes}) => ({
+            ...changes,
+            highlightedIndex: edgeIndex,
+          }))
+          renderCombobox({
+            initialIsOpen: true,
             initialHighlightedIndex: 2,
+            stateReducer,
           })
-
-          await keyDownOnInput(user, '{End}')
-
-          expect(getInput()).toHaveAttribute(
-            'aria-activedescendant',
-            defaultIds.getItemId(items.length - 1),
-          )
-        })
-
-        test('prevents the default event and calls dispatch only when menu is open', () => {
-          const {rerender, renderSpy} = renderCombobox({isOpen: false})
           const input = getInput()
-          const keyDownEvent = createEvent.keyDown(input, {key: 'End'})
 
-          renderSpy.mockClear()
-          fireEvent(input, keyDownEvent)
+          fireEvent.keyDown(input, {key})
 
-          expect(keyDownEvent.defaultPrevented).toBe(false)
-          expect(renderSpy).not.toHaveBeenCalled()
-
-          rerender({isOpen: true})
-          renderSpy.mockClear()
-          fireEvent(input, keyDownEvent)
-
-          expect(keyDownEvent.defaultPrevented).toBe(true)
-          expect(renderSpy).toHaveBeenCalledTimes(1)
-        })
-
-        test('highlights previous non-disabled option', async () => {
-          const {user} = renderCombobox({
-            isOpen: true,
-            initialHighlightedIndex: 0,
-            isItemDisabled(_item, index) {
-              return index === items.length - 1
-            },
-          })
-
-          await keyDownOnInput(user, '{End}')
-
-          expect(getInput()).toHaveAttribute(
-            'aria-activedescendant',
-            defaultIds.getItemId(items.length - 2),
+          expect(stateReducer).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({type: actionType}),
           )
-        })
-      })
-
-      describe('home', () => {
-        test('home highlights the first option number', async () => {
-          const {user} = renderCombobox({
-            isOpen: true,
-            initialHighlightedIndex: 2,
-          })
-
-          await keyDownOnInput(user, '{Home}')
-
-          expect(getInput()).toHaveAttribute(
+          expect(input).toHaveAttribute(
             'aria-activedescendant',
-            defaultIds.getItemId(0),
+            defaultIds.getItemId(edgeIndex),
           )
         })
 
-        test('home prevents the default event calls dispatch only when menu is open', () => {
-          const {rerender, renderSpy} = renderCombobox({isOpen: false})
+        test.each([false, true])(
+          'leaves the key alone when the menu is closed and readOnly=%s',
+          readOnly => {
+            const stateReducer = jest.fn((_state, {changes}) => changes)
+            renderCombobox({isOpen: false, stateReducer})
+            const input = getInput()
+            input.toggleAttribute('readonly', readOnly)
+            const event = createEvent.keyDown(input, {key})
+
+            fireEvent(input, event)
+
+            expect(event.defaultPrevented).toBe(false)
+            expect(stateReducer).not.toHaveBeenCalled()
+          },
+        )
+
+        test('highlights the edge option on a read-only input when the menu is open', () => {
+          renderCombobox({initialIsOpen: true, initialHighlightedIndex: 2})
           const input = getInput()
-          const keyDownEvent = createEvent.keyDown(input, {key: 'Home'})
+          input.setAttribute('readonly', '')
+          const event = createEvent.keyDown(input, {key})
 
-          renderSpy.mockClear()
-          fireEvent(input, keyDownEvent)
+          fireEvent(input, event)
 
-          expect(keyDownEvent.defaultPrevented).toBe(false)
-          expect(renderSpy).not.toHaveBeenCalled()
-
-          rerender({isOpen: true})
-          renderSpy.mockClear()
-          fireEvent(input, keyDownEvent)
-
-          expect(keyDownEvent.defaultPrevented).toBe(true)
-          expect(renderSpy).toHaveBeenCalledTimes(1) // re-render on key
+          expect(event.defaultPrevented).toBe(true)
+          expect(input).toHaveAttribute(
+            'aria-activedescendant',
+            defaultIds.getItemId(edgeIndex),
+          )
         })
 
-        test('highlights next non-disabled option', async () => {
-          const {user} = renderCombobox({
-            isOpen: true,
+        test('skips a disabled edge option on a read-only input', () => {
+          renderCombobox({
+            initialIsOpen: true,
             initialHighlightedIndex: 2,
-            isItemDisabled(_item, index) {
-              return index === 0
-            },
+            isItemDisabled: (_item, index) => index === edgeIndex,
           })
+          const input = getInput()
+          input.setAttribute('readonly', '')
 
-          await keyDownOnInput(user, '{Home}')
+          fireEvent.keyDown(input, {key})
 
-          expect(getInput()).toHaveAttribute(
+          expect(input).toHaveAttribute(
             'aria-activedescendant',
-            defaultIds.getItemId(1),
+            defaultIds.getItemId(enabledIndex),
           )
         })
       })
