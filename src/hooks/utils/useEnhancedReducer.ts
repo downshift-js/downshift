@@ -26,6 +26,9 @@ export function useEnhancedReducer<
   isStateEqual: (prev: S, next: S) => boolean,
 ): [S, (action: A) => void] {
   const prevStateRef = React.useRef<S>({} as S)
+  const lastHandledActionRef = React.useRef<Action<S, A, P> | undefined>(
+    undefined,
+  )
   const enhancedReducer = React.useCallback(
     (
       {state}: {state: S},
@@ -55,7 +58,8 @@ export function useEnhancedReducer<
   )
 
   React.useEffect(() => {
-    if (lastAction) {
+    if (lastAction && lastAction !== lastHandledActionRef.current) {
+      lastHandledActionRef.current = lastAction
       const prevState = getState(prevStateRef.current, lastAction.props)
       const shouldCallOnChangeProps = !isStateEqual(prevState, state)
 
