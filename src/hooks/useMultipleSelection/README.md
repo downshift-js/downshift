@@ -462,40 +462,84 @@ function itemToKey(item) {
 
 ### getA11yStatusMessage
 
-> `function({/* see below */})` | default messages provided in English
+> `function({activeIndex, selectedItems}): string` | optional, no default
 
-This function is passed as props to a status updating function nested within
-that allows you to create your own ARIA statuses. It is called when the state
-changes: `selectedItem`, `highlightedIndex`, `inputValue` or `isOpen`.
+After mount, `useMultipleSelection` calls this function when `activeIndex` or
+`selectedItems` changes. Return a string to announce through an ARIA live
+region, or an empty string to skip the announcement.
 
-There is no default function provided anymore since v9, so if there's no prop
-passed, no aria live status message is created. An implementation that resembles
-the previous default is written below, should you want to keep pre v9 behaviour.
+Since v9, removal announcements are opt-in. In this example, activate **Select
+citrus fruit** to replace Apple with Lemon. Both selections contain two items,
+but the live region announces “Apple has been removed.” With the button focused,
+press `ArrowLeft` to focus Lemon, then `Delete` to hear “Lemon has been
+removed.”
 
-We don't provide this as a default anymore since we consider that screen readers
-have been significantly improved and they can convey information about items
-count, possible actions and highlighted items only from the HTML markup, without
-the need for aria-live regions.
+```jsx
+import * as React from 'react'
+import {useMultipleSelection} from 'downshift'
 
-```js
-function getA11yStatusMessage(state) {
-  const {selectedItems} = state
+const initialSelectedItems = [
+  {id: 1, name: 'Apple'},
+  {id: 2, name: 'Orange'},
+]
+const citrusFruit = [
+  {id: 2, name: 'Orange'},
+  {id: 3, name: 'Lemon'},
+]
+const itemToKey = fruit => fruit.id
 
-  if (selectedItems.length === previousSelectedItemsRef.current.length) {
-    return ''
-  }
+export default function FruitSelection() {
+  const previousSelectedItemsRef = React.useRef(initialSelectedItems)
+  const {
+    selectedItems,
+    setSelectedItems,
+    getSelectedItemProps,
+    getDropdownProps,
+  } = useMultipleSelection({
+    initialSelectedItems,
+    itemToKey,
+    getA11yStatusMessage({selectedItems: currentItems}) {
+      const previousItems = previousSelectedItemsRef.current
+      previousSelectedItemsRef.current = currentItems
 
-  const removedSelectedItem = previousSelectedItemsRef.current.find(
-    selectedItem =>
-      selectedItems.findIndex(
-        item => props.itemToKey(item) === props.itemToKey(selectedItem),
-      ) < 0,
+      if (currentItems === previousItems) {
+        return ''
+      }
+
+      const selectedIds = new Set(currentItems.map(itemToKey))
+      return previousItems
+        .filter(fruit => !selectedIds.has(itemToKey(fruit)))
+        .map(fruit => `${fruit.name} has been removed.`)
+        .join(' ')
+    },
+  })
+
+  return (
+    <>
+      <ul aria-label="Selected fruit">
+        {selectedItems.map((selectedItem, index) => (
+          <li
+            key={selectedItem.id}
+            {...getSelectedItemProps({selectedItem, index})}
+          >
+            {selectedItem.name}
+          </li>
+        ))}
+      </ul>
+      <button
+        type="button"
+        {...getDropdownProps({onClick: () => setSelectedItems(citrusFruit)})}
+      >
+        Select citrus fruit
+      </button>
+    </>
   )
-
-  // where itemToString is a function that returns the string equivalent for an item.
-  return `${itemToString(removedSelectedItem)} has been removed.`
 }
 ```
+
+Initialize the ref with the hook's starting selection. For a controlled
+component, use the initial value of the `selectedItems` prop. Comparing IDs lets
+the callback recognize Orange across both arrays, even with a new object.
 
 ### onActiveIndexChange
 
