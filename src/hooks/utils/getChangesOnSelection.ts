@@ -18,7 +18,7 @@ type Changes<Item> = {
  * @returns The changes for the state.
  */
 export function getChangesOnSelection<Item>(
-  items: Item[],
+  items: readonly Item[],
   itemToString: (item: Item | null) => string,
   defaultIsOpen: boolean | undefined,
   defaultHighlightedIndex: number | undefined,

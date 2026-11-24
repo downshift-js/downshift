@@ -7,7 +7,7 @@ import {
 } from '../../downshift.types'
 
 export interface UseMultipleSelectionState<Item> {
-  selectedItems: Item[]
+  selectedItems: readonly Item[]
   activeIndex: number
 }
 
@@ -28,9 +28,9 @@ export enum UseMultipleSelectionStateChangeTypes {
 }
 
 export interface UseMultipleSelectionProps<Item> {
-  selectedItems?: Item[]
-  initialSelectedItems?: Item[]
-  defaultSelectedItems?: Item[]
+  selectedItems?: readonly Item[]
+  initialSelectedItems?: readonly Item[]
+  defaultSelectedItems?: readonly Item[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Breaking Change to move to unknown.
   itemToKey?: (item: Item | null) => any
   getA11yStatusMessage?: (options: UseMultipleSelectionState<Item>) => string
@@ -63,7 +63,7 @@ export interface UseMultipleSelectionDispatchAction<Item> {
   type: UseMultipleSelectionStateChangeTypes
   index?: number
   selectedItem?: Item | null
-  selectedItems?: Item[]
+  selectedItems?: readonly Item[]
   activeIndex?: number
 }
 
@@ -82,7 +82,7 @@ export interface UseMultipleSelectionActiveIndexChange<
 export interface UseMultipleSelectionSelectedItemsChange<
   Item,
 > extends UseMultipleSelectionStateChange<Item> {
-  selectedItems: Item[]
+  selectedItems: readonly Item[]
 }
 
 export interface A11yRemovalMessage<Item> {
@@ -141,7 +141,7 @@ export interface UseMultipleSelectionActions<Item> {
   reset: () => void
   addSelectedItem: (item: Item) => void
   removeSelectedItem: (item: Item) => void
-  setSelectedItems: (items: Item[]) => void
+  setSelectedItems: (items: readonly Item[]) => void
   setActiveIndex: (index: number) => void
 }
 

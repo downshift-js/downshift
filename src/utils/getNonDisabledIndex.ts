@@ -11,7 +11,7 @@
 export function getNonDisabledIndex<Item>(
   start: number,
   backwards: boolean,
-  items: Item[],
+  items: readonly Item[],
   isItemDisabled: (item: Item, index: number) => boolean,
   circular = false,
 ) {

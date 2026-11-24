@@ -6,7 +6,7 @@ import {colors, getExampleLabelClassName} from '../utils'
 
 const initialSelectedItems = colors.slice(0, 2)
 
-function getFilteredItems(selectedItems: string[]) {
+function getFilteredItems(selectedItems: readonly string[]) {
   return colors.filter(colour => !selectedItems.includes(colour))
 }
 

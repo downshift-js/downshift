@@ -140,7 +140,7 @@ export type UseSelectReducerAction<Item> =
   | UseSelectFunctionResetAction
 
 export interface UseSelectProps<Item> {
-  items: Item[]
+  items: readonly Item[]
   isItemDisabled?(item: Item, index: number): boolean
   itemToString?: (item: Item | null) => string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Breaking Change to move to unknown.
