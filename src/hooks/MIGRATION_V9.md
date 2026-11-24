@@ -47,9 +47,10 @@ implementation inside a `onStateChange` callback.
 
 ## getA11yRemovalMessage
 
-The prop has been removed from useMultipleSelection. If you still need an a11y
-removal message, use either `getA11yStatusMessage` or your own aria-live
-implementation inside a `onStateChange` callback.
+The prop has been removed from `useMultipleSelection`. To announce removed
+items, follow the
+[working `getA11yStatusMessage` example](./useMultipleSelection/README.md#geta11ystatusmessage)
+or use your own aria-live implementation inside an `onStateChange` callback.
 
 ## getA11yStatusMessage
 
