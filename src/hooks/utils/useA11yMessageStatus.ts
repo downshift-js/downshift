@@ -35,6 +35,10 @@ export function useA11yMessageStatus<Options>(
 
     const status = getA11yStatusMessage(options)
 
+    if (!status) {
+      return
+    }
+
     updateA11yStatus(status, document)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
