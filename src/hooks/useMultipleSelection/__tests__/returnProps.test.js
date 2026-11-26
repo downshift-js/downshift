@@ -60,6 +60,26 @@ describe('returnProps', () => {
       expect(result.current.activeIndex).toEqual(0)
     })
 
+    test.each([
+      [-1, 'more test', -1],
+      [0, 'more test', 0],
+      [2, 'test', 1],
+    ])(
+      'removeSelectedItem preserves the active item when removing another item',
+      (initialActiveIndex, removedItem, expectedActiveIndex) => {
+        const {result} = renderUseMultipleSelection({
+          initialSelectedItems: ['test', 'other test', 'more test'],
+          initialActiveIndex,
+        })
+
+        act(() => {
+          result.current.removeSelectedItem(removedItem)
+        })
+
+        expect(result.current.activeIndex).toBe(expectedActiveIndex)
+      },
+    )
+
     test('removeSelectedItem handles undefined item without modifying the selected array or the active index', () => {
       const {result} = renderUseMultipleSelection({
         initialSelectedItems: ['test', 'more test'],

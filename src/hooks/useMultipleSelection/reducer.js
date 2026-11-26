@@ -85,8 +85,10 @@ export default function downshiftMultipleSelectionReducer(state, action) {
 
       if (selectedItems.length === 1) {
         newActiveIndex = -1
-      } else if (selectedItemIndex === selectedItems.length - 1) {
-        newActiveIndex = selectedItems.length - 2
+      } else if (selectedItemIndex < activeIndex) {
+        newActiveIndex = activeIndex - 1
+      } else if (selectedItemIndex === activeIndex) {
+        newActiveIndex = Math.min(activeIndex, selectedItems.length - 2)
       }
 
       changes = {
